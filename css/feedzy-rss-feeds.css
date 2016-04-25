@@ -1,0 +1,47 @@
+/**
+ * Plugin Name: FEEDZY RSS Feeds
+ * Plugin URI: http://themeisle.com/plugins/feedzy-rss-feeds/
+ * Author: Themeisle
+ */
+.feedzy-rss > ul {
+	margin: 0;
+	padding: 0;
+}
+.feedzy-rss .rss_item {
+	list-style: none;
+	border-bottom: 1px solid #eee;
+}
+.feedzy-rss .rss_item .title {
+	font-weight: bold;
+}
+.feedzy-rss .rss_item:after{
+	content:'';
+	display:block;
+	clear: both;
+}
+.feedzy-rss .rss_item .rss_image {
+	float: left;
+	text-decoration: none;
+	border: none;
+	position:relative;
+}
+.feedzy-rss .rss_item .rss_image span{
+	display:inline-block;
+	background-size: cover;
+	background-position: 50%;
+	position: absolute;
+}
+.feedzy-rss .rss_item .rss_image {
+	margin: 0.3em 1em 0 0;
+}
+.feedzy-rss .rss_item .rss_content small {
+	display: block;
+	font-size: 0.9em;
+	font-style:italic;
+}
+
+/*TinyMce UI button*/
+i.mce-i-feedzy-icon {
+	background-image:  url('../img/feedzy.png');
+	background-image:  none, url('../img/feedzy.svg'), url('../img/feedzy.png');
+}
