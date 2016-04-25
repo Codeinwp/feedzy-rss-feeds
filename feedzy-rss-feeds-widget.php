@@ -16,7 +16,7 @@ add_action( 'widgets_init', create_function( '', 'return register_widget("feedzy
 class feedzy_wp_widget extends WP_Widget {
 
 	//Constructor
-	function feedzy_wp_widget() {
+	function __construct() {
 		
         parent::__construct( false, $name = __( 'Feedzy RSS Feeds', 'feedzy_wp_widget' ) );
 		

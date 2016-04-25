@@ -5,7 +5,7 @@
  * Description: FEEDZY RSS Feeds is a small and lightweight plugin. Fast and easy to use, it aggregates RSS feeds into your WordPress site through simple shortcodes.				
  * Author: Themeisle
  * Author URI: http://themeisle.com
- * Version: 2.7.2
+ * Version: 2.8.1
  * Text Domain: feedzy_rss_translate
  * Text Domain Path: /langs
  */
@@ -25,7 +25,7 @@ if ( !defined( 'ABSPATH' ) ) {
  ***************************************************************/
 if ( !defined( 'FEEDZY_VERSION' ) ) {
 	
-    define( 'FEEDZY_VERSION', '2.7.1' );
+    define( 'FEEDZY_VERSION', '2.8.1' );
 	
 }
 

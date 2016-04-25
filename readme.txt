@@ -2,8 +2,8 @@
 Contributors: themeisle
 Tags: RSS, SimplePie, shortcode, feed, thumbnail, image, rss feeds, aggregator, tinyMCE, WYSIWYG, MCE, UI, flux, plugin, WordPress, widget, importer, XML, ATOM, API, parser
 Requires at least: 3.7
-Tested up to: 4.3.1
-Stable tag: 2.7.1
+Tested up to: 4.5
+Stable tag: 2.8.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -114,6 +114,11 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 == Changelog ==
+
+= 2.8 - 04/14/2016 = 
+* Tested on WP 4.5 with success! 
+* themeisle added as plugin author 
+* Fix a PHP7 warning in the widget contructor regarding [this topic](https://wordpress.org/support/topic/php7-debug-error?replies=1)
 
 = 2.7.1 =
 * Remove unnecessary and redundant feedzy_wp_widget_box div container in the widget's body
