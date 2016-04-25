@@ -49,12 +49,12 @@ By activating this plugin, your cover picture will be inserted into your RSS fee
 
 = Basic example =
 
-`[feedzy-rss feeds="http://b-website.com/feed"]`
+`[feedzy-rss feeds="http://themeisle.com/feed"]`
 
 
 = Advanced example =
 
-`[feedzy-rss feeds="http://b-website.com/feed" max="2" feed_title="yes" target="_blank" title="50" meta="yes" summary="yes" summarylength="300" thumb="yes" size="100" default="http://your-site/default-image.jpg" keywords_title="WordPress"]`
+`[feedzy-rss feeds="http://themeisle.com/feed" max="2" feed_title="yes" target="_blank" title="50" meta="yes" summary="yes" summarylength="300" thumb="yes" size="100" default="http://your-site/default-image.jpg" keywords_title="WordPress"]`
 
 
 = Available Hooks =
@@ -87,7 +87,7 @@ By activating this plugin, your cover picture will be inserted into your RSS fee
 * German [ralfsteck](https://profiles.wordpress.org/ralfsteck/ "ralfsteck")
 * Spanish [Angel Calzado](http://sintaxisweb.es "Angel Calzado")
 
-Become a translator and send me your translation! [Contact-me](http://b-website.com/contact "Contact")
+Become a translator and send me your translation! [Contact-me](http://themeisle.com/contact "Contact")
 
 == Installation ==
 

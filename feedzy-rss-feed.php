@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: FEEDZY RSS Feeds by b*web
+ * Plugin Name: FEEDZY RSS Feeds
  * Plugin URI: http://themeisle.com/plugins/feedzy-rss-feeds/
  * Description: FEEDZY RSS Feeds is a small and lightweight plugin. Fast and easy to use, it aggregates RSS feeds into your WordPress site through simple shortcodes.				
  * Author: Themeisle
@@ -48,9 +48,8 @@ add_action( 'init', 'feedzy_rss_load_textdomain' );
 function feedzy_meta_links( $links, $file ) {
 	
 	if ( $file === 'feedzy-rss-feeds/feedzy-rss-feed.php' ) {
-		$links[] = '<a href="http://b-website.com/feedzy-rss-feeds-wordpress-plugin-using-simplepie" target="_blank" title="'. __( 'Documentation and examples', 'feedzy_rss_translate' ) .'">'. __( 'Documentation and examples', 'feedzy_rss_translate' ) .'</a>';
-		$links[] = '<a href="http://b-website.com/category/plugins" target="_blank" title="'. __( 'More b*web Plugins', 'feedzy_rss_translate' ) .'">'. __( 'More b*web Plugins', 'feedzy_rss_translate' ) .'</a>';
-		$links[] = '<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7Z6YVM63739Y8" target="_blank" title="' . __( 'Donate to this plugin &#187;' ) . '"><strong>' . __( 'Donate to this plugin &#187;' ) . '</strong></a>';
+		$links[] = '<a href="http://docs.themeisle.com/article/277-feedzy-rss-feeds-hooks" target="_blank" title="'. __( 'Documentation and examples', 'feedzy_rss_translate' ) .'">'. __( 'Documentation and examples', 'feedzy_rss_translate' ) .'</a>';
+		$links[] = '<a href="http://themeisle.com/wordpress-plugins/" target="_blank" title="'. __( 'More Plugins', 'feedzy_rss_translate' ) .'">'. __( 'More Plugins', 'feedzy_rss_translate' ) .'</a>';
 	}
 	
 	return $links;

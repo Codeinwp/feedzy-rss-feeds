@@ -1,7 +1,7 @@
 /**
- * Plugin Name: FEEDZY RSS Feeds by b*web
- * Plugin URI: http://b-website.com/
- * Author: Brice CAPOBIANCO
+ * Plugin Name: FEEDZY RSS Feeds
+ * Plugin URI: http://themeisle.com/plugins/feedzy-rss-feeds/
+ * Author: Themeisle
  */
 (function() {
 	tinymce.PluginManager.add('feedzy_mce_button', function( editor, url ) {
@@ -114,7 +114,7 @@
 						if(e.data.feeds != ''){
 							e.data.feeds = 'feeds="' + e.data.feeds + '" ';
 						} else {
-							e.data.feeds = 'feeds="http://b-website.com/feed" ';
+							e.data.feeds = 'feeds="http://themeisle.com/feed" ';
 						}
 						if(e.data.maximum != ''){
 							e.data.maximum = 'max="' + e.data.maximum + '" ';
