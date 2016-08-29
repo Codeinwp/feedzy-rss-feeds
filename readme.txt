@@ -76,7 +76,7 @@ By activating this plugin, your cover picture will be inserted into your RSS fee
 * feedzy_default_error
 * shortcode_atts_feedzy_default
 `
-This plugin is maintained and supported by Themeisle, check out some of the other <a href="http://themeisle.com/wordpress-plugins/" rel="friend">WordPress plugins</a> and <a href="http://themeisle.com/wordpress-themes/free/" rel="friend">free themes</a> we've developed.
+This plugin is maintained and supported by Themeisle, check out some of the other <a href="http://themeisle.com/wordpress-plugins/" rel="nofollow">WordPress plugins</a> and <a href="http://themeisle.com/wordpress-themes/free/" rel="nofollow">free themes</a> we've developed.
  
 = Languages =
 
