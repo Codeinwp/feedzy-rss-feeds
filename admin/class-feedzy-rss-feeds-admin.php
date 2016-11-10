@@ -8,7 +8,6 @@
  * @package    Feedzy_Rss_Feeds
  * @subpackage Feedzy_Rss_Feeds/admin
  */
-
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -19,9 +18,11 @@
  * @subpackage Feedzy_Rss_Feeds/admin
  * @author     Themeisle <friends@themeisle.com>
  */
-
 require_once( 'class-abstract-feedzy-rss-feeds-admin.php' );
 
+/**
+ * Class Feedzy_Rss_Feeds_Admin
+ */
 class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Abstract {
 
 	/**

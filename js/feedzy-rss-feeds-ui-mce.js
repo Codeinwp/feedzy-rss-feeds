@@ -33,9 +33,9 @@
 							name: 'feed_title',
 							label: editor.getLang( 'feedzy_tinymce_plugin.feed_title' ),
 							'values': [
-								{text: editor.getLang( 'feedzy_tinymce_plugin.text_default' ), value: ''},
-								{text: editor.getLang( 'feedzy_tinymce_plugin.text_no' ), value: 'no'},
-								{text: editor.getLang( 'feedzy_tinymce_plugin.text_yes' ), value: 'yes'},
+								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_default' ), value: '' },
+								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_no' ), value: 'no' },
+								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_yes' ), value: 'yes' }
 							]
 					},
 						{
@@ -43,12 +43,12 @@
 							name: 'target',
 							label: editor.getLang( 'feedzy_tinymce_plugin.target' ),
 							'values': [
-								{text: editor.getLang( 'feedzy_tinymce_plugin.text_default' ), value: ''},
-								{text: '_blank', value: '_blank'},
-								{text: '_self', value: '_self'},
-								{text: '_parent', value: '_parent'},
-								{text: '_top', value: '_top'},
-								{text: 'framename', value: 'framename'}
+								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_default' ), value: '' },
+								{ text: '_blank', value: '_blank' },
+								{ text: '_self', value: '_self' },
+								{ text: '_parent', value: '_parent' },
+								{ text: '_top', value: '_top' },
+								{ text: 'framename', value: 'framename' }
 							]
 					},
 						{
@@ -62,9 +62,9 @@
 							name: 'meta',
 							label: editor.getLang( 'feedzy_tinymce_plugin.meta' ),
 							'values': [
-								{text: editor.getLang( 'feedzy_tinymce_plugin.text_default' ), value: ''},
-								{text: editor.getLang( 'feedzy_tinymce_plugin.text_no' ), value: 'no'},
-								{text: editor.getLang( 'feedzy_tinymce_plugin.text_yes' ), value: 'yes'},
+								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_default' ), value: '' },
+								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_no' ), value: 'no' },
+								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_yes' ), value: 'yes' }
 							]
 					},
 						{
@@ -72,9 +72,9 @@
 							name: 'summary',
 							label: editor.getLang( 'feedzy_tinymce_plugin.summary' ),
 							'values': [
-								{text: editor.getLang( 'feedzy_tinymce_plugin.text_default' ), value: ''},
-								{text: editor.getLang( 'feedzy_tinymce_plugin.text_no' ), value: 'no'},
-								{text: editor.getLang( 'feedzy_tinymce_plugin.text_yes' ), value: 'yes'},
+								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_default' ), value: '' },
+								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_no' ), value: 'no' },
+								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_yes' ), value: 'yes' }
 							]
 					},
 						{
@@ -88,10 +88,10 @@
 							name: 'thumb',
 							label: editor.getLang( 'feedzy_tinymce_plugin.thumb' ),
 							'values': [
-								{text: editor.getLang( 'feedzy_tinymce_plugin.text_default' ), value: ''},
-								{text: editor.getLang( 'feedzy_tinymce_plugin.text_no' ), value: 'no'},
-								{text: editor.getLang( 'feedzy_tinymce_plugin.text_yes' ), value: 'yes'},
-								{text: editor.getLang( 'feedzy_tinymce_plugin.text_auto' ), value: 'auto'},
+								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_default' ), value: '' },
+								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_no' ), value: 'no' },
+								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_yes' ), value: 'yes' },
+								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_auto' ), value: 'auto' }
 							]
 					},
 						{

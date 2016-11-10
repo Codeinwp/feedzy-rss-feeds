@@ -32,8 +32,7 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 	/**
 	 * The Feedzy_Rss_feeds_widget constructor method
 	 *
-	 * @param   Feedzy_Rss_Feeds_Admin $plugin_admin
-	 * @return  void
+	 * @param   Feedzy_Rss_Feeds_Admin $plugin_admin The Feedzy_Rss_Feeds_Admin object.
 	 */
 	public function __construct( $plugin_admin ) {
 		parent::__construct( false, $name = __( 'Feedzy RSS Feeds', 'feedzy_wp_widget' ) );
@@ -44,8 +43,6 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 
 	/**
 	 * The register method for registering this widget class
-	 *
-	 * @return  void
 	 */
 	public function registerWidget() {
 		register_widget( $this );
@@ -56,7 +53,7 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 	 *
 	 * TODO Improve clean html from code
 	 *
-	 * @return  void
+	 * @param string $instance The Widget instance.
 	 */
 	public function form( $instance ) {
 		// Check values
@@ -174,7 +171,14 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 
 	}
 
-	// Update widget
+	/**
+	 *
+	 * The update method
+	 *
+	 * @param array $new_instance The new widget instance.
+	 * @param array $old_instance The old widget instance.
+	 * @return array
+	 */
 	public function update( $new_instance, $old_instance ) {
 
 		$instance = $old_instance;
@@ -207,7 +211,13 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 
 	}
 
-	// Display widget
+	/**
+	 *
+	 * The widget function
+	 *
+	 * @param array $args     The args to use.
+	 * @param array $instance The widget instance.
+	 */
 	public function widget( $args, $instance ) {
 
 		extract( $args );

@@ -11,7 +11,7 @@
 /**
  * The Feedzy RSS functions of the plugin.
  *
- * TODO description
+ * Abstract class containing functions for the Feedzy Admin Class
  *
  * @package    Feedzy_Rss_Feeds
  * @subpackage Feedzy_Rss_Feeds/admin
@@ -41,8 +41,8 @@ abstract class Feedzy_Rss_Feeds_Abstract {
 	 * @return  string
 	 */
 	public function feedzy_default_error_notice( $error, $feedURL  ) {
-		error_log( 'Feedzy RSS Feeds - related feed: ' . $feedURL . ' - Error message: ' . feedzy_array_obj_string( $error ) );
-		return '<div id="message" class="error" data-error"' . esc_attr( feedzy_array_obj_string( $error ) ) . '"><p>' . __( 'Sorry, this feed is currently unavailable or does not exists anymore.', 'feedzy_rss_translate' ) . '</p></div>';
+		error_log( 'Feedzy RSS Feeds - related feed: ' . $feedURL . ' - Error message: ' . $this->feedzy_array_obj_string( $error ) );
+		return '<div id="message" class="error" data-error"' . esc_attr( $this->feedzy_array_obj_string( $error ) ) . '"><p>' . __( 'Sorry, this feed is currently unavailable or does not exists anymore.', 'feedzy_rss_translate' ) . '</p></div>';
 	}
 
 	/**
@@ -142,14 +142,16 @@ abstract class Feedzy_Rss_Feeds_Abstract {
 		// Content image
 		if ( empty( $theThumbnail ) ) {
 			$feedDescription = $item->get_content();
-			$theThumbnail = $this->feedzy_returnImage( $feedDescription );
+			$theThumbnail = $this->feedzy_return_image( $feedDescription );
 		}
 
 		// Description image
 		if ( empty( $theThumbnail ) ) {
 			$feedDescription = $item->get_description();
-			$theThumbnail = $this->feedzy_returnImage( $feedDescription );
+			$theThumbnail = $this->feedzy_return_image( $feedDescription );
 		}
+
+		dbgx_trace_var( $theThumbnail, false );
 
 		return $theThumbnail;
 	}
@@ -160,14 +162,14 @@ abstract class Feedzy_Rss_Feeds_Abstract {
 	 * @param   string $string     A string with an <img/> tag.
 	 * @return  string
 	 */
-	public function feedzy_returnImage( $string ) {
+	public function feedzy_return_image( $string ) {
 		$img = html_entity_decode( $string, ENT_QUOTES, 'UTF-8' );
 		$pattern = '/<img[^>]+\>/i';
 		preg_match( $pattern, $img, $matches );
 		if ( isset( $matches[0] ) ) {
 			$blacklistCount = 0;
 			foreach ( $matches as $matche ) {
-				$link = $this->feedzy_scrapeImage( $matche );
+				$link = $this->feedzy_scrape_image( $matche );
 				$blacklist = array();
 				$blacklist = apply_filters( 'feedzy_feed_blacklist_images', $this->feedzy_blacklist_images( $blacklist ) );
 				foreach ( $blacklist as $string ) {
@@ -181,10 +183,17 @@ abstract class Feedzy_Rss_Feeds_Abstract {
 			if ( $blacklistCount == 0 ) { return $link;
 			}
 		}
-		return;
+		return '';
 	}
 
-	function feedzy_scrapeImage( $string, $link = '' ) {
+	/**
+	 * Scrape an image for link from a string with an <img/>
+	 *
+	 * @param   string $string  A string with an <img/> tag.
+	 * @param   string $link    The link to search for.
+	 * @return  string
+	 */
+	function feedzy_scrape_image( $string, $link = '' ) {
 		$pattern = '/src=[\'"]?([^\'" >]+)[\'" >]/';
 		preg_match( $pattern, $string, $link );
 		if ( isset( $link[1] ) ) {
@@ -283,8 +292,8 @@ abstract class Feedzy_Rss_Feeds_Abstract {
 	/**
 	 * Check title for keywords
 	 *
-	 * @param   boolean $continue
-	 * @param   string  $keywords_title  The keywords for title.
+	 * @param   boolean $continue A boolean to stop the script.
+	 * @param   array   $keywords_title  The keywords for title.
 	 * @param   object  $item  The feed item.
 	 * @param   string  $feedURL  The feed URL.
 	 * @return  boolean
@@ -307,7 +316,7 @@ abstract class Feedzy_Rss_Feeds_Abstract {
 	 * @param   string $content  The item feed content.
 	 * @return  string
 	 */
-	public function feedzy_insert_thumbnail_RSS( $content ) {
+	public function feedzy_insert_thumbnail_rss( $content ) {
 		global $post;
 		if ( has_post_thumbnail( $post->ID ) ) {
 			$content = '' . get_the_post_thumbnail( $post->ID, 'thumbnail' ) . '' . $content;
@@ -318,10 +327,8 @@ abstract class Feedzy_Rss_Feeds_Abstract {
 	/**
 	 * Include cover picture (medium) to rss feed enclosure
 	 * and media:content
-	 *
-	 * @return  string
 	 */
-	public function feedzy_include_thumbnail_RSS() {
+	public function feedzy_include_thumbnail_rss() {
 		global $post;
 
 		if ( has_post_thumbnail( $post->ID ) ) {
@@ -407,10 +414,7 @@ abstract class Feedzy_Rss_Feeds_Abstract {
 			$summarylength = '';
 		}
 
-		if ( ! empty( $default ) ) {
-			$default = $default;
-
-		} else {
+		if ( empty( $default ) ) {
 			$default = apply_filters( 'feedzy_default_image', $default, $feedURL );
 		}
 

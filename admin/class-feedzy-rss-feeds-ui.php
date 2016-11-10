@@ -18,7 +18,6 @@
  * @subpackage Feedzy_Rss_Feeds/admin
  * @author     Themeisle <friends@themeisle.com>
  */
-
 class Feedzy_Rss_Feeds_Ui {
 
 	/**
@@ -52,8 +51,9 @@ class Feedzy_Rss_Feeds_Ui {
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    3.0.0
-	 * @param      string $plugin_name       The name of this plugin.
-	 * @param      string $version    The version of this plugin.
+	 * @param      string                  $plugin_name    The name of this plugin.
+	 * @param      string                  $version        The version of this plugin.
+	 * @param      Feedzy_Rss_Feeds_Loader $loader         The version of this plugin.
 	 */
 	public function __construct( $plugin_name, $version, $loader ) {
 
@@ -63,7 +63,10 @@ class Feedzy_Rss_Feeds_Ui {
 
 	}
 
-	public function registerInit() {
+	/**
+	 * Initialize the hooks and filters for the tinymce button
+	 */
+	public function register_init() {
 		if ( current_user_can( 'edit_posts' ) && current_user_can( 'edit_pages' ) ) {
 			if ( 'true' == get_user_option( 'rich_editing' ) ) {
 

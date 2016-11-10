@@ -1,16 +1,24 @@
 <?php
 /**
- * ************************************************************
+ * The Language function file for tinymce.
+ *
+ * @link       http://themeisle.com
+ * @since      3.0.0
+ *
+ * @package    Feedzy_Rss_Feeds
+ * @subpackage Feedzy_Rss_Feeds/admin
+ */
+/**
+ *
  * SECURITY : Exit if accessed directly
- ***************************************************************/
+ */
 if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Direct access not allowed!' );
 }
 
 
 /**
-
-*************************************************************
+ *
  * Translation for TinyMCE
  */
 
@@ -18,11 +26,17 @@ if ( ! class_exists( '_WP_Editors' ) ) {
 	require( ABSPATH . WPINC . '/class-wp-editor.php' );
 }
 
+/**
+ *
+ * The method that returns the translation array
+ *
+ * @return string
+ */
 function feedzy_tinymce_translation() {
 
 	$strings = array(
 		'plugin_title' 	=> __( 'Insert FEEDZY RSS Feeds Shortcode', 'feedzy_rss_translate' ),
-		'feeds' 		=> __( 'The feed(s) URL (comma-separated list).', 'feedzy_rss_translate' ) . ' ' . __( 'If your feed is not valid, it won\'t work.', 'feedzy_rss_translate' ),
+		'feeds' 		=> __( 'The feed(s) URL (comma-separated list).', 'feedzy_rss_translate' ) . ' ' . __( 'Check feed before insert.', 'feedzy_rss_translate' ),
 		'maximum' 		=> __( 'Number of items to display.', 'feedzy_rss_translate' ),
 		'feed_title' 	=> __( 'Should we display the RSS title?', 'feedzy_rss_translate' ),
 		'target' 		=> __( 'Links may be opened in the same window or a new tab.', 'feedzy_rss_translate' ),

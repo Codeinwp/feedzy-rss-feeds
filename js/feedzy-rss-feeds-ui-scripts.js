@@ -5,12 +5,12 @@
  *
  * @package feedzy-rss-feeds
  */
-jQuery( document ).ready( function($) {
+jQuery( document ).ready(function ($) {
 
-	function feedzyMediaLibrary(){
-		$( document ).on( 'click', 'i.mce-i-feedzy-icon', function() {
-				setTimeout( function() {
-				$( '.mce-feedzy-validator' ).parent('div').find('label').append(
+	function feedzyMediaLibrary() {
+		$( document ).on('click', 'i.mce-i-feedzy-icon', function () {
+			setTimeout(function () {
+				$( '.mce-feedzy-validator' ).parent( 'div' ).find( 'label' ).append(
 					' <a href="https://validator.w3.org/feed/" target="_blank" style="font-weight: 800;" title="Validate my feed!">Validate my feed!</a>'
 				);
 				$( '.mce-feedzy-media' ).after(
@@ -22,30 +22,31 @@ jQuery( document ).ready( function($) {
 			}, 100);
 		});
 
-		$( document ).on( 'click', '.mce-feedzy-media-button', function(){
-			var $this = $(this);
-			 var wireframe;
-			 if ( wireframe ) {
-				 wireframe.open();
-				 return;
-			 }
+		$( document ).on('click', '.mce-feedzy-media-button', function () {
+			var $this = $( this );
+			var wireframe;
+			if (wireframe) {
+				wireframe.open();
+				return;
+			}
 
-			 wireframe = wp.media.frames.wireframe = wp.media({
-				 /*title: 'Media Library Title',
-				 button: {
-					 text: 'Media Library Button Title'
-				 },*/
-				 multiple: false
-			 });
+			wireframe = wp.media.frames.wireframe = wp.media({
+				/*title: 'Media Library Title',
+                 button: {
+                 text: 'Media Library Button Title'
+                 },*/
+				multiple: false
+			});
 
-			 wireframe.on( 'select', function() {
-				attachment = wireframe.state().get('selection').first().toJSON();
-				$this.parent().find('.mce-feedzy-media').val(attachment.url);
-			 });
+			wireframe.on('select', function () {
+				var attachment = wireframe.state().get( 'selection' ).first().toJSON();
+				$this.parent().find( '.mce-feedzy-media' ).val( attachment.url );
+			});
 
-			 wireframe.open();
+			wireframe.open();
 		});
-	};
+	}
+
 	feedzyMediaLibrary();
 
 });
