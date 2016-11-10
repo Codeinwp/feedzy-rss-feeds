@@ -1,0 +1,24 @@
+{
+  "name": "feedzy-rss-feeds",
+  "version": "3.0.0",
+  "description": "FEEDZY RSS Feeds is a small and lightweight RSS aggregator plugin",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Codeinwp/feedzy-rss-feeds.git"
+  },
+  "keywords": [
+    "wordpress-plugin",
+    "rss",
+    "feed"
+  ],
+  "author": "Themeisle <friends@themeisle.com>",
+  "license": "GPL-3.0+",
+  "bugs": {
+    "url": "https://github.com/Codeinwp/feedzy-rss-feeds/issues"
+  },
+  "homepage": "https://github.com/Codeinwp/feedzy-rss-feeds#readme",
+  "devDependencies": {
+    "grunt-plugin-fleet": "https://github.com/Codeinwp/grunt-plugin-fleet/tarball/master",
+    "load-project-config": "~0.2.0"
+  }
+}

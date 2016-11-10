@@ -1,0 +1,44 @@
+language: php
+
+##  PHP versions to test  against
+php:
+    - "7.0"
+    - "5.6"
+    - "5.5"
+    - "5.4"
+    - "5.3"
+    - "5.2"
+sudo: false
+env:
+    - WP_VERSION=master WP_MULTISITE=0
+install:
+  - . $HOME/.nvm/nvm.sh
+  - nvm install stable
+  - nvm use stable
+  - npm install
+  - npm install grunt-cli -g
+before_script:
+    ## Install the wordpress latest version
+    - export WP_DEVELOP_DIR=/tmp/wordpress/
+    - mkdir -p $WP_DEVELOP_DIR
+    - git clone --depth=1 --branch="$WP_VERSION" git://develop.git.wordpress.org/ $WP_DEVELOP_DIR
+    - plugin_slug=$(basename $(pwd))
+    - plugin_dir=$WP_DEVELOP_DIR/src/wp-content/plugins/$plugin_slug
+    - cd ..
+    - mv $plugin_slug $plugin_dir
+    - cd $WP_DEVELOP_DIR
+    - cp wp-tests-config-sample.php wp-tests-config.php
+    - sed -i "s/youremptytestdbnamehere/wordpress_test/" wp-tests-config.php
+    - sed -i "s/yourusernamehere/root/" wp-tests-config.php
+    - sed -i "s/yourpasswordhere//" wp-tests-config.php
+    - mysql -e 'CREATE DATABASE wordpress_test;' -uroot
+
+     ## install PHPCS and Wordpress standards
+    - pear install pear/PHP_CodeSniffer
+    - mkdir wordpress-coding-standards && curl -L https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/archive/master.tar.gz | tar xz --strip-components=1 -C wordpress-coding-standards
+    - phpenv rehash
+    - phpcs --config-set installed_paths $WP_DEVELOP_DIR/wordpress-coding-standards
+    - phpenv rehash
+    - cd $plugin_dir
+script:
+     grunt travis

@@ -3,12 +3,12 @@ Contributors: themeisle,codeinwp
 Tags: RSS, SimplePie, shortcode, feed, thumbnail, image, rss feeds, aggregator, tinyMCE, WYSIWYG, MCE, UI, flux, plugin, WordPress, widget, importer, XML, ATOM, API, parser
 Requires at least: 3.7
 Tested up to: 4.5.2
-Stable tag: 2.8.1
+Stable tag: 3.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
- 
-FEEDZY RSS Feeds is a small & lightweight plugin. Fast and easy to use, it aggregates RSS feeds into your site with shortcodes & widgets. 
+
+FEEDZY RSS Feeds is a small & lightweight plugin. Fast and easy to use, it aggregates RSS feeds into your site with shortcodes & widgets.
 
 
 == Description ==
@@ -77,7 +77,7 @@ By activating this plugin, your cover picture will be inserted into your RSS fee
 * shortcode_atts_feedzy_default
 `
 This plugin is maintained and supported by Themeisle, check out some of the other <a href="http://themeisle.com/wordpress-plugins/" rel="nofollow">WordPress plugins</a> and <a href="http://themeisle.com/wordpress-themes/free/" rel="nofollow">free themes</a> we've developed.
- 
+
 = Languages =
 
 * English
@@ -115,9 +115,13 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 == Changelog ==
 
-= 2.8 - 04/14/2016 = 
-* Tested on WP 4.5 with success! 
-* themeisle added as plugin author 
+= 3.0.0 - 10/11/2016 =
+* Refactored code base from 2.8.1 to OOP style
+
+
+= 2.8 - 04/14/2016 =
+* Tested on WP 4.5 with success!
+* themeisle added as plugin author
 * Fix a PHP7 warning in the widget contructor regarding [this topic](https://wordpress.org/support/topic/php7-debug-error?replies=1)
 
 = 2.7.1 =
@@ -196,7 +200,7 @@ You have to check first if your feed is valid. Please test it here: https://vali
 = 2.3 =
 * New hook: feedzy_feed_items
 * New hook: feedzy_item_keyword
-* Introduce SimplePie native strip_htmltags() method 
+* Introduce SimplePie native strip_htmltags() method
 * Use PNG icon as SVG fallback on the visual editor button
 * Improve plugin's files structure
 * readme.txt and hooks documentation update

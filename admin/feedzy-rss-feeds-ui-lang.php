@@ -1,21 +1,25 @@
 <?php
-/***************************************************************
+/**
+ * ************************************************************
  * SECURITY : Exit if accessed directly
-***************************************************************/
-if ( !defined( 'ABSPATH' ) ) {
+ ***************************************************************/
+if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Direct access not allowed!' );
 }
 
 
-/***************************************************************
- * Translation for TinyMCE
- ***************************************************************/ 
+/**
 
-if ( ! class_exists( '_WP_Editors' ) )
-    require( ABSPATH . WPINC . '/class-wp-editor.php' );
+*************************************************************
+ * Translation for TinyMCE
+ */
+
+if ( ! class_exists( '_WP_Editors' ) ) {
+	require( ABSPATH . WPINC . '/class-wp-editor.php' );
+}
 
 function feedzy_tinymce_translation() {
-    
+
 	$strings = array(
 		'plugin_title' 	=> __( 'Insert FEEDZY RSS Feeds Shortcode', 'feedzy_rss_translate' ),
 		'feeds' 		=> __( 'The feed(s) URL (comma-separated list).', 'feedzy_rss_translate' ) . ' ' . __( 'If your feed is not valid, it won\'t work.', 'feedzy_rss_translate' ),
@@ -29,17 +33,17 @@ function feedzy_tinymce_translation() {
 		'thumb' 		=> __( 'Should we display the first image of the content if it is available?', 'feedzy_rss_translate' ),
 		'defaultimg' 	=> __( 'Default thumbnail URL if no image is found.', 'feedzy_rss_translate' ),
 		'size' 			=> __( 'Thumblails dimension. Do not include "px". Eg: 150', 'feedzy_rss_translate' ),
-		'keywords_title'=> __( 'Only display item if title contains specific keyword(s) (comma-separated list/case sensitive).', 'feedzy_rss_translate' ),
+		'keywords_title' => __( 'Only display item if title contains specific keyword(s) (comma-separated list/case sensitive).', 'feedzy_rss_translate' ),
 		'text_default' 	=> __( 'Do not specify', 'feedzy_rss_translate' ),
 		'text_no' 		=> __( 'No', 'feedzy_rss_translate' ),
 		'text_yes' 		=> __( 'Yes', 'feedzy_rss_translate' ),
-		'text_auto' 	=> __( 'Auto', 'feedzy_rss_translate' )
+		'text_auto' 	=> __( 'Auto', 'feedzy_rss_translate' ),
 	);
-    
-	$locale = _WP_Editors::$mce_locale;
-    $translated = 'tinyMCE.addI18n("' . $locale . '.feedzy_tinymce_plugin", ' . json_encode( $strings ) . ");\n";
 
-     return $translated;
+	$locale = _WP_Editors::$mce_locale;
+	$translated = 'tinyMCE.addI18n("' . $locale . '.feedzy_tinymce_plugin", ' . json_encode( $strings ) . ");\n";
+
+	return $translated;
 }
 
 $strings = feedzy_tinymce_translation();
