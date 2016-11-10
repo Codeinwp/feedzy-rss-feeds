@@ -220,17 +220,15 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 	 */
 	public function widget( $args, $instance ) {
 
-		extract( $args );
-
 		$title = apply_filters( 'widget_title', $instance['title'] );
 		$textarea = apply_filters( 'widget_textarea', empty( $instance['textarea'] ) ? '' : $instance['textarea'], $instance );
 
 		// Display the widget body
-		echo $before_widget;
+		echo $args['before_widget'];
 
 		// Check if title is set
 		if ( $title ) {
-			echo $before_title . $title . $after_title;
+			echo $args['before_title'] . $title . $args['after_title'];
 		}
 
 		// Check if text intro is set
@@ -279,7 +277,7 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 			'keywords_title' 	=> $instance['keywords_title'],
 		) );
 
-		echo $after_widget;
+		echo $args['after_widget'];
 
 	}
 
