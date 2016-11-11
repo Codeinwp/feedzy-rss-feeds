@@ -11,10 +11,16 @@
     "rss",
     "feed"
   ],
+  "textdomain": "feedzy-rss-feeds-translate",
   "author": "Themeisle <friends@themeisle.com>",
   "license": "GPL-3.0+",
   "bugs": {
     "url": "https://github.com/Codeinwp/feedzy-rss-feeds/issues"
+  },
+  "pot": {
+    "reportmsgidbugsto": "https://github.com/Codeinwp/feedzy-rss-feeds/issues",
+    "languageteam": "Themeisle Translate <friends@themeisle.com>",
+    "lasttranslator": "Themeisle Translate Team <friends@themeisle.com>"
   },
   "homepage": "https://github.com/Codeinwp/feedzy-rss-feeds#readme",
   "devDependencies": {
