@@ -98,7 +98,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Abstract {
 		 * class.
 		 */
 
-		//wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . '../js/feedzy-rss-feeds-admin.js', array( 'jquery' ), $this->version, false );
+		// wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . '../js/feedzy-rss-feeds-admin.js', array( 'jquery' ), $this->version, false );
 	}
 
 	/**
