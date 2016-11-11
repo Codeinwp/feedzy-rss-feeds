@@ -5,6 +5,8 @@
  *
  * @package feedzy-rss-feeds
  */
+/* global tinymce */
+/* jshint unused:false */
 (function() {
 	tinymce.PluginManager.add('feedzy_mce_button', function( editor, url ) {
 		editor.addButton( 'feedzy_mce_button', {
@@ -115,59 +117,59 @@
 					}
 					],
 					onsubmit: function( e ) {
-						if (e.data.feeds != '') {
+						if (e.data.feeds !== '') {
 							e.data.feeds = 'feeds="' + e.data.feeds + '" ';
 						} else {
 							e.data.feeds = 'feeds="http://themeisle.com/feed" ';
 						}
-						if (e.data.maximum != '') {
+						if (e.data.maximum !== '') {
 							e.data.maximum = 'max="' + e.data.maximum + '" ';
 						}
-						if (e.data.feed_title != '') {
+						if (e.data.feed_title !== '') {
 							e.data.feed_title = 'feed_title="' + e.data.feed_title + '" ';
 						}
-						if (e.data.target != '') {
+						if (e.data.target !== '') {
 							e.data.target = 'target="' + e.data.target + '" ';
 						}
-						if (e.data.title != '') {
+						if (e.data.title !== '') {
 							e.data.title = 'title="' + e.data.title + '" ';
 						}
-						if (e.data.meta != '') {
+						if (e.data.meta !== '') {
 							e.data.meta = 'meta="' + e.data.meta + '" ';
 						}
-						if (e.data.summary != '') {
+						if (e.data.summary !== '') {
 							e.data.summary = 'summary="' + e.data.summary + '" ';
 						}
-						if (e.data.summarylength != '') {
+						if (e.data.summarylength !== '') {
 							e.data.summarylength = 'summarylength="' + e.data.summarylength + '" ';
 						}
-						if (e.data.thumb != '') {
+						if (e.data.thumb !== '') {
 							e.data.thumb = 'thumb="' + e.data.thumb + '" ';
 						}
-						if (e.data.defaultimg != '') {
+						if (e.data.defaultimg !== '') {
 							e.data.defaultimg = 'default="' + e.data.defaultimg + '" ';
 						}
-						if (e.data.size != '') {
+						if (e.data.size !== '') {
 							e.data.size = 'size="' + e.data.size + '" ';
 						}
-						if (e.data.keywords_title != '') {
+						if (e.data.keywords_title !== '') {
 							e.data.keywords_title = 'keywords_title="' + e.data.keywords_title + '" ';
 						}
 						editor.insertContent(
-							'[feedzy-rss '
-								+ e.data.feeds
-								+ e.data.maximum
-								+ e.data.feed_title
-								+ e.data.target
-								+ e.data.title
-								+ e.data.meta
-								+ e.data.summary
-								+ e.data.summarylength
-								+ e.data.thumb
-								+ e.data.defaultimg
-								+ e.data.size
-								+ e.data.keywords_title
-							+ ']'
+							'[feedzy-rss ' +
+								e.data.feeds +
+								e.data.maximum +
+								e.data.feed_title +
+								e.data.target +
+								e.data.title +
+								e.data.meta +
+								e.data.summary +
+								e.data.summarylength +
+								e.data.thumb +
+								e.data.defaultimg +
+								e.data.size +
+								e.data.keywords_title +
+							']'
 						);
 					}
 				});

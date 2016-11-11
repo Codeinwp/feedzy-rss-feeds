@@ -483,7 +483,7 @@ abstract class Feedzy_Rss_Feeds_Abstract {
 							$contentThumb .= '<span class="default" style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:  url(' . $shortcode_atts['default'] . ');" alt="' . $item->get_title() . '"></span>';
 							$contentThumb .= '<span class="fetched" style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:  url(' . $theThumbnail . ');" alt="' . $item->get_title() . '"></span>';
 						} elseif ( empty( $theThumbnail ) && $shortcode_atts['thumb'] == 'yes' ) {
-							$contentThumb .= '<span style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:url(' . $default . ');" alt="' . $item->get_title() . '"></span>';
+							$contentThumb .= '<span style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:url(' . $shortcode_atts['default'] . ');" alt="' . $item->get_title() . '"></span>';
 						}
 
 						$contentThumb .= '</a>';

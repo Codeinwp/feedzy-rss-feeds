@@ -73,7 +73,7 @@ class Feedzy_Rss_Feeds_Ui {
 				$this->loader->add_filter( 'mce_external_plugins', $this, 'feedzy_tinymce_plugin', 10, 1 );
 				$this->loader->add_filter( 'mce_buttons', $this, 'feedzy_register_mce_button', 10, 1 );
 
-				$this->loader->add_action( 'admin_enqueue_scripts', $this, 'enqueue_scripts' );
+				$this->loader->add_action( 'admin_enqueue_scripts', $this, 'enqueue_scripts', 10 );
 
 				$this->loader->run();
 			}
