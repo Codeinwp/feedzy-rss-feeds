@@ -344,22 +344,14 @@ abstract class Feedzy_Rss_Feeds_Abstract {
 	}
 
 	/**
-	 * Main shortcode function
+	 * Returns the attributes of the shortcode
 	 *
-	 * @param   array  $atts  Shortcode attributes.
-	 * @param   string $content  The item feed content.
-	 * @return  mixed
+	 * @param array $atts The attributes passed by WordPress.
+	 * @return array
 	 */
-	public function feedzy_rss( $atts, $content = '' ) {
-		$count = 0;
-
-		// Load SimplePie if not already
-		if ( ! class_exists( 'SimplePie' ) ) {
-			require_once( ABSPATH . WPINC . '/class-feed.php' );
-		}
-
+	public function get_short_code_attributes( $atts ) {
 		// Retrieve & extract shorcode parameters
-		$shortcode_atts = shortcode_atts( array(
+		$sc = shortcode_atts( array(
 			'feeds' => '', 			// comma separated feeds url
 			'max' => '5', 			// number of feeds items (0 for unlimited)
 			'feed_title' => 'yes', 	// display feed title yes/no
@@ -371,16 +363,26 @@ abstract class Feedzy_Rss_Feeds_Abstract {
 			'thumb' => 'yes', 		// yes, no, auto
 			'default' => '', 		// default thumb URL if no image found (only if thumb is set to yes or auto)
 			'size' => '', 			// thumbs pixel size
-			'keywords_title' => '',// only display item if title contains specific keywords (comma-separated list/case sensitive)
+			'keywords_title' => '', // only display item if title contains specific keywords (comma-separated list/case sensitive)
 		), $atts, 'feedzy_default' );
 
+		return $sc;
+	}
+
+	/**
+	 * Get the feed url based on the feeds passed from the shortcode attribute.
+	 *
+	 * @param string $feeds The feeds from the shortcode attribute.
+	 * @return array|mixed
+	 */
+	public function get_feed_url( $feeds ) {
 		// Use "shortcode_atts_feedzy_default" filter to edit shortcode parameters default values or add your owns.
-		if ( ! empty( $shortcode_atts['feeds'] ) ) {
-			$shortcode_atts['feeds'] = rtrim( $shortcode_atts['feeds'], ',' );
-			$shortcode_atts['feeds'] = explode( ',', $shortcode_atts['feeds'] );
+		if ( ! empty( $feeds ) ) {
+			$feeds = rtrim( $feeds, ',' );
+			$feeds = explode( ',', $feeds );
 
 			// Remove SSL from HTTP request to prevent fetching errors
-			foreach ( $shortcode_atts['feeds'] as $feed ) {
+			foreach ( $feeds as $feed ) {
 				$feedURL[] = preg_replace( '/^https:/i', 'http:', $feed );
 			}
 
@@ -388,49 +390,63 @@ abstract class Feedzy_Rss_Feeds_Abstract {
 				$feedURL = $feedURL[0];
 			}
 		}
+		return $feedURL;
+	}
 
-		if ( $shortcode_atts['max'] == '0' ) {
-			$shortcode_atts['max'] = '999';
-		} elseif ( empty( $shortcode_atts['max'] ) || ! ctype_digit( $shortcode_atts['max'] ) ) {
-			$shortcode_atts['max'] = '5';
+	/**
+	 * Sanitizes the shortcode array and sets the defaults
+	 *
+	 * @param array  $sc         The shorcode attributes array.
+	 * @param string $feedURL    The feed url.
+	 * @return mixed
+	 */
+	public function sanitize_attr( $sc, $feedURL ) {
+		if ( $sc['max'] == '0' ) {
+			$sc['max'] = '999';
+		} elseif ( empty( $sc['max'] ) || ! ctype_digit( $sc['max'] ) ) {
+			$sc['max'] = '5';
 		}
 
-		if ( empty( $shortcode_atts['size'] ) || ! ctype_digit( $shortcode_atts['size'] ) ) {
-			$shortcode_atts['size'] = '150';
+		if ( empty( $sc['size'] ) || ! ctype_digit( $sc['size'] ) ) {
+			$sc['size'] = '150';
 		}
-		$sizes = array( 'width' => $shortcode_atts['size'], 'height' => $shortcode_atts['size'] );
+
+		if ( ! empty( $sc['title'] ) && ! ctype_digit( $sc['title'] ) ) {
+			$sc['title'] = '';
+		}
+
+		if ( ! empty( $sc['keywords_title'] ) ) {
+			$sc['keywords_title'] = rtrim( $sc['keywords_title'], ',' );
+			$sc['keywords_title'] = array_map( 'trim', explode( ',', $sc['keywords_title'] ) );
+		}
+
+		if ( ! empty( $sc['summarylength'] ) && ! ctype_digit( $sc['summarylength'] ) ) {
+			$sc['summarylength'] = '';
+		}
+
+		if ( empty( $sc['default'] ) ) {
+			$sc['default'] = apply_filters( 'feedzy_default_image', $sc['default'], $feedURL );
+		}
+
+		return $sc;
+	}
+
+	/**
+	 * Render the content to be displayed
+	 *
+	 * @param array  $sc         The shorcode attributes array.
+	 * @param object $feed       The feed object.
+	 * @param string $content    The original content.
+	 * @param string $feedURL    The feed url.
+	 * @return string
+	 */
+	public function render_content( $sc, $feed, $content, $feedURL ) {
+		$count = 0;
+
+		$sc = $this->sanitize_attr( $sc, $feedURL );
+
+		$sizes = array( 'width' => $sc['size'], 'height' => $sc['size'] );
 		$sizes = apply_filters( 'feedzy_thumb_sizes', $sizes, $feedURL );
-
-		if ( ! empty( $shortcode_atts['title'] ) && ! ctype_digit( $shortcode_atts['title'] ) ) {
-			$shortcode_atts['title'] = '';
-		}
-
-		if ( ! empty( $shortcode_atts['keywords_title'] ) ) {
-			$shortcode_atts['keywords_title'] = rtrim( $shortcode_atts['keywords_title'], ',' );
-			$shortcode_atts['keywords_title'] = array_map( 'trim', explode( ',', $shortcode_atts['keywords_title'] ) );
-		}
-
-		if ( ! empty( $shortcode_atts['summarylength'] ) && ! ctype_digit( $shortcode_atts['summarylength'] ) ) {
-			$shortcode_atts['summarylength'] = '';
-		}
-
-		if ( empty( $shortcode_atts['default'] ) ) {
-			$shortcode_atts['default'] = apply_filters( 'feedzy_default_image', $shortcode_atts['default'], $feedURL );
-		}
-
-		// Load SimplePie Instance
-		$feed = new SimplePie();
-		$feed -> set_feed_url( $feedURL );
-		$feed -> enable_cache( true );
-		$feed -> enable_order_by_date( true );
-		$feed -> set_cache_class( 'WP_Feed_Cache' );
-		$feed -> set_file_class( 'WP_SimplePie_File' );
-		$feed -> set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', 7200, $feedURL ) );
-		do_action_ref_array( 'wp_feed_options', array( $feed, $feedURL ) );
-		$feed -> strip_comments( true );
-		$feed -> strip_htmltags( array( 'base', 'blink', 'body', 'doctype', 'embed', 'font', 'form', 'frame', 'frameset', 'html', 'iframe', 'input', 'marquee', 'meta', 'noscript', 'object', 'param', 'script', 'style' ) );
-		$feed -> init();
-		$feed -> handle_content_type();
 
 		// Display the error message
 		if ( $feed -> error() ) {
@@ -439,7 +455,7 @@ abstract class Feedzy_Rss_Feeds_Abstract {
 
 		$content .= '<div class="feedzy-rss">';
 
-		if ( $shortcode_atts['feed_title'] == 'yes' ) {
+		if ( $sc['feed_title'] == 'yes' ) {
 			$content .= '<div class="rss_header">';
 			$content .= '<h2><a href="' . $feed->get_permalink() . '" class="rss_title">' . html_entity_decode( $feed->get_title() ) . '</a> <span class="rss_description"> ' . $feed->get_description() . '</span></h2>';
 			$content .= '</div>';
@@ -451,17 +467,17 @@ abstract class Feedzy_Rss_Feeds_Abstract {
 		$items = apply_filters( 'feedzy_feed_items', $feed->get_items(), $feedURL );
 		foreach ( (array) $items as $item ) {
 
-			$continue = apply_filters( 'feedzy_item_keyword', true, $shortcode_atts['keywords_title'], $item, $feedURL );
+			$continue = apply_filters( 'feedzy_item_keyword', true, $sc['keywords_title'], $item, $feedURL );
 
 			if ( $continue == true ) {
 				// Count items
-				if ( $count >= $shortcode_atts['max'] ) {
+				if ( $count >= $sc['max'] ) {
 					break;
 				}
 				$count++;
 
 				// Fetch image thumbnail
-				if ( $shortcode_atts['thumb'] == 'yes' || $shortcode_atts['thumb'] == 'auto' ) {
+				if ( $sc['thumb'] == 'yes' || $sc['thumb'] == 'auto' ) {
 					$theThumbnail = $this->feedzy_retrieve_image( $item );
 				}
 
@@ -470,20 +486,23 @@ abstract class Feedzy_Rss_Feeds_Abstract {
 				// Build element DOM
 				$content .= '<li ' . $itemAttr . '>';
 
-				if ( $shortcode_atts['thumb'] == 'yes' || $shortcode_atts['thumb'] == 'auto' ) {
+				$itemLink = $item->get_permalink();
+				$newLink = $itemLink;
+
+				if ( $sc['thumb'] == 'yes' || $sc['thumb'] == 'auto' ) {
 					$contentThumb = '';
 
-					if ( ( ! empty( $theThumbnail ) && $shortcode_atts['thumb'] == 'auto' ) || $shortcode_atts['thumb'] == 'yes' ) {
+					if ( ( ! empty( $theThumbnail ) && $sc['thumb'] == 'auto' ) || $sc['thumb'] == 'yes' ) {
 
 						$contentThumb .= '<div class="rss_image" style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px;">';
-						$contentThumb .= '<a href="' . $item->get_permalink() . '" target="' . $shortcode_atts['target'] . '" title="' . $item->get_title() . '" >';
+						$contentThumb .= '<a href="' . $newLink . '" target="' . $sc['target'] . '" title="' . $item->get_title() . '" >';
 
 						if ( ! empty( $theThumbnail ) ) {
 							$theThumbnail = $this->feedzy_image_encode( $theThumbnail );
-							$contentThumb .= '<span class="default" style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:  url(' . $shortcode_atts['default'] . ');" alt="' . $item->get_title() . '"></span>';
+							$contentThumb .= '<span class="default" style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:  url(' . $sc['default'] . ');" alt="' . $item->get_title() . '"></span>';
 							$contentThumb .= '<span class="fetched" style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:  url(' . $theThumbnail . ');" alt="' . $item->get_title() . '"></span>';
-						} elseif ( empty( $theThumbnail ) && $shortcode_atts['thumb'] == 'yes' ) {
-							$contentThumb .= '<span style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:url(' . $shortcode_atts['default'] . ');" alt="' . $item->get_title() . '"></span>';
+						} elseif ( empty( $theThumbnail ) && $sc['thumb'] == 'yes' ) {
+							$contentThumb .= '<span style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:url(' . $sc['default'] . ');" alt="' . $item->get_title() . '"></span>';
 						}
 
 						$contentThumb .= '</a>';
@@ -497,10 +516,10 @@ abstract class Feedzy_Rss_Feeds_Abstract {
 				}
 
 				$contentTitle = '';
-				$contentTitle .= '<span class="title"><a href="' . $item->get_permalink() . '" target="' . $shortcode_atts['target'] . '">';
+				$contentTitle .= '<span class="title"><a href="' . $newLink . '" target="' . $sc['target'] . '">';
 
-				if ( is_numeric( $shortcode_atts['title'] ) && strlen( $item->get_title() ) > $shortcode_atts['title'] ) {
-					$contentTitle .= preg_replace( '/\s+?(\S+)?$/', '', substr( $item->get_title(), 0, $shortcode_atts['title'] ) ) . '...';
+				if ( is_numeric( $sc['title'] ) && strlen( $item->get_title() ) > $sc['title'] ) {
+					$contentTitle .= preg_replace( '/\s+?(\S+)?$/', '', substr( $item->get_title(), 0, $sc['title'] ) ) . '...';
 				} else {
 					$contentTitle .= $item->get_title();
 				}
@@ -522,10 +541,10 @@ abstract class Feedzy_Rss_Feeds_Abstract {
 				// Filter: feedzy_meta_args
 				$metaArgs = apply_filters( 'feedzy_meta_args', $metaArgs, $feedURL );
 
-				if ( $shortcode_atts['meta'] == 'yes' && ( $metaArgs['author'] || $metaArgs['date'] ) ) {
+				if ( $sc['meta'] == 'yes' && ( $metaArgs['author'] || $metaArgs['date'] ) ) {
 
 					$contentMeta = '';
-					$contentMeta .= '<small>' . __( 'Posted', 'feedzy-rss-feeds-translate' ) . ' ';
+					$contentMeta .= '<small>' . __( 'Posted', 'feedzy-rss-feeds-pro-translate' ) . ' ';
 
 					if ( $item->get_author() && $metaArgs['author'] ) {
 						$author = $item->get_author();
@@ -533,15 +552,15 @@ abstract class Feedzy_Rss_Feeds_Abstract {
 							$authorName = $author->get_email();
 						}
 						if ( $authorName ) {
-							$domain = parse_url( $item->get_permalink() );
-							$contentMeta .= __( 'by', 'feedzy-rss-feeds-translate' ) . ' <a href="http://' . $domain['host'] . '" target="' . $shortcode_atts['target'] . '" title="' . $domain['host'] . '" >' . $authorName . '</a> ';
+							$domain = parse_url( $newLink );
+							$contentMeta .= __( 'by', 'feedzy-rss-feeds-pro-translate' ) . ' <a href="http://' . $domain['host'] . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $authorName . '</a> ';
 						}
 					}
 
 					if ( $metaArgs['date'] ) {
-						$contentMeta .= __( 'on', 'feedzy-rss-feeds-translate' ) . ' ' . date_i18n( $metaArgs['date_format'], $item->get_date( 'U' ) );
+						$contentMeta .= __( 'on', 'feedzy-rss-feeds-pro-translate' ) . ' ' . date_i18n( $metaArgs['date_format'], $item->get_date( 'U' ) );
 						$contentMeta .= ' ';
-						$contentMeta .= __( 'at', 'feedzy-rss-feeds-translate' ) . ' ' . date_i18n( $metaArgs['time_format'], $item->get_date( 'U' ) );
+						$contentMeta .= __( 'at', 'feedzy-rss-feeds-pro-translate' ) . ' ' . date_i18n( $metaArgs['time_format'], $item->get_date( 'U' ) );
 					}
 
 					$contentMeta .= '</small>';
@@ -550,7 +569,7 @@ abstract class Feedzy_Rss_Feeds_Abstract {
 					$content .= apply_filters( 'feedzy_meta_output', $contentMeta, $feedURL );
 
 				}
-				if ( $shortcode_atts['summary'] == 'yes' ) {
+				if ( $sc['summary'] == 'yes' ) {
 					$contentSummary = '';
 					$contentSummary .= '<p>';
 
@@ -558,8 +577,8 @@ abstract class Feedzy_Rss_Feeds_Abstract {
 					$description = $item->get_description();
 					$description = apply_filters( 'feedzy_summary_input', $description, $item->get_content(), $feedURL );
 
-					if ( is_numeric( $shortcode_atts['summarylength'] ) && strlen( $description ) > $shortcode_atts['summarylength'] ) {
-						$contentSummary .= preg_replace( '/\s+?(\S+)?$/', '', substr( $description, 0, $shortcode_atts['summarylength'] ) ) . ' […]';
+					if ( is_numeric( $sc['summarylength'] ) && strlen( $description ) > $sc['summarylength'] ) {
+						$contentSummary .= preg_replace( '/\s+?(\S+)?$/', '', substr( $description, 0, $sc['summarylength'] ) ) . ' […]';
 					} else {
 						$contentSummary .= $description . ' […]';
 					}
@@ -567,7 +586,7 @@ abstract class Feedzy_Rss_Feeds_Abstract {
 					$contentSummary .= '</p>';
 
 					// Filter: feedzy_summary_output
-					$content .= apply_filters( 'feedzy_summary_output', $contentSummary, $item->get_permalink(), $feedURL );
+					$content .= apply_filters( 'feedzy_summary_output', $contentSummary, $newLink, $feedURL );
 
 				}
 
@@ -579,6 +598,42 @@ abstract class Feedzy_Rss_Feeds_Abstract {
 
 		$content .= '</ul>';
 		$content .= '</div>';
+
+		return $content;
+	}
+
+	/**
+	 * Main shortcode function
+	 *
+	 * @param   array  $atts  Shortcode attributes.
+	 * @param   string $content  The item feed content.
+	 * @return  mixed
+	 */
+	public function feedzy_rss( $atts, $content = '' ) {
+		// Load SimplePie if not already
+		if ( ! class_exists( 'SimplePie' ) ) {
+			require_once( ABSPATH . WPINC . '/class-feed.php' );
+		}
+
+		$sc = $this->get_short_code_attributes( $atts );
+		$feedURL = $this->get_feed_url( $sc['feeds'] );
+
+		// Load SimplePie Instance
+		$feed = new SimplePie();
+		$feed -> set_feed_url( $feedURL );
+		$feed -> enable_cache( true );
+		$feed -> enable_order_by_date( true );
+		$feed -> set_cache_class( 'WP_Feed_Cache' );
+		$feed -> set_file_class( 'WP_SimplePie_File' );
+		$feed -> set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', 7200, $feedURL ) );
+		do_action_ref_array( 'wp_feed_options', array( $feed, $feedURL ) );
+		$feed -> strip_comments( true );
+		$feed -> strip_htmltags( array( 'base', 'blink', 'body', 'doctype', 'embed', 'font', 'form', 'frame', 'frameset', 'html', 'iframe', 'input', 'marquee', 'meta', 'noscript', 'object', 'param', 'script', 'style' ) );
+		$feed -> init();
+		$feed -> handle_content_type();
+
+		$content = $this->render_content( $sc, $feed, $content, $feedURL );
+
 		return apply_filters( 'feedzy_global_output', $content, $feedURL );
 	}
 }

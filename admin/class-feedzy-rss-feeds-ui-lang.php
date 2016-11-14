@@ -35,10 +35,10 @@ class Feedzy_Rss_Feeds_Lang {
 	 * The strings for translation.
 	 *
 	 * @since    3.0.0
-	 * @access   private
+	 * @access   protected
 	 * @var      array    $strings    The ID of this plugin.
 	 */
-	private $strings;
+	protected $strings;
 
 	/**
 	 * Initialize the class and set its properties.
