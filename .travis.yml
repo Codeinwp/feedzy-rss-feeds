@@ -40,5 +40,8 @@ before_script:
     - phpcs --config-set installed_paths $WP_DEVELOP_DIR/wordpress-coding-standards
     - phpenv rehash
     - cd $plugin_dir
+addons:
+    code_climate:
+        repo_token: c63bb0fd56cca4099244e34c7ed09620d4ed89116436f3bd642af45cae4d86c6
 script:
      grunt travis

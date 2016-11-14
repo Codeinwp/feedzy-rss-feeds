@@ -1,5 +1,8 @@
 # Feedzy RSS Feeds Lite
 [![Build Status](https://travis-ci.org/preda-bogdan/feedzy-rss-feeds.svg?branch=production)](https://travis-ci.org/preda-bogdan/feedzy-rss-feeds)
+[![Code Climate](https://codeclimate.com/github/preda-bogdan/feedzy-rss-feeds/badges/gpa.svg)](https://codeclimate.com/github/preda-bogdan/feedzy-rss-feeds)
+[![Test Coverage](https://codeclimate.com/github/preda-bogdan/feedzy-rss-feeds/badges/coverage.svg)](https://codeclimate.com/github/preda-bogdan/feedzy-rss-feeds/coverage)
+[![Issue Count](https://codeclimate.com/github/preda-bogdan/feedzy-rss-feeds/badges/issue_count.svg)](https://codeclimate.com/github/preda-bogdan/feedzy-rss-feeds)
 
 ## Description
 FEEDZY RSS Feeds is a small and lightweight RSS aggregator plugin. Fast and very easy to use, it allows you to aggregate multiple RSS feeds into your WordPress site through fully customizable shortcodes & widgets.

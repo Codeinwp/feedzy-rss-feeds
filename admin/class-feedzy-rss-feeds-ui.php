@@ -108,7 +108,7 @@ class Feedzy_Rss_Feeds_Ui {
 	 * @return  array
 	 */
 	public function feedzy_add_tinymce_lang( $arr ) {
-		$arr[] = plugin_dir_path( __FILE__ ) . 'feedzy-rss-feeds-ui-lang.php';
+		$arr[] = plugin_dir_path( __FILE__ ) . 'class-feedzy-rss-feeds-ui-lang.php';
 		dbgx_trace_var( $arr, $var_name = false );
 		return $arr;
 	}
