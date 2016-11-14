@@ -544,7 +544,7 @@ abstract class Feedzy_Rss_Feeds_Abstract {
 				if ( $sc['meta'] == 'yes' && ( $metaArgs['author'] || $metaArgs['date'] ) ) {
 
 					$contentMeta = '';
-					$contentMeta .= '<small>' . __( 'Posted', 'feedzy-rss-feeds-pro-translate' ) . ' ';
+					$contentMeta .= '<small>' . __( 'Posted', 'feedzy-rss-feeds-translate' ) . ' ';
 
 					if ( $item->get_author() && $metaArgs['author'] ) {
 						$author = $item->get_author();
@@ -553,14 +553,14 @@ abstract class Feedzy_Rss_Feeds_Abstract {
 						}
 						if ( $authorName ) {
 							$domain = parse_url( $newLink );
-							$contentMeta .= __( 'by', 'feedzy-rss-feeds-pro-translate' ) . ' <a href="http://' . $domain['host'] . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $authorName . '</a> ';
+							$contentMeta .= __( 'by', 'feedzy-rss-feeds-translate' ) . ' <a href="http://' . $domain['host'] . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $authorName . '</a> ';
 						}
 					}
 
 					if ( $metaArgs['date'] ) {
-						$contentMeta .= __( 'on', 'feedzy-rss-feeds-pro-translate' ) . ' ' . date_i18n( $metaArgs['date_format'], $item->get_date( 'U' ) );
+						$contentMeta .= __( 'on', 'feedzy-rss-feeds-translate' ) . ' ' . date_i18n( $metaArgs['date_format'], $item->get_date( 'U' ) );
 						$contentMeta .= ' ';
-						$contentMeta .= __( 'at', 'feedzy-rss-feeds-pro-translate' ) . ' ' . date_i18n( $metaArgs['time_format'], $item->get_date( 'U' ) );
+						$contentMeta .= __( 'at', 'feedzy-rss-feeds-translate' ) . ' ' . date_i18n( $metaArgs['time_format'], $item->get_date( 'U' ) );
 					}
 
 					$contentMeta .= '</small>';
