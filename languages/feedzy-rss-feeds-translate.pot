@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Feedzy RSS Feeds 3.0.0\n"
 "Report-Msgid-Bugs-To: https://github.com/Codeinwp/feedzy-rss-feeds/issues\n"
-"POT-Creation-Date: 2016-11-11 15:17:29+00:00\n"
+"POT-Creation-Date: 2016-11-15 13:24:49+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -28,19 +28,19 @@ msgstr ""
 msgid "Sorry, this feed is currently unavailable or does not exists anymore."
 msgstr ""
 
-#: admin/class-abstract-feedzy-rss-feeds-admin.php:528
+#: admin/class-abstract-feedzy-rss-feeds-admin.php:547
 msgid "Posted"
 msgstr ""
 
-#: admin/class-abstract-feedzy-rss-feeds-admin.php:537
+#: admin/class-abstract-feedzy-rss-feeds-admin.php:556
 msgid "by"
 msgstr ""
 
-#: admin/class-abstract-feedzy-rss-feeds-admin.php:542
+#: admin/class-abstract-feedzy-rss-feeds-admin.php:561
 msgid "on"
 msgstr ""
 
-#: admin/class-abstract-feedzy-rss-feeds-admin.php:544
+#: admin/class-abstract-feedzy-rss-feeds-admin.php:563
 msgid "at"
 msgstr ""
 
@@ -50,6 +50,94 @@ msgstr ""
 
 #: admin/class-feedzy-rss-feeds-admin.php:121
 msgid "More Plugins"
+msgstr ""
+
+#: admin/class-feedzy-rss-feeds-ui-lang.php:50
+msgid "Insert Feedzy RSS Feeds Shortcode"
+msgstr ""
+
+#: admin/class-feedzy-rss-feeds-ui-lang.php:51
+#: admin/class-feedzy-rss-feeds-widget.php:100
+msgid "The feed(s) URL (comma-separated list)."
+msgstr ""
+
+#: admin/class-feedzy-rss-feeds-ui-lang.php:51
+msgid "Check feed before insert."
+msgstr ""
+
+#: admin/class-feedzy-rss-feeds-ui-lang.php:52
+#: admin/class-feedzy-rss-feeds-widget.php:104
+msgid "Number of items to display."
+msgstr ""
+
+#: admin/class-feedzy-rss-feeds-ui-lang.php:53
+msgid "Should we display the RSS title?"
+msgstr ""
+
+#: admin/class-feedzy-rss-feeds-ui-lang.php:54
+#: admin/class-feedzy-rss-feeds-widget.php:108
+msgid "Links may be opened in the same window or a new tab."
+msgstr ""
+
+#: admin/class-feedzy-rss-feeds-ui-lang.php:55
+#: admin/class-feedzy-rss-feeds-widget.php:119
+msgid "Trim the title of the item after X characters."
+msgstr ""
+
+#: admin/class-feedzy-rss-feeds-ui-lang.php:56
+#: admin/class-feedzy-rss-feeds-widget.php:124
+msgid "Should we display the date of publication and the author name?"
+msgstr ""
+
+#: admin/class-feedzy-rss-feeds-ui-lang.php:57
+#: admin/class-feedzy-rss-feeds-widget.php:128
+msgid "Should we display a description (abstract) of the retrieved item?"
+msgstr ""
+
+#: admin/class-feedzy-rss-feeds-ui-lang.php:58
+#: admin/class-feedzy-rss-feeds-widget.php:131
+msgid "Crop description (summary) of the element after X characters."
+msgstr ""
+
+#: admin/class-feedzy-rss-feeds-ui-lang.php:59
+#: admin/class-feedzy-rss-feeds-widget.php:135
+msgid "Should we display the first image of the content if it is available?"
+msgstr ""
+
+#: admin/class-feedzy-rss-feeds-ui-lang.php:60
+#: admin/class-feedzy-rss-feeds-widget.php:158
+msgid "Default thumbnail URL if no image is found."
+msgstr ""
+
+#: admin/class-feedzy-rss-feeds-ui-lang.php:61
+#: admin/class-feedzy-rss-feeds-widget.php:162
+msgid "Thumblails dimension. Do not include \"px\". Eg: 150"
+msgstr ""
+
+#: admin/class-feedzy-rss-feeds-ui-lang.php:62
+#: admin/class-feedzy-rss-feeds-widget.php:166
+msgid ""
+"Only display item if title contains specific keyword(s) (comma-separated "
+"list/case sensitive)."
+msgstr ""
+
+#: admin/class-feedzy-rss-feeds-ui-lang.php:63
+msgid "Do not specify"
+msgstr ""
+
+#: admin/class-feedzy-rss-feeds-ui-lang.php:64
+#: admin/class-feedzy-rss-feeds-widget.php:146
+msgid "No"
+msgstr ""
+
+#: admin/class-feedzy-rss-feeds-ui-lang.php:65
+#: admin/class-feedzy-rss-feeds-widget.php:147
+msgid "Yes"
+msgstr ""
+
+#: admin/class-feedzy-rss-feeds-ui-lang.php:66
+#: admin/class-feedzy-rss-feeds-widget.php:148
+msgid "Auto"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
@@ -62,94 +150,6 @@ msgstr ""
 
 #: admin/class-feedzy-rss-feeds-widget.php:96
 msgid "Intro text"
-msgstr ""
-
-#: admin/class-feedzy-rss-feeds-widget.php:100
-#: admin/feedzy-rss-feeds-ui-lang.php:39
-msgid "The feed(s) URL (comma-separated list)."
-msgstr ""
-
-#: admin/class-feedzy-rss-feeds-widget.php:104
-#: admin/feedzy-rss-feeds-ui-lang.php:40
-msgid "Number of items to display."
-msgstr ""
-
-#: admin/class-feedzy-rss-feeds-widget.php:108
-#: admin/feedzy-rss-feeds-ui-lang.php:42
-msgid "Links may be opened in the same window or a new tab."
-msgstr ""
-
-#: admin/class-feedzy-rss-feeds-widget.php:119
-#: admin/feedzy-rss-feeds-ui-lang.php:43
-msgid "Trim the title of the item after X characters."
-msgstr ""
-
-#: admin/class-feedzy-rss-feeds-widget.php:124
-#: admin/feedzy-rss-feeds-ui-lang.php:44
-msgid "Should we display the date of publication and the author name?"
-msgstr ""
-
-#: admin/class-feedzy-rss-feeds-widget.php:128
-#: admin/feedzy-rss-feeds-ui-lang.php:45
-msgid "Should we display a description (abstract) of the retrieved item?"
-msgstr ""
-
-#: admin/class-feedzy-rss-feeds-widget.php:131
-#: admin/feedzy-rss-feeds-ui-lang.php:46
-msgid "Crop description (summary) of the element after X characters."
-msgstr ""
-
-#: admin/class-feedzy-rss-feeds-widget.php:135
-#: admin/feedzy-rss-feeds-ui-lang.php:47
-msgid "Should we display the first image of the content if it is available?"
-msgstr ""
-
-#: admin/class-feedzy-rss-feeds-widget.php:146
-#: admin/feedzy-rss-feeds-ui-lang.php:52
-msgid "No"
-msgstr ""
-
-#: admin/class-feedzy-rss-feeds-widget.php:147
-#: admin/feedzy-rss-feeds-ui-lang.php:53
-msgid "Yes"
-msgstr ""
-
-#: admin/class-feedzy-rss-feeds-widget.php:148
-#: admin/feedzy-rss-feeds-ui-lang.php:54
-msgid "Auto"
-msgstr ""
-
-#: admin/class-feedzy-rss-feeds-widget.php:158
-#: admin/feedzy-rss-feeds-ui-lang.php:48
-msgid "Default thumbnail URL if no image is found."
-msgstr ""
-
-#: admin/class-feedzy-rss-feeds-widget.php:162
-#: admin/feedzy-rss-feeds-ui-lang.php:49
-msgid "Thumblails dimension. Do not include \"px\". Eg: 150"
-msgstr ""
-
-#: admin/class-feedzy-rss-feeds-widget.php:166
-#: admin/feedzy-rss-feeds-ui-lang.php:50
-msgid ""
-"Only display item if title contains specific keyword(s) (comma-separated "
-"list/case sensitive)."
-msgstr ""
-
-#: admin/feedzy-rss-feeds-ui-lang.php:38
-msgid "Insert FEEDZY RSS Feeds Shortcode"
-msgstr ""
-
-#: admin/feedzy-rss-feeds-ui-lang.php:39
-msgid "Check feed before insert."
-msgstr ""
-
-#: admin/feedzy-rss-feeds-ui-lang.php:41
-msgid "Should we display the RSS title?"
-msgstr ""
-
-#: admin/feedzy-rss-feeds-ui-lang.php:51
-msgid "Do not specify"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
