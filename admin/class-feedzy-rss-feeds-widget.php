@@ -12,8 +12,6 @@
 /**
  * The Widget functionality of the plugin.
  *
- * TODO add description
- *
  * @package    Feedzy_Rss_Feeds
  * @subpackage Feedzy_Rss_Feeds/admin
  * @author     Themeisle <friends@themeisle.com>
@@ -51,12 +49,23 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 	/**
 	 * The widget form creation
 	 *
-	 * TODO Improve clean html from code
-	 *
 	 * @param string $instance The Widget instance.
 	 */
 	public function form( $instance ) {
 		// Check values
+		$title = '';
+		$textarea = '';
+		$feeds = '';
+		$max = '';
+		$target = '';
+		$titlelength = '';
+		$meta = '';
+		$summary = '';
+		$summarylength = '';
+		$thumb = '';
+		$default = '';
+		$size = '';
+		$keywords_title = '';
 		if ( $instance ) {
 			$title 			= esc_attr( $instance['title'] );
 			$textarea 		= esc_attr( $instance['textarea'] );
@@ -71,103 +80,89 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 			$default 		= esc_attr( $instance['default'] );
 			$size 			= esc_attr( $instance['size'] );
 			$keywords_title = esc_attr( $instance['keywords_title'] );
-		} else {
-			$title = '';
-			$textarea = '';
-			$feeds = '';
-			$max = '';
-			$target = '';
-			$titlelength = '';
-			$meta = '';
-			$summary = '';
-			$summarylength = '';
-			$thumb = '';
-			$default = '';
-			$size = '';
-			$keywords_title = '';
 		}
-		?>
-		
+
+		$options = array( '_blank', '_parent', '_self', '_top', 'framename' );
+		$option_list_links = '';
+		foreach ( $options as $option ) {
+			$option_list .= '<option value="' . $option . '" id="' . $option . '"' . ( ( $target == $option ) ? ' selected="selected"' : '' ) . '>' . $option . '</option>';
+		}
+
+		// Fix for versions before 2.3.1
+		if ( $thumb == '1' ) {
+			$thumb = 'yes';
+		} elseif ( $thumb == '0' ) {
+			$thumb = 'no';
+		}
+		$options = array(
+			array( 'no', __( 'No', 'feedzy-rss-feeds-translate' ) ),
+			array( 'yes', __( 'Yes', 'feedzy-rss-feeds-translate' ) ),
+			array( 'auto', __( 'Auto', 'feedzy-rss-feeds-translate' ) ),
+		);
+		$option_list_thumbs = '';
+		foreach ( $options as $option ) {
+			$option_list_thumbs .= '<option value="' . $option[0] . '" id="' . $option[0] . '"' . ( ( $thumb == $option[0] ) ? ' selected="selected"' : '' ) . '>' . $option[1] . '</option>';
+		}
+
+		echo '<<<HTML
+			<p>
+				<label for="' . $this->get_field_id( 'title' ) . '">' . _e( 'Widget Title', 'feedzy-rss-feeds-translate' ) . '</label>
+				<input class="widefat" id="' . $this->get_field_id( 'title' ) . '" name="' . $this->get_field_name( 'title' ) . '" type="text" value="' . $title . '" />
+			</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Widget Title', 'feedzy-rss-feeds-translate' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>" />
+			<label for="' . $this->get_field_id( 'textarea' ) . '">' . _e( 'Intro text', 'feedzy-rss-feeds-translate' ) . '</label>
+			<textarea class="widefat" id="' . $this->get_field_id( 'textarea' ) . '" name="' . $this->get_field_name( 'textarea' ) . '">' . $textarea . '</textarea>
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'textarea' ); ?>"><?php _e( 'Intro text', 'feedzy-rss-feeds-translate' ); ?></label>
-			<textarea class="widefat" id="<?php echo $this->get_field_id( 'textarea' ); ?>" name="<?php echo $this->get_field_name( 'textarea' ); ?>"><?php echo $textarea; ?></textarea>
+			<label for="' . $this->get_field_id( 'feeds' ) . '">' . _e( 'The feed(s) URL (comma-separated list).', 'feedzy-rss-feeds-translate' ) . '</label>
+			<input class="widefat" id="' . $this->get_field_id( 'feeds' ) . '" name="' . $this->get_field_name( 'feeds' ) . '" type="text" value="' . $feeds . '" />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'feeds' ); ?>"><?php _e( 'The feed(s) URL (comma-separated list).', 'feedzy-rss-feeds-translate' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'feeds' ); ?>" name="<?php echo $this->get_field_name( 'feeds' ); ?>" type="text" value="<?php echo $feeds; ?>" />
+			<label for="' . $this->get_field_id( 'max' ) . '">' . _e( 'Number of items to display.', 'feedzy-rss-feeds-translate' ) . '</label>
+			<input class="widefat"  id="' . $this->get_field_id( 'max' ) . '" name="' . $this->get_field_name( 'max' ) . '" type="text" value="' . $max . '" />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'max' ); ?>"><?php _e( 'Number of items to display.', 'feedzy-rss-feeds-translate' ); ?></label>
-			<input class="widefat"  id="<?php echo $this->get_field_id( 'max' ); ?>" name="<?php echo $this->get_field_name( 'max' ); ?>" type="text" value="<?php echo $max; ?>" />
-		</p>
-		<p>
-			<label for="<?php echo $this->get_field_id( 'target' ); ?>"><?php _e( 'Links may be opened in the same window or a new tab.', 'feedzy-rss-feeds-translate' ); ?></label>
-			<select id="<?php echo $this->get_field_id( 'target' ); ?>" name="<?php echo $this->get_field_name( 'target' ); ?>" class="widefat">
-				<?php
-				$options = array( '_blank', '_parent', '_self', '_top', 'framename' );
-				foreach ( $options as $option ) {
-					echo '<option value="' . $option . '" id="' . $option . '"', $target == $option ? ' selected="selected"' : '', '>', $option, '</option>';
-				}
-				?>
+			<label for="' . $this->get_field_id( 'target' ) . '">' . _e( 'Links may be opened in the same window or a new tab.', 'feedzy-rss-feeds-translate' ) . '</label>
+			<select id="' . $this->get_field_id( 'target' ) . '" name="' . $this->get_field_name( 'target' ) . '" class="widefat">
+				' . $option_list . '
 			</select>
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'titlelength' ); ?>"><?php _e( 'Trim the title of the item after X characters.', 'feedzy-rss-feeds-translate' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'titlelength' ); ?>" name="<?php echo $this->get_field_name( 'titlelength' ); ?>" type="text" value="<?php echo $titlelength; ?>" />
+			<label for="' . $this->get_field_id( 'titlelength' ) . '">' . _e( 'Trim the title of the item after X characters.', 'feedzy-rss-feeds-translate' ) . '</label>
+			<input class="widefat" id="' . $this->get_field_id( 'titlelength' ) . '" name="' . $this->get_field_name( 'titlelength' ) . '" type="text" value="' . $titlelength . '" />
 		</p>
 		<p>
-			<input id="<?php echo $this->get_field_id( 'meta' ); ?>" name="<?php echo $this->get_field_name( 'meta' ); ?>" type="checkbox" value="1" <?php checked( '1', $meta ); ?> />
-			<label for="<?php echo $this->get_field_id( 'meta' ); ?>"><?php _e( 'Should we display the date of publication and the author name?', 'feedzy-rss-feeds-translate' ); ?></label>
+			<input id="' . $this->get_field_id( 'meta' ) . '" name="' . $this->get_field_name( 'meta' ) . '" type="checkbox" value="1" ' . checked( '1', $meta ) . ' />
+			<label for="' . $this->get_field_id( 'meta' ) . '">' . _e( 'Should we display the date of publication and the author name?', 'feedzy-rss-feeds-translate' ) . '</label>
 		</p>
 		<p>
-			<input id="<?php echo $this->get_field_id( 'summary' ); ?>" name="<?php echo $this->get_field_name( 'summary' ); ?>" type="checkbox" value="1" <?php checked( '1', $summary ); ?> />
-			<label for="<?php echo $this->get_field_id( 'summary' ); ?>"><?php _e( 'Should we display a description (abstract) of the retrieved item?', 'feedzy-rss-feeds-translate' ); ?></label>
+			<input id="' . $this->get_field_id( 'summary' ) . '" name="' . $this->get_field_name( 'summary' ) . '" type="checkbox" value="1" ' . checked( '1', $summary ) . ' />
+			<label for="' . $this->get_field_id( 'summary' ) . '">' . _e( 'Should we display a description (abstract) of the retrieved item?', 'feedzy-rss-feeds-translate' ) . '</label>
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'summarylength' ); ?>"><?php _e( 'Crop description (summary) of the element after X characters.', 'feedzy-rss-feeds-translate' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'summarylength' ); ?>" name="<?php echo $this->get_field_name( 'summarylength' ); ?>" type="text" value="<?php echo $summarylength; ?>" />
+			<label for="' . $this->get_field_id( 'summarylength' ) . '">' . _e( 'Crop description (summary) of the element after X characters.', 'feedzy-rss-feeds-translate' ) . '</label>
+			<input class="widefat" id="' . $this->get_field_id( 'summarylength' ) . '" name="' . $this->get_field_name( 'summarylength' ) . '" type="text" value="' . $summarylength . '" />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'thumb' ); ?>"><?php _e( 'Should we display the first image of the content if it is available?', 'feedzy-rss-feeds-translate' ); ?></label>
-			<select id="<?php echo $this->get_field_id( 'thumb' ); ?>" name="<?php echo $this->get_field_name( 'thumb' ); ?>" class="widefat">
-				<?php
-				// Fix for versions before 2.3.1
-				if ( $thumb == '1' ) {
-					$thumb = 'yes';
-				} elseif ( $thumb == '0' ) {
-					$thumb = 'no';
-				}
-
-				$options = array(
-					array( 'no', __( 'No', 'feedzy-rss-feeds-translate' ) ),
-					array( 'yes', __( 'Yes', 'feedzy-rss-feeds-translate' ) ),
-					array( 'auto', __( 'Auto', 'feedzy-rss-feeds-translate' ) ),
-				);
-
-				foreach ( $options as $option ) {
-					echo '<option value="' . $option[0] . '" id="' . $option[0] . '"', $thumb == $option[0] ? ' selected="selected"' : '', '>', $option[1], '</option>';
-				}
-				?>
+			<label for="' . $this->get_field_id( 'thumb' ) . '">' . _e( 'Should we display the first image of the content if it is available?', 'feedzy-rss-feeds-translate' ) . '</label>
+			<select id="' . $this->get_field_id( 'thumb' ) . '" name="' . $this->get_field_name( 'thumb' ) . '" class="widefat">
+				' . $option_list_thumbs . '
 			</select>
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'default' ); ?>"><?php _e( 'Default thumbnail URL if no image is found.', 'feedzy-rss-feeds-translate' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'default' ); ?>" name="<?php echo $this->get_field_name( 'default' ); ?>" type="text" value="<?php echo $default; ?>" />
+			<label for="' . $this->get_field_id( 'default' ) . '">' . _e( 'Default thumbnail URL if no image is found.', 'feedzy-rss-feeds-translate' ) . '</label>
+			<input class="widefat" id="' . $this->get_field_id( 'default' ) . '" name="' . $this->get_field_name( 'default' ) . '" type="text" value="' . $default . '" />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'size' ); ?>"><?php _e( 'Thumblails dimension. Do not include "px". Eg: 150', 'feedzy-rss-feeds-translate' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'size' ); ?>" name="<?php echo $this->get_field_name( 'size' ); ?>" type="text" value="<?php echo $size; ?>" />
+			<label for="' . $this->get_field_id( 'size' ) . '">' . _e( 'Thumblails dimension. Do not include "px". Eg: 150', 'feedzy-rss-feeds-translate' ) . '</label>
+			<input class="widefat" id="' . $this->get_field_id( 'size' ) . '" name="' . $this->get_field_name( 'size' ) . '" type="text" value="' . $size . '" />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'keywords_title' ); ?>"><?php _e( 'Only display item if title contains specific keyword(s) (comma-separated list/case sensitive).', 'feedzy-rss-feeds-translate' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'keywords_title' ); ?>" name="<?php echo $this->get_field_name( 'keywords_title' ); ?>" type="text" value="<?php echo $keywords_title; ?>" />
+			<label for="' . $this->get_field_id( 'keywords_title' ) . '">' . _e( 'Only display item if title contains specific keyword(s) (comma-separated list/case sensitive).', 'feedzy-rss-feeds-translate' ) . '</label>
+			<input class="widefat" id="' . $this->get_field_id( 'keywords_title' ) . '" name="' . $this->get_field_name( 'keywords_title' ) . '" type="text" value="' . $keywords_title . '" />
 		</p>
-		
-		<?php
+
+		HTML';
 
 	}
 
@@ -182,17 +177,11 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 
 		$instance = $old_instance;
-
 		$instance['title']			= strip_tags( $new_instance['title'] );
+		$instance['textarea'] 	= stripslashes( wp_filter_post_kses( addslashes( $new_instance['textarea'] ) ) );
 
 		if ( current_user_can( 'unfiltered_html' ) ) {
-
 			$instance['textarea'] 	= $new_instance['textarea'];
-
-		} else {
-
-			$instance['textarea'] 	= stripslashes( wp_filter_post_kses( addslashes( $new_instance['textarea'] ) ) );
-
 		}
 
 		$instance['feeds'] 			= strip_tags( $new_instance['feeds'] );
@@ -238,27 +227,17 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 
 		$items = array( 'meta', 'summary' );
 		foreach ( $items as $item ) {
-
+			$instance[ $item ] = 'no';
 			if ( $instance[ $item ] == true ) {
-
 				$instance[ $item ] = 'yes';
-
-			} else {
-
-				$instance[ $item ] = 'no';
-
 			}
 		}
 
 		// Fix for versions before 2.3.1
 		if ( $instance['thumb'] == '1' ) {
-
 			$instance['thumb'] = 'yes';
-
 		} elseif ( $instance['thumb'] == '0' ) {
-
 			$instance['thumb'] = 'no';
-
 		}
 
 		// Call the shortcode function
