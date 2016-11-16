@@ -172,7 +172,7 @@ class Feedzy_Rss_Feeds {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
 		$plugin_widget = new Feedzy_Rss_Feeds_Widget( $plugin_admin );
-		$this->loader->add_action( 'widgets_init', $plugin_widget, 'registerWidget' );
+		$this->loader->add_action( 'widgets_init', $plugin_widget, 'registerWidget', 10 );
 
 	}
 
