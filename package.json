@@ -11,7 +11,7 @@
     "rss",
     "feed"
   ],
-  "textdomain": "feedzy-rss-feeds-translate",
+  "textdomain": "feedzy_rss_translate",
   "author": "Themeisle <friends@themeisle.com>",
   "license": "GPL-3.0+",
   "bugs": {

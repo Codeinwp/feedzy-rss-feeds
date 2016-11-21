@@ -33,7 +33,7 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 	 * @param   Feedzy_Rss_Feeds_Admin $plugin_admin The Feedzy_Rss_Feeds_Admin object.
 	 */
 	public function __construct( $plugin_admin ) {
-		parent::__construct( false, $name = __( 'Feedzy RSS Feeds', 'feedzy-rss-feeds-translate' ) );
+		parent::__construct( false, $name = __( 'Feedzy RSS Feeds', 'feedzy_rss_translate' ) );
 
 		$this->plugin_admin = $plugin_admin;
 
@@ -53,19 +53,21 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 	 */
 	public function form( $instance ) {
 		// Check values
-		$title = '';
-		$textarea = '';
-		$feeds = '';
-		$max = '';
-		$target = '';
-		$titlelength = '';
-		$meta = '';
-		$summary = '';
-		$summarylength = '';
-		$thumb = '';
-		$default = '';
-		$size = '';
-		$keywords_title = '';
+        $defaults = array(
+            'title' => '',
+            'textarea' => '',
+            'feeds' => '',
+            'max' => '',
+            'target' => '',
+            'meta' => '',
+            'summary' => '',
+            'summarylength' => '',
+            'thumb' => '',
+            'default' => '',
+            'size' => '',
+            'keywords_title' => ''
+        );
+        $instance = wp_parse_args( $instance, $defaults );
 		if ( $instance ) {
 			$title 			= esc_attr( $instance['title'] );
 			$textarea 		= esc_attr( $instance['textarea'] );
@@ -95,9 +97,9 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 			$thumb = 'no';
 		}
 		$options = array(
-			array( 'no', __( 'No', 'feedzy-rss-feeds-translate' ) ),
-			array( 'yes', __( 'Yes', 'feedzy-rss-feeds-translate' ) ),
-			array( 'auto', __( 'Auto', 'feedzy-rss-feeds-translate' ) ),
+			array( 'no', __( 'No', 'feedzy_rss_translate' ) ),
+			array( 'yes', __( 'Yes', 'feedzy_rss_translate' ) ),
+			array( 'auto', __( 'Auto', 'feedzy_rss_translate' ) ),
 		);
 		$option_list_thumbs = '';
 		foreach ( $options as $option ) {
@@ -106,59 +108,59 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 
 		echo '
 			<p>
-				<label for="' . $this->get_field_id( 'title' ) . '">' . __( 'Widget Title', 'feedzy-rss-feeds-translate' ) . '</label>
+				<label for="' . $this->get_field_id( 'title' ) . '">' . __( 'Widget Title', 'feedzy_rss_translate' ) . '</label>
 				<input class="widefat" id="' . $this->get_field_id( 'title' ) . '" name="' . $this->get_field_name( 'title' ) . '" type="text" value="' . $title . '" />
 			</p>
 			<p>
-				<label for="' . $this->get_field_id( 'textarea' ) . '">' . __( 'Intro text', 'feedzy-rss-feeds-translate' ) . '</label>
+				<label for="' . $this->get_field_id( 'textarea' ) . '">' . __( 'Intro text', 'feedzy_rss_translate' ) . '</label>
 				<textarea class="widefat" id="' . $this->get_field_id( 'textarea' ) . '" name="' . $this->get_field_name( 'textarea' ) . '">' . $textarea . '</textarea>
 			</p>
 			<p>
-				<label for="' . $this->get_field_id( 'feeds' ) . '">' . __( 'The feed(s) URL (comma-separated list).', 'feedzy-rss-feeds-translate' ) . '</label>
+				<label for="' . $this->get_field_id( 'feeds' ) . '">' . __( 'The feed(s) URL (comma-separated list).', 'feedzy_rss_translate' ) . '</label>
 				<input class="widefat" id="' . $this->get_field_id( 'feeds' ) . '" name="' . $this->get_field_name( 'feeds' ) . '" type="text" value="' . $feeds . '" />
 			</p>
 			<p>
-				<label for="' . $this->get_field_id( 'max' ) . '">' . __( 'Number of items to display.', 'feedzy-rss-feeds-translate' ) . '</label>
+				<label for="' . $this->get_field_id( 'max' ) . '">' . __( 'Number of items to display.', 'feedzy_rss_translate' ) . '</label>
 				<input class="widefat"  id="' . $this->get_field_id( 'max' ) . '" name="' . $this->get_field_name( 'max' ) . '" type="text" value="' . $max . '" />
 			</p>
 			<p>
-				<label for="' . $this->get_field_id( 'target' ) . '">' . __( 'Links may be opened in the same window or a new tab.', 'feedzy-rss-feeds-translate' ) . '</label>
+				<label for="' . $this->get_field_id( 'target' ) . '">' . __( 'Links may be opened in the same window or a new tab.', 'feedzy_rss_translate' ) . '</label>
 				<select id="' . $this->get_field_id( 'target' ) . '" name="' . $this->get_field_name( 'target' ) . '" class="widefat">
 					' . $option_list_links . '
 				</select>
 			</p>
 			<p>
-				<label for="' . $this->get_field_id( 'titlelength' ) . '">' . __( 'Trim the title of the item after X characters.', 'feedzy-rss-feeds-translate' ) . '</label>
+				<label for="' . $this->get_field_id( 'titlelength' ) . '">' . __( 'Trim the title of the item after X characters.', 'feedzy_rss_translate' ) . '</label>
 				<input class="widefat" id="' . $this->get_field_id( 'titlelength' ) . '" name="' . $this->get_field_name( 'titlelength' ) . '" type="text" value="' . $titlelength . '" />
 			</p>
 			<p>
 				<input id="' . $this->get_field_id( 'meta' ) . '" name="' . $this->get_field_name( 'meta' ) . '" type="checkbox" value="1" ' . checked( '1', $meta, false ) . ' />
-				<label for="' . $this->get_field_id( 'meta' ) . '">' . __( 'Should we display the date of publication and the author name?', 'feedzy-rss-feeds-translate' ) . '</label>
+				<label for="' . $this->get_field_id( 'meta' ) . '">' . __( 'Should we display the date of publication and the author name?', 'feedzy_rss_translate' ) . '</label>
 			</p>
 			<p>
 				<input id="' . $this->get_field_id( 'summary' ) . '" name="' . $this->get_field_name( 'summary' ) . '" type="checkbox" value="1" ' . checked( '1', $summary, false ) . ' />
-				<label for="' . $this->get_field_id( 'summary' ) . '">' . __( 'Should we display a description (abstract) of the retrieved item?', 'feedzy-rss-feeds-translate' ) . '</label>
+				<label for="' . $this->get_field_id( 'summary' ) . '">' . __( 'Should we display a description (abstract) of the retrieved item?', 'feedzy_rss_translate' ) . '</label>
 			</p>
 			<p>
-				<label for="' . $this->get_field_id( 'summarylength' ) . '">' . __( 'Crop description (summary) of the element after X characters.', 'feedzy-rss-feeds-translate' ) . '</label>
+				<label for="' . $this->get_field_id( 'summarylength' ) . '">' . __( 'Crop description (summary) of the element after X characters.', 'feedzy_rss_translate' ) . '</label>
 				<input class="widefat" id="' . $this->get_field_id( 'summarylength' ) . '" name="' . $this->get_field_name( 'summarylength' ) . '" type="text" value="' . $summarylength . '" />
 			</p>
 			<p>
-				<label for="' . $this->get_field_id( 'thumb' ) . '">' . __( 'Should we display the first image of the content if it is available?', 'feedzy-rss-feeds-translate' ) . '</label>
+				<label for="' . $this->get_field_id( 'thumb' ) . '">' . __( 'Should we display the first image of the content if it is available?', 'feedzy_rss_translate' ) . '</label>
 				<select id="' . $this->get_field_id( 'thumb' ) . '" name="' . $this->get_field_name( 'thumb' ) . '" class="widefat">
 					' . $option_list_thumbs . '
 				</select>
 			</p>
 			<p>
-				<label for="' . $this->get_field_id( 'default' ) . '">' . __( 'Default thumbnail URL if no image is found.', 'feedzy-rss-feeds-translate' ) . '</label>
+				<label for="' . $this->get_field_id( 'default' ) . '">' . __( 'Default thumbnail URL if no image is found.', 'feedzy_rss_translate' ) . '</label>
 				<input class="widefat" id="' . $this->get_field_id( 'default' ) . '" name="' . $this->get_field_name( 'default' ) . '" type="text" value="' . $default . '" />
 			</p>
 			<p>
-				<label for="' . $this->get_field_id( 'size' ) . '">' . __( 'Thumblails dimension. Do not include "px". Eg: 150', 'feedzy-rss-feeds-translate' ) . '</label>
+				<label for="' . $this->get_field_id( 'size' ) . '">' . __( 'Thumblails dimension. Do not include "px". Eg: 150', 'feedzy_rss_translate' ) . '</label>
 				<input class="widefat" id="' . $this->get_field_id( 'size' ) . '" name="' . $this->get_field_name( 'size' ) . '" type="text" value="' . $size . '" />
 			</p>
 			<p>
-				<label for="' . $this->get_field_id( 'keywords_title' ) . '">' . __( 'Only display item if title contains specific keyword(s) (comma-separated list/case sensitive).', 'feedzy-rss-feeds-translate' ) . '</label>
+				<label for="' . $this->get_field_id( 'keywords_title' ) . '">' . __( 'Only display item if title contains specific keyword(s) (comma-separated list/case sensitive).', 'feedzy_rss_translate' ) . '</label>
 				<input class="widefat" id="' . $this->get_field_id( 'keywords_title' ) . '" name="' . $this->get_field_name( 'keywords_title' ) . '" type="text" value="' . $keywords_title . '" />
 			</p>
 		';

@@ -117,8 +117,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Abstract {
 
 		if ( strpos( $file, 'feedzy-rss-feeds.php' ) !== false ) {
 			$new_links = array(
-				'doc' => '<a href="http://docs.themeisle.com/article/277-feedzy-rss-feeds-hooks" target="_blank" title="' . __( 'Documentation and examples', 'feedzy-rss-feeds-translate' ) . '">' . __( 'Documentation and examples', 'feedzy-rss-feeds-translate' ) . '</a>',
-				'more_plugins' => '<a href="http://themeisle.com/wordpress-plugins/" target="_blank" title="' . __( 'More Plugins', 'feedzy-rss-feeds-translate' ) . '">' . __( 'More Plugins', 'feedzy-rss-feeds-translate' ) . '</a>',
+				'doc' => '<a href="http://docs.themeisle.com/article/277-feedzy-rss-feeds-hooks" target="_blank" title="' . __( 'Documentation and examples', 'feedzy_rss_translate' ) . '">' . __( 'Documentation and examples', 'feedzy_rss_translate' ) . '</a>',
+				'more_plugins' => '<a href="http://themeisle.com/wordpress-plugins/" target="_blank" title="' . __( 'More Plugins', 'feedzy_rss_translate' ) . '">' . __( 'More Plugins', 'feedzy_rss_translate' ) . '</a>',
 			);
 
 			$links = array_merge( $links, $new_links );

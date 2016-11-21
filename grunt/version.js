@@ -18,19 +18,19 @@ module.exports = {
 	},
 	style: {
 		options: {
-			prefix: 'Version\\:\\s'
+			prefix: 'Version\\:\.*\\s'
 		},
 		src: [
 			'feedzy-rss-feeds.php',
 			'css/feedzy-rss-feeds.css',
 		]
 	},
-	functions: {
+	class: {
 		options: {
-			prefix: 'VERSION\'\,\\s+\''
+			prefix: '\\$this->version\.*\\s=\.*\\s\''
 		},
 		src: [
-			'feedzy-rss-feeds.php',
+			'includes/class-feedzy-rss-feeds.php',
 		]
 	}
 };
