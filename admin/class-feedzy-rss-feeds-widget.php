@@ -53,21 +53,21 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 	 */
 	public function form( $instance ) {
 		// Check values
-        $defaults = array(
-            'title' => '',
-            'textarea' => '',
-            'feeds' => '',
-            'max' => '',
-            'target' => '',
-            'meta' => '',
-            'summary' => '',
-            'summarylength' => '',
-            'thumb' => '',
-            'default' => '',
-            'size' => '',
-            'keywords_title' => ''
-        );
-        $instance = wp_parse_args( $instance, $defaults );
+		$defaults = array(
+			'title' => '',
+			'textarea' => '',
+			'feeds' => '',
+			'max' => '',
+			'target' => '',
+			'meta' => '',
+			'summary' => '',
+			'summarylength' => '',
+			'thumb' => '',
+			'default' => '',
+			'size' => '',
+			'keywords_title' => '',
+		);
+		$instance = wp_parse_args( $instance, $defaults );
 		if ( $instance ) {
 			$title 			= esc_attr( $instance['title'] );
 			$textarea 		= esc_attr( $instance['textarea'] );
