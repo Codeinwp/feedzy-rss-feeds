@@ -66,6 +66,9 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-feedzy-rss-feeds.php';
  * @since    1.0.0
  */
 function run_feedzy_rss_feeds() {
+	define( 'FEEDZY_BASEFILE', __FILE__ );
+	define( 'FEEDZY_ABSURL', plugins_url( '/', __FILE__ ) );
+	define( 'FEEDZY_ABSPATH', dirname( __FILE__ ) );
 
 	$plugin = new Feedzy_Rss_Feeds();
 	$plugin->run();
