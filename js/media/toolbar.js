@@ -1,29 +1,29 @@
 (function(wpmv, wpmvt) {
-    var wpmvvl, wpmvtv, wpmvlvb;
+    var wpmvfl, wpmvtf, wpmvlfb;
 
-    wpmvvl = wpmv.feedzy_rss.Library;
-    wpmvlvb = wpmv.l10n.feedzy_rss.button;
+    wpmvfl = wpmv.feedzy_rss.Library;
+    wpmvlfb = wpmv.l10n.feedzy_rss.button;
 
     wpmv.toolbar = wpmv.toolbar || {};
-    wpmvtv = wpmv.toolbar.feedzy_rss = {};
+    wpmvtf = wpmv.toolbar.feedzy_rss = {};
 
     /**
      * =========================================================================
      * Library Toolbar
      * =========================================================================
      */
-    wpmvtv.Library = wpmvt.extend({
+    wpmvtf.Library = wpmvt.extend({
         initialize: function() {
             var self = this;
 
             _.defaults(self.options, {
                 close: false,
                 items: {
-                    type_filter: new wpmvvl.Types({
+                    type_filter: new wpmvfl.Types({
                         controller: self.controller,
                         priority: -100
                     }),
-                    pagination: new wpmvvl.Pagination({
+                    pagination: new wpmvfl.Pagination({
                         controller: self.controller,
                         priority: 100
                     })

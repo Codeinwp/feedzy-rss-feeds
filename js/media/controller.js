@@ -1,8 +1,8 @@
 (function(wpm) {
-    var wpmmv, wpmc;
+    var wpmmf, wpmc;
 
     wpmc = wpm.controller;
-    wpmmv = wpm.model.feedzy_rss;
+    wpmmf = wpm.model.feedzy_rss;
 
     wpmc.Feedzy_Rss = wpmc.State.extend({
         defaults: {
@@ -13,7 +13,7 @@
         },
 
         initialize: function() {
-            this.library = new wpmmv.Templates();
+            this.library = new wpmmf.Templates();
         }
     });
 })(wp.media);

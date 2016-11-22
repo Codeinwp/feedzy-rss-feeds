@@ -3,12 +3,12 @@
 /* global feedzy_rss */
 /* global showNotice */
 (function($, wpm) {
-    var libraryWidth, libraryHeight, wpmv, wpmV, wpmvv, wpmvvl, wpmvvb, l10n;
+    var libraryWidth, libraryHeight, wpmf, wpmVF, wpmvf, wpmvfl, wpmvfb, l10n;
 
-    wpmv = wpm.view;
-    wpmV = wpm.View;
-    wpmvv = wpmv.feedzy_rss = {};
-    l10n = wpmv.l10n.feedzy_rss;
+    wpmf = wpm.view;;
+    wpmVF = wpm.View;
+    wpmvf = wpmf.feedzy_rss = {};
+    l10n = wpmf.l10n.feedzy_rss;
 
     /**
      * =========================================================================
@@ -16,8 +16,8 @@
      * =========================================================================
      */
 
-    if (!_.isFunction(wpmV.prototype.make)) {
-        wpmV.prototype.make = function(tag, attrs, val) {
+    if (!_.isFunction(wpmVF.prototype.make)) {
+        wpmVF.prototype.make = function(tag, attrs, val) {
             var html, attr;
 
             html = '<' + tag;
@@ -30,146 +30,16 @@
         };
     }
 
-    wpmvv.Template = wpmV.extend({
+    wpmvf.Template = wpmVF.extend({
         className: 'feedzy_rss_library_template_canvas',
 
         constructor: function(options) {
             this.id = 'feedzy_rss_template_' + options.model.get('id');
-            wpmV.apply(this, arguments);
+            wpmVF.apply(this, arguments);
         },
 
         render: function() {
-            var self, model, chart, gv, type, series, data, table, settings, i, j, row, date, format, formatter, axis, property;
 
-            self = this;
-            gv = google.visualization;
-            model = self.model;
-
-            self.$el
-                .width(self.options.width)
-                .height(self.options.height)
-                .css('background-image', 'none');
-
-            type = model.get('type');
-            series = model.get('series');
-            data = model.get('data');
-            settings = model.get('settings');
-
-            settings.width = self.options.width;
-            settings.height = self.options.height;
-
-            table = new gv.DataTable({cols: series});
-            chart = type === 'gauge' ? 'Gauge' : type.charAt(0).toUpperCase() + type.slice(1) + 'Chart';
-            chart = new gv[chart](self.el);
-
-            switch (type) {
-                case 'pie':
-                    if (settings.slices) {
-                        for (i in settings.slices) {
-                            if (settings.slices[i]['color'] === '') {
-                                delete settings.slices[i]['color'];
-                            }
-                        }
-                    }
-                    break;
-                case 'line':
-                case 'bar':
-                case 'column':
-                case 'area':
-                case 'scatter':
-                case 'candlestick':
-                    if (settings.series) {
-                        for (i in settings.series) {
-                            if (settings.series[i]['color'] === '') {
-                                delete settings.series[i]['color'];
-                            }
-                        }
-                    }
-                    break;
-                case 'geo':
-                    if (settings.region !== undefined && settings.region.replace(/^\s+|\s+$/g, '') === '') {
-                        settings['region'] = 'world';
-                    }
-                    break;
-                case 'gauge':
-                    break;
-                default:
-                    return;
-            }
-
-            if (series[0] && (series[0].type === 'date' || series[0].type === 'datetime')) {
-                axis = false;
-                switch (type) {
-                    case 'line':
-                    case 'area':
-                    case 'scatter':
-                    case 'candlestick':
-                    case 'column':
-                        axis = settings.hAxis;
-                        break;
-                    case 'bar':
-                        axis = settings.vAxis;
-                        break;
-                }
-
-                if (axis) {
-                    for (property in axis.viewWindow) {
-                        date = new Date(axis.viewWindow[property]);
-                        if (Object.prototype.toString.call(date) === "[object Date]") {
-                            if (!isNaN(date.getTime())) {
-                                axis.viewWindow[property] = date;
-                                continue;
-                            }
-                        }
-
-                        delete axis.viewWindow[property];
-                    }
-                }
-            }
-
-            for (i = 0; i < data.length; i++) {
-                row = [];
-                for (j = 0; j < series.length; j++) {
-                    if (series[j].type === 'date' || series[j].type === 'datetime') {
-                        date = new Date(data[i][j]);
-                        data[i][j] = null;
-                        if (Object.prototype.toString.call(date) === "[object Date]") {
-                            if (!isNaN(date.getTime())) {
-                                data[i][j] = date;
-                            }
-                        }
-                    }
-                    row.push(data[i][j]);
-                }
-                table.addRow(row);
-            }
-
-            if (settings.series) {
-                for (i = 0; i < settings.series.length; i++) {
-                    format = settings.series[i].format;
-                    if (!format || format === '') {
-                        continue;
-                    }
-
-                    formatter = null;
-                    switch (series[i + 1].type) {
-                        case 'number':
-                            formatter = new gv.NumberFormat({pattern: format});
-                            break;
-                        case 'date':
-                        case 'datetime':
-                        case 'timeofday':
-                            formatter = new gv.DateFormat({pattern: format});
-                            break;
-                    }
-
-                    if (formatter) {
-                        formatter.format(table, i + 1);
-                    }
-                }
-            }
-
-            chart.draw(table, settings);
         }
     });
 
@@ -179,7 +49,7 @@
      * =========================================================================
      */
 
-    wpmvvl = wpmvv.Library = wpmV.extend({
+    wpmvfl = wpmvf.Library = wpmVF.extend({
         id: 'feedzy_rss_library_view',
         className: 'feedzy_rss_clearfix',
         template: wpm.template('feedzy_rss_library_empty'),
@@ -225,7 +95,7 @@
 
         addTemplate: function(chart) {
             var self = this,
-                view = new wpmvvl.Template({ model: template });
+                view = new wpmvfl.Template({ model: template });
 
             self.$el.append(view.$el);
             self.views.set('#feedzy_rss_template_' + template.get('id'), view, { silent: true });
@@ -265,7 +135,7 @@
         }
     });
 
-    wpmvvl.Template = wpmV.extend({
+    wpmvfl.Template = wpmVF.extend({
         className: 'feedzy_rss_library_template',
         template: wpm.template('feedzy_rss_library_template'),
 
@@ -286,7 +156,7 @@
                 libraryHeight = Math.floor(libraryHeight);
             }
 
-            self._view = new wpmvv.Template({
+            self._view = new wpmvf.Template({
                 model: self.model,
                 width: libraryWidth,
                 height: libraryHeight
@@ -334,7 +204,7 @@
         }
     });
 
-    wpmvvl.Types = wpmV.extend({
+    wpmvfl.Types = wpmVF.extend({
         tagName: 'select',
         className: 'feedzy_rss_library_filters',
 
@@ -372,7 +242,7 @@
         }
     });
 
-    wpmvvl.Pagination = wpmV.extend({
+    wpmvfl.Pagination = wpmVF.extend({
         id: 'feedzy_rss_library_pagination',
         tagName: 'ul',
 

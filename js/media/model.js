@@ -1,4 +1,4 @@
-(function($, wpmm, wpmvlv) {
+(function($, wpmm, wpmvlf) {
     wpmm.feedzy_rss = {};
 
     wpmm.feedzy_rss.Template = Backbone.Model.extend({
@@ -6,9 +6,9 @@
             if ('delete' === method) {
                 options = options || {};
                 options.data = _.extend( options.data || {}, {
-                    action:  wpmvlv.actions.delete_template,
+                    action:  wpmvlf.actions.delete_template,
                     chart: model.get('id'),
-                    nonce: wpmvlv.nonce
+                    nonce: wpmvlf.nonce
                 });
 
                 return wp.media.ajax( options );

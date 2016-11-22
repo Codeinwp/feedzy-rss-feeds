@@ -103,6 +103,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Abstract {
 		if ( post_type_supports( $typenow, 'editor' ) ) {
 			//wp_enqueue_style( $this->plugin_name . '-media', FEEDZY_ABSURL . 'css/media.css', array( 'media-views' ), $this->version );
 
+            //wp_enqueue_script( $this->plugin_name .'-library', FEEDZY_ABSURL . 'js/library.js', array( 'jquery', $this->plugin_name . '-media' ), $this->version, true );
+
 			wp_enqueue_script( $this->plugin_name . '-media-model',      FEEDZY_ABSURL . 'js/media/model.js',      null,                                              $this->version, true );
 			wp_enqueue_script( $this->plugin_name . '-media-collection', FEEDZY_ABSURL . 'js/media/collection.js', array( $this->plugin_name . '-media-model' ),      $this->version, true );
 			wp_enqueue_script( $this->plugin_name . '-media-controller', FEEDZY_ABSURL . 'js/media/controller.js', array( $this->plugin_name . '-media-collection' ), $this->version, true );
@@ -178,8 +180,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Abstract {
 				'title' => esc_html__( 'Feedzy RSS Feeds', 'feedzy_rss_translate' ),
 			),
 			'routers' => array(
-				'library' => esc_html__( 'From Library', 'feedzy_rss_translate' ),
-				'create'  => esc_html__( 'Create New', 'feedzy_rss_translate' ),
+				'library' => esc_html__( 'Saved Feeds', 'feedzy_rss_translate' ),
+				'create'  => esc_html__( 'New Feed', 'feedzy_rss_translate' ),
 			),
 			'library' => array(
 				'filters' => $this->_get_template_names_localized(),

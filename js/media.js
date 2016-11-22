@@ -1,7 +1,7 @@
 (function(wpmv) {
-    var mediaFrame, wpmvtv;
+    var mediaFrame, wpmvtf;
 
-    wpmvtv = wpmv.toolbar.feedzy_rss;
+    wpmvtf = wpmv.toolbar.feedzy_rss;
     mediaFrame = wpmv.MediaFrame.Post;
 
     wpmv.MediaFrame.Post = mediaFrame.extend({
@@ -14,7 +14,7 @@
                 new wp.media.controller.Feedzy_Rss({
                     id: 'feedzy_rss',
                     menu: 'default',
-                    title: wpmv.l10n.feedzy_rss.controller.title,
+                    title: wpmv.l10n.feedzy_rss.controller.title + ' Title',
                     priority: 200,
                     type: 'link',
                     src: wpmv.l10n.feedzy_rss.buildurl
@@ -44,7 +44,7 @@
         contentCreateLibrary: function(region) {
             var self = this;
 
-            self.toolbar.set(new wpmvtv.Library({controller: self}));
+            self.toolbar.set(new wpmvtf.Library({controller: self}));
             self.$el.removeClass('hide-toolbar');
 
             region.view = new wpmv.feedzy_rss.Library({
