@@ -5,6 +5,7 @@
  *
  * @package feedzy-rss-feeds
  */
+/* global console */
 (function($, wpmm, wpmvlf) {
 	wpmm.feedzy_rss = {};
 

@@ -5,6 +5,7 @@
  *
  * @package feedzy-rss-feeds
  */
+/* global console */
 (function(wpmv) {
 	var mediaFrame, wpmvtf;
 

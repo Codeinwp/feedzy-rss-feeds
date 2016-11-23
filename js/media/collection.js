@@ -5,6 +5,7 @@
  *
  * @package feedzy-rss-feeds
  */
+/* global console */
 (function(wpmm) {
 	wpmm.feedzy_rss.Templates = Backbone.Collection.extend({
 		model: wpmm.feedzy_rss.Template,

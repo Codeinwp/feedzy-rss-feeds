@@ -6,13 +6,12 @@
  * @package feedzy-rss-feeds
  */
 /*jshint scripturl:true*/
-/* global google */
-/* global feedzy_rss */
+/* global console */
 /* global showNotice */
 (function($, wpm) {
-	var libraryWidth, libraryHeight, wpmf, wpmVFD, wpmvf, wpmvfl, wpmvfb, l10n;
+	var libraryWidth, libraryHeight, wpmf, wpmVFD, wpmvf, wpmvfl, l10n;
 
-	wpmf = wpm.view;;
+	wpmf = wpm.view;
 	wpmVFD = wpm.View;
 	wpmvf = wpmf.feedzy_rss = {};
 	l10n = wpmf.l10n.feedzy_rss;
@@ -41,7 +40,7 @@
 	}
 
 	wpmvf.Template = wpmVFD.extend({
-		className: 'feedzy_rss_library_template_canvas',
+		className: 'feedzy-rss-library-feed-canvas',
 
 		constructor: function(options) {
 			this.id = 'feedzy-library-feed-' + options.model.get( 'id' );
@@ -60,8 +59,8 @@
 	 */
 
 	wpmvfl = wpmvf.Library = wpmVFD.extend({
-		id: 'feedzy_rss_library_view',
-		className: 'feedzy_rss_clearfix',
+		id: 'feedzy-rss-library-view',
+		className: 'feedzy-rss-clearfix',
 		template: wpm.template( 'feedzy-library-empty' ),
 
 		initialize: function() {
@@ -109,12 +108,12 @@
 			}
 		},
 
-		addTemplate: function(chart) {
+		addTemplate: function(feed) {
 			var self = this,
-				view = new wpmvfl.Template( { model: template } );
+				view = new wpmvfl.Template( { model: feed } );
 
 			self.$el.append( view.$el );
-			self.views.set( '#feedzy-library-feed-' + template.get( 'id' ), view, { silent: true } );
+			self.views.set( '#feedzy-library-feed-' + feed.get( 'id' ), view, { silent: true } );
 			view.render();
 		},
 
@@ -156,16 +155,16 @@
 		template: wpm.template( 'feedzy-library-feed' ),
 
 		events: {
-			'click .feedzy_rss_library_template_delete': 'deleteTemplate',
-			'click .feedzy_rss_library_template_insert': 'insertTemplate',
-			'click .feedzy_rss_library_template_shortcode': 'selectShortcode'
+			'click .feedzy-rss_library-feed-delete': 'deleteTemplate',
+			'click .feedzy-rss_library-feed-insert': 'insertTemplate',
+			'click .feedzy-rss_library-feed-shortcode': 'selectShortcode'
 		},
 
 		initialize: function() {
 			var self = this;
 
 			if ( ! libraryWidth && ! libraryHeight) {
-				libraryWidth = $( '#feedzy_rss_library_view' ).width() / 3 - 40;
+				libraryWidth = $( '#feedzy-rss-library-view' ).width() / 3 - 40;
 				libraryHeight = libraryWidth * 3 / 4;
 
 				libraryWidth = Math.floor( libraryWidth );
@@ -222,7 +221,7 @@
 
 	wpmvfl.Types = wpmVFD.extend({
 		tagName: 'select',
-		className: 'feedzy_rss_library_filters',
+		className: 'feedzy-rss-library-filters',
 
 		events: {
 			change: 'onFilterChange'
@@ -259,11 +258,11 @@
 	});
 
 	wpmvfl.Pagination = wpmVFD.extend({
-		id: 'feedzy_rss_library_pagination',
+		id: 'feedzy-rss-library-pagination',
 		tagName: 'ul',
 
 		events: {
-			'click a.feedzy_rss_library_pagination_page': 'onPageChange'
+			'click a.feedzy-rss-library-pagination-page': 'onPageChange'
 		},
 
 		initialize: function() {
@@ -287,9 +286,9 @@
 			self.$el.html(_.chain( items ).map(function(item) {
 				var content, className;
 
-				content = item === '...' || item === self.options.page ? self.make( 'span', { class: 'feedzy_rss_library_pagination_page' }, item ) : self.make( 'a', { class: 'feedzy_rss_library_pagination_page', href: 'javascript:;', 'data-page': item }, item );
+				content = item === '...' || item === self.options.page ? self.make( 'span', { class: 'feedzy-rss-library-pagination-page' }, item ) : self.make( 'a', { class: 'feedzy-rss-library-pagination-page', href: 'javascript:;', 'data-page': item }, item );
 
-				className = item === self.options.page ? 'feedzy_rss_library_pagination_item feedzy_rss_library_pagination_active' : 'feedzy_rss_library_pagination_item';
+				className = item === self.options.page ? 'feedzy-rss-library_pagination-item feedzy-rss-library-pagination-active' : 'feedzy-rss-library-pagination-item';
 
 				return self.make( 'li', { class: className }, content );
 			}).value());
