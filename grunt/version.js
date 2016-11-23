@@ -30,7 +30,7 @@ module.exports = {
 			prefix: '\\$this->version\.*\\s=\.*\\s\''
 		},
 		src: [
-			'includes/class-feedzy-rss-feeds.php',
+			'includes/Feedzy_Rss_Feeds.php',
 		]
 	}
 };

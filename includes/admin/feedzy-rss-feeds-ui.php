@@ -55,7 +55,7 @@ class Feedzy_Rss_Feeds_Ui {
 	 * @param      string                  $version        The version of this plugin.
 	 * @param      Feedzy_Rss_Feeds_Loader $loader         The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version, $loader ) {
+	public function __construct( $plugin_name, $version, Feedzy_Rss_Feeds_Loader $loader ) {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
@@ -98,7 +98,7 @@ class Feedzy_Rss_Feeds_Ui {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-		wp_enqueue_script( $this->plugin_name . '-ui', plugin_dir_url( __FILE__ ) . '../js/feedzy-rss-feeds-ui-scripts.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name . '-ui', FEEDZY_ABSURL . 'js/feedzy-rss-feeds-ui-scripts.js', array( 'jquery' ), $this->version, false );
 	}
 
 	/**
@@ -108,7 +108,7 @@ class Feedzy_Rss_Feeds_Ui {
 	 * @return  array
 	 */
 	public function feedzy_add_tinymce_lang( $arr ) {
-		$arr[] = plugin_dir_path( __FILE__ ) . 'class-feedzy-rss-feeds-ui-lang.php';
+		$arr[] = plugin_dir_path( __FILE__ ) . 'feedzy-rss-feeds-ui-lang.php';
 		return $arr;
 	}
 
@@ -119,7 +119,7 @@ class Feedzy_Rss_Feeds_Ui {
 	 * @return  array
 	 */
 	public function feedzy_tinymce_plugin( $plugin_array ) {
-		$plugin_array['feedzy_mce_button'] = plugin_dir_url( __FILE__ ) . '../js/feedzy-rss-feeds-ui-mce.js';
+		$plugin_array['feedzy_mce_button'] = FEEDZY_ABSURL . 'js/feedzy-rss-feeds-ui-mce.js';
 		return $plugin_array;
 	}
 

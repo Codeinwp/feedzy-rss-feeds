@@ -6,7 +6,7 @@
  * @since      3.0.0
  *
  * @package    Feedzy_Rss_Feeds
- * @subpackage Feedzy_Rss_Feeds/admin
+ * @subpackage Feedzy_Rss_Feeds/includes/admin
  */
 /**
  *
@@ -27,9 +27,9 @@ if ( ! class_exists( '_WP_Editors' ) ) {
 }
 
 /**
- * Class Feedzy_Rss_Feeds_Lang
+ * Class Feedzy_Rss_Feeds_Ui_Lang
  */
-class Feedzy_Rss_Feeds_Lang {
+class Feedzy_Rss_Feeds_Ui_Lang {
 
 	/**
 	 * The strings for translation.
@@ -84,5 +84,5 @@ class Feedzy_Rss_Feeds_Lang {
 
 }
 
-$feedzyLangClass = new Feedzy_Rss_Feeds_Lang();
+$feedzyLangClass = new Feedzy_Rss_Feeds_Ui_Lang();
 $strings = $feedzyLangClass->feedzy_tinymce_translation();

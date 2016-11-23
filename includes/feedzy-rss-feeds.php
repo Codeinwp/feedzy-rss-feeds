@@ -98,29 +98,6 @@ class Feedzy_Rss_Feeds {
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-feedzy-rss-feeds-loader.php';
-
-		/**
-		 * The class responsible for defining internationalization functionality
-		 * of the plugin.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-feedzy-rss-feeds-i18n.php';
-
-		/**
-		 * The class responsible for defining all actions that occur in the admin area.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-feedzy-rss-feeds-admin.php';
-
-		/**
-		 * The class responsible for the UI part of the plugin.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-feedzy-rss-feeds-ui.php';
-
-		/**
-		 * The class responsible for the Widget part of the plugin.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-feedzy-rss-feeds-widget.php';
-
 		$this->loader = new Feedzy_Rss_Feeds_Loader();
 
 	}
@@ -136,6 +113,10 @@ class Feedzy_Rss_Feeds {
 	 */
 	private function set_locale() {
 
+		/**
+		 * The class responsible for defining internationalization functionality
+		 * of the plugin.
+		 */
 		$plugin_i18n = new Feedzy_Rss_Feeds_i18n();
 
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
@@ -173,6 +154,7 @@ class Feedzy_Rss_Feeds {
 
 		$this->loader->add_action( 'load-post.php', $plugin_admin, 'enqueue_scripts' );
 		$this->loader->add_action( 'load-post-new.php', $plugin_admin, 'enqueue_scripts' );
+		$this->loader->add_action( 'admin_footer', $plugin_admin, 'render_templates' );
 
 		$plugin_widget = new Feedzy_Rss_Feeds_Widget( $plugin_admin );
 		$this->loader->add_action( 'widgets_init', $plugin_widget, 'registerWidget', 10 );

@@ -18,12 +18,11 @@
  * @subpackage Feedzy_Rss_Feeds/admin
  * @author     Themeisle <friends@themeisle.com>
  */
-require_once( 'class-abstract-feedzy-rss-feeds-admin.php' );
 
 /**
  * Class Feedzy_Rss_Feeds_Admin
  */
-class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Abstract {
+class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 	/**
 	 * The ID of this plugin.
@@ -76,7 +75,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Abstract {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . '../css/feedzy-rss-feeds.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name, FEEDZY_ABSURL . 'css/feedzy-rss-feeds.css', array(), $this->version, 'all' );
 	}
 
 	/**
@@ -101,10 +100,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Abstract {
 		global $typenow;
 
 		if ( post_type_supports( $typenow, 'editor' ) ) {
-			//wp_enqueue_style( $this->plugin_name . '-media', FEEDZY_ABSURL . 'css/media.css', array( 'media-views' ), $this->version );
-
-            //wp_enqueue_script( $this->plugin_name .'-library', FEEDZY_ABSURL . 'js/library.js', array( 'jquery', $this->plugin_name . '-media' ), $this->version, true );
-
+			// wp_enqueue_style( $this->plugin_name . '-media', FEEDZY_ABSURL . 'css/media.css', array( 'media-views' ), $this->version );
+			// wp_enqueue_script( $this->plugin_name .'-library', FEEDZY_ABSURL . 'js/library.js', array( 'jquery', $this->plugin_name . '-media' ), $this->version, true );
 			wp_enqueue_script( $this->plugin_name . '-media-model',      FEEDZY_ABSURL . 'js/media/model.js',      null,                                              $this->version, true );
 			wp_enqueue_script( $this->plugin_name . '-media-collection', FEEDZY_ABSURL . 'js/media/collection.js', array( $this->plugin_name . '-media-model' ),      $this->version, true );
 			wp_enqueue_script( $this->plugin_name . '-media-controller', FEEDZY_ABSURL . 'js/media/controller.js', array( $this->plugin_name . '-media-collection' ), $this->version, true );
@@ -151,7 +148,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Abstract {
 	 */
 	public static function _get_template_names_localized() {
 		$templates  = array(
-			'all'             => esc_html__( 'No Template', 'feedzy_rss_translate' ),
+			'all'             => esc_html__( 'All', 'feedzy_rss_translate' ),
+			'no-template'     => esc_html__( 'No Template', 'feedzy_rss_translate' ),
 			'default'         => esc_html__( 'Default', 'feedzy_rss_translate' ),
 			'example'         => esc_html__( 'Example', 'feedzy_rss_translate' ),
 		);

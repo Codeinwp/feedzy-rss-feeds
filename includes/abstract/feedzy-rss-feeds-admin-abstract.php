@@ -6,7 +6,7 @@
  * @since      3.0.0
  *
  * @package    Feedzy_Rss_Feeds
- * @subpackage Feedzy_Rss_Feeds/admin
+ * @subpackage Feedzy_Rss_Feeds/includes/abstract
  */
 /**
  * The Feedzy RSS functions of the plugin.
@@ -14,10 +14,11 @@
  * Abstract class containing functions for the Feedzy Admin Class
  *
  * @package    Feedzy_Rss_Feeds
- * @subpackage Feedzy_Rss_Feeds/admin
+ * @subpackage Feedzy_Rss_Feeds/includes/abstract
  * @author     Themeisle <friends@themeisle.com>
+ * @abstract
  */
-abstract class Feedzy_Rss_Feeds_Abstract {
+abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 
 	/**
@@ -633,5 +634,19 @@ abstract class Feedzy_Rss_Feeds_Abstract {
 		$content = $this->render_content( $sc, $feed, $content, $feedURL );
 
 		return apply_filters( 'feedzy_global_output', $content, $feedURL );
+	}
+
+	/**
+	 * Render the Template
+	 */
+	public function render_templates() {
+		global $pagenow;
+
+		if ( 'post.php' != $pagenow && 'post-new.php' != $pagenow ) {
+			return;
+		}
+
+		$render = new Feedzy_Rss_Feeds_Render_Templates();
+		$render->render();
 	}
 }

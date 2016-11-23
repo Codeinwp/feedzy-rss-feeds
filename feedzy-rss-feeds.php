@@ -31,19 +31,17 @@ if ( ! defined( 'WPINC' ) ) {
 
 /**
  * The code that runs during plugin activation.
- * This action is documented in includes/class-feedzy-rss-feeds-activator.php
+ * This action is documented in includes/feedzy-rss-feeds-activator.php
  */
 function activate_feedzy_rss_feeds() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-feedzy-rss-feeds-activator.php';
 	Feedzy_Rss_Feeds_Activator::activate();
 }
 
 /**
  * The code that runs during plugin deactivation.
- * This action is documented in includes/class-feedzy-rss-feeds-deactivator.php
+ * This action is documented in includes/feedzy-rss-feeds-deactivator.php
  */
 function deactivate_feedzy_rss_feeds() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-feedzy-rss-feeds-deactivator.php';
 	Feedzy_Rss_Feeds_Deactivator::deactivate();
 }
 
@@ -54,7 +52,32 @@ register_deactivation_hook( __FILE__, 'deactivate_feedzy_rss_feeds' );
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-feedzy-rss-feeds.php';
+function feedzy_rss_feeds_autoload( $class ) {
+	$namespaces = array( 'Feedzy_Rss_Feeds' );
+	foreach ( $namespaces as $namespace ) {
+		if ( substr( $class, 0, strlen( $namespace ) ) == $namespace ) {
+			$filename = plugin_dir_path( __FILE__ ) . 'includes/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
+			if ( is_readable( $filename ) ) {
+				require_once $filename;
+				return true;
+			}
+
+			$filename = plugin_dir_path( __FILE__ ) . 'includes/abstract/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
+			if ( is_readable( $filename ) ) {
+				require_once $filename;
+				return true;
+			}
+
+			$filename = plugin_dir_path( __FILE__ ) . 'includes/admin/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
+			if ( is_readable( $filename ) ) {
+				require_once $filename;
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 
 /**
  * Begins execution of the plugin.
@@ -74,4 +97,7 @@ function run_feedzy_rss_feeds() {
 	$plugin->run();
 
 }
+
+spl_autoload_register( 'feedzy_rss_feeds_autoload' );
+
 run_feedzy_rss_feeds();
