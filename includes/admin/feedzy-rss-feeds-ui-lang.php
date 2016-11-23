@@ -5,8 +5,8 @@
  * @link       http://themeisle.com
  * @since      3.0.0
  *
- * @package    Feedzy_Rss_Feeds
- * @subpackage Feedzy_Rss_Feeds/includes/admin
+ * @package    feedzy-rss-feeds
+ * @subpackage feedzy-rss-feeds/includes/admin
  */
 /**
  *

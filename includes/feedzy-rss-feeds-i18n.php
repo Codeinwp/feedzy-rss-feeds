@@ -19,8 +19,8 @@
  * so that it is ready for translation.
  *
  * @since      3.0.0
- * @package    Feedzy_Rss_Feeds
- * @subpackage Feedzy_Rss_Feeds/includes
+ * @package    feedzy-rss-feeds
+ * @subpackage feedzy-rss-feeds/includes
  * @author     Themeisle <friends@themeisle.com>
  */
 class Feedzy_Rss_Feeds_i18n {

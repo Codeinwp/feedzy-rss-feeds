@@ -5,14 +5,14 @@
  * @link       http://themeisle.com
  * @since      3.0.0
  *
- * @package    Feedzy_Rss_Feeds
- * @subpackage Feedzy_Rss_Feeds/includes/admin
+ * @package    feedzy-rss-feeds
+ * @subpackage feedzy-rss-feeds/includes/admin
  */
 /**
  * Media view template rendering class.
  *
- * @package    Feedzy_Rss_Feeds
- * @subpackage Feedzy_Rss_Feeds/includes/admin
+ * @package    feedzy-rss-feeds
+ * @subpackage feedzy-rss-feeds/includes/admin
  * @author     Themeisle <friends@themeisle.com>
  * @since 3.0.0
  */
@@ -70,12 +70,12 @@ class Feedzy_Rss_Feeds_Render_Templates extends Feedzy_Rss_Feeds_Render_Abstract
 	 */
 	protected function _renderFeedzyLibraryEmpty() {
 		echo '<div class="feedzy-library-feed">';
-		echo '<div class="feedzy-library-feed-canvas feedzy-library-nochart-canvas">';
-		echo '<div class="feedzy-library-notfound">', esc_html__( 'No feed templates found', 'feedzy_rss_translate' ), '</div>';
+		echo '<div class="feedzy-library-feed-canvas feedzy-library-nofeed-canvas">';
+		echo '<div class="feedzy-library-notfound">', esc_html__( 'No saved feeds found', 'feedzy_rss_translate' ), '</div>';
 		echo '</div>';
 		echo '<div class="feedzy-library-feed-footer feedzy-clearfix">';
-		echo '<span class="feedzy-library-feed-action feedzy-library-nochart-delete"></span>';
-		echo '<span class="feedzy-library-feed-action feedzy-library-nochart-insert"></span>';
+		echo '<span class="feedzy-library-feed-action feedzy-library-nofeed-delete"></span>';
+		echo '<span class="feedzy-library-feed-action feedzy-library-nofeed-insert"></span>';
 
 		echo '<span class="feedzy-library-feed-shortcode">';
 		echo '&nbsp;[Feedzy RSS Feeds]&nbsp;';

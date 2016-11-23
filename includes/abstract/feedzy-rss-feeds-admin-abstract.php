@@ -5,16 +5,16 @@
  * @link       http://themeisle.com
  * @since      3.0.0
  *
- * @package    Feedzy_Rss_Feeds
- * @subpackage Feedzy_Rss_Feeds/includes/abstract
+ * @package    feedzy-rss-feeds
+ * @subpackage feedzy-rss-feeds/includes/abstract
  */
 /**
  * The Feedzy RSS functions of the plugin.
  *
  * Abstract class containing functions for the Feedzy Admin Class
  *
- * @package    Feedzy_Rss_Feeds
- * @subpackage Feedzy_Rss_Feeds/includes/abstract
+ * @package    feedzy-rss-feeds
+ * @subpackage feedzy-rss-feeds/includes/abstract
  * @author     Themeisle <friends@themeisle.com>
  * @abstract
  */

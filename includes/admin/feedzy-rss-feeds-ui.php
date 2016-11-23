@@ -5,8 +5,8 @@
  * @link       http://themeisle.com
  * @since      3.0.0
  *
- * @package    Feedzy_Rss_Feeds
- * @subpackage Feedzy_Rss_Feeds/admin
+ * @package    feedzy-rss-feeds
+ * @subpackage feedzy-rss-feeds/includes/admin
  */
 
 /**
@@ -14,8 +14,8 @@
  *
  * TODO add description
  *
- * @package    Feedzy_Rss_Feeds
- * @subpackage Feedzy_Rss_Feeds/admin
+ * @package    feedzy-rss-feeds
+ * @subpackage feedzy-rss-feeds/includes/admin
  * @author     Themeisle <friends@themeisle.com>
  */
 class Feedzy_Rss_Feeds_Ui {

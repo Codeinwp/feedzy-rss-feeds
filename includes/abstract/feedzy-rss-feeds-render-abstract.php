@@ -5,15 +5,15 @@
  * @link       http://themeisle.com
  * @since      3.0.0
  *
- * @package    Feedzy_Rss_Feeds
- * @subpackage Feedzy_Rss_Feeds/includes/abstract
+ * @package    feedzy-rss-feeds
+ * @subpackage feedzy-rss-feeds/includes/abstract
  */
 /**
  * Abstract render class implements all routine stuff required for template
  * rendering.
  *
- * @package    Feedzy_Rss_Feeds
- * @subpackage Feedzy_Rss_Feeds/includes/abstract
+ * @package    feedzy-rss-feeds
+ * @subpackage feedzy-rss-feeds/includes/abstract
  * @author     Themeisle <friends@themeisle.com>
  * @abstract
  */

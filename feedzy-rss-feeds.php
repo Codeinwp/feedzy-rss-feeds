@@ -9,7 +9,7 @@
  *
  * @link              http://themeisle.com
  * @since             3.0.0
- * @package           Feedzy_Rss_Feeds
+ * @package           feedzy-rss-feeds
  *
  * @wordpress-plugin
  * Plugin Name:       Feedzy RSS Feeds

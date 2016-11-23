@@ -5,15 +5,15 @@
  * @link       http://themeisle.com
  * @since      3.0.0
  *
- * @package    Feedzy_Rss_Feeds
- * @subpackage Feedzy_Rss_Feeds/includes/admin
+ * @package    feedzy-rss-feeds
+ * @subpackage feedzy-rss-feeds/includes/admin
  */
 
 /**
  * The Widget functionality of the plugin.
  *
- * @package    Feedzy_Rss_Feeds
- * @subpackage Feedzy_Rss_Feeds/includes/admin
+ * @package    feedzy-rss-feeds
+ * @subpackage feedzy-rss-feeds/includes/admin
  * @author     Themeisle <friends@themeisle.com>
  */
 class Feedzy_Rss_Feeds_Widget extends WP_Widget {
