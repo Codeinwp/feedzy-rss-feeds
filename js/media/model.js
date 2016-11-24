@@ -9,7 +9,7 @@
 (function($, wpmm, wpmvlf) {
 	wpmm.feedzy_rss = {};
 
-	wpmm.feedzy_rss.Template = Backbone.Model.extend({
+	wpmm.feedzy_rss.Feed = Backbone.Model.extend({
 		sync: function(method, model, options) {
 			console.log( 'model.js' );
 			console.log( method );
@@ -18,7 +18,7 @@
 			if ('delete' === method) {
 				options = options || {};
 				options.data = _.extend( options.data || {}, {
-					action:  wpmvlf.actions.delete_template,
+					action:  wpmvlf.actions.delete_feed,
 					chart: model.get( 'id' ),
 					nonce: wpmvlf.nonce
 				});

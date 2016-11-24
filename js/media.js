@@ -7,16 +7,16 @@
  */
 /* global console */
 (function(wpmv) {
-	var mediaFrame, wpmvtf;
+	var mediaFrameFeed, wpmvtf;
 
 	wpmvtf = wpmv.toolbar.feedzy_rss;
-	mediaFrame = wpmv.MediaFrame.Post;
+	mediaFrameFeed = wpmv.MediaFrame.Post;
 
-	wpmv.MediaFrame.Post = mediaFrame.extend({
+	wpmv.MediaFrame.Post = mediaFrameFeed.extend({
 		initialize: function() {
 			var self = this;
 
-			mediaFrame.prototype.initialize.apply( self, arguments );
+			mediaFrameFeed.prototype.initialize.apply( self, arguments );
 
 			self.states.add([
 			        new wp.media.controller.Feedzy_Rss({

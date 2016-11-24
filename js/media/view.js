@@ -35,11 +35,12 @@
 			}
 			html += '>' + val + '</' + tag + '>';
 
+			console.log(html);
 			return html;
 		};
 	}
 
-	wpmvf.Template = wpmVFD.extend({
+	wpmvf.Feed = wpmVFD.extend({
 		className: 'feedzy-rss-library-feed-canvas',
 
 		constructor: function(options) {
@@ -48,7 +49,23 @@
 		},
 
 		render: function() {
+			var self, model, chart, gv, type, series, data, table, settings, i, j, row, date, format, formatter, axis, property;
 
+			self = this;
+			model = self.model;
+
+			self.$el
+				.width(self.options.width)
+				.height(self.options.height)
+				.css('background-image', 'none');
+
+			type = model.get('type');
+			series = model.get('series');
+			data = model.get('data');
+			settings = model.get('settings');
+
+			settings.width = self.options.width;
+			settings.height = self.options.height;
 		}
 	});
 
@@ -102,18 +119,18 @@
 
 			if (self.collection.length > 0) {
 				self.$el.html( '' );
-				self.collection.each( self.addTemplate, self );
+				self.collection.each( self.addFeed, self );
 			} else {
 				self.$el.html( self.template( {} ) );
 			}
 		},
 
-		addTemplate: function(feed) {
+		addFeed: function(feed) {
 			var self = this,
-				view = new wpmvfl.Template( { model: feed } );
+				view = new wpmvfl.Feed( { model: feed } );
 
 			self.$el.append( view.$el );
-			self.views.set( '#feedzy-library-feed-' + feed.get( 'id' ), view, { silent: true } );
+			self.views.set( '#feedzy-feed-' + feed.get( 'id' ), view, { silent: true } );
 			view.render();
 		},
 
@@ -150,13 +167,13 @@
 		}
 	});
 
-	wpmvfl.Template = wpmVFD.extend({
+	wpmvfl.Feed = wpmVFD.extend({
 		className: 'feedzy-library-feed',
 		template: wpm.template( 'feedzy-library-feed' ),
 
 		events: {
-			'click .feedzy-rss_library-feed-delete': 'deleteTemplate',
-			'click .feedzy-rss_library-feed-insert': 'insertTemplate',
+			'click .feedzy-rss_library-feed-delete': 'deleteFeed',
+			'click .feedzy-rss_library-feed-insert': 'insertFeed',
 			'click .feedzy-rss_library-feed-shortcode': 'selectShortcode'
 		},
 
@@ -171,7 +188,7 @@
 				libraryHeight = Math.floor( libraryHeight );
 			}
 
-			self._view = new wpmvf.Template({
+			self._view = new wpmvf.Feed({
 				model: self.model,
 				width: libraryWidth,
 				height: libraryHeight
@@ -185,7 +202,7 @@
 			this._view.render();
 		},
 
-		deleteTemplate: function() {
+		deleteFeed: function() {
 			var self = this;
 
 			if (showNotice.warn()) {
@@ -198,7 +215,7 @@
 			}
 		},
 
-		insertTemplate: function() {
+		insertFeed: function() {
 			wpm.editor.insert( '[feedzy_rss id="' + this.model.get( 'id' ) + '"]' );
 		},
 

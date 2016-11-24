@@ -20,7 +20,9 @@
 		},
 
 		initialize: function() {
-			this.library = new wpmmf.Templates();
+			this.library = new wpmmf.Feeds();
+			console.log('Controller.js');
+			console.log(this);
 		}
 	});
 })(wp.media);

@@ -171,8 +171,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	public function setup_media_view_strings( $strings ) {
 		$strings['feedzy_rss'] = array(
 			'actions' => array(
-				'get_template'   => 'feedzy-get-action-function',
-				'delete_template' => 'feedzy-delete-function',
+				'get_feed'   => 'feedzy-get-action-function',
+				'delete_feed' => 'feedzy-delete-function',
 			),
 			'controller' => array(
 				'title' => esc_html__( 'Feedzy RSS Feeds', 'feedzy_rss_translate' ),
@@ -184,7 +184,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			'library' => array(
 				'filters' => $this->_get_template_names_localized(),
 			),
-			'nonce'    => wp_create_nonce(),
+			'nonce'    => wp_create_nonce( $this->plugin_name . '-media-library' ),
 			'buildurl' => add_query_arg( 'action', 'create-feed-function', admin_url( 'admin-ajax.php' ) ),
 		);
 

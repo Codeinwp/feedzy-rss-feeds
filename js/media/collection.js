@@ -7,8 +7,8 @@
  */
 /* global console */
 (function(wpmm) {
-	wpmm.feedzy_rss.Templates = Backbone.Collection.extend({
-		model: wpmm.feedzy_rss.Template,
+	wpmm.feedzy_rss.Feeds = Backbone.Collection.extend({
+		model: wpmm.feedzy_rss.Feed,
 
 		sync: function(method, model, options) {
 			console.log( 'collection.js' );
@@ -19,7 +19,7 @@
 				options = options || {};
 				options.type = 'GET';
 				options.data = _.extend( options.data || {}, {
-					action:  wp.media.view.l10n.feedzy_rss.actions.get_template
+					action:  wp.media.view.l10n.feedzy_rss.actions.get_feed
 				});
 
 				return wp.media.ajax( options );
