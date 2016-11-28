@@ -2,6 +2,18 @@
  * form.css
  * Feedzy RSS Feeds Form CSS
  */
+.feedzy-popup-form input, .feedzy-popup-form select {
+    width: 100%;
+    line-height: 1.4em;
+    background-color: #fff;
+    height: 1.8em;
+    font-size: 0.8em;
+    margin: 0;
+    padding: 4px;
+    display: block;
+    box-sizing: border-box;
+}
+
 .feedzy-popup-form, .feedzy-popup-form .row {
     display: block;
     width: 100%;

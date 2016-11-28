@@ -49,22 +49,10 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 		$this->strings = array(
 		    'popup_url' => FEEDZY_ABSURL,
 			'plugin_title' => __( 'Insert Feedzy RSS Feeds Shortcode', 'feedzy_rss_translate' ),
-			'feeds' => __( 'The feed(s) URL (comma-separated list).', 'feedzy_rss_translate' ) . ' ' . __( 'Check feed before insert.', 'feedzy_rss_translate' ),
-			'maximum' => __( 'Number of items to display.', 'feedzy_rss_translate' ),
-			'feed_title' => __( 'Should we display the RSS title?', 'feedzy_rss_translate' ),
-			'target' => __( 'Links may be opened in the same window or a new tab.', 'feedzy_rss_translate' ),
-			'title' => __( 'Trim the title of the item after X characters.', 'feedzy_rss_translate' ),
-			'meta' => __( 'Should we display the date of publication and the author name?', 'feedzy_rss_translate' ),
-			'summary' => __( 'Should we display a description (abstract) of the retrieved item?', 'feedzy_rss_translate' ),
-			'summarylength' => __( 'Crop description (summary) of the element after X characters.', 'feedzy_rss_translate' ),
-			'thumb' => __( 'Should we display the first image of the content if it is available?', 'feedzy_rss_translate' ),
-			'defaultimg' => __( 'Default thumbnail URL if no image is found.', 'feedzy_rss_translate' ),
-			'size' => __( 'Thumblails dimension. Do not include "px". Eg: 150', 'feedzy_rss_translate' ),
-			'keywords_title' => __( 'Only display item if title contains specific keyword(s) (comma-separated list/case sensitive).', 'feedzy_rss_translate' ),
-			'text_default' => __( 'Do not specify', 'feedzy_rss_translate' ),
-			'text_no' => __( 'No', 'feedzy_rss_translate' ),
-			'text_yes' => __( 'Yes', 'feedzy_rss_translate' ),
-			'text_auto' => __( 'Auto', 'feedzy_rss_translate' ),
+			'image_button' => __( 'Use Image', 'feedzy_rss_translate' ),
+			'insert_button' => __( 'Insert Shortcode', 'feedzy_rss_translate' ),
+			'cancel_button' => __( 'Cancel', 'feedzy_rss_translate' ),
+			'pro_button' => __( 'Get Feedzy RSS Feeds PRO', 'feedzy_rss_translate' ),
 		);
 	}
 
@@ -88,10 +76,12 @@ class Feedzy_Rss_Feeds_Ui_Lang {
         $elements = array(
             'feeds'             => array(
                 'label' => __( 'The feed(s) URL (comma-separated list).', 'feedzy_rss_translate' ) . ' ' . __( 'Check feed before insert.', 'feedzy_rss_translate' ),
+                'placeholder' => __( 'Feed URL', 'feedzy_rss_translate' ),
                 'type'  => 'text',
                 'value' => ''),
             'maximum'           => array(
                 'label' => __( 'Number of items to display.', 'feedzy_rss_translate' ),
+                'placeholder' => __( '(eg: 5)', 'feedzy_rss_translate' ),
                 'type'  => 'text',
                 'value' => ''),
             'feed_title'        => array(
@@ -144,6 +134,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
                 )),
             'title'             => array(
                 'label' => __( 'Trim the title of the item after X characters.', 'feedzy_rss_translate' ),
+                'placeholder' => __( '(eg: 160)', 'feedzy_rss_translate' ),
                 'type'  => 'text',
                 'value' => ''),
             'meta'              => array(
@@ -185,6 +176,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
             'summarylength'     => array(
                 'label' => __( 'Crop description (summary) of the element after X characters.', 'feedzy_rss_translate' ),
                 'type'  => 'text',
+                'placeholder' => __( '(eg: 160)', 'feedzy_rss_translate' ),
                 'value' => ''),
             'thumb'             => array(
                 'label' => __( 'Should we display the first image of the content if it is available?', 'feedzy_rss_translate' ),
@@ -207,13 +199,18 @@ class Feedzy_Rss_Feeds_Ui_Lang {
             'defaultimg'        => array(
                 'label' => __( 'Default thumbnail URL if no image is found.', 'feedzy_rss_translate' ),
                 'type'  => 'file',
-                'value' => ''),
+                'value' => '',
+                'button' => array(
+                    'button_text' => __('Select Image from Gallery', 'feedzy_rss_translate')
+                )),
             'size'              => array(
                 'label' => __( 'Thumblails dimension. Do not include "px". Eg: 150', 'feedzy_rss_translate' ),
+                'placeholder' => __( '(eg: 150)', 'feedzy_rss_translate' ),
                 'type'  => 'text',
                 'value' => ''),
             'keywords_title'    => array(
                 'label' => __( 'Only display item if title contains specific keyword(s) (comma-separated list/case sensitive).', 'feedzy_rss_translate' ),
+                'placeholder' => __( '(eg: news, sports etc.)', 'feedzy_rss_translate' ),
                 'type'  => 'text',
                 'value' => '')
         );

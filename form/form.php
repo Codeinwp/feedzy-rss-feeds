@@ -68,10 +68,13 @@ $elements = $feedzyLangClass->get_form_elements();
                         }
                         break;
                     case 'file':
-                        $element = '<input type="file" name="' . $name . '" value="' . $props['value'] . '" />';
+                        $element = '
+                        <input type="text" name="' . $name . '" id="feedzy_image_url" value="' . $props['value'] . '">
+                        <input type="button" name="upload-btn" id="feedzy_upload_btn" value="' .  $props['button']['button_text'] . '">
+                        ';
                         break;
                     default:
-                        $element = '<input type="text" name="' . $name . '" value="' . $props['value'] . '" />';
+                        $element = '<input type="text" name="' . $name . '" value="' . $props['value'] . '" placeholder="' . $props['placeholder'] . '" />';
                         break;
                 }
                 echo '
@@ -88,5 +91,32 @@ $elements = $feedzyLangClass->get_form_elements();
         }
         ?>
     </div>
+    <script type="text/javascript">
+        var args = top.tinymce.activeEditor.windowManager.getParams();
+        var $ = args.jquery;
+        var editor = args.editor;
+        var wp = args.wp;
+        var custom_uploader;
+        $(document).ready(function($) {
+            $(document).on('click', '#feedzy_upload_btn', function (e) {
+                e.preventDefault();
+                var upload_button = $(this);
+                custom_uploader = wp.media.frames.file_frame = wp.media({
+                    title: editor.getLang( 'feedzy_tinymce_plugin.image_button' ),
+                    button: {
+                        text: editor.getLang( 'feedzy_tinymce_plugin.image_button' )
+                    },
+                    multiple: false
+                });
+
+                custom_uploader.on('select', function () {
+                    var attachment = custom_uploader.state().get('selection').first().toJSON();
+                    upload_button.siblings('input[type="text"]').val(attachment.url);
+                });
+
+                custom_uploader.open();
+            });
+        });
+    </script>
 </body>
 </html>

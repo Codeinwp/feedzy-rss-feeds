@@ -23,25 +23,30 @@
                     inline: 1,
                     id: 'feedzy-rss-insert-dialog',
                     buttons: [{
-                        text: 'Insert',
-                        id: 'feedzy-rss-button-insert',
-                        class: 'insert',
+                        text: editor.getLang( 'feedzy_tinymce_plugin.pro_button' ),
+                        id: 'feedzy-rss-button-pro',
                         onclick: function( e ) {
-                            insertShortcode( e, editor );
+                            openProLink( e, editor);
                         },
                     },
                         {
-                            text: 'Cancel',
+                            text: editor.getLang( 'feedzy_tinymce_plugin.cancel_button' ),
                             id: 'feedzy-rss-button-cancel',
                             onclick: 'close'
                     },
                         {
-                            text: 'Go Pro',
-                            id: 'feedzy-rss-button-pro',
+                            text: editor.getLang( 'feedzy_tinymce_plugin.insert_button' ),
+                            id: 'feedzy-rss-button-insert',
+                            class: 'insert',
                             onclick: function( e ) {
-                                openProLink( e, editor);
+                                insertShortcode( e, editor );
                             },
+
                     }],
+                }, {
+                    editor: editor,
+                    jquery: $,
+                    wp: wp,
                 });
             }
         });
