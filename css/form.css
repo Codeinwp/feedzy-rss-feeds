@@ -1,0 +1,16 @@
+/**
+ * form.css
+ * Feedzy RSS Feeds Form CSS
+ */
+.feedzy-popup-form, .feedzy-popup-form .row {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.feedzy-popup-form .row .col-md-6 {
+    display: inline-block;
+    width: 45%;
+    margin-left: 2.2%;
+    margin-right: 2.2%;
+    margin-bottom: 15px;
+}

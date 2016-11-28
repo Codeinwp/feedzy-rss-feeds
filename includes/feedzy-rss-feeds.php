@@ -148,13 +148,8 @@ class Feedzy_Rss_Feeds {
 		$this->loader->add_filter( 'the_content_feed', $plugin_admin, 'feedzy_insert_thumbnail_rss' );
 		add_shortcode( 'feedzy-rss', array( $plugin_admin, 'feedzy_rss' ) );
 
-		$this->loader->add_filter( 'media_view_strings', $plugin_admin, 'setup_media_view_strings' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-
-		$this->loader->add_action( 'load-post.php', $plugin_admin, 'enqueue_scripts' );
-		$this->loader->add_action( 'load-post-new.php', $plugin_admin, 'enqueue_scripts' );
-		$this->loader->add_action( 'admin_footer', $plugin_admin, 'render_templates' );
 
 		$plugin_widget = new Feedzy_Rss_Feeds_Widget( $plugin_admin );
 		$this->loader->add_action( 'widgets_init', $plugin_widget, 'registerWidget', 10 );

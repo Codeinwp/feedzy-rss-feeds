@@ -47,6 +47,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 	 */
 	public function __construct() {
 		$this->strings = array(
+		    'popup_url' => FEEDZY_ABSURL,
 			'plugin_title' => __( 'Insert Feedzy RSS Feeds Shortcode', 'feedzy_rss_translate' ),
 			'feeds' => __( 'The feed(s) URL (comma-separated list).', 'feedzy_rss_translate' ) . ' ' . __( 'Check feed before insert.', 'feedzy_rss_translate' ),
 			'maximum' => __( 'Number of items to display.', 'feedzy_rss_translate' ),
@@ -81,6 +82,146 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 
 		return $translated;
 	}
+
+
+    public function get_form_elements(){
+        $elements = array(
+            'feeds'             => array(
+                'label' => __( 'The feed(s) URL (comma-separated list).', 'feedzy_rss_translate' ) . ' ' . __( 'Check feed before insert.', 'feedzy_rss_translate' ),
+                'type'  => 'text',
+                'value' => ''),
+            'maximum'           => array(
+                'label' => __( 'Number of items to display.', 'feedzy_rss_translate' ),
+                'type'  => 'text',
+                'value' => ''),
+            'feed_title'        => array(
+                'label' => __( 'Should we display the RSS title?', 'feedzy_rss_translate' ),
+                'type'  => 'select',
+                'value' => '',
+                'opts'  => array(
+                    'auto' => array(
+                        'label' => __( 'Auto', 'feedzy_rss_translate' ),
+                        'value' => ''
+                    ),
+                    'yes' => array(
+                        'label' => __( 'Yes', 'feedzy_rss_translate' ),
+                        'value' => 'yes'
+                    ),
+                    'no' => array(
+                        'label' => __( 'No', 'feedzy_rss_translate' ),
+                        'value' => 'no'
+                    ),
+                )),
+            'target'            => array(
+                'label' => __( 'Links may be opened in the same window or a new tab.', 'feedzy_rss_translate' ),
+                'type'  => 'select',
+                'value' => '',
+                'opts'  => array(
+                    'auto' => array(
+                        'label' => __( 'Auto', 'feedzy_rss_translate' ),
+                        'value' => ''
+                    ),
+                    '_blank' => array(
+                        'label' => __( '_blank', 'feedzy_rss_translate' ),
+                        'value' => '_blank'
+                    ),
+                    '_self' => array(
+                        'label' => __( '_self', 'feedzy_rss_translate' ),
+                        'value' => '_self'
+                    ),
+                    '_parent' => array(
+                        'label' => __( '_parent', 'feedzy_rss_translate' ),
+                        'value' => '_parent'
+                    ),
+                    '_top' => array(
+                        'label' => __( '_top', 'feedzy_rss_translate' ),
+                        'value' => '_top'
+                    ),
+                    'framename' => array(
+                        'label' => __( 'framename', 'feedzy_rss_translate' ),
+                        'value' => 'framename'
+                    )
+                )),
+            'title'             => array(
+                'label' => __( 'Trim the title of the item after X characters.', 'feedzy_rss_translate' ),
+                'type'  => 'text',
+                'value' => ''),
+            'meta'              => array(
+                'label' => __( 'Should we display the date of publication and the author name?', 'feedzy_rss_translate' ),
+                'type'  => 'select',
+                'value' => '',
+                'opts'  => array(
+                    'auto' => array(
+                        'label' => __( 'Auto', 'feedzy_rss_translate' ),
+                        'value' => ''
+                    ),
+                    'yes' => array(
+                        'label' => __( 'Yes', 'feedzy_rss_translate' ),
+                        'value' => 'yes'
+                    ),
+                    'no' => array(
+                        'label' => __( 'No', 'feedzy_rss_translate' ),
+                        'value' => 'no'
+                    ),
+                )),
+            'summary'           => array(
+                'label' => __( 'Should we display a description (abstract) of the retrieved item?', 'feedzy_rss_translate' ),
+                'type'  => 'select',
+                'value' => '',
+                'opts'  => array(
+                    'auto' => array(
+                        'label' => __( 'Auto', 'feedzy_rss_translate' ),
+                        'value' => ''
+                    ),
+                    'yes' => array(
+                        'label' => __( 'Yes', 'feedzy_rss_translate' ),
+                        'value' => 'yes'
+                    ),
+                    'no' => array(
+                        'label' => __( 'No', 'feedzy_rss_translate' ),
+                        'value' => 'no'
+                    ),
+                )),
+            'summarylength'     => array(
+                'label' => __( 'Crop description (summary) of the element after X characters.', 'feedzy_rss_translate' ),
+                'type'  => 'text',
+                'value' => ''),
+            'thumb'             => array(
+                'label' => __( 'Should we display the first image of the content if it is available?', 'feedzy_rss_translate' ),
+                'type'  => 'select',
+                'value' => '',
+                'opts'  => array(
+                    'auto' => array(
+                        'label' => __( 'Auto', 'feedzy_rss_translate' ),
+                        'value' => ''
+                    ),
+                    'yes' => array(
+                        'label' => __( 'Yes', 'feedzy_rss_translate' ),
+                        'value' => 'yes'
+                    ),
+                    'no' => array(
+                        'label' => __( 'No', 'feedzy_rss_translate' ),
+                        'value' => 'no'
+                    ),
+                )),
+            'defaultimg'        => array(
+                'label' => __( 'Default thumbnail URL if no image is found.', 'feedzy_rss_translate' ),
+                'type'  => 'file',
+                'value' => ''),
+            'size'              => array(
+                'label' => __( 'Thumblails dimension. Do not include "px". Eg: 150', 'feedzy_rss_translate' ),
+                'type'  => 'text',
+                'value' => ''),
+            'keywords_title'    => array(
+                'label' => __( 'Only display item if title contains specific keyword(s) (comma-separated list/case sensitive).', 'feedzy_rss_translate' ),
+                'type'  => 'text',
+                'value' => '')
+        );
+
+        $elements = apply_filters('feedzy_get_form_elements', $elements);
+
+        return $elements;
+    }
 
 }
 

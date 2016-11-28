@@ -7,173 +7,125 @@
  */
 /* global tinymce */
 /* jshint unused:false */
-(function() {
-	tinymce.PluginManager.add('feedzy_mce_button', function( editor, url ) {
-		editor.addButton( 'feedzy_mce_button', {
-			title: 'Feedzy Lite',
-			label: 'Feedzy Lite',
-			icon: 'feedzy-icon',
-			onclick: function() {
-				editor.windowManager.open( {
-					title: editor.getLang( 'feedzy_tinymce_plugin.plugin_title' ),
-					body: [
-						{
-							type: 'textbox',
-							name: 'feeds',
-							classes : 'feedzy-validator', // necessary to insert the validator link
-							label: editor.getLang( 'feedzy_tinymce_plugin.feeds' ),
-							value: ''
-					},
-						{
-							type: 'textbox',
-							name: 'maximum',
-							label: editor.getLang( 'feedzy_tinymce_plugin.maximum' ),
-							value: ''
-					},
-						{
-							type: 'listbox',
-							name: 'feed_title',
-							label: editor.getLang( 'feedzy_tinymce_plugin.feed_title' ),
-							'values': [
-								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_default' ), value: '' },
-								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_no' ), value: 'no' },
-								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_yes' ), value: 'yes' }
-							]
-					},
-						{
-							type: 'listbox',
-							name: 'target',
-							label: editor.getLang( 'feedzy_tinymce_plugin.target' ),
-							'values': [
-								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_default' ), value: '' },
-								{ text: '_blank', value: '_blank' },
-								{ text: '_self', value: '_self' },
-								{ text: '_parent', value: '_parent' },
-								{ text: '_top', value: '_top' },
-								{ text: 'framename', value: 'framename' }
-							]
-					},
-						{
-							type: 'textbox',
-							name: 'title',
-							label: editor.getLang( 'feedzy_tinymce_plugin.title' ),
-							value: ''
-					},
-						{
-							type: 'listbox',
-							name: 'meta',
-							label: editor.getLang( 'feedzy_tinymce_plugin.meta' ),
-							'values': [
-								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_default' ), value: '' },
-								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_no' ), value: 'no' },
-								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_yes' ), value: 'yes' }
-							]
-					},
-						{
-							type: 'listbox',
-							name: 'summary',
-							label: editor.getLang( 'feedzy_tinymce_plugin.summary' ),
-							'values': [
-								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_default' ), value: '' },
-								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_no' ), value: 'no' },
-								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_yes' ), value: 'yes' }
-							]
-					},
-						{
-							type: 'textbox',
-							name: 'summarylength',
-							label: editor.getLang( 'feedzy_tinymce_plugin.summarylength' ),
-							value: ''
-					},
-						{
-							type: 'listbox',
-							name: 'thumb',
-							label: editor.getLang( 'feedzy_tinymce_plugin.thumb' ),
-							'values': [
-								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_default' ), value: '' },
-								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_no' ), value: 'no' },
-								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_yes' ), value: 'yes' },
-								{ text: editor.getLang( 'feedzy_tinymce_plugin.text_auto' ), value: 'auto' }
-							]
-					},
-						{
-							type: 'textbox',
-							name: 'defaultimg',
-							classes : 'feedzy-media', // necessary to call the media library
-							label: editor.getLang( 'feedzy_tinymce_plugin.defaultimg' ),
-							value: ''
-					},
-						{
-							type: 'textbox',
-							name: 'size',
-							label: editor.getLang( 'feedzy_tinymce_plugin.size' ),
-							value: ''
-					},
-						{
-							type: 'textbox',
-							name: 'keywords_title',
-							label: editor.getLang( 'feedzy_tinymce_plugin.keywords_title' ),
-							value: ''
-					}
-					],
-					onsubmit: function( e ) {
-						if (e.data.feeds !== '') {
-							e.data.feeds = 'feeds="' + e.data.feeds + '" ';
-						} else {
-							e.data.feeds = 'feeds="http://themeisle.com/feed" ';
-						}
-						if (e.data.maximum !== '') {
-							e.data.maximum = 'max="' + e.data.maximum + '" ';
-						}
-						if (e.data.feed_title !== '') {
-							e.data.feed_title = 'feed_title="' + e.data.feed_title + '" ';
-						}
-						if (e.data.target !== '') {
-							e.data.target = 'target="' + e.data.target + '" ';
-						}
-						if (e.data.title !== '') {
-							e.data.title = 'title="' + e.data.title + '" ';
-						}
-						if (e.data.meta !== '') {
-							e.data.meta = 'meta="' + e.data.meta + '" ';
-						}
-						if (e.data.summary !== '') {
-							e.data.summary = 'summary="' + e.data.summary + '" ';
-						}
-						if (e.data.summarylength !== '') {
-							e.data.summarylength = 'summarylength="' + e.data.summarylength + '" ';
-						}
-						if (e.data.thumb !== '') {
-							e.data.thumb = 'thumb="' + e.data.thumb + '" ';
-						}
-						if (e.data.defaultimg !== '') {
-							e.data.defaultimg = 'default="' + e.data.defaultimg + '" ';
-						}
-						if (e.data.size !== '') {
-							e.data.size = 'size="' + e.data.size + '" ';
-						}
-						if (e.data.keywords_title !== '') {
-							e.data.keywords_title = 'keywords_title="' + e.data.keywords_title + '" ';
-						}
-						editor.insertContent(
-							'[feedzy-rss ' +
-								e.data.feeds +
-								e.data.maximum +
-								e.data.feed_title +
-								e.data.target +
-								e.data.title +
-								e.data.meta +
-								e.data.summary +
-								e.data.summarylength +
-								e.data.thumb +
-								e.data.defaultimg +
-								e.data.size +
-								e.data.keywords_title +
-							']'
-						);
-					}
-				});
-			}
-		});
-	});
-})();
+(function($) {
+    tinymce.PluginManager.add('feedzy_mce_button', function( editor, url ) {
+        editor.addButton( 'feedzy_mce_button', {
+            title: 'Feedzy Lite',
+            label: 'Feedzy Lite',
+            icon: 'feedzy-icon',
+            onclick: function() {
+                //console.log(ajaxurl);
+                editor.windowManager.open( {
+                    title: editor.getLang( 'feedzy_tinymce_plugin.plugin_title' ),
+                    url: editor.getLang( 'feedzy_tinymce_plugin.popup_url' ) + 'form/form.php',
+                    width: $( window ).width() * 0.7,
+                    height: ($( window ).height() - 36 - 50) * 0.7,
+                    inline: 1,
+                    id: 'feedzy-rss-insert-dialog',
+                    buttons: [{
+                        text: 'Insert',
+                        id: 'feedzy-rss-button-insert',
+                        class: 'insert',
+                        onclick: function( e ) {
+                            insertShortcode( e, editor );
+                        },
+                    },
+                        {
+                            text: 'Cancel',
+                            id: 'feedzy-rss-button-cancel',
+                            onclick: 'close'
+                    },
+                        {
+                            text: 'Go Pro',
+                            id: 'feedzy-rss-button-pro',
+                            onclick: function( e ) {
+                                openProLink( e, editor);
+                            },
+                    }],
+                });
+            }
+        });
+    });
+
+    function insertShortcode( e, editor ) {
+        console.log('Insert Shortcode Cliked');
+        var frame = $(e.currentTarget).find("iframe").get(0);
+        var content = frame.contentDocument;
+
+        var feeds = $('input[name="feeds"]', content).val();
+        var maximum = $('input[name="maximum"]', content).val();
+        var feed_title = $('select[name="feed_title"]', content).val();
+        var target = $('select[name="target"]', content).val();
+        var title = $('input[name="title"]', content).val();
+        var meta = $('select[name="meta"]', content).val();
+        var summary = $('select[name="summary"]', content).val();
+        var summarylength = $('input[name="summarylength"]', content).val();
+        var thumb = $('select[name="thumb"]', content).val();
+        var defaultimg = $('input[name="defaultimg"]', content).val();
+        var size = $('input[name="size"]', content).val();
+        var keywords_title = $('input[name="keywords_title"]', content).val();
+
+
+
+        if (feeds !== '') {
+            feeds = 'feeds="' + feeds + '" ';
+        } else {
+            feeds = 'feeds="http://themeisle.com/feed" ';
+        }
+        if (maximum !== '') {
+            maximum = 'max="' + maximum + '" ';
+        }
+        if (feed_title !== '') {
+            feed_title = 'feed_title="' + feed_title + '" ';
+        }
+        if (target !== '') {
+            target = 'target="' + target + '" ';
+        }
+        if (title !== '') {
+            title = 'title="' + title + '" ';
+        }
+        if (meta !== '') {
+            meta = 'meta="' + meta + '" ';
+        }
+        if (summary !== '') {
+            summary = 'summary="' + summary + '" ';
+        }
+        if (summarylength !== '') {
+            summarylength = 'summarylength="' + summarylength + '" ';
+        }
+        if (thumb !== '') {
+            thumb = 'thumb="' + thumb + '" ';
+        }
+        if (defaultimg !== '') {
+            defaultimg = 'default="' + defaultimg + '" ';
+        }
+        if (size !== '') {
+            size = 'size="' + size + '" ';
+        }
+        if (keywords_title !== '') {
+            keywords_title = 'keywords_title="' + keywords_title + '" ';
+        }
+        editor.insertContent(
+            '[feedzy-rss ' +
+            feeds +
+            maximum +
+            feed_title +
+            target +
+            title +
+            meta +
+            summary +
+            summarylength +
+            thumb +
+            defaultimg +
+            size +
+            keywords_title +
+            ']'
+        );
+        editor.windowManager.close();
+    }
+
+    function openProLink( e , editor ) {
+
+    }
+})(jQuery);
+
