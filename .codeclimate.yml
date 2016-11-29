@@ -17,7 +17,9 @@ engines:
   phpmd:
     enabled: true
     checks:
-      Design%2FLongMethod:
+      Design/TooManyPublicMethods:
+        enabled: false
+      Design/LongMethod:
         enabled: false
 ratings:
   paths:
