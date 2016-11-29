@@ -36,8 +36,11 @@ $html_parts = $feedzyLangClass->get_form_elements();
 		$output = '';
 		if ( ! empty( $html_parts ) ) {
 			foreach ( $html_parts as $item => $section ) {
+				$output .= '<div class="container feedzy_' . $item . '">';
 				$output .= '<h5>' . $section['title'] . '</h5>';
-				$output .= '<div class="container">';
+				if( isset( $section['description'] ) ) {
+					$output .= '<p>' . $section['description'] . '</p>';
+				}
 				if ( ! empty( $section['elements'] ) ) {
 					foreach ( $section['elements'] as $name => $props ) {
 						$element = '';
@@ -86,7 +89,7 @@ $html_parts = $feedzyLangClass->get_form_elements();
 								break;
 						}
 						$output .= '
-                        <div class="row">
+                        <div class="row feedzy_element_' . $name . '">
                            <div class="column column-50">
                                 <label for="' . $name . '">' . $props['label'] . '</label>
                             </div>

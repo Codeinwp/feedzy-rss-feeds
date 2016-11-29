@@ -48,6 +48,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 	public function __construct() {
 		$this->strings = array(
 		    'popup_url' => FEEDZY_ABSURL,
+		    'pro_url' => 'https://themeisle.com/',
 			'plugin_title' => __( 'Insert Feedzy RSS Feeds Shortcode', 'feedzy_rss_translate' ),
 			'image_button' => __( 'Use Image', 'feedzy_rss_translate' ),
 			'insert_button' => __( 'Insert Shortcode', 'feedzy_rss_translate' ),
@@ -81,9 +82,8 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 	 */
 	public function get_form_elements() {
 		$elements = array(
-			'section_01' => array(
+			'section_feed' => array(
 				'title' => __( 'Feed Source', 'feedzy_rss_translate' ),
-				'description' => __( 'Feed Source', 'feedzy_rss_translate' ),
 				'elements' => array(
 					'feeds' => array(
 						'label' => __( 'The feed(s) URL (comma-separated list).', 'feedzy_rss_translate' ) . ' ' . __( 'Check feed before insert.', 'feedzy_rss_translate' ),
@@ -118,9 +118,8 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 				    ),
 				),
 			),
-			'section_02' => array(
+			'section_item' => array(
 				'title' => __( 'Item Options', 'feedzy_rss_translate' ),
-				'description' => __( 'Item Options', 'feedzy_rss_translate' ),
 				'elements' => array(
 					'target' => array(
 						'label' => __( 'Links may be opened in the same window or a new tab.', 'feedzy_rss_translate' ),
@@ -211,9 +210,8 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 				    ),
 				),
 			),
-			'section_03' => array(
+			'section_image' => array(
 				'title' => __( 'Item Image Options', 'feedzy_rss_translate' ),
-				'description' => __( 'Item Image Options', 'feedzy_rss_translate' ),
 				'elements' => array(
 					'thumb' => array(
 						'label' => __( 'Should we display the first image of the content if it is available?', 'feedzy_rss_translate' ),
@@ -251,12 +249,12 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 				    ),
 				),
 			),
-			'section_04' => array(
+			'section_pro' => array(
 				'title' => __( 'PRO Options', 'feedzy_rss_translate' ),
-				'description' => __( 'PRO Options', 'feedzy_rss_translate' ),
+				'description' => __( 'Get access to more options and customizations with Feedzy RSS Feeds Pro. Use existing templates or extend them and make them your own.', 'feedzy_rss_translate' ) . '<br/>' . '<a href="https://themeisle.com" target="_blank"><small>' . __( 'Get Feedzy RSS Feeds PRO', 'feedzy_rss_translate' ) . '</small></a>',
 				'elements' => array(
 					'price' => array(
-						'label' => __( 'Should we display the price from the feed if it is available?', 'feedzy_rss_translate' ),
+						'label' => __( 'Should we display the price from the feed if it is available?', 'feedzy_rss_translate' ) . '<small class="feedzy_pro_tag">* ' . __( 'available in PRO', 'feedzy_rss_translate' ) . '</small>',
 						'type'  => 'select',
 						'disabled' => true,
 						'value' => '',
@@ -276,14 +274,14 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						),
 				    ),
 					'referral_url' => array(
-						'label' => __( 'Referral URL parameters (w/o "?").', 'feedzy_rss_translate' ),
+						'label' => __( 'Referral URL parameters (w/o "?").', 'feedzy_rss_translate' ) . '<small class="feedzy_pro_tag">* ' . __( 'available in PRO', 'feedzy_rss_translate' ) . '</small>',
 						'placeholder' => __( '(eg. promo_code=feedzy_is_awesome)', 'feedzy_rss_translate' ),
 						'type'  => 'text',
 						'disabled' => true,
 						'value' => '',
 				    ),
 					'template' => array(
-						'label' => __( 'Template to use when displaying the feed.', 'feedzy_rss_translate' ),
+						'label' => __( 'Template to use when displaying the feed.', 'feedzy_rss_translate' ) . '<small class="feedzy_pro_tag">* ' . __( 'available in PRO', 'feedzy_rss_translate' ) . '</small>',
 						'type'  => 'radio',
 						'disabled' => true,
 						'value' => '',
