@@ -38,7 +38,7 @@ $html_parts = $feedzyLangClass->get_form_elements();
 			foreach ( $html_parts as $item => $section ) {
 				$output .= '<div class="container feedzy_' . $item . '">';
 				$output .= '<h5>' . $section['title'] . '</h5>';
-				if( isset( $section['description'] ) ) {
+				if ( isset( $section['description'] ) ) {
 					$output .= '<p>' . $section['description'] . '</p>';
 				}
 				if ( ! empty( $section['elements'] ) ) {

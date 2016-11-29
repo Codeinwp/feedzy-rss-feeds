@@ -89,6 +89,6 @@
 	}
 
 	function openProLink( e , editor ) {
-		window.open(editor.getLang( 'feedzy_tinymce_plugin.pro_url' ), '_blank');
+		window.open( editor.getLang( 'feedzy_tinymce_plugin.pro_url' ), '_blank' );
 	}
 })(jQuery);
