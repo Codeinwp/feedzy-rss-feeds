@@ -62,49 +62,59 @@ i.mce-i-feedzy-icon {
 }
 
 #feedzy-rss-button-insert {
+	border-color: #4cae4c;
 	color: #fff;
 	background-color: #5cb85c;
-	border-color: #4cae4c;
 }
 
 #feedzy-rss-button-insert button {
 	color: #fff;
 }
 
-#feedzy-rss-button-insert:hover, #feedzy-rss-button-insert:focus {
+#feedzy-rss-button-insert:hover,
+#feedzy-rss-button-insert:focus {
+	border-color: #398439;
 	color: #fff;
 	background-color: #449d44;
-	border-color: #398439;
 }
 
 #feedzy-rss-button-cancel {
+	border-color: #ccc;
 	color: #333;
 	background-color: #fff;
-	border-color: #ccc;
 }
 
 #feedzy-rss-button-cancel button {
 	color: #333;
 }
 
-#feedzy-rss-button-cancel:hover, #feedzy-rss-button-cancel:focus {
+#feedzy-rss-button-cancel:hover,
+#feedzy-rss-button-cancel:focus {
+	border-color: #adadad;
 	color: #333;
 	background-color: #e6e6e6;
-	border-color: #adadad;
 }
 
 #feedzy-rss-button-pro {
+	position: absolute;
+	left: 10px !important;
+	border-color: #46b8da;
 	color: #fff;
 	background-color: #5bc0de;
-	border-color: #46b8da;
 }
 
 #feedzy-rss-button-pro button {
 	color: #fff;
 }
 
-#feedzy-rss-button-pro:hover, #feedzy-rss-button-pro:focus {
+#feedzy-rss-button-pro:hover,
+#feedzy-rss-button-pro:focus {
+	border-color: #269abc;
 	color: #fff;
 	background-color: #31b0d5;
-	border-color: #269abc;
+}
+
+#feedzy-rss-insert-dialog-title {
+	font-weight: 300;
+	text-align: center;
 }

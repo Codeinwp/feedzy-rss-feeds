@@ -8,129 +8,87 @@
 /* global tinymce */
 /* jshint unused:false */
 (function($) {
-    tinymce.PluginManager.add('feedzy_mce_button', function( editor, url ) {
-        editor.addButton( 'feedzy_mce_button', {
-            title: 'Feedzy Lite',
-            label: 'Feedzy Lite',
-            icon: 'feedzy-icon',
-            onclick: function() {
-                //console.log(ajaxurl);
-                editor.windowManager.open( {
-                    title: editor.getLang( 'feedzy_tinymce_plugin.plugin_title' ),
-                    url: editor.getLang( 'feedzy_tinymce_plugin.popup_url' ) + 'form/form.php',
-                    width: $( window ).width() * 0.7,
-                    height: ($( window ).height() - 36 - 50) * 0.7,
-                    inline: 1,
-                    id: 'feedzy-rss-insert-dialog',
-                    buttons: [{
-                        text: editor.getLang( 'feedzy_tinymce_plugin.pro_button' ),
-                        id: 'feedzy-rss-button-pro',
-                        onclick: function( e ) {
-                            openProLink( e, editor);
-                        },
-                    },
-                        {
-                            text: editor.getLang( 'feedzy_tinymce_plugin.cancel_button' ),
-                            id: 'feedzy-rss-button-cancel',
-                            onclick: 'close'
-                    },
-                        {
-                            text: editor.getLang( 'feedzy_tinymce_plugin.insert_button' ),
-                            id: 'feedzy-rss-button-insert',
-                            class: 'insert',
-                            onclick: function( e ) {
-                                insertShortcode( e, editor );
-                            },
+	tinymce.PluginManager.add('feedzy_mce_button', function( editor, url ) {
+		editor.addButton( 'feedzy_mce_button', {
+			title: 'Feedzy Lite',
+			label: 'Feedzy Lite',
+			icon: 'feedzy-icon',
+			onclick: function() {
+				editor.windowManager.open( {
+					title: editor.getLang( 'feedzy_tinymce_plugin.plugin_title' ),
+					url: editor.getLang( 'feedzy_tinymce_plugin.popup_url' ) + 'form/form.php',
+					width: $( window ).width() * 0.7,
+					height: ($( window ).height() - 36 - 50) * 0.7,
+					inline: 1,
+					id: 'feedzy-rss-insert-dialog',
+					buttons: [{
+						text: editor.getLang( 'feedzy_tinymce_plugin.pro_button' ),
+						id: 'feedzy-rss-button-pro',
+						onclick: function( e ) {
+							openProLink( e, editor );
+						},
+					},
+						{
+							text: editor.getLang( 'feedzy_tinymce_plugin.cancel_button' ),
+							id: 'feedzy-rss-button-cancel',
+							onclick: 'close'
+					},
+						{
+							text: editor.getLang( 'feedzy_tinymce_plugin.insert_button' ),
+							id: 'feedzy-rss-button-insert',
+							class: 'insert',
+							onclick: function( e ) {
+								insertShortcode( e, editor );
+							},
 
-                    }],
-                }, {
-                    editor: editor,
-                    jquery: $,
-                    wp: wp,
-                });
-            }
-        });
-    });
+					}],
+					}, {
+						editor: editor,
+						jquery: $,
+						wp: wp,
+				});
+			}
+		});
+	});
 
-    function insertShortcode( e, editor ) {
-        console.log('Insert Shortcode Cliked');
-        var frame = $(e.currentTarget).find("iframe").get(0);
-        var content = frame.contentDocument;
+	function insertShortcode( e, editor ) {
+		var frame = $( e.currentTarget ).find( 'iframe' ).get( 0 );
+		var content = frame.contentDocument;
 
-        var feeds = $('input[name="feeds"]', content).val();
-        var maximum = $('input[name="maximum"]', content).val();
-        var feed_title = $('select[name="feed_title"]', content).val();
-        var target = $('select[name="target"]', content).val();
-        var title = $('input[name="title"]', content).val();
-        var meta = $('select[name="meta"]', content).val();
-        var summary = $('select[name="summary"]', content).val();
-        var summarylength = $('input[name="summarylength"]', content).val();
-        var thumb = $('select[name="thumb"]', content).val();
-        var defaultimg = $('input[name="defaultimg"]', content).val();
-        var size = $('input[name="size"]', content).val();
-        var keywords_title = $('input[name="keywords_title"]', content).val();
+		var feedzy_form = $( '*[data-feedzy]', content );
+		var shortCode = '';
+		$.each( feedzy_form, function( index, element ) {
+			if ( ! $( element ).attr( 'disabled' ) ) {
+				var shortCodeParams = '';
+				var eName = $( element ).attr( 'data-feedzy' );
+				var eValue = '';
+				if ($( element ).is( 'input' )) {
+					if ($( element ).attr( 'type' ) === 'radio' || $( element ).attr( 'type' ) === 'checkbox') {
+						eValue = $( 'input[name="' + eName + '"]:checked' ).val();
+					} else {
+						eValue = $( element ).val();
+					}
+				} else {
+					eValue = $( element ).val();
+				}
 
+				if ( eValue !== '' && typeof eValue !== 'undefined' ) {
+					shortCodeParams = eName + '="' + eValue + '" ';
+				} else {
+					if ( eName === 'feeds' ) {
+						shortCodeParams = eName + '="http://themeisle.com/feed" ';
+					}
+				}
+				shortCode += shortCodeParams;
+			}
+		});
+		editor.insertContent(
+			'[feedzy-rss ' + shortCode + ']'
+		);
+		editor.windowManager.close();
+	}
 
+	function openProLink( e , editor ) {
 
-        if (feeds !== '') {
-            feeds = 'feeds="' + feeds + '" ';
-        } else {
-            feeds = 'feeds="http://themeisle.com/feed" ';
-        }
-        if (maximum !== '') {
-            maximum = 'max="' + maximum + '" ';
-        }
-        if (feed_title !== '') {
-            feed_title = 'feed_title="' + feed_title + '" ';
-        }
-        if (target !== '') {
-            target = 'target="' + target + '" ';
-        }
-        if (title !== '') {
-            title = 'title="' + title + '" ';
-        }
-        if (meta !== '') {
-            meta = 'meta="' + meta + '" ';
-        }
-        if (summary !== '') {
-            summary = 'summary="' + summary + '" ';
-        }
-        if (summarylength !== '') {
-            summarylength = 'summarylength="' + summarylength + '" ';
-        }
-        if (thumb !== '') {
-            thumb = 'thumb="' + thumb + '" ';
-        }
-        if (defaultimg !== '') {
-            defaultimg = 'default="' + defaultimg + '" ';
-        }
-        if (size !== '') {
-            size = 'size="' + size + '" ';
-        }
-        if (keywords_title !== '') {
-            keywords_title = 'keywords_title="' + keywords_title + '" ';
-        }
-        editor.insertContent(
-            '[feedzy-rss ' +
-            feeds +
-            maximum +
-            feed_title +
-            target +
-            title +
-            meta +
-            summary +
-            summarylength +
-            thumb +
-            defaultimg +
-            size +
-            keywords_title +
-            ']'
-        );
-        editor.windowManager.close();
-    }
-
-    function openProLink( e , editor ) {
-
-    }
+	}
 })(jQuery);
-
