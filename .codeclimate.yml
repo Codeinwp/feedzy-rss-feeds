@@ -6,10 +6,10 @@ engines:
     enabled: true
     config:
       languages:
-      javascript:
-        mass_threshold: 70
-      php:
-        mass_threshold: 70
+        javascript:
+          mass_threshold: 70
+        php:
+          mass_threshold: 70
   eslint:
     enabled: true
   fixme:
