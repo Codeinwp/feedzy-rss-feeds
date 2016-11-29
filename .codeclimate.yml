@@ -10,12 +10,16 @@ engines:
       - javascript
       - python
       - php
+          mass_threshold: 70
   eslint:
     enabled: true
   fixme:
     enabled: true
   phpmd:
     enabled: true
+    checks:
+      Design%2FLongMethod:
+        enabled: false
 ratings:
   paths:
   - "**.css"
