@@ -1,0 +1,293 @@
+# Copyright (C) 2016 Themeisle
+# This file is distributed under the GPL-2.0+.
+msgid ""
+msgstr ""
+"Project-Id-Version: Feedzy RSS Feeds 3.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/Codeinwp/feedzy-rss-feeds/issues\n"
+"POT-Creation-Date: 2016-11-29 12:53:13+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2016-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Themeisle Translate Team <friends@themeisle.com>\n"
+"Language-Team: Themeisle Translate <friends@themeisle.com>\n"
+"X-Generator: grunt-wp-i18n 0.5.4\n"
+"X-Poedit-KeywordsList: "
+"__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
+"attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Country: United States\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-Bookmarks: \n"
+"X-Textdomain-Support: yes\n"
+
+#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:46
+msgid "Sorry, this feed is currently unavailable or does not exists anymore."
+msgstr ""
+
+#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:546
+msgid "Posted"
+msgstr ""
+
+#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:555
+msgid "by"
+msgstr ""
+
+#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:560
+msgid "on"
+msgstr ""
+
+#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:562
+msgid "at"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-admin.php:118
+msgid "Documentation and examples"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-admin.php:119
+msgid "More Plugins"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:51
+msgid "Insert Feedzy RSS Feeds Shortcode"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:52
+msgid "Use Image"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:53
+msgid "Insert Shortcode"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:54
+msgid "Cancel"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:55
+msgid "Get Feedzy RSS Feeds PRO"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:85
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:86
+msgid "Feed Source"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:89
+#: includes/admin/feedzy-rss-feeds-widget.php:119
+msgid "The feed(s) URL (comma-separated list)."
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:89
+msgid "Check feed before insert."
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:90
+msgid "Feed URL"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:95
+#: includes/admin/feedzy-rss-feeds-widget.php:123
+msgid "Number of items to display."
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:96
+msgid "(eg: 5)"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:101
+msgid "Should we display the RSS title?"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:106
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:131
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:168
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:187
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:224
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:265
+#: includes/admin/feedzy-rss-feeds-widget.php:102
+msgid "Auto"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:110
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:172
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:191
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:228
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:269
+#: includes/admin/feedzy-rss-feeds-widget.php:101
+msgid "Yes"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:114
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:176
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:195
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:232
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:273
+#: includes/admin/feedzy-rss-feeds-widget.php:100
+msgid "No"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:122
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:123
+msgid "Item Options"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:126
+#: includes/admin/feedzy-rss-feeds-widget.php:127
+msgid "Links may be opened in the same window or a new tab."
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:135
+msgid "_blank"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:139
+msgid "_self"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:143
+msgid "_parent"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:147
+msgid "_top"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:151
+msgid "framename"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:157
+#: includes/admin/feedzy-rss-feeds-widget.php:133
+msgid "Trim the title of the item after X characters."
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:158
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:203
+msgid "(eg: 160)"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:163
+#: includes/admin/feedzy-rss-feeds-widget.php:138
+msgid "Should we display the date of publication and the author name?"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:182
+#: includes/admin/feedzy-rss-feeds-widget.php:142
+msgid "Should we display a description (abstract) of the retrieved item?"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:201
+#: includes/admin/feedzy-rss-feeds-widget.php:145
+msgid "Crop description (summary) of the element after X characters."
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:207
+#: includes/admin/feedzy-rss-feeds-widget.php:163
+msgid ""
+"Only display item if title contains specific keyword(s) (comma-separated "
+"list/case sensitive)."
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:208
+msgid "(eg: news, sports etc.)"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:215
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:216
+msgid "Item Image Options"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:219
+#: includes/admin/feedzy-rss-feeds-widget.php:149
+msgid "Should we display the first image of the content if it is available?"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:238
+#: includes/admin/feedzy-rss-feeds-widget.php:155
+msgid "Default thumbnail URL if no image is found."
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:239
+msgid "Image URL"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:243
+msgid "Select from Gallery"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:247
+#: includes/admin/feedzy-rss-feeds-widget.php:159
+msgid "Thumblails dimension. Do not include \"px\". Eg: 150"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:248
+msgid "(eg: 150)"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:255
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:256
+msgid "PRO Options"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:259
+msgid "Should we display the price from the feed if it is available?"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:279
+msgid "Referral URL parameters (w/o \"?\")."
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:280
+msgid "(eg. promo_code=feedzy_is_awesome)"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:286
+msgid "Template to use when displaying the feed."
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:292
+msgid "No Template"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:296
+msgid "Default"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:300
+msgid "Example"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Feedzy RSS Feeds"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-widget.php:111
+msgid "Widget Title"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-widget.php:115
+msgid "Intro text"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://themeisle.com/plugins/feedzy-rss-feeds/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"This is a short description of what the plugin does. It's displayed in the "
+"WordPress admin area."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Themeisle"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://themeisle.com"
+msgstr ""
