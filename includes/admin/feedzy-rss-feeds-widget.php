@@ -41,6 +41,8 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 
 	/**
 	 * The register method for registering this widget class
+	 *
+	 * @since    3.0.0
 	 */
 	public function registerWidget() {
 		register_widget( $this );
@@ -49,7 +51,8 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 	/**
 	 * The widget form creation
 	 *
-	 * @param string $instance The Widget instance.
+	 * @since   3.0.0
+	 * @param   string $instance The Widget instance.
 	 */
 	public function form( $instance ) {
 		// Check values
@@ -171,9 +174,10 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 	 *
 	 * The update method
 	 *
-	 * @param array $new_instance The new widget instance.
-	 * @param array $old_instance The old widget instance.
-	 * @return array
+	 * @since   3.0.0
+	 * @param   array $new_instance The new widget instance.
+	 * @param   array $old_instance The old widget instance.
+	 * @return  array
 	 */
 	public function update( $new_instance, $old_instance ) {
 
@@ -205,8 +209,9 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 	 *
 	 * The widget function
 	 *
-	 * @param array $args     The args to use.
-	 * @param array $instance The widget instance.
+	 * @since   3.0.0
+	 * @param   array $args     The args to use.
+	 * @param   array $instance The widget instance.
 	 */
 	public function widget( $args, $instance ) {
 

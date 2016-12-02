@@ -12,8 +12,6 @@
 /**
  * The UI functionality of the plugin.
  *
- * TODO add description
- *
  * @package    feedzy-rss-feeds
  * @subpackage feedzy-rss-feeds/includes/admin
  * @author     Themeisle <friends@themeisle.com>
@@ -50,7 +48,7 @@ class Feedzy_Rss_Feeds_Ui {
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @since    3.0.0
+	 * @since      3.0.0
 	 * @param      string                  $plugin_name    The name of this plugin.
 	 * @param      string                  $version        The version of this plugin.
 	 * @param      Feedzy_Rss_Feeds_Loader $loader         The version of this plugin.
@@ -65,6 +63,8 @@ class Feedzy_Rss_Feeds_Ui {
 
 	/**
 	 * Initialize the hooks and filters for the tinymce button
+	 *
+	 * @since    3.0.0
 	 */
 	public function register_init() {
 		if ( current_user_can( 'edit_posts' ) && current_user_can( 'edit_pages' ) ) {
@@ -104,6 +104,7 @@ class Feedzy_Rss_Feeds_Ui {
 	/**
 	 * Load plugin translation for - TinyMCE API
 	 *
+	 * @since   3.0.0
 	 * @param   array $arr  The tinymce_lang array.
 	 * @return  array
 	 */
@@ -115,6 +116,7 @@ class Feedzy_Rss_Feeds_Ui {
 	/**
 	 * Load custom js options - TinyMCE API
 	 *
+	 * @since   3.0.0
 	 * @param   array $plugin_array  The tinymce plugin array.
 	 * @return  array
 	 */
@@ -126,6 +128,7 @@ class Feedzy_Rss_Feeds_Ui {
 	/**
 	 * Register new button in the editor
 	 *
+	 * @since   3.0.0
 	 * @param   array $buttons  The tinymce buttons array.
 	 * @return  array
 	 */

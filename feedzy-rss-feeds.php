@@ -40,6 +40,8 @@ function activate_feedzy_rss_feeds() {
 /**
  * The code that runs during plugin deactivation.
  * This action is documented in includes/feedzy-rss-feeds-deactivator.php
+ *
+ * @since    3.0.0
  */
 function deactivate_feedzy_rss_feeds() {
 	Feedzy_Rss_Feeds_Deactivator::deactivate();
@@ -51,6 +53,8 @@ register_deactivation_hook( __FILE__, 'deactivate_feedzy_rss_feeds' );
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
+ *
+ * @since    3.0.0
  */
 function feedzy_rss_feeds_autoload( $class ) {
 	$namespaces = array( 'Feedzy_Rss_Feeds' );
@@ -86,7 +90,7 @@ function feedzy_rss_feeds_autoload( $class ) {
  * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.
  *
- * @since    1.0.0
+ * @since    3.0.0
  */
 function run_feedzy_rss_feeds() {
 	define( 'FEEDZY_BASEFILE', __FILE__ );
