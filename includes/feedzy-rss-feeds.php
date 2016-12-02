@@ -148,6 +148,7 @@ class Feedzy_Rss_Feeds {
 		$this->loader->add_filter( 'the_content_feed', $plugin_admin, 'feedzy_insert_thumbnail_rss' );
 		add_shortcode( 'feedzy-rss', array( $plugin_admin, 'feedzy_rss' ) );
 
+		$this->loader->add_action( 'wp_ajax_get_tinymce_form', $plugin_admin,  'get_tinymce_form' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 

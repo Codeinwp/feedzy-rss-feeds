@@ -24,6 +24,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Defines the default image to use on RSS Feeds
 	 *
+	 * @since   3.0.0
 	 * @param   string $imageSrc The image source, currently not used.
 	 * @return  string
 	 */
@@ -37,6 +38,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * Logs error to the log file
 	 * Returns the error message
 	 *
+	 * @since   3.0.0
 	 * @param   object $error The error Object.
 	 * @param   string $feedURL The feed URL.
 	 * @return  string
@@ -49,6 +51,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Converts an object to string
 	 *
+	 * @since   3.0.0
 	 * @param   object $error The error Object.
 	 * @return  string
 	 */
@@ -63,6 +66,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Padding ratio based on image size
 	 *
+	 * @since   3.0.0
 	 * @param   string $itemAttr   The item attribute.
 	 * @param   array  $sizes      An array with the current sizes.
 	 * @return  string
@@ -77,6 +81,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Appends classes to the feed item
 	 *
+	 * @since   3.0.0
 	 * @param   string $itemAttr   The item attribute.
 	 * @return  string
 	 */
@@ -90,6 +95,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Retrive image from the item object
 	 *
+	 * @since   3.0.0
 	 * @param   object $item   The item object.
 	 * @return  string
 	 */
@@ -158,6 +164,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Get an image from a string
 	 *
+	 * @since   3.0.0
 	 * @param   string $string     A string with an <img/> tag.
 	 * @return  string
 	 */
@@ -188,6 +195,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Scrape an image for link from a string with an <img/>
 	 *
+	 * @since   3.0.0
 	 * @param   string $string  A string with an <img/> tag.
 	 * @param   string $link    The link to search for.
 	 * @return  string
@@ -204,6 +212,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * List blacklisted images to prevent fetching emoticons
 	 *
+	 * @since   3.0.0
 	 * @param   array $blacklist  An array with blacklisted resources.
 	 * @return  array
 	 */
@@ -242,6 +251,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Image name encoder and url retrive if in url param
 	 *
+	 * @since   3.0.0
 	 * @param   string $string  A string containing the image URL.
 	 * @return  string
 	 */
@@ -276,6 +286,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Filter feed description input
 	 *
+	 * @since   3.0.0
 	 * @param   string $description  The feed description.
 	 * @param   string $content  The feed description.
 	 * @param   string $feedURL  The feed URL.
@@ -291,6 +302,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Check title for keywords
 	 *
+	 * @since   3.0.0
 	 * @param   boolean $continue A boolean to stop the script.
 	 * @param   array   $keywords_title  The keywords for title.
 	 * @param   object  $item  The feed item.
@@ -312,6 +324,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Insert cover picture to main rss feed content
 	 *
+	 * @since   3.0.0
 	 * @param   string $content  The item feed content.
 	 * @return  string
 	 */
@@ -326,6 +339,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Include cover picture (medium) to rss feed enclosure
 	 * and media:content
+	 *
+	 * @since   3.0.0
 	 */
 	public function feedzy_include_thumbnail_rss() {
 		global $post;
@@ -345,8 +360,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Returns the attributes of the shortcode
 	 *
-	 * @param array $atts The attributes passed by WordPress.
-	 * @return array
+	 * @since   3.0.0
+	 * @param   array $atts The attributes passed by WordPress.
+	 * @return  array
 	 */
 	public function get_short_code_attributes( $atts ) {
 		// Retrieve & extract shorcode parameters
@@ -371,8 +387,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Get the feed url based on the feeds passed from the shortcode attribute.
 	 *
-	 * @param string $feeds The feeds from the shortcode attribute.
-	 * @return array|mixed
+	 * @since   3.0.0
+	 * @param   string $feeds The feeds from the shortcode attribute.
+	 * @return  array|mixed
 	 */
 	public function get_feed_url( $feeds ) {
 		// Use "shortcode_atts_feedzy_default" filter to edit shortcode parameters default values or add your owns.
@@ -395,9 +412,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Sanitizes the shortcode array and sets the defaults
 	 *
-	 * @param array  $sc         The shorcode attributes array.
-	 * @param string $feedURL    The feed url.
-	 * @return mixed
+	 * @since   3.0.0
+	 * @param   array  $sc         The shorcode attributes array.
+	 * @param   string $feedURL    The feed url.
+	 * @return  mixed
 	 */
 	public function sanitize_attr( $sc, $feedURL ) {
 		if ( $sc['max'] == '0' ) {
@@ -433,11 +451,12 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Render the content to be displayed
 	 *
-	 * @param array  $sc         The shorcode attributes array.
-	 * @param object $feed       The feed object.
-	 * @param string $content    The original content.
-	 * @param string $feedURL    The feed url.
-	 * @return string
+	 * @since   3.0.0
+	 * @param   array  $sc         The shorcode attributes array.
+	 * @param   object $feed       The feed object.
+	 * @param   string $content    The original content.
+	 * @param   string $feedURL    The feed url.
+	 * @return  string
 	 */
 	public function render_content( $sc, $feed, $content, $feedURL ) {
 		$count = 0;
@@ -604,6 +623,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Main shortcode function
 	 *
+	 * @since   3.0.0
 	 * @param   array  $atts  Shortcode attributes.
 	 * @param   string $content  The item feed content.
 	 * @return  mixed
@@ -637,16 +657,12 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	}
 
 	/**
-	 * Render the Template
+	 * Render the form template for tinyMCE popup.
+	 * Called via ajax.
+	 *
+	 * @since   3.0.0
 	 */
-	public function render_templates() {
-		global $pagenow;
-
-		if ( 'post.php' != $pagenow && 'post-new.php' != $pagenow ) {
-			return;
-		}
-
-		$render = new Feedzy_Rss_Feeds_Render_Templates();
-		$render->render();
+	public function get_tinymce_form() {
+		die( include FEEDZY_ABSPATH . '/form/form.php' );
 	}
 }

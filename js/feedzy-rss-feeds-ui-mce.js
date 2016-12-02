@@ -16,7 +16,7 @@
 			onclick: function() {
 				editor.windowManager.open( {
 					title: editor.getLang( 'feedzy_tinymce_plugin.plugin_title' ),
-					url: editor.getLang( 'feedzy_tinymce_plugin.popup_url' ) + 'form/form.php',
+					url: editor.getLang( 'feedzy_tinymce_plugin.popup_url' ) + '&amp;action=get_tinymce_form',
 					width: $( window ).width() * 0.7,
 					height: ($( window ).height() - 36 - 50) * 0.7,
 					inline: 1,

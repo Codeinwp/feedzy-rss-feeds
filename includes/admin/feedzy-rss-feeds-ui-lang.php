@@ -47,7 +47,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 	 */
 	public function __construct() {
 		$this->strings = array(
-		    'popup_url' => FEEDZY_ABSURL,
+		    'popup_url' => wp_nonce_url( 'admin-ajax.php', 'feedzy_ajax_token', 'feedzy_request_form_token' ),
 		    'pro_url' => 'https://themeisle.com/',
 			'plugin_title' => __( 'Insert Feedzy RSS Feeds Shortcode', 'feedzy_rss_translate' ),
 			'image_button' => __( 'Use Image', 'feedzy_rss_translate' ),
