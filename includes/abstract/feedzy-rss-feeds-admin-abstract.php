@@ -29,7 +29,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  string
 	 */
 	public function feedzy_define_default_image( $imageSrc ) {
-		return plugins_url( '../img/feedzy-default.jpg', __FILE__ );
+		$defaultImg = FEEDZY_ABSURL . '/img/feedzy-default.jpg';
+		return apply_filters( 'feedzy_define_default_image_filter', $defaultImg );
 	}
 
 	/**

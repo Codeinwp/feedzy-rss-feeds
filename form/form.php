@@ -58,7 +58,7 @@ $html_parts = $feedzyLangClass->get_form_elements();
 								foreach ( $props['opts'] as $opt => $values ) {
 									$checked = '';
 									if ( $props['value'] == $values['value'] ) {
-										$checked = 'checked';
+										$checked = 'checked="checked"';
 									}
 									$element .= '<input type="radio" name="' . $name . '" data-feedzy="' . $name . '" value="' . $values['value'] . '" ' . $checked . ' ' . $disabled . ' /> ' . $values['label'];
 								}
@@ -67,7 +67,7 @@ $html_parts = $feedzyLangClass->get_form_elements();
 								foreach ( $props['opts'] as $opt => $values ) {
 									$checked = '';
 									if ( $props['value'] == $values['value'] ) {
-										$checked = 'checked';
+										$checked = 'checked="checked"';
 									}
 									$element .= '<input type="checkbox" name="' . $name . '" data-feedzy="' . $name . '" value="' . $values['value'] . '" ' . $checked . ' ' . $disabled . ' /> ' . $values['label'];
 								}

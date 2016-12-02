@@ -49,6 +49,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 		$this->strings = array(
 		    'popup_url' => wp_nonce_url( 'admin-ajax.php', 'feedzy_ajax_token', 'feedzy_request_form_token' ),
 		    'pro_url' => 'https://themeisle.com/',
+			'plugin_label' => __( 'Feedzy Lite', 'feedzy_rss_translate' ),
 			'plugin_title' => __( 'Insert Feedzy RSS Feeds Shortcode', 'feedzy_rss_translate' ),
 			'image_button' => __( 'Use Image', 'feedzy_rss_translate' ),
 			'insert_button' => __( 'Insert Shortcode', 'feedzy_rss_translate' ),
@@ -304,7 +305,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 			),
 		);
 
-		$elements = apply_filters( 'feedzy_get_form_elements', $elements );
+		$elements = apply_filters( 'feedzy_get_form_elements_filter', $elements );
 
 		return $elements;
 	}
