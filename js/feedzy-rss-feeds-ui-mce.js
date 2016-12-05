@@ -64,7 +64,7 @@
 				var eValue = '';
 				if ($( element ).is( 'input' )) {
 					if ($( element ).attr( 'type' ) === 'radio' || $( element ).attr( 'type' ) === 'checkbox') {
-						if ( $( element ).is( ":checked" ) ) {
+						if ( $( element ).is( ':checked' ) ) {
 							eValue = $( element ).val();
 						}
 					} else {
