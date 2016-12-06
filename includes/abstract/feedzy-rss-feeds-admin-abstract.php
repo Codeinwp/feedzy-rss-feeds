@@ -382,6 +382,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'keywords_title' => '', // only display item if title contains specific keywords (comma-separated list/case sensitive)
 		), $atts, 'feedzy_default' );
 
+		$sc = apply_filters( 'feedzy_get_short_code_attributes_filter', $atts );
 		return $sc;
 	}
 
@@ -393,7 +394,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  array|mixed
 	 */
 	public function get_feed_url( $feeds ) {
-		// Use "shortcode_atts_feedzy_default" filter to edit shortcode parameters default values or add your owns.
 		if ( ! empty( $feeds ) ) {
 			$feeds = rtrim( $feeds, ',' );
 			$feeds = explode( ',', $feeds );
@@ -461,8 +461,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function render_content( $sc, $feed, $content, $feedURL ) {
 		$count = 0;
-
-		$sc = $this->sanitize_attr( $sc, $feedURL );
 
 		$sizes = array( 'width' => $sc['size'], 'height' => $sc['size'] );
 		$sizes = apply_filters( 'feedzy_thumb_sizes', $sizes, $feedURL );
@@ -652,9 +650,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$feed -> init();
 		$feed -> handle_content_type();
 
+		$sc = $this->sanitize_attr( $sc, $feedURL );
+
 		$content = $this->render_content( $sc, $feed, $content, $feedURL );
 
-		return apply_filters( 'feedzy_global_output', $content, $feedURL );
+		return apply_filters( 'feedzy_global_output', $sc, $feed, $content, $feedURL );
 	}
 
 	/**

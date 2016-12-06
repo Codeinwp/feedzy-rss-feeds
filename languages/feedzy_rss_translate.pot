@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Feedzy RSS Feeds 3.0.0\n"
 "Report-Msgid-Bugs-To: https://github.com/Codeinwp/feedzy-rss-feeds/issues\n"
-"POT-Creation-Date: 2016-12-02 12:25:55+00:00\n"
+"POT-Creation-Date: 2016-12-06 11:39:50+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,23 +24,23 @@ msgstr ""
 "X-Poedit-Bookmarks: \n"
 "X-Textdomain-Support: yes\n"
 
-#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:48
+#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:49
 msgid "Sorry, this feed is currently unavailable or does not exists anymore."
 msgstr ""
 
-#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:565
+#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:564
 msgid "Posted"
 msgstr ""
 
-#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:574
+#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:573
 msgid "by"
 msgstr ""
 
-#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:579
+#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:578
 msgid "on"
 msgstr ""
 
-#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:581
+#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:580
 msgid "at"
 msgstr ""
 
@@ -53,221 +53,225 @@ msgid "More Plugins"
 msgstr ""
 
 #: includes/admin/feedzy-rss-feeds-ui-lang.php:52
-msgid "Insert Feedzy RSS Feeds Shortcode"
+msgid "Feedzy Lite"
 msgstr ""
 
 #: includes/admin/feedzy-rss-feeds-ui-lang.php:53
-msgid "Use Image"
+msgid "Insert Feedzy RSS Feeds Shortcode"
 msgstr ""
 
 #: includes/admin/feedzy-rss-feeds-ui-lang.php:54
-msgid "Insert Shortcode"
+msgid "Use Image"
 msgstr ""
 
 #: includes/admin/feedzy-rss-feeds-ui-lang.php:55
-msgid "Cancel"
+msgid "Insert Shortcode"
 msgstr ""
 
 #: includes/admin/feedzy-rss-feeds-ui-lang.php:56
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:254
+msgid "Cancel"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:57
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:255
 msgid "Get Feedzy RSS Feeds PRO"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:86
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:87
 msgid "Feed Source"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:89
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:90
 #: includes/admin/feedzy-rss-feeds-widget.php:122
 msgid "The feed(s) URL (comma-separated list)."
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:89
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:90
 msgid "Check feed before insert."
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:90
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:91
 msgid "Feed URL"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:95
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:96
 #: includes/admin/feedzy-rss-feeds-widget.php:126
 msgid "Number of items to display."
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:96
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:97
 msgid "(eg: 5)"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:101
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:102
 msgid "Should we display the RSS title?"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:106
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:130
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:167
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:186
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:222
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:263
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:107
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:131
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:168
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:187
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:223
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:264
 #: includes/admin/feedzy-rss-feeds-widget.php:105
 msgid "Auto"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:110
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:171
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:190
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:226
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:267
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:111
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:172
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:191
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:227
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:268
 #: includes/admin/feedzy-rss-feeds-widget.php:104
 msgid "Yes"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:114
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:175
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:194
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:230
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:271
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:115
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:176
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:195
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:231
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:272
 #: includes/admin/feedzy-rss-feeds-widget.php:103
 msgid "No"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:122
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:123
 msgid "Item Options"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:125
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:126
 #: includes/admin/feedzy-rss-feeds-widget.php:130
 msgid "Links may be opened in the same window or a new tab."
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:134
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:135
 msgid "_blank"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:138
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:139
 msgid "_self"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:142
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:143
 msgid "_parent"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:146
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:147
 msgid "_top"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:150
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:151
 msgid "framename"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:156
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:157
 #: includes/admin/feedzy-rss-feeds-widget.php:136
 msgid "Trim the title of the item after X characters."
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:157
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:202
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:158
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:203
 msgid "(eg: 160)"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:162
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:163
 #: includes/admin/feedzy-rss-feeds-widget.php:141
 msgid "Should we display the date of publication and the author name?"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:181
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:182
 #: includes/admin/feedzy-rss-feeds-widget.php:145
 msgid "Should we display a description (abstract) of the retrieved item?"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:200
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:201
 #: includes/admin/feedzy-rss-feeds-widget.php:148
 msgid "Crop description (summary) of the element after X characters."
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:206
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:207
 #: includes/admin/feedzy-rss-feeds-widget.php:166
 msgid ""
 "Only display item if title contains specific keyword(s) (comma-separated "
 "list/case sensitive)."
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:207
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:208
 msgid "(eg: news, sports etc.)"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:214
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:215
 msgid "Item Image Options"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:217
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:218
 #: includes/admin/feedzy-rss-feeds-widget.php:152
 msgid "Should we display the first image of the content if it is available?"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:236
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:237
 #: includes/admin/feedzy-rss-feeds-widget.php:158
 msgid "Default thumbnail URL if no image is found."
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:237
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:238
 msgid "Image URL"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:241
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:242
 msgid "Select from Gallery"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:245
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:246
 #: includes/admin/feedzy-rss-feeds-widget.php:162
 msgid "Thumblails dimension. Do not include \"px\". Eg: 150"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:246
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:247
 msgid "(eg: 150)"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:253
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:254
 msgid "PRO Options"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:254
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:255
 msgid ""
 "Get access to more options and customizations with Feedzy RSS Feeds Pro. "
 "Use existing templates or extend them and make them your own."
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:257
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:258
 msgid "Should we display the price from the feed if it is available?"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:257
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:277
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:284
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:258
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:278
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:285
 msgid "available in PRO"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:277
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:278
 msgid "Referral URL parameters (w/o \"?\")."
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:278
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:279
 msgid "(eg. promo_code=feedzy_is_awesome)"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:284
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:285
 msgid "Template to use when displaying the feed."
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:290
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:291
 msgid "No Template"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:294
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:295
 msgid "Default"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-ui-lang.php:298
+#: includes/admin/feedzy-rss-feeds-ui-lang.php:299
 msgid "Example"
 msgstr ""
 
