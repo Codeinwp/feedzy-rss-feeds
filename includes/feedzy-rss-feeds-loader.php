@@ -43,7 +43,8 @@ class Feedzy_Rss_Feeds_Loader {
 	/**
 	 * Initialize the collections used to maintain the actions and filters.
 	 *
-	 * @since    3.0.0
+	 * @since   3.0.0
+	 * @access  public
 	 */
 	public function __construct() {
 
@@ -56,6 +57,7 @@ class Feedzy_Rss_Feeds_Loader {
 	 * Add a new action to the collection to be registered with WordPress.
 	 *
 	 * @since    3.0.0
+	 * @access   public
 	 * @param    string $hook             The name of the WordPress action that is being registered.
 	 * @param    object $component        A reference to the instance of the object on which the action is defined.
 	 * @param    string $callback         The name of the function definition on the $component.
@@ -70,6 +72,7 @@ class Feedzy_Rss_Feeds_Loader {
 	 * Add a new filter to the collection to be registered with WordPress.
 	 *
 	 * @since    3.0.0
+	 * @access   public
 	 * @param    string $hook             The name of the WordPress filter that is being registered.
 	 * @param    object $component        A reference to the instance of the object on which the filter is defined.
 	 * @param    string $callback         The name of the function definition on the $component.
@@ -83,8 +86,7 @@ class Feedzy_Rss_Feeds_Loader {
 	/**
 	 * Registers AJAX action hook.
 	 *
-	 * @since 3.0.0
-	 *
+	 * @since   3.0.0
 	 * @access  public
 	 * @param   string  $tag            The name of the AJAX action to which the $method is hooked.
 	 * @param   object  $component      A reference to the instance of the object on which the filter is defined.
@@ -94,7 +96,7 @@ class Feedzy_Rss_Feeds_Loader {
 	 * @param   boolean $private        Optional. Determines if we should register hook for logged in users.
 	 * @param   boolean $public         Optional. Determines if we should register hook for not logged in users.
 	 */
-	protected function add_ajax_action( $tag, $component, $callback, $priority = 10, $accepted_args = 1, $private = true, $public = false ) {
+	public function add_ajax_action( $tag, $component, $callback, $priority = 10, $accepted_args = 1, $private = true, $public = false ) {
 		if ( $private ) {
 			$this->actions = $this->add( $this->actions, 'wp_ajax_' . $tag, $component, $callback, $priority, $accepted_args );
 		}
@@ -136,6 +138,7 @@ class Feedzy_Rss_Feeds_Loader {
 	 * Register the filters and actions with WordPress.
 	 *
 	 * @since    3.0.0
+	 * @access   public
 	 */
 	public function run() {
 

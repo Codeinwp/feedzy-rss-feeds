@@ -8,8 +8,8 @@
  * @link       http://themeisle.com
  * @since      3.0.0
  *
- * @package    Feedzy_Rss_Feeds
- * @subpackage Feedzy_Rss_Feeds/includes
+ * @package    feedzy-rss-feeds
+ * @subpackage feedzy-rss-feeds/includes
  */
 
 /**
@@ -30,6 +30,7 @@ class Feedzy_Rss_Feeds_i18n {
 	 * Load the plugin text domain for translation.
 	 *
 	 * @since    3.0.0
+	 * @access   public
 	 */
 	public function load_plugin_textdomain() {
 

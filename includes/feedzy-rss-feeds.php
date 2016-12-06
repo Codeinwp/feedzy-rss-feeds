@@ -64,6 +64,7 @@ class Feedzy_Rss_Feeds {
 	 * the public-facing side of the site.
 	 *
 	 * @since    3.0.0
+	 * @access   public
 	 */
 	public function __construct() {
 
@@ -161,6 +162,7 @@ class Feedzy_Rss_Feeds {
 	 * Run the loader to execute all of the hooks with WordPress.
 	 *
 	 * @since    3.0.0
+	 * @access   public
 	 */
 	public function run() {
 		$this->loader->run();
@@ -171,6 +173,7 @@ class Feedzy_Rss_Feeds {
 	 * WordPress and to define internationalization functionality.
 	 *
 	 * @since     3.0.0
+	 * @access    public
 	 * @return    string    The name of the plugin.
 	 */
 	public function get_plugin_name() {
@@ -181,6 +184,7 @@ class Feedzy_Rss_Feeds {
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
 	 * @since     3.0.0
+	 * @access    public
 	 * @return    Feedzy_Rss_Feeds_Loader    Orchestrates the hooks of the plugin.
 	 */
 	public function get_loader() {
@@ -191,6 +195,7 @@ class Feedzy_Rss_Feeds {
 	 * Retrieve the version number of the plugin.
 	 *
 	 * @since     3.0.0
+	 * @access    public
 	 * @return    string    The version number of the plugin.
 	 */
 	public function get_version() {

@@ -39,7 +39,8 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 	/**
 	 * The Feedzy_Rss_feeds_widget constructor method
 	 *
-	 * @since    3.0.0
+	 * @since   3.0.0
+	 * @access  public
 	 * @param   Feedzy_Rss_Feeds_Admin $plugin_admin The Feedzy_Rss_Feeds_Admin object.
 	 */
 	public function __construct( $plugin_admin ) {
@@ -55,6 +56,7 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 	 * Returns the instance of this class as in the singleton pattern
 	 *
 	 * @since    3.0.0
+	 * @access   public
 	 * @return Feedzy_Rss_Feeds_Widget
 	 */
 	public static function get_instance() {
@@ -68,6 +70,7 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 	 * The register method for registering this widget class
 	 *
 	 * @since    3.0.0
+	 * @access   public
 	 */
 	public function registerWidget() {
 		register_widget( $this );
@@ -77,7 +80,9 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 	 * The widget form creation
 	 *
 	 * @since   3.0.0
+	 * @access  public
 	 * @param   string $instance The Widget instance.
+	 * @return mixed
 	 */
 	public function form( $instance ) {
 		// Check values
@@ -213,6 +218,7 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 	 * The update method
 	 *
 	 * @since   3.0.0
+	 * @access  public
 	 * @param   array $new_instance The new widget instance.
 	 * @param   array $old_instance The old widget instance.
 	 * @return  array
@@ -250,6 +256,7 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 	 * The widget function
 	 *
 	 * @since   3.0.0
+	 * @access  public
 	 * @param   array $args     The args to use.
 	 * @param   array $instance The widget instance.
 	 */

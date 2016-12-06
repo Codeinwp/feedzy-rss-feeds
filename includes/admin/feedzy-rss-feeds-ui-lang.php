@@ -44,6 +44,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    3.0.0
+	 * @access   public
 	 */
 	public function __construct() {
 		$this->strings = array(
@@ -63,6 +64,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 	 * The method that returns the translation array
 	 *
 	 * @since    3.0.0
+	 * @access   public
 	 * @return string
 	 */
 	public function feedzy_tinymce_translation() {
@@ -79,6 +81,8 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 	 * It returns an array, use it to add more options to the popup window.
 	 * Can be hook-ed into via 'feedzy_get_form_elements'.
 	 *
+	 * @since   3.0.0
+	 * @access  public
 	 * @return array|mixed|void
 	 */
 	public function get_form_elements() {
