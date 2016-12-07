@@ -100,7 +100,7 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 			'default' => '',
 			'size' => '',
 			'keywords_title' => '',
-			'referrel_url' => '',
+			'referral_url' => '',
 			'price' => '',
 			'template_file' => '',
 		);
