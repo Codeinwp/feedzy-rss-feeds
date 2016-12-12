@@ -64,6 +64,8 @@ feedzy_thumb_sizes
 feedzy_feed_blacklist_images
 feedzy_default_image
 feedzy_default_error
+feedzy_item_filter
+feedzy_item_url_filter
 shortcode_atts_feedzy_default
 ```
 

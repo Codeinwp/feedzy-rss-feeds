@@ -74,6 +74,8 @@ By activating this plugin, your cover picture will be inserted into your RSS fee
 * feedzy_feed_blacklist_images
 * feedzy_default_image
 * feedzy_default_error
+* feedzy_item_filter
+* feedzy_item_url_filter
 * shortcode_atts_feedzy_default
 `
 This plugin is maintained and supported by Themeisle, check out some of the other <a href="http://themeisle.com/wordpress-plugins/" rel="nofollow">WordPress plugins</a> and <a href="http://themeisle.com/wordpress-themes/free/" rel="nofollow">free themes</a> we've developed.
@@ -117,6 +119,8 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 = 3.0.0 - 10/11/2016 =
 * Refactored code base from 2.8.1 to OOP style
+* Added support for PRO version
+* Added new hooks feedzy_item_filter, feedzy_item_url_filter
 
 
 = 2.8 - 04/14/2016 =
