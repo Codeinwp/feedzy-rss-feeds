@@ -41,7 +41,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * Returns the error message
 	 *
 	 * @since   3.0.0
-	 * @access  public@access  public
+	 * @access  public
 	 * @param   object $error The error Object.
 	 * @param   string $feedURL The feed URL.
 	 * @return  string
