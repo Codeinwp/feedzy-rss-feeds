@@ -695,15 +695,14 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	public function feedzy_rss( $atts, $content = '' ) {
 		// Load SimplePie if not already
 		if ( ! class_exists( 'SimplePie' ) ) {
-			require_once( ABSPATH . WPINC . '/class-feed.php' );
+			require_once( ABSPATH . WPINC . '/feed.php' );
 		}
 
 		$sc = $this->get_short_code_attributes( $atts );
 		$feedURL = $this->get_feed_url( $sc['feeds'] );
 
 		// Load SimplePie Instance
-		$feed = new SimplePie();
-		$feed -> set_feed_url( $feedURL );
+		$feed = fetch_feed( $feedURL );
 		$feed -> enable_cache( true );
 		$feed -> enable_order_by_date( true );
 		$feed -> set_cache_class( 'WP_Feed_Cache' );
