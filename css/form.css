@@ -703,3 +703,22 @@ img {
 	color: #fff;
 	background-color: #d9a404;
 }
+
+.feedzy-radio-image {
+	display: inline-block;
+	margin-right: 20px;
+	padding-bottom: 60px;
+	width: 100px;
+}
+
+.feedzy-template-default {
+	background: url(../img/feedzy-default-template.jpg) no-repeat bottom center;
+}
+
+.feedzy-template-style1 {
+	background: url(../img/feedzy-style1-template.jpg) no-repeat bottom center;
+}
+
+.feedzy-template-style2 {
+	background: url(../img/feedzy-style2-template.jpg) no-repeat bottom center;
+}

@@ -259,7 +259,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 				'description' => __( 'Get access to more options and customizations with Feedzy RSS Feeds Pro. Use existing templates or extend them and make them your own.', 'feedzy_rss_translate' ) . '<br/>' . '<a href="https://themeisle.com" target="_blank"><small>' . __( 'Get Feedzy RSS Feeds PRO', 'feedzy_rss_translate' ) . '</small></a>',
 				'elements' => array(
 					'price' => array(
-						'label' => __( 'Should we display the price from the feed if it is available?', 'feedzy_rss_translate' ) . '<small class="feedzy_pro_tag">* ' . __( 'available in PRO', 'feedzy_rss_translate' ) . '</small>',
+						'label' => __( 'Should we display the price from the feed if it is available?', 'feedzy_rss_translate' ) . '<small class="feedzy_pro_tag">' . __( 'ONLY PRO', 'feedzy_rss_translate' ) . '</small>',
 						'type'  => 'select',
 						'disabled' => true,
 						'value' => '',
@@ -279,29 +279,29 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						),
 				    ),
 					'referral_url' => array(
-						'label' => __( 'Referral URL parameters (w/o "?").', 'feedzy_rss_translate' ) . '<small class="feedzy_pro_tag">* ' . __( 'available in PRO', 'feedzy_rss_translate' ) . '</small>',
+						'label' => __( 'Referral URL parameters (w/o "?").', 'feedzy_rss_translate' ) . '<small class="feedzy_pro_tag">' . __( 'ONLY PRO', 'feedzy_rss_translate' ) . '</small>',
 						'placeholder' => __( '(eg. promo_code=feedzy_is_awesome)', 'feedzy_rss_translate' ),
 						'type'  => 'text',
 						'disabled' => true,
 						'value' => '',
 				    ),
 					'template' => array(
-						'label' => __( 'Template to use when displaying the feed.', 'feedzy_rss_translate' ) . '<small class="feedzy_pro_tag">* ' . __( 'available in PRO', 'feedzy_rss_translate' ) . '</small>',
+						'label' => __( 'Template to use when displaying the feed.', 'feedzy_rss_translate' ) . '<small class="feedzy_pro_tag">' . __( 'ONLY PRO', 'feedzy_rss_translate' ) . '</small>',
 						'type'  => 'radio',
 						'disabled' => true,
 						'value' => '',
 						'opts'  => array(
 							'auto' => array(
-								'label' => __( 'No Template', 'feedzy_rss_translate' ),
-								'value' => '',
-							),
-							'yes' => array(
 								'label' => __( 'Default', 'feedzy_rss_translate' ),
 								'value' => 'default',
 							),
+							'yes' => array(
+								'label' => __( 'Style 1', 'feedzy_rss_translate' ),
+								'value' => 'style1',
+							),
 							'no' => array(
-								'label' => __( 'Example', 'feedzy_rss_translate' ),
-								'value' => 'example',
+								'label' => __( 'Style 2', 'feedzy_rss_translate' ),
+								'value' => 'style2',
 							),
 					    ),
 					),

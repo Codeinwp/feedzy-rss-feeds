@@ -511,10 +511,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			if ( ( ! empty( $theThumbnail ) && $sc['thumb'] == 'auto' ) || $sc['thumb'] == 'yes' ) {
 				if ( ! empty( $theThumbnail ) ) {
 					$theThumbnail = $this->feedzy_image_encode( $theThumbnail );
-					$contentThumb .= '<span class="default" style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:  url(' . $sc['default'] . ');" alt="' . $item->get_title() . '"></span>';
-					$contentThumb .= '<span class="fetched" style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:  url(' . $theThumbnail . ');" alt="' . $item->get_title() . '"></span>';
+					$contentThumb .= '<span class="fetched" style="background-image:  url(' . $theThumbnail . ');" alt="' . $item->get_title() . '"></span>';
 				} elseif ( empty( $theThumbnail ) && $sc['thumb'] == 'yes' ) {
-					$contentThumb .= '<span style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:url(' . $sc['default'] . ');" alt="' . $item->get_title() . '"></span>';
+					$contentThumb .= '<span style="background-image:url(' . $sc['default'] . ');" alt="' . $item->get_title() . '"></span>';
 				}
 			} else {
 				$contentThumb .= '<span style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:url(' . $sc['default'] . ');" alt="' . $item->get_title() . '"></span>';
@@ -658,7 +657,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$content .= '
             <li ' . $item['itemAttr'] . '>
                 <div class="' . $item['item_img_class'] . '" style="' . $item['item_img_style'] . '">
-					<a href="' . $item['item_url'] . '" target="' . $item['item_url_target'] . '" title="' . $item['item_url_title'] . '">
+					<a href="' . $item['item_url'] . '" target="' . $item['item_url_target'] . '" title="' . $item['item_url_title'] . '"   style="' . $item['item_img_style'] . '">
 						' . $item['item_img'] . '
 					</a>
 				</div>

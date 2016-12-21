@@ -60,7 +60,9 @@ $html_parts = $feedzyLangClass->get_form_elements();
 									if ( $props['value'] == $values['value'] ) {
 										$checked = 'checked="checked"';
 									}
-									$element .= '<input type="radio" name="' . $name . '" data-feedzy="' . $name . '" value="' . $values['value'] . '" ' . $checked . ' ' . $disabled . ' /> ' . $values['label'];
+									$element .= '<label class="feedzy-radio-image feedzy-template-'.$values['value']
+									            .'"><input type="radio" name="' . $name . '" data-feedzy="' . $name . '" value="' . $values['value'] . '" ' . $checked . ' ' . $disabled . ' />' .
+                                                $values['label'].'</label>';
 								}
 								break;
 							case 'checkbox':
