@@ -27,6 +27,21 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 	 */
 	private $plugin_admin;
 
+    /**
+     * @access  private
+     * @since   3.0.0
+     * @var     array $elements The form elements of the widget
+     */
+    private $elements;
+
+    /**
+     * @access  private
+     * @since   3.0.0
+     * @var     array $defaults The defaults of the elements
+     */
+    private $defaults;
+
+
 	/**
 	 * The class instance.
 	 *
@@ -47,6 +62,7 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 		parent::__construct( false, $name = __( 'Feedzy RSS Feeds', 'feedzy_rss_translate' ) );
 
 		$this->plugin_admin = $plugin_admin;
+
 
 		self::$instance = $this;
 
@@ -73,9 +89,15 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 	 * @access   public
 	 */
 	public function registerWidget() {
-		register_widget( $this );
-	}
+        $this->defaults = Feedzy_Rss_Feeds_Ui_Lang::get_form_defaults();
+        // rename title to title length as widget instance already have one
+        $this->defaults['titlelength'] = $this->defaults['title'];
+        unset($this->defaults['title']);
 
+        $this->elements = Feedzy_Rss_Feeds_Ui_Lang::get_form_elements();
+
+        register_widget( $this );
+	}
 	/**
 	 * The widget form creation
 	 *
@@ -85,130 +107,45 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 	 * @return mixed
 	 */
 	public function form( $instance ) {
-		// Check values
-		$defaults = array(
-			'title' => '',
-			'textarea' => '',
-			'feeds' => '',
-			'max' => '',
-			'target' => '',
-			'titlelength' => '',
-			'meta' => '',
-			'summary' => '',
-			'summarylength' => '',
-			'thumb' => '',
-			'default' => '',
-			'size' => '',
-			'keywords_title' => '',
-			'referral_url' => '',
-			'price' => '',
-			'template_file' => '',
-		);
-		$instance = wp_parse_args( $instance, $defaults );
-		if ( $instance ) {
-			$title 			= esc_attr( $instance['title'] );
-			$textarea 		= esc_attr( $instance['textarea'] );
-			$feeds			= esc_attr( $instance['feeds'] );
-			$max 			= esc_attr( $instance['max'] );
-			$target 		= esc_attr( $instance['target'] );
-			$titlelength 	= esc_attr( $instance['titlelength'] );
-			$meta 			= esc_attr( $instance['meta'] );
-			$summary 		= esc_attr( $instance['summary'] );
-			$summarylength 	= esc_attr( $instance['summarylength'] );
-			$thumb 			= esc_attr( $instance['thumb'] );
-			$default 		= esc_attr( $instance['default'] );
-			$size 			= esc_attr( $instance['size'] );
-			$keywords_title = esc_attr( $instance['keywords_title'] );
-		}
 
-		$options = array( '_blank', '_parent', '_self', '_top', 'framename' );
-		$option_list_links = '';
-		foreach ( $options as $option ) {
-			$option_list_links .= '<option value="' . $option . '" id="' . $option . '"' . ( ( $target == $option ) ? ' selected="selected"' : '' ) . '>' . $option . '</option>';
-		}
+        $instance = wp_parse_args( $instance, $this->defaults );
 
-		// Fix for versions before 2.3.1
-		if ( $thumb == '1' ) {
-			$thumb = 'yes';
-		} elseif ( $thumb == '0' ) {
-			$thumb = 'no';
-		}
-		$options = array(
-			array( 'no', __( 'No', 'feedzy_rss_translate' ) ),
-			array( 'yes', __( 'Yes', 'feedzy_rss_translate' ) ),
-			array( 'auto', __( 'Auto', 'feedzy_rss_translate' ) ),
-		);
-		$option_list_thumbs = '';
-		foreach ( $options as $option ) {
-			$option_list_thumbs .= '<option value="' . $option[0] . '" id="' . $option[0] . '"' . ( ( $thumb == $option[0] ) ? ' selected="selected"' : '' ) . '>' . $option[1] . '</option>';
-		}
-
-		$widget_form = '
-			<p>
+		$widget_form ='<p>
 				<label for="' . $this->get_field_id( 'title' ) . '">' . __( 'Widget Title', 'feedzy_rss_translate' ) . '</label>
-				<input class="widefat" id="' . $this->get_field_id( 'title' ) . '" name="' . $this->get_field_name( 'title' ) . '" type="text" value="' . $title . '" />
+				<input class="widefat" id="' . $this->get_field_id( 'title' ) . '" name="' . $this->get_field_name( 'title' ) . '" type="text" value="' . esc_attr($instance['title']) . '" />
 			</p>
 			<p>
 				<label for="' . $this->get_field_id( 'textarea' ) . '">' . __( 'Intro text', 'feedzy_rss_translate' ) . '</label>
-				<textarea class="widefat" id="' . $this->get_field_id( 'textarea' ) . '" name="' . $this->get_field_name( 'textarea' ) . '">' . $textarea . '</textarea>
-			</p>
-			<hr/>
-			<h3>' . __( 'Feed Source', 'feedzy_rss_translate' ) . '</h3>
-			<p>
-				<label for="' . $this->get_field_id( 'feeds' ) . '">' . __( 'The feed(s) URL (comma-separated list).', 'feedzy_rss_translate' ) . '</label>
-				<textarea class="widefat" id="' . $this->get_field_id( 'feeds' ) . '" name="' . $this->get_field_name( 'feeds' ) . '" >' . $feeds . '</textarea>
-			</p>
-			<p>
-				<label for="' . $this->get_field_id( 'max' ) . '">' . __( 'Number of items to display.', 'feedzy_rss_translate' ) . '</label>
-				<input class="widefat"  id="' . $this->get_field_id( 'max' ) . '" name="' . $this->get_field_name( 'max' ) . '" type="text" value="' . $max . '" />
-			</p>
-			<hr/>
-			<h3>' . __( 'Item Options', 'feedzy_rss_translate' ) . '</h3>
-			<p>
-				<label for="' . $this->get_field_id( 'target' ) . '">' . __( 'Links may be opened in the same window or a new tab.', 'feedzy_rss_translate' ) . '</label>
-				<select id="' . $this->get_field_id( 'target' ) . '" name="' . $this->get_field_name( 'target' ) . '" class="widefat">
-					' . $option_list_links . '
-				</select>
-			</p>
-			<p>
-				<label for="' . $this->get_field_id( 'titlelength' ) . '">' . __( 'Trim the title of the item after X characters.', 'feedzy_rss_translate' ) . '</label>
-				<input class="widefat" id="' . $this->get_field_id( 'titlelength' ) . '" name="' . $this->get_field_name( 'titlelength' ) . '" type="text" value="' . $titlelength . '" />
-			</p>
-			<p>
-				<input id="' . $this->get_field_id( 'meta' ) . '" name="' . $this->get_field_name( 'meta' ) . '" type="checkbox" value="1" ' . checked( '1', $meta, false ) . ' />
-				<label for="' . $this->get_field_id( 'meta' ) . '">' . __( 'Should we display the date of publication and the author name?', 'feedzy_rss_translate' ) . '</label>
-			</p>
-			<p>
-				<input id="' . $this->get_field_id( 'summary' ) . '" name="' . $this->get_field_name( 'summary' ) . '" type="checkbox" value="1" ' . checked( '1', $summary, false ) . ' />
-				<label for="' . $this->get_field_id( 'summary' ) . '">' . __( 'Should we display a description (abstract) of the retrieved item?', 'feedzy_rss_translate' ) . '</label>
-			</p>
-			<p>
-				<label for="' . $this->get_field_id( 'summarylength' ) . '">' . __( 'Crop description (summary) of the element after X characters.', 'feedzy_rss_translate' ) . '</label>
-				<input class="widefat" id="' . $this->get_field_id( 'summarylength' ) . '" name="' . $this->get_field_name( 'summarylength' ) . '" type="text" value="' . $summarylength . '" />
-			</p>
-			<p>
-				<label for="' . $this->get_field_id( 'keywords_title' ) . '">' . __( 'Only display item if title contains specific keyword(s) (comma-separated list/case sensitive).', 'feedzy_rss_translate' ) . '</label>
-				<input class="widefat" id="' . $this->get_field_id( 'keywords_title' ) . '" name="' . $this->get_field_name( 'keywords_title' ) . '" type="text" value="' . $keywords_title . '" />
-			</p>
-			<hr/>
-			<h3>' . __( 'Item Image Options', 'feedzy_rss_translate' ) . '</h3>
-			<p>
-				<label for="' . $this->get_field_id( 'thumb' ) . '">' . __( 'Should we display the first image of the content if it is available?', 'feedzy_rss_translate' ) . '</label>
-				<select id="' . $this->get_field_id( 'thumb' ) . '" name="' . $this->get_field_name( 'thumb' ) . '" class="widefat">
-					' . $option_list_thumbs . '
-				</select>
-			</p>
-			<p>
-				<label for="' . $this->get_field_id( 'default' ) . '">' . __( 'Default thumbnail URL if no image is found.', 'feedzy_rss_translate' ) . '</label>
-				<input class="widefat" id="' . $this->get_field_id( 'default' ) . '" name="' . $this->get_field_name( 'default' ) . '" type="text" value="' . $default . '" />
-			</p>
-			<p>
-				<label for="' . $this->get_field_id( 'size' ) . '">' . __( 'Thumblails dimension. Do not include "px". Eg: 150', 'feedzy_rss_translate' ) . '</label>
-				<input class="widefat" id="' . $this->get_field_id( 'size' ) . '" name="' . $this->get_field_name( 'size' ) . '" type="text" value="' . $size . '" />
-			</p>
-		';
+				<textarea class="widefat" id="' . $this->get_field_id( 'textarea' ) . '" name="' . $this->get_field_name( 'textarea' ) . '">' . esc_attr($instance['textarea']) . '</textarea>
+			</p>';
 
-		$widget_form = apply_filters( 'feedzy_widget_form_filter', $widget_form, $instance, $defaults );
+
+
+        foreach( $this->elements as $key_section => $section ){
+		    $widget_form .= '<hr/><h4>'.$section['title'].'</h4>';
+		    $widget_form .= '<small>'.$section['description'].'</small>';
+		    foreach ($section['elements'] as $id=>$element){
+		        if($element['disabled']) continue;
+		        if($id == 'title') $id = 'titlelength';
+		        $widget_form .='<p>';
+		        $widget_form .='<label for="'.$this->get_field_id($id).'">'.$element['label'].'</label>';
+		        if($element['type'] == 'text' ){
+		            $widget_form .= '<input class="widefat" id="'.$this->get_field_id($id).'" name="'.$this->get_field_name($id).'" type="text" value="'.esc_attr($instance[$id]).'" />';
+                }
+		        if($element['type'] == 'select'){
+		            $widget_form .= '<select class="widefat" id="'.$this->get_field_id($id).'" name="'.$this->get_field_name($id).'" >';
+		             foreach($element['opts'] as $select_option){
+		                 $widget_form .= '<option '.selected(esc_attr($select_option['value']),$instance[$id],false).'value="'.esc_attr($select_option['value']).'">'.esc_html($select_option['label']).'</option>';
+                     }
+
+		            $widget_form .='</select>';
+                }
+		        $widget_form .='</p>';
+
+            }
+        }
+        $widget_form .='<hr/>';
+		$widget_form = apply_filters( 'feedzy_widget_form_filter', $widget_form, $instance, $this->defaults );
 		echo $widget_form;
 
 	}
@@ -226,25 +163,20 @@ class Feedzy_Rss_Feeds_Widget extends WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 
 		$instance = $old_instance;
+
 		$instance['title']			= strip_tags( $new_instance['title'] );
-		$instance['textarea'] 	    = stripslashes( wp_filter_post_kses( addslashes( $new_instance['textarea'] ) ) );
 
 		if ( current_user_can( 'unfiltered_html' ) ) {
 			$instance['textarea'] 	= $new_instance['textarea'];
-		}
+		}else{
+            $instance['textarea'] 	    = stripslashes( wp_filter_post_kses( addslashes( $new_instance['textarea'] ) ) );
+        }
+        $forms_ids = array_keys($this->defaults);
 
-		$instance['feeds'] 			    = strip_tags( $new_instance['feeds'] );
-		$instance['max'] 				= strip_tags( $new_instance['max'] );
-		$instance['target'] 			= strip_tags( $new_instance['target'] );
-		$instance['titlelength'] 		= strip_tags( $new_instance['titlelength'] );
-		$instance['meta'] 			    = strip_tags( $new_instance['meta'] );
-		$instance['summary'] 			= strip_tags( $new_instance['summary'] );
-		$instance['summarylength'] 	    = strip_tags( $new_instance['summarylength'] );
-		$instance['thumb'] 			    = strip_tags( $new_instance['thumb'] );
-		$instance['default'] 			= strip_tags( $new_instance['default'] );
-		$instance['size'] 			    = strip_tags( $new_instance['size'] );
-		$instance['keywords_title']     = strip_tags( $new_instance['keywords_title'] );
+		foreach($forms_ids as $key){
 
+            $instance[$key] 			    = strip_tags( $new_instance[$key] );
+        }
 		$instance = apply_filters( 'feedzy_widget_update_filter', $instance, $new_instance );
 
 		return $instance;

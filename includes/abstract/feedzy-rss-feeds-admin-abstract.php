@@ -702,6 +702,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		// Load SimplePie Instance
 		$feed = fetch_feed( $feedURL );
+		// TODO report error when is an error loading the feed
+		if( is_wp_error($feed) ) return '';
+
 		$feed -> enable_cache( true );
 		$feed -> enable_order_by_date( true );
 		$feed -> set_cache_class( 'WP_Feed_Cache' );

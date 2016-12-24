@@ -12,8 +12,7 @@
  * @subpackage feedzy-rss-feeds/form
  */
 
-$feedzyLangClass = new Feedzy_Rss_Feeds_Ui_Lang();
-$html_parts = $feedzyLangClass->get_form_elements();
+$html_parts = Feedzy_Rss_Feeds_Ui_Lang::get_form_elements();
 ?>
 <!DOCTYPE html>
 <html>
