@@ -706,9 +706,9 @@ img {
 
 .feedzy-radio-image {
 	display: inline-block;
+	width: 100px;
 	margin-right: 20px;
 	padding-bottom: 60px;
-	width: 100px;
 }
 
 .feedzy-template-default {
