@@ -1,8 +1,8 @@
-=== FEEDZY RSS Feeds ===
+=== FEEDZY RSS Feeds Lite ===
 Contributors: themeisle,codeinwp
 Tags: RSS, SimplePie, shortcode, feed, thumbnail, image, rss feeds, aggregator, tinyMCE, WYSIWYG, MCE, UI, flux, plugin, WordPress, widget, importer, XML, ATOM, API, parser
 Requires at least: 3.7
-Tested up to: 4.5.2
+Tested up to: 4.7
 Stable tag: 3.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -14,6 +14,17 @@ FEEDZY RSS Feeds is a small & lightweight plugin. Fast and easy to use, it aggre
 == Description ==
 
 FEEDZY RSS Feeds is a small and lightweight RSS aggregator plugin. Fast and very easy to use, it allows you to aggregate multiple RSS feeds into your WordPress site through fully customizable shortcodes & widgets.
+
+> **Time-saving features available in the FULL version:**
+>
+> * Multiple templates for feed items
+> * Automatically build affiliate links
+> * Parse price from product feeds
+> * Priority email support from the developer of the plugin
+> * Support and updates for 12 months
+>
+> **[Learn more about Feedzy Full version]( https://themeisle.com/plugins/feedzy-rss-feeds-lite/ )**
+
 
 The plugin uses the SimplePie php CLASS natively included in WordPress. SimplePie is a RSS parser that can read the information contained in a feed, process it, and finally display it.
 
