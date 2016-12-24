@@ -57,7 +57,7 @@ register_deactivation_hook( __FILE__, 'deactivate_feedzy_rss_feeds' );
  * @since    3.0.0
  */
 function feedzy_rss_feeds_autoload( $class ) {
-	$namespaces = array( 'Feedzy_Rss_Feeds' );
+	$namespaces = array( 'Feedzy_Rss_Feeds','feedzy' );
 	foreach ( $namespaces as $namespace ) {
 		if ( substr( $class, 0, strlen( $namespace ) ) == $namespace ) {
 			$filename = plugin_dir_path( __FILE__ ) . 'includes/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';

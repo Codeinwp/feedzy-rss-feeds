@@ -16,7 +16,7 @@
  * @subpackage feedzy-rss-feeds/includes/admin
  * @author     Themeisle <friends@themeisle.com>
  */
-class Feedzy_Rss_Feeds_Widget extends WP_Widget {
+class feedzy_wp_widget extends WP_Widget {
 
 	/**
 	 * The loader class.
