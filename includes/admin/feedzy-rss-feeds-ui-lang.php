@@ -96,7 +96,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'type'  => 'text',
 						'value' => '',
 				    ),
-					'maximum' => array(
+					'max' => array(
 						'label' => __( 'Number of items to display.', 'feedzy_rss_translate' ),
 						'placeholder' => __( '(eg: 5)', 'feedzy_rss_translate' ),
 						'type'  => 'text',
