@@ -27,21 +27,6 @@ class feedzy_wp_widget extends WP_Widget {
 	 */
 	private $plugin_admin;
 
-    /**
-     * @access  private
-     * @since   3.0.0
-     * @var     array $elements The form elements of the widget
-     */
-    private $elements;
-
-    /**
-     * @access  private
-     * @since   3.0.0
-     * @var     array $defaults The defaults of the elements
-     */
-    private $defaults;
-
-
 	/**
 	 * The class instance.
 	 *
@@ -89,15 +74,19 @@ class feedzy_wp_widget extends WP_Widget {
 	 * @access   public
 	 */
 	public function registerWidget() {
-        $this->defaults = Feedzy_Rss_Feeds_Ui_Lang::get_form_defaults();
-        // rename title to title length as widget instance already have one
-        $this->defaults['titlelength'] = $this->defaults['title'];
-        unset($this->defaults['title']);
-
-        $this->elements = Feedzy_Rss_Feeds_Ui_Lang::get_form_elements();
 
         register_widget( $this );
 	}
+
+	public function get_widget_defaults(){
+
+	    $defaults = Feedzy_Rss_Feeds_Ui_Lang::get_form_defaults();
+        // rename title to title length as widget instance already have one
+        $defaults['titlelength'] = $defaults['title'];
+        unset($defaults['title']);
+
+        return $defaults;
+    }
 	/**
 	 * The widget form creation
 	 *
@@ -108,7 +97,7 @@ class feedzy_wp_widget extends WP_Widget {
 	 */
 	public function form( $instance ) {
 
-        $instance = wp_parse_args( $instance, $this->defaults );
+        $instance = wp_parse_args( $instance, $this->get_widget_defaults() );
 
 		$widget_form ='<p>
 				<label for="' . $this->get_field_id( 'title' ) . '">' . __( 'Widget Title', 'feedzy_rss_translate' ) . '</label>
@@ -119,13 +108,13 @@ class feedzy_wp_widget extends WP_Widget {
 				<textarea class="widefat" id="' . $this->get_field_id( 'textarea' ) . '" name="' . $this->get_field_name( 'textarea' ) . '">' . esc_attr($instance['textarea']) . '</textarea>
 			</p>';
 
-
-
-        foreach( $this->elements as $key_section => $section ){
+        foreach( Feedzy_Rss_Feeds_Ui_Lang::get_form_elements() as $key_section => $section ){
 		    $widget_form .= '<hr/><h4>'.$section['title'].'</h4>';
-		    $widget_form .= '<small>'.$section['description'].'</small>';
+		    if( isset($section['description']) ) {
+		         $widget_form .= '<small>'.$section['description'].'</small>';
+            }
 		    foreach ($section['elements'] as $id=>$element){
-		        if($element['disabled']) continue;
+		        if(isset($element['disabled']) && $element['disabled']) continue;
 		        if($id == 'title') $id = 'titlelength';
 		        $widget_form .='<p>';
 		        $widget_form .='<label for="'.$this->get_field_id($id).'">'.$element['label'].'</label>';
@@ -145,7 +134,7 @@ class feedzy_wp_widget extends WP_Widget {
             }
         }
         $widget_form .='<hr/>';
-		$widget_form = apply_filters( 'feedzy_widget_form_filter', $widget_form, $instance, $this->defaults );
+		$widget_form = apply_filters( 'feedzy_widget_form_filter', $widget_form, $instance, $this->get_widget_defaults());
 		echo $widget_form;
 
 	}
@@ -171,7 +160,7 @@ class feedzy_wp_widget extends WP_Widget {
 		}else{
             $instance['textarea'] 	    = stripslashes( wp_filter_post_kses( addslashes( $new_instance['textarea'] ) ) );
         }
-        $forms_ids = array_keys($this->defaults);
+        $forms_ids = array_keys($this->get_widget_defaults());
 
 		foreach($forms_ids as $key){
 

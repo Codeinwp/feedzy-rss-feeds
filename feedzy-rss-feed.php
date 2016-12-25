@@ -57,7 +57,8 @@ register_deactivation_hook( __FILE__, 'deactivate_feedzy_rss_feeds' );
  * @since    3.0.0
  */
 function feedzy_rss_feeds_autoload( $class ) {
-	$namespaces = array( 'Feedzy_Rss_Feeds','feedzy' );
+	$namespaces = array( 'Feedzy_Rss_Feeds');
+
 	foreach ( $namespaces as $namespace ) {
 		if ( substr( $class, 0, strlen( $namespace ) ) == $namespace ) {
 			$filename = plugin_dir_path( __FILE__ ) . 'includes/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
@@ -79,6 +80,10 @@ function feedzy_rss_feeds_autoload( $class ) {
 			}
 		}
 	}
+    if ( is_readable( plugin_dir_path( __FILE__ ) . 'includes/admin/feedzy-wp-widget.php') ) {
+        require_once plugin_dir_path( __FILE__ ) . 'includes/admin/feedzy-wp-widget.php';
+        return true;
+    }
 	return false;
 }
 
