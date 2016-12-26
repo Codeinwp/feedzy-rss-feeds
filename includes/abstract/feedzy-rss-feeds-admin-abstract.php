@@ -656,21 +656,22 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		foreach ( $feed_items as $item ) {
 			$content .= '
             <li ' . $item['itemAttr'] . '>
+                '.( ! empty($item['item_img']) ? '
                 <div class="' . $item['item_img_class'] . '" style="' . $item['item_img_style'] . '">
 					<a href="' . $item['item_url'] . '" target="' . $item['item_url_target'] . '" title="' . $item['item_url_title'] . '"   style="' . $item['item_img_style'] . '">
 						' . $item['item_img'] . '
 					</a>
-				</div>
+				</div>' : '' ) .'
 				<span class="title">
 					<a href="' . $item['item_url'] . '" target="' . $item['item_url_target'] . '">
 						' . $item['item_title'] . '
 					</a>
 				</span>
 				<div class="' . $item['item_content_class'] . '" style="' . $item['item_content_style'] . '">
-					<small>
+					'. ( ! empty($item['item_meta'])  ? '<small>
 						' . $item['item_meta'] . '
-					</small>
-					<p>' . $item['item_description'] . '</p>
+					</small>' : '' ). '
+					' .(!  empty($item['item_description']) ? '<p>' . $item['item_description'] . '</p>':'').'
 				</div>
 			</li>
             ';
