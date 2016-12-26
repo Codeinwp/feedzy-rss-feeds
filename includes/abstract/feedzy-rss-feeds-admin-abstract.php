@@ -656,7 +656,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		foreach ( $feed_items as $item ) {
 			$content .= '
             <li ' . $item['itemAttr'] . '>
-                '.( ! empty($item['item_img']) ? '
+                '.( ! empty($item['item_img'] && $sc['thumb'] != 'no') ? '
                 <div class="' . $item['item_img_class'] . '" style="' . $item['item_img_style'] . '">
 					<a href="' . $item['item_url'] . '" target="' . $item['item_url_target'] . '" title="' . $item['item_url_title'] . '"   style="' . $item['item_img_style'] . '">
 						' . $item['item_img'] . '
