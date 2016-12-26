@@ -102,13 +102,13 @@ class feedzy_wp_widget extends WP_Widget
      */
     public static function bool_to_enum($value)
     {
-        if (in_array($value, array('yes', 'no', ''))) {
+        if (in_array($value, array('yes', 'no'))) {
             return $value;
         }
         $value = strval($value);
         if($value == '1' || $value == 'true')
             return 'yes';
-        if($value == '0' || $value == 'false')
+        if($value == '0' || $value == 'false' || $value == '')
             return 'no';
 
     }
@@ -149,7 +149,6 @@ class feedzy_wp_widget extends WP_Widget
                     $widget_form .= '<input class="widefat" id="' . $this->get_field_id($id) . '" name="' . $this->get_field_name($id) . '" type="text" value="' . esc_attr($instance[$id]) . '" />';
                 }
                 if ($element['type'] == 'select') {
-                    var_dump($id);
                     $widget_form .= '<select class="widefat" id="' . $this->get_field_id($id) . '" name="' . $this->get_field_name($id) . '" >';
                     foreach ($element['opts'] as $select_option) {
 
@@ -229,20 +228,6 @@ class feedzy_wp_widget extends WP_Widget
             echo '<p class="feedzy-widget-intro">' . wpautop($textarea) . '</p>';
         }
 
-        $items = array('meta', 'summary');
-        foreach ($items as $item) {
-            $instance[$item] = 'no';
-            if ($instance[$item] == true) {
-                $instance[$item] = 'yes';
-            }
-        }
-
-        // Fix for versions before 2.3.1
-        if ($instance['thumb'] == '1') {
-            $instance['thumb'] = 'yes';
-        } elseif ($instance['thumb'] == '0') {
-            $instance['thumb'] = 'no';
-        }
 
         $feedzy_widget_shortcode_attributes = array(
             'feeds' => $instance['feeds'],
@@ -250,15 +235,14 @@ class feedzy_wp_widget extends WP_Widget
             'feed_title' => 'no',
             'target' => $instance['target'],
             'title' => $instance['titlelength'],
-            'meta' => $instance['meta'],
-            'summary' => $instance['summary'],
+            'meta' => self::bool_to_enum($instance['meta']),
+            'summary' => self::bool_to_enum($instance['summary']),
             'summarylength' => $instance['summarylength'],
-            'thumb' => $instance['thumb'],
+            'thumb' => self::bool_to_enum($instance['thumb']),
             'default' => $instance['default'],
             'size' => $instance['size'],
             'keywords_title' => $instance['keywords_title'],
         );
-
         $feedzy_widget_shortcode_attributes = apply_filters('feedzy_widget_shortcode_attributes_filter', $feedzy_widget_shortcode_attributes, $args, $instance);
 
         // Call the shortcode function

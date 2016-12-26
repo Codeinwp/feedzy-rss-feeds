@@ -544,7 +544,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		// Filter: feedzy_meta_args
 		$metaArgs = apply_filters( 'feedzy_meta_args', $metaArgs, $feedURL );
-
+        $contentMeta = '';
 		if ( $sc['meta'] == 'yes' && ( $metaArgs['author'] || $metaArgs['date'] ) ) {
 			$contentMeta = '';
 			if ( $item->get_author() && $metaArgs['author'] ) {
@@ -565,7 +565,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 		}
 		$contentMeta = apply_filters( 'feedzy_meta_output', $contentMeta, $feedURL );
-
+        $contentSummary = '';
 		if ( $sc['summary'] == 'yes' ) {
 			$contentSummary = '';
 			$description = $item->get_description();
