@@ -148,7 +148,10 @@ class feedzy_wp_widget extends WP_Widget
                 if ($element['type'] == 'text' || $element['type'] == 'file') {
                     $widget_form .= '<input class="widefat" id="' . $this->get_field_id($id) . '" name="' . $this->get_field_name($id) . '" type="text" value="' . esc_attr($instance[$id]) . '" />';
                 }
-                if ($element['type'] == 'select') {
+                if ($element['type'] == 'number') {
+                    $widget_form .= '<input class="widefat" id="' . $this->get_field_id($id) . '" name="' . $this->get_field_name($id) . '" type="number" value="' . esc_attr($instance[$id]) . '" />';
+                }
+                if ($element['type'] == 'select' || $element['type'] == 'radio') {
                     $widget_form .= '<select class="widefat" id="' . $this->get_field_id($id) . '" name="' . $this->get_field_name($id) . '" >';
                     foreach ($element['opts'] as $select_option) {
 
