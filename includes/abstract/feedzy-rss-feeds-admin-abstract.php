@@ -544,7 +544,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		// Filter: feedzy_meta_args
 		$metaArgs = apply_filters( 'feedzy_meta_args', $metaArgs, $feedURL );
-        $contentMeta = '';
+		$contentMeta = '';
 		if ( $sc['meta'] == 'yes' && ( $metaArgs['author'] || $metaArgs['date'] ) ) {
 			$contentMeta = '';
 			if ( $item->get_author() && $metaArgs['author'] ) {
@@ -565,7 +565,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 		}
 		$contentMeta = apply_filters( 'feedzy_meta_output', $contentMeta, $feedURL );
-        $contentSummary = '';
+		$contentSummary = '';
 		if ( $sc['summary'] == 'yes' ) {
 			$contentSummary = '';
 			$description = $item->get_description();
@@ -656,22 +656,22 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		foreach ( $feed_items as $item ) {
 			$content .= '
             <li ' . $item['itemAttr'] . '>
-                '.( ! empty($item['item_img'] && $sc['thumb'] != 'no') ? '
+                ' . ( ! empty( $item['item_img'] && $sc['thumb'] != 'no' ) ? '
                 <div class="' . $item['item_img_class'] . '" style="' . $item['item_img_style'] . '">
 					<a href="' . $item['item_url'] . '" target="' . $item['item_url_target'] . '" title="' . $item['item_url_title'] . '"   style="' . $item['item_img_style'] . '">
 						' . $item['item_img'] . '
 					</a>
-				</div>' : '' ) .'
+				</div>' : '' ) . '
 				<span class="title">
 					<a href="' . $item['item_url'] . '" target="' . $item['item_url_target'] . '">
 						' . $item['item_title'] . '
 					</a>
 				</span>
 				<div class="' . $item['item_content_class'] . '" style="' . $item['item_content_style'] . '">
-					'. ( ! empty($item['item_meta'])  ? '<small>
+					' . ( ! empty( $item['item_meta'] )  ? '<small>
 						' . $item['item_meta'] . '
-					</small>' : '' ). '
-					' .(!  empty($item['item_description']) ? '<p>' . $item['item_description'] . '</p>':'').'
+					</small>' : '' ) . '
+					' . ( ! empty( $item['item_description'] ) ? '<p>' . $item['item_description'] . '</p>':'') . '
 				</div>
 			</li>
             ';
@@ -704,7 +704,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		// Load SimplePie Instance
 		$feed = fetch_feed( $feedURL );
 		// TODO report error when is an error loading the feed
-		if( is_wp_error($feed) ) return '';
+		if ( is_wp_error( $feed ) ) { return '';
+		}
 
 		$feed -> enable_cache( true );
 		$feed -> enable_order_by_date( true );

@@ -75,23 +75,23 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 		return $translated;
 	}
 
-    /**
-     * Return the default values of the forms elements
-     *
-     * @return array The default values of shortcode elements
-     */
-    public static function get_form_defaults(){
+	/**
+	 * Return the default values of the forms elements
+	 *
+	 * @return array The default values of shortcode elements
+	 */
+	public static function get_form_defaults() {
 
-        $html_parts = self::get_form_elements();
-        $all_options = wp_list_pluck(array_values($html_parts),'elements');
-        $all_options = call_user_func_array('array_merge', $all_options);
-        $defaults = array();
+		$html_parts = self::get_form_elements();
+		$all_options = wp_list_pluck( array_values( $html_parts ),'elements' );
+		$all_options = call_user_func_array( 'array_merge', $all_options );
+		$defaults = array();
 
-        foreach ($all_options as $id=>$option){
-            $defaults[$id] = $option['value'];
-        }
-        return $defaults;
-    }
+		foreach ( $all_options as $id => $option ) {
+			$defaults[ $id ] = $option['value'];
+		}
+		return $defaults;
+	}
 	/**
 	 * The method for localizing and generating of the tinyMCE popup form.
 	 *
@@ -302,7 +302,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'disabled' => true,
 						'value' => '',
 				    ),
-                    'columns' => array(
+					'columns' => array(
 						'label' => __( 'How many columns we should use to display the feed items', 'feedzy_rss_translate' ) . '<small class="feedzy_pro_tag">' . __( 'Premium', 'feedzy_rss_translate' ) . '</small>',
 						'placeholder' => __( '(eg. 1, 2, ..., 6)', 'feedzy_rss_translate' ),
 						'type'  => 'number',
