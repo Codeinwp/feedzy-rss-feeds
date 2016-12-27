@@ -91,7 +91,8 @@ class feedzy_wp_widget extends WP_Widget
         $defaults = Feedzy_Rss_Feeds_Ui_Lang::get_form_defaults();
         // rename title to title length as widget instance already have one
         $defaults['titlelength'] = $defaults['title'];
-        unset($defaults['title']);
+        $defaults['title'] = '';
+        $defaults['textarea'] = '';
 
         return $defaults;
     }
