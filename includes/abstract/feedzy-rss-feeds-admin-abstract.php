@@ -411,6 +411,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  array|mixed
 	 */
 	public function get_feed_url( $feeds ) {
+		$feedURL = '';
 		if ( ! empty( $feeds ) ) {
 			$feeds = rtrim( $feeds, ',' );
 			$feeds = explode( ',', $feeds );
