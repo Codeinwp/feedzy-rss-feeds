@@ -91,9 +91,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @param   string $itemAttr   The item attribute.
 	 * @return  string
 	 */
-	public function feedzy_classes_item( $itemAttr ) {
+	public function feedzy_classes_item( $itemAttr = '', $sizes = '', $item = '', $feedURL = '', $sc = '' ) {
 		$classes = array( 'rss_item' );
-		$classes = apply_filters( 'feedzy_add_classes_item', $classes );
+		$classes = apply_filters( 'feedzy_add_classes_item', $classes, $sc );
 		$classes = ' class="' . implode( ' ', $classes ) . '"';
 		return $itemAttr . $classes;
 	}
@@ -638,7 +638,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				if ( $count >= $sc['max'] ) {
 					break;
 				}
-				$itemAttr = apply_filters( 'feedzy_item_attributes', $itemAttr = '', $sizes, $item, $feedURL );
+				$itemAttr = apply_filters( 'feedzy_item_attributes', $itemAttr = '', $sizes, $item, $feedURL, $sc );
 				$feed_items[ $count ] = $this->get_feed_item_filter( $sc, $sizes, $item, $feedURL );
 				$feed_items[ $count ]['itemAttr'] = $itemAttr;
 				$count++;
@@ -657,7 +657,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		foreach ( $feed_items as $item ) {
 			$content .= '
             <li ' . $item['itemAttr'] . '>
-                ' . ( ! empty( $item['item_img'] && $sc['thumb'] != 'no' ) ? '
+                ' . ( ( ! empty( $item['item_img'] )  && $sc['thumb'] != 'no' ) ? '
                 <div class="' . $item['item_img_class'] . '" style="' . $item['item_img_style'] . '">
 					<a href="' . $item['item_url'] . '" target="' . $item['item_url_target'] . '" title="' . $item['item_url_title'] . '"   style="' . $item['item_img_style'] . '">
 						' . $item['item_img'] . '

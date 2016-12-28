@@ -142,7 +142,7 @@ class Feedzy_Rss_Feeds {
 		$this->loader->add_filter( 'feedzy_default_image', $plugin_admin, 'feedzy_define_default_image' );
 		$this->loader->add_filter( 'feedzy_default_error', $plugin_admin ,'feedzy_default_error_notice', 9, 2 );
 		$this->loader->add_filter( 'feedzy_item_attributes', $plugin_admin, 'feedzy_add_item_padding', 10, 2 );
-		$this->loader->add_filter( 'feedzy_item_attributes', $plugin_admin, 'feedzy_classes_item' );
+		$this->loader->add_filter( 'feedzy_item_attributes', $plugin_admin, 'feedzy_classes_item' ,99,5 );
 		$this->loader->add_filter( 'feedzy_summary_input', $plugin_admin, 'feedzy_summary_input_filter', 9, 3 );
 		$this->loader->add_filter( 'feedzy_item_keyword', $plugin_admin, 'feedzy_feed_item_keywords_title', 9, 4 );
 		$this->loader->add_filter( 'the_excerpt_rss', $plugin_admin, 'feedzy_insert_thumbnail_rss' );

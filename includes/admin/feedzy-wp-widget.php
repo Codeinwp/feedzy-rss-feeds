@@ -46,7 +46,7 @@ class feedzy_wp_widget extends WP_Widget {
 	public function __construct( $plugin_admin ) {
 		parent::__construct( false, $name = __( 'Feedzy RSS Feeds', 'feedzy_rss_translate' ) );
 		$this->plugin_admin = $plugin_admin;
-		self::$instance = $this;
+		self::$instance     = $this;
 
 	}
 
@@ -86,7 +86,7 @@ class feedzy_wp_widget extends WP_Widget {
 	 * @return mixed
 	 */
 	public function form( $instance ) {
-		$instance = wp_parse_args( $instance, $this->get_widget_defaults() );
+		$instance    = wp_parse_args( $instance, $this->get_widget_defaults() );
 		$widget_form = '<p>
 				<label for="' . $this->get_field_id( 'title' ) . '">' . __( 'Widget Title', 'feedzy_rss_translate' ) . '</label>
 				<input class="widefat" id="' . $this->get_field_id( 'title' ) . '" name="' . $this->get_field_name( 'title' ) . '" type="text" value="' . esc_attr( $instance['title'] ) . '" />
@@ -162,10 +162,10 @@ class feedzy_wp_widget extends WP_Widget {
 			return $value;
 		}
 		$value = strval( $value );
-		if ( $value == '1' || $value == 'true' ) {
+		if ( $value == '1' || $value == 'true' || $value == '' ) {
 			return 'yes';
 		}
-		if ( $value == '0' || $value == 'false' || $value == '' ) {
+		if ( $value == '0' || $value == 'false' ) {
 			return 'no';
 		}
 
@@ -184,7 +184,7 @@ class feedzy_wp_widget extends WP_Widget {
 	 * @return  array
 	 */
 	public function update( $new_instance, $old_instance ) {
-		$instance = $old_instance;
+		$instance          = $old_instance;
 		$instance['title'] = strip_tags( $new_instance['title'] );
 		if ( current_user_can( 'unfiltered_html' ) ) {
 			$instance['textarea'] = $new_instance['textarea'];
