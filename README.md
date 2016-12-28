@@ -1,10 +1,20 @@
 # Feedzy RSS Feeds Lite
-[![Build Status](https://travis-ci.org/preda-bogdan/feedzy-rss-feeds.svg?branch=production)](https://travis-ci.org/preda-bogdan/feedzy-rss-feeds)
-[![Code Climate](https://codeclimate.com/github/preda-bogdan/feedzy-rss-feeds/badges/gpa.svg)](https://codeclimate.com/github/preda-bogdan/feedzy-rss-feeds)
-[![Issue Count](https://codeclimate.com/github/preda-bogdan/feedzy-rss-feeds/badges/issue_count.svg)](https://codeclimate.com/github/preda-bogdan/feedzy-rss-feeds)
+[![Build Status](https://travis-ci.org/Codeinwp/feedzy-rss-feeds.svg?branch=production)](https://travis-ci.org/Codeinwp/feedzy-rss-feeds)
+[![Code Climate](https://codeclimate.com/github/Codeinwp/feedzy-rss-feeds/badges/gpa.svg)](https://codeclimate.com/github/Codeinwp/feedzy-rss-feeds)
+[![Issue Count](https://codeclimate.com/github/Codeinwp/feedzy-rss-feeds/badges/issue_count.svg)](https://codeclimate.com/github/Codeinwp/feedzy-rss-feeds)
 
 ## Description
 FEEDZY RSS Feeds is a small and lightweight RSS aggregator plugin. Fast and very easy to use, it allows you to aggregate multiple RSS feeds into your WordPress site through fully customizable shortcodes & widgets.
+
+> **Time-saving features available in the FULL version:**
+>
+> * Multiple templates for feed items
+> * Automatically build affiliate links
+> * Parse price from product feeds
+> * Priority email support from the developer of the plugin
+> * Support and updates for 12 months
+>
+> **[Learn more about Feedzy Full version]( https://themeisle.com/plugins/feedzy-rss-feeds-lite/ )**
 
 The plugin uses the SimplePie php CLASS natively included in WordPress. SimplePie is a RSS parser that can read the information contained in a feed, process it, and finally display it.
 

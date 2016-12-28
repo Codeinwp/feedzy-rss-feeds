@@ -12,8 +12,8 @@
  * @package           feedzy-rss-feeds
  *
  * @wordpress-plugin
- * Plugin Name:       Feedzy RSS Feeds
- * Plugin URI:        http://themeisle.com/plugins/feedzy-rss-feeds/
+ * Plugin Name:       Feedzy RSS Feeds Lite
+ * Plugin URI:        https://themeisle.com/plugins/feedzy-rss-feeds-lite/
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
  * Version:           3.0.0
  * Author:            Themeisle
@@ -58,6 +58,7 @@ register_deactivation_hook( __FILE__, 'deactivate_feedzy_rss_feeds' );
  */
 function feedzy_rss_feeds_autoload( $class ) {
 	$namespaces = array( 'Feedzy_Rss_Feeds' );
+
 	foreach ( $namespaces as $namespace ) {
 		if ( substr( $class, 0, strlen( $namespace ) ) == $namespace ) {
 			$filename = plugin_dir_path( __FILE__ ) . 'includes/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
@@ -78,6 +79,10 @@ function feedzy_rss_feeds_autoload( $class ) {
 				return true;
 			}
 		}
+	}
+	if ( is_readable( plugin_dir_path( __FILE__ ) . 'includes/admin/feedzy-wp-widget.php' ) ) {
+		require_once plugin_dir_path( __FILE__ ) . 'includes/admin/feedzy-wp-widget.php';
+		return true;
 	}
 	return false;
 }

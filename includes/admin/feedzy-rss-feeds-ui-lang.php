@@ -49,13 +49,13 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 	public function __construct() {
 		$this->strings = array(
 		    'popup_url' => wp_nonce_url( 'admin-ajax.php', 'feedzy_ajax_token', 'feedzy_request_form_token' ),
-		    'pro_url' => 'https://themeisle.com/',
+		    'pro_url' => ' https://themeisle.com/plugins/feedzy-rss-feeds/',
 			'plugin_label' => __( 'Feedzy Lite', 'feedzy_rss_translate' ),
 			'plugin_title' => __( 'Insert Feedzy RSS Feeds Shortcode', 'feedzy_rss_translate' ),
 			'image_button' => __( 'Use Image', 'feedzy_rss_translate' ),
 			'insert_button' => __( 'Insert Shortcode', 'feedzy_rss_translate' ),
 			'cancel_button' => __( 'Cancel', 'feedzy_rss_translate' ),
-			'pro_button' => __( 'Get Feedzy RSS Feeds PRO', 'feedzy_rss_translate' ),
+			'pro_button' => __( 'Get Feedzy RSS Feeds Premium', 'feedzy_rss_translate' ),
 		);
 	}
 
@@ -76,6 +76,23 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 	}
 
 	/**
+	 * Return the default values of the forms elements
+	 *
+	 * @return array The default values of shortcode elements
+	 */
+	public static function get_form_defaults() {
+
+		$html_parts = self::get_form_elements();
+		$all_options = wp_list_pluck( array_values( $html_parts ),'elements' );
+		$all_options = call_user_func_array( 'array_merge', $all_options );
+		$defaults = array();
+
+		foreach ( $all_options as $id => $option ) {
+			$defaults[ $id ] = $option['value'];
+		}
+		return $defaults;
+	}
+	/**
 	 * The method for localizing and generating of the tinyMCE popup form.
 	 *
 	 * It returns an array, use it to add more options to the popup window.
@@ -85,7 +102,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 	 * @access  public
 	 * @return array|mixed|void
 	 */
-	public function get_form_elements() {
+	public static function get_form_elements() {
 		$elements = array(
 			'section_feed' => array(
 				'title' => __( 'Feed Source', 'feedzy_rss_translate' ),
@@ -237,7 +254,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 							),
 						),
 				    ),
-					'defaultimg' => array(
+					'default' => array(
 						'label' => __( 'Default thumbnail URL if no image is found.', 'feedzy_rss_translate' ),
 						'placeholder' => __( 'Image URL', 'feedzy_rss_translate' ),
 						'type'  => 'file',
@@ -256,10 +273,10 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 			),
 			'section_pro' => array(
 				'title' => __( 'PRO Options', 'feedzy_rss_translate' ),
-				'description' => __( 'Get access to more options and customizations with Feedzy RSS Feeds Pro. Use existing templates or extend them and make them your own.', 'feedzy_rss_translate' ) . '<br/>' . '<a href="https://themeisle.com" target="_blank"><small>' . __( 'Get Feedzy RSS Feeds PRO', 'feedzy_rss_translate' ) . '</small></a>',
+				'description' => __( 'Get access to more options and customizations with full version of Feedzy RSS Feeds . Use existing templates or extend them and make them your own.', 'feedzy_rss_translate' ) . '<br/>' . '<a href=" https://themeisle.com/plugins/feedzy-rss-feeds/" target="_blank"><small>' . __( 'See more features of Feedzy RSS Feeds ', 'feedzy_rss_translate' ) . '</small></a>',
 				'elements' => array(
 					'price' => array(
-						'label' => __( 'Should we display the price from the feed if it is available?', 'feedzy_rss_translate' ) . '<small class="feedzy_pro_tag">* ' . __( 'available in PRO', 'feedzy_rss_translate' ) . '</small>',
+						'label' => __( 'Should we display the price from the feed if it is available?', 'feedzy_rss_translate' ) . '<small class="feedzy_pro_tag">' . __( 'Premium', 'feedzy_rss_translate' ) . '</small>',
 						'type'  => 'select',
 						'disabled' => true,
 						'value' => '',
@@ -279,29 +296,36 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						),
 				    ),
 					'referral_url' => array(
-						'label' => __( 'Referral URL parameters (w/o "?").', 'feedzy_rss_translate' ) . '<small class="feedzy_pro_tag">* ' . __( 'available in PRO', 'feedzy_rss_translate' ) . '</small>',
+						'label' => __( 'Referral URL parameters (w/o "?").', 'feedzy_rss_translate' ) . '<small class="feedzy_pro_tag">' . __( 'Premium', 'feedzy_rss_translate' ) . '</small>',
 						'placeholder' => __( '(eg. promo_code=feedzy_is_awesome)', 'feedzy_rss_translate' ),
 						'type'  => 'text',
 						'disabled' => true,
 						'value' => '',
 				    ),
+					'columns' => array(
+						'label' => __( 'How many columns we should use to display the feed items', 'feedzy_rss_translate' ) . '<small class="feedzy_pro_tag">' . __( 'Premium', 'feedzy_rss_translate' ) . '</small>',
+						'placeholder' => __( '(eg. 1, 2, ..., 6)', 'feedzy_rss_translate' ),
+						'type'  => 'number',
+						'disabled' => true,
+						'value' => '1',
+				    ),
 					'template' => array(
-						'label' => __( 'Template to use when displaying the feed.', 'feedzy_rss_translate' ) . '<small class="feedzy_pro_tag">* ' . __( 'available in PRO', 'feedzy_rss_translate' ) . '</small>',
+						'label' => __( 'Template to use when displaying the feed.', 'feedzy_rss_translate' ) . '<small class="feedzy_pro_tag">' . __( 'Premium', 'feedzy_rss_translate' ) . '</small>',
 						'type'  => 'radio',
 						'disabled' => true,
 						'value' => '',
 						'opts'  => array(
 							'auto' => array(
-								'label' => __( 'No Template', 'feedzy_rss_translate' ),
-								'value' => '',
-							),
-							'yes' => array(
 								'label' => __( 'Default', 'feedzy_rss_translate' ),
 								'value' => 'default',
 							),
+							'yes' => array(
+								'label' => __( 'Style 1', 'feedzy_rss_translate' ),
+								'value' => 'style1',
+							),
 							'no' => array(
-								'label' => __( 'Example', 'feedzy_rss_translate' ),
-								'value' => 'example',
+								'label' => __( 'Style 2', 'feedzy_rss_translate' ),
+								'value' => 'style2',
 							),
 					    ),
 					),

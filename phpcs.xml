@@ -12,6 +12,8 @@
         <exclude name="Squiz.Commenting.FunctionComment.MissingParamTag" />
         <exclude name="Squiz.Commenting.InlineComment.InvalidEndChar" />
         <exclude name="Squiz.Commenting.InlineComment.NotCapital" />
+        <exclude name="Squiz.Classes.ValidClassName.NotCamelCaps" />
+        <exclude name="WordPress.Classes.ValidClassName.NotCamelCaps" />
         <exclude name="WordPress.NamingConvention.ValidVariableName.StringNotSnakeCase" />
         <exclude name="WordPress.NamingConventions.ValidVariableName.NotSnakeCase" />
         <exclude name="WordPress.PHP.YodaConditions.NotYoda" />

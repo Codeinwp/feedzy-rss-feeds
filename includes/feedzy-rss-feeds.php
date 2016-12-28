@@ -153,7 +153,7 @@ class Feedzy_Rss_Feeds {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 
-		$plugin_widget = new Feedzy_Rss_Feeds_Widget( $plugin_admin );
+		$plugin_widget = new feedzy_wp_widget( $plugin_admin );
 		$this->loader->add_action( 'widgets_init', $plugin_widget, 'registerWidget', 10 );
 
 	}

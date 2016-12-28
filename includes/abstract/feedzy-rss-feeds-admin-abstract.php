@@ -411,6 +411,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  array|mixed
 	 */
 	public function get_feed_url( $feeds ) {
+		$feedURL = '';
 		if ( ! empty( $feeds ) ) {
 			$feeds = rtrim( $feeds, ',' );
 			$feeds = explode( ',', $feeds );
@@ -511,10 +512,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			if ( ( ! empty( $theThumbnail ) && $sc['thumb'] == 'auto' ) || $sc['thumb'] == 'yes' ) {
 				if ( ! empty( $theThumbnail ) ) {
 					$theThumbnail = $this->feedzy_image_encode( $theThumbnail );
-					$contentThumb .= '<span class="default" style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:  url(' . $sc['default'] . ');" alt="' . $item->get_title() . '"></span>';
-					$contentThumb .= '<span class="fetched" style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:  url(' . $theThumbnail . ');" alt="' . $item->get_title() . '"></span>';
+					$contentThumb .= '<span class="fetched" style="background-image:  url(' . $theThumbnail . ');" alt="' . $item->get_title() . '"></span>';
 				} elseif ( empty( $theThumbnail ) && $sc['thumb'] == 'yes' ) {
-					$contentThumb .= '<span style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:url(' . $sc['default'] . ');" alt="' . $item->get_title() . '"></span>';
+					$contentThumb .= '<span style="background-image:url(' . $sc['default'] . ');" alt="' . $item->get_title() . '"></span>';
 				}
 			} else {
 				$contentThumb .= '<span style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:url(' . $sc['default'] . ');" alt="' . $item->get_title() . '"></span>';
@@ -545,7 +545,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		// Filter: feedzy_meta_args
 		$metaArgs = apply_filters( 'feedzy_meta_args', $metaArgs, $feedURL );
-
+		$contentMeta = '';
 		if ( $sc['meta'] == 'yes' && ( $metaArgs['author'] || $metaArgs['date'] ) ) {
 			$contentMeta = '';
 			if ( $item->get_author() && $metaArgs['author'] ) {
@@ -566,7 +566,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 		}
 		$contentMeta = apply_filters( 'feedzy_meta_output', $contentMeta, $feedURL );
-
+		$contentSummary = '';
 		if ( $sc['summary'] == 'yes' ) {
 			$contentSummary = '';
 			$description = $item->get_description();
@@ -657,21 +657,22 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		foreach ( $feed_items as $item ) {
 			$content .= '
             <li ' . $item['itemAttr'] . '>
+                ' . ( ! empty( $item['item_img'] && $sc['thumb'] != 'no' ) ? '
                 <div class="' . $item['item_img_class'] . '" style="' . $item['item_img_style'] . '">
-					<a href="' . $item['item_url'] . '" target="' . $item['item_url_target'] . '" title="' . $item['item_url_title'] . '">
+					<a href="' . $item['item_url'] . '" target="' . $item['item_url_target'] . '" title="' . $item['item_url_title'] . '"   style="' . $item['item_img_style'] . '">
 						' . $item['item_img'] . '
 					</a>
-				</div>
+				</div>' : '' ) . '
 				<span class="title">
 					<a href="' . $item['item_url'] . '" target="' . $item['item_url_target'] . '">
 						' . $item['item_title'] . '
 					</a>
 				</span>
 				<div class="' . $item['item_content_class'] . '" style="' . $item['item_content_style'] . '">
-					<small>
+					' . ( ! empty( $item['item_meta'] )  ? '<small>
 						' . $item['item_meta'] . '
-					</small>
-					<p>' . $item['item_description'] . '</p>
+					</small>' : '' ) . '
+					' . ( ! empty( $item['item_description'] ) ? '<p>' . $item['item_description'] . '</p>':'') . '
 				</div>
 			</li>
             ';
@@ -703,6 +704,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		// Load SimplePie Instance
 		$feed = fetch_feed( $feedURL );
+		// TODO report error when is an error loading the feed
+		if ( is_wp_error( $feed ) ) { return '';
+		}
+
 		$feed -> enable_cache( true );
 		$feed -> enable_order_by_date( true );
 		$feed -> set_cache_class( 'WP_Feed_Cache' );

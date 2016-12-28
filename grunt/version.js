@@ -21,7 +21,7 @@ module.exports = {
 			prefix: 'Version\\:\.*\\s'
 		},
 		src: [
-			'feedzy-rss-feeds.php',
+			'feedzy-rss-feed.php',
 			'css/feedzy-rss-feeds.css',
 		]
 	},
