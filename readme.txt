@@ -23,7 +23,7 @@ FEEDZY RSS Feeds is a small and lightweight RSS aggregator plugin. Fast and very
 > * Priority email support from the developer of the plugin
 > * Support and updates for 12 months
 >
-> **[Learn more about Feedzy Full version]( https://themeisle.com/plugins/feedzy-rss-feeds-lite/ )**
+> **[Learn more about Feedzy Full version]( https://themeisle.com/plugins/feedzy-rss-feeds/ )**
 
 
 The plugin uses the SimplePie php CLASS natively included in WordPress. SimplePie is a RSS parser that can read the information contained in a feed, process it, and finally display it.
