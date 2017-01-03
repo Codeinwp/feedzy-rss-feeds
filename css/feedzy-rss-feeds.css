@@ -50,6 +50,7 @@
 .feedzy-rss .rss_item .rss_image .fetched {
 	z-index: 999;
 }
+
 .feedzy-rss .rss_item .rss_image {
 	margin: 0.3em 1em 0 0;
 }
@@ -266,8 +267,9 @@ i.mce-i-feedzy-icon {
 }
 
 .feedzy-rss .feedzy-style2 .rss_image span {
-	left:0px;
+	left: 0;
 }
+
 .feedzy-rss .feedzy-style2 .rss_image,
 .feedzy-rss .feedzy-style2 .rss_content_wrap {
 	display: inline-block;
