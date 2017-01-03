@@ -513,7 +513,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				if ( ! empty( $theThumbnail ) ) {
 					$theThumbnail = $this->feedzy_image_encode( $theThumbnail );
 					$contentThumb .= '<span class="fetched" style="background-image:  url(' . $theThumbnail . ');" alt="' . $item->get_title() . '"></span>';
-				} elseif ( empty( $theThumbnail ) && $sc['thumb'] == 'yes' ) {
+				}
+				if ( $sc['thumb'] == 'yes' ) {
 					$contentThumb .= '<span style="background-image:url(' . $sc['default'] . ');" alt="' . $item->get_title() . '"></span>';
 				}
 			} else {
