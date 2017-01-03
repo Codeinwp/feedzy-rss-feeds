@@ -11,15 +11,8 @@
  * @package    feedzy-rss-feeds
  * @subpackage feedzy-rss-feeds/form
  */
-$wp_include = '../wp-load.php';
-$i = 0;
-while ( ! file_exists( $wp_include ) && $i++ < 10 ) {
-	$wp_include = "../$wp_include";
-}
-require( $wp_include );
 
-$feedzyLangClass = new Feedzy_Rss_Feeds_Ui_Lang();
-$html_parts = $feedzyLangClass->get_form_elements();
+$html_parts = Feedzy_Rss_Feeds_Ui_Lang::get_form_elements();
 ?>
 <!DOCTYPE html>
 <html>
@@ -36,8 +29,11 @@ $html_parts = $feedzyLangClass->get_form_elements();
 		$output = '';
 		if ( ! empty( $html_parts ) ) {
 			foreach ( $html_parts as $item => $section ) {
+				$output .= '<div class="container feedzy_' . $item . '">';
 				$output .= '<h5>' . $section['title'] . '</h5>';
-				$output .= '<div class="container">';
+				if ( isset( $section['description'] ) ) {
+					$output .= '<p>' . $section['description'] . '</p>';
+				}
 				if ( ! empty( $section['elements'] ) ) {
 					foreach ( $section['elements'] as $name => $props ) {
 						$element = '';
@@ -61,16 +57,18 @@ $html_parts = $feedzyLangClass->get_form_elements();
 								foreach ( $props['opts'] as $opt => $values ) {
 									$checked = '';
 									if ( $props['value'] == $values['value'] ) {
-										$checked = 'checked';
+										$checked = 'checked="checked"';
 									}
-									$element .= '<input type="radio" name="' . $name . '" data-feedzy="' . $name . '" value="' . $values['value'] . '" ' . $checked . ' ' . $disabled . ' /> ' . $values['label'];
+									$element .= '<label class="feedzy-radio-image feedzy-template-' . $values['value']
+									            . '"><input type="radio" name="' . $name . '" data-feedzy="' . $name . '" value="' . $values['value'] . '" ' . $checked . ' ' . $disabled . ' />' .
+												$values['label'] . '</label>';
 								}
 								break;
 							case 'checkbox':
 								foreach ( $props['opts'] as $opt => $values ) {
 									$checked = '';
 									if ( $props['value'] == $values['value'] ) {
-										$checked = 'checked';
+										$checked = 'checked="checked"';
 									}
 									$element .= '<input type="checkbox" name="' . $name . '" data-feedzy="' . $name . '" value="' . $values['value'] . '" ' . $checked . ' ' . $disabled . ' /> ' . $values['label'];
 								}
@@ -86,7 +84,7 @@ $html_parts = $feedzyLangClass->get_form_elements();
 								break;
 						}
 						$output .= '
-                        <div class="row">
+                        <div class="row feedzy_element_' . $name . '">
                            <div class="column column-50">
                                 <label for="' . $name . '">' . $props['label'] . '</label>
                             </div>

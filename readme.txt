@@ -1,8 +1,8 @@
-=== FEEDZY RSS Feeds ===
+=== FEEDZY RSS Feeds Lite ===
 Contributors: themeisle,codeinwp
 Tags: RSS, SimplePie, shortcode, feed, thumbnail, image, rss feeds, aggregator, tinyMCE, WYSIWYG, MCE, UI, flux, plugin, WordPress, widget, importer, XML, ATOM, API, parser
 Requires at least: 3.7
-Tested up to: 4.5.2
+Tested up to: 4.7
 Stable tag: 3.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -14,6 +14,17 @@ FEEDZY RSS Feeds is a small & lightweight plugin. Fast and easy to use, it aggre
 == Description ==
 
 FEEDZY RSS Feeds is a small and lightweight RSS aggregator plugin. Fast and very easy to use, it allows you to aggregate multiple RSS feeds into your WordPress site through fully customizable shortcodes & widgets.
+
+> **Time-saving features available in the FULL version:**
+>
+> * Multiple templates for feed items
+> * Automatically build affiliate links
+> * Parse price from product feeds
+> * Priority email support from the developer of the plugin
+> * Support and updates for 12 months
+>
+> **[Learn more about Feedzy Full version]( https://themeisle.com/plugins/feedzy-rss-feeds/ )**
+
 
 The plugin uses the SimplePie php CLASS natively included in WordPress. SimplePie is a RSS parser that can read the information contained in a feed, process it, and finally display it.
 
@@ -74,6 +85,8 @@ By activating this plugin, your cover picture will be inserted into your RSS fee
 * feedzy_feed_blacklist_images
 * feedzy_default_image
 * feedzy_default_error
+* feedzy_item_filter
+* feedzy_item_url_filter
 * shortcode_atts_feedzy_default
 `
 This plugin is maintained and supported by Themeisle, check out some of the other <a href="http://themeisle.com/wordpress-plugins/" rel="nofollow">WordPress plugins</a> and <a href="http://themeisle.com/wordpress-themes/free/" rel="nofollow">free themes</a> we've developed.
@@ -117,6 +130,8 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 = 3.0.0 - 10/11/2016 =
 * Refactored code base from 2.8.1 to OOP style
+* Added support for PRO version
+* Added new hooks feedzy_item_filter, feedzy_item_url_filter
 
 
 = 2.8 - 04/14/2016 =

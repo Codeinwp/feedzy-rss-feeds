@@ -27,6 +27,7 @@ class Feedzy_Rss_Feeds_Deactivator {
 	 * Long Description.
 	 *
 	 * @since    3.0.0
+	 * @access   public
 	 */
 	public static function deactivate() {
 

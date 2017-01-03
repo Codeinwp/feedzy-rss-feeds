@@ -64,6 +64,7 @@ class Feedzy_Rss_Feeds {
 	 * the public-facing side of the site.
 	 *
 	 * @since    3.0.0
+	 * @access   public
 	 */
 	public function __construct() {
 
@@ -141,17 +142,18 @@ class Feedzy_Rss_Feeds {
 		$this->loader->add_filter( 'feedzy_default_image', $plugin_admin, 'feedzy_define_default_image' );
 		$this->loader->add_filter( 'feedzy_default_error', $plugin_admin ,'feedzy_default_error_notice', 9, 2 );
 		$this->loader->add_filter( 'feedzy_item_attributes', $plugin_admin, 'feedzy_add_item_padding', 10, 2 );
-		$this->loader->add_filter( 'feedzy_item_attributes', $plugin_admin, 'feedzy_classes_item' );
+		$this->loader->add_filter( 'feedzy_item_attributes', $plugin_admin, 'feedzy_classes_item' ,99,5 );
 		$this->loader->add_filter( 'feedzy_summary_input', $plugin_admin, 'feedzy_summary_input_filter', 9, 3 );
 		$this->loader->add_filter( 'feedzy_item_keyword', $plugin_admin, 'feedzy_feed_item_keywords_title', 9, 4 );
 		$this->loader->add_filter( 'the_excerpt_rss', $plugin_admin, 'feedzy_insert_thumbnail_rss' );
 		$this->loader->add_filter( 'the_content_feed', $plugin_admin, 'feedzy_insert_thumbnail_rss' );
 		add_shortcode( 'feedzy-rss', array( $plugin_admin, 'feedzy_rss' ) );
 
+		$this->loader->add_action( 'wp_ajax_get_tinymce_form', $plugin_admin,  'get_tinymce_form' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 
-		$plugin_widget = new Feedzy_Rss_Feeds_Widget( $plugin_admin );
+		$plugin_widget = new feedzy_wp_widget( $plugin_admin );
 		$this->loader->add_action( 'widgets_init', $plugin_widget, 'registerWidget', 10 );
 
 	}
@@ -160,6 +162,7 @@ class Feedzy_Rss_Feeds {
 	 * Run the loader to execute all of the hooks with WordPress.
 	 *
 	 * @since    3.0.0
+	 * @access   public
 	 */
 	public function run() {
 		$this->loader->run();
@@ -170,6 +173,7 @@ class Feedzy_Rss_Feeds {
 	 * WordPress and to define internationalization functionality.
 	 *
 	 * @since     3.0.0
+	 * @access    public
 	 * @return    string    The name of the plugin.
 	 */
 	public function get_plugin_name() {
@@ -180,6 +184,7 @@ class Feedzy_Rss_Feeds {
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
 	 * @since     3.0.0
+	 * @access    public
 	 * @return    Feedzy_Rss_Feeds_Loader    Orchestrates the hooks of the plugin.
 	 */
 	public function get_loader() {
@@ -190,6 +195,7 @@ class Feedzy_Rss_Feeds {
 	 * Retrieve the version number of the plugin.
 	 *
 	 * @since     3.0.0
+	 * @access    public
 	 * @return    string    The version number of the plugin.
 	 */
 	public function get_version() {

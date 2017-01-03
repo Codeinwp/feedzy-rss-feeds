@@ -6,16 +6,21 @@ engines:
     enabled: true
     config:
       languages:
-      - ruby
-      - javascript
-      - python
-      - php
+        javascript:
+          mass_threshold: 70
+        php:
+          mass_threshold: 70
   eslint:
     enabled: true
   fixme:
     enabled: true
   phpmd:
     enabled: true
+    checks:
+      Design/TooManyPublicMethods:
+        enabled: false
+      Design/LongMethod:
+        enabled: false
 ratings:
   paths:
   - "**.css"

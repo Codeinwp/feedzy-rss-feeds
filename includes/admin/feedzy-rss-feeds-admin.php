@@ -45,21 +45,21 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @since    3.0.0
-	 * @param      string $plugin_name       The name of this plugin.
-	 * @param      string $version    The version of this plugin.
+	 * @since   3.0.0
+	 * @access  public
+	 * @param   string $plugin_name       The name of this plugin.
+	 * @param   string $version    The version of this plugin.
 	 */
 	public function __construct( $plugin_name, $version ) {
-
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-
 	}
 
 	/**
 	 * Register the stylesheets for the admin area.
 	 *
-	 * @since    3.0.0
+	 * @since   3.0.0
+	 * @access  public
 	 */
 	public function enqueue_styles() {
 
@@ -81,7 +81,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Register the JavaScript for the admin area.
 	 *
-	 * @since    3.0.0
+	 * @since   3.0.0
+	 * @access  public
 	 */
 	public function enqueue_scripts() {
 
@@ -103,9 +104,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * The custom plugin_row_meta function
 	 * Adds additional links on the plugins page for this plugin
 	 *
-	 * @since    1.0.0
-	 * @access   public
-	 *
+	 * @since   3.0.0
+	 * @access  public
 	 * @param   array  $links  The array having default links for the plugin.
 	 * @param   string $file   The name of the plugin file.
 	 *
@@ -113,7 +113,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function feedzy_filter_plugin_row_meta( $links, $file ) {
 
-		if ( strpos( $file, 'feedzy-rss-feeds.php' ) !== false ) {
+		if ( strpos( $file, 'feedzy-rss-feed.php' ) !== false ) {
 			$new_links = array(
 				'doc' => '<a href="http://docs.themeisle.com/article/277-feedzy-rss-feeds-hooks" target="_blank" title="' . __( 'Documentation and examples', 'feedzy_rss_translate' ) . '">' . __( 'Documentation and examples', 'feedzy_rss_translate' ) . '</a>',
 				'more_plugins' => '<a href="http://themeisle.com/wordpress-plugins/" target="_blank" title="' . __( 'More Plugins', 'feedzy_rss_translate' ) . '">' . __( 'More Plugins', 'feedzy_rss_translate' ) . '</a>',

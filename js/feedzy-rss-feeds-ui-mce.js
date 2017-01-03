@@ -10,13 +10,13 @@
 (function($) {
 	tinymce.PluginManager.add('feedzy_mce_button', function( editor, url ) {
 		editor.addButton( 'feedzy_mce_button', {
-			title: 'Feedzy Lite',
-			label: 'Feedzy Lite',
+			title: editor.getLang( 'feedzy_tinymce_plugin.plugin_label' ),
+			label: editor.getLang( 'feedzy_tinymce_plugin.plugin_label' ),
 			icon: 'feedzy-icon',
 			onclick: function() {
 				editor.windowManager.open( {
 					title: editor.getLang( 'feedzy_tinymce_plugin.plugin_title' ),
-					url: editor.getLang( 'feedzy_tinymce_plugin.popup_url' ) + 'form/form.php',
+					url: editor.getLang( 'feedzy_tinymce_plugin.popup_url' ) + '&amp;action=get_tinymce_form',
 					width: $( window ).width() * 0.7,
 					height: ($( window ).height() - 36 - 50) * 0.7,
 					inline: 1,
@@ -64,7 +64,9 @@
 				var eValue = '';
 				if ($( element ).is( 'input' )) {
 					if ($( element ).attr( 'type' ) === 'radio' || $( element ).attr( 'type' ) === 'checkbox') {
-						eValue = $( 'input[name="' + eName + '"]:checked' ).val();
+						if ( $( element ).is( ':checked' ) ) {
+							eValue = $( element ).val();
+						}
 					} else {
 						eValue = $( element ).val();
 					}
@@ -89,6 +91,6 @@
 	}
 
 	function openProLink( e , editor ) {
-
+		window.open( editor.getLang( 'feedzy_tinymce_plugin.pro_url' ), '_blank' );
 	}
 })(jQuery);

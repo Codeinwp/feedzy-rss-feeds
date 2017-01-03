@@ -12,8 +12,6 @@
 /**
  * The UI functionality of the plugin.
  *
- * TODO add description
- *
  * @package    feedzy-rss-feeds
  * @subpackage feedzy-rss-feeds/includes/admin
  * @author     Themeisle <friends@themeisle.com>
@@ -50,7 +48,8 @@ class Feedzy_Rss_Feeds_Ui {
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @since    3.0.0
+	 * @since      3.0.0
+	 * @access     public
 	 * @param      string                  $plugin_name    The name of this plugin.
 	 * @param      string                  $version        The version of this plugin.
 	 * @param      Feedzy_Rss_Feeds_Loader $loader         The version of this plugin.
@@ -65,6 +64,9 @@ class Feedzy_Rss_Feeds_Ui {
 
 	/**
 	 * Initialize the hooks and filters for the tinymce button
+	 *
+	 * @since   3.0.0
+	 * @access  public
 	 */
 	public function register_init() {
 		if ( current_user_can( 'edit_posts' ) && current_user_can( 'edit_pages' ) ) {
@@ -83,7 +85,8 @@ class Feedzy_Rss_Feeds_Ui {
 	/**
 	 * Register the JavaScript for the admin area.
 	 *
-	 * @since    3.0.0
+	 * @since   3.0.0
+	 * @access  public
 	 */
 	public function enqueue_scripts() {
 
@@ -98,23 +101,28 @@ class Feedzy_Rss_Feeds_Ui {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-		wp_enqueue_script( $this->plugin_name . '-ui', FEEDZY_ABSURL . 'js/feedzy-rss-feeds-ui-scripts.js', array( 'jquery' ), $this->version, false );
 	}
 
 	/**
 	 * Load plugin translation for - TinyMCE API
 	 *
+	 * @since   3.0.0
+	 * @access  public
 	 * @param   array $arr  The tinymce_lang array.
 	 * @return  array
 	 */
 	public function feedzy_add_tinymce_lang( $arr ) {
-		$arr[] = plugin_dir_path( __FILE__ ) . 'feedzy-rss-feeds-ui-lang.php';
+		$feedzy_rss_feeds_ui_lang = FEEDZY_ABSPATH . '/includes/admin/feedzy-rss-feeds-ui-lang.php';
+		$feedzy_rss_feeds_ui_lang = apply_filters( 'feedzy_rss_feeds_ui_lang_filter', $feedzy_rss_feeds_ui_lang );
+		$arr[] = $feedzy_rss_feeds_ui_lang;
 		return $arr;
 	}
 
 	/**
 	 * Load custom js options - TinyMCE API
 	 *
+	 * @since   3.0.0
+	 * @access  public
 	 * @param   array $plugin_array  The tinymce plugin array.
 	 * @return  array
 	 */
@@ -126,6 +134,8 @@ class Feedzy_Rss_Feeds_Ui {
 	/**
 	 * Register new button in the editor
 	 *
+	 * @since   3.0.0
+	 * @access  public
 	 * @param   array $buttons  The tinymce buttons array.
 	 * @return  array
 	 */

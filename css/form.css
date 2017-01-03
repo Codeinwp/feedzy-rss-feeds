@@ -594,6 +594,7 @@ th:last-child {
 
 p {
 	margin-top: 0;
+	font-size: 1.4rem;
 }
 
 h1,
@@ -630,6 +631,7 @@ h4 {
 }
 
 h5 {
+	border-bottom: 1px solid #31b0d5;
 	font-size: 1.8rem;
 	line-height: 1.5;
 	letter-spacing: -0.05rem;
@@ -685,27 +687,38 @@ img {
 	float: right;
 }
 
-/*.feedzy-popup-form input, .feedzy-popup-form select {*/
-/*width: 100%;*/
-/*line-height: 1.4em;*/
-/*background-color: #fff;*/
-/*height: 1.8em;*/
-/*font-size: 0.8em;*/
-/*margin: 0;*/
-/*padding: 4px;*/
-/*display: block;*/
-/*box-sizing: border-box;*/
-/*}*/
+.feedzy_section_pro {
+	background-color: #fefefe;
+}
 
-/*.feedzy-popup-form, .feedzy-popup-form .row {*/
-/*display: block;*/
-/*width: 100%;*/
-/*height: 100%;*/
-/*}*/
-/*.feedzy-popup-form .row .col-md-6 {*/
-/*display: inline-block;*/
-/*width: 45%;*/
-/*margin-left: 2.2%;*/
-/*margin-right: 2.2%;*/
-/*margin-bottom: 15px;*/
-/*}*/
+.feedzy_section_pro h5 {
+	border-bottom-color: #d9a404;
+	color: #d9a404;
+}
+
+.feedzy_pro_tag {
+	margin-left: 10px;
+	padding: 3px 6px;
+	border-radius: 3px;
+	color: #fff;
+	background-color: #d9a404;
+}
+
+.feedzy-radio-image {
+	display: inline-block;
+	width: 100px;
+	margin-right: 20px;
+	padding-bottom: 60px;
+}
+
+.feedzy-template-default {
+	background: url(../img/feedzy-default-template.jpg) no-repeat bottom center;
+}
+
+.feedzy-template-style1 {
+	background: url(../img/feedzy-style1-template.jpg) no-repeat bottom center;
+}
+
+.feedzy-template-style2 {
+	background: url(../img/feedzy-style2-template.jpg) no-repeat bottom center;
+}

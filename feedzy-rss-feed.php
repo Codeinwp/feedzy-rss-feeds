@@ -12,8 +12,8 @@
  * @package           feedzy-rss-feeds
  *
  * @wordpress-plugin
- * Plugin Name:       Feedzy RSS Feeds
- * Plugin URI:        http://themeisle.com/plugins/feedzy-rss-feeds/
+ * Plugin Name:       Feedzy RSS Feeds Lite
+ * Plugin URI:        https://themeisle.com/plugins/feedzy-rss-feeds-lite/
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
  * Version:           3.0.0
  * Author:            Themeisle
@@ -40,6 +40,8 @@ function activate_feedzy_rss_feeds() {
 /**
  * The code that runs during plugin deactivation.
  * This action is documented in includes/feedzy-rss-feeds-deactivator.php
+ *
+ * @since    3.0.0
  */
 function deactivate_feedzy_rss_feeds() {
 	Feedzy_Rss_Feeds_Deactivator::deactivate();
@@ -51,9 +53,12 @@ register_deactivation_hook( __FILE__, 'deactivate_feedzy_rss_feeds' );
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
+ *
+ * @since    3.0.0
  */
 function feedzy_rss_feeds_autoload( $class ) {
 	$namespaces = array( 'Feedzy_Rss_Feeds' );
+
 	foreach ( $namespaces as $namespace ) {
 		if ( substr( $class, 0, strlen( $namespace ) ) == $namespace ) {
 			$filename = plugin_dir_path( __FILE__ ) . 'includes/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
@@ -75,6 +80,10 @@ function feedzy_rss_feeds_autoload( $class ) {
 			}
 		}
 	}
+	if ( is_readable( plugin_dir_path( __FILE__ ) . 'includes/admin/feedzy-wp-widget.php' ) ) {
+		require_once plugin_dir_path( __FILE__ ) . 'includes/admin/feedzy-wp-widget.php';
+		return true;
+	}
 	return false;
 }
 
@@ -86,7 +95,7 @@ function feedzy_rss_feeds_autoload( $class ) {
  * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.
  *
- * @since    1.0.0
+ * @since    3.0.0
  */
 function run_feedzy_rss_feeds() {
 	define( 'FEEDZY_BASEFILE', __FILE__ );
