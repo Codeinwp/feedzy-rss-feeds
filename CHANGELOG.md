@@ -1,4 +1,8 @@
 
+### 3.0.1 - 05/01/2017
+**Changes:** 
+- Fixed html markup error
+
 ### 3.0.0 - 03/01/2017
 **Changes:** 
 - Release 3.0.0 version
