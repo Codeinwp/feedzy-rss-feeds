@@ -69,7 +69,7 @@ class Feedzy_Rss_Feeds {
 	public function __construct() {
 
 		$this->plugin_name = 'feedzy-rss-feeds';
-		$this->version = '3.0.0';
+		$this->version = '3.0.1';
 
 		$this->load_dependencies();
 		$this->set_locale();
