@@ -1,5 +1,5 @@
 # Feedzy RSS Feeds Lite
-[![Build Status](https://travis-ci.org/Codeinwp/feedzy-rss-feeds.svg?branch=production)](https://travis-ci.org/Codeinwp/feedzy-rss-feeds)
+[![Build Status](https://api.travis-ci.org/Codeinwp/feedzy-rss-feeds.svg?branch=development)](https://travis-ci.org/Codeinwp/feedzy-rss-feeds)
 [![Code Climate](https://codeclimate.com/github/Codeinwp/feedzy-rss-feeds/badges/gpa.svg)](https://codeclimate.com/github/Codeinwp/feedzy-rss-feeds)
 [![Issue Count](https://codeclimate.com/github/Codeinwp/feedzy-rss-feeds/badges/issue_count.svg)](https://codeclimate.com/github/Codeinwp/feedzy-rss-feeds)
 
