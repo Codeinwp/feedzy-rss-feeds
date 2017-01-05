@@ -218,8 +218,8 @@ i.mce-i-feedzy-icon {
 
 .feedzy-rss .feedzy-style1 .rss_image a span {
 	display: inline-block;
+	left: 0;
 	border-radius: 50%;
-	left: 0px;
 }
 
 .feedzy-rss .feedzy-style1 .rss_item:hover .rss_image a {

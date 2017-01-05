@@ -678,7 +678,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			</li>
             ';
 		}
-		$content .= '</ul>';
+		$content .= '</ul> </div>';
 
 		$content = apply_filters( 'feedzy_global_output', $content, $sc, $feed_title, $feed_items );
 
