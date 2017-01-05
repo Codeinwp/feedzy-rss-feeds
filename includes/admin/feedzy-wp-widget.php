@@ -44,7 +44,7 @@ class feedzy_wp_widget extends WP_Widget {
 	 * @param   Feedzy_Rss_Feeds_Admin $plugin_admin The Feedzy_Rss_Feeds_Admin object.
 	 */
 	public function __construct( $plugin_admin ) {
-		parent::__construct( false, $name = __( 'Feedzy RSS Feeds', 'feedzy_rss_translate' ) );
+		parent::__construct( false, $name = __( 'Feedzy RSS Feeds', 'feedzy-rss-feeds' ) );
 		$this->plugin_admin = $plugin_admin;
 		self::$instance     = $this;
 
@@ -88,11 +88,11 @@ class feedzy_wp_widget extends WP_Widget {
 	public function form( $instance ) {
 		$instance    = wp_parse_args( $instance, $this->get_widget_defaults() );
 		$widget_form = '<p>
-				<label for="' . $this->get_field_id( 'title' ) . '">' . __( 'Widget Title', 'feedzy_rss_translate' ) . '</label>
+				<label for="' . $this->get_field_id( 'title' ) . '">' . __( 'Widget Title', 'feedzy-rss-feeds' ) . '</label>
 				<input class="widefat" id="' . $this->get_field_id( 'title' ) . '" name="' . $this->get_field_name( 'title' ) . '" type="text" value="' . esc_attr( $instance['title'] ) . '" />
 			</p>
 			<p>
-				<label for="' . $this->get_field_id( 'textarea' ) . '">' . __( 'Intro text', 'feedzy_rss_translate' ) . '</label>
+				<label for="' . $this->get_field_id( 'textarea' ) . '">' . __( 'Intro text', 'feedzy-rss-feeds' ) . '</label>
 				<textarea class="widefat" id="' . $this->get_field_id( 'textarea' ) . '" name="' . $this->get_field_name( 'textarea' ) . '">' . esc_attr( $instance['textarea'] ) . '</textarea>
 			</p>';
 		foreach ( Feedzy_Rss_Feeds_Ui_Lang::get_form_elements() as $key_section => $section ) {

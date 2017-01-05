@@ -48,7 +48,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function feedzy_default_error_notice( $error, $feedURL  ) {
 		error_log( 'Feedzy RSS Feeds - related feed: ' . print_r( $feedURL ) . ' - Error message: ' . $this->feedzy_array_obj_string( $error ) );
-		return '<div id="message" class="error" data-error"' . esc_attr( $this->feedzy_array_obj_string( $error ) ) . '"><p>' . __( 'Sorry, this feed is currently unavailable or does not exists anymore.', 'feedzy_rss_translate' ) . '</p></div>';
+		return '<div id="message" class="error" data-error"' . esc_attr( $this->feedzy_array_obj_string( $error ) ) . '"><p>' . __( 'Sorry, this feed is currently unavailable or does not exists anymore.', 'feedzy-rss-feeds' ) . '</p></div>';
 	}
 
 	/**
@@ -556,14 +556,14 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				}
 				if ( $authorName ) {
 					$domain = parse_url( $newLink );
-					$contentMeta .= __( 'by', 'feedzy_rss_translate' ) . ' <a href="http://' . $domain['host'] . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $authorName . '</a> ';
+					$contentMeta .= __( 'by', 'feedzy-rss-feeds' ) . ' <a href="http://' . $domain['host'] . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $authorName . '</a> ';
 				}
 			}
 
 			if ( $metaArgs['date'] ) {
-				$contentMeta .= __( 'on', 'feedzy_rss_translate' ) . ' ' . date_i18n( $metaArgs['date_format'], $item->get_date( 'U' ) );
+				$contentMeta .= __( 'on', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $metaArgs['date_format'], $item->get_date( 'U' ) );
 				$contentMeta .= ' ';
-				$contentMeta .= __( 'at', 'feedzy_rss_translate' ) . ' ' . date_i18n( $metaArgs['time_format'], $item->get_date( 'U' ) );
+				$contentMeta .= __( 'at', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $metaArgs['time_format'], $item->get_date( 'U' ) );
 			}
 		}
 		$contentMeta = apply_filters( 'feedzy_meta_output', $contentMeta, $feedURL );
