@@ -35,7 +35,7 @@ class Feedzy_Rss_Feeds_i18n {
 	public function load_plugin_textdomain() {
 
 		load_plugin_textdomain(
-			'feedzy_rss_translate',
+			'feedzy-rss-feeds',
 			false,
 			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
 		);

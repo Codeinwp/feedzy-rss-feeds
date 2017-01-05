@@ -21,154 +21,154 @@ msgstr ""
 "X-Textdomain-Support: yes"
 
 #: feedzy-rss-feeds-shortcode.php:120
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "Sorry, this feed is currently unavailable or does not exists anymore."
 msgstr "Žao nam je, ovo polje trenutno nije dostupno ili više ne postoji."
 
 #: feedzy-rss-feeds-shortcode.php:298
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "on"
 msgstr "na"
 
 #: feedzy-rss-feeds-shortcode.php:298
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "at"
 msgstr "u"
 
 #: feedzy-rss-feed.php:37
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "Documentation and examples"
 msgstr "Dokumentacija i primeri"
 
 #: feedzy-rss-feed.php:38
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "More b*web Plugins"
 msgstr "Više b*web Plugin-ova"
 
 #: feedzy-rss-feeds-ui-lang.php:19
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "Insert FEEDZY RSS Feeds Shortcode"
 msgstr "Unesite FEEDZY RSS Feeds Shortcode"
 
 #: feedzy-rss-feeds-ui-lang.php:21
 #: feedzy-rss-feeds-widget.php:69
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "Number of items to display."
 msgstr "Broj stavki za prikazivanje"
 
 #: feedzy-rss-feeds-ui-lang.php:23
 #: feedzy-rss-feeds-widget.php:73
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "Links may be opened in the same window or a new tab."
 msgstr "Linkovi mogu biti otvoreni u istom prozoru ili u novom tabulatoru."
 
 #: feedzy-rss-feeds-ui-lang.php:24
 #: feedzy-rss-feeds-widget.php:84
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "Trim the title of the item after X characters."
 msgstr "Skratite naslov stavke posle X karaktera."
 
 #: feedzy-rss-feeds-ui-lang.php:25
 #: feedzy-rss-feeds-widget.php:89
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "Should we display the date of publication and the author name?"
 msgstr "Treba li da prikažemo datum publikacije i ime autora?"
 
 #: feedzy-rss-feeds-ui-lang.php:26
 #: feedzy-rss-feeds-widget.php:93
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "Should we display a description (abstract) of the retrieved item?"
 msgstr "Treba li da prikažemo opis (siže) dobavljene stavke?"
 
 #: feedzy-rss-feeds-ui-lang.php:27
 #: feedzy-rss-feeds-widget.php:96
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "Crop description (summary) of the element after X characters."
 msgstr "Kropuj opis (siže) elementa posle X karaktera."
 
 #: feedzy-rss-feeds-ui-lang.php:28
 #: feedzy-rss-feeds-widget.php:101
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "Should we display the first image of the content if it is available?"
 msgstr "Treba li da prikažemo prvu sliku sadržaja ako je raspoloživa?"
 
 #: feedzy-rss-feeds-ui-lang.php:29
 #: feedzy-rss-feeds-widget.php:104
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "Default thumbnail URL if no image is found."
 msgstr "URL podrazumevane sličice ako nije pronađena nijedna slika."
 
 #: feedzy-rss-feeds-ui-lang.php:30
 #: feedzy-rss-feeds-widget.php:108
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "Thumblails dimension. Do not include \"px\". Eg: 150"
 msgstr "Dimenzije sličice. Nemojte unositi \"px\". Npr. 150"
 
 #: feedzy-rss-feeds-ui-lang.php:31
 #: feedzy-rss-feeds-widget.php:112
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "Only display item if title contains specific keyword(s) (comma-separated list/case sensitive)."
 msgstr "Prikaži stavku samo ako naslov sadrži specifične ključne reči (odvojene zarezima/osetljive na velika i mala slova)."
 
 #: feedzy-rss-feeds-ui-lang.php:32
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "Do not specify"
 msgstr "Nemoj određivati"
 
 #: feedzy-rss-feeds-ui-lang.php:33
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "No"
 msgstr "Ne"
 
 #: feedzy-rss-feeds-ui-lang.php:34
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "Yes"
 msgstr "Da"
 
 #: feedzy-rss-feeds-ui-lang.php:20
 #: feedzy-rss-feeds-widget.php:65
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "The feed(s) URL (comma-separated list)."
 msgstr "URL feed-ova (odvojenih zarezima ako je lista)."
 
 #: feedzy-rss-feeds-ui-lang.php:22
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "Should we display the RSS title?"
 msgstr "Treba li da prikažemo RSS naslov?"
 
 #. translators: plugin header field 'Name'
 #: feedzy-rss-feed.php:0
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "FEEDZY RSS Feeds by b*web"
 msgstr "FEEDZY RSS Feeds, autor b*web"
 
 #. translators: plugin header field 'Description'
 #: feedzy-rss-feed.php:0
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "FEEDZY RSS Feeds is a small and lightweight plugin. Fast and easy to use, it aggregates RSS feeds into your WordPress site through simple shortcodes."
 msgstr "FEEDZY RSS Feeds je mali i lagan plugin. Brz i jednostavan za upotrebu, sakuplja RSS feed-ove na vaš WordPress site uz pomoć jednostavnih shortcode-ova."
 
 #. translators: plugin header field 'Author'
 #: feedzy-rss-feed.php:0
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "Brice CAPOBIANCO"
 msgstr "Brice CAPOBIANCO"
 
 #. translators: plugin header field 'AuthorURI'
 #: feedzy-rss-feed.php:0
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "http://b-website.com/"
 msgstr "http://b-website.com/"
 
 #. translators: plugin header field 'PluginURI'
 #: feedzy-rss-feed.php:0
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "http://b-website.com/feedzy-rss-feeds-wordpress-plugin-using-simplepie"
 msgstr "http://b-website.com/feedzy-rss-feeds-wordpress-plugin-using-simplepie"
 
 #. translators: plugin header field 'Version'
 #: feedzy-rss-feed.php:0
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "2.2.1"
 msgstr ""
 
@@ -178,12 +178,12 @@ msgid "Donate to this plugin &#187;"
 msgstr ""
 
 #: feedzy-rss-feeds-shortcode.php:289
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "Posted"
 msgstr "Objavljeno"
 
 #: feedzy-rss-feeds-shortcode.php:294
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "by"
 msgstr "po"
 
@@ -193,12 +193,12 @@ msgid "Feedzy RSS Feeds"
 msgstr ""
 
 #: feedzy-rss-feeds-widget.php:57
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "Widget Title"
 msgstr "dodatak Naslov"
 
 #: feedzy-rss-feeds-widget.php:61
-#@ feedzy_rss_translate
+#@ feedzy-rss-feeds
 msgid "Intro text"
 msgstr "Uvodni tekst"
 

@@ -1,6 +1,6 @@
 {
   "name": "feedzy-rss-feeds",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "FEEDZY RSS Feeds is a small and lightweight RSS aggregator plugin",
   "repository": {
     "type": "git",
@@ -11,7 +11,7 @@
     "rss",
     "feed"
   ],
-  "textdomain": "feedzy_rss_translate",
+  "textdomain": "feedzy-rss-feeds",
   "author": "Themeisle <friends@themeisle.com>",
   "license": "GPL-3.0+",
   "bugs": {

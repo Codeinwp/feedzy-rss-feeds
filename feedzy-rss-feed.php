@@ -15,12 +15,12 @@
  * Plugin Name:       Feedzy RSS Feeds Lite
  * Plugin URI:        https://themeisle.com/plugins/feedzy-rss-feeds-lite/
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
- * Version:           3.0.0
+ * Version:           3.0.1
  * Author:            Themeisle
  * Author URI:        http://themeisle.com
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       feedzy_rss_translate
+ * Text Domain:       feedzy-rss-feeds
  * Domain Path:       /languages
  */
 

@@ -2,7 +2,7 @@
  * feedzy-rss-feeds.css
  * Feedzy RSS Feed
  * Copyright: (c) 2016 Themeisle, themeisle.com
- * Version: 3.0.0
+ * Version: 3.0.1
  * Plugin Name: FEEDZY RSS Feeds
  * Plugin URI: http://themeisle.com/plugins/feedzy-rss-feeds/
  * Author: Themeisle
@@ -218,8 +218,8 @@ i.mce-i-feedzy-icon {
 
 .feedzy-rss .feedzy-style1 .rss_image a span {
 	display: inline-block;
+	left: 0;
 	border-radius: 50%;
-	left: 0px;
 }
 
 .feedzy-rss .feedzy-style1 .rss_item:hover .rss_image a {

@@ -128,6 +128,9 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 == Changelog ==
 
+= 3.0.1 - 05/01/2017 =
+* Fixed html markup error which was breaking user websites
+
 = 3.0.0 - 10/11/2016 =
 * Refactored code base from 2.8.1 to OOP style
 * Added support for PRO version
