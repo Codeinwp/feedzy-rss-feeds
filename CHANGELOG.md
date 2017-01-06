@@ -1,4 +1,8 @@
 
+### 3.0.2 - 06/01/2017
+**Changes:** 
+- Added default image class back
+
 ### 3.0.1 - 05/01/2017
 **Changes:** 
 - Fixed html markup error
