@@ -334,21 +334,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		return $continue;
 	}
 
-	/**
-	 * Insert cover picture to main rss feed content
-	 *
-	 * @since   3.0.0
-	 * @access  public
-	 * @param   string $content  The item feed content.
-	 * @return  string
-	 */
-	public function feedzy_insert_thumbnail_rss( $content ) {
-		global $post;
-		if ( has_post_thumbnail( $post->ID ) ) {
-			$content = '' . get_the_post_thumbnail( $post->ID, 'thumbnail' ) . '' . $content;
-		}
-		return $content;
-	}
 
 	/**
 	 * Include cover picture (medium) to rss feed enclosure

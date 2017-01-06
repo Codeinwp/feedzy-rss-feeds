@@ -23,12 +23,10 @@
  * Text Domain:       feedzy-rss-feeds
  * Domain Path:       /languages
  */
-
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
-
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/feedzy-rss-feeds-activator.php
@@ -49,7 +47,6 @@ function deactivate_feedzy_rss_feeds() {
 
 register_activation_hook( __FILE__, 'activate_feedzy_rss_feeds' );
 register_deactivation_hook( __FILE__, 'deactivate_feedzy_rss_feeds' );
-
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
@@ -58,35 +55,36 @@ register_deactivation_hook( __FILE__, 'deactivate_feedzy_rss_feeds' );
  */
 function feedzy_rss_feeds_autoload( $class ) {
 	$namespaces = array( 'Feedzy_Rss_Feeds' );
-
 	foreach ( $namespaces as $namespace ) {
 		if ( substr( $class, 0, strlen( $namespace ) ) == $namespace ) {
 			$filename = plugin_dir_path( __FILE__ ) . 'includes/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
 			if ( is_readable( $filename ) ) {
 				require_once $filename;
+
 				return true;
 			}
-
 			$filename = plugin_dir_path( __FILE__ ) . 'includes/abstract/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
 			if ( is_readable( $filename ) ) {
 				require_once $filename;
+
 				return true;
 			}
-
 			$filename = plugin_dir_path( __FILE__ ) . 'includes/admin/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
 			if ( is_readable( $filename ) ) {
 				require_once $filename;
+
 				return true;
 			}
 		}
 	}
 	if ( is_readable( plugin_dir_path( __FILE__ ) . 'includes/admin/feedzy-wp-widget.php' ) ) {
 		require_once plugin_dir_path( __FILE__ ) . 'includes/admin/feedzy-wp-widget.php';
+
 		return true;
 	}
+
 	return false;
 }
-
 
 /**
  * Begins execution of the plugin.
@@ -101,12 +99,9 @@ function run_feedzy_rss_feeds() {
 	define( 'FEEDZY_BASEFILE', __FILE__ );
 	define( 'FEEDZY_ABSURL', plugins_url( '/', __FILE__ ) );
 	define( 'FEEDZY_ABSPATH', dirname( __FILE__ ) );
-
-	$plugin = new Feedzy_Rss_Feeds();
-	$plugin->run();
-
+	$feedzy = new Feedzy_Rss_Feeds();
+	$feedzy->run();
 }
 
 spl_autoload_register( 'feedzy_rss_feeds_autoload' );
-
 run_feedzy_rss_feeds();
