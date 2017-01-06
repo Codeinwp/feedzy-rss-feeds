@@ -30,6 +30,17 @@ The plugin uses the SimplePie php CLASS natively included in WordPress. SimplePi
 
 FEEDZY RSS Feeds therefore supports any additional library and uses only the bare minimum to ensure good performance (minimalistic CSS + cache). This will ensure compatibility with any hosting provider that supports WordPress, but if for any reason it doesn't work for yours feel free to <a href="http://themeisle.com/contact/" rel="nofollow">contact us</a>.
 
+
+ = ** See how Feedzy can integrate with your website ** =
+
+    * [Shop feed – 2 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/shop-feed/)
+    * [Large image square grid – 2 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/2-columns-large-images-square-grid/)
+    * [Square grid template – 2 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/square-template/)
+    * [Round grid templates – 2 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/round-grid-template/)
+    * [Standard grid layout – 2 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/grid-layout-feed-items/)
+    * [Blog layout – 1 column layout](https://demo.themeisle.com/feedzy-rss-feeds/blog-layout/)
+
+
 You may use this plugin in your widgets and your pages and reuse the shortcode + widget several times within the same page.
 
 By activating this plugin, your cover picture will be inserted into your RSS feeds. By doing so, you'll make it will easier for external sites to retrieve images from your feeds.
@@ -127,6 +138,9 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 == Changelog ==
+
+= 3.0.2 - 06/01/2017 =
+* Fixed default class  back
 
 = 3.0.1 - 05/01/2017 =
 * Fixed html markup error which was breaking user websites
