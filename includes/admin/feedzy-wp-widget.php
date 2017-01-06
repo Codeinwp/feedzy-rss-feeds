@@ -16,8 +16,9 @@
  * @subpackage feedzy-rss-feeds/includes/admin
  * @author     Themeisle <friends@themeisle.com>
  */
+// @codingStandardsIgnoreStart
 class feedzy_wp_widget extends WP_Widget {
-
+	// @codingStandardsIgnoreEnd
 	/**
 	 * The class instance.
 	 *

@@ -3,7 +3,7 @@ Contributors: themeisle,codeinwp
 Tags: RSS, SimplePie, shortcode, feed, thumbnail, image, rss feeds, aggregator, tinyMCE, WYSIWYG, MCE, UI, flux, plugin, WordPress, widget, importer, XML, ATOM, API, parser
 Requires at least: 3.7
 Tested up to: 4.7
-Stable tag: 3.0.0
+Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,6 +29,17 @@ FEEDZY RSS Feeds is a small and lightweight RSS aggregator plugin. Fast and very
 The plugin uses the SimplePie php CLASS natively included in WordPress. SimplePie is a RSS parser that can read the information contained in a feed, process it, and finally display it.
 
 FEEDZY RSS Feeds therefore supports any additional library and uses only the bare minimum to ensure good performance (minimalistic CSS + cache). This will ensure compatibility with any hosting provider that supports WordPress, but if for any reason it doesn't work for yours feel free to <a href="http://themeisle.com/contact/" rel="nofollow">contact us</a>.
+
+
+ = ** See how Feedzy can integrate with your website ** =
+
+    * [Shop feed – 2 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/shop-feed/)
+    * [Large image square grid – 2 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/2-columns-large-images-square-grid/)
+    * [Square grid template – 2 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/square-template/)
+    * [Round grid templates – 2 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/round-grid-template/)
+    * [Standard grid layout – 2 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/grid-layout-feed-items/)
+    * [Blog layout – 1 column layout](https://demo.themeisle.com/feedzy-rss-feeds/blog-layout/)
+
 
 You may use this plugin in your widgets and your pages and reuse the shortcode + widget several times within the same page.
 
@@ -127,6 +138,9 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 == Changelog ==
+
+= 3.0.2 - 06/01/2017 =
+* Fixed default class  back
 
 = 3.0.1 - 05/01/2017 =
 * Fixed html markup error which was breaking user websites

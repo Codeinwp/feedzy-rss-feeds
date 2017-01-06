@@ -515,16 +515,16 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 					$contentThumb .= '<span class="fetched" style="background-image:  url(' . $theThumbnail . ');" alt="' . $item->get_title() . '"></span>';
 				}
 				if ( $sc['thumb'] == 'yes' ) {
-					$contentThumb .= '<span style="background-image:url(' . $sc['default'] . ');" alt="' . $item->get_title() . '"></span>';
+					$contentThumb .= '<span class="default" style="background-image:url(' . $sc['default'] . ');" alt="' . $item->get_title() . '"></span>';
 				}
 			} else {
-				$contentThumb .= '<span style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:url(' . $sc['default'] . ');" alt="' . $item->get_title() . '"></span>';
+				$contentThumb .= '<span class="default" style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:url(' . $sc['default'] . ');" alt="' . $item->get_title() . '"></span>';
 			}
 
 			$contentThumb = apply_filters( 'feedzy_thumb_output', $contentThumb, $feedURL );
 		} else {
 			$contentThumb = '';
-			$contentThumb .= '<span style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:url(' . $sc['default'] . ');" alt="' . $item->get_title() . '"></span>';
+			$contentThumb .= '<span class="default" style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:url(' . $sc['default'] . ');" alt="' . $item->get_title() . '"></span>';
 			$contentThumb = apply_filters( 'feedzy_thumb_output', $contentThumb, $feedURL );
 		}
 

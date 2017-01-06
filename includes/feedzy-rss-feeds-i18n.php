@@ -23,8 +23,10 @@
  * @subpackage feedzy-rss-feeds/includes
  * @author     Themeisle <friends@themeisle.com>
  */
-class Feedzy_Rss_Feeds_i18n {
 
+// @codingStandardsIgnoreStart
+class Feedzy_Rss_Feeds_i18n {
+	// @codingStandardsIgnoreEnd
 
 	/**
 	 * Load the plugin text domain for translation.
