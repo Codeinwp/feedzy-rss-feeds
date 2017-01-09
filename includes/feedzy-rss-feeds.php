@@ -45,7 +45,7 @@ class Feedzy_Rss_Feeds {
 	 * @access   protected
 	 * @var      string $plugin_name The string used to uniquely identify this plugin.
 	 */
-	protected $plugin_name;
+	protected static $plugin_name;
 
 	/**
 	 * The current version of the plugin.
@@ -54,7 +54,7 @@ class Feedzy_Rss_Feeds {
 	 * @access   protected
 	 * @var      string $version The current version of the plugin.
 	 */
-	protected $version;
+	protected static $version;
 
 	/**
 	 * Define the core functionality of the plugin.
@@ -67,8 +67,8 @@ class Feedzy_Rss_Feeds {
 	 * @access   public
 	 */
 	public function __construct() {
-		$this->plugin_name = 'feedzy-rss-feeds';
-		$this->version     = '3.0.2';
+		self::$plugin_name = 'feedzy-rss-feeds';
+		self::$version     = '3.0.3';
 		$this->load_dependencies();
 		$this->set_locale();
 		$this->define_admin_hooks();
@@ -155,8 +155,8 @@ class Feedzy_Rss_Feeds {
 	 * @access    public
 	 * @return    string    The name of the plugin.
 	 */
-	public function get_plugin_name() {
-		return $this->plugin_name;
+	public static function get_plugin_name() {
+		return self::$plugin_name;
 	}
 
 	/**
@@ -166,8 +166,8 @@ class Feedzy_Rss_Feeds {
 	 * @access    public
 	 * @return    string    The version number of the plugin.
 	 */
-	public function get_version() {
-		return $this->version;
+	public static function get_version() {
+		return self::$version;
 	}
 
 	/**

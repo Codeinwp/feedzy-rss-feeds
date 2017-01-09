@@ -229,6 +229,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'placeholder' => __( '(eg: news, sports etc.)', 'feedzy-rss-feeds' ),
 						'type'  => 'text',
 						'value' => '',
+						'disabled' =>  ! feedzy_is_new(),
 				    ),
 				),
 			),

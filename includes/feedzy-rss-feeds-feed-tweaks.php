@@ -33,3 +33,21 @@ function feedzy_insert_thumbnail_RSS( $content ) {
 // Alter the main blog feed to insert the thumbnail image.
 add_filter( 'the_excerpt_rss', 'feedzy_insert_thumbnail_RSS' );
 add_filter( 'the_content_feed', 'feedzy_insert_thumbnail_RSS' );
+
+/**
+ * The helper method for options wrapper
+ *
+ * @return Feedzy_Rss_Feeds_Options
+ */
+function feedzy_options() {
+	return Feedzy_Rss_Feeds_Options::instance();
+}
+
+function feedzy_is_new(){
+	if( feedzy_options()->get_var('db_version') === false )
+	{
+		return false;
+	}else{
+		return true;
+	}
+}

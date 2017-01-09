@@ -22,14 +22,17 @@
 class Feedzy_Rss_Feeds_Activator {
 
 	/**
-	 * Short Description. (use period)
+	 * Plugin activation action.
 	 *
-	 * Long Description.
+	 * Triggers the plugin activation action on plugin activate.
 	 *
 	 * @since    3.0.0
 	 * @access   public
 	 */
 	public static function activate() {
+		if ( get_option( Feedzy_Rss_Feeds::get_plugin_name(), '' ) === '' ) {
+			update_option( Feedzy_Rss_Feeds::get_plugin_name(), array( 'is_new' => 'yes' ) );
+		}
 
 	}
 
