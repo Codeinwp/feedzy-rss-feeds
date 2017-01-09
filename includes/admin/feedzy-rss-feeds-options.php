@@ -54,6 +54,7 @@ if ( ! class_exists( 'Feedy_Rss_Feeds_Options' ) ) {
 				);
 				update_option( Feedzy_Rss_Feeds::get_plugin_name(), $options );
 			}
+			$this->options = get_option( Feedzy_Rss_Feeds::get_plugin_name() );
 		}
 
 		/**
