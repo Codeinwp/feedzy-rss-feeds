@@ -323,6 +323,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  boolean
 	 */
 	public function feedzy_feed_item_keywords_title( $continue, $keywords_title, $item, $feedURL ) {
+		if ( feedzy_is_new() ) {
+			return true;
+		}
 		if ( ! empty( $keywords_title ) ) {
 			$continue = false;
 			foreach ( $keywords_title as $keyword ) {
