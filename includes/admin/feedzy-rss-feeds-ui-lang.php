@@ -225,7 +225,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'value' => '',
 				    ),
 					'keywords_title' => array(
-						'label' => __( 'Only display item if title or content contains specific keyword(s) (comma-separated list/case sensitive).', 'feedzy-rss-feeds' ) . '<small class="feedzy_pro_tag">' . __( 'Premium', 'feedzy-rss-feeds' ) . '</small>',
+						'label' => __( 'Only display item if title contains specific keyword(s) (comma-separated list/case sensitive).', 'feedzy-rss-feeds' ) . '<small class="feedzy_pro_tag">' . __( 'Premium', 'feedzy-rss-feeds' ) . '</small>',
 						'placeholder' => __( '(eg: news, sports etc.)', 'feedzy-rss-feeds' ),
 						'type'  => 'text',
 						'value' => '',
