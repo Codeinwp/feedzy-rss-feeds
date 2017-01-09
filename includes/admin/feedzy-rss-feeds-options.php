@@ -49,9 +49,9 @@ if ( ! class_exists( 'Feedy_Rss_Feeds_Options' ) ) {
 		 */
 		public function init() {
 			if ( empty( get_option( Feedzy_Rss_Feeds::get_plugin_name() ) ) ) {
-				$options = apply_filters( 'feedzy_register_options', array(
+				$options = array(
 					'is_new' => 'no',
-				) );
+				);
 				update_option( Feedzy_Rss_Feeds::get_plugin_name(), $options );
 			}
 			$this->options = get_option( Feedzy_Rss_Feeds::get_plugin_name() );
@@ -81,13 +81,10 @@ if ( ! class_exists( 'Feedy_Rss_Feeds_Options' ) ) {
 		 * @return bool|mixed The value of the option.
 		 */
 		public function set_var( $key, $value = '' ) {
-			if ( isset( $this->options[ $key ] ) ) {
-				$this->options[ $key ] = apply_filters( 'feedzy_pre_set_option_' . $key, $value );
+			$this->options[ $key ] = apply_filters( 'feedzy_pre_set_option_' . $key, $value );
 
-				return update_option( Feedzy_Rss_Feeds::get_plugin_name(), $this->options );
-			}
+			return update_option( Feedzy_Rss_Feeds::get_plugin_name(), $this->options );
 
-			return false;
 		}
 	}
 }

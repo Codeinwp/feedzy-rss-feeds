@@ -29,16 +29,6 @@
 class Feedzy_Rss_Feeds {
 
 	/**
-	 * The loader that's responsible for maintaining and registering all hooks that power
-	 * the plugin.
-	 *
-	 * @since    3.0.0
-	 * @access   protected
-	 * @var      Feedzy_Rss_Feeds_Loader $loader Maintains and registers all hooks for the plugin.
-	 */
-	protected $loader;
-
-	/**
 	 * The unique identifier of this plugin.
 	 *
 	 * @since    3.0.0
@@ -46,7 +36,6 @@ class Feedzy_Rss_Feeds {
 	 * @var      string $plugin_name The string used to uniquely identify this plugin.
 	 */
 	protected static $plugin_name;
-
 	/**
 	 * The current version of the plugin.
 	 *
@@ -55,6 +44,15 @@ class Feedzy_Rss_Feeds {
 	 * @var      string $version The current version of the plugin.
 	 */
 	protected static $version;
+	/**
+	 * The loader that's responsible for maintaining and registering all hooks that power
+	 * the plugin.
+	 *
+	 * @since    3.0.0
+	 * @access   protected
+	 * @var      Feedzy_Rss_Feeds_Loader $loader Maintains and registers all hooks for the plugin.
+	 */
+	protected $loader;
 
 	/**
 	 * Define the core functionality of the plugin.
@@ -127,6 +125,7 @@ class Feedzy_Rss_Feeds {
 	 * @access   private
 	 */
 	private function define_admin_hooks() {
+		include_once FEEDZY_ABSPATH . '/includes/feedzy-rss-feeds-feed-tweaks.php';
 		$plugin_ui = new Feedzy_Rss_Feeds_Ui( $this->get_plugin_name(), $this->get_version(), $this->loader );
 		$this->loader->add_action( 'init', $plugin_ui, 'register_init' );
 		$this->loader->add_filter( 'mce_external_languages', $plugin_ui, 'feedzy_add_tinymce_lang', 10, 1 );
@@ -136,6 +135,7 @@ class Feedzy_Rss_Feeds {
 		$this->loader->add_filter( 'feedzy_default_error', $plugin_admin, 'feedzy_default_error_notice', 9, 2 );
 		$this->loader->add_filter( 'feedzy_item_attributes', $plugin_admin, 'feedzy_add_item_padding', 10, 2 );
 		$this->loader->add_filter( 'feedzy_item_attributes', $plugin_admin, 'feedzy_classes_item', 99, 5 );
+		$this->loader->add_filter( 'feedzy_register_options', $plugin_admin, 'register_options' );
 		$this->loader->add_filter( 'feedzy_summary_input', $plugin_admin, 'feedzy_summary_input_filter', 9, 3 );
 		$this->loader->add_filter( 'feedzy_item_keyword', $plugin_admin, 'feedzy_feed_item_keywords_title', 9, 4 );
 		add_shortcode( 'feedzy-rss', array( $plugin_admin, 'feedzy_rss' ) );
@@ -144,7 +144,7 @@ class Feedzy_Rss_Feeds {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$plugin_widget = new feedzy_wp_widget( $plugin_admin );
 		$this->loader->add_action( 'widgets_init', $plugin_widget, 'registerWidget', 10 );
-		include_once FEEDZY_ABSPATH . '/includes/feedzy-rss-feeds-feed-tweaks.php';
+		$upgrader = new Feedzy_Rss_Feeds_Upgrader();
 	}
 
 	/**
