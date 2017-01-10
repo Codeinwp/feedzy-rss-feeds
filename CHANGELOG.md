@@ -1,4 +1,10 @@
 
+### 3.0.3 - 10/01/2017
+**Changes:** 
+- Added compatibility with the new pro options
+- Added new documentation help
+- Added legacy filters and functions
+
 ### 3.0.2 - 06/01/2017
 **Changes:** 
 - Added default image class back
