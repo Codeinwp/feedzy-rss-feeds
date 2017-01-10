@@ -30,7 +30,8 @@ class Feedzy_Rss_Feeds_Activator {
 	 * @access   public
 	 */
 	public static function activate() {
-		if ( get_option( Feedzy_Rss_Feeds::get_plugin_name(), '' ) === '' ) {
+		$options = get_option( Feedzy_Rss_Feeds::get_plugin_name(), array() );
+		if ( ! isset( $options['is_new'] ) ) {
 			update_option( Feedzy_Rss_Feeds::get_plugin_name(), array( 'is_new' => 'yes' ) );
 		}
 

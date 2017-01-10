@@ -48,13 +48,7 @@ if ( ! class_exists( 'Feedy_Rss_Feeds_Options' ) ) {
 		 *  Init the default values of the options class.
 		 */
 		public function init() {
-			if ( count( get_option( Feedzy_Rss_Feeds::get_plugin_name(), array() ) ) === 0 ) {
-				$options = array(
-					'is_new' => 'no',
-				);
-				update_option( Feedzy_Rss_Feeds::get_plugin_name(), $options );
-			}
-			$this->options = get_option( Feedzy_Rss_Feeds::get_plugin_name() );
+			self::$instance->options = get_option( Feedzy_Rss_Feeds::get_plugin_name() );
 		}
 
 		/**
@@ -65,8 +59,8 @@ if ( ! class_exists( 'Feedy_Rss_Feeds_Options' ) ) {
 		 * @return bool|mixed The value of the option
 		 */
 		public function get_var( $key ) {
-			if ( isset( $this->options[ $key ] ) ) {
-				return $this->options[ $key ];
+			if ( isset( self::$instance->options[ $key ] ) ) {
+				return self::$instance->options[ $key ];
 			}
 
 			return false;
@@ -81,9 +75,9 @@ if ( ! class_exists( 'Feedy_Rss_Feeds_Options' ) ) {
 		 * @return bool|mixed The value of the option.
 		 */
 		public function set_var( $key, $value = '' ) {
-			$this->options[ $key ] = apply_filters( 'feedzy_pre_set_option_' . $key, $value );
+			self::$instance->options[ $key ] = apply_filters( 'feedzy_pre_set_option_' . $key, $value );
 
-			return update_option( Feedzy_Rss_Feeds::get_plugin_name(), $this->options );
+			return update_option( Feedzy_Rss_Feeds::get_plugin_name(), self::$instance->options );
 
 		}
 	}

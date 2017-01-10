@@ -225,14 +225,14 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'value' => '',
 				    ),
 					'keywords_title' => array(
-						'label' => __( 'Only display item if title contains specific keyword(s) (comma-separated list/case sensitive).', 'feedzy-rss-feeds' ) . '<small class="feedzy_pro_tag">' . __( 'Premium', 'feedzy-rss-feeds' ) . '</small>',
+						'label' => __( 'Only display item if title contains specific keyword(s) (comma-separated list/case sensitive).', 'feedzy-rss-feeds' ),
 						'placeholder' => __( '(eg: news, sports etc.)', 'feedzy-rss-feeds' ),
 						'type'  => 'text',
 						'value' => '',
 						'disabled' => feedzy_is_new(),
 				    ),
 					'keywords_ban' => array(
-						'label' => __( 'Exclude items if title or content contains specific keyword(s) (comma-separated list/case sensitive). ', 'feedzy-rss-feeds' ) . '<small class="feedzy_pro_tag">' . __( 'Premium', 'feedzy-rss-feeds' ) . '</small>',
+						'label' => __( 'Exclude items if title or content contains specific keyword(s) (comma-separated list/case sensitive). ', 'feedzy-rss-feeds' ),
 						'placeholder' => '',
 						'type'  => 'text',
 						'value' => '',
@@ -284,7 +284,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 				'description' => __( 'Get access to more options and customizations with full version of Feedzy RSS Feeds . Use existing templates or extend them and make them your own.', 'feedzy-rss-feeds' ) . '<br/>' . '<a href=" https://themeisle.com/plugins/feedzy-rss-feeds/" target="_blank"><small>' . __( 'See more features of Feedzy RSS Feeds ', 'feedzy-rss-feeds' ) . '</small></a>',
 				'elements' => array(
 					'price' => array(
-						'label' => __( 'Should we display the price from the feed if it is available?', 'feedzy-rss-feeds' ) . '<small class="feedzy_pro_tag">' . __( 'Premium', 'feedzy-rss-feeds' ) . '</small>',
+						'label' => __( 'Should we display the price from the feed if it is available?', 'feedzy-rss-feeds' ),
 						'type'  => 'select',
 						'disabled' => true,
 						'value' => '',
@@ -304,21 +304,21 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						),
 				    ),
 					'referral_url' => array(
-						'label' => __( 'Referral URL parameters (w/o "?").', 'feedzy-rss-feeds' ) . '<small class="feedzy_pro_tag">' . __( 'Premium', 'feedzy-rss-feeds' ) . '</small>',
+						'label' => __( 'Referral URL parameters (w/o "?").', 'feedzy-rss-feeds' ),
 						'placeholder' => __( '(eg. promo_code=feedzy_is_awesome)', 'feedzy-rss-feeds' ),
 						'type'  => 'text',
 						'disabled' => true,
 						'value' => '',
 				    ),
 					'columns' => array(
-						'label' => __( 'How many columns we should use to display the feed items', 'feedzy-rss-feeds' ) . '<small class="feedzy_pro_tag">' . __( 'Premium', 'feedzy-rss-feeds' ) . '</small>',
+						'label' => __( 'How many columns we should use to display the feed items', 'feedzy-rss-feeds' ),
 						'placeholder' => __( '(eg. 1, 2, ..., 6)', 'feedzy-rss-feeds' ),
 						'type'  => 'number',
 						'disabled' => true,
 						'value' => '1',
 				    ),
 					'template' => array(
-						'label' => __( 'Template to use when displaying the feed.', 'feedzy-rss-feeds' ) . '<small class="feedzy_pro_tag">' . __( 'Premium', 'feedzy-rss-feeds' ) . '</small>',
+						'label' => __( 'Template to use when displaying the feed.', 'feedzy-rss-feeds' ),
 						'type'  => 'radio',
 						'disabled' => true,
 						'value' => '',

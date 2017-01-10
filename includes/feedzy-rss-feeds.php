@@ -53,6 +53,14 @@ class Feedzy_Rss_Feeds {
 	 * @var      Feedzy_Rss_Feeds_Loader $loader Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
+	/**
+	 * The class responsible for all upgrading proceses.
+	 *
+	 * @since    3.0.3
+	 * @access   protected
+	 * @var      Feedzy_Rss_Feeds_Upgrader $upgrader Responsible for the upgrading processes.
+	 */
+	protected $upgrader;
 
 	/**
 	 * Define the core functionality of the plugin.
@@ -90,11 +98,10 @@ class Feedzy_Rss_Feeds {
 	 * @access   private
 	 */
 	private function load_dependencies() {
-		/**
-		 * The class responsible for orchestrating the actions and filters of the
-		 * core plugin.
-		 */
+
+		include_once FEEDZY_ABSPATH . '/includes/feedzy-rss-feeds-feed-tweaks.php';
 		$this->loader = new Feedzy_Rss_Feeds_Loader();
+		$this->upgrader = new Feedzy_Rss_Feeds_Upgrader();
 
 	}
 
@@ -125,7 +132,6 @@ class Feedzy_Rss_Feeds {
 	 * @access   private
 	 */
 	private function define_admin_hooks() {
-		include_once FEEDZY_ABSPATH . '/includes/feedzy-rss-feeds-feed-tweaks.php';
 		$plugin_ui = new Feedzy_Rss_Feeds_Ui( $this->get_plugin_name(), $this->get_version(), $this->loader );
 		$this->loader->add_action( 'init', $plugin_ui, 'register_init' );
 		$this->loader->add_filter( 'mce_external_languages', $plugin_ui, 'feedzy_add_tinymce_lang', 10, 1 );
@@ -144,7 +150,6 @@ class Feedzy_Rss_Feeds {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$plugin_widget = new feedzy_wp_widget( $plugin_admin );
 		$this->loader->add_action( 'widgets_init', $plugin_widget, 'registerWidget', 10 );
-		$upgrader = new Feedzy_Rss_Feeds_Upgrader();
 	}
 
 	/**

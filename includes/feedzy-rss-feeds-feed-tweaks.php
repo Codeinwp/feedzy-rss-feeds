@@ -50,3 +50,12 @@ function feedzy_options() {
 function feedzy_is_new() {
 	return feedzy_options()->get_var( 'is_new' ) === 'yes';
 }
+
+/**
+ * Check if the user is pro or not.
+ *
+ * @return bool If the users is pro or not
+ */
+function feedzy_is_pro() {
+	return defined( 'FEEDZY_PRO_ABSPATH' );
+}

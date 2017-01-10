@@ -38,8 +38,10 @@ $html_parts = Feedzy_Rss_Feeds_Ui_Lang::get_form_elements();
 					foreach ( $section['elements'] as $name => $props ) {
 						$element = '';
 						$disabled = '';
+						$badge = '';
 						if ( isset( $props['disabled'] ) && $props['disabled'] ) {
 							$disabled = 'disabled="true"';
+							$badge = '<small class="feedzy_pro_tag">' . __( 'Premium', 'feedzy-rss-feeds' ) . '</small>';
 						}
 						switch ( $props['type'] ) {
 							case 'select':
@@ -86,7 +88,7 @@ $html_parts = Feedzy_Rss_Feeds_Ui_Lang::get_form_elements();
 						$output .= '
                         <div class="row feedzy_element_' . $name . '">
                            <div class="column column-50">
-                                <label for="' . $name . '">' . $props['label'] . '</label>
+                                <label for="' . $name . '">' . $props['label'] . $badge . '</label>
                             </div>
                             <div class="column column-50">
                                 ' . $element . '
