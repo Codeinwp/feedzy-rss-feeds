@@ -20,6 +20,7 @@ FEEDZY RSS Feeds is a small and lightweight RSS aggregator plugin. Fast and very
 > * Multiple templates for feed items
 > * Automatically build affiliate links
 > * Parse price from product feeds
+> * Blacklist specific keywords from feeds
 > * Priority email support from the developer of the plugin
 > * Support and updates for 12 months
 >
@@ -32,8 +33,6 @@ FEEDZY RSS Feeds therefore supports any additional library and uses only the bar
 
 
  = See how Feedzy can integrate with your website  =
-
-
 
 * [Shop feed – 3 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/shop-feed/)
 * [Large image square grid – 2 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/2-columns-large-images-square-grid/)
@@ -130,23 +129,50 @@ Yes it is.
 
 You have to check first if your feed is valid. Please test it here: https://validator.w3.org/feed/
 
-= Other useful custom codes =
+= How to change cache lifetime for a specific feed =
+http://docs.themeisle.com/article/547-how-to-change-cache-lifetime-for-a-specific-feed
 
-[How to change cache lifetime for a specific feed]( http://docs.themeisle.com/article/547-how-to-change-cache-lifetime-for-a-specific-feed )
-[How to change thumbs size and aspect ratio]( http://docs.themeisle.com/article/551-how-to-change-thumbs-size-and-aspect-ratio )
-[What hooks and filters are available in Feedzy]( http://docs.themeisle.com/article/540-what-hooks-and-filters-are-available-in-feedzy )
-[How to change the blacklist image name]( http://docs.themeisle.com/article/552-how-to-change-the-blacklist-image-name )
-[How to decode item title]( http://docs.themeisle.com/article/548-how-to-decode-item-title-with )
-[How to remove featured image from blog feed]( http://docs.themeisle.com/article/554-how-to-remove-featured-image-from-blog-feed )
-[How to keep html in feed items content]( http://docs.themeisle.com/article/542-how-to-keep-html-in-feed-items-content )
-[How to remove plugin css]( http://docs.themeisle.com/article/545-how-to-remove-plugin-css )
-[How to use your own inline css]( http://docs.themeisle.com/article/546-how-to-use-your-own-inline-css )
-[How to remove links]( http://docs.themeisle.com/article/541-how-to-remove-links )
-[How to add a read more link]( http://docs.themeisle.com/article/544-how-to-add-a-read-more-link )
-[How to remove time from publication date]( http://docs.themeisle.com/article/553-how-to-remove-time-from-publication-date )
-[How to handle publication date and author content]( http://docs.themeisle.com/article/549-how-to-handle-time-and-date-content )
-[How to display items in a random order]( http://docs.themeisle.com/article/550-how-to-display-items-in-a-random-order )
-[How to remove the end hellip]( http://docs.themeisle.com/article/543-how-to-remove-the-end-hellip )
+= How to change thumbs size and aspect ratio =
+http://docs.themeisle.com/article/551-how-to-change-thumbs-size-and-aspect-ratio
+
+= What hooks and filters are available in Feedzy =
+http://docs.themeisle.com/article/540-what-hooks-and-filters-are-available-in-feedzy
+
+= How to change the blacklist image name =
+http://docs.themeisle.com/article/552-how-to-change-the-blacklist-image-name
+
+= How to decode item title =
+http://docs.themeisle.com/article/548-how-to-decode-item-title-with
+
+= How to remove featured image from blog feed =
+http://docs.themeisle.com/article/554-how-to-remove-featured-image-from-blog-feed
+
+= How to keep html in feed items content =
+http://docs.themeisle.com/article/542-how-to-keep-html-in-feed-items-content
+
+= How to remove plugin css =
+http://docs.themeisle.com/article/545-how-to-remove-plugin-css
+
+= How to remove links =
+http://docs.themeisle.com/article/541-how-to-remove-links
+
+= How to add a read more link =
+http://docs.themeisle.com/article/544-how-to-add-a-read-more-link
+
+= How to remove time from publication date =
+http://docs.themeisle.com/article/553-how-to-remove-time-from-publication-date
+
+= How to handle publication date and author content =
+http://docs.themeisle.com/article/549-how-to-handle-time-and-date-content
+
+= How to use your own inline css =
+http://docs.themeisle.com/article/546-how-to-use-your-own-inline-css
+
+= How to remove the end hellip =
+http://docs.themeisle.com/article/543-how-to-remove-the-end-hellip
+
+= How to display items in a random order =
+http://docs.themeisle.com/article/550-how-to-display-items-in-a-random-order
 
 == Screenshots ==
 
