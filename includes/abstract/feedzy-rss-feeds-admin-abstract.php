@@ -317,15 +317,17 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @since   3.0.0
 	 * @access  public
 	 * @param   boolean $continue A boolean to stop the script.
-	 * @param   array   $keywords_title  The keywords for title.
+	 * @param   array   $sc  The shortcode attributes.
 	 * @param   object  $item  The feed item.
 	 * @param   string  $feedURL  The feed URL.
 	 * @return  boolean
 	 */
-	public function feedzy_feed_item_keywords_title( $continue, $keywords_title, $item, $feedURL ) {
-		if ( feedzy_is_new() ) {
+	public function feedzy_feed_item_keywords_title( $continue, $sc, $item, $feedURL ) {
+		if ( feedzy_is_new() && ! feedzy_is_pro() ) {
 			return true;
 		}
+
+		$keywords_title = $sc['keywords_title'];
 		if ( ! empty( $keywords_title ) ) {
 			$continue = false;
 			foreach ( $keywords_title as $keyword ) {
@@ -443,6 +445,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! empty( $sc['keywords_title'] ) ) {
 			$sc['keywords_title'] = rtrim( $sc['keywords_title'], ',' );
 			$sc['keywords_title'] = array_map( 'trim', explode( ',', $sc['keywords_title'] ) );
+		}
+		if ( ! empty( $sc['keywords_ban'] ) ) {
+			$sc['keywords_ban'] = rtrim( $sc['keywords_ban'], ',' );
+			$sc['keywords_ban'] = array_map( 'trim', explode( ',', $sc['keywords_ban'] ) );
 		}
 
 		if ( ! empty( $sc['summarylength'] ) && ! ctype_digit( $sc['summarylength'] ) ) {
@@ -621,7 +627,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$items = apply_filters( 'feedzy_feed_items', $feed->get_items(), $feedURL );
 		$feed_items = array();
 		foreach ( (array) $items as $item ) {
-			$continue = apply_filters( 'feedzy_item_keyword', true, $sc['keywords_title'], $item, $feedURL );
+			$continue = apply_filters( 'feedzy_item_keyword', true, $sc, $item, $feedURL );
 			if ( $continue == true ) {
 				// Count items
 				if ( $count >= $sc['max'] ) {

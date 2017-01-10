@@ -233,7 +233,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 				    ),
 					'keywords_ban' => array(
 						'label' => __( 'Exclude items if title or content contains specific keyword(s) (comma-separated list/case sensitive). ', 'feedzy-rss-feeds' ),
-						'placeholder' => '',
+						'placeholder' => __( '(eg: politics, gossip etc.)', 'feedzy-rss-feeds' ),
 						'type'  => 'text',
 						'value' => '',
 						'disabled' => true,
