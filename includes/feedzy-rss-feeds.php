@@ -29,32 +29,38 @@
 class Feedzy_Rss_Feeds {
 
 	/**
-	 * The loader that's responsible for maintaining and registering all hooks that power
-	 * the plugin.
-	 *
-	 * @since    3.0.0
-	 * @access   protected
-	 * @var      Feedzy_Rss_Feeds_Loader    $loader    Maintains and registers all hooks for the plugin.
-	 */
-	protected $loader;
-
-	/**
 	 * The unique identifier of this plugin.
 	 *
 	 * @since    3.0.0
 	 * @access   protected
-	 * @var      string    $plugin_name    The string used to uniquely identify this plugin.
+	 * @var      string $plugin_name The string used to uniquely identify this plugin.
 	 */
-	protected $plugin_name;
-
+	protected static $plugin_name;
 	/**
 	 * The current version of the plugin.
 	 *
 	 * @since    3.0.0
 	 * @access   protected
-	 * @var      string    $version    The current version of the plugin.
+	 * @var      string $version The current version of the plugin.
 	 */
-	protected $version;
+	protected static $version;
+	/**
+	 * The loader that's responsible for maintaining and registering all hooks that power
+	 * the plugin.
+	 *
+	 * @since    3.0.0
+	 * @access   protected
+	 * @var      Feedzy_Rss_Feeds_Loader $loader Maintains and registers all hooks for the plugin.
+	 */
+	protected $loader;
+	/**
+	 * The class responsible for all upgrading proceses.
+	 *
+	 * @since    3.0.3
+	 * @access   protected
+	 * @var      Feedzy_Rss_Feeds_Upgrader $upgrader Responsible for the upgrading processes.
+	 */
+	protected $upgrader;
 
 	/**
 	 * Define the core functionality of the plugin.
@@ -67,10 +73,8 @@ class Feedzy_Rss_Feeds {
 	 * @access   public
 	 */
 	public function __construct() {
-
-		$this->plugin_name = 'feedzy-rss-feeds';
-		$this->version = '3.0.2';
-
+		self::$plugin_name = 'feedzy-rss-feeds';
+		self::$version     = '3.0.3';
 		$this->load_dependencies();
 		$this->set_locale();
 		$this->define_admin_hooks();
@@ -95,11 +99,9 @@ class Feedzy_Rss_Feeds {
 	 */
 	private function load_dependencies() {
 
-		/**
-		 * The class responsible for orchestrating the actions and filters of the
-		 * core plugin.
-		 */
+		include_once FEEDZY_ABSPATH . '/includes/feedzy-rss-feeds-feed-tweaks.php';
 		$this->loader = new Feedzy_Rss_Feeds_Loader();
+		$this->upgrader = new Feedzy_Rss_Feeds_Upgrader();
 
 	}
 
@@ -113,13 +115,11 @@ class Feedzy_Rss_Feeds {
 	 * @access   private
 	 */
 	private function set_locale() {
-
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
 		$plugin_i18n = new Feedzy_Rss_Feeds_i18n();
-
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
 
 	}
@@ -135,27 +135,44 @@ class Feedzy_Rss_Feeds {
 		$plugin_ui = new Feedzy_Rss_Feeds_Ui( $this->get_plugin_name(), $this->get_version(), $this->loader );
 		$this->loader->add_action( 'init', $plugin_ui, 'register_init' );
 		$this->loader->add_filter( 'mce_external_languages', $plugin_ui, 'feedzy_add_tinymce_lang', 10, 1 );
-
 		$plugin_admin = new Feedzy_Rss_Feeds_Admin( $this->get_plugin_name(), $this->get_version() );
-
-		$this->loader->add_filter( 'plugin_row_meta', $plugin_admin ,'feedzy_filter_plugin_row_meta', 10, 2 );
+		$this->loader->add_filter( 'plugin_row_meta', $plugin_admin, 'feedzy_filter_plugin_row_meta', 10, 2 );
 		$this->loader->add_filter( 'feedzy_default_image', $plugin_admin, 'feedzy_define_default_image' );
-		$this->loader->add_filter( 'feedzy_default_error', $plugin_admin ,'feedzy_default_error_notice', 9, 2 );
+		$this->loader->add_filter( 'feedzy_default_error', $plugin_admin, 'feedzy_default_error_notice', 9, 2 );
 		$this->loader->add_filter( 'feedzy_item_attributes', $plugin_admin, 'feedzy_add_item_padding', 10, 2 );
-		$this->loader->add_filter( 'feedzy_item_attributes', $plugin_admin, 'feedzy_classes_item' ,99,5 );
+		$this->loader->add_filter( 'feedzy_item_attributes', $plugin_admin, 'feedzy_classes_item', 99, 5 );
+		$this->loader->add_filter( 'feedzy_register_options', $plugin_admin, 'register_options' );
 		$this->loader->add_filter( 'feedzy_summary_input', $plugin_admin, 'feedzy_summary_input_filter', 9, 3 );
 		$this->loader->add_filter( 'feedzy_item_keyword', $plugin_admin, 'feedzy_feed_item_keywords_title', 9, 4 );
-		$this->loader->add_filter( 'the_excerpt_rss', $plugin_admin, 'feedzy_insert_thumbnail_rss' );
-		$this->loader->add_filter( 'the_content_feed', $plugin_admin, 'feedzy_insert_thumbnail_rss' );
 		add_shortcode( 'feedzy-rss', array( $plugin_admin, 'feedzy_rss' ) );
-
-		$this->loader->add_action( 'wp_ajax_get_tinymce_form', $plugin_admin,  'get_tinymce_form' );
+		$this->loader->add_action( 'wp_ajax_get_tinymce_form', $plugin_admin, 'get_tinymce_form' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-
 		$plugin_widget = new feedzy_wp_widget( $plugin_admin );
 		$this->loader->add_action( 'widgets_init', $plugin_widget, 'registerWidget', 10 );
+	}
 
+	/**
+	 * The name of the plugin used to uniquely identify it within the context of
+	 * WordPress and to define internationalization functionality.
+	 *
+	 * @since     3.0.0
+	 * @access    public
+	 * @return    string    The name of the plugin.
+	 */
+	public static function get_plugin_name() {
+		return self::$plugin_name;
+	}
+
+	/**
+	 * Retrieve the version number of the plugin.
+	 *
+	 * @since     3.0.0
+	 * @access    public
+	 * @return    string    The version number of the plugin.
+	 */
+	public static function get_version() {
+		return self::$version;
 	}
 
 	/**
@@ -169,18 +186,6 @@ class Feedzy_Rss_Feeds {
 	}
 
 	/**
-	 * The name of the plugin used to uniquely identify it within the context of
-	 * WordPress and to define internationalization functionality.
-	 *
-	 * @since     3.0.0
-	 * @access    public
-	 * @return    string    The name of the plugin.
-	 */
-	public function get_plugin_name() {
-		return $this->plugin_name;
-	}
-
-	/**
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
 	 * @since     3.0.0
@@ -189,17 +194,6 @@ class Feedzy_Rss_Feeds {
 	 */
 	public function get_loader() {
 		return $this->loader;
-	}
-
-	/**
-	 * Retrieve the version number of the plugin.
-	 *
-	 * @since     3.0.0
-	 * @access    public
-	 * @return    string    The version number of the plugin.
-	 */
-	public function get_version() {
-		return $this->version;
 	}
 
 }

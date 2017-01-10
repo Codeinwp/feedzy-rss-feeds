@@ -722,3 +722,8 @@ img {
 .feedzy-template-style2 {
 	background: url(../img/feedzy-style2-template.jpg) no-repeat bottom center;
 }
+
+input[disabled],
+select[disabled] {
+	cursor: not-allowed;
+}
