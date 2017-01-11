@@ -44,6 +44,14 @@ class Feedzy_Rss_Feeds {
 	 * @var      string $version The current version of the plugin.
 	 */
 	protected static $version;
+
+	/**
+	 * The main instance var.
+	 *
+	 * @var Feedzy_Rss_Feeds The one Feedzy_Rss_Feeds istance.
+	 * @since 3.0.4
+	 */
+	private static $instance;
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
 	 * the plugin.
@@ -61,6 +69,14 @@ class Feedzy_Rss_Feeds {
 	 * @var      Feedzy_Rss_Feeds_Upgrader $upgrader Responsible for the upgrading processes.
 	 */
 	protected $upgrader;
+	/**
+	 * The class responsible for all admin proceses.
+	 *
+	 * @since    3.0.3
+	 * @access   protected
+	 * @var      Feedzy_Rss_Feeds_Admin $admin Responsible for the admin processes.
+	 */
+	protected $admin;
 
 	/**
 	 * Define the core functionality of the plugin.
@@ -72,15 +88,28 @@ class Feedzy_Rss_Feeds {
 	 * @since    3.0.0
 	 * @access   public
 	 */
-	public function __construct() {
+	public function init() {
 		self::$plugin_name = 'feedzy-rss-feeds';
 		self::$version     = '3.0.3';
-		$this->load_dependencies();
-		$this->set_locale();
-		$this->define_admin_hooks();
+		self::$instance->load_dependencies();
+		self::$instance->set_locale();
+		self::$instance->define_admin_hooks();
 
 	}
 
+	/**
+	 * Init the main singleton instance class.
+	 *
+	 * @return Feedzy_Rss_Feeds Return the instance class
+	 */
+	public static function instance() {
+		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Feedzy_Rss_Feeds ) ) {
+			self::$instance = new Feedzy_Rss_Feeds;
+			self::$instance->init();
+		}
+
+		return self::$instance;
+	}
 	/**
 	 * Load the required dependencies for this plugin.
 	 *
@@ -100,8 +129,9 @@ class Feedzy_Rss_Feeds {
 	private function load_dependencies() {
 
 		include_once FEEDZY_ABSPATH . '/includes/feedzy-rss-feeds-feed-tweaks.php';
-		$this->loader = new Feedzy_Rss_Feeds_Loader();
-		$this->upgrader = new Feedzy_Rss_Feeds_Upgrader();
+		self::$instance->loader = new Feedzy_Rss_Feeds_Loader();
+		self::$instance->upgrader = new Feedzy_Rss_Feeds_Upgrader();
+		self::$instance->admin = new Feedzy_Rss_Feeds_Admin( self::$instance->get_plugin_name(), self::$instance->get_version() );
 
 	}
 
@@ -120,7 +150,7 @@ class Feedzy_Rss_Feeds {
 		 * of the plugin.
 		 */
 		$plugin_i18n = new Feedzy_Rss_Feeds_i18n();
-		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
+		self::$instance->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
 
 	}
 
@@ -132,24 +162,23 @@ class Feedzy_Rss_Feeds {
 	 * @access   private
 	 */
 	private function define_admin_hooks() {
-		$plugin_ui = new Feedzy_Rss_Feeds_Ui( $this->get_plugin_name(), $this->get_version(), $this->loader );
-		$this->loader->add_action( 'init', $plugin_ui, 'register_init' );
-		$this->loader->add_filter( 'mce_external_languages', $plugin_ui, 'feedzy_add_tinymce_lang', 10, 1 );
-		$plugin_admin = new Feedzy_Rss_Feeds_Admin( $this->get_plugin_name(), $this->get_version() );
-		$this->loader->add_filter( 'plugin_row_meta', $plugin_admin, 'feedzy_filter_plugin_row_meta', 10, 2 );
-		$this->loader->add_filter( 'feedzy_default_image', $plugin_admin, 'feedzy_define_default_image' );
-		$this->loader->add_filter( 'feedzy_default_error', $plugin_admin, 'feedzy_default_error_notice', 9, 2 );
-		$this->loader->add_filter( 'feedzy_item_attributes', $plugin_admin, 'feedzy_add_item_padding', 10, 2 );
-		$this->loader->add_filter( 'feedzy_item_attributes', $plugin_admin, 'feedzy_classes_item', 99, 5 );
-		$this->loader->add_filter( 'feedzy_register_options', $plugin_admin, 'register_options' );
-		$this->loader->add_filter( 'feedzy_summary_input', $plugin_admin, 'feedzy_summary_input_filter', 9, 3 );
-		$this->loader->add_filter( 'feedzy_item_keyword', $plugin_admin, 'feedzy_feed_item_keywords_title', 9, 4 );
-		add_shortcode( 'feedzy-rss', array( $plugin_admin, 'feedzy_rss' ) );
-		$this->loader->add_action( 'wp_ajax_get_tinymce_form', $plugin_admin, 'get_tinymce_form' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$plugin_widget = new feedzy_wp_widget( $plugin_admin );
-		$this->loader->add_action( 'widgets_init', $plugin_widget, 'registerWidget', 10 );
+		$plugin_ui = new Feedzy_Rss_Feeds_Ui( self::$instance->get_plugin_name(), self::$instance->get_version(), self::$instance->loader );
+		self::$instance->loader->add_action( 'init', $plugin_ui, 'register_init' );
+		self::$instance->loader->add_filter( 'mce_external_languages', $plugin_ui, 'feedzy_add_tinymce_lang', 10, 1 );
+		self::$instance->loader->add_filter( 'plugin_row_meta', self::$instance->admin, 'feedzy_filter_plugin_row_meta', 10, 2 );
+		self::$instance->loader->add_filter( 'feedzy_default_image', self::$instance->admin, 'feedzy_define_default_image' );
+		self::$instance->loader->add_filter( 'feedzy_default_error', self::$instance->admin, 'feedzy_default_error_notice', 9, 2 );
+		self::$instance->loader->add_filter( 'feedzy_item_attributes', self::$instance->admin, 'feedzy_add_item_padding', 10, 2 );
+		self::$instance->loader->add_filter( 'feedzy_item_attributes', self::$instance->admin, 'feedzy_classes_item', 99, 5 );
+		self::$instance->loader->add_filter( 'feedzy_register_options', self::$instance->admin, 'register_options' );
+		self::$instance->loader->add_filter( 'feedzy_summary_input', self::$instance->admin, 'feedzy_summary_input_filter', 9, 3 );
+		self::$instance->loader->add_filter( 'feedzy_item_keyword', self::$instance->admin, 'feedzy_feed_item_keywords_title', 9, 4 );
+		add_shortcode( 'feedzy-rss', array( self::$instance->admin, 'feedzy_rss' ) );
+		self::$instance->loader->add_action( 'wp_ajax_get_tinymce_form', self::$instance->admin, 'get_tinymce_form' );
+		self::$instance->loader->add_action( 'wp_enqueue_scripts', self::$instance->admin, 'enqueue_styles' );
+		self::$instance->loader->add_action( 'admin_enqueue_scripts', self::$instance->admin, 'enqueue_styles' );
+		$plugin_widget = new feedzy_wp_widget();
+		self::$instance->loader->add_action( 'widgets_init', $plugin_widget, 'registerWidget', 10 );
 	}
 
 	/**
@@ -182,7 +211,7 @@ class Feedzy_Rss_Feeds {
 	 * @access   public
 	 */
 	public function run() {
-		$this->loader->run();
+		self::$instance->loader->run();
 	}
 
 	/**
@@ -193,7 +222,18 @@ class Feedzy_Rss_Feeds {
 	 * @return    Feedzy_Rss_Feeds_Loader    Orchestrates the hooks of the plugin.
 	 */
 	public function get_loader() {
-		return $this->loader;
+		return self::$instance->loader;
+	}
+
+	/**
+	 * The reference to the class that run the admin with the plugin.
+	 *
+	 * @since     3.0.0
+	 * @access    public
+	 * @return    Feedzy_Rss_Feeds_Admin    Orchestrates the admin of the plugin.
+	 */
+	public function get_admin() {
+		return self::$instance->admin;
 	}
 
 }

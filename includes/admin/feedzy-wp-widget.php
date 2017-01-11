@@ -27,26 +27,15 @@ class feedzy_wp_widget extends WP_Widget {
 	 * @var      feedzy_wp_widget $instance The instance of the class.
 	 */
 	public static $instance;
-	/**
-	 * The loader class.
-	 *
-	 * @since    3.0.0
-	 * @access   private
-	 * @var      Feedzy_Rss_Feeds_Admin $plugin_admin The loader class of the plugin.
-	 */
-	private $plugin_admin;
 
 	/**
 	 * The feedzy_wp_widget constructor method
 	 *
 	 * @since   3.0.0
 	 * @access  public
-	 *
-	 * @param   Feedzy_Rss_Feeds_Admin $plugin_admin The Feedzy_Rss_Feeds_Admin object.
 	 */
-	public function __construct( $plugin_admin ) {
-		parent::__construct( false, $name = __( 'Feedzy RSS Feeds', 'feedzy-rss-feeds' ) );
-		$this->plugin_admin = $plugin_admin;
+	public function __construct() {
+		parent::__construct( 'feedzy_widget', $name = __( 'Feedzy RSS Feeds', 'feedzy-rss-feeds' ) );
 		self::$instance     = $this;
 
 	}
@@ -73,7 +62,7 @@ class feedzy_wp_widget extends WP_Widget {
 	 * @access   public
 	 */
 	public function registerWidget() {
-		register_widget( $this );
+		register_widget( __CLASS__ );
 	}
 
 	/**
@@ -242,7 +231,7 @@ class feedzy_wp_widget extends WP_Widget {
 		);
 		$feedzy_widget_shortcode_attributes = apply_filters( 'feedzy_widget_shortcode_attributes_filter', $feedzy_widget_shortcode_attributes, $args, $instance );
 		// Call the shortcode function
-		echo $this->plugin_admin->feedzy_rss( $feedzy_widget_shortcode_attributes );
+		echo feedzy_rss( $feedzy_widget_shortcode_attributes );
 		echo $args['after_widget'];
 
 	}

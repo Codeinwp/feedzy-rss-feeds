@@ -20,6 +20,11 @@
  * @return  string
  */
 // @codingStandardsIgnoreStart
+/**
+ * @param string $content
+ *
+ * @return string
+ */
 function feedzy_insert_thumbnail_RSS( $content ) {
 // @codingStandardsIgnoreEnd
 	global $post;
@@ -33,6 +38,17 @@ function feedzy_insert_thumbnail_RSS( $content ) {
 // Alter the main blog feed to insert the thumbnail image.
 add_filter( 'the_excerpt_rss', 'feedzy_insert_thumbnail_RSS' );
 add_filter( 'the_content_feed', 'feedzy_insert_thumbnail_RSS' );
+
+/**
+ * Boostrap the plugin view.
+ *
+ * @param array $options The shortcode attributes.
+ */
+function feedzy_rss( $options = array() ) {
+	$admin = Feedzy_Rss_Feeds::instance()->get_admin();
+	return $admin->feedzy_rss( $options );
+}
+
 /**
  * The helper method for options wrapper
  *

@@ -99,7 +99,7 @@ function run_feedzy_rss_feeds() {
 	define( 'FEEDZY_BASEFILE', __FILE__ );
 	define( 'FEEDZY_ABSURL', plugins_url( '/', __FILE__ ) );
 	define( 'FEEDZY_ABSPATH', dirname( __FILE__ ) );
-	$feedzy = new Feedzy_Rss_Feeds();
+	$feedzy = Feedzy_Rss_Feeds::instance();
 	$feedzy->run();
 }
 
