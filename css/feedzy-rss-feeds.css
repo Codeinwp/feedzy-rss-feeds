@@ -346,7 +346,9 @@ i.mce-i-feedzy-icon {
 }
 
 /* Columns */
-.feedzy-rss .feedzy-rss-col-1,
+.feedzy-rss .feedzy-rss-col-1{
+	width: 96%;
+}
 /* SCHIMBAT DIN ID in CLASA */
 .feedzy-rss .feedzy-rss-col-2,
 .feedzy-rss .feedzy-rss-col-3,
