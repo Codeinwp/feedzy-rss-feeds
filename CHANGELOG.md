@@ -1,4 +1,8 @@
 
+### 3.0.4 - 11/01/2017
+**Changes:** 
+- Release 3.0.4
+
 ### 3.0.3 - 10/01/2017
 **Changes:** 
 - Added compatibility with the new pro options
