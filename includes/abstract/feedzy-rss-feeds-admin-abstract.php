@@ -381,7 +381,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'meta' => 'yes', 		// yes, no
 			'summary' => 'yes', 	// strip title
 			'summarylength' => '', 	// strip summary after X char
-			'thumb' => 'yes', 		// yes, no, auto
+			'thumb' => 'auto', 		// yes, no, auto
 			'default' => '', 		// default thumb URL if no image found (only if thumb is set to yes or auto)
 			'size' => '', 			// thumbs pixel size
 			'keywords_title' => '', // only display item if title contains specific keywords (comma-separated list/case sensitive)
@@ -493,14 +493,12 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	private function get_feed_item_filter( $sc, $sizes, $item, $feedURL ) {
 		$itemLink = $item->get_permalink();
-		$newLink = $itemLink;
 		$newLink = apply_filters( 'feedzy_item_url_filter', $itemLink, $sc );
 
 		// Fetch image thumbnail
 		if ( $sc['thumb'] == 'yes' || $sc['thumb'] == 'auto' ) {
 			$theThumbnail = $this->feedzy_retrieve_image( $item );
 		}
-
 		if ( $sc['thumb'] == 'yes' || $sc['thumb'] == 'auto' ) {
 			$contentThumb = '';
 			if ( ( ! empty( $theThumbnail ) && $sc['thumb'] == 'auto' ) || $sc['thumb'] == 'yes' ) {
@@ -511,8 +509,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				if ( $sc['thumb'] == 'yes' ) {
 					$contentThumb .= '<span class="default" style="background-image:url(' . $sc['default'] . ');" alt="' . $item->get_title() . '"></span>';
 				}
-			} else {
-				$contentThumb .= '<span class="default" style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:url(' . $sc['default'] . ');" alt="' . $item->get_title() . '"></span>';
 			}
 
 			$contentThumb = apply_filters( 'feedzy_thumb_output', $contentThumb, $feedURL );

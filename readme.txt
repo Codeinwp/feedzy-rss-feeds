@@ -184,6 +184,9 @@ http://docs.themeisle.com/article/550-how-to-display-items-in-a-random-order
 
 == Changelog ==
 
+= 3.0.4 - 06/01/2017 =
+* Fixed thumb='auto' behaviour
+
 = 3.0.3 - 06/01/2017 =
 * Fixed blog feed feature image filter
 * Improved documentation and examples
