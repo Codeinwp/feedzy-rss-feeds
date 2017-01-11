@@ -27,14 +27,6 @@ class feedzy_wp_widget extends WP_Widget {
 	 * @var      feedzy_wp_widget $instance The instance of the class.
 	 */
 	public static $instance;
-	/**
-	 * The loader class.
-	 *
-	 * @since    3.0.0
-	 * @access   private
-	 * @var      Feedzy_Rss_Feeds_Admin $plugin_admin The loader class of the plugin.
-	 */
-	private $plugin_admin;
 
 	/**
 	 * The feedzy_wp_widget constructor method
@@ -44,10 +36,9 @@ class feedzy_wp_widget extends WP_Widget {
 	 *
 	 * @param   Feedzy_Rss_Feeds_Admin $plugin_admin The Feedzy_Rss_Feeds_Admin object.
 	 */
-	public function __construct( $plugin_admin ) {
+	public function __construct( $plugin_admin = null ) {
 		parent::__construct( false, $name = __( 'Feedzy RSS Feeds', 'feedzy-rss-feeds' ) );
-		$this->plugin_admin = $plugin_admin;
-		self::$instance     = $this;
+		self::$instance = $this;
 
 	}
 
@@ -73,7 +64,7 @@ class feedzy_wp_widget extends WP_Widget {
 	 * @access   public
 	 */
 	public function registerWidget() {
-		register_widget( $this );
+		register_widget( 'feedzy_wp_widget' );
 	}
 
 	/**
@@ -163,12 +154,13 @@ class feedzy_wp_widget extends WP_Widget {
 			return $value;
 		}
 		$value = strval( $value );
-		if ( $value == '1' || $value == 'true'  ) {
+		if ( $value == '1' || $value == 'true' ) {
 			return 'yes';
 		}
 		if ( $value == '0' || $value == 'false' || $value == '' ) {
 			return 'no';
 		}
+
 		return $value;
 
 	}
@@ -195,7 +187,7 @@ class feedzy_wp_widget extends WP_Widget {
 		}
 		$forms_ids = array_keys( $this->get_widget_defaults() );
 		foreach ( $forms_ids as $key ) {
-			$instance[ $key ] = strip_tags( $new_instance[ $key ] );
+			$instance[ $key ] = strip_tags( isset( $new_instance[ $key ] ) ? $new_instance[ $key ] : '' );
 		}
 		$instance = apply_filters( 'feedzy_widget_update_filter', $instance, $new_instance );
 
@@ -242,7 +234,9 @@ class feedzy_wp_widget extends WP_Widget {
 		);
 		$feedzy_widget_shortcode_attributes = apply_filters( 'feedzy_widget_shortcode_attributes_filter', $feedzy_widget_shortcode_attributes, $args, $instance );
 		// Call the shortcode function
-		echo $this->plugin_admin->feedzy_rss( $feedzy_widget_shortcode_attributes );
+		$plugin_admin = new Feedzy_Rss_Feeds_Admin( Feedzy_Rss_Feeds::get_plugin_name(), Feedzy_Rss_Feeds::get_version() );
+
+		echo $plugin_admin->feedzy_rss( $feedzy_widget_shortcode_attributes );
 		echo $args['after_widget'];
 
 	}
