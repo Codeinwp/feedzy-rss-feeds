@@ -27,7 +27,7 @@ module.exports = {
 	},
 	class: {
 		options: {
-			prefix: '\\$this->version\.*\\s=\.*\\s\''
+			prefix: '\\.*version\.*\\s=\.*\\s\''
 		},
 		src: [
 			'includes/feedzy-rss-feeds.php',

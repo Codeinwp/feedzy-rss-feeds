@@ -79,25 +79,6 @@ class Feedzy_Rss_Feeds {
 	protected $admin;
 
 	/**
-	 * Define the core functionality of the plugin.
-	 *
-	 * Set the plugin name and the plugin version that can be used throughout the plugin.
-	 * Load the dependencies, define the locale, and set the hooks for the admin area and
-	 * the public-facing side of the site.
-	 *
-	 * @since    3.0.0
-	 * @access   public
-	 */
-	public function init() {
-		self::$plugin_name = 'feedzy-rss-feeds';
-		self::$version     = '3.0.3';
-		self::$instance->load_dependencies();
-		self::$instance->set_locale();
-		self::$instance->define_admin_hooks();
-
-	}
-
-	/**
 	 * Init the main singleton instance class.
 	 *
 	 * @return Feedzy_Rss_Feeds Return the instance class
@@ -110,6 +91,26 @@ class Feedzy_Rss_Feeds {
 
 		return self::$instance;
 	}
+
+	/**
+	 * Define the core functionality of the plugin.
+	 *
+	 * Set the plugin name and the plugin version that can be used throughout the plugin.
+	 * Load the dependencies, define the locale, and set the hooks for the admin area and
+	 * the public-facing side of the site.
+	 *
+	 * @since    3.0.0
+	 * @access   public
+	 */
+	public function init() {
+		self::$plugin_name = 'feedzy-rss-feeds';
+		self::$version = '3.0.5';
+		self::$instance->load_dependencies();
+		self::$instance->set_locale();
+		self::$instance->define_admin_hooks();
+
+	}
+
 	/**
 	 * Load the required dependencies for this plugin.
 	 *
@@ -127,12 +128,34 @@ class Feedzy_Rss_Feeds {
 	 * @access   private
 	 */
 	private function load_dependencies() {
-
 		include_once FEEDZY_ABSPATH . '/includes/feedzy-rss-feeds-feed-tweaks.php';
-		self::$instance->loader = new Feedzy_Rss_Feeds_Loader();
+		self::$instance->loader   = new Feedzy_Rss_Feeds_Loader();
 		self::$instance->upgrader = new Feedzy_Rss_Feeds_Upgrader();
-		self::$instance->admin = new Feedzy_Rss_Feeds_Admin( self::$instance->get_plugin_name(), self::$instance->get_version() );
+		self::$instance->admin    = new Feedzy_Rss_Feeds_Admin( self::$instance->get_plugin_name(), self::$instance->get_version() );
 
+	}
+
+	/**
+	 * The name of the plugin used to uniquely identify it within the context of
+	 * WordPress and to define internationalization functionality.
+	 *
+	 * @since     3.0.0
+	 * @access    public
+	 * @return    string    The name of the plugin.
+	 */
+	public static function get_plugin_name() {
+		return self::$plugin_name;
+	}
+
+	/**
+	 * Retrieve the version number of the plugin.
+	 *
+	 * @since     3.0.0
+	 * @access    public
+	 * @return    string    The version number of the plugin.
+	 */
+	public static function get_version() {
+		return self::$version;
 	}
 
 	/**
@@ -179,29 +202,6 @@ class Feedzy_Rss_Feeds {
 		self::$instance->loader->add_action( 'admin_enqueue_scripts', self::$instance->admin, 'enqueue_styles' );
 		$plugin_widget = new feedzy_wp_widget();
 		self::$instance->loader->add_action( 'widgets_init', $plugin_widget, 'registerWidget', 10 );
-	}
-
-	/**
-	 * The name of the plugin used to uniquely identify it within the context of
-	 * WordPress and to define internationalization functionality.
-	 *
-	 * @since     3.0.0
-	 * @access    public
-	 * @return    string    The name of the plugin.
-	 */
-	public static function get_plugin_name() {
-		return self::$plugin_name;
-	}
-
-	/**
-	 * Retrieve the version number of the plugin.
-	 *
-	 * @since     3.0.0
-	 * @access    public
-	 * @return    string    The version number of the plugin.
-	 */
-	public static function get_version() {
-		return self::$version;
 	}
 
 	/**
