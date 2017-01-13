@@ -698,7 +698,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		// TODO report error when is an error loading the feed
 		if ( is_wp_error( $feed ) ) { return '';
 		}
-
+		$feed->set_sanitize_class( 'SimplePie_Sanitize' );
+		$feed->sanitize = new SimplePie_Sanitize();
 		$feed -> enable_cache( true );
 		$feed -> enable_order_by_date( true );
 		$feed -> set_cache_class( 'WP_Feed_Cache' );

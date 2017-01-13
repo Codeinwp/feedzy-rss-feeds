@@ -233,10 +233,8 @@ class feedzy_wp_widget extends WP_Widget {
 			'keywords_title' => $instance['keywords_title'],
 		);
 		$feedzy_widget_shortcode_attributes = apply_filters( 'feedzy_widget_shortcode_attributes_filter', $feedzy_widget_shortcode_attributes, $args, $instance );
-		// Call the shortcode function
-		$plugin_admin = new Feedzy_Rss_Feeds_Admin( Feedzy_Rss_Feeds::get_plugin_name(), Feedzy_Rss_Feeds::get_version() );
 
-		echo $plugin_admin->feedzy_rss( $feedzy_widget_shortcode_attributes );
+		echo feedzy_rss( $feedzy_widget_shortcode_attributes );
 		echo $args['after_widget'];
 
 	}
