@@ -1,4 +1,8 @@
 
+### 3.0.5 - 13/01/2017
+**Changes:** 
+- Fixed issue with google news feeds
+
 ### 3.0.4 - 11/01/2017
 **Changes:** 
 - Release 3.0.4
