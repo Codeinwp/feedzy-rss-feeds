@@ -405,7 +405,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! empty( $feeds ) ) {
 			$feeds = rtrim( $feeds, ',' );
 			$feeds = explode( ',', $feeds );
-
+			$feedURL = array();
 			// Remove SSL from HTTP request to prevent fetching errors
 			foreach ( $feeds as $feed ) {
 				$feedURL[] = preg_replace( '/^https:/i', 'http:', $feed );
