@@ -689,14 +689,24 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! class_exists( 'SimplePie' ) ) {
 			require_once( ABSPATH . WPINC . '/feed.php' );
 		}
-
 		$sc = $this->get_short_code_attributes( $atts );
 		$feedURL = $this->get_feed_url( $sc['feeds'] );
-
 		// Load SimplePie Instance
 		$feed = fetch_feed( $feedURL );
 		// TODO report error when is an error loading the feed
-		if ( is_wp_error( $feed ) ) { return '';
+		if ( is_wp_error( $feed ) ) {
+			// Fallback for different edge cases.
+			if ( is_array( $feedURL ) ) {
+				$feedURL = array_map( 'html_entity_decode',$feedURL );
+			} else {
+				$feedURL = html_entity_decode( $feedURL );
+			}
+
+			$feed = fetch_feed( $feedURL );
+
+			if ( is_wp_error( $feed ) ) {
+				return '';
+			}
 		}
 		$feed->set_sanitize_class( 'SimplePie_Sanitize' );
 		$feed->sanitize = new SimplePie_Sanitize();
