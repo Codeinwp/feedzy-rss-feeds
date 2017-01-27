@@ -99,6 +99,7 @@ By activating this plugin, your cover picture will be inserted into your RSS fee
 * feedzy_default_error
 * feedzy_item_filter
 * feedzy_item_url_filter
+* feedzy_feed_timestamp
 * shortcode_atts_feedzy_default
 `
 This plugin is maintained and supported by Themeisle, check out some of the other <a href="http://themeisle.com/wordpress-plugins/" rel="nofollow">WordPress plugins</a> and <a href="http://themeisle.com/wordpress-themes/free/" rel="nofollow">free themes</a> we've developed.
@@ -174,6 +175,9 @@ http://docs.themeisle.com/article/543-how-to-remove-the-end-hellip
 = How to display items in a random order =
 http://docs.themeisle.com/article/550-how-to-display-items-in-a-random-order
 
+= How to display RSS feed time and date in local time =
+http://docs.themeisle.com/article/567-how-to-display-rss-feed-time-and-date-in-local-time
+
 == Screenshots ==
 
 1. Simple example
@@ -183,6 +187,12 @@ http://docs.themeisle.com/article/550-how-to-display-items-in-a-random-order
 
 
 == Changelog ==
+
+= 3.0.6 - 27/01/2017 =
+* Added feedzy_feed_timestamp filter.
+* Fixed issue with edge cases feed urls.
+* Fixed error when using [] on string vars.
+
 
 = 3.0.5 - 06/01/2017 =
 * Fixed issue with google news feed

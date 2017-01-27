@@ -405,7 +405,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! empty( $feeds ) ) {
 			$feeds = rtrim( $feeds, ',' );
 			$feeds = explode( ',', $feeds );
-
+			$feedURL = array();
 			// Remove SSL from HTTP request to prevent fetching errors
 			foreach ( $feeds as $feed ) {
 				$feedURL[] = preg_replace( '/^https:/i', 'http:', $feed );
@@ -551,9 +551,12 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 
 			if ( $metaArgs['date'] ) {
-				$contentMeta .= __( 'on', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $metaArgs['date_format'], $item->get_date( 'U' ) );
+				$date_time = $item->get_date( 'U' );
+				$date_time = apply_filters( 'feedzy_feed_timestamp',$date_time, $feedURL );
+
+				$contentMeta .= __( 'on', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $metaArgs['date_format'], $date_time );
 				$contentMeta .= ' ';
-				$contentMeta .= __( 'at', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $metaArgs['time_format'], $item->get_date( 'U' ) );
+				$contentMeta .= __( 'at', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $metaArgs['time_format'], $date_time );
 			}
 		}
 		$contentMeta = apply_filters( 'feedzy_meta_output', $contentMeta, $feedURL );
@@ -689,14 +692,24 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! class_exists( 'SimplePie' ) ) {
 			require_once( ABSPATH . WPINC . '/feed.php' );
 		}
-
 		$sc = $this->get_short_code_attributes( $atts );
 		$feedURL = $this->get_feed_url( $sc['feeds'] );
-
 		// Load SimplePie Instance
 		$feed = fetch_feed( $feedURL );
 		// TODO report error when is an error loading the feed
-		if ( is_wp_error( $feed ) ) { return '';
+		if ( is_wp_error( $feed ) ) {
+			// Fallback for different edge cases.
+			if ( is_array( $feedURL ) ) {
+				$feedURL = array_map( 'html_entity_decode',$feedURL );
+			} else {
+				$feedURL = html_entity_decode( $feedURL );
+			}
+
+			$feed = fetch_feed( $feedURL );
+
+			if ( is_wp_error( $feed ) ) {
+				return '';
+			}
 		}
 		$feed->set_sanitize_class( 'SimplePie_Sanitize' );
 		$feed->sanitize = new SimplePie_Sanitize();
