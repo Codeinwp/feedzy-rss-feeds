@@ -1,4 +1,11 @@
 
+### 3.0.6 - 27/01/2017
+**Changes:** 
+- 
+- Added feedzy_feed_timestamp filter.
+- Fixed issue with edge cases feed urls.
+- Fixed error when using [] on string vars.
+
 ### 3.0.5 - 13/01/2017
 **Changes:** 
 - Fixed issue with google news feeds
