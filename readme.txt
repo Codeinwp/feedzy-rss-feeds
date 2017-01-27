@@ -188,6 +188,12 @@ http://docs.themeisle.com/article/567-how-to-display-rss-feed-time-and-date-in-l
 
 == Changelog ==
 
+= 3.0.6 - 27/01/2017 =
+* Added feedzy_feed_timestamp filter.
+* Fixed issue with edge cases feed urls.
+* Fixed error when using [] on string vars.
+
+
 = 3.0.5 - 06/01/2017 =
 * Fixed issue with google news feed
 
