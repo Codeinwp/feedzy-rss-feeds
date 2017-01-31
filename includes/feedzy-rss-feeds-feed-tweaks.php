@@ -1,23 +1,12 @@
 <?php
 /**
- * The file that alter the main blog feed
+ * Useful helper functions for plugin.
  *
  * @link       http://themeisle.com
  * @since      3.0.0
  *
  * @package    feedzy-rss-feeds
  * @subpackage feedzy-rss-feeds/includes
- */
-/**
- *
- * Insert cover picture to main rss feed content
- *
- * @since   3.0.0
- * @access  public
- *
- * @param   string $content The item feed content.
- *
- * @return  string
  */
 // @codingStandardsIgnoreStart
 /**
