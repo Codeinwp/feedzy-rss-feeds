@@ -157,10 +157,12 @@ class feedzy_wp_widget extends WP_Widget {
 		if ( $value == '1' || $value == 'true' ) {
 			return 'yes';
 		}
-		if ( $value == '0' || $value == 'false' || $value == '' ) {
+		if ( $value == '0' || $value == 'false' ) {
 			return 'no';
 		}
-
+		if( $value == '' ){
+			return 'auto';
+		}
 		return $value;
 
 	}
