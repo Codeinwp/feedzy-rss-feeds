@@ -1,4 +1,10 @@
 
+### 3.0.7 - 03/02/2017
+**Changes:** 
+- Fixed is_new when pro is active.
+- Fixed redundant auto options.
+- Fixed auto option in widget for image option.
+
 ### 3.0.6 - 27/01/2017
 **Changes:** 
 - 
