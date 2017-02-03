@@ -124,10 +124,6 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'type'  => 'select',
 						'value' => '',
 						'opts'  => array(
-							'auto' => array(
-								'label' => __( 'Auto', 'feedzy-rss-feeds' ),
-								'value' => '',
-							),
 							'yes' => array(
 								'label' => __( 'Yes', 'feedzy-rss-feeds' ),
 								'value' => 'yes',
@@ -185,10 +181,6 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'type'  => 'select',
 						'value' => '',
 						'opts'  => array(
-							'auto' => array(
-								'label' => __( 'Auto', 'feedzy-rss-feeds' ),
-								'value' => '',
-							),
 							'yes' => array(
 								'label' => __( 'Yes', 'feedzy-rss-feeds' ),
 								'value' => 'yes',
@@ -204,10 +196,6 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'type'  => 'select',
 						'value' => '',
 						'opts'  => array(
-							'auto' => array(
-								'label' => __( 'Auto', 'feedzy-rss-feeds' ),
-								'value' => '',
-							),
 							'yes' => array(
 								'label' => __( 'Yes', 'feedzy-rss-feeds' ),
 								'value' => 'yes',
@@ -289,10 +277,6 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'disabled' => true,
 						'value' => '',
 						'opts'  => array(
-							'auto' => array(
-								'label' => __( 'Auto', 'feedzy-rss-feeds' ),
-								'value' => '',
-							),
 							'yes' => array(
 								'label' => __( 'Yes', 'feedzy-rss-feeds' ),
 								'value' => 'yes',

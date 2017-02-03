@@ -1,23 +1,12 @@
 <?php
 /**
- * The file that alter the main blog feed
+ * Useful helper functions for plugin.
  *
  * @link       http://themeisle.com
  * @since      3.0.0
  *
  * @package    feedzy-rss-feeds
  * @subpackage feedzy-rss-feeds/includes
- */
-/**
- *
- * Insert cover picture to main rss feed content
- *
- * @since   3.0.0
- * @access  public
- *
- * @param   string $content The item feed content.
- *
- * @return  string
  */
 // @codingStandardsIgnoreStart
 /**
@@ -64,7 +53,7 @@ function feedzy_options() {
  * @return bool If the users is before 3.0.3 or after
  */
 function feedzy_is_new() {
-	return feedzy_options()->get_var( 'is_new' ) === 'yes';
+	return feedzy_options()->get_var( 'is_new' ) === 'yes' && ! feedzy_is_pro();
 }
 
 /**
