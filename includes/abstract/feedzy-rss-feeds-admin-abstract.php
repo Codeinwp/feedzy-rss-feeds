@@ -511,11 +511,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				}
 			}
 
-			$contentThumb = apply_filters( 'feedzy_thumb_output', $contentThumb, $feedURL );
+			$contentThumb = apply_filters( 'feedzy_thumb_output', $contentThumb, $feedURL, $sizes );
 		} else {
 			$contentThumb = '';
 			$contentThumb .= '<span class="default" style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:url(' . $sc['default'] . ');" alt="' . $item->get_title() . '"></span>';
-			$contentThumb = apply_filters( 'feedzy_thumb_output', $contentThumb, $feedURL );
+			$contentThumb = apply_filters( 'feedzy_thumb_output', $contentThumb, $feedURL, $sizes );
 		}
 
 		$contentTitle = '';
