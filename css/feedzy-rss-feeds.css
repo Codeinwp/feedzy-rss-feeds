@@ -48,7 +48,7 @@
 
 /*noinspection CssUnusedSymbol*/
 .feedzy-rss .rss_item .rss_image .fetched {
-	z-index: 999;
+	z-index: 9;
 }
 
 .feedzy-rss .rss_item .rss_image {
