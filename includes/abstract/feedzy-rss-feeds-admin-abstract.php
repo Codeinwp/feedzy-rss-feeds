@@ -393,7 +393,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$items      = apply_filters( 'feedzy_feed_items', $feed->get_items(), $feedURL );
 		$feed_items = array();
 		foreach ( (array) $items as $item ) {
-			if ( ! empty( $item->get_title() ) ) {
+			if ( ! trim( $item->get_title() ) != '' ) {
 				$continue = apply_filters( 'feedzy_item_keyword', true, $sc, $item, $feedURL );
 				if ( $continue == true ) {
 					// Count items
