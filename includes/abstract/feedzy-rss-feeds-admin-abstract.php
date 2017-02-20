@@ -626,16 +626,18 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$items = apply_filters( 'feedzy_feed_items', $feed->get_items(), $feedURL );
 		$feed_items = array();
 		foreach ( (array) $items as $item ) {
-			$continue = apply_filters( 'feedzy_item_keyword', true, $sc, $item, $feedURL );
-			if ( $continue == true ) {
-				// Count items
-				if ( $count >= $sc['max'] ) {
-					break;
+			if ( ! empty( $item->get_title() ) ) {
+				$continue = apply_filters( 'feedzy_item_keyword', true, $sc, $item, $feedURL );
+				if ( $continue == true ) {
+					// Count items
+					if ( $count >= $sc['max'] ) {
+						break;
+					}
+					$itemAttr                         = apply_filters( 'feedzy_item_attributes', $itemAttr = '', $sizes, $item, $feedURL, $sc );
+					$feed_items[ $count ]             = $this->get_feed_item_filter( $sc, $sizes, $item, $feedURL );
+					$feed_items[ $count ]['itemAttr'] = $itemAttr;
+					$count ++;
 				}
-				$itemAttr = apply_filters( 'feedzy_item_attributes', $itemAttr = '', $sizes, $item, $feedURL, $sc );
-				$feed_items[ $count ] = $this->get_feed_item_filter( $sc, $sizes, $item, $feedURL );
-				$feed_items[ $count ]['itemAttr'] = $itemAttr;
-				$count++;
 			}
 		}
 
