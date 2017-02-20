@@ -1,4 +1,9 @@
 
+### 3.0.8 - 20/02/2017
+**Changes:** 
+- Added sizes param to feedzy_thumb_output.
+- Dont show items with empty title.
+
 ### 3.0.7 - 03/02/2017
 **Changes:** 
 - Fixed is_new when pro is active.
