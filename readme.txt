@@ -188,6 +188,9 @@ http://docs.themeisle.com/article/567-how-to-display-rss-feed-time-and-date-in-l
 
 == Changelog ==
 
+= 3.0.9 - 21/02/2017 =
+* Added wrong feed title check.
+
 = 3.0.8 - 20/02/2017 =
 * Added $sizes param to feedzy_thumb_output.
 * Added check when title is empty.
