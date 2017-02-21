@@ -1,6 +1,6 @@
 {
   "name": "feedzy-rss-feeds",
-  "version": "3.0.8",
+  "version": "3.0.9",
   "description": "FEEDZY RSS Feeds is a small and lightweight RSS aggregator plugin",
   "repository": {
     "type": "git",
