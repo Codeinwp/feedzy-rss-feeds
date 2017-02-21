@@ -1,4 +1,8 @@
 
+### 3.0.9 - 21/02/2017
+**Changes:** 
+- Fixed wrong empty title check.
+
 ### 3.0.8 - 20/02/2017
 **Changes:** 
 - Added sizes param to feedzy_thumb_output.
