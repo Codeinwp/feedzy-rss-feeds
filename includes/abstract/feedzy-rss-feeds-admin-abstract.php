@@ -592,13 +592,13 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 					}
 				}
 				if ( $thumbnail = $enclosure->embed() ) {
-					$pattern = '/https?:\/\/.*\.(?:jpg|JPG|jpe|JPE|jpeg|JPEG|gif|GIF|png|PNG)/iU';
+					$pattern = '/https?:\/\/.*\.(?:jpg|JPG|jpe|JPE|jpeg|JPEG|gif|GIF|png|PNG)/i';
 					if ( preg_match( $pattern, $thumbnail, $matches ) ) {
 						$theThumbnail = $matches[0];
 					}
 				}
 				foreach ( (array) $enclosure->get_link() as $thumbnail ) {
-					$pattern = '/https?:\/\/.*\.(?:jpg|JPG|jpe|JPE|jpeg|JPEG|gif|GIF|png|PNG)/iU';
+					$pattern = '/https?:\/\/.*\.(?:jpg|JPG|jpe|JPE|jpeg|JPEG|gif|GIF|png|PNG)/i';
 					$imgsrc  = $thumbnail;
 					if ( preg_match( $pattern, $imgsrc, $matches ) ) {
 						$theThumbnail = $matches[0];
