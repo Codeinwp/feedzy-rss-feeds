@@ -26,5 +26,7 @@
   "devDependencies": {
     "grunt-plugin-fleet": "https://github.com/Codeinwp/grunt-plugin-fleet/tarball/master",
     "load-project-config": "~0.2.0"
-  }
+  },
+  "category": "plugins",
+  "wraithSlug": "feedzy-rss-feeds"
 }
