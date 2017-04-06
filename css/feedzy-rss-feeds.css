@@ -2,7 +2,7 @@
  * feedzy-rss-feeds.css
  * Feedzy RSS Feed
  * Copyright: (c) 2016 Themeisle, themeisle.com
- * Version: 3.0.0
+ * Version: 3.0.9
  * Plugin Name: FEEDZY RSS Feeds
  * Plugin URI: http://themeisle.com/plugins/feedzy-rss-feeds/
  * Author: Themeisle
@@ -47,6 +47,10 @@
 }
 
 /*noinspection CssUnusedSymbol*/
+.feedzy-rss .rss_item .rss_image .fetched {
+	z-index: 9;
+}
+
 .feedzy-rss .rss_item .rss_image {
 	margin: 0.3em 1em 0 0;
 }
@@ -168,6 +172,34 @@ i.mce-i-feedzy-icon {
 	width: 100%;
 }
 
+.feedzy-rss .feedzy-style1 .rss_item .rss_image span {
+	width: 100%;
+}
+
+.feedzy-rss .feedzy-style1 .rss_content_wrap {
+	text-align: left;
+}
+
+.feedzy-rss .feedzy-style1 .rss_item {
+	text-align: center;
+}
+
+.feedzy-rss .feedzy-style2 .rss_item .rss_image {
+	float: none;
+}
+
+.feedzy-rss .feedzy-style2 .rss_item .rss_image span {
+	width: 100%;
+}
+
+.feedzy-rss .feedzy-style2 .rss_content_wrap {
+	text-align: left;
+}
+
+.feedzy-rss .feedzy-style2  .rss_item {
+	text-align: center;
+}
+
 .feedzy-rss .feedzy-style1 .rss_image {
 	float: none;
 	width: 100%;
@@ -186,6 +218,7 @@ i.mce-i-feedzy-icon {
 
 .feedzy-rss .feedzy-style1 .rss_image a span {
 	display: inline-block;
+	left: 0;
 	border-radius: 50%;
 }
 
@@ -234,6 +267,10 @@ i.mce-i-feedzy-icon {
 	border-radius: 5px;
 }
 
+.feedzy-rss .feedzy-style2 .rss_image span {
+	left: 0;
+}
+
 .feedzy-rss .feedzy-style2 .rss_image,
 .feedzy-rss .feedzy-style2 .rss_content_wrap {
 	display: inline-block;
@@ -241,7 +278,6 @@ i.mce-i-feedzy-icon {
 }
 
 .feedzy-rss .feedzy-style2 .rss_image {
-	float: left;
 	overflow: hidden;
 	width: 100%;
 	padding: 0;
@@ -310,79 +346,83 @@ i.mce-i-feedzy-icon {
 }
 
 /* Columns */
-.feedzy-rss #feedzy-rss-col-1,
+.feedzy-rss .feedzy-rss-col-1 {
+	width: 96%;
+}
+
 /* SCHIMBAT DIN ID in CLASA */
-.feedzy-rss #feedzy-rss-col-2,
-.feedzy-rss #feedzy-rss-col-3,
-.feedzy-rss #feedzy-rss-col-4,
-.feedzy-rss #feedzy-rss-col-5,
-.feedzy-rss #feedzy-rss-col-6 {
+.feedzy-rss .feedzy-rss-col-2,
+.feedzy-rss .feedzy-rss-col-3,
+.feedzy-rss .feedzy-rss-col-4,
+.feedzy-rss .feedzy-rss-col-5,
+.feedzy-rss .feedzy-rss-col-6 {
+	float: left;
 	width: 96%;
 }
 
 @media screen and (min-width: 768px) {
-	.feedzy-rss #feedzy-rss-col-2,
-	.feedzy-rss #feedzy-rss-col-3,
-	.feedzy-rss #feedzy-rss-col-4,
-	.feedzy-rss #feedzy-rss-col-5,
-	.feedzy-rss #feedzy-rss-col-6 {
+	.feedzy-rss .feedzy-rss-col-2,
+	.feedzy-rss .feedzy-rss-col-3,
+	.feedzy-rss .feedzy-rss-col-4,
+	.feedzy-rss .feedzy-rss-col-5,
+	.feedzy-rss .feedzy-rss-col-6 {
 		width: 46%;
 	}
 
-	.feedzy-rss #feedzy-rss-col-2:nth-child(2n+1),
-	.feedzy-rss #feedzy-rss-col-3:nth-child(2n+1),
-	.feedzy-rss #feedzy-rss-col-4:nth-child(2n+1),
-	.feedzy-rss #feedzy-rss-col-5:nth-child(2n+1),
-	.feedzy-rss #feedzy-rss-col-6:nth-child(2n+1) {
+	.feedzy-rss .feedzy-rss-col-2:nth-child(2n+1),
+	.feedzy-rss .feedzy-rss-col-3:nth-child(2n+1),
+	.feedzy-rss .feedzy-rss-col-4:nth-child(2n+1),
+	.feedzy-rss .feedzy-rss-col-5:nth-child(2n+1),
+	.feedzy-rss .feedzy-rss-col-6:nth-child(2n+1) {
 		clear: both;
 	}
 }
 
 @media screen and (min-width: 992px) {
-	.feedzy-rss #feedzy-rss-col-3,
-	.feedzy-rss #feedzy-rss-col-4,
-	.feedzy-rss #feedzy-rss-col-5,
-	.feedzy-rss #feedzy-rss-col-6 {
+	.feedzy-rss .feedzy-rss-col-3,
+	.feedzy-rss .feedzy-rss-col-4,
+	.feedzy-rss .feedzy-rss-col-5,
+	.feedzy-rss .feedzy-rss-col-6 {
 		width: 29.33333%;
 	}
 
-	.feedzy-rss #feedzy-rss-col-3:nth-child(2n+1),
-	.feedzy-rss #feedzy-rss-col-4:nth-child(2n+1),
-	.feedzy-rss #feedzy-rss-col-5:nth-child(2n+1),
-	.feedzy-rss #feedzy-rss-col-6:nth-child(2n+1) {
+	.feedzy-rss .feedzy-rss-col-3:nth-child(2n+1),
+	.feedzy-rss .feedzy-rss-col-4:nth-child(2n+1),
+	.feedzy-rss .feedzy-rss-col-5:nth-child(2n+1),
+	.feedzy-rss .feedzy-rss-col-6:nth-child(2n+1) {
 		clear: none;
 	}
 
-	.feedzy-rss #feedzy-rss-col-3:nth-child(3n+1),
-	.feedzy-rss #feedzy-rss-col-4:nth-child(3n+1),
-	.feedzy-rss #feedzy-rss-col-5:nth-child(3n+1),
-	.feedzy-rss #feedzy-rss-col-6:nth-child(3n+1) {
+	.feedzy-rss .feedzy-rss-col-3:nth-child(3n+1),
+	.feedzy-rss .feedzy-rss-col-4:nth-child(3n+1),
+	.feedzy-rss .feedzy-rss-col-5:nth-child(3n+1),
+	.feedzy-rss .feedzy-rss-col-6:nth-child(3n+1) {
 		clear: both;
 	}
 }
 
 @media screen and (min-width: 1200px) {
-	.feedzy-rss #feedzy-rss-col-4 {
+	.feedzy-rss .feedzy-rss-col-4 {
 		width: 21%;
 	}
 
-	.feedzy-rss #feedzy-rss-col-5 {
+	.feedzy-rss .feedzy-rss-col-5 {
 		width: 16%;
 	}
 
-	.feedzy-rss #feedzy-rss-col-6 {
+	.feedzy-rss .feedzy-rss-col-6 {
 		width: 12.66666%;
 	}
 
-	.feedzy-rss #feedzy-rss-col-4:nth-child(3n+1),
-	.feedzy-rss #feedzy-rss-col-5:nth-child(3n+1),
-	.feedzy-rss #feedzy-rss-col-6:nth-child(3n+1) {
+	.feedzy-rss .feedzy-rss-col-4:nth-child(3n+1),
+	.feedzy-rss .feedzy-rss-col-5:nth-child(3n+1),
+	.feedzy-rss .feedzy-rss-col-6:nth-child(3n+1) {
 		clear: none;
 	}
 
-	.feedzy-rss #feedzy-rss-col-4:nth-child(4n+1),
-	.feedzy-rss #feedzy-rss-col-5:nth-child(5n+1),
-	.feedzy-rss #feedzy-rss-col-6:nth-child(6n+1) {
+	.feedzy-rss .feedzy-rss-col-4:nth-child(4n+1),
+	.feedzy-rss .feedzy-rss-col-5:nth-child(5n+1),
+	.feedzy-rss .feedzy-rss-col-6:nth-child(6n+1) {
 		/* PANA AICI INCLUSIV */
 		clear: both;
 	}

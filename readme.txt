@@ -3,7 +3,7 @@ Contributors: themeisle,codeinwp
 Tags: RSS, SimplePie, shortcode, feed, thumbnail, image, rss feeds, aggregator, tinyMCE, WYSIWYG, MCE, UI, flux, plugin, WordPress, widget, importer, XML, ATOM, API, parser
 Requires at least: 3.7
 Tested up to: 4.7
-Stable tag: 3.0.0
+Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,15 +20,27 @@ FEEDZY RSS Feeds is a small and lightweight RSS aggregator plugin. Fast and very
 > * Multiple templates for feed items
 > * Automatically build affiliate links
 > * Parse price from product feeds
+> * Blacklist specific keywords from feeds
 > * Priority email support from the developer of the plugin
 > * Support and updates for 12 months
 >
-> **[Learn more about Feedzy Full version]( https://themeisle.com/plugins/feedzy-rss-feeds-lite/ )**
+> **[Learn more about Feedzy Full version]( https://themeisle.com/plugins/feedzy-rss-feeds/ )**
 
 
 The plugin uses the SimplePie php CLASS natively included in WordPress. SimplePie is a RSS parser that can read the information contained in a feed, process it, and finally display it.
 
 FEEDZY RSS Feeds therefore supports any additional library and uses only the bare minimum to ensure good performance (minimalistic CSS + cache). This will ensure compatibility with any hosting provider that supports WordPress, but if for any reason it doesn't work for yours feel free to <a href="http://themeisle.com/contact/" rel="nofollow">contact us</a>.
+
+
+ = See how Feedzy can integrate with your website  =
+
+* [Shop feed – 3 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/shop-feed/)
+* [Large image square grid – 2 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/2-columns-large-images-square-grid/)
+* [Square grid template – 3 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/square-template/)
+* [Round grid templates – 3 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/round-grid-template/)
+* [Standard grid layout – 2 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/grid-layout-feed-items/)
+* [Blog layout – 1 column layout](https://demo.themeisle.com/feedzy-rss-feeds/blog-layout/)
+
 
 You may use this plugin in your widgets and your pages and reuse the shortcode + widget several times within the same page.
 
@@ -87,6 +99,7 @@ By activating this plugin, your cover picture will be inserted into your RSS fee
 * feedzy_default_error
 * feedzy_item_filter
 * feedzy_item_url_filter
+* feedzy_feed_timestamp
 * shortcode_atts_feedzy_default
 `
 This plugin is maintained and supported by Themeisle, check out some of the other <a href="http://themeisle.com/wordpress-plugins/" rel="nofollow">WordPress plugins</a> and <a href="http://themeisle.com/wordpress-themes/free/" rel="nofollow">free themes</a> we've developed.
@@ -117,6 +130,53 @@ Yes it is.
 
 You have to check first if your feed is valid. Please test it here: https://validator.w3.org/feed/
 
+= How to change cache lifetime for a specific feed =
+http://docs.themeisle.com/article/547-how-to-change-cache-lifetime-for-a-specific-feed
+
+= How to change thumbs size and aspect ratio =
+http://docs.themeisle.com/article/551-how-to-change-thumbs-size-and-aspect-ratio
+
+= What hooks and filters are available in Feedzy =
+http://docs.themeisle.com/article/540-what-hooks-and-filters-are-available-in-feedzy
+
+= How to change the blacklist image name =
+http://docs.themeisle.com/article/552-how-to-change-the-blacklist-image-name
+
+= How to decode item title =
+http://docs.themeisle.com/article/548-how-to-decode-item-title-with
+
+= How to remove featured image from blog feed =
+http://docs.themeisle.com/article/554-how-to-remove-featured-image-from-blog-feed
+
+= How to keep html in feed items content =
+http://docs.themeisle.com/article/542-how-to-keep-html-in-feed-items-content
+
+= How to remove plugin css =
+http://docs.themeisle.com/article/545-how-to-remove-plugin-css
+
+= How to remove links =
+http://docs.themeisle.com/article/541-how-to-remove-links
+
+= How to add a read more link =
+http://docs.themeisle.com/article/544-how-to-add-a-read-more-link
+
+= How to remove time from publication date =
+http://docs.themeisle.com/article/553-how-to-remove-time-from-publication-date
+
+= How to handle publication date and author content =
+http://docs.themeisle.com/article/549-how-to-handle-time-and-date-content
+
+= How to use your own inline css =
+http://docs.themeisle.com/article/546-how-to-use-your-own-inline-css
+
+= How to remove the end hellip =
+http://docs.themeisle.com/article/543-how-to-remove-the-end-hellip
+
+= How to display items in a random order =
+http://docs.themeisle.com/article/550-how-to-display-items-in-a-random-order
+
+= How to display RSS feed time and date in local time =
+http://docs.themeisle.com/article/567-how-to-display-rss-feed-time-and-date-in-local-time
 
 == Screenshots ==
 
@@ -127,6 +187,36 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 == Changelog ==
+
+= 3.0.9 - 21/02/2017 =
+* Added wrong feed title check.
+
+= 3.0.8 - 20/02/2017 =
+* Added $sizes param to feedzy_thumb_output.
+* Added check when title is empty.
+* Fixed image encoding url.
+
+= 3.0.6 - 27/01/2017 =
+* Added feedzy_feed_timestamp filter.
+* Fixed issue with edge cases feed urls.
+* Fixed error when using [] on string vars.
+
+
+= 3.0.5 - 06/01/2017 =
+* Fixed issue with google news feed
+
+= 3.0.4 - 06/01/2017 =
+* Fixed thumb='auto' behaviour
+
+= 3.0.3 - 06/01/2017 =
+* Fixed blog feed feature image filter
+* Improved documentation and examples
+
+= 3.0.2 - 06/01/2017 =
+* Fixed default class  back
+
+= 3.0.1 - 05/01/2017 =
+* Fixed html markup error which was breaking user websites
 
 = 3.0.0 - 10/11/2016 =
 * Refactored code base from 2.8.1 to OOP style

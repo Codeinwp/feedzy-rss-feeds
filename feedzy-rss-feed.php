@@ -15,20 +15,18 @@
  * Plugin Name:       Feedzy RSS Feeds Lite
  * Plugin URI:        https://themeisle.com/plugins/feedzy-rss-feeds-lite/
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
- * Version:           3.0.0
+ * Version:           3.0.9
  * Author:            Themeisle
  * Author URI:        http://themeisle.com
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       feedzy_rss_translate
+ * Text Domain:       feedzy-rss-feeds
  * Domain Path:       /languages
  */
-
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
-
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/feedzy-rss-feeds-activator.php
@@ -49,44 +47,43 @@ function deactivate_feedzy_rss_feeds() {
 
 register_activation_hook( __FILE__, 'activate_feedzy_rss_feeds' );
 register_deactivation_hook( __FILE__, 'deactivate_feedzy_rss_feeds' );
-
 /**
- * The core plugin class that is used to define internationalization,
- * admin-specific hooks, and public-facing site hooks.
+ * The function that will handle the queue for autoloader.
  *
  * @since    3.0.0
  */
 function feedzy_rss_feeds_autoload( $class ) {
 	$namespaces = array( 'Feedzy_Rss_Feeds' );
-
 	foreach ( $namespaces as $namespace ) {
 		if ( substr( $class, 0, strlen( $namespace ) ) == $namespace ) {
 			$filename = plugin_dir_path( __FILE__ ) . 'includes/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
 			if ( is_readable( $filename ) ) {
 				require_once $filename;
+
 				return true;
 			}
-
 			$filename = plugin_dir_path( __FILE__ ) . 'includes/abstract/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
 			if ( is_readable( $filename ) ) {
 				require_once $filename;
+
 				return true;
 			}
-
 			$filename = plugin_dir_path( __FILE__ ) . 'includes/admin/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
 			if ( is_readable( $filename ) ) {
 				require_once $filename;
+
 				return true;
 			}
 		}
 	}
 	if ( is_readable( plugin_dir_path( __FILE__ ) . 'includes/admin/feedzy-wp-widget.php' ) ) {
 		require_once plugin_dir_path( __FILE__ ) . 'includes/admin/feedzy-wp-widget.php';
+
 		return true;
 	}
+
 	return false;
 }
-
 
 /**
  * Begins execution of the plugin.
@@ -101,12 +98,9 @@ function run_feedzy_rss_feeds() {
 	define( 'FEEDZY_BASEFILE', __FILE__ );
 	define( 'FEEDZY_ABSURL', plugins_url( '/', __FILE__ ) );
 	define( 'FEEDZY_ABSPATH', dirname( __FILE__ ) );
-
-	$plugin = new Feedzy_Rss_Feeds();
-	$plugin->run();
-
+	$feedzy = Feedzy_Rss_Feeds::instance();
+	$feedzy->run();
 }
 
 spl_autoload_register( 'feedzy_rss_feeds_autoload' );
-
 run_feedzy_rss_feeds();

@@ -16,8 +16,9 @@
  * @subpackage feedzy-rss-feeds/includes/admin
  * @author     Themeisle <friends@themeisle.com>
  */
+// @codingStandardsIgnoreStart
 class feedzy_wp_widget extends WP_Widget {
-
+	// @codingStandardsIgnoreEnd
 	/**
 	 * The class instance.
 	 *
@@ -26,14 +27,6 @@ class feedzy_wp_widget extends WP_Widget {
 	 * @var      feedzy_wp_widget $instance The instance of the class.
 	 */
 	public static $instance;
-	/**
-	 * The loader class.
-	 *
-	 * @since    3.0.0
-	 * @access   private
-	 * @var      Feedzy_Rss_Feeds_Admin $plugin_admin The loader class of the plugin.
-	 */
-	private $plugin_admin;
 
 	/**
 	 * The feedzy_wp_widget constructor method
@@ -43,9 +36,8 @@ class feedzy_wp_widget extends WP_Widget {
 	 *
 	 * @param   Feedzy_Rss_Feeds_Admin $plugin_admin The Feedzy_Rss_Feeds_Admin object.
 	 */
-	public function __construct( $plugin_admin ) {
-		parent::__construct( false, $name = __( 'Feedzy RSS Feeds', 'feedzy_rss_translate' ) );
-		$this->plugin_admin = $plugin_admin;
+	public function __construct( $plugin_admin = null ) {
+		parent::__construct( false, $name = __( 'Feedzy RSS Feeds', 'feedzy-rss-feeds' ) );
 		self::$instance = $this;
 
 	}
@@ -72,7 +64,7 @@ class feedzy_wp_widget extends WP_Widget {
 	 * @access   public
 	 */
 	public function registerWidget() {
-		register_widget( $this );
+		register_widget( 'feedzy_wp_widget' );
 	}
 
 	/**
@@ -86,13 +78,13 @@ class feedzy_wp_widget extends WP_Widget {
 	 * @return mixed
 	 */
 	public function form( $instance ) {
-		$instance = wp_parse_args( $instance, $this->get_widget_defaults() );
+		$instance    = wp_parse_args( $instance, $this->get_widget_defaults() );
 		$widget_form = '<p>
-				<label for="' . $this->get_field_id( 'title' ) . '">' . __( 'Widget Title', 'feedzy_rss_translate' ) . '</label>
+				<label for="' . $this->get_field_id( 'title' ) . '">' . __( 'Widget Title', 'feedzy-rss-feeds' ) . '</label>
 				<input class="widefat" id="' . $this->get_field_id( 'title' ) . '" name="' . $this->get_field_name( 'title' ) . '" type="text" value="' . esc_attr( $instance['title'] ) . '" />
 			</p>
 			<p>
-				<label for="' . $this->get_field_id( 'textarea' ) . '">' . __( 'Intro text', 'feedzy_rss_translate' ) . '</label>
+				<label for="' . $this->get_field_id( 'textarea' ) . '">' . __( 'Intro text', 'feedzy-rss-feeds' ) . '</label>
 				<textarea class="widefat" id="' . $this->get_field_id( 'textarea' ) . '" name="' . $this->get_field_name( 'textarea' ) . '">' . esc_attr( $instance['textarea'] ) . '</textarea>
 			</p>';
 		foreach ( Feedzy_Rss_Feeds_Ui_Lang::get_form_elements() as $key_section => $section ) {
@@ -165,9 +157,13 @@ class feedzy_wp_widget extends WP_Widget {
 		if ( $value == '1' || $value == 'true' ) {
 			return 'yes';
 		}
-		if ( $value == '0' || $value == 'false' || $value == '' ) {
+		if ( $value == '0' || $value == 'false' ) {
 			return 'no';
 		}
+		if ( $value == '' ) {
+			return 'auto';
+		}
+		return $value;
 
 	}
 
@@ -184,7 +180,7 @@ class feedzy_wp_widget extends WP_Widget {
 	 * @return  array
 	 */
 	public function update( $new_instance, $old_instance ) {
-		$instance = $old_instance;
+		$instance          = $old_instance;
 		$instance['title'] = strip_tags( $new_instance['title'] );
 		if ( current_user_can( 'unfiltered_html' ) ) {
 			$instance['textarea'] = $new_instance['textarea'];
@@ -193,7 +189,7 @@ class feedzy_wp_widget extends WP_Widget {
 		}
 		$forms_ids = array_keys( $this->get_widget_defaults() );
 		foreach ( $forms_ids as $key ) {
-			$instance[ $key ] = strip_tags( $new_instance[ $key ] );
+			$instance[ $key ] = strip_tags( isset( $new_instance[ $key ] ) ? $new_instance[ $key ] : '' );
 		}
 		$instance = apply_filters( 'feedzy_widget_update_filter', $instance, $new_instance );
 
@@ -239,8 +235,8 @@ class feedzy_wp_widget extends WP_Widget {
 			'keywords_title' => $instance['keywords_title'],
 		);
 		$feedzy_widget_shortcode_attributes = apply_filters( 'feedzy_widget_shortcode_attributes_filter', $feedzy_widget_shortcode_attributes, $args, $instance );
-		// Call the shortcode function
-		echo $this->plugin_admin->feedzy_rss( $feedzy_widget_shortcode_attributes );
+
+		echo feedzy_rss( $feedzy_widget_shortcode_attributes );
 		echo $args['after_widget'];
 
 	}
