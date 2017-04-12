@@ -245,7 +245,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		) );
 		$feed->init();
 		$feed->handle_content_type();
-		$sc = $this->sanitize_attr( $sc, $feedURL );
+		$sc      = $this->sanitize_attr( $sc, $feedURL );
 		$content = $this->render_content( $sc, $feed, $content, $feedURL );
 
 		return $content;
@@ -378,7 +378,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function render_content( $sc, $feed, $content = '', $feedURL ) {
 		$count = 0;
-		$sizes = array( 'width' => $sc['size'], 'height' => $sc['size'] );
+		$sizes = array(
+			'width' => $sc['size'],
+			'height' => $sc['size'],
+		);
 		$sizes = apply_filters( 'feedzy_thumb_sizes', $sizes, $feedURL );
 		// Display the error message
 		if ( $feed->error() ) {
@@ -525,13 +528,13 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 					$authorName = $author->get_email();
 				}
 				if ( $authorName ) {
-					$domain = parse_url( $newLink );
+					$domain      = parse_url( $newLink );
 					$contentMeta .= __( 'by', 'feedzy-rss-feeds' ) . ' <a href="http://' . $domain['host'] . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $authorName . '</a> ';
 				}
 			}
 			if ( $metaArgs['date'] ) {
-				$date_time = $item->get_date( 'U' );
-				$date_time = apply_filters( 'feedzy_feed_timestamp', $date_time, $feedURL );
+				$date_time   = $item->get_date( 'U' );
+				$date_time   = apply_filters( 'feedzy_feed_timestamp', $date_time, $feedURL );
 				$contentMeta .= __( 'on', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $metaArgs['date_format'], $date_time );
 				$contentMeta .= ' ';
 				$contentMeta .= __( 'at', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $metaArgs['time_format'], $date_time );
@@ -761,7 +764,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$path_parts = pathinfo( $string );
 		$path       = $path_parts['dirname'];
 		$file       = rawurldecode( $path_parts['filename'] );
-		$extention = pathinfo( $url_tab['path'], PATHINFO_EXTENSION );
+		$extention  = pathinfo( $url_tab['path'], PATHINFO_EXTENSION );
 		if ( ! empty( $extention ) ) {
 			$extention = '.' . $extention;
 		} else {

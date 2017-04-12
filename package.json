@@ -1,30 +1,28 @@
 {
-  "name": "feedzy-rss-feeds",
-  "version": "3.0.9",
-  "description": "FEEDZY RSS Feeds is a small and lightweight RSS aggregator plugin",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Codeinwp/feedzy-rss-feeds.git"
-  },
-  "keywords": [
-    "wordpress-plugin",
-    "rss",
-    "feed"
-  ],
-  "textdomain": "feedzy-rss-feeds",
-  "author": "Themeisle <friends@themeisle.com>",
-  "license": "GPL-3.0+",
-  "bugs": {
-    "url": "https://github.com/Codeinwp/feedzy-rss-feeds/issues"
-  },
-  "pot": {
-    "reportmsgidbugsto": "https://github.com/Codeinwp/feedzy-rss-feeds/issues",
-    "languageteam": "Themeisle Translate <friends@themeisle.com>",
-    "lasttranslator": "Themeisle Translate Team <friends@themeisle.com>"
-  },
-  "homepage": "https://github.com/Codeinwp/feedzy-rss-feeds#readme",
-  "devDependencies": {
-    "grunt-plugin-fleet": "https://github.com/Codeinwp/grunt-plugin-fleet/tarball/master",
-    "load-project-config": "~0.2.0"
-  }
+    "name": "feedzy-rss-feeds",
+    "version": "3.0.10",
+    "description": "Feedzy RSS Feeds Lite",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Codeinwp/feedzy-rss-feeds.git"
+    },
+    "keywords": [
+        "wordpress-plugin"
+    ],
+    "textdomain": "feedzy-rss-feeds",
+    "category": "plugins",
+    "author": "ThemeIsle <friends@themeisle.com>",
+    "license": "GPL-2.0+",
+    "bugs": {
+        "url": "https://github.com/Codeinwp/feedzy-rss-feeds/issues"
+    },
+    "pot": {
+        "reportmsgidbugsto": "https://github.com/Codeinwp/feedzy-rss-feeds/issues",
+        "languageteam": "Themeisle Translate <friends@themeisle.com>",
+        "lasttranslator": "Themeisle Translate Team <friends@themeisle.com>"
+    },
+    "devDependencies": {
+        "grunt-plugin-fleet": "codeinwp/grunt-plugin-fleet",
+        "load-project-config": "~0.2.0"
+    }
 }
