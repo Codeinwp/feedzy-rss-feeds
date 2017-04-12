@@ -14,6 +14,6 @@ class Test_Plugin extends WP_UnitTestCase {
 	 * Test if plugin is active.
 	 */
 	function testPlugin() {
-		$this->assertTrue( is_plugin_active( 'feedzy-rss-feeds/feedzy-rss-feeds.php' ) );
+		$this->assertTrue( is_plugin_active( 'feedzy-rss-feeds/feedzy-rss-feed.php' ) );
 	}
 }
