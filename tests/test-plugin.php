@@ -11,9 +11,9 @@
  */
 class Test_Plugin extends WP_UnitTestCase {
 	/**
-	 * Test if plugin is active.
+	 * Test if class has static attribute.
 	 */
 	function testPlugin() {
-		$this->assertTrue( is_plugin_active( 'feedzy-rss-feeds/feedzy-rss-feed.php' ) );
+		$this->assertClassHasStaticAttribute( 'instance', 'Feedzy_Rss_Feeds' );
 	}
 }
