@@ -6,6 +6,14 @@ php:
     - "5.4"
     - "5.3"
     - "5.2"
+matrix:
+  include:
+  - php: "5.6"
+    before_install: chmod +x bin/wraith.sh
+    install: true
+    before_script:
+    env: TEST_SUITE=Wraith_Visual_Regression_Testing WRAITH_FAIL=5
+    script:  ./bin/wraith.sh
 sudo: false
 branches:
   except:
@@ -47,15 +55,6 @@ deploy:
   local-dir: artifact/
   upload-dir: "$AWS_PRODUCTS_FOLDER/$THEMEISLE_REPO/$THEMEISLE_VERSION"
   on:
-    repo: "$UPSTREAM_REPO"
-    branch: "$MASTER_BRANCH"
-    condition: $TRAVIS_PHP_VERSION = "7.0"
-- provider: releases
-  api_key: "$GITHUB_TOKEN"
-  file: artifact/$THEMEISLE_REPO.zip
-  skip_cleanup: true
-  on:
-    tags: false
     repo: "$UPSTREAM_REPO"
     branch: "$MASTER_BRANCH"
     condition: $TRAVIS_PHP_VERSION = "7.0"

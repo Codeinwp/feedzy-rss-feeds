@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # We run this on PR or on push to MASTER_BRANCH.
-if [ "$TRAVIS_PULL_REQUEST" != "false" ] ||  ( [ "$TRAVIS_EVENT_TYPE" == "push" ] && [ "$TRAVIS_REPO_SLUG" == "$UPSTREAM_REPO" ] && [ "$TRAVIS_BRANCH"  == "$MASTER_BRANCH" ] ) ; then
+if [ "$TRAVIS_PULL_REQUEST" != "false" ] ||  ( [ "$TRAVIS_EVENT_TYPE" == "push" ] && [ "$TRAVIS_REPO_SLUG" == "$UPSTREAM_REPO" ] && [ "$TRAVIS_BRANCH"  == "$MASTER_BRANCH" ]  && [ "$TRAVIS_PHP_VERSION" == "7.0" ] ) ; then
 
     . $HOME/.nvm/nvm.sh
     nvm install stable
