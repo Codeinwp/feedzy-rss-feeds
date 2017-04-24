@@ -1,4 +1,8 @@
 
+ ### v3.0.11 - 2017-04-24 
+ **Changes:** 
+ - Changed deploy mechanism.
+ 
 ### 3.0.10 - 24/04/2017
 **Changes:** 
 - Fixed wrong image regex.
