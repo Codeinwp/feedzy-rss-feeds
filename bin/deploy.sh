@@ -49,7 +49,7 @@ if ! [ $AFTER_DEPLOY_RUN ] && [ "$TRAVIS_PHP_VERSION" == "7.0" ]; then
             svn co -q "http://svn.wp-plugins.org/$THEMEISLE_REPO" svn
 
             # Copy new content to svn trunk.
-            rsync -r -p --delete  dist/* svn/trunk
+            rsync -r -p --delete --exclude=".*" dist/* svn/trunk
 
             # Create new SVN tag.
             mkdir -p svn/tags/$THEMEISLE_VERSION
