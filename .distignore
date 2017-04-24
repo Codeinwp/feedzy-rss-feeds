@@ -15,4 +15,5 @@ phpunit.xml
 npm-debug.log
 dist
 artifact
-composer
+composer.json
+composer.lock
