@@ -188,8 +188,9 @@ http://docs.themeisle.com/article/567-how-to-display-rss-feed-time-and-date-in-l
 
 == Changelog ==
 
-= 3.1.0 - 24/04/2017 =
+= 3.0.10 - 24/04/2017 =
 * Fixed wrong image regex.
+* Fixed image compression.
 
 = 3.0.9 - 21/02/2017 =
 * Added wrong feed title check.
