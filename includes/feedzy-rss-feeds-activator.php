@@ -32,7 +32,9 @@ class Feedzy_Rss_Feeds_Activator {
 	public static function activate() {
 		$options = get_option( Feedzy_Rss_Feeds::get_plugin_name(), array() );
 		if ( ! isset( $options['is_new'] ) ) {
-			update_option( Feedzy_Rss_Feeds::get_plugin_name(), array( 'is_new' => 'yes' ) );
+			update_option( Feedzy_Rss_Feeds::get_plugin_name(), array(
+				'is_new' => 'yes',
+			) );
 		}
 
 	}

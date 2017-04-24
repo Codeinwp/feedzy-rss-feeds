@@ -81,4 +81,4 @@ if ( ! class_exists( 'Feedy_Rss_Feeds_Options' ) ) {
 
 		}
 	}
-}
+}// End if().

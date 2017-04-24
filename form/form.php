@@ -84,7 +84,7 @@ $html_parts = Feedzy_Rss_Feeds_Ui_Lang::get_form_elements();
 							default:
 								$element = '<input type="text" name="' . $name . '" data-feedzy="' . $name . '" value="' . $props['value'] . '" placeholder="' . $props['placeholder'] . '" ' . $disabled . ' />';
 								break;
-						}
+						} // End switch().
 						$output .= '
                         <div class="row feedzy_element_' . $name . '">
                            <div class="column column-50">
@@ -96,11 +96,11 @@ $html_parts = Feedzy_Rss_Feeds_Ui_Lang::get_form_elements();
                             <hr/>
                         </div>
                         ';
-					}
-				}
+					} // End foreach().
+				} // End if().
 				$output .= '</div>';
-			}
-		}
+			} // End foreach().
+		} // End if().
 		echo $output;
 		?>
 	</div>

@@ -1,0 +1,46 @@
+{
+  "name": "codeinwp/feedzy-rss-feeds",
+  "description": "Feedzy RSS feedzy for WordPress.",
+  "keywords": [
+    "wordpress",
+    "feeds",
+    "rss"
+  ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/Codeinwp/themeisle-sdk"
+    }
+  ],
+  "homepage": "https://themeisle.com/plugins/feedzy-rss-feeds/",
+  "license": "GPL-2.0+",
+  "authors": [
+    {
+      "name": "ThemeIsle Team",
+      "email": "friends@themeisle.com.com",
+      "homepage": "https://themeisle.com"
+    }
+  ],
+  "type": "wordpress-plugin",
+  "support": {
+    "issues": "https://github.com/Codeinwp/feedzy-rss-feeds/issues",
+    "source": "https://github.com/Codeinwp/feedzy-rss-feeds"
+  },
+  "require": {
+    "codeinwp/themeisle-sdk": "master",
+    "xrstf/composer-php52": "^1.0.20"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "scripts": {
+    "post-install-cmd": [
+      "xrstf\\Composer52\\Generator::onPostInstallCmd"
+    ],
+    "post-update-cmd": [
+      "xrstf\\Composer52\\Generator::onPostInstallCmd"
+    ],
+    "post-autoload-dump": [
+      "xrstf\\Composer52\\Generator::onPostInstallCmd"
+    ]
+  }
+}

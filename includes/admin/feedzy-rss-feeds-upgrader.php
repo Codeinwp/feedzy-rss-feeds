@@ -65,4 +65,4 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Upgrader' ) ) {
 			return str_replace( '.', '_', $version );
 		}
 	}
-}
+}// End if().

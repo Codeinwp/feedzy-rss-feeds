@@ -9,8 +9,11 @@ phpcs.xml
 node_modules
 logs
 package.json
+bin
+tests
+phpunit.xml
 npm-debug.log
-.codeclimate.yml
-.csslintrc
-.eslintignore
-.eslintrc
+dist
+artifact
+composer.json
+composer.lock
