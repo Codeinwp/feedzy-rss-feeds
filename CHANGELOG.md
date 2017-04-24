@@ -1,4 +1,10 @@
 
+### 3.0.10 - 24/04/2017
+**Changes:** 
+- Fixed wrong image regex.
+- Fixed image compression.
+- Added wraith.
+
 ### 3.0.9 - 21/02/2017
 **Changes:** 
 - Fixed wrong empty title check.
