@@ -180,6 +180,29 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 	}
 
+	protected function process_feed_source( $src ) {
+        $regex = "((https?|ftp)\:\/\/)?";                                       // Contains Protocol
+        $regex .= "([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?";  // Uses User and Pass
+        $regex .= "([a-z0-9-.]*)\.([a-z]{2,3})";                                // Has Host or IP
+        $regex .= "(\:[0-9]{2,5})?";                                            // Uses Port
+        $regex .= "(\/([a-z0-9+\$_-]\.?)+)*\/?";                                // Has Path
+        $regex .= "(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?";                   // Has GET Query
+        $regex .= "(#[a-z_.-][a-z0-9+\$_.-]*)?";                                // Uses Anchor
+
+	    if( preg_match( "/^$regex$/", $src ) ) {
+	        // If it matches Regex ( it's not a slug ) so return the sources.
+	        return $src;
+        } else {
+	        $src = trim( $src );
+            if ( $post = get_page_by_path( $src, OBJECT, 'feedzy_categories' ) ) {
+                return trim( preg_replace( '/\s+/', ' ', get_post_meta( $post->ID, 'feedzy_category_feed', true ) ) );
+            } else {
+                return false;
+            }
+        }
+
+    }
+
 	/**
 	 * Main shortcode function
 	 *
@@ -197,7 +220,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			require_once( ABSPATH . WPINC . '/feed.php' );
 		}
 		$sc      = $this->get_short_code_attributes( $atts );
-		$feedURL = $this->get_feed_url( $sc['feeds'] );
+
+		$feeds = $this->process_feed_source( $sc['feeds'] );
+
+		$feedURL = $this->get_feed_url( $feeds );
 		// Load SimplePie Instance
 		$feed = fetch_feed( $feedURL );
 		// TODO report error when is an error loading the feed
@@ -210,7 +236,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 			$feed = fetch_feed( $feedURL );
 			if ( is_wp_error( $feed ) ) {
-				return '';
+				return __( 'An error occured for when trying to retrieve feeds! Check the URL\'s provided as feed sources.', 'feedzy-rss-feeds' );
 			}
 		}
 		$feed->set_sanitize_class( 'SimplePie_Sanitize' );

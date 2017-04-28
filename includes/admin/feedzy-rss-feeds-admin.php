@@ -144,7 +144,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
      * @access  public
      */
     public function add_feedzy_post_type_metaboxes() {
-        add_meta_box('feedzy_category_feeds',  __( 'Category Feeds', 'feedzy-rss-feeds' ), array( $this, 'feedzy_category_feed' ), 'feedzy_categories', 'normal', 'high');
+        add_meta_box( 'feedzy_category_feeds',  __( 'Category Feeds', 'feedzy-rss-feeds' ), array( $this, 'feedzy_category_feed' ), 'feedzy_categories', 'normal', 'high' );
     }
 
     /**
@@ -158,7 +158,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
     public function feedzy_category_feed() {
         global $post;
         $nonce = wp_create_nonce( FEEDZY_BASEFILE );
-        $feed = get_post_meta($post->ID, 'feedzy_category_feed', true);
+        $feed = get_post_meta( $post->ID, 'feedzy_category_feed', true );
         $output = '
             <input type="hidden" name="feedzy_category_meta_noncename" id="feedzy_category_meta_noncename" value="' . $nonce . '" />
             <textarea name="feedzy_category_feed" rows="15" class="widefat" placeholder="' . __( 'Place your URL\'s here followed by a comma.', 'feedzy-rss-feeds' ) . '" >' . $feed . '</textarea>
