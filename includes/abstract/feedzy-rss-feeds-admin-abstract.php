@@ -810,4 +810,30 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
         wp_enqueue_style( 'feedzy-upsell', FEEDZY_ABSURL . '/includes/layouts/css/upsell.css' );
         include( FEEDZY_ABSPATH . '/includes/layouts/' . $layout_name . '.php' );
     }
+
+    /**
+     * Utility method to insert before specific key
+     * in an associative array.
+     *
+     * @since   3.0.12
+     * @access  public
+     * @param   string  $key        The key before to insert.
+     * @param   array   $array      The array in which to insert the new key.
+     * @param   string  $new_key    The new key name.
+     * @param   mixed   $new_value  The new key value.
+     * @return array|bool
+     */
+    protected function array_insert_before( $key, &$array, $new_key, $new_value ) {
+        if ( array_key_exists( $key, $array ) ) {
+            $new = array();
+            foreach ( $array as $k => $value ) {
+                if ( $k === $key ) {
+                    $new[$new_key] = $new_value;
+                }
+                $new[$k] = $value;
+            }
+            return $new;
+        }
+        return false;
+    }
 }

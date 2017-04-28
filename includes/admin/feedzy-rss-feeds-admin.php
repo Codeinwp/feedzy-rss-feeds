@@ -219,7 +219,11 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
      */
     public function feedzy_category_columns( $columns ) {
         $columns['title'] = __( 'Category Title', 'feedzy-rss-feeds' );
-        $columns['slug'] =  __( 'Slug', 'feedzy-rss-feeds' );
+        if( $new_columns =  $this->array_insert_before( 'date', $columns, 'slug', __( 'Slug', 'feedzy-rss-feeds' ) ) ) {
+            $columns = $new_columns;
+        } else {
+            $columns['slug'] =  __( 'Slug', 'feedzy-rss-feeds' );
+        }
 
         return $columns;
     }
