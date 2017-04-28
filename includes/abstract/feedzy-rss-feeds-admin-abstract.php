@@ -787,4 +787,27 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	public function get_tinymce_form() {
 		die( include FEEDZY_ABSPATH . '/form/form.php' );
 	}
+
+    /**
+     * Method used to render upsell page.
+     *
+     * @since   3.0.12
+     * @access  public
+     */
+	public function render_upsell() {
+        $this->load_layout( 'feedzy-upsell' );
+    }
+
+    /**
+     * Method used to render pages
+     *
+     * @since   3.0.12
+     * @access  public
+     * @param   string  $layout_name The name of the layout
+     * @return mixed
+     */
+    public function load_layout( $layout_name ) {
+        wp_enqueue_style( 'feedzy-upsell', FEEDZY_ABSURL . '/includes/layouts/css/upsell.css' );
+        include( FEEDZY_ABSPATH . '/includes/layouts/' . $layout_name . '.php' );
+    }
 }

@@ -48,7 +48,7 @@ class Feedzy_Rss_Feeds {
 	/**
 	 * The main instance var.
 	 *
-	 * @var Feedzy_Rss_Feeds The one Feedzy_Rss_Feeds istance.
+	 * @var Feedzy_Rss_Feeds The one Feedzy_Rss_Feeds instance.
 	 * @since 3.0.4
 	 */
 	private static $instance;
@@ -70,7 +70,7 @@ class Feedzy_Rss_Feeds {
 	 */
 	protected $upgrader;
 	/**
-	 * The class responsible for all admin proceses.
+	 * The class responsible for all admin processes.
 	 *
 	 * @since    3.0.3
 	 * @access   protected
@@ -180,13 +180,21 @@ class Feedzy_Rss_Feeds {
 	/**
 	 * Register all of the hooks related to the admin area functionality
 	 * of the plugin.
-	 *
+     *
 	 * @since    3.0.0
+     * @updated  3.0.12
 	 * @access   private
 	 */
 	private function define_admin_hooks() {
 		$plugin_ui = new Feedzy_Rss_Feeds_Ui( self::$instance->get_plugin_name(), self::$instance->get_version(), self::$instance->loader );
 		self::$instance->loader->add_action( 'init', $plugin_ui, 'register_init' );
+        self::$instance->loader->add_action( 'init', self::$instance->admin, 'register_post_type' );
+        self::$instance->loader->add_action('save_post', self::$instance->admin, 'save_feedzy_post_type_meta', 1, 2);
+
+        self::$instance->loader->add_action( 'manage_feedzy_categories_posts_custom_column', self::$instance->admin, 'manage_feedzy_category_columns', 10, 2 );
+        self::$instance->loader->add_filter( 'manage_feedzy_categories_posts_columns', self::$instance->admin, 'feedzy_category_columns' ) ;
+
+        self::$instance->loader->add_action( 'admin_menu', self::$instance->admin, 'feedzy_menu_pages' );
 		self::$instance->loader->add_filter( 'mce_external_languages', $plugin_ui, 'feedzy_add_tinymce_lang', 10, 1 );
 		self::$instance->loader->add_filter( 'plugin_row_meta', self::$instance->admin, 'feedzy_filter_plugin_row_meta', 10, 2 );
 		self::$instance->loader->add_filter( 'feedzy_default_image', self::$instance->admin, 'feedzy_define_default_image' );
