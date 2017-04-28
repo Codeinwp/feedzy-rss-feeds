@@ -27,7 +27,7 @@ Layout For Upsell Page of Feedzy RSS Feeds
 		</div>
 		<div class="pro-feature-image">
             <img style="width: 250px; float: right;" src="<?php  echo FEEDZY_ABSURL; ?>/img/feedzy-default-template.jpg">
-        </div>
+		</div>
 		<div class="clear"></div>
 	</div>
 	<div class="clear"></div>

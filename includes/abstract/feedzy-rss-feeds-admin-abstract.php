@@ -180,28 +180,37 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 	}
 
+	/**
+	 * Utility method to check if source is a URL's string
+	 * or if is a post type slug.
+	 *
+	 * @since   3.0.12
+	 * @access  protected
+	 * @param   string $src    The feeds source string.
+	 * @return bool|string
+	 */
 	protected function process_feed_source( $src ) {
-        $regex = "((https?|ftp)\:\/\/)?";                                       // Contains Protocol
-        $regex .= "([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?";  // Uses User and Pass
-        $regex .= "([a-z0-9-.]*)\.([a-z]{2,3})";                                // Has Host or IP
-        $regex .= "(\:[0-9]{2,5})?";                                            // Uses Port
-        $regex .= "(\/([a-z0-9+\$_-]\.?)+)*\/?";                                // Has Path
-        $regex .= "(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?";                   // Has GET Query
-        $regex .= "(#[a-z_.-][a-z0-9+\$_.-]*)?";                                // Uses Anchor
+		$regex = '((https?|ftp)\:\/\/)?';                                       // Contains Protocol
+		$regex .= '([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?';  // Uses User and Pass
+		$regex .= '([a-z0-9-.]*)\.([a-z]{2,3})';                                // Has Host or IP
+		$regex .= '(\:[0-9]{2,5})?';                                            // Uses Port
+		$regex .= '(\/([a-z0-9+\$_-]\.?)+)*\/?';                                // Has Path
+		$regex .= '(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?';                   // Has GET Query
+		$regex .= '(#[a-z_.-][a-z0-9+\$_.-]*)?';                                // Uses Anchor
 
-	    if( preg_match( "/^$regex$/", $src ) ) {
+	    if ( preg_match( "/^$regex$/", $src ) ) {
 	        // If it matches Regex ( it's not a slug ) so return the sources.
 	        return $src;
-        } else {
+		} else {
 	        $src = trim( $src );
-            if ( $post = get_page_by_path( $src, OBJECT, 'feedzy_categories' ) ) {
-                return trim( preg_replace( '/\s+/', ' ', get_post_meta( $post->ID, 'feedzy_category_feed', true ) ) );
-            } else {
-                return false;
-            }
-        }
+			if ( $post = get_page_by_path( $src, OBJECT, 'feedzy_categories' ) ) {
+				return trim( preg_replace( '/\s+/', ' ', get_post_meta( $post->ID, 'feedzy_category_feed', true ) ) );
+			} else {
+				return false;
+			}
+		}
 
-    }
+	}
 
 	/**
 	 * Main shortcode function
@@ -814,52 +823,52 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		die( include FEEDZY_ABSPATH . '/form/form.php' );
 	}
 
-    /**
-     * Method used to render upsell page.
-     *
-     * @since   3.0.12
-     * @access  public
-     */
+	/**
+	 * Method used to render upsell page.
+	 *
+	 * @since   3.0.12
+	 * @access  public
+	 */
 	public function render_upsell() {
-        $this->load_layout( 'feedzy-upsell' );
-    }
+		$this->load_layout( 'feedzy-upsell' );
+	}
 
-    /**
-     * Method used to render pages
-     *
-     * @since   3.0.12
-     * @access  public
-     * @param   string  $layout_name The name of the layout
-     * @return mixed
-     */
-    public function load_layout( $layout_name ) {
-        wp_enqueue_style( 'feedzy-upsell', FEEDZY_ABSURL . '/includes/layouts/css/upsell.css' );
-        include( FEEDZY_ABSPATH . '/includes/layouts/' . $layout_name . '.php' );
-    }
+	/**
+	 * Method used to render pages
+	 *
+	 * @since   3.0.12
+	 * @access  public
+	 * @param   string $layout_name The name of the layout.
+	 * @return mixed
+	 */
+	public function load_layout( $layout_name ) {
+		wp_enqueue_style( 'feedzy-upsell', FEEDZY_ABSURL . '/includes/layouts/css/upsell.css' );
+		include( FEEDZY_ABSPATH . '/includes/layouts/' . $layout_name . '.php' );
+	}
 
-    /**
-     * Utility method to insert before specific key
-     * in an associative array.
-     *
-     * @since   3.0.12
-     * @access  public
-     * @param   string  $key        The key before to insert.
-     * @param   array   $array      The array in which to insert the new key.
-     * @param   string  $new_key    The new key name.
-     * @param   mixed   $new_value  The new key value.
-     * @return array|bool
-     */
-    protected function array_insert_before( $key, &$array, $new_key, $new_value ) {
-        if ( array_key_exists( $key, $array ) ) {
-            $new = array();
-            foreach ( $array as $k => $value ) {
-                if ( $k === $key ) {
-                    $new[$new_key] = $new_value;
-                }
-                $new[$k] = $value;
-            }
-            return $new;
-        }
-        return false;
-    }
+	/**
+	 * Utility method to insert before specific key
+	 * in an associative array.
+	 *
+	 * @since   3.0.12
+	 * @access  public
+	 * @param   string $key        The key before to insert.
+	 * @param   array  $array      The array in which to insert the new key.
+	 * @param   string $new_key    The new key name.
+	 * @param   mixed  $new_value  The new key value.
+	 * @return array|bool
+	 */
+	protected function array_insert_before( $key, &$array, $new_key, $new_value ) {
+		if ( array_key_exists( $key, $array ) ) {
+			$new = array();
+			foreach ( $array as $k => $value ) {
+				if ( $k === $key ) {
+					$new[ $new_key ] = $new_value;
+				}
+				$new[ $k ] = $value;
+			}
+			return $new;
+		}
+		return false;
+	}
 }
