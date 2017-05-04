@@ -230,10 +230,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 		$sc      = $this->get_short_code_attributes( $atts );
 
-		//$feeds = $this->process_feed_source( $sc['feeds'] );
 		$feeds = apply_filters( 'feedzy_process_feed_source', $sc['feeds'] );
 
-		//$feedURL = $this->get_feed_url( $feeds );
 		$feedURL = apply_filters( 'feedzy_get_feed_url', $feeds );
 		// Load SimplePie Instance
 		$feed = fetch_feed( $feedURL );
@@ -400,40 +398,40 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		return $sc;
 	}
 
-    /**
-     * Utility method to return feed in array format
-     * before content render.
-     *
-     * @since   3.0.12
-     * @access  public
-     * @param   array   $feed_items The feed items array.
-     * @param   array   $sc         The shortcode attributes
-     * @param   object  $feed       The feed object.
-     * @param   string  $feedURL    The feed URL source/s.
-     * @param   array   $sizes      Sizes array.
-     * @return array
-     */
+	/**
+	 * Utility method to return feed in array format
+	 * before content render.
+	 *
+	 * @since   3.0.12
+	 * @access  public
+	 * @param   array  $feed_items The feed items array.
+	 * @param   array  $sc         The short code attributes.
+	 * @param   object $feed       The feed object.
+	 * @param   string $feedURL    The feed URL source/s.
+	 * @param   array  $sizes      Sizes array.
+	 * @return array
+	 */
 	public function get_feed_array( $feed_items = array(), $sc, $feed, $feedURL, $sizes ) {
-        $count      = 0;
-        $items      = apply_filters( 'feedzy_feed_items', $feed->get_items(), $feedURL );
-        foreach ( (array) $items as $item ) {
-            if ( trim( $item->get_title() ) != '' ) {
-                $continue = apply_filters( 'feedzy_item_keyword', true, $sc, $item, $feedURL );
-                if ( $continue == true ) {
-                    // Count items
-                    if ( $count >= $sc['max'] ) {
-                        break;
-                    }
-                    $itemAttr                         = apply_filters( 'feedzy_item_attributes', $itemAttr = '', $sizes, $item, $feedURL, $sc );
-                    $feed_items[ $count ]             = $this->get_feed_item_filter( $sc, $sizes, $item, $feedURL );
-                    $feed_items[ $count ]['itemAttr'] = $itemAttr;
-                    $count ++;
-                }
-            }
-        }
+		$count      = 0;
+		$items      = apply_filters( 'feedzy_feed_items', $feed->get_items(), $feedURL );
+		foreach ( (array) $items as $item ) {
+			if ( trim( $item->get_title() ) != '' ) {
+				$continue = apply_filters( 'feedzy_item_keyword', true, $sc, $item, $feedURL );
+				if ( $continue == true ) {
+					// Count items
+					if ( $count >= $sc['max'] ) {
+						break;
+					}
+					$itemAttr                         = apply_filters( 'feedzy_item_attributes', $itemAttr = '', $sizes, $item, $feedURL, $sc );
+					$feed_items[ $count ]             = $this->get_feed_item_filter( $sc, $sizes, $item, $feedURL );
+					$feed_items[ $count ]['itemAttr'] = $itemAttr;
+					$count ++;
+				}
+			}
+		}
 
-        return $feed_items;
-    }
+		return $feed_items;
+	}
 
 	/**
 	 * Render the content to be displayed
@@ -449,18 +447,18 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  string
 	 */
 	public function render_content( $sc, $feed, $content = '', $feedURL ) {
-        $count = 0;
-        $sizes = array(
-            'width' => $sc['size'],
-            'height' => $sc['size'],
-        );
-        $sizes = apply_filters( 'feedzy_thumb_sizes', $sizes, $feedURL );
+		$count = 0;
+		$sizes = array(
+			'width' => $sc['size'],
+			'height' => $sc['size'],
+		);
+		$sizes = apply_filters( 'feedzy_thumb_sizes', $sizes, $feedURL );
 
-        $feed_title['use_title'] = false;
-        if ( $sc['feed_title'] == 'yes' ) {
-            $feed_title              = $this->get_feed_title_filter( $feed );
-            $feed_title['use_title'] = true;
-        }
+		$feed_title['use_title'] = false;
+		if ( $sc['feed_title'] == 'yes' ) {
+			$feed_title              = $this->get_feed_title_filter( $feed );
+			$feed_title['use_title'] = true;
+		}
 
 		// Display the error message
 		if ( $feed->error() ) {
