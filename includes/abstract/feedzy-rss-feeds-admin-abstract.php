@@ -617,10 +617,13 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'item_url_target'    => $sc['target'],
 			'item_url_title'     => $item->get_title(),
 			'item_img'           => $contentThumb,
+			'item_img_path'      => $this->feedzy_retrieve_image( $item ),
 			'item_title'         => $contentTitle,
 			'item_content_class' => 'rss_content',
 			'item_content_style' => '',
 			'item_meta'          => $contentMeta,
+			'item_date'          => $item->get_date( 'U' ),
+			'item_author'        => $item->get_author(),
 			'item_description'   => $contentSummary,
 		);
 		$itemArray = apply_filters( 'feedzy_item_filter', $itemArray, $item );
