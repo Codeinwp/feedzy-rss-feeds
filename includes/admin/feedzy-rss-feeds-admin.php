@@ -366,7 +366,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		} else {
 			$is_business = apply_filters( 'feedzy_is_business_filter', false );
 			if ( $is_business != false ) {
-				add_submenu_page( 'feedzy-admin-menu', __( 'Import Feeds', 'feedzy-rss-feeds' ), __( 'Import Feeds', 'feedzy-rss-feeds' ), 'manage_options', 'edit.php?post_type=feedzy_imports' );
+				add_submenu_page( 'feedzy-admin-menu', __( 'Import Posts', 'feedzy-rss-feeds' ), __( 'Import Posts', 'feedzy-rss-feeds' ), 'manage_options', 'edit.php?post_type=feedzy_imports' );
 			}
 		}
 	}
