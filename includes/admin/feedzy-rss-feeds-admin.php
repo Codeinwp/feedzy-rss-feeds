@@ -249,7 +249,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	public function save_feedzy_post_type_meta( $post_id, $post ) {
 		if (
 		 empty( $_POST ) ||
-		 ! wp_verify_nonce( $_POST['feedzy_category_meta_noncename'], FEEDZY_BASEFILE ) ||
+         ( isset( $_POST['feedzy_category_meta_noncename'] ) && ! wp_verify_nonce( $_POST['feedzy_category_meta_noncename'], FEEDZY_BASEFILE ) ) ||
 		 ! current_user_can( 'edit_post', $post_id )
 		) {
 			return $post_id;
