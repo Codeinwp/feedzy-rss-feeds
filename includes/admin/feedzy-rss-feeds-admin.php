@@ -255,7 +255,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			return $post_id;
 		}
 
-		$category_meta['feedzy_category_feed'] = $_POST['feedzy_category_feed'];
+		$category_meta['feedzy_category_feed'] = array();
+		if ( isset( $_POST['feedzy_category_feed'] ) ) {
+			$category_meta['feedzy_category_feed'] = $_POST['feedzy_category_feed'];
+		}
 
 		if ( $post->post_type == 'revision' ) {
 			return true;
