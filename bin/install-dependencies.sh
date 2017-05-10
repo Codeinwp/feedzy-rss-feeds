@@ -21,7 +21,7 @@ fi;
 if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
 
           # Install PHPCS.
-          pear install pear/PHP_CodeSniffer
+          pear install pear/PHP_CodeSniffer-2.8.1
 
           # Install WPCS standards.
           git clone -b master --depth 1 https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git $HOME/wordpress-coding-standards
