@@ -186,6 +186,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			'labels'                => $labels,
 			'supports'              => $supports,
 			'public'                => true,
+			'exclude_from_search'                => true,
+			'publicly_queryable'                => false,
 			'capability_type'       => 'post',
 			'rewrite'               => array( 'slug' => 'feedzy-category' ),
 			'show_in_menu'          => 'feedzy-admin-menu',
