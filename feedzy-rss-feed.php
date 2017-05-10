@@ -22,6 +22,8 @@
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       feedzy-rss-feeds
  * Domain Path:       /languages
+ * WordPress Available:  yes
+ * Requires License:    no
  */
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -100,6 +102,11 @@ function run_feedzy_rss_feeds() {
 	define( 'FEEDZY_ABSPATH', dirname( __FILE__ ) );
 	$feedzy = Feedzy_Rss_Feeds::instance();
 	$feedzy->run();
+	$vendor_file = FEEDZY_ABSPATH . '/vendor/autoload_52.php';
+	if ( is_readable( $vendor_file ) ) {
+		require_once $vendor_file;
+		ThemeIsle_SDK_Loader::init_product( FEEDZY_BASEFILE );
+	}
 }
 
 spl_autoload_register( 'feedzy_rss_feeds_autoload' );
