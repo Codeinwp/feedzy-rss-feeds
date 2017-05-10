@@ -235,7 +235,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$feedURL = apply_filters( 'feedzy_get_feed_url', $feeds );
 		// Load SimplePie Instance
 		$feed = fetch_feed( $feedURL );
-		// TODO report error when is an error loading the feed
+		// Report error when is an error loading the feed
 		if ( is_wp_error( $feed ) ) {
 			// Fallback for different edge cases.
 			if ( is_array( $feedURL ) ) {
