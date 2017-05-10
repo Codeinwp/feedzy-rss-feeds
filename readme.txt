@@ -175,6 +175,9 @@ http://docs.themeisle.com/article/543-how-to-remove-the-end-hellip
 = How to display items in a random order =
 http://docs.themeisle.com/article/550-how-to-display-items-in-a-random-order
 
+= How to sort items alphabetically by their title =
+http://docs.themeisle.com/article/633-how-to-sort-feed-items-by-title
+
 = How to display RSS feed time and date in local time =
 http://docs.themeisle.com/article/567-how-to-display-rss-feed-time-and-date-in-local-time
 
