@@ -206,7 +206,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			if ( $post = get_page_by_path( $src, OBJECT, 'feedzy_categories' ) ) {
 				return trim( preg_replace( '/\s+/', ' ', get_post_meta( $post->ID, 'feedzy_category_feed', true ) ) );
 			} else {
-				return false;
+				return $src;
 			}
 		}
 
