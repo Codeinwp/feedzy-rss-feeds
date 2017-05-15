@@ -342,7 +342,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( strpos( $file, 'feedzy-rss-feed.php' ) !== false ) {
 			$new_links = array(
 				'doc' => '<a href="http://docs.themeisle.com/article/277-feedzy-rss-feeds-hooks" target="_blank" title="' . __( 'Documentation and examples', 'feedzy-rss-feeds' ) . '">' . __( 'Documentation and examples', 'feedzy-rss-feeds' ) . '</a>',
-				'more_features' => '<a href="https://themeisle.com/plugins/feedzy-rss-feeds/" target="_blank" title="' . __( 'More Plugins', 'feedzy-rss-feeds' ) . '">' . __( 'More Features', 'feedzy-rss-feeds' ) . '<i class="dashicons dashicons-unlock"></i></a>',
+				'more_features' => '<a href="https://themeisle.com/plugins/feedzy-rss-feeds/" target="_blank" title="' . __( 'More Plugins', 'feedzy-rss-feeds' ) . '">' . __( 'More Features', 'feedzy-rss-feeds' ) . '<i class="dashicons dashicons-unlock more-features-icon"></i></a>',
 			);
 
 			$links = array_merge( $links, $new_links );
@@ -362,7 +362,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		add_menu_page( __( 'Feedzy RSS Feeds', 'feedzy-rss-feeds' ), __( 'Feedzy RSS Feeds', 'feedzy-rss-feeds' ), 'manage_options', 'feedzy-admin-menu', '', $svg_base64_icon, 98.7666 );
 		if ( ! class_exists( 'Feedzy_Rss_Feeds_Pro' ) ) {
 			add_submenu_page( 'feedzy-admin-menu', __( 'More Features', 'feedzy-rss-feeds' ), __( 'More Features', 'feedzy-rss-feeds' ) . '<span class="dashicons 
-		dashicons-star-filled" style="vertical-align:-5px; padding-left:2px; color:#FFCA54;"></span>', 'manage_options', 'feedzy-admin-menu-pro-upsell', array( $this, 'render_upsell' ) );
+		dashicons-star-filled more-features-icon"></span>', 'manage_options', 'feedzy-admin-menu-pro-upsell', array( $this, 'render_upsell' ) );
 		} else {
 			$is_business = apply_filters( 'feedzy_is_business_filter', false );
 			if ( $is_business != false ) {

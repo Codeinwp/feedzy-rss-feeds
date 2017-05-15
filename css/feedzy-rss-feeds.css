@@ -514,3 +514,13 @@ input:checked + .feedzy-track:before {
 	font-size: 14px;
 	font-weight: bold;
 }
+
+/* More features - icon */
+.more-features-icon {
+	width: 17px;
+	height: 17px;
+	margin-left: 4px;
+	color: #ffca54;
+	font-size: 17px;
+	vertical-align: -3px;
+}

@@ -7,9 +7,11 @@
  */
 
 #pro-features .pro-features-header {
-	background: #fff;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 20px 30px 30px;
 	border-top: 5px solid #252b37;
-	padding: 20px 10px;
+	background: #fff;
 }
 
 #pro-features .logo {
@@ -20,7 +22,7 @@
 	background: url(../../../img/feedzy.svg) no-repeat left center;
 	background-size: 48px;
 	font-family: "Open Sans", sans-serif;
-	font-size: 2em;
+	font-size: 28px;
 	font-weight: 700;
 	line-height: 60px;
 	letter-spacing: -1px;
@@ -28,12 +30,13 @@
 
 #pro-features .slogan {
 	display: inline-block;
-	margin: 0 0 0 5px;
+	margin: 0 0 0 8px;
 	padding: 0;
 	color: #858585;
 	font-family: "Open Sans", sans-serif;
 	font-size: 17px;
-	line-height: 3.5;
+	line-height: 1;
+	vertical-align: 4px;
 }
 
 #pro-features .slogan a {
@@ -62,17 +65,17 @@
 }
 
 #pro-features .header-btns .buy-now {
-	background: #e33b3f;
+	display: inline-block;
+	margin-top: 2px;
+	margin-right: 5px;
+	padding: 15px 25px;
 	border-radius: 3px;
 	border-radius: 3px;
 	color: #fff;
-	display: inline-block;
+	background: #e33b3f;
 	font-family: "Open Sans", sans-serif;
 	font-size: 18px;
 	font-weight: bold;
-	margin-right: 5px;
-	margin-top: 2px;
-	padding: 15px 25px;
 	text-decoration: none;
 	text-transform: uppercase;
 	-webkit-transition: all 0.250s ease-in-out;
@@ -87,17 +90,31 @@
 	padding-right: 3px;
 }
 
+#pro-features {
+	padding: 0;
+}
+
+#pro-features .pro-features-content {
+	width: 100%;
+	padding: 0;
+}
+
 #pro-features .pro-features-header,
-#pro-features .pro-feature{
+#pro-features .pro-feature {
+	display: table;
+	float: left;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	width: 100%;
+	margin: 30px 0 0;
+	padding: 30px;
 	background-color: #fff;
 	-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,0.1);
 	box-shadow: 0 1px 1px 0 rgba(0,0,0,0.1);
-	display: block;
-	margin: 30px 15px 0;
 }
 
 #pro-features .pro-feature .pro-feature-features,
-#pro-features .pro-feature .pro-feature-image{
+#pro-features .pro-feature .pro-feature-image {
 	display: table-cell;
 	margin: 0;
 	vertical-align: middle;
@@ -106,7 +123,7 @@
 #pro-features .pro-feature .pro-feature-features {
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
-	padding: 30px;
+	padding: 0 0 20px;
 }
 
 #pro-features .pro-feature .pro-feature-image {
@@ -114,38 +131,55 @@
 }
 
 #pro-features .pro-feature .pro-feature-features h2 {
-	font-size: 28px;
 	margin: 0 0 20px;
+	font-size: 28px;
+	font-weight: 700;
+	line-height: 1.2;
 }
 
 #pro-features .pro-feature .pro-feature-features h4 {
-	font-size: 20px;
 	margin: 0 0 10px;
+	font-size: 24px;
 }
 
 #pro-features .pro-feature .pro-feature-features p {
-	font-size: 16px;
-	line-height: 1.5;
 	margin: 0 0 15px;
+	font-size: 18px;
+	line-height: 1.5;
 }
 
 #pro-features .pro-feature .pro-feature-image img {
-	height: auto;
 	width: 100%;
+	height: auto;
 }
 
-@media screen and (max-width: 1200px) {
-	#pro-features .pro-feature .pro-feature-features,
-	#pro-features .pro-feature .pro-feature-image{
-		display: block;
+@media screen and (min-width: 768px) {
+	#pro-features {
+		padding: 0 15px;
 	}
-	#pro-features .pro-feature .pro-feature-image {
-		margin: 0 auto 20px;
-		text-align: center;
-		width: 470px;
+}
+
+@media screen and (min-width: 1200px) {
+	#pro-features .pro-feature {
+		padding: 30px 60px;
 	}
-	#pro-features .slogan {
-		display: none;
+
+	#pro-features .pro-feature .pro-feature-features {
+		padding: 0 30px 0 0;
+	}
+
+	#pro-features .pro-feature .pro-feature-features h2 {
+		font-size: 30px;
+	}
+
+	#pro-features .pro-feature .pro-feature-features p {
+		font-size: 20px;
+	}
+}
+
+@media screen and (min-width: 1500px) {
+	#pro-features .pro-feature .pro-feature-features {
+		padding: 0 120px 0 0;
 	}
 }
 
@@ -161,7 +195,24 @@
 	#pro-features .header-btns {
 		display: block;
 		float: none;
-		margin: 0 0 10px 0;
+		margin: 10px 0 0;
 		text-align: center;
+	}
+}
+
+@media screen and (max-width: 1200px) {
+	#pro-features .pro-feature .pro-feature-features,
+	#pro-features .pro-feature .pro-feature-image {
+		display: block;
+	}
+
+	#pro-features .pro-feature .pro-feature-image {
+		display: inline-block;
+		max-width: 100%;
+		margin: 0 auto 30px;
+	}
+
+	#pro-features .slogan {
+		display: none;
 	}
 }
