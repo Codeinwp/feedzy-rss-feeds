@@ -2,7 +2,7 @@
 Contributors: themeisle,codeinwp
 Tags: RSS, SimplePie, shortcode, feed, thumbnail, image, rss feeds, aggregator, tinyMCE, WYSIWYG, MCE, UI, flux, plugin, WordPress, widget, importer, XML, ATOM, API, parser
 Requires at least: 3.7
-Tested up to: 4.7
+Tested up to: 4.7.4
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -17,6 +17,7 @@ FEEDZY RSS Feeds is a small and lightweight RSS aggregator plugin. Fast and very
 
 > **Time-saving features available in the FULL version:**
 >
+> * Convert feed items to WordPress posts/pages/any
 > * Multiple templates for feed items
 > * Automatically build affiliate links
 > * Parse price from product feeds
@@ -190,6 +191,10 @@ http://docs.themeisle.com/article/567-how-to-display-rss-feed-time-and-date-in-l
 
 
 == Changelog ==
+
+= 3.1.0 - 16/05/2017 =
+* Added feed categories for grouping urls.
+* Added support for feed to post feature.
 
 = 3.0.10 - 24/04/2017 =
 * Fixed wrong image regex.
