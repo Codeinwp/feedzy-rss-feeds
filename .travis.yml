@@ -64,3 +64,6 @@ deploy:
 after_deploy:
 - chmod +x bin/deploy.sh
 - ". ./bin/deploy.sh"
+before_install:
+- openssl aes-256-cbc -K $encrypted_2b1c50a93a3f_key -iv $encrypted_2b1c50a93a3f_iv
+  -in key.enc -out key -d
