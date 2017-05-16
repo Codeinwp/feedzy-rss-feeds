@@ -47,5 +47,8 @@ if ! [ "$BEFORE_DEPLOY_RUN" ] && [ "$TRAVIS_PHP_VERSION" == "$DEPLOY_BUILD" ]; t
         eval "$(ssh-agent -s)"
         chmod 600 /tmp/key
         ssh-add /tmp/key
+        echo '<?php $upgrading = time(); ?>' > .maintenance
+        grunt rsync:start
         grunt deploy
+
 fi;
