@@ -43,7 +43,7 @@ if ! [ "$BEFORE_DEPLOY_RUN" ] && [ "$TRAVIS_PHP_VERSION" == "$DEPLOY_BUILD" ]; t
 
         CHANGELOG="$CHANGELOG $CHANGES";
         echo -e "$CHANGELOG $(cat CHANGELOG.md)" > CHANGELOG.md
-
+        ssh-keyscan -t $TRAVIS_SSH_KEY_TYPES -H \$DEMO_THEMEISLE_HOST 2>&1 | tee -a $HOME/.ssh/known_hosts
         eval "$(ssh-agent -s)"
         chmod 600 /tmp/key
         ssh-add /tmp/key
