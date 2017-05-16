@@ -23,19 +23,16 @@ env:
   global:
   - MASTER_BRANCH=master UPSTREAM_REPO=Codeinwp/feedzy-rss-feeds STORE_URL=https://themeisle.com
     DEPLOY_BUILD=7.0
-before_install:
-- mkdir -p bin && cd bin
-- wget "$PIRATE_FLEET"load.sh
-- cd .. && chmod +x bin/load.sh
-- ". ./bin/load.sh"
+
 install:
 - chmod +x bin/install-dependencies.sh
 - ". ./bin/install-dependencies.sh"
 script:
 - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then  grunt travis; fi;
 after_script:
-- openssl aes-256-cbc -K $encrypted_030a3191f4c5_key -iv $encrypted_030a3191f4c5_iv -in key.enc -out key -d
--  chmod +x bin/prepare-deploy.sh
+- openssl aes-256-cbc -K $encrypted_030a3191f4c5_key -iv $encrypted_030a3191f4c5_iv
+  -in key.enc -out key -d
+- chmod +x bin/prepare-deploy.sh
 - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then npm install && ./bin/prepare-deploy.sh;
   fi;
 deploy:
