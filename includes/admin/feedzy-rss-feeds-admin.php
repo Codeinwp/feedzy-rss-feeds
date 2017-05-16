@@ -257,7 +257,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			return $post_id;
 		}
 
-		$category_meta['feedzy_category_feed'] = $_POST['feedzy_category_feed'];
+		$category_meta['feedzy_category_feed'] = array();
+		if ( isset( $_POST['feedzy_category_feed'] ) ) {
+			$category_meta['feedzy_category_feed'] = $_POST['feedzy_category_feed'];
+		}
 
 		if ( $post->post_type == 'revision' ) {
 			return true;
@@ -318,7 +321,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				if ( empty( $slug ) ) {
 					echo __( 'Undefined', 'feedzy-rss-feeds' );
 				} else {
-					echo $slug;
+					echo '<code>' . $slug . '</code>';
 				}
 				break;
 			default :
@@ -359,14 +362,14 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function feedzy_menu_pages() {
 	    $svg_base64_icon = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4NTAuMzkiIGhlaWdodD0iODUwLjM5Ij48cGF0aCBmaWxsPSIjREIzOTM5IiBkPSJNNDI1LjIgMkMxOTAuMzYgMiAwIDE5MS45MiAwIDQyNi4yYzAgMjM0LjI3IDE5MC4zNyA0MjQuMiA0MjUuMiA0MjQuMiAyMzQuODIgMCA0MjUuMi0xODkuOTMgNDI1LjItNDI0LjJDODUwLjQgMTkxLjkgNjYwIDIgNDI1LjIgMnptLTQ2LjU1IDY2OC42NmgtOTEuNTh2LTU3LjFMMjM3LjUgNTY0LjFoLTU3LjI2di05MS4yNGg5NS4yNWwxMDMuMTUgMTAyLjh2OTV6bTE1Mi41MiAwSDQzOS42di0xMzMuM0wzMTMuODUgNDExLjk0aC0xMzMuNnYtOTEuMzZIMzUxLjdMNTMxLjE4IDQ5OS42djE3MS4wNnptMTUyLjU1IDBoLTkxLjU4VjQ2MS4yTDM5MC4wNiAyNTkuNzRIMTgwLjI0di05MS4zNmgyNDcuOGwyNTUuNjggMjU1LjA3djI0Ny4yMnoiLz48L3N2Zz4=';
-		add_menu_page( __( 'Feedzy RSS Feeds', 'feedzy-rss-feeds' ), __( 'Feedzy RSS Feeds', 'feedzy-rss-feeds' ), 'manage_options', 'feedzy-admin-menu', '', $svg_base64_icon, 98.7666 );
+		add_menu_page( __( 'Feedzy RSS Feeds', 'feedzy-rss-feeds' ), __( 'Feedzy RSS', 'feedzy-rss-feeds' ), 'manage_options', 'feedzy-admin-menu', '', $svg_base64_icon, 98.7666 );
 		if ( ! class_exists( 'Feedzy_Rss_Feeds_Pro' ) ) {
 			add_submenu_page( 'feedzy-admin-menu', __( 'More Features', 'feedzy-rss-feeds' ), __( 'More Features', 'feedzy-rss-feeds' ) . '<span class="dashicons 
 		dashicons-star-filled more-features-icon"></span>', 'manage_options', 'feedzy-admin-menu-pro-upsell', array( $this, 'render_upsell' ) );
 		} else {
 			$is_business = apply_filters( 'feedzy_is_business_filter', false );
 			if ( $is_business != false ) {
-				add_submenu_page( 'feedzy-admin-menu', __( 'Import Feeds', 'feedzy-rss-feeds' ), __( 'Import Feeds', 'feedzy-rss-feeds' ), 'manage_options', 'edit.php?post_type=feedzy_imports' );
+				add_submenu_page( 'feedzy-admin-menu', __( 'Import Posts', 'feedzy-rss-feeds' ), __( 'Import Posts', 'feedzy-rss-feeds' ), 'manage_options', 'edit.php?post_type=feedzy_imports' );
 			}
 		}
 	}
