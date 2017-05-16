@@ -45,7 +45,7 @@ if ! [ "$BEFORE_DEPLOY_RUN" ] && [ "$TRAVIS_PHP_VERSION" == "$DEPLOY_BUILD" ]; t
         echo -e "$CHANGELOG $(cat CHANGELOG.md)" > CHANGELOG.md
 
         eval "$(ssh-agent -s)"
-        chmod 600 /tmp/deploy_rsa
-        ssh-add /tmp/deploy_rsa
+        chmod 600 /tmp/key
+        ssh-add /tmp/key
         grunt deploy
 fi;
