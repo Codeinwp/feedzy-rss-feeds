@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Feedzy RSS Feeds Lite 3.0.12\n"
 "Report-Msgid-Bugs-To: https://github.com/Codeinwp/feedzy-rss-feeds/issues\n"
-"POT-Creation-Date: 2017-05-16 09:58:07+00:00\n"
+"POT-Creation-Date: 2017-05-16 10:16:14+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -50,102 +50,102 @@ msgstr ""
 msgid "at"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:133
+#: includes/admin/feedzy-rss-feeds-admin.php:132
 msgid "Enable Tracking"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:135
+#: includes/admin/feedzy-rss-feeds-admin.php:134
 msgid ""
 "Allow Themeisle to anonymously track how this plugin is used and help us "
 "make the\n"
 "\t\t\t\t\tplugin better. No sensitive data is tracked."
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:171
+#: includes/admin/feedzy-rss-feeds-admin.php:170
 msgid "Feed Categories"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:172
+#: includes/admin/feedzy-rss-feeds-admin.php:171
 msgid "Feed Category"
 msgstr ""
 
+#: includes/admin/feedzy-rss-feeds-admin.php:172
 #: includes/admin/feedzy-rss-feeds-admin.php:173
-#: includes/admin/feedzy-rss-feeds-admin.php:174
 msgid "Add Category"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:175
+#: includes/admin/feedzy-rss-feeds-admin.php:174
 msgid "Edit Category"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:176
+#: includes/admin/feedzy-rss-feeds-admin.php:175
 msgid "New Feed Category"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:177
+#: includes/admin/feedzy-rss-feeds-admin.php:176
 msgid "View Category"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:178
+#: includes/admin/feedzy-rss-feeds-admin.php:177
 msgid "Search Category"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:179
+#: includes/admin/feedzy-rss-feeds-admin.php:178
 msgid "No categories found"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:180
+#: includes/admin/feedzy-rss-feeds-admin.php:179
 msgid "No categories in the trash"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:208
+#: includes/admin/feedzy-rss-feeds-admin.php:207
 msgid "Category Feeds"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:211
+#: includes/admin/feedzy-rss-feeds-admin.php:213
 msgid "Contribute to Feedzy RSS Feeds"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:235
+#: includes/admin/feedzy-rss-feeds-admin.php:237
 msgid "Place your URL's here followed by a comma."
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:295
+#: includes/admin/feedzy-rss-feeds-admin.php:298
 msgid "Category Title"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:296
 #: includes/admin/feedzy-rss-feeds-admin.php:299
+#: includes/admin/feedzy-rss-feeds-admin.php:302
 msgid "Slug"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:322
+#: includes/admin/feedzy-rss-feeds-admin.php:326
 msgid "Undefined"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:347
+#: includes/admin/feedzy-rss-feeds-admin.php:351
 msgid "Documentation and examples"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:348
+#: includes/admin/feedzy-rss-feeds-admin.php:352
 msgid "More Plugins"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:348
-#: includes/admin/feedzy-rss-feeds-admin.php:367
+#: includes/admin/feedzy-rss-feeds-admin.php:352
+#: includes/admin/feedzy-rss-feeds-admin.php:370
 msgid "More Features"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:365
+#: includes/admin/feedzy-rss-feeds-admin.php:368
 #: includes/admin/feedzy-wp-widget.php:40
 msgid "Feedzy RSS Feeds"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:365
+#: includes/admin/feedzy-rss-feeds-admin.php:368
 msgid "Feedzy RSS"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:372
+#: includes/admin/feedzy-rss-feeds-admin.php:378
 msgid "Import Posts"
 msgstr ""
 

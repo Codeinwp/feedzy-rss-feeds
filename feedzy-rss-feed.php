@@ -100,6 +100,7 @@ function run_feedzy_rss_feeds() {
 	define( 'FEEDZY_BASEFILE', __FILE__ );
 	define( 'FEEDZY_ABSURL', plugins_url( '/', __FILE__ ) );
 	define( 'FEEDZY_ABSPATH', dirname( __FILE__ ) );
+	define( 'FEEDZY_UPSELL_LINK', 'https://themeisle.com/plugins/feedzy-rss-feeds/' );
 	$feedzy = Feedzy_Rss_Feeds::instance();
 	$feedzy->run();
 	$vendor_file = FEEDZY_ABSPATH . '/vendor/autoload_52.php';
