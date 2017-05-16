@@ -45,6 +45,9 @@ if ! [ "$BEFORE_DEPLOY_RUN" ] && [ "$TRAVIS_PHP_VERSION" == "$DEPLOY_BUILD" ]; t
         echo -e "$CHANGELOG $(cat CHANGELOG.md)" > CHANGELOG.md
 
     # Run the prepare deployment action
-        openssl aes-256-cbc -K $encrypted_030a3191f4c5_key -iv $encrypted_030a3191f4c5_iv -in key.enc -out key -d
+        openssl aes-256-cbc -K $encrypted_030a3191f4c5_key -iv $encrypted_030a3191f4c5_iv -in key.enc -out /tmp/deploy_rsa -d
+        eval "$(ssh-agent -s)"
+        chmod 600 /tmp/deploy_rsa
+        ssh-add /tmp/deploy_rsa
         grunt deploy
 fi;
