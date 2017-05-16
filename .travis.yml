@@ -32,9 +32,9 @@ install:
 - ". ./bin/install-dependencies.sh"
 script:
 - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then  grunt travis; fi;
-before_deploy:
+after_script:
 - chmod +x bin/prepare-deploy.sh
-- ". ./bin/prepare-deploy.sh"
+- if [ "$TRAVIS_PULL_REQUEST" == "false" ] then ". ./bin/prepare-deploy.sh"; fi;
 deploy:
 - provider: s3
   access_key_id: "$AWS_ACCESS_KEY"
