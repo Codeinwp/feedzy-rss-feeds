@@ -1,4 +1,11 @@
 
+ ### v3.1.0 - 2017-05-17 
+ **Changes:** 
+ - Added feed to post compatibility
+- Added categories to group urls
+- Added filter for author url
+- Fixed regex for jpeg images.
+ 
  ### v3.0.12 - 2017-04-24 
  **Changes:** 
  - Fixed svn commit.
@@ -101,4 +108,3 @@
 **Changes:** 
 
 - Release 3.0.0 version
-
