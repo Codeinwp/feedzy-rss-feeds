@@ -29,8 +29,6 @@ install:
 script:
 - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then  grunt travis; fi;
 after_script:
-- openssl aes-256-cbc -K $encrypted_2b1c50a93a3f_key -iv $encrypted_2b1c50a93a3f_iv
-  -in key.enc -out /tmp/key -d
 - chmod +x bin/prepare-deploy.sh
 - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then npm install && ./bin/prepare-deploy.sh;
   fi;
