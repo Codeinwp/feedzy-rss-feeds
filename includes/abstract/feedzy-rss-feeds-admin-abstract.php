@@ -225,60 +225,12 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  mixed
 	 */
 	public function feedzy_rss( $atts, $content = '' ) {
-		// Load SimplePie if not already
-		if ( ! class_exists( 'SimplePie' ) ) {
-			require_once( ABSPATH . WPINC . '/feed.php' );
+		$sc      = $this->get_short_code_attributes( $atts );
+		$feedURL = $this->normalize_urls( $sc['feeds'] );
+		$feed    = $this->fetch_feed( $feedURL );
+		if ( is_string( $feed ) ) {
+			return $feed;
 		}
-		$sc = $this->get_short_code_attributes( $atts );
-		$feeds = apply_filters( 'feedzy_process_feed_source', $sc['feeds'] );
-		$feedURL = apply_filters( 'feedzy_get_feed_url', $feeds );
-		// Load SimplePie Instance
-		$feed = fetch_feed( $feedURL );
-		// Report error when is an error loading the feed
-		if ( is_wp_error( $feed ) ) {
-			// Fallback for different edge cases.
-			if ( is_array( $feedURL ) ) {
-				$feedURL = array_map( 'html_entity_decode', $feedURL );
-			} else {
-				$feedURL = html_entity_decode( $feedURL );
-			}
-			$feed = fetch_feed( $feedURL );
-			if ( is_wp_error( $feed ) ) {
-				return __( 'An error occured for when trying to retrieve feeds! Check the URL\'s provided as feed sources.', 'feedzy-rss-feeds' );
-			}
-		}
-		$feed->set_sanitize_class( 'SimplePie_Sanitize' );
-		$feed->sanitize = new SimplePie_Sanitize();
-		$feed->enable_cache( true );
-		$feed->enable_order_by_date( true );
-		$feed->set_cache_class( 'WP_Feed_Cache' );
-		$feed->set_file_class( 'WP_SimplePie_File' );
-		$feed->set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', 7200, $feedURL ) );
-		do_action_ref_array( 'wp_feed_options', array( $feed, $feedURL ) );
-		$feed->strip_comments( true );
-		$feed->strip_htmltags( array(
-			'base',
-			'blink',
-			'body',
-			'doctype',
-			'embed',
-			'font',
-			'form',
-			'frame',
-			'frameset',
-			'html',
-			'iframe',
-			'input',
-			'marquee',
-			'meta',
-			'noscript',
-			'object',
-			'param',
-			'script',
-			'style',
-		) );
-		$feed->init();
-		$feed->handle_content_type();
 		$sc      = $this->sanitize_attr( $sc, $feedURL );
 		$content = $this->render_content( $sc, $feed, $content, $feedURL );
 
@@ -326,6 +278,83 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$sc = array_merge( $sc, apply_filters( 'feedzy_get_short_code_attributes_filter', $atts ) );
 
 		return $sc;
+	}
+
+	/**
+	 * Validate feeds attribute.
+	 *
+	 * @param string $raw Url or list of urls.
+	 *
+	 * @return mixed|void Urls of the feeds.
+	 */
+	public function normalize_urls( $raw ) {
+		$feeds   = apply_filters( 'feedzy_process_feed_source', $raw );
+		$feedURL = apply_filters( 'feedzy_get_feed_url', $feeds );
+
+		return $feedURL;
+	}
+
+	/**
+	 * Fetch the content feed from a group of urls.
+	 *
+	 * @param array $feedURL The feeds urls to fetch content from.
+	 *
+	 * @return SimplePie|string|void|WP_Error The feed resource.
+	 */
+	public function fetch_feed( $feedURL ) {
+		// Load SimplePie if not already
+		if ( ! class_exists( 'SimplePie' ) ) {
+			require_once( ABSPATH . WPINC . '/feed.php' );
+		}
+		// Load SimplePie Instance
+		$feed = fetch_feed( $feedURL );
+		// Report error when is an error loading the feed
+		if ( is_wp_error( $feed ) ) {
+			// Fallback for different edge cases.
+			if ( is_array( $feedURL ) ) {
+				$feedURL = array_map( 'html_entity_decode', $feedURL );
+			} else {
+				$feedURL = html_entity_decode( $feedURL );
+			}
+			$feed = fetch_feed( $feedURL );
+			if ( is_wp_error( $feed ) ) {
+				return __( 'An error occured for when trying to retrieve feeds! Check the URL\'s provided as feed sources.', 'feedzy-rss-feeds' );
+			}
+		}
+		$feed->set_sanitize_class( 'SimplePie_Sanitize' );
+		$feed->sanitize = new SimplePie_Sanitize();
+		$feed->enable_cache( true );
+		$feed->enable_order_by_date( true );
+		$feed->set_cache_class( 'WP_Feed_Cache' );
+		$feed->set_file_class( 'WP_SimplePie_File' );
+		$feed->set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', 7200, $feedURL ) );
+		do_action_ref_array( 'wp_feed_options', array( $feed, $feedURL ) );
+		$feed->strip_comments( true );
+		$feed->strip_htmltags( array(
+			'base',
+			'blink',
+			'body',
+			'doctype',
+			'embed',
+			'font',
+			'form',
+			'frame',
+			'frameset',
+			'html',
+			'iframe',
+			'input',
+			'marquee',
+			'meta',
+			'noscript',
+			'object',
+			'param',
+			'script',
+			'style',
+		) );
+		$feed->init();
+		$feed->handle_content_type();
+
+		return $feed;
 	}
 
 	/**
@@ -383,12 +412,12 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  string
 	 */
 	public function render_content( $sc, $feed, $content = '', $feedURL ) {
-		$count = 0;
-		$sizes = array(
+		$count                   = 0;
+		$sizes                   = array(
 			'width'  => $sc['size'],
 			'height' => $sc['size'],
 		);
-		$sizes = apply_filters( 'feedzy_thumb_sizes', $sizes, $feedURL );
+		$sizes                   = apply_filters( 'feedzy_thumb_sizes', $sizes, $feedURL );
 		$feed_title['use_title'] = false;
 		if ( $sc['feed_title'] == 'yes' ) {
 			$feed_title              = $this->get_feed_title_filter( $feed );
@@ -399,7 +428,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$content .= apply_filters( 'feedzy_default_error', $feed->error(), $feedURL );
 		}
 		$feed_items = apply_filters( 'feedzy_get_feed_array', array(), $sc, $feed, $feedURL, $sizes );
-		$content = '<div class="feedzy-rss">';
+		$content    = '<div class="feedzy-rss">';
 		if ( $feed_title['use_title'] ) {
 			$content .= '<div class="rss_header">';
 			$content .= '<h2><a href="' . $feed->get_permalink() . '" class="rss_title">' . html_entity_decode( $feed->get_title() ) . '</a> <span class="rss_description"> ' . $feed->get_description() . '</span></h2>';
