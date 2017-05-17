@@ -49,7 +49,7 @@ if ! [ "$BEFORE_DEPLOY_RUN" ] && [ "$TRAVIS_PHP_VERSION" == "$DEPLOY_BUILD" ]; t
     # Send the distribution files to demo server.
 
         # Decrypt ssh key.
-        openssl aes-256-cbc -K $encrypted_2b1c50a93a3f_key -iv $encrypted_2b1c50a93a3f_iv -in ../key.enc -out /tmp/key -d
+        openssl aes-256-cbc -K $encrypted_2b1c50a93a3f_key -iv $encrypted_2b1c50a93a3f_iv -in key.enc -out /tmp/key -d
 
         # Adding the ssh key to the agent.
         eval "$(ssh-agent -s)"
