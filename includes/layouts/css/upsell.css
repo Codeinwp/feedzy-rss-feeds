@@ -1,0 +1,218 @@
+/**
+ * upsell.css
+ * Feedzy RSS Feed Upsell Style
+ *
+ * @since   3.0.12
+ * @package feedzy-rss-feeds
+ */
+
+#pro-features .pro-features-header {
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 20px 30px 30px;
+	border-top: 5px solid #252b37;
+	background: #fff;
+}
+
+#pro-features .logo {
+	display: inline-block;
+	margin: 0 0 0 20px;
+	padding: 0 0 0 70px;
+	color: #3c3c3c;
+	background: url(../../../img/feedzy.svg) no-repeat left center;
+	background-size: 48px;
+	font-family: "Open Sans", sans-serif;
+	font-size: 28px;
+	font-weight: 700;
+	line-height: 60px;
+	letter-spacing: -1px;
+}
+
+#pro-features .slogan {
+	display: inline-block;
+	margin: 0 0 0 8px;
+	padding: 0;
+	color: #858585;
+	font-family: "Open Sans", sans-serif;
+	font-size: 17px;
+	line-height: 1;
+	vertical-align: 4px;
+}
+
+#pro-features .slogan a {
+	color: #858585;
+	font-weight: 600;
+	font-style: italic;
+	text-decoration: none;
+	-webkit-transition: all 0.250s ease-in-out;
+	transition: all 0.250s ease-in-out;
+}
+
+#pro-features .slogan a:hover {
+	color: #ff6160;
+}
+
+#pro-features .slogan a:focus {
+	outline: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+#pro-features .header-btns {
+	float: right;
+	margin: 7px 20px;
+	text-align: right;
+}
+
+#pro-features .header-btns .buy-now {
+	display: inline-block;
+	margin-top: 2px;
+	margin-right: 5px;
+	padding: 15px 25px;
+	border-radius: 3px;
+	border-radius: 3px;
+	color: #fff;
+	background: #e33b3f;
+	font-family: "Open Sans", sans-serif;
+	font-size: 18px;
+	font-weight: bold;
+	text-decoration: none;
+	text-transform: uppercase;
+	-webkit-transition: all 0.250s ease-in-out;
+	transition: all 0.250s ease-in-out;
+}
+
+#pro-features .header-btns .buy-now:hover {
+	background: #252b37;
+}
+
+#pro-features .header-btns .buy-now .dashicons {
+	padding-right: 3px;
+}
+
+#pro-features {
+	padding: 0;
+}
+
+#pro-features .pro-features-content {
+	width: 100%;
+	padding: 0;
+}
+
+#pro-features .pro-features-header,
+#pro-features .pro-feature {
+	display: table;
+	float: left;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	width: 100%;
+	margin: 30px 0 0;
+	padding: 30px;
+	background-color: #fff;
+	-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,0.1);
+	box-shadow: 0 1px 1px 0 rgba(0,0,0,0.1);
+}
+
+#pro-features .pro-feature .pro-feature-features,
+#pro-features .pro-feature .pro-feature-image {
+	display: table-cell;
+	margin: 0;
+	vertical-align: middle;
+}
+
+#pro-features .pro-feature .pro-feature-features {
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 0 0 20px;
+}
+
+#pro-features .pro-feature .pro-feature-image {
+	width: 470px;
+}
+
+#pro-features .pro-feature .pro-feature-features h2 {
+	margin: 0 0 20px;
+	font-size: 28px;
+	font-weight: 700;
+	line-height: 1.2;
+}
+
+#pro-features .pro-feature .pro-feature-features h4 {
+	margin: 0 0 10px;
+	font-size: 24px;
+}
+
+#pro-features .pro-feature .pro-feature-features p {
+	margin: 0 0 15px;
+	font-size: 18px;
+	line-height: 1.5;
+}
+
+#pro-features .pro-feature .pro-feature-image img {
+	width: 100%;
+	height: auto;
+}
+
+@media screen and (min-width: 768px) {
+	#pro-features {
+		padding: 0 15px;
+	}
+}
+
+@media screen and (min-width: 1200px) {
+	#pro-features .pro-feature {
+		padding: 30px 60px;
+	}
+
+	#pro-features .pro-feature .pro-feature-features {
+		padding: 0 30px 0 0;
+	}
+
+	#pro-features .pro-feature .pro-feature-features h2 {
+		font-size: 30px;
+	}
+
+	#pro-features .pro-feature .pro-feature-features p {
+		font-size: 20px;
+	}
+}
+
+@media screen and (min-width: 1500px) {
+	#pro-features .pro-feature .pro-feature-features {
+		padding: 0 120px 0 0;
+	}
+}
+
+@media screen and (max-width: 1100px) {
+	#pro-features {
+		text-align: center;
+	}
+
+	#pro-features .logo {
+		margin-left: 0;
+	}
+
+	#pro-features .header-btns {
+		display: block;
+		float: none;
+		margin: 10px 0 0;
+		text-align: center;
+	}
+}
+
+@media screen and (max-width: 1200px) {
+	#pro-features .pro-feature .pro-feature-features,
+	#pro-features .pro-feature .pro-feature-image {
+		display: block;
+	}
+
+	#pro-features .pro-feature .pro-feature-image {
+		display: inline-block;
+		max-width: 100%;
+		margin: 0 auto 30px;
+	}
+
+	#pro-features .slogan {
+		display: none;
+	}
+}

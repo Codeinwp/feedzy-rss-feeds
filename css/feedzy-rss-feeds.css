@@ -2,7 +2,7 @@
  * feedzy-rss-feeds.css
  * Feedzy RSS Feed
  * Copyright: (c) 2016 Themeisle, themeisle.com
- * Version: 3.0.12
+ * Version: 3.1.0
  * Plugin Name: FEEDZY RSS Feeds
  * Plugin URI: http://themeisle.com/plugins/feedzy-rss-feeds/
  * Author: Themeisle
@@ -426,4 +426,101 @@ i.mce-i-feedzy-icon {
 		/* PANA AICI INCLUSIV */
 		clear: both;
 	}
+}
+
+/* The switch - the box around the slider */
+.feedzy-switch {
+	display: inline-block;
+	position: relative;
+	width: 30px;
+	height: 18px;
+	margin-left: 20px;
+}
+
+/* Hide default HTML checkbox */
+.feedzy-switch input {
+	display: none;
+}
+
+/* The slider */
+.feedzy-tracking sup {
+	vertical-align: 3px;
+}
+
+.feedzy-track {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: #ccc;
+	cursor: pointer;
+	-webkit-transition: 0.4s;
+	transition: 0.4s;
+}
+
+.feedzy-track:before {
+	position: absolute;
+	bottom: 1.5px;
+	left: 2px;
+	width: 15px;
+	height: 15px;
+	background-color: white;
+	content: "";
+	-webkit-transition: 0.4s;
+	transition: 0.4s;
+}
+
+input:checked + .feedzy-track {
+	background-color: #0085ba;
+}
+
+input:focus + .feedzy-track {
+	-webkit-box-shadow: 0 0 1px #0085ba;
+	box-shadow: 0 0 1px #0085ba;
+}
+
+input:checked + .feedzy-track:before {
+	-webkit-transform: translateX(11px);
+	-ms-transform: translateX(11px);
+	transform: translateX(11px);
+}
+
+/* Rounded sliders */
+.feedzy-track.visualizer-round {
+	border-radius: 34px;
+}
+
+.feedzy-track.visualizer-round:before {
+	border-radius: 50%;
+}
+
+.feedzy-tracking p small sup {
+	margin-left: -3px;
+}
+
+.feedzy-tracking p {
+	padding-left: 14px;
+	color: #23282d;
+	font-size: 12px;
+	line-height: 12px;
+	text-align: left;
+}
+
+.feedzy-tracking span {
+	margin-left: 10px;
+	color: #23282d;
+	background: none;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+/* More features - icon */
+.more-features-icon {
+	width: 17px;
+	height: 17px;
+	margin-left: 4px;
+	color: #ffca54;
+	font-size: 17px;
+	vertical-align: -3px;
 }

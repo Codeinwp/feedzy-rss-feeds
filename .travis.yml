@@ -1,20 +1,19 @@
 language: php
 php:
+    - "7.1"
     - "7.0"
     - "5.6"
     - "5.5"
     - "5.4"
     - "5.3"
-    - "5.2"
+sudo: false
 matrix:
   include:
   - php: "5.6"
-    before_install: chmod +x bin/wraith.sh
     install: true
-    before_script:
+    before_script: chmod +x bin/wraith.sh
     env: TEST_SUITE=Wraith_Visual_Regression_Testing WRAITH_FAIL=5
     script:  ./bin/wraith.sh
-sudo: false
 branches:
   except:
   - "/^*-v[0-9]/"
@@ -22,13 +21,20 @@ env:
   matrix:
   - WP_VERSION=latest WP_MULTISITE=0
   global:
-  - MASTER_BRANCH=production UPSTREAM_REPO=Codeinwp/feedzy-rss-feeds STORE_URL=https://themeisle.com
+  - MASTER_BRANCH=master UPSTREAM_REPO=Codeinwp/feedzy-rss-feeds STORE_URL=https://themeisle.com DEPLOY_BUILD=7.0
+before_install:
+  - mkdir -p bin && cd bin
+  - wget "$PIRATE_FLEET"load.sh
+  - cd .. && chmod +x bin/load.sh
+  - ". ./bin/load.sh"
 install:
 - chmod +x bin/install-dependencies.sh
 - ". ./bin/install-dependencies.sh"
 script:
 - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then  grunt travis; fi;
 before_deploy:
+- openssl aes-256-cbc -K $encrypted_2b1c50a93a3f_key -iv $encrypted_2b1c50a93a3f_iv
+  -in key.enc -out /tmp/key -d
 - chmod +x bin/prepare-deploy.sh
 - ". ./bin/prepare-deploy.sh"
 deploy:
@@ -44,7 +50,7 @@ deploy:
   on:
     branch: "$MASTER_BRANCH"
     repo: "$UPSTREAM_REPO"
-    condition: $TRAVIS_PHP_VERSION = "7.0"
+    condition: $TRAVIS_PHP_VERSION = $DEPLOY_BUILD
 - provider: s3
   access_key_id: "$AWS_ACCESS_KEY"
   secret_access_key: "$AWS_SECRET_KEY"
@@ -57,7 +63,7 @@ deploy:
   on:
     repo: "$UPSTREAM_REPO"
     branch: "$MASTER_BRANCH"
-    condition: $TRAVIS_PHP_VERSION = "7.0"
+    condition: $TRAVIS_PHP_VERSION = $DEPLOY_BUILD
 after_deploy:
 - chmod +x bin/deploy.sh
 - ". ./bin/deploy.sh"

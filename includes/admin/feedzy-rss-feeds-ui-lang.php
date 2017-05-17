@@ -49,7 +49,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 	public function __construct() {
 		$this->strings = array(
 		    'popup_url' => wp_nonce_url( 'admin-ajax.php', 'feedzy_ajax_token', 'feedzy_request_form_token' ),
-		    'pro_url' => ' https://themeisle.com/plugins/feedzy-rss-feeds/',
+		    'pro_url' => FEEDZY_UPSELL_LINK,
 			'plugin_label' => __( 'Feedzy Lite', 'feedzy-rss-feeds' ),
 			'plugin_title' => __( 'Insert Feedzy RSS Feeds Shortcode', 'feedzy-rss-feeds' ),
 			'image_button' => __( 'Use Image', 'feedzy-rss-feeds' ),
@@ -269,7 +269,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 			),
 			'section_pro' => array(
 				'title' => __( 'PRO Options', 'feedzy-rss-feeds' ),
-				'description' => __( 'Get access to more options and customizations with full version of Feedzy RSS Feeds . Use existing templates or extend them and make them your own.', 'feedzy-rss-feeds' ) . '<br/>' . '<a href=" https://themeisle.com/plugins/feedzy-rss-feeds/" target="_blank"><small>' . __( 'See more features of Feedzy RSS Feeds ', 'feedzy-rss-feeds' ) . '</small></a>',
+				'description' => __( 'Get access to more options and customizations with full version of Feedzy RSS Feeds . Use existing templates or extend them and make them your own.', 'feedzy-rss-feeds' ) . '<br/>' . '<a href="' . FEEDZY_UPSELL_LINK . '" target="_blank"><small>' . __( 'See more features of Feedzy RSS Feeds ', 'feedzy-rss-feeds' ) . '</small></a>',
 				'elements' => array(
 					'price' => array(
 						'label' => __( 'Should we display the price from the feed if it is available?', 'feedzy-rss-feeds' ),

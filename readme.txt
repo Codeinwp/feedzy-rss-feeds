@@ -2,7 +2,7 @@
 Contributors: themeisle,codeinwp
 Tags: RSS, SimplePie, shortcode, feed, thumbnail, image, rss feeds, aggregator, tinyMCE, WYSIWYG, MCE, UI, flux, plugin, WordPress, widget, importer, XML, ATOM, API, parser
 Requires at least: 3.7
-Tested up to: 4.7
+Tested up to: 4.7.5
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -17,6 +17,7 @@ FEEDZY RSS Feeds is a small and lightweight RSS aggregator plugin. Fast and very
 
 > **Time-saving features available in the FULL version:**
 >
+> * Convert feed items to WordPress posts/pages/any
 > * Multiple templates for feed items
 > * Automatically build affiliate links
 > * Parse price from product feeds
@@ -29,12 +30,16 @@ FEEDZY RSS Feeds is a small and lightweight RSS aggregator plugin. Fast and very
 
 The plugin uses the SimplePie php CLASS natively included in WordPress. SimplePie is a RSS parser that can read the information contained in a feed, process it, and finally display it.
 
+**Using the latest version you can now group feeds into categories and reuse them across your content without worrying of their url**
+
+
 FEEDZY RSS Feeds therefore supports any additional library and uses only the bare minimum to ensure good performance (minimalistic CSS + cache). This will ensure compatibility with any hosting provider that supports WordPress, but if for any reason it doesn't work for yours feel free to <a href="http://themeisle.com/contact/" rel="nofollow">contact us</a>.
 
 
  = See how Feedzy can integrate with your website  =
 
 * [Shop feed – 3 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/shop-feed/)
+* [Feed categories – 1 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/group-feeds-categories/)
 * [Large image square grid – 2 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/2-columns-large-images-square-grid/)
 * [Square grid template – 3 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/square-template/)
 * [Round grid templates – 3 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/round-grid-template/)
@@ -98,6 +103,7 @@ By activating this plugin, your cover picture will be inserted into your RSS fee
 * feedzy_default_image
 * feedzy_default_error
 * feedzy_item_filter
+* feedzy_author_url
 * feedzy_item_url_filter
 * feedzy_feed_timestamp
 * shortcode_atts_feedzy_default
@@ -175,8 +181,14 @@ http://docs.themeisle.com/article/543-how-to-remove-the-end-hellip
 = How to display items in a random order =
 http://docs.themeisle.com/article/550-how-to-display-items-in-a-random-order
 
+= How to sort items alphabetically by their title =
+http://docs.themeisle.com/article/633-how-to-sort-feed-items-by-title
+
 = How to display RSS feed time and date in local time =
 http://docs.themeisle.com/article/567-how-to-display-rss-feed-time-and-date-in-local-time
+
+= How to change author url =
+http://docs.themeisle.com/article/636-how-to-change-author-url
 
 == Screenshots ==
 
@@ -187,6 +199,12 @@ http://docs.themeisle.com/article/567-how-to-display-rss-feed-time-and-date-in-l
 
 
 == Changelog ==
+
+= 3.1.0 - 17/05/2017 =
+* Added feed categories for grouping urls.
+* Added support for feed to post feature.
+* Fixed regex for jpeg image ( Reported by @piccart )
+* Added filter for author url ( Thanks to @piccart )
 
 = 3.0.10 - 24/04/2017 =
 * Fixed wrong image regex.
