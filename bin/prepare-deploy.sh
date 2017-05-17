@@ -49,7 +49,7 @@ if ! [ "$BEFORE_DEPLOY_RUN" ] && [ "$TRAVIS_PHP_VERSION" == "$DEPLOY_BUILD" ]; t
         ssh-add /tmp/key
         echo '<?php $upgrading = time(); ?>' > .maintenance
         grunt rsync:start
-        rm -rf .maintenance
+        echo -n > .maintenance
         grunt rsync:end
         grunt deploy
 
