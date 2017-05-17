@@ -99,6 +99,7 @@ By activating this plugin, your cover picture will be inserted into your RSS fee
 * feedzy_default_image
 * feedzy_default_error
 * feedzy_item_filter
+* feedzy_author_url
 * feedzy_item_url_filter
 * feedzy_feed_timestamp
 * shortcode_atts_feedzy_default
@@ -182,6 +183,9 @@ http://docs.themeisle.com/article/633-how-to-sort-feed-items-by-title
 = How to display RSS feed time and date in local time =
 http://docs.themeisle.com/article/567-how-to-display-rss-feed-time-and-date-in-local-time
 
+= How to change author url =
+http://docs.themeisle.com/article/636-how-to-change-author-url
+
 == Screenshots ==
 
 1. Simple example
@@ -192,9 +196,11 @@ http://docs.themeisle.com/article/567-how-to-display-rss-feed-time-and-date-in-l
 
 == Changelog ==
 
-= 3.1.0 - 16/05/2017 =
+= 3.1.0 - 17/05/2017 =
 * Added feed categories for grouping urls.
 * Added support for feed to post feature.
+* Fixed regex for jpeg image ( Reported by @piccart )
+* Added filter for author url ( Thanks to @piccart )
 
 = 3.0.10 - 24/04/2017 =
 * Fixed wrong image regex.

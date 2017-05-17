@@ -186,7 +186,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @since   3.0.12
 	 * @access  public
-	 * @param   string $src    The feeds source string.
+	 *
+	 * @param   string $src The feeds source string.
+	 *
 	 * @return bool|string
 	 */
 	public function process_feed_source( $src ) {
@@ -197,12 +199,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$regex .= '(\/([a-z0-9+\$_-]\.?)+)*\/?';                                // Has Path
 		$regex .= '(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?';                   // Has GET Query
 		$regex .= '(#[a-z_.-][a-z0-9+\$_.-]*)?';                                // Uses Anchor
-
-	    if ( preg_match( "/^$regex$/", $src ) ) {
-	        // If it matches Regex ( it's not a slug ) so return the sources.
-	        return $src;
+		if ( preg_match( "/^$regex$/", $src ) ) {
+			// If it matches Regex ( it's not a slug ) so return the sources.
+			return $src;
 		} else {
-	        $src = trim( $src );
+			$src = trim( $src );
 			if ( $post = get_page_by_path( $src, OBJECT, 'feedzy_categories' ) ) {
 				return trim( preg_replace( '/\s+/', ' ', get_post_meta( $post->ID, 'feedzy_category_feed', true ) ) );
 			} else {
@@ -228,10 +229,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! class_exists( 'SimplePie' ) ) {
 			require_once( ABSPATH . WPINC . '/feed.php' );
 		}
-		$sc      = $this->get_short_code_attributes( $atts );
-
+		$sc = $this->get_short_code_attributes( $atts );
 		$feeds = apply_filters( 'feedzy_process_feed_source', $sc['feeds'] );
-
 		$feedURL = apply_filters( 'feedzy_get_feed_url', $feeds );
 		// Load SimplePie Instance
 		$feed = fetch_feed( $feedURL );
@@ -330,34 +329,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	}
 
 	/**
-	 * Get the feed url based on the feeds passed from the shortcode attribute.
-	 *
-	 * @since   3.0.0
-	 * @access  public
-	 *
-	 * @param   string $feeds The feeds from the shortcode attribute.
-	 *
-	 * @return  array|mixed
-	 */
-	public function get_feed_url( $feeds ) {
-		$feedURL = '';
-		if ( ! empty( $feeds ) ) {
-			$feeds   = rtrim( $feeds, ',' );
-			$feeds   = explode( ',', $feeds );
-			$feedURL = array();
-			// Remove SSL from HTTP request to prevent fetching errors
-			foreach ( $feeds as $feed ) {
-				$feedURL[] = preg_replace( '/^https:/i', 'http:', $feed );
-			}
-			if ( count( $feedURL ) === 1 ) {
-				$feedURL = $feedURL[0];
-			}
-		}
-
-		return $feedURL;
-	}
-
-	/**
 	 * Sanitizes the shortcode array and sets the defaults
 	 *
 	 * @since   3.0.0
@@ -399,41 +370,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	}
 
 	/**
-	 * Utility method to return feed in array format
-	 * before content render.
-	 *
-	 * @since   3.0.12
-	 * @access  public
-	 * @param   array  $feed_items The feed items array.
-	 * @param   array  $sc         The short code attributes.
-	 * @param   object $feed       The feed object.
-	 * @param   string $feedURL    The feed URL source/s.
-	 * @param   array  $sizes      Sizes array.
-	 * @return array
-	 */
-	public function get_feed_array( $feed_items = array(), $sc, $feed, $feedURL, $sizes ) {
-		$count      = 0;
-		$items      = apply_filters( 'feedzy_feed_items', $feed->get_items(), $feedURL );
-		foreach ( (array) $items as $item ) {
-			if ( trim( $item->get_title() ) != '' ) {
-				$continue = apply_filters( 'feedzy_item_keyword', true, $sc, $item, $feedURL );
-				if ( $continue == true ) {
-					// Count items
-					if ( $count >= $sc['max'] ) {
-						break;
-					}
-					$itemAttr                         = apply_filters( 'feedzy_item_attributes', $itemAttr = '', $sizes, $item, $feedURL, $sc );
-					$feed_items[ $count ]             = $this->get_feed_item_filter( $sc, $sizes, $item, $feedURL );
-					$feed_items[ $count ]['itemAttr'] = $itemAttr;
-					$count ++;
-				}
-			}
-		}
-
-		return $feed_items;
-	}
-
-	/**
 	 * Render the content to be displayed
 	 *
 	 * @since   3.0.0
@@ -449,24 +385,20 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	public function render_content( $sc, $feed, $content = '', $feedURL ) {
 		$count = 0;
 		$sizes = array(
-			'width' => $sc['size'],
+			'width'  => $sc['size'],
 			'height' => $sc['size'],
 		);
 		$sizes = apply_filters( 'feedzy_thumb_sizes', $sizes, $feedURL );
-
 		$feed_title['use_title'] = false;
 		if ( $sc['feed_title'] == 'yes' ) {
 			$feed_title              = $this->get_feed_title_filter( $feed );
 			$feed_title['use_title'] = true;
 		}
-
 		// Display the error message
 		if ( $feed->error() ) {
 			$content .= apply_filters( 'feedzy_default_error', $feed->error(), $feedURL );
 		}
-
 		$feed_items = apply_filters( 'feedzy_get_feed_array', array(), $sc, $feed, $feedURL, $sizes );
-
 		$content = '<div class="feedzy-rss">';
 		if ( $feed_title['use_title'] ) {
 			$content .= '<div class="rss_header">';
@@ -521,6 +453,71 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'rss_description_class' => 'rss_description',
 			'rss_description'       => $feed->get_description(),
 		);
+	}
+
+	/**
+	 * Get the feed url based on the feeds passed from the shortcode attribute.
+	 *
+	 * @since   3.0.0
+	 * @access  public
+	 *
+	 * @param   string $feeds The feeds from the shortcode attribute.
+	 *
+	 * @return  array|mixed
+	 */
+	public function get_feed_url( $feeds ) {
+		$feedURL = '';
+		if ( ! empty( $feeds ) ) {
+			$feeds   = rtrim( $feeds, ',' );
+			$feeds   = explode( ',', $feeds );
+			$feedURL = array();
+			// Remove SSL from HTTP request to prevent fetching errors
+			foreach ( $feeds as $feed ) {
+				$feedURL[] = preg_replace( '/^https:/i', 'http:', $feed );
+			}
+			if ( count( $feedURL ) === 1 ) {
+				$feedURL = $feedURL[0];
+			}
+		}
+
+		return $feedURL;
+	}
+
+	/**
+	 * Utility method to return feed in array format
+	 * before content render.
+	 *
+	 * @since   3.0.12
+	 * @access  public
+	 *
+	 * @param   array  $feed_items The feed items array.
+	 * @param   array  $sc The short code attributes.
+	 * @param   object $feed The feed object.
+	 * @param   string $feedURL The feed URL source/s.
+	 * @param   array  $sizes Sizes array.
+	 *
+	 * @return array
+	 */
+	public function get_feed_array( $feed_items = array(), $sc, $feed, $feedURL, $sizes ) {
+		$count = 0;
+		$items = apply_filters( 'feedzy_feed_items', $feed->get_items(), $feedURL );
+		foreach ( (array) $items as $item ) {
+			if ( trim( $item->get_title() ) != '' ) {
+				$continue = apply_filters( 'feedzy_item_keyword', true, $sc, $item, $feedURL );
+				if ( $continue == true ) {
+					// Count items
+					if ( $count >= $sc['max'] ) {
+						break;
+					}
+					$itemAttr                         = apply_filters( 'feedzy_item_attributes', $itemAttr = '', $sizes, $item, $feedURL, $sc );
+					$feed_items[ $count ]             = $this->get_feed_item_filter( $sc, $sizes, $item, $feedURL );
+					$feed_items[ $count ]['itemAttr'] = $itemAttr;
+					$count ++;
+				}
+			}
+		}
+
+		return $feed_items;
 	}
 
 	/**
@@ -586,7 +583,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				}
 				if ( $authorName ) {
 					$domain      = parse_url( $newLink );
-					$contentMeta .= __( 'by', 'feedzy-rss-feeds' ) . ' <a href="http://' . $domain['host'] . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $authorName . '</a> ';
+					$authorURL   = 'http://' . $domain['host'];
+					$authorURL   = apply_filters( 'feedzy_author_url', $authorURL, $feedURL );
+					$contentMeta .= __( 'by', 'feedzy-rss-feeds' ) . ' <a href="http://' . $authorURL . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $authorName . '</a> ';
 				}
 			}
 			if ( $metaArgs['date'] ) {
@@ -863,7 +862,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @since   3.0.12
 	 * @access  public
+	 *
 	 * @param   string $layout_name The name of the layout.
+	 *
 	 * @return mixed
 	 */
 	public function load_layout( $layout_name ) {
@@ -877,10 +878,12 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @since   3.0.12
 	 * @access  public
-	 * @param   string $key        The key before to insert.
-	 * @param   array  $array      The array in which to insert the new key.
-	 * @param   string $new_key    The new key name.
-	 * @param   mixed  $new_value  The new key value.
+	 *
+	 * @param   string $key The key before to insert.
+	 * @param   array  $array The array in which to insert the new key.
+	 * @param   string $new_key The new key name.
+	 * @param   mixed  $new_value The new key value.
+	 *
 	 * @return array|bool
 	 */
 	protected function array_insert_before( $key, &$array, $new_key, $new_value ) {
@@ -892,8 +895,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				}
 				$new[ $k ] = $value;
 			}
+
 			return $new;
 		}
+
 		return false;
 	}
 }
