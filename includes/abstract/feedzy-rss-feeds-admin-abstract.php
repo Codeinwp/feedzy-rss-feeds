@@ -574,16 +574,16 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			if ( ( ! empty( $theThumbnail ) && $sc['thumb'] == 'auto' ) || $sc['thumb'] == 'yes' ) {
 				if ( ! empty( $theThumbnail ) ) {
 					$theThumbnail = $this->feedzy_image_encode( $theThumbnail );
-					$contentThumb .= '<span class="fetched" style="background-image:  url(' . $theThumbnail . ');" alt="' . $item->get_title() . '"></span>';
+					$contentThumb .= '<span class="fetched" style="background-image:  url(' . $theThumbnail . ');" title="' . $item->get_title() . '"></span>';
 				}
 				if ( $sc['thumb'] == 'yes' ) {
-					$contentThumb .= '<span class="default" style="background-image:url(' . $sc['default'] . ');" alt="' . $item->get_title() . '"></span>';
+					$contentThumb .= '<span class="default" style="background-image:url(' . $sc['default'] . ');" title="' . $item->get_title() . '"></span>';
 				}
 			}
 			$contentThumb = apply_filters( 'feedzy_thumb_output', $contentThumb, $feedURL, $sizes );
 		} else {
 			$contentThumb = '';
-			$contentThumb .= '<span class="default" style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:url(' . $sc['default'] . ');" alt="' . $item->get_title() . '"></span>';
+			$contentThumb .= '<span class="default" style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:url(' . $sc['default'] . ');" title="' . $item->get_title() . '"></span>';
 			$contentThumb = apply_filters( 'feedzy_thumb_output', $contentThumb, $feedURL, $sizes );
 		}
 		$contentTitle = '';
