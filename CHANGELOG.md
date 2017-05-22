@@ -1,4 +1,8 @@
 
+ ### v3.1.1 - 2017-05-22 
+ **Changes:** 
+ - Replace alt in span with title
+ 
  ### v3.1.0 - 2017-05-17 
  **Changes:** 
  - Added feed to post compatibility
