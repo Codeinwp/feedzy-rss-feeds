@@ -200,6 +200,9 @@ http://docs.themeisle.com/article/636-how-to-change-author-url
 
 == Changelog ==
 
+= 3.1.1 - 22/05/2017 =
+* Fixed span alt tag, replaced with title.
+
 = 3.1.0 - 17/05/2017 =
 * Added feed categories for grouping urls.
 * Added support for feed to post feature.
