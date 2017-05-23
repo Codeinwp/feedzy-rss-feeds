@@ -190,6 +190,9 @@ http://docs.themeisle.com/article/567-how-to-display-rss-feed-time-and-date-in-l
 = How to change author url =
 http://docs.themeisle.com/article/636-how-to-change-author-url
 
+= How remove feed items duplicates by url =
+http://docs.themeisle.com/article/638-how-to-eliminate-duplicate-feed-item
+
 == Screenshots ==
 
 1. Simple example
