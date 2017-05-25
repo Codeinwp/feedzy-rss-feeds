@@ -1,4 +1,8 @@
 
+ ### v3.1.2 - 2017-05-25 
+ **Changes:** 
+ - Release 3.1.2
+ 
  ### v3.1.1 - 2017-05-22 
  **Changes:** 
  - Replace alt in span with title
