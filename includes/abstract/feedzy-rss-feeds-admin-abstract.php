@@ -308,6 +308,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 		// Load SimplePie Instance
 		$feed = fetch_feed( $feedURL );
+
 		// Report error when is an error loading the feed
 		if ( is_wp_error( $feed ) ) {
 			// Fallback for different edge cases.
@@ -321,39 +322,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				return __( 'An error occured for when trying to retrieve feeds! Check the URL\'s provided as feed sources.', 'feedzy-rss-feeds' );
 			}
 		}
-		$feed->set_sanitize_class( 'SimplePie_Sanitize' );
-		$feed->sanitize = new SimplePie_Sanitize();
-		$feed->enable_cache( true );
-		$feed->enable_order_by_date( true );
-		$feed->set_cache_class( 'WP_Feed_Cache' );
-		$feed->set_file_class( 'WP_SimplePie_File' );
-		$feed->set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', 7200, $feedURL ) );
-		do_action_ref_array( 'wp_feed_options', array( $feed, $feedURL ) );
-		$feed->strip_comments( true );
-		$feed->strip_htmltags( array(
-			'base',
-			'blink',
-			'body',
-			'doctype',
-			'embed',
-			'font',
-			'form',
-			'frame',
-			'frameset',
-			'html',
-			'iframe',
-			'input',
-			'marquee',
-			'meta',
-			'noscript',
-			'object',
-			'param',
-			'script',
-			'style',
-		) );
-		$feed->init();
-		$feed->handle_content_type();
-
 		return $feed;
 	}
 
@@ -612,9 +580,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				}
 				if ( $authorName ) {
 					$domain      = parse_url( $newLink );
-					$authorURL   = 'http://' . $domain['host'];
+					$authorURL   = '//' . $domain['host'];
 					$authorURL   = apply_filters( 'feedzy_author_url', $authorURL, $authorName, $feedURL );
-					$contentMeta .= __( 'by', 'feedzy-rss-feeds' ) . ' <a href="http://' . $authorURL . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $authorName . '</a> ';
+					$contentMeta .= __( 'by', 'feedzy-rss-feeds' ) . ' <a href="' . $authorURL . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $authorName . '</a> ';
 				}
 			}
 			if ( $metaArgs['date'] ) {
