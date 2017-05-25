@@ -203,6 +203,10 @@ http://docs.themeisle.com/article/638-how-to-eliminate-duplicate-feed-item
 
 == Changelog ==
 
+= 3.1.2 - 22/05/2017 =
+* Fixed author protocol.
+* Added core fetch_feed method.
+
 = 3.1.1 - 22/05/2017 =
 * Fixed span alt tag, replaced with title.
 
