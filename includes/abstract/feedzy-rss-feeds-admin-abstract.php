@@ -580,9 +580,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				}
 				if ( $authorName ) {
 					$domain      = parse_url( $newLink );
-					$authorURL   = 'http://' . $domain['host'];
+					$authorURL   = '//' . $domain['host'];
 					$authorURL   = apply_filters( 'feedzy_author_url', $authorURL, $authorName, $feedURL );
-					$contentMeta .= __( 'by', 'feedzy-rss-feeds' ) . ' <a href="http://' . $authorURL . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $authorName . '</a> ';
+					$contentMeta .= __( 'by', 'feedzy-rss-feeds' ) . ' <a href="' . $authorURL . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $authorName . '</a> ';
 				}
 			}
 			if ( $metaArgs['date'] ) {
