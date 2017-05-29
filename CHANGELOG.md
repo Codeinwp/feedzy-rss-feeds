@@ -1,4 +1,9 @@
 
+ ### v3.1.3 - 2017-05-29 
+ **Changes:** 
+ - * Added new SDK features.
+- * Fixed some edge case issues on image parsing.
+ 
  ### v3.1.2 - 2017-05-25 
  **Changes:** 
  - Release 3.1.2
