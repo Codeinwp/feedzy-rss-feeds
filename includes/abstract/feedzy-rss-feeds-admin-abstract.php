@@ -681,13 +681,13 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( empty( $theThumbnail ) ) {
 			$feedDescription = $item->get_content();
 			$theThumbnail    = $this->feedzy_return_image( $feedDescription );
+
 		}
 		// Description image
 		if ( empty( $theThumbnail ) ) {
 			$feedDescription = $item->get_description();
 			$theThumbnail    = $this->feedzy_return_image( $feedDescription );
 		}
-
 		return $theThumbnail;
 	}
 

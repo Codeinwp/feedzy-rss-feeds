@@ -99,66 +99,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	}
 
 	/**
-	 * Ajax endpoint for url tracking.
-	 *
-	 * @since   3.0.12
-	 * @access  public
-	 */
-	public function track_url() {
-		check_admin_referer( 'feedzy-track', 'nonce' );
-		$status = $_POST['status'];
-		if ( $status == 'yes' ) {
-			update_option( 'feedzy_logger_flag', 'yes' );
-		} else {
-			update_option( 'feedzy_logger_flag', 'no' );
-		}
-		wp_send_json_success( array(
-			'status' => $status,
-		) );
-	}
-
-	/**
-	 * Adds tracking box to the edit screen
-	 *
-	 * @since   3.0.12
-	 * @access  public
-	 */
-	public function enable_tracking() {
-		$checked = get_option( 'feedzy_logger_flag', 'no' ) === 'yes' ? 'checked' : '';
-		?>
-		<div class="feedzy-tracking"><label class="feedzy-switch" style="display: inline-block;"><input type="checkbox"
-		                                                                                                onchange="return toggel_track();" <?php echo $checked; ?>>
-				<div class="feedzy-track visualizer-round"></div>
-			</label><span><?php _e( 'Enable Tracking', 'feedzy-rss-feeds' ); ?> <sup>*</sup></span>
-			<p>
-				<small><sup>*</sup><?php _e( 'Allow Themeisle to anonymously track how this plugin is used and help us make the
-					plugin better. No sensitive data is tracked.', 'feedzy-rss-feeds' ); ?>
-				</small>
-			</p>
-		</div>
-		<script type="text/javascript">
-			function toggel_track() {
-
-				var check_status = jQuery('.feedzy-switch input').is(':checked');
-
-				var data = {
-					'action': 'track_url',
-					'nonce': '<?php echo wp_create_nonce( 'feedzy-track' ); ?>',
-					'status': ( check_status ) ? 'yes' : 'no'
-				};
-
-				// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
-				jQuery.post(ajaxurl, data, function (response) {
-					console.log(response);
-				});
-
-				return true;
-			}
-		</script>
-		<?php
-	}
-
-	/**
 	 * Method to register custom post type for
 	 * Feedzy RSS Feeds Categories.
 	 *
@@ -187,7 +127,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			'public'               => true,
 			'exclude_from_search'  => true,
 			'publicly_queryable'   => false,
-			'show_in_nav_menus'   => false,
+			'show_in_nav_menus'    => false,
 			'capability_type'      => 'post',
 			'rewrite'              => array( 'slug' => 'feedzy-category' ),
 			'show_in_menu'         => 'feedzy-admin-menu',
@@ -209,16 +149,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$this,
 			'feedzy_category_feed',
 		), 'feedzy_categories', 'normal', 'high' );
-		if ( ! class_exists( 'Feedzy_Rss_Feeds_Pro' ) ) {
-			add_meta_box(
-				'feedzy_categories_enable_tracking', __( 'Contribute to Feedzy RSS Feeds', 'feedzy-rss-feeds' ),
-				array(
-					$this,
-					'enable_tracking',
-				),
-				'feedzy_categories', 'side'
-			);
-		}
 	}
 
 	/**
@@ -352,7 +282,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				'doc'           => '<a href="http://docs.themeisle.com/article/277-feedzy-rss-feeds-hooks" target="_blank" title="' . __( 'Documentation and examples', 'feedzy-rss-feeds' ) . '">' . __( 'Documentation and examples', 'feedzy-rss-feeds' ) . '</a>',
 				'more_features' => '<a href="' . FEEDZY_UPSELL_LINK . '" target="_blank" title="' . __( 'More Plugins', 'feedzy-rss-feeds' ) . '">' . __( 'More Features', 'feedzy-rss-feeds' ) . '<i class="dashicons dashicons-unlock more-features-icon"></i></a>',
 			);
-			$links = array_merge( $links, $new_links );
+			$links     = array_merge( $links, $new_links );
 		}
 
 		return $links;
@@ -379,16 +309,5 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				add_submenu_page( 'feedzy-admin-menu', __( 'Import Posts', 'feedzy-rss-feeds' ), __( 'Import Posts', 'feedzy-rss-feeds' ), 'manage_options', 'edit.php?post_type=feedzy_imports' );
 			}
 		}
-	}
-
-	/**
-	 * Track the feedzy rss feeds usage.
-	 *
-	 * @since   3.0.12
-	 * @access  public
-	 * @return bool Either we should track or not.
-	 */
-	public function check_logger() {
-		return ( get_option( 'feedzy_logger_flag', 'no' ) === 'yes' );
 	}
 }

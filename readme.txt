@@ -203,6 +203,10 @@ http://docs.themeisle.com/article/638-how-to-eliminate-duplicate-feed-item
 
 == Changelog ==
 
+= 3.1.3 - 29/05/2017 =
+* Added new SDK features.
+* Fixed some edge case issues on image parsing.
+
 = 3.1.2 - 22/05/2017 =
 * Fixed author protocol.
 * Added core fetch_feed method.

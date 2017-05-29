@@ -104,7 +104,7 @@ class Feedzy_Rss_Feeds {
 	 */
 	public function init() {
 		self::$plugin_name = 'feedzy-rss-feeds';
-		self::$version = '3.1.2';
+		self::$version = '3.1.3';
 		self::$instance->load_dependencies();
 		self::$instance->set_locale();
 		self::$instance->define_admin_hooks();
@@ -193,9 +193,6 @@ class Feedzy_Rss_Feeds {
 
 		self::$instance->loader->add_action( 'manage_feedzy_categories_posts_custom_column', self::$instance->admin, 'manage_feedzy_category_columns', 10, 2 );
 		self::$instance->loader->add_filter( 'manage_feedzy_categories_posts_columns', self::$instance->admin, 'feedzy_category_columns' );
-
-		self::$instance->loader->add_filter( 'feedzy_rss_feeds_logger_flag', self::$instance->admin, 'check_logger', 10, 2 );
-		self::$instance->loader->add_action( 'wp_ajax_track_url', self::$instance->admin, 'track_url' );
 
 		self::$instance->loader->add_action( 'admin_menu', self::$instance->admin, 'feedzy_menu_pages' );
 		self::$instance->loader->add_filter( 'mce_external_languages', $plugin_ui, 'feedzy_add_tinymce_lang', 10, 1 );

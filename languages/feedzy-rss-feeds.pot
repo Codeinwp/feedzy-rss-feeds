@@ -2,9 +2,9 @@
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: Feedzy RSS Feeds Lite 3.1.1\n"
+"Project-Id-Version: Feedzy RSS Feeds Lite 3.1.2\n"
 "Report-Msgid-Bugs-To: https://github.com/Codeinwp/feedzy-rss-feeds/issues\n"
-"POT-Creation-Date: 2017-05-25 13:42:35+00:00\n"
+"POT-Creation-Date: 2017-05-29 10:20:44+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -50,102 +50,87 @@ msgstr ""
 msgid "at"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:132
-msgid "Enable Tracking"
-msgstr ""
-
-#: includes/admin/feedzy-rss-feeds-admin.php:134
-msgid ""
-"Allow Themeisle to anonymously track how this plugin is used and help us "
-"make the\n"
-"\t\t\t\t\tplugin better. No sensitive data is tracked."
-msgstr ""
-
-#: includes/admin/feedzy-rss-feeds-admin.php:170
+#: includes/admin/feedzy-rss-feeds-admin.php:110
 msgid "Feed Categories"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:171
+#: includes/admin/feedzy-rss-feeds-admin.php:111
 msgid "Feed Category"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:172
-#: includes/admin/feedzy-rss-feeds-admin.php:173
+#: includes/admin/feedzy-rss-feeds-admin.php:112
+#: includes/admin/feedzy-rss-feeds-admin.php:113
 msgid "Add Category"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:174
+#: includes/admin/feedzy-rss-feeds-admin.php:114
 msgid "Edit Category"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:175
+#: includes/admin/feedzy-rss-feeds-admin.php:115
 msgid "New Feed Category"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:176
+#: includes/admin/feedzy-rss-feeds-admin.php:116
 msgid "View Category"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:177
+#: includes/admin/feedzy-rss-feeds-admin.php:117
 msgid "Search Category"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:178
+#: includes/admin/feedzy-rss-feeds-admin.php:118
 msgid "No categories found"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:179
+#: includes/admin/feedzy-rss-feeds-admin.php:119
 msgid "No categories in the trash"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:208
+#: includes/admin/feedzy-rss-feeds-admin.php:148
 msgid "Category Feeds"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:214
-msgid "Contribute to Feedzy RSS Feeds"
-msgstr ""
-
-#: includes/admin/feedzy-rss-feeds-admin.php:238
+#: includes/admin/feedzy-rss-feeds-admin.php:168
 msgid "Place your URL's here followed by a comma."
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:299
+#: includes/admin/feedzy-rss-feeds-admin.php:229
 msgid "Category Title"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:300
-#: includes/admin/feedzy-rss-feeds-admin.php:303
+#: includes/admin/feedzy-rss-feeds-admin.php:230
+#: includes/admin/feedzy-rss-feeds-admin.php:233
 msgid "Slug"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:327
+#: includes/admin/feedzy-rss-feeds-admin.php:257
 msgid "Undefined"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:352
+#: includes/admin/feedzy-rss-feeds-admin.php:282
 msgid "Documentation and examples"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:353
+#: includes/admin/feedzy-rss-feeds-admin.php:283
 msgid "More Plugins"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:353
-#: includes/admin/feedzy-rss-feeds-admin.php:371
+#: includes/admin/feedzy-rss-feeds-admin.php:283
+#: includes/admin/feedzy-rss-feeds-admin.php:301
 msgid "More Features"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:369
+#: includes/admin/feedzy-rss-feeds-admin.php:299
 #: includes/admin/feedzy-wp-widget.php:40
 msgid "Feedzy RSS Feeds"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:369
+#: includes/admin/feedzy-rss-feeds-admin.php:299
 msgid "Feedzy RSS"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:379
+#: includes/admin/feedzy-rss-feeds-admin.php:309
 msgid "Import Posts"
 msgstr ""
 
@@ -381,6 +366,10 @@ msgstr ""
 msgid ""
 "Updating this theme will lose any customizations you have made. Cancel to "
 "stop, OK to update."
+msgstr ""
+
+#: vendor/codeinwp/themeisle-sdk/class-themeisle-sdk-widget-dashboard-blog.php:189
+msgid "Install"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
