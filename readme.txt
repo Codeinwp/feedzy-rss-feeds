@@ -193,6 +193,9 @@ http://docs.themeisle.com/article/636-how-to-change-author-url
 = How remove feed items duplicates by url =
 http://docs.themeisle.com/article/638-how-to-eliminate-duplicate-feed-item
 
+= How to use feedzy categories =
+http://docs.themeisle.com/article/640-how-to-use-feedzy-categories
+
 == Screenshots ==
 
 1. Simple example
@@ -202,6 +205,9 @@ http://docs.themeisle.com/article/638-how-to-eliminate-duplicate-feed-item
 
 
 == Changelog ==
+
+= 3.1.4 - 29/05/2017 =
+* Added new doc on how to use feedzy categories.
 
 = 3.1.3 - 29/05/2017 =
 * Added new SDK features.
