@@ -1,4 +1,9 @@
 
+ ### v3.1.4 - 2017-05-30 
+ **Changes:** 
+ - Added new doc for feedzy categories.
+- Bump themeisle-sdk version.
+ 
  ### v3.1.3 - 2017-05-29 
  **Changes:** 
  - * Added new SDK features.
