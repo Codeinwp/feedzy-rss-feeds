@@ -1,4 +1,9 @@
 
+ ### v3.1.5 - 2017-05-31 
+ **Changes:** 
+ - Fixed sdk notifications issues.
+- Added compatibility with pro version.
+ 
  ### v3.1.4 - 2017-05-30 
  **Changes:** 
  - Added new doc for feedzy categories.
