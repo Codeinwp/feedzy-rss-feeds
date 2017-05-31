@@ -206,6 +206,10 @@ http://docs.themeisle.com/article/640-how-to-use-feedzy-categories
 
 == Changelog ==
 
+= 3.1.5 - 30/05/2017 =
+* Fixed issues with sdk notifications.
+* Added more compatibility with pro version.
+
 = 3.1.4 - 29/05/2017 =
 * Added new doc on how to use feedzy categories.
 
