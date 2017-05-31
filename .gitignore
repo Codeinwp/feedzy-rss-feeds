@@ -5,3 +5,4 @@ dist
 artifact
 vendor
 bin
+composer.lock
