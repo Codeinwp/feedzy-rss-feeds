@@ -1,4 +1,8 @@
 
+ ### v3.1.6 - 2017-06-02 
+ **Changes:** 
+ - Added sdk test.
+ 
  ### v3.1.5 - 2017-05-31 
  **Changes:** 
  - Fixed sdk notifications issues.
