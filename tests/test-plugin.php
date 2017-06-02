@@ -11,6 +11,13 @@
  */
 class Test_Feedzy extends WP_UnitTestCase {
 	/**
+	 * Check if we have SDK loaded.
+	 */
+	public function test_sdk_exists() {
+		$this->assertTrue( class_exists( 'ThemeIsle_SDK_Loader' ) );
+	}
+
+	/**
 	 * Test method to check Create | Update and Feed from Slug
 	 *
 	 * @since   3.0.12
@@ -18,8 +25,8 @@ class Test_Feedzy extends WP_UnitTestCase {
 	 */
 	public function test_feedzy_category() {
 
-		$random_name   = $this->get_rand_name();
-		$user_id       = $this->factory->user->create( array(
+		$random_name = $this->get_rand_name();
+		$user_id     = $this->factory->user->create( array(
 			'role' => 'administrator',
 		) );
 		wp_set_current_user( $user_id );
@@ -31,9 +38,9 @@ class Test_Feedzy extends WP_UnitTestCase {
 
 		$urls = $this->get_two_rand_feeds();
 
-		$_POST[ 'feedzy_categories' . '_noncename' ]    = wp_create_nonce( FEEDZY_BASEFILE );
-		$_POST['post_type']                             = 'feedzy_categories';
-		$_POST['feedzy_category_feed']                = $urls;
+		$_POST[ 'feedzy_categories' . '_noncename' ] = wp_create_nonce( FEEDZY_BASEFILE );
+		$_POST['post_type']                          = 'feedzy_categories';
+		$_POST['feedzy_category_feed']               = $urls;
 
 		$this->assertClassHasStaticAttribute( 'instance', 'Feedzy_Rss_Feeds' );
 
@@ -45,15 +52,15 @@ class Test_Feedzy extends WP_UnitTestCase {
 		$this->assertEquals( $urls, $post_meta_urls );
 
 		// Test Update Feedzy Category
-		$urls_changed = $this->get_two_rand_feeds();
-		$_POST['feedzy_category_feed']    = $urls_changed;
+		$urls_changed                  = $this->get_two_rand_feeds();
+		$_POST['feedzy_category_feed'] = $urls_changed;
 		do_action( 'save_post', $p->ID, $p );
 		$post_meta_urls = get_post_meta( $p->ID, 'feedzy_category_feed', true );
 		$this->assertEquals( $urls_changed, $post_meta_urls );
 
 		// Test Feed By Category slug
-		$post = get_post( $p->ID );
-		$slug = $post->post_name;
+		$post           = get_post( $p->ID );
+		$slug           = $post->post_name;
 		$feed_from_slug = apply_filters( 'feedzy_process_feed_source', $slug );
 		$this->assertEquals( str_replace( PHP_EOL, '', $urls_changed ), $feed_from_slug );
 
@@ -84,11 +91,11 @@ class Test_Feedzy extends WP_UnitTestCase {
 	 * @return string
 	 */
 	private function get_two_rand_feeds() {
-		$sections = array( 'economics', 'china', 'europe', 'united-states', 'international', 'science-technology' );
+		$sections  = array( 'economics', 'china', 'europe', 'united-states', 'international', 'science-technology' );
 		$feed_urls = '';
-		$section = $sections[ mt_rand( 0, 5 ) ];
+		$section   = $sections[ mt_rand( 0, 5 ) ];
 		$feed_urls .= 'http://www.economist.com/sections/' . $section . '/rss.xml, ' . PHP_EOL;
-		$section = $sections[ mt_rand( 0, 5 ) ];
+		$section   = $sections[ mt_rand( 0, 5 ) ];
 		$feed_urls .= 'http://www.economist.com/sections/' . $section . '/rss.xml' . PHP_EOL;
 
 		return $feed_urls;
