@@ -2,7 +2,7 @@
 Contributors: themeisle,codeinwp,hardeepasrani
 Tags: RSS, SimplePie, shortcode, feed, thumbnail, image, rss feeds, aggregator, tinyMCE, WYSIWYG, MCE, UI, flux, plugin, WordPress, widget, importer, XML, ATOM, API, parser
 Requires at least: 3.7
-Tested up to: 4.7.5
+Tested up to: 4.8.0
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
