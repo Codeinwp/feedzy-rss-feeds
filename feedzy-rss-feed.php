@@ -15,7 +15,7 @@
  * Plugin Name:       Feedzy RSS Feeds Lite
  * Plugin URI:        https://themeisle.com/plugins/feedzy-rss-feeds-lite/
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
- * Version:           3.1.6
+ * Version:           3.1.7
  * Author:            Themeisle
  * Author URI:        http://themeisle.com
  * License:           GPL-2.0+
@@ -107,8 +107,12 @@ function run_feedzy_rss_feeds() {
 	$vendor_file = FEEDZY_ABSPATH . '/vendor/autoload_52.php';
 	if ( is_readable( $vendor_file ) ) {
 		require_once $vendor_file;
-		ThemeIsle_SDK_Loader::init_product( FEEDZY_BASEFILE );
 	}
+	add_filter( 'themeisle_sdk_products', function ( $products ) {
+		$products[] = FEEDZY_BASEFILE;
+
+		return $products;
+	} );
 }
 
 spl_autoload_register( 'feedzy_rss_feeds_autoload' );

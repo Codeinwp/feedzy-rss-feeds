@@ -30,6 +30,11 @@
     "codeinwp/themeisle-sdk": "master",
     "xrstf/composer-php52": "^1.0.20"
   },
+  "autoload": {
+    "files": [
+      "vendor/codeinwp/themeisle-sdk/load.php"
+    ]
+  },
   "minimum-stability": "dev",
   "prefer-stable": true,
   "scripts": {
