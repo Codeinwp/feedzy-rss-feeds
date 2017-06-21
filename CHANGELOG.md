@@ -1,4 +1,9 @@
 
+ ### v3.1.7 - 2017-06-21 
+ **Changes:** 
+ * Added new sdk logic.
+* Improved compatibility with the pro version.
+ 
  ### v3.1.6 - 2017-06-02 
  **Changes:** 
  - Added sdk test.
