@@ -495,7 +495,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @return array
 	 */
-	public function get_feed_array( $feed_items = array(), $sc, $feed, $feedURL, $sizes ) {
+	public function get_feed_array( $feed_items, $sc, $feed, $feedURL, $sizes ) {
 		$count = 0;
 		$items = apply_filters( 'feedzy_feed_items', $feed->get_items(), $feedURL );
 		foreach ( (array) $items as $item ) {
