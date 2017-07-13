@@ -283,14 +283,21 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Validate feeds attribute.
 	 *
-	 * @param string $raw Url or list of urls.
-	 *
+	 * @since   3.0.0
+	 * @updated 3.1.7   Take into account $feedURL as array from PRO version.
+	 * @param   string $raw Url or list of urls.
 	 * @return mixed|void Urls of the feeds.
 	 */
 	public function normalize_urls( $raw ) {
 		$feeds   = apply_filters( 'feedzy_process_feed_source', $raw );
 		$feedURL = apply_filters( 'feedzy_get_feed_url', $feeds );
-		$feedURL = htmlspecialchars_decode( $feedURL );
+		if ( is_array( $feedURL ) ) {
+		    foreach ( $feedURL as $index => $url ) {
+				$feedURL[ $index ] = htmlspecialchars_decode( $url );
+			}
+		} else {
+			$feedURL = htmlspecialchars_decode( $feedURL );
+		}
 
 		return $feedURL;
 	}
