@@ -290,8 +290,33 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	public function normalize_urls( $raw ) {
 		$feeds   = apply_filters( 'feedzy_process_feed_source', $raw );
 		$feedURL = apply_filters( 'feedzy_get_feed_url', $feeds );
+		$feedURL = htmlspecialchars_decode( $feedURL );
 
 		return $feedURL;
+	}
+
+	/**
+	 * Method to avoid using core implementation in order
+	 * order to fix issues reported here: https://core.trac.wordpress.org/ticket/41304
+	 * Bug: #41304 with WP wp_kses sanitizer used by WP SimplePie implementation.
+	 *
+	 * NOTE: This is temporary should be removed as soon as #41304 is patched.
+	 *
+	 * @since   3.1.7
+	 * @access  private
+	 * @param   string $feedURL The feed URL.
+	 * @return SimplePie
+	 */
+	private function init_feed( $feedURL ) {
+		$feed = new SimplePie();
+		$feed->set_cache_class( 'WP_Feed_Cache' );
+		$feed->set_file_class( 'WP_SimplePie_File' );
+		$feed->set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', 12 * HOUR_IN_SECONDS, $feedURL ) );
+		$feed->set_feed_url( $feedURL );
+		$feed->init();
+		$feed->handle_content_type();
+
+	    return $feed;
 	}
 
 	/**
@@ -307,7 +332,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			require_once( ABSPATH . WPINC . '/feed.php' );
 		}
 		// Load SimplePie Instance
-		$feed = fetch_feed( $feedURL );
+		$feed = fetch_feed( $feedURL ); // Not used as log as #41304 is Opened.
 
 		// Report error when is an error loading the feed
 		if ( is_wp_error( $feed ) ) {
@@ -317,11 +342,14 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			} else {
 				$feedURL = html_entity_decode( $feedURL );
 			}
-			$feed = fetch_feed( $feedURL );
+			$feed = fetch_feed( $feedURL ); // Not used as log as #41304 is Opened.
 			if ( is_wp_error( $feed ) ) {
 				return __( 'An error occured for when trying to retrieve feeds! Check the URL\'s provided as feed sources.', 'feedzy-rss-feeds' );
 			}
 		}
+
+		$feed = $this->init_feed( $feedURL ); // Added in 3.1.7 -- TODO: Remove this line when #41304 is fixed.
+
 		return $feed;
 	}
 
@@ -681,13 +709,13 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( empty( $theThumbnail ) ) {
 			$feedDescription = $item->get_content();
 			$theThumbnail    = $this->feedzy_return_image( $feedDescription );
-
 		}
 		// Description image
 		if ( empty( $theThumbnail ) ) {
 			$feedDescription = $item->get_description();
 			$theThumbnail    = $this->feedzy_return_image( $feedDescription );
 		}
+
 		return $theThumbnail;
 	}
 
@@ -741,12 +769,13 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function feedzy_scrape_image( $string, $link = '' ) {
 		$pattern = '/src=[\'"]?([^\'" >]+)[\'" >]/';
+		$match = $link;
 		preg_match( $pattern, $string, $link );
-		if ( isset( $link[1] ) ) {
-			$link = urldecode( $link[1] );
+		if ( ! empty( $link ) && isset( $link[1] ) ) {
+			$match = urldecode( $link[1] );
 		}
 
-		return $link;
+		return $match;
 	}
 
 	/**
