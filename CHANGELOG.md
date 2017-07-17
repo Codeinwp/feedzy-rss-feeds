@@ -1,4 +1,10 @@
 
+ ### v3.1.8 - 2017-07-17 
+ **Changes:** 
+ * Fixed image fetching issues.
+* Fixed link opening behaviour
+* Improved description ( Thanks to @chesio )
+ 
  ### v3.1.7 - 2017-06-21 
  **Changes:** 
  * Added new sdk logic.

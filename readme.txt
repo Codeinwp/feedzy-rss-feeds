@@ -205,6 +205,13 @@ http://docs.themeisle.com/article/640-how-to-use-feedzy-categories
 
 
 == Changelog ==
+= 3.1.8 - 2017-07-17  = 
+
+* Fixed image fetching issues.
+* Fixed link opening behaviour
+* Improved description ( Thanks to @chesio )
+
+
 = 3.1.7 = 
 
 * Added new sdk logic.
