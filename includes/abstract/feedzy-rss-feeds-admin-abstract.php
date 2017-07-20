@@ -695,7 +695,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 					$pattern = '/https?:\/\/.*\.(?:jpg|JPG|jpeg|JPEG|jpe|JPE|gif|GIF|png|PNG)/i';
 					$imgsrc  = $thumbnail;
 					if ( preg_match( $pattern, $imgsrc, $matches ) ) {
-						$theThumbnail = $matches[0];
+						$theThumbnail = $thumbnail;
 						break;
 					}
 				}
