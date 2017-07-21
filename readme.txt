@@ -205,6 +205,11 @@ http://docs.themeisle.com/article/640-how-to-use-feedzy-categories
 
 
 == Changelog ==
+= 3.1.9 - 2017-07-21  = 
+
+* Fixed issue with fetching images containg GET parameters.
+
+
 = 3.1.8 - 2017-07-17  = 
 
 * Fixed image fetching issues.
