@@ -249,32 +249,34 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function get_short_code_attributes( $atts ) {
 		// Retrieve & extract shorcode parameters
-		$sc = shortcode_atts( array(
-			'feeds'          => '',
-			// comma separated feeds url
-			'max'            => '5',
-			// number of feeds items (0 for unlimited)
-			'feed_title'     => 'yes',
-			// display feed title yes/no
-			'target'         => '_blank',
-			// _blank, _self
-			'title'          => '',
-			// strip title after X char
-			'meta'           => 'yes',
-			// yes, no
-			'summary'        => 'yes',
-			// strip title
-			'summarylength'  => '',
-			// strip summary after X char
-			'thumb'          => 'auto',
-			// yes, no, auto
-			'default'        => '',
-			// default thumb URL if no image found (only if thumb is set to yes or auto)
-			'size'           => '',
-			// thumbs pixel size
-			'keywords_title' => '',
+		$sc = shortcode_atts(
+			array(
+				'feeds'          => '',
+				// comma separated feeds url
+				'max'            => '5',
+				// number of feeds items (0 for unlimited)
+				'feed_title'     => 'yes',
+				// display feed title yes/no
+				'target'         => '_blank',
+				// _blank, _self
+				'title'          => '',
+				// strip title after X char
+				'meta'           => 'yes',
+				// yes, no
+				'summary'        => 'yes',
+				// strip title
+				'summarylength'  => '',
+				// strip summary after X char
+				'thumb'          => 'auto',
+				// yes, no, auto
+				'default'        => '',
+				// default thumb URL if no image found (only if thumb is set to yes or auto)
+				'size'           => '',
+				// thumbs pixel size
+				'keywords_title' => '',
 			// only display item if title contains specific keywords (comma-separated list/case sensitive)
-		), $atts, 'feedzy_default' );
+			), $atts, 'feedzy_default'
+		);
 		$sc = array_merge( $sc, apply_filters( 'feedzy_get_short_code_attributes_filter', $atts ) );
 
 		return $sc;
@@ -292,7 +294,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$feeds   = apply_filters( 'feedzy_process_feed_source', $raw );
 		$feedURL = apply_filters( 'feedzy_get_feed_url', $feeds );
 		if ( is_array( $feedURL ) ) {
-		    foreach ( $feedURL as $index => $url ) {
+			foreach ( $feedURL as $index => $url ) {
 				$feedURL[ $index ] = htmlspecialchars_decode( $url );
 			}
 		} else {
@@ -323,7 +325,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$feed->init();
 		$feed->handle_content_type();
 
-	    return $feed;
+		return $feed;
 	}
 
 	/**

@@ -108,11 +108,13 @@ function run_feedzy_rss_feeds() {
 	if ( is_readable( $vendor_file ) ) {
 		require_once $vendor_file;
 	}
-	add_filter( 'themeisle_sdk_products', function ( $products ) {
-		$products[] = FEEDZY_BASEFILE;
+	add_filter(
+		'themeisle_sdk_products', function ( $products ) {
+			$products[] = FEEDZY_BASEFILE;
 
-		return $products;
-	} );
+			return $products;
+		}
+	);
 }
 
 spl_autoload_register( 'feedzy_rss_feeds_autoload' );

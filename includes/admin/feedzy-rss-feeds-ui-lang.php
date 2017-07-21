@@ -48,8 +48,8 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 	 */
 	public function __construct() {
 		$this->strings = array(
-		    'popup_url' => wp_nonce_url( 'admin-ajax.php', 'feedzy_ajax_token', 'feedzy_request_form_token' ),
-		    'pro_url' => FEEDZY_UPSELL_LINK,
+			'popup_url' => wp_nonce_url( 'admin-ajax.php', 'feedzy_ajax_token', 'feedzy_request_form_token' ),
+			'pro_url' => FEEDZY_UPSELL_LINK,
 			'plugin_label' => __( 'Feedzy Lite', 'feedzy-rss-feeds' ),
 			'plugin_title' => __( 'Insert Feedzy RSS Feeds Shortcode', 'feedzy-rss-feeds' ),
 			'image_button' => __( 'Use Image', 'feedzy-rss-feeds' ),
@@ -112,13 +112,13 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'placeholder' => __( 'Feed URL', 'feedzy-rss-feeds' ),
 						'type'  => 'text',
 						'value' => '',
-				    ),
+					),
 					'max' => array(
 						'label' => __( 'Number of items to display.', 'feedzy-rss-feeds' ),
 						'placeholder' => __( '(eg: 5)', 'feedzy-rss-feeds' ),
 						'type'  => 'text',
 						'value' => '',
-				    ),
+					),
 					'feed_title' => array(
 						'label' => __( 'Should we display the RSS title?', 'feedzy-rss-feeds' ),
 						'type'  => 'select',
@@ -133,7 +133,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 								'value' => 'no',
 							),
 						),
-				    ),
+					),
 				),
 			),
 			'section_item' => array(
@@ -169,13 +169,13 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 								'value' => 'framename',
 							),
 						),
-				    ),
+					),
 					'title' => array(
 						'label' => __( 'Trim the title of the item after X characters.', 'feedzy-rss-feeds' ),
 						'placeholder' => __( '(eg: 160)', 'feedzy-rss-feeds' ),
 						'type'  => 'text',
 						'value' => '',
-				    ),
+					),
 					'meta' => array(
 						'label' => __( 'Should we display the date of publication and the author name?', 'feedzy-rss-feeds' ),
 						'type'  => 'select',
@@ -190,7 +190,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 								'value' => 'no',
 							),
 						),
-				    ),
+					),
 					'summary' => array(
 						'label' => __( 'Should we display a description (abstract) of the retrieved item?', 'feedzy-rss-feeds' ),
 						'type'  => 'select',
@@ -205,27 +205,27 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 								'value' => 'no',
 							),
 						),
-				    ),
+					),
 					'summarylength' => array(
 						'label' => __( 'Crop description (summary) of the element after X characters.', 'feedzy-rss-feeds' ),
 						'type'  => 'text',
 						'placeholder' => __( '(eg: 160)', 'feedzy-rss-feeds' ),
 						'value' => '',
-				    ),
+					),
 					'keywords_title' => array(
 						'label' => __( 'Only display item if title contains specific keyword(s) (comma-separated list/case sensitive).', 'feedzy-rss-feeds' ),
 						'placeholder' => __( '(eg: news, sports etc.)', 'feedzy-rss-feeds' ),
 						'type'  => 'text',
 						'value' => '',
 						'disabled' => feedzy_is_new(),
-				    ),
+					),
 					'keywords_ban' => array(
 						'label' => __( 'Exclude items if title or content contains specific keyword(s) (comma-separated list/case sensitive). ', 'feedzy-rss-feeds' ),
 						'placeholder' => __( '(eg: politics, gossip etc.)', 'feedzy-rss-feeds' ),
 						'type'  => 'text',
 						'value' => '',
 						'disabled' => true,
-				    ),
+					),
 				),
 			),
 			'section_image' => array(
@@ -249,7 +249,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 								'value' => 'no',
 							),
 						),
-				    ),
+					),
 					'default' => array(
 						'label' => __( 'Default thumbnail URL if no image is found.', 'feedzy-rss-feeds' ),
 						'placeholder' => __( 'Image URL', 'feedzy-rss-feeds' ),
@@ -258,13 +258,13 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'button' => array(
 							'button_text' => __( 'Select from Gallery', 'feedzy-rss-feeds' ),
 						),
-				    ),
+					),
 					'size' => array(
 						'label' => __( 'Thumblails dimension. Do not include "px". Eg: 150', 'feedzy-rss-feeds' ),
 						'placeholder' => __( '(eg: 150)', 'feedzy-rss-feeds' ),
 						'type'  => 'text',
 						'value' => '',
-				    ),
+					),
 				),
 			),
 			'section_pro' => array(
@@ -286,21 +286,21 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 								'value' => 'no',
 							),
 						),
-				    ),
+					),
 					'referral_url' => array(
 						'label' => __( 'Referral URL parameters (w/o "?").', 'feedzy-rss-feeds' ),
 						'placeholder' => __( '(eg. promo_code=feedzy_is_awesome)', 'feedzy-rss-feeds' ),
 						'type'  => 'text',
 						'disabled' => true,
 						'value' => '',
-				    ),
+					),
 					'columns' => array(
 						'label' => __( 'How many columns we should use to display the feed items', 'feedzy-rss-feeds' ),
 						'placeholder' => __( '(eg. 1, 2, ..., 6)', 'feedzy-rss-feeds' ),
 						'type'  => 'number',
 						'disabled' => true,
 						'value' => '1',
-				    ),
+					),
 					'template' => array(
 						'label' => __( 'Template to use when displaying the feed.', 'feedzy-rss-feeds' ),
 						'type'  => 'radio',
@@ -319,7 +319,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 								'label' => __( 'Style 2', 'feedzy-rss-feeds' ),
 								'value' => 'style2',
 							),
-					    ),
+						),
 					),
 				),
 			),

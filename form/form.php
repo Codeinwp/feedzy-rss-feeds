@@ -62,7 +62,7 @@ $html_parts = Feedzy_Rss_Feeds_Ui_Lang::get_form_elements();
 										$checked = 'checked="checked"';
 									}
 									$element .= '<label class="feedzy-radio-image feedzy-template-' . $values['value']
-									            . '"><input type="radio" name="' . $name . '" data-feedzy="' . $name . '" value="' . $values['value'] . '" ' . $checked . ' ' . $disabled . ' />' .
+												. '"><input type="radio" name="' . $name . '" data-feedzy="' . $name . '" value="' . $values['value'] . '" ' . $checked . ' ' . $disabled . ' />' .
 												$values['label'] . '</label>';
 								}
 								break;
