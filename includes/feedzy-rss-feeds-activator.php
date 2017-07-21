@@ -37,9 +37,11 @@ class Feedzy_Rss_Feeds_Activator {
 			update_option( 'feedzy_logger_flag', 'no' );
 		}
 		if ( ! isset( $options['is_new'] ) ) {
-			update_option( Feedzy_Rss_Feeds::get_plugin_name(), array(
-				'is_new' => 'yes',
-			) );
+			update_option(
+				Feedzy_Rss_Feeds::get_plugin_name(), array(
+					'is_new' => 'yes',
+				)
+			);
 		}
 
 	}

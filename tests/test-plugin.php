@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Wordpress unit test plugin.
+ * WordPress unit test plugin.
  *
  * @package     Feedzy
  * @subpackage  Tests
@@ -26,15 +26,19 @@ class Test_Feedzy extends WP_UnitTestCase {
 	public function test_feedzy_category() {
 
 		$random_name = $this->get_rand_name();
-		$user_id     = $this->factory->user->create( array(
-			'role' => 'administrator',
-		) );
+		$user_id     = $this->factory->user->create(
+			array(
+				'role' => 'administrator',
+			)
+		);
 		wp_set_current_user( $user_id );
-		$p = $this->factory->post->create_and_get( array(
-			'post_title'  => $random_name,
-			'post_type'   => 'feedzy_categories',
-			'post_author' => $user_id,
-		) );
+		$p = $this->factory->post->create_and_get(
+			array(
+				'post_title'  => $random_name,
+				'post_type'   => 'feedzy_categories',
+				'post_author' => $user_id,
+			)
+		);
 
 		$urls = $this->get_two_rand_feeds();
 
