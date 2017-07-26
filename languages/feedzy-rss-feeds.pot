@@ -2,9 +2,9 @@
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: Feedzy RSS Feeds Lite 3.1.4\n"
+"Project-Id-Version: Feedzy RSS Feeds Lite 3.1.9\n"
 "Report-Msgid-Bugs-To: https://github.com/Codeinwp/feedzy-rss-feeds/issues\n"
-"POT-Creation-Date: 2017-05-31 11:32:30+00:00\n"
+"POT-Creation-Date: 2017-07-26 20:26:01+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -32,21 +32,21 @@ msgstr ""
 msgid "Sorry, this feed is currently unavailable or does not exists anymore."
 msgstr ""
 
-#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:322
+#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:356
 msgid ""
 "An error occured for when trying to retrieve feeds! Check the URL's "
 "provided as feed sources."
 msgstr ""
 
-#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:585
+#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:622
 msgid "by"
 msgstr ""
 
-#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:591
+#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:628
 msgid "on"
 msgstr ""
 
-#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:593
+#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:630
 msgid "at"
 msgstr ""
 
@@ -87,50 +87,50 @@ msgstr ""
 msgid "No categories in the trash"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:148
+#: includes/admin/feedzy-rss-feeds-admin.php:149
 msgid "Category Feeds"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:168
+#: includes/admin/feedzy-rss-feeds-admin.php:170
 msgid "Place your URL's here followed by a comma."
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:229
+#: includes/admin/feedzy-rss-feeds-admin.php:231
 msgid "Category Title"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:230
-#: includes/admin/feedzy-rss-feeds-admin.php:233
+#: includes/admin/feedzy-rss-feeds-admin.php:232
+#: includes/admin/feedzy-rss-feeds-admin.php:235
 msgid "Slug"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:257
+#: includes/admin/feedzy-rss-feeds-admin.php:259
 msgid "Undefined"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:282
+#: includes/admin/feedzy-rss-feeds-admin.php:284
 msgid "Documentation and examples"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:283
+#: includes/admin/feedzy-rss-feeds-admin.php:285
 msgid "More Plugins"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:283
-#: includes/admin/feedzy-rss-feeds-admin.php:301
+#: includes/admin/feedzy-rss-feeds-admin.php:285
+#: includes/admin/feedzy-rss-feeds-admin.php:304
 msgid "More Features"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:299
+#: includes/admin/feedzy-rss-feeds-admin.php:301
 #: includes/admin/feedzy-wp-widget.php:40
 msgid "Feedzy RSS Feeds"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:299
+#: includes/admin/feedzy-rss-feeds-admin.php:301
 msgid "Feedzy RSS"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:309
+#: includes/admin/feedzy-rss-feeds-admin.php:314
 msgid "Import Posts"
 msgstr ""
 
@@ -297,7 +297,7 @@ msgid "Select from Gallery"
 msgstr ""
 
 #: includes/admin/feedzy-rss-feeds-ui-lang.php:263
-msgid "Thumblails dimension. Do not include \"px\". Eg: 150"
+msgid "Thumbnails dimension. Do not include \"px\". Eg: 150"
 msgstr ""
 
 #: includes/admin/feedzy-rss-feeds-ui-lang.php:264
@@ -362,16 +362,6 @@ msgstr ""
 msgid "Intro text"
 msgstr ""
 
-#: vendor/codeinwp/themeisle-sdk/class-themeisle-sdk-licenser.php:453
-msgid ""
-"Updating this theme will lose any customizations you have made. Cancel to "
-"stop, OK to update."
-msgstr ""
-
-#: vendor/codeinwp/themeisle-sdk/class-themeisle-sdk-widget-dashboard-blog.php:197
-msgid "Install"
-msgstr ""
-
 #. Plugin Name of the plugin/theme
 msgid "Feedzy RSS Feeds Lite"
 msgstr ""
@@ -382,8 +372,9 @@ msgstr ""
 
 #. Description of the plugin/theme
 msgid ""
-"This is a short description of what the plugin does. It's displayed in the "
-"WordPress admin area."
+"A small and lightweight RSS aggregator plugin. Fast and very easy to use, "
+"it allows you to aggregate multiple RSS feeds into your WordPress site "
+"through fully customizable shortcodes & widgets."
 msgstr ""
 
 #. Author of the plugin/theme
