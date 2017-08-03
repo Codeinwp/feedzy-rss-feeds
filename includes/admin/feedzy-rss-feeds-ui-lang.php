@@ -260,7 +260,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						),
 					),
 					'size' => array(
-						'label' => __( 'Thumblails dimension. Do not include "px". Eg: 150', 'feedzy-rss-feeds' ),
+						'label' => __( 'Thumbnails dimension. Do not include "px". Eg: 150', 'feedzy-rss-feeds' ),
 						'placeholder' => __( '(eg: 150)', 'feedzy-rss-feeds' ),
 						'type'  => 'text',
 						'value' => '',

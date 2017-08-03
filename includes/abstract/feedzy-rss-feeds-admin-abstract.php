@@ -725,6 +725,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$theThumbnail    = $this->feedzy_return_image( $feedDescription );
 		}
 
+		$theThumbnail = preg_replace( '/\s+/', '-', trim( preg_replace( '/[\s-]+/', ' ', $theThumbnail ) ) );
+
 		return $theThumbnail;
 	}
 
