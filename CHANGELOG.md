@@ -1,4 +1,9 @@
 
+ ### v3.1.10 - 2017-08-03 
+ **Changes:** 
+ * Fixed typos in shortcode builder.
+* Fixed image encoding issue.
+ 
  ### v3.1.9 - 2017-07-21 
  **Changes:** 
  * Fixed issue with fetching images containg GET parameters.

@@ -205,6 +205,12 @@ http://docs.themeisle.com/article/640-how-to-use-feedzy-categories
 
 
 == Changelog ==
+= 3.1.10 - 2017-08-03  = 
+
+* Fixed typos in shortcode builder.
+* Fixed image encoding issue.
+
+
 = 3.1.9 - 2017-07-21  = 
 
 * Fixed issue with fetching images containg GET parameters.
