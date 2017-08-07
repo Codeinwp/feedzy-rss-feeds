@@ -2,7 +2,7 @@
 Contributors: themeisle,codeinwp,hardeepasrani
 Tags: RSS, SimplePie, shortcode, feed, thumbnail, image, rss feeds, aggregator, tinyMCE, WYSIWYG, MCE, UI, flux, plugin, WordPress, widget, importer, XML, ATOM, API, parser
 Requires at least: 3.7
-Tested up to: 4.8.0
+Tested up to: 4.8
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -136,65 +136,71 @@ Yes it is.
 
 You have to check first if your feed is valid. Please test it here: https://validator.w3.org/feed/
 
+= Where do i find the plugin documentation = 
+[http://docs.themeisle.com/article/658-feedzy-rss-feeds](http://docs.themeisle.com/article/658-feedzy-rss-feeds)
+
+= How to fix images that are not showing in the feed = 
+[http://docs.themeisle.com/article/666-how-to-fix-images-that-are-not-showing-in-the-feed](http://docs.themeisle.com/article/666-how-to-fix-images-that-are-not-showing-in-the-feed)
+
 = How to change cache lifetime for a specific feed =
-http://docs.themeisle.com/article/547-how-to-change-cache-lifetime-for-a-specific-feed
+[http://docs.themeisle.com/article/547-how-to-change-cache-lifetime-for-a-specific-feed](http://docs.themeisle.com/article/547-how-to-change-cache-lifetime-for-a-specific-feed)
 
 = How to change thumbs size and aspect ratio =
-http://docs.themeisle.com/article/551-how-to-change-thumbs-size-and-aspect-ratio
+[http://docs.themeisle.com/article/551-how-to-change-thumbs-size-and-aspect-ratio](http://docs.themeisle.com/article/551-how-to-change-thumbs-size-and-aspect-ratio)
 
 = What hooks and filters are available in Feedzy =
-http://docs.themeisle.com/article/540-what-hooks-and-filters-are-available-in-feedzy
+[http://docs.themeisle.com/article/540-what-hooks-and-filters-are-available-in-feedzy](http://docs.themeisle.com/article/540-what-hooks-and-filters-are-available-in-feedzy)
 
 = How to change the blacklist image name =
-http://docs.themeisle.com/article/552-how-to-change-the-blacklist-image-name
+[http://docs.themeisle.com/article/552-how-to-change-the-blacklist-image-name](http://docs.themeisle.com/article/552-how-to-change-the-blacklist-image-name)
 
 = How to decode item title =
-http://docs.themeisle.com/article/548-how-to-decode-item-title-with
+[http://docs.themeisle.com/article/548-how-to-decode-item-title-with](http://docs.themeisle.com/article/548-how-to-decode-item-title-with)
 
 = How to remove featured image from blog feed =
-http://docs.themeisle.com/article/554-how-to-remove-featured-image-from-blog-feed
+[http://docs.themeisle.com/article/554-how-to-remove-featured-image-from-blog-feed](http://docs.themeisle.com/article/554-how-to-remove-featured-image-from-blog-feed)
 
 = How to keep html in feed items content =
-http://docs.themeisle.com/article/542-how-to-keep-html-in-feed-items-content
+[http://docs.themeisle.com/article/542-how-to-keep-html-in-feed-items-content](http://docs.themeisle.com/article/542-how-to-keep-html-in-feed-items-content)
 
 = How to remove plugin css =
-http://docs.themeisle.com/article/545-how-to-remove-plugin-css
+[http://docs.themeisle.com/article/545-how-to-remove-plugin-css](http://docs.themeisle.com/article/545-how-to-remove-plugin-css)
 
 = How to remove links =
-http://docs.themeisle.com/article/541-how-to-remove-links
+[http://docs.themeisle.com/article/541-how-to-remove-links](http://docs.themeisle.com/article/541-how-to-remove-links)
 
 = How to add a read more link =
-http://docs.themeisle.com/article/544-how-to-add-a-read-more-link
+[http://docs.themeisle.com/article/544-how-to-add-a-read-more-link](http://docs.themeisle.com/article/544-how-to-add-a-read-more-link)
 
 = How to remove time from publication date =
-http://docs.themeisle.com/article/553-how-to-remove-time-from-publication-date
+[http://docs.themeisle.com/article/553-how-to-remove-time-from-publication-date](http://docs.themeisle.com/article/553-how-to-remove-time-from-publication-date)
 
 = How to handle publication date and author content =
-http://docs.themeisle.com/article/549-how-to-handle-time-and-date-content
+[http://docs.themeisle.com/article/549-how-to-handle-time-and-date-content](http://docs.themeisle.com/article/549-how-to-handle-time-and-date-content)
 
 = How to use your own inline css =
-http://docs.themeisle.com/article/546-how-to-use-your-own-inline-css
+[http://docs.themeisle.com/article/546-how-to-use-your-own-inline-css](http://docs.themeisle.com/article/546-how-to-use-your-own-inline-css)
 
 = How to remove the end hellip =
-http://docs.themeisle.com/article/543-how-to-remove-the-end-hellip
+[http://docs.themeisle.com/article/543-how-to-remove-the-end-hellip](http://docs.themeisle.com/article/543-how-to-remove-the-end-hellip)
 
 = How to display items in a random order =
-http://docs.themeisle.com/article/550-how-to-display-items-in-a-random-order
+[http://docs.themeisle.com/article/550-how-to-display-items-in-a-random-order](http://docs.themeisle.com/article/550-how-to-display-items-in-a-random-order)
 
 = How to sort items alphabetically by their title =
-http://docs.themeisle.com/article/633-how-to-sort-feed-items-by-title
+[http://docs.themeisle.com/article/633-how-to-sort-feed-items-by-title](http://docs.themeisle.com/article/633-how-to-sort-feed-items-by-title)
 
 = How to display RSS feed time and date in local time =
-http://docs.themeisle.com/article/567-how-to-display-rss-feed-time-and-date-in-local-time
+[http://docs.themeisle.com/article/567-how-to-display-rss-feed-time-and-date-in-local-time](http://docs.themeisle.com/article/567-how-to-display-rss-feed-time-and-date-in-local-time)
 
 = How to change author url =
-http://docs.themeisle.com/article/636-how-to-change-author-url
+[http://docs.themeisle.com/article/636-how-to-change-author-url](http://docs.themeisle.com/article/636-how-to-change-author-url)
 
 = How remove feed items duplicates by url =
-http://docs.themeisle.com/article/638-how-to-eliminate-duplicate-feed-item
+[http://docs.themeisle.com/article/638-how-to-eliminate-duplicate-feed-item](http://docs.themeisle.com/article/638-how-to-eliminate-duplicate-feed-item)
 
 = How to use feedzy categories =
-http://docs.themeisle.com/article/640-how-to-use-feedzy-categories
+[http://docs.themeisle.com/article/640-how-to-use-feedzy-categories](http://docs.themeisle.com/article/640-how-to-use-feedzy-categories)
 
 == Screenshots ==
 
