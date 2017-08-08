@@ -351,15 +351,66 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			} else {
 				$feedURL = html_entity_decode( $feedURL );
 			}
-			$feed = fetch_feed( $feedURL ); // Not used as log as #41304 is Opened.
-			if ( is_wp_error( $feed ) ) {
-				return __( 'An error occured for when trying to retrieve feeds! Check the URL\'s provided as feed sources.', 'feedzy-rss-feeds' );
-			}
+
+			$feedURL = $this->get_valid_feed_urls( $feedURL );
+
+			// $feed = fetch_feed( $validFeedURL ); // Not used as log as #41304 is Opened.
 		}
 
 		$feed = $this->init_feed( $feedURL ); // Added in 3.1.7 -- TODO: Remove this line when #41304 is fixed.
 
+		// var_dump( $feed );
 		return $feed;
+	}
+
+	/**
+	 * Returns only valid URLs for fetching.
+	 *
+	 * @since   3.1.1
+	 * @access  private
+	 * @param   array|string $feedURL The feeds URL/s.
+	 * @return array
+	 */
+	private function get_valid_feed_urls( $feedURL ) {
+		$validFeedURL = array();
+		if ( is_array( $feedURL ) ) {
+			foreach ( $feedURL as $url ) {
+				if ( $this->check_valid_xml( $url ) ) {
+					$validFeedURL[] = $url;
+				} else {
+					echo sprintf( __( 'Feed URL: %s not valid and removed from fetch.', 'feedzy-rss-feeds' ), '<b>' . $url . '</b>' );
+				}
+			}
+		} else {
+			if ( $this->check_valid_xml( $feedURL ) ) {
+				$validFeedURL[] = $feedURL;
+			} else {
+				echo sprintf( __( 'Feed URL: %s not valid and removed from fetch.', 'feedzy-rss-feeds' ), '<b>' . $feedURL . '</b>' );
+			}
+		}
+
+	    return $validFeedURL;
+	}
+
+	/**
+	 * Checks if a url is a valid feed.
+	 *
+	 * @since   3.1.1
+	 * @access  private
+	 * @param   string $url The URL to validate.
+	 * @return bool
+	 */
+	private function check_valid_xml( $url ) {
+		$feed = new SimplePie();
+		$feed->set_feed_url( $url );
+		$feed->enable_cache( false );
+		$feed->init();
+		$feed->handle_content_type();
+
+		if ( $feed->error() ) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
