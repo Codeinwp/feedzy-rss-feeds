@@ -579,7 +579,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			if ( ( ! empty( $theThumbnail ) && $sc['thumb'] == 'auto' ) || $sc['thumb'] == 'yes' ) {
 				if ( ! empty( $theThumbnail ) ) {
 					$theThumbnail = $this->feedzy_image_encode( $theThumbnail );
-					$contentThumb .= '<span class="fetched" style="background-image:  url(' . $theThumbnail . ');" title="' . $item->get_title() . '"></span>';
+					$contentThumb .= '<span class="fetched" style="background-image:  url(\'' . $theThumbnail . '\');" title="' . $item->get_title() . '"></span>';
 				}
 				if ( $sc['thumb'] == 'yes' ) {
 					$contentThumb .= '<span class="default" style="background-image:url(' . $sc['default'] . ');" title="' . $item->get_title() . '"></span>';
@@ -783,7 +783,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$match = $link;
 		preg_match( $pattern, $string, $link );
 		if ( ! empty( $link ) && isset( $link[1] ) ) {
-			$match = urldecode( $link[1] );
+			$match = $link[1];
 		}
 
 		return $match;
