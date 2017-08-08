@@ -331,8 +331,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Fetch the content feed from a group of urls.
 	 *
-	 * @param array $feedURL The feeds urls to fetch content from.
-	 *
+     * @since   3.0.0
+     * @access  public
+     * @updated 3.2.0
+	 * @param   array $feedURL The feeds urls to fetch content from.
 	 * @return SimplePie|string|void|WP_Error The feed resource.
 	 */
 	public function fetch_feed( $feedURL ) {
@@ -366,7 +368,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Returns only valid URLs for fetching.
 	 *
-	 * @since   3.1.1
+	 * @since   3.2.0
 	 * @access  private
 	 * @param   array|string $feedURL The feeds URL/s.
 	 * @return array
@@ -395,18 +397,13 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Checks if a url is a valid feed.
 	 *
-	 * @since   3.1.1
+	 * @since   3.2.0
 	 * @access  private
 	 * @param   string $url The URL to validate.
 	 * @return bool
 	 */
 	private function check_valid_xml( $url ) {
-		$feed = new SimplePie();
-		$feed->set_feed_url( $url );
-		$feed->enable_cache( false );
-		$feed->init();
-		$feed->handle_content_type();
-
+		$feed = $this->init_feed( $url );
 		if ( $feed->error() ) {
 			return false;
 		}
