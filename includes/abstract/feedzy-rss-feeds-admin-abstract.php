@@ -331,9 +331,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Fetch the content feed from a group of urls.
 	 *
-     * @since   3.0.0
-     * @access  public
-     * @updated 3.2.0
+	 * @since   3.0.0
+	 * @access  public
+	 * @updated 3.2.0
 	 * @param   array $feedURL The feeds urls to fetch content from.
 	 * @return SimplePie|string|void|WP_Error The feed resource.
 	 */
