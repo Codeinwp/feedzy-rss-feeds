@@ -134,6 +134,12 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 							),
 						),
 					),
+					'refresh' => array(
+						'label' => __( 'Time to for feed cache. Format: `value_unit` ( Where 1 <= value <= 100 and  unit can be: `mins`, `hours` or `days` )', 'feedzy-rss-feeds' ),
+						'placeholder' => __( '(eg: 1_days, defaults: 12_hours)', 'feedzy-rss-feeds' ),
+						'type'  => 'text',
+						'value' => '',
+					),
 				),
 			),
 			'section_item' => array(

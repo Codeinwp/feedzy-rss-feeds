@@ -227,7 +227,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	public function feedzy_rss( $atts, $content = '' ) {
 		$sc      = $this->get_short_code_attributes( $atts );
 		$feedURL = $this->normalize_urls( $sc['feeds'] );
-		$feed    = $this->fetch_feed( $feedURL );
+		$cache   = $sc['refresh'];
+		$feed    = $this->fetch_feed( $feedURL, $cache );
 		if ( is_string( $feed ) ) {
 			return $feed;
 		}
@@ -274,6 +275,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'size'           => '',
 				// thumbs pixel size
 				'keywords_title' => '',
+				// cache refresh
+			    'refresh'        => '12_hours',
 			// only display item if title contains specific keywords (comma-separated list/case sensitive)
 			), $atts, 'feedzy_default'
 		);
@@ -314,13 +317,30 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @since   3.1.7
 	 * @access  private
 	 * @param   string $feedURL The feed URL.
+	 * @param   string $cache The cache string (eg. 1_hour, 30_min etc.).
 	 * @return SimplePie
 	 */
-	private function init_feed( $feedURL ) {
+	private function init_feed( $feedURL, $cache ) {
+	    $unit_defaults = array(
+	        'mins' => MINUTE_IN_SECONDS,
+	        'hours' => HOUR_IN_SECONDS,
+	        'days' => DAY_IN_SECONDS,
+		);
+	    $cache_time = 12 * HOUR_IN_SECONDS;
+	    if ( isset( $cache ) && $cache != '' ) {
+	        list( $value, $unit ) = explode( '_', $cache );
+	        if ( isset( $value ) && is_numeric( $value ) && $value >= 1 && $value <= 100 ) {
+	            if ( isset( $unit ) && in_array( strtolower( $unit ), array( 'mins', 'hours', 'days' ) ) ) {
+					$cache_time = $value * $unit_defaults[ $unit ];
+				}
+			}
+		}
+		var_dump( $cache );
+		var_dump( $cache_time );
 		$feed = new SimplePie();
 		$feed->set_cache_class( 'WP_Feed_Cache' );
 		$feed->set_file_class( 'WP_SimplePie_File' );
-		$feed->set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', 12 * HOUR_IN_SECONDS, $feedURL ) );
+		$feed->set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', $cache_time, $feedURL ) );
 		$feed->set_feed_url( $feedURL );
 		$feed->init();
 		$feed->handle_content_type();
@@ -334,10 +354,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @since   3.0.0
 	 * @access  public
 	 * @updated 3.2.0
-	 * @param   array $feedURL The feeds urls to fetch content from.
+	 * @param   array  $feedURL The feeds urls to fetch content from.
+	 * @param   string $cache The cache string (eg. 1_hour, 30_min etc.).
 	 * @return SimplePie|string|void|WP_Error The feed resource.
 	 */
-	public function fetch_feed( $feedURL ) {
+	public function fetch_feed( $feedURL, $cache = '12_hours' ) {
 		// Load SimplePie if not already
 		if ( ! class_exists( 'SimplePie' ) ) {
 			require_once( ABSPATH . WPINC . '/feed.php' );
@@ -354,12 +375,12 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$feedURL = html_entity_decode( $feedURL );
 			}
 
-			$feedURL = $this->get_valid_feed_urls( $feedURL );
+			$feedURL = $this->get_valid_feed_urls( $feedURL, $cache );
 
 			// $feed = fetch_feed( $validFeedURL ); // Not used as log as #41304 is Opened.
 		}
 
-		$feed = $this->init_feed( $feedURL ); // Added in 3.1.7 -- TODO: Remove this line when #41304 is fixed.
+		$feed = $this->init_feed( $feedURL, $cache ); // Added in 3.1.7 -- TODO: Remove this line when #41304 is fixed.
 
 		// var_dump( $feed );
 		return $feed;
@@ -371,20 +392,21 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @since   3.2.0
 	 * @access  private
 	 * @param   array|string $feedURL The feeds URL/s.
+	 * @param   string       $cache The cache string (eg. 1_hour, 30_min etc.).
 	 * @return array
 	 */
-	private function get_valid_feed_urls( $feedURL ) {
+	private function get_valid_feed_urls( $feedURL, $cache ) {
 		$validFeedURL = array();
 		if ( is_array( $feedURL ) ) {
 			foreach ( $feedURL as $url ) {
-				if ( $this->check_valid_xml( $url ) ) {
+				if ( $this->check_valid_xml( $url, $cache ) ) {
 					$validFeedURL[] = $url;
 				} else {
 					echo sprintf( __( 'Feed URL: %s not valid and removed from fetch.', 'feedzy-rss-feeds' ), '<b>' . $url . '</b>' );
 				}
 			}
 		} else {
-			if ( $this->check_valid_xml( $feedURL ) ) {
+			if ( $this->check_valid_xml( $feedURL, $cache ) ) {
 				$validFeedURL[] = $feedURL;
 			} else {
 				echo sprintf( __( 'Feed URL: %s not valid and removed from fetch.', 'feedzy-rss-feeds' ), '<b>' . $feedURL . '</b>' );
@@ -400,10 +422,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @since   3.2.0
 	 * @access  private
 	 * @param   string $url The URL to validate.
+	 * @param   string $cache The cache string (eg. 1_hour, 30_min etc.).
 	 * @return bool
 	 */
-	private function check_valid_xml( $url ) {
-		$feed = $this->init_feed( $url );
+	private function check_valid_xml( $url, $cache ) {
+		$feed = $this->init_feed( $url, $cache );
 		if ( $feed->error() ) {
 			return false;
 		}
