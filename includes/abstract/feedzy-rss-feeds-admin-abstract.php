@@ -280,7 +280,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				// thumbs pixel size
 				'keywords_title' => '',
 				// cache refresh
-			    'refresh'        => '12_hours',
+				'refresh'        => '12_hours',
 			// only display item if title contains specific keywords (comma-separated list/case sensitive)
 			), $atts, 'feedzy_default'
 		);
@@ -325,16 +325,16 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return SimplePie
 	 */
 	private function init_feed( $feedURL, $cache ) {
-	    $unit_defaults = array(
-	        'mins' => MINUTE_IN_SECONDS,
-	        'hours' => HOUR_IN_SECONDS,
-	        'days' => DAY_IN_SECONDS,
+		$unit_defaults = array(
+			'mins' => MINUTE_IN_SECONDS,
+			'hours' => HOUR_IN_SECONDS,
+			'days' => DAY_IN_SECONDS,
 		);
-	    $cache_time = 12 * HOUR_IN_SECONDS;
-	    if ( isset( $cache ) && $cache != '' ) {
-	        list( $value, $unit ) = explode( '_', $cache );
-	        if ( isset( $value ) && is_numeric( $value ) && $value >= 1 && $value <= 100 ) {
-	            if ( isset( $unit ) && in_array( strtolower( $unit ), array( 'mins', 'hours', 'days' ) ) ) {
+		$cache_time = 12 * HOUR_IN_SECONDS;
+		if ( isset( $cache ) && $cache != '' ) {
+			list( $value, $unit ) = explode( '_', $cache );
+			if ( isset( $value ) && is_numeric( $value ) && $value >= 1 && $value <= 100 ) {
+				if ( isset( $unit ) && in_array( strtolower( $unit ), array( 'mins', 'hours', 'days' ) ) ) {
 					$cache_time = $value * $unit_defaults[ $unit ];
 				}
 			}
@@ -415,7 +415,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 		}
 
-	    return $validFeedURL;
+		return $validFeedURL;
 	}
 
 	/**
