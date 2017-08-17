@@ -67,6 +67,7 @@ By activating this plugin, your cover picture will be inserted into your RSS fee
 * summarylength
 * thumb
 * default
+* refresh
 * size
 * keywords_title
 `
@@ -82,7 +83,7 @@ By activating this plugin, your cover picture will be inserted into your RSS fee
 
 = Advanced example =
 
-`[feedzy-rss feeds="http://themeisle.com/feed" max="2" feed_title="yes" target="_blank" title="50" meta="yes" summary="yes" summarylength="300" thumb="yes" size="100" default="http://your-site/default-image.jpg" keywords_title="WordPress"]`
+`[feedzy-rss feeds="http://themeisle.com/feed" max="2" feed_title="yes" target="_blank"  refresh="12_hours" title="50" meta="yes" summary="yes" summarylength="300" thumb="yes" size="100" default="http://your-site/default-image.jpg" keywords_title="WordPress"]`
 
 
 = Available Hooks =

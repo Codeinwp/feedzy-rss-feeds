@@ -524,3 +524,12 @@ input:checked + .feedzy-track:before {
 	font-size: 17px;
 	vertical-align: -3px;
 }
+
+.post-type-feedzy_categories .postbox-container div#submitdiv,
+.post-type-feedzy_categories #feedzy_category_feeds_rn {
+	display: block !important;
+}
+
+.post-type-feedzy_categories .postbox-container > div > .postbox:not(#feedzy_category_feeds) {
+	display: none;
+}

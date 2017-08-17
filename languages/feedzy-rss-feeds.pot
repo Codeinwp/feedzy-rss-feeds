@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Feedzy RSS Feeds Lite 3.2.0\n"
 "Report-Msgid-Bugs-To: https://github.com/Codeinwp/feedzy-rss-feeds/issues\n"
-"POT-Creation-Date: 2017-08-17 13:24:59+00:00\n"
+"POT-Creation-Date: 2017-08-17 13:49:33+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -90,46 +90,50 @@ msgstr ""
 msgid "Category Feeds"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:170
+#: includes/admin/feedzy-rss-feeds-admin.php:155
+msgid "Increase your social media presence"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-admin.php:185
 msgid "Place your URL's here followed by a comma."
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:231
+#: includes/admin/feedzy-rss-feeds-admin.php:246
 msgid "Category Title"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:232
-#: includes/admin/feedzy-rss-feeds-admin.php:235
+#: includes/admin/feedzy-rss-feeds-admin.php:247
+#: includes/admin/feedzy-rss-feeds-admin.php:250
 msgid "Slug"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:259
+#: includes/admin/feedzy-rss-feeds-admin.php:274
 msgid "Undefined"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:284
+#: includes/admin/feedzy-rss-feeds-admin.php:299
 msgid "Documentation and examples"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:285
+#: includes/admin/feedzy-rss-feeds-admin.php:300
 msgid "More Plugins"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:285
-#: includes/admin/feedzy-rss-feeds-admin.php:304
+#: includes/admin/feedzy-rss-feeds-admin.php:300
+#: includes/admin/feedzy-rss-feeds-admin.php:319
 msgid "More Features"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:301
+#: includes/admin/feedzy-rss-feeds-admin.php:316
 #: includes/admin/feedzy-wp-widget.php:40
 msgid "Feedzy RSS Feeds"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:301
+#: includes/admin/feedzy-rss-feeds-admin.php:316
 msgid "Feedzy RSS"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:314
+#: includes/admin/feedzy-rss-feeds-admin.php:329
 msgid "Import Posts"
 msgstr ""
 
