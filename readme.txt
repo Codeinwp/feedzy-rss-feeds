@@ -17,6 +17,8 @@ FEEDZY RSS Feeds is a small and lightweight RSS aggregator plugin. Fast and very
 
 > **Time-saving features available in the FULL version:**
 >
+> * Integration with WordAI to avoid duplicate content
+> * Audio playback template
 > * Convert feed items to WordPress posts/pages/any
 > * Multiple templates for feed items
 > * Automatically build affiliate links
@@ -30,7 +32,13 @@ FEEDZY RSS Feeds is a small and lightweight RSS aggregator plugin. Fast and very
 
 The plugin uses the SimplePie php CLASS natively included in WordPress. SimplePie is a RSS parser that can read the information contained in a feed, process it, and finally display it.
 
-**Using the latest version you can now group feeds into categories and reuse them across your content without worrying of their url**
+**Full cache control**
+
+Choose right from the shortcode how often do you want your content from feeds to get updated.
+
+**Feed Categories**
+
+You can now group feeds into categories and reuse them across your content without worrying of their url.
 
 
 FEEDZY RSS Feeds therefore supports any additional library and uses only the bare minimum to ensure good performance (minimalistic CSS + cache). This will ensure compatibility with any hosting provider that supports WordPress, but if for any reason it doesn't work for yours feel free to <a href="http://themeisle.com/contact/" rel="nofollow">contact us</a>.
@@ -38,6 +46,7 @@ FEEDZY RSS Feeds therefore supports any additional library and uses only the bar
 
  = See how Feedzy can integrate with your website  =
 
+* [Audio playback template](https://demo.themeisle.com/feedzy-rss-feeds/audio-feed-template/)
 * [Shop feed – 3 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/shop-feed/)
 * [Feed categories – 1 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/group-feeds-categories/)
 * [Large image square grid – 2 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/2-columns-large-images-square-grid/)
