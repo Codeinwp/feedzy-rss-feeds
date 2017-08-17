@@ -212,6 +212,13 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 == Changelog ==
+= 3.2.0 - 2017-08-17  = 
+
+* Fix for image URL issue following some strange patterns. 
+* Added fallback for broken feed, now if one feed from the list is not working, others will will be used.
+* Added shortcode parameter for feed cache control.
+
+
 = 3.1.10 - 2017-08-03  = 
 
 * Fixed typos in shortcode builder.

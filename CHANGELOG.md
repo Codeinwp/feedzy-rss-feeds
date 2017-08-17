@@ -1,4 +1,10 @@
 
+ ### v3.2.0 - 2017-08-17 
+ **Changes:** 
+ * Fix for image URL issue following some strange patterns. 
+* Added fallback for broken feed, now if one feed from the list is not working, others will will be used.
+* Added shortcode parameter for feed cache control.
+ 
  ### v3.1.10 - 2017-08-03 
  **Changes:** 
  * Fixed typos in shortcode builder.
