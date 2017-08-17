@@ -151,6 +151,21 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				'feedzy_category_feed',
 			), 'feedzy_categories', 'normal', 'high'
 		);
+		add_meta_box(
+			'feedzy_category_feeds_rn', __( 'Increase your social media presence', 'feedzy-rss-feeds' ), array(
+				$this,
+				'render_upsell_rn',
+			), 'feedzy_categories', 'side', 'low'
+		);
+	}
+
+	/**
+	 * Render RN upsell metabox.
+	 */
+	public function render_upsell_rn() {
+		echo '<p>Learn how you can connect with people by sharing content from RSS feeds on your social media accounts. </p>';
+		echo '<a class="button button-primary  " href="https://revive.social/plugins/revive-network/" target="_blank">View more details</a>';
+
 	}
 
 	/**
