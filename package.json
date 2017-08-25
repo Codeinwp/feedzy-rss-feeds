@@ -10,7 +10,7 @@
     "wordpress-plugin"
   ],
   "textdomain": "feedzy-rss-feeds",
-  "category": "plugins",
+  "category": "plugin",
   "author": "ThemeIsle <friends@themeisle.com>",
   "license": "GPL-2.0+",
   "bugs": {
