@@ -339,10 +339,13 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				}
 			}
 		}
+
 		$feed = new SimplePie();
-		$feed->set_cache_class( 'WP_Feed_Cache' );
 		$feed->set_file_class( 'WP_SimplePie_File' );
-		$feed->set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', $cache_time, $feedURL ) );
+		if ( ! FEEDZY_DISABLE_CACHE_FOR_TESTING ) {
+			$feed->set_cache_class( 'WP_Feed_Cache' );
+			$feed->set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', $cache_time, $feedURL ) );
+		}
 		$feed->set_feed_url( $feedURL );
 		$feed->init();
 		$feed->handle_content_type();
@@ -365,6 +368,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! class_exists( 'SimplePie' ) ) {
 			require_once( ABSPATH . WPINC . '/feed.php' );
 		}
+
+		do_action( 'feedzy_pre_http_setup', $feedURL );
+
 		// Load SimplePie Instance
 		$feed = fetch_feed( $feedURL ); // Not used as log as #41304 is Opened.
 
@@ -383,6 +389,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		$feed = $this->init_feed( $feedURL, $cache ); // Added in 3.1.7 -- TODO: Remove this line when #41304 is fixed.
+
+		do_action( 'feedzy_post_http_teardown', $feedURL );
 
 		// var_dump( $feed );
 		return $feed;

@@ -42,6 +42,22 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	private $plugin_name;
 
 	/**
+	 * Any notice we want to show in the settings screen.
+	 *
+	 * @access   public
+	 * @var      string $notice The notice.
+	 */
+	public $notice;
+
+	/**
+	 * Any error we want to show in the settings screen.
+	 *
+	 * @access   public
+	 * @var      string $error The error.
+	 */
+	public $error;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since   3.0.0
@@ -329,5 +345,136 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				add_submenu_page( 'feedzy-admin-menu', __( 'Import Posts', 'feedzy-rss-feeds' ), __( 'Import Posts', 'feedzy-rss-feeds' ), 'manage_options', 'edit.php?post_type=feedzy_imports' );
 			}
 		}
+		add_submenu_page( 'feedzy-admin-menu', __( 'Settings', 'feedzy-rss-feeds' ), __( 'Settings', 'feedzy-rss-feeds' ), 'manage_options', 'feedzy-settings', array( $this, 'feedzy_settings_page' ) );
 	}
+
+	/**
+	 * Method to register the settings page.
+	 *
+	 * @access  public
+	 */
+	public function feedzy_settings_page() {
+		if ( isset( $_POST['feedzy-settings-submit'] ) && isset( $_POST['tab'] ) && wp_verify_nonce( $_POST['nonce'], $_POST['tab'] ) ) {
+			$this->save_settings();
+			$this->notice   = __( 'Your settings were saved.', 'feedzy-rss-feeds' );
+		}
+
+		$settings   = apply_filters( 'feedzy_get_settings', array() );
+		include( FEEDZY_ABSPATH . '/includes/layouts/settings.php' );
+	}
+
+	/**
+	 * Method to get the settings.
+	 *
+	 * @access  public
+	 */
+	public function get_settings() {
+		$settings   = get_option( 'feedzy-settings' );
+		return $settings;
+	}
+
+	/**
+	 * Method to save the settings.
+	 *
+	 * @access  private
+	 */
+	private function save_settings() {
+		$settings   = apply_filters( 'feedzy_get_settings', array() );
+		switch ( $_POST['tab'] ) {
+			case 'headers':
+				$settings['header']['user-agent']   = $_POST['user-agent'];
+				break;
+			case 'proxy':
+				$settings['proxy']  = array(
+					'host'      => $_POST['proxy-host'],
+					'port'      => $_POST['proxy-port'],
+					'user'      => $_POST['proxy-user'],
+					'pass'      => $_POST['proxy-pass'],
+				);
+				break;
+		}
+
+		update_option( 'feedzy-settings', $settings );
+	}
+
+	/**
+	 * Set up the HTTP parameters/headers.
+	 *
+	 * @access  public
+	 */
+	public function pre_http_setup( $url ) {
+		$this->add_proxy( $url );
+		add_filter( 'http_headers_useragent', array( $this, 'add_user_agent' ) );
+	}
+
+	/**
+	 * Add the user agent if specified in the settings.
+	 *
+	 * @access  public
+	 */
+	public function add_user_agent( $ua ) {
+		$settings   = apply_filters( 'feedzy_get_settings', null );
+		if ( $settings && isset( $settings['header']['user-agent'] ) && ! empty( $settings['header']['user-agent'] ) ) {
+			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Override user-agent from %s to %s', $ua, $settings['header']['user-agent'] ), 'info', __FILE__, __LINE__ );
+			$ua     = $settings['header']['user-agent'];
+		}
+		return $ua;
+	}
+
+	/**
+	 * Add the proxy settings as specified in the settings.
+	 *
+	 * @access  private
+	 */
+	private function add_proxy( $url ) {
+		$settings   = apply_filters( 'feedzy_get_settings', null );
+		if ( $settings && is_array( $settings['proxy'] ) && ! empty( $settings['proxy'] ) ) {
+			// if even one constant is defined, escape.
+			if ( defined( 'WP_PROXY_HOST' ) || defined( 'WP_PROXY_PORT' ) || defined( 'WP_PROXY_USERNAME' ) || defined( 'WP_PROXY_PASSWORD' ) ) {
+				do_action( 'themeisle_log_event', FEEDZY_NAME, 'Some proxy constants already defined; ignoring proxy settings', 'info', __FILE__, __LINE__ );
+				return;
+			}
+			if ( isset( $settings['proxy']['host'] ) ) {
+				define( 'WP_PROXY_HOST', $settings['proxy']['host'] );
+			}
+			if ( isset( $settings['proxy']['port'] ) ) {
+				define( 'WP_PROXY_PORT', $settings['proxy']['port'] );
+			}
+			if ( isset( $settings['proxy']['user'] ) ) {
+				define( 'WP_PROXY_USERNAME', $settings['proxy']['user'] );
+			}
+			if ( isset( $settings['proxy']['pass'] ) ) {
+				define( 'WP_PROXY_PASSWORD', $settings['proxy']['pass'] );
+			}
+
+			// save the url(s) in a transient for 5s
+			set_transient( 'feedzy_proxy_urls', $url, 5 );
+			add_filter( 'pre_http_send_through_proxy', array( $this, 'send_through_proxy' ), 10, 4 );
+		}
+	}
+
+	/**
+	 * Check if the uri should go through the proxy.
+	 *
+	 * @access  public
+	 */
+	public function send_through_proxy( $return, $uri, $check, $home ) {
+		$proxied    = get_transient( 'feedzy_proxy_urls' );
+		if ( $proxied && ( ( is_array( $proxied ) && in_array( $uri, $proxied ) ) || $uri === $proxied ) ) {
+			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'sending %s through proxy', $uri ), 'info', __FILE__, __LINE__ );
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Teardown the HTTP parameters/headers.
+	 *
+	 * @access  public
+	 */
+	public function post_http_teardown( $url ) {
+		remove_filter( 'http_headers_useragent', array( $this, 'add_user_agent' ) );
+	}
+
+
 }
