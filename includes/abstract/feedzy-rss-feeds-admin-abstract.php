@@ -281,7 +281,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'keywords_title' => '',
 				// cache refresh
 				'refresh'        => '12_hours',
-			// only display item if title contains specific keywords (comma-separated list/case sensitive)
+				// only display item if title contains specific keywords (comma-separated list/case sensitive)
 			), $atts, 'feedzy_default'
 		);
 		$sc = array_merge( $sc, apply_filters( 'feedzy_get_short_code_attributes_filter', $atts ) );
@@ -294,7 +294,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @since   3.0.0
 	 * @updated 3.1.7   Take into account $feedURL as array from PRO version.
+	 *
 	 * @param   string $raw Url or list of urls.
+	 *
 	 * @return mixed|void Urls of the feeds.
 	 */
 	public function normalize_urls( $raw ) {
@@ -312,52 +314,15 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	}
 
 	/**
-	 * Method to avoid using core implementation in order
-	 * order to fix issues reported here: https://core.trac.wordpress.org/ticket/41304
-	 * Bug: #41304 with WP wp_kses sanitizer used by WP SimplePie implementation.
-	 *
-	 * NOTE: This is temporary should be removed as soon as #41304 is patched.
-	 *
-	 * @since   3.1.7
-	 * @access  private
-	 * @param   string $feedURL The feed URL.
-	 * @param   string $cache The cache string (eg. 1_hour, 30_min etc.).
-	 * @return SimplePie
-	 */
-	private function init_feed( $feedURL, $cache ) {
-		$unit_defaults = array(
-			'mins' => MINUTE_IN_SECONDS,
-			'hours' => HOUR_IN_SECONDS,
-			'days' => DAY_IN_SECONDS,
-		);
-		$cache_time = 12 * HOUR_IN_SECONDS;
-		if ( isset( $cache ) && $cache != '' ) {
-			list( $value, $unit ) = explode( '_', $cache );
-			if ( isset( $value ) && is_numeric( $value ) && $value >= 1 && $value <= 100 ) {
-				if ( isset( $unit ) && in_array( strtolower( $unit ), array( 'mins', 'hours', 'days' ) ) ) {
-					$cache_time = $value * $unit_defaults[ $unit ];
-				}
-			}
-		}
-		$feed = new SimplePie();
-		$feed->set_cache_class( 'WP_Feed_Cache' );
-		$feed->set_file_class( 'WP_SimplePie_File' );
-		$feed->set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', $cache_time, $feedURL ) );
-		$feed->set_feed_url( $feedURL );
-		$feed->init();
-		$feed->handle_content_type();
-
-		return $feed;
-	}
-
-	/**
 	 * Fetch the content feed from a group of urls.
 	 *
 	 * @since   3.0.0
 	 * @access  public
 	 * @updated 3.2.0
+	 *
 	 * @param   array  $feedURL The feeds urls to fetch content from.
 	 * @param   string $cache The cache string (eg. 1_hour, 30_min etc.).
+	 *
 	 * @return SimplePie|string|void|WP_Error The feed resource.
 	 */
 	public function fetch_feed( $feedURL, $cache = '12_hours' ) {
@@ -393,8 +358,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @since   3.2.0
 	 * @access  private
+	 *
 	 * @param   array|string $feedURL The feeds URL/s.
 	 * @param   string       $cache The cache string (eg. 1_hour, 30_min etc.).
+	 *
 	 * @return array
 	 */
 	private function get_valid_feed_urls( $feedURL, $cache ) {
@@ -423,8 +390,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @since   3.2.0
 	 * @access  private
+	 *
 	 * @param   string $url The URL to validate.
 	 * @param   string $cache The cache string (eg. 1_hour, 30_min etc.).
+	 *
 	 * @return bool
 	 */
 	private function check_valid_xml( $url, $cache ) {
@@ -432,7 +401,49 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( $feed->error() ) {
 			return false;
 		}
+
 		return true;
+	}
+
+	/**
+	 * Method to avoid using core implementation in order
+	 * order to fix issues reported here: https://core.trac.wordpress.org/ticket/41304
+	 * Bug: #41304 with WP wp_kses sanitizer used by WP SimplePie implementation.
+	 *
+	 * NOTE: This is temporary should be removed as soon as #41304 is patched.
+	 *
+	 * @since   3.1.7
+	 * @access  private
+	 *
+	 * @param   string $feedURL The feed URL.
+	 * @param   string $cache The cache string (eg. 1_hour, 30_min etc.).
+	 *
+	 * @return SimplePie
+	 */
+	private function init_feed( $feedURL, $cache ) {
+		$unit_defaults = array(
+			'mins'  => MINUTE_IN_SECONDS,
+			'hours' => HOUR_IN_SECONDS,
+			'days'  => DAY_IN_SECONDS,
+		);
+		$cache_time    = 12 * HOUR_IN_SECONDS;
+		if ( isset( $cache ) && $cache != '' ) {
+			list( $value, $unit ) = explode( '_', $cache );
+			if ( isset( $value ) && is_numeric( $value ) && $value >= 1 && $value <= 100 ) {
+				if ( isset( $unit ) && in_array( strtolower( $unit ), array( 'mins', 'hours', 'days' ) ) ) {
+					$cache_time = $value * $unit_defaults[ $unit ];
+				}
+			}
+		}
+		$feed = new SimplePie();
+		$feed->set_cache_class( 'WP_Feed_Cache' );
+		$feed->set_file_class( 'WP_SimplePie_File' );
+		$feed->set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', $cache_time, $feedURL ) );
+		$feed->set_feed_url( $feedURL );
+		$feed->init();
+		$feed->handle_content_type();
+
+		return $feed;
 	}
 
 	/**
@@ -851,7 +862,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function feedzy_scrape_image( $string, $link = '' ) {
 		$pattern = '/src=[\'"]?([^\'" >]+)[\'" >]/';
-		$match = $link;
+		$match   = $link;
 		preg_match( $pattern, $string, $link );
 		if ( ! empty( $link ) && isset( $link[1] ) ) {
 			$match = $link[1];
@@ -923,25 +934,14 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 		}
 		// Encode image name only en keep extra parameters
-		$query   = $extention = '';
-		$url_tab = parse_url( $string );
+		$query = '';
 		if ( isset( $url_tab['query'] ) ) {
 			$query = '?' . $url_tab['query'];
 		}
-		$path_parts = pathinfo( $string );
-		$path       = $path_parts['dirname'];
-		$file       = rawurldecode( $path_parts['filename'] );
-		$extention  = pathinfo( $url_tab['path'], PATHINFO_EXTENSION );
-		if ( ! empty( $extention ) ) {
-			$extention = '.' . $extention;
-		} else {
-			if ( isset( $path_parts['extension'] ) ) {
-				$extention = '.' . $path_parts['extension'];
-			}
-		}
+		$path = $url_tab['path'];
 
 		// Return a well encoded image url
-		return $path . '/' . rawurlencode( $file ) . $extention . $query;
+		return $url_tab['scheme'] . '://' . $url_tab['host'] . '/' . $path . $query;
 	}
 
 	/**
