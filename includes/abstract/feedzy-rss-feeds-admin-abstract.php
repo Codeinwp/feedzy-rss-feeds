@@ -312,7 +312,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		return $feedURL;
 	}
- 
+    /*
+     *
 	 * Method to avoid using core implementation in order
 	 * order to fix issues reported here: https://core.trac.wordpress.org/ticket/41304
 	 * Bug: #41304 with WP wp_kses sanitizer used by WP SimplePie implementation.
@@ -449,47 +450,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		return true;
-	}
-
-	/**
-	 * Method to avoid using core implementation in order
-	 * order to fix issues reported here: https://core.trac.wordpress.org/ticket/41304
-	 * Bug: #41304 with WP wp_kses sanitizer used by WP SimplePie implementation.
-	 *
-	 * NOTE: This is temporary should be removed as soon as #41304 is patched.
-	 *
-	 * @since   3.1.7
-	 * @access  private
-	 *
-	 * @param   string $feedURL The feed URL.
-	 * @param   string $cache The cache string (eg. 1_hour, 30_min etc.).
-	 *
-	 * @return SimplePie
-	 */
-	private function init_feed( $feedURL, $cache ) {
-		$unit_defaults = array(
-			'mins'  => MINUTE_IN_SECONDS,
-			'hours' => HOUR_IN_SECONDS,
-			'days'  => DAY_IN_SECONDS,
-		);
-		$cache_time    = 12 * HOUR_IN_SECONDS;
-		if ( isset( $cache ) && $cache != '' ) {
-			list( $value, $unit ) = explode( '_', $cache );
-			if ( isset( $value ) && is_numeric( $value ) && $value >= 1 && $value <= 100 ) {
-				if ( isset( $unit ) && in_array( strtolower( $unit ), array( 'mins', 'hours', 'days' ) ) ) {
-					$cache_time = $value * $unit_defaults[ $unit ];
-				}
-			}
-		}
-		$feed = new SimplePie();
-		$feed->set_cache_class( 'WP_Feed_Cache' );
-		$feed->set_file_class( 'WP_SimplePie_File' );
-		$feed->set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', $cache_time, $feedURL ) );
-		$feed->set_feed_url( $feedURL );
-		$feed->init();
-		$feed->handle_content_type();
-
-		return $feed;
 	}
 
 	/**
