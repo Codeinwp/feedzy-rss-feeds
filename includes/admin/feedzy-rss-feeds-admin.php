@@ -447,8 +447,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				define( 'WP_PROXY_PASSWORD', $settings['proxy']['pass'] );
 			}
 
-			// save the url(s) in a transient for 5s
-			set_transient( 'feedzy_proxy_urls', $url, 5 );
+			// temporary constant for use in the pre_http_send_through_proxy filter.
+			if ( ! defined( 'FEEZY_URL_THRU_PROXY' ) ) {
+				define( 'FEEZY_URL_THRU_PROXY', $url );
+			}
 			add_filter( 'pre_http_send_through_proxy', array( $this, 'send_through_proxy' ), 10, 4 );
 		}
 	}
@@ -459,7 +461,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @access  public
 	 */
 	public function send_through_proxy( $return, $uri, $check, $home ) {
-		$proxied    = get_transient( 'feedzy_proxy_urls' );
+		$proxied    = defined( 'FEEZY_URL_THRU_PROXY' ) ? FEEZY_URL_THRU_PROXY : null;
 		if ( $proxied && ( ( is_array( $proxied ) && in_array( $uri, $proxied ) ) || $uri === $proxied ) ) {
 			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'sending %s through proxy', $uri ), 'info', __FILE__, __LINE__ );
 			return true;
