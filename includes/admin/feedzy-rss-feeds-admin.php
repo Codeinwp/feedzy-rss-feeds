@@ -89,7 +89,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-		wp_enqueue_style( $this->plugin_name, FEEDZY_ABSURL . 'css/feedzy-rss-feeds.css', array(), $this->version, 'all' );
+		wp_enqueue_style( 'feedzy-upsell', FEEDZY_ABSURL . '/includes/layouts/css/upsell.css' );
+		wp_enqueue_style( 'feedzy-settings', FEEDZY_ABSURL . 'css/metabox-settings.css', array( 'feedzy-upsell' ) );
+		wp_enqueue_style( $this->plugin_name, FEEDZY_ABSURL . 'css/feedzy-rss-feeds.css', array( 'feedzy-settings' ), $this->version, 'all' );
 	}
 
 	/**
@@ -111,7 +113,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
 	}
 
 	/**
