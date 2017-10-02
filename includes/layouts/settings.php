@@ -8,21 +8,21 @@
 
 	<?php
 		$active_tab = isset( $_REQUEST['tab'] ) ? $_REQUEST['tab'] : 'headers';
-		$show_button	= true;
+		$show_button    = true;
 	?>
 
 	<h2 class="nav-tab-wrapper">
 		<a href="?page=feedzy-settings&tab=headers" class="nav-tab <?php echo $active_tab == 'headers' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Headers', 'feedzy-rss-feeds' ); ?></a>
 		<a href="?page=feedzy-settings&tab=proxy" class="nav-tab <?php echo $active_tab == 'proxy' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Proxy', 'feedzy-rss-feeds' ); ?></a>
-		<?php 
-			$tabs	= apply_filters( 'feedzy_settings_tabs', array() );
-			if ( $tabs ) {
-				foreach ( $tabs as $tab => $label ) {
+		<?php
+			$tabs   = apply_filters( 'feedzy_settings_tabs', array() );
+		if ( $tabs ) {
+			foreach ( $tabs as $tab => $label ) {
 		?>
 		<a href="?page=feedzy-settings&tab=<?php echo $tab; ?>" class="nav-tab <?php echo $active_tab == $tab ? 'nav-tab-active' : ''; ?>"><?php echo $label; ?></a>
 		<?php
-				}
 			}
+		}
 		?>
 	</h2>
 
@@ -43,7 +43,7 @@
 	switch ( $active_tab ) {
 		case 'headers':
 	?>
-		<h2><?php _e( 'Headers', 'feedzy-rss-feeds' );?></h2>
+		<h2><?php _e( 'Headers', 'feedzy-rss-feeds' ); ?></h2>
 		<div class="fz-form-group">
 			<label><?php echo __( 'User Agent', 'feedzy-rss-feeds' ); ?>:</label>
 		</div>
@@ -54,7 +54,7 @@
 			break;
 		case 'proxy':
 	?>
-		<h2><?php _e( 'Proxy Settings', 'feedzy-rss-feeds' );?></h2>
+		<h2><?php _e( 'Proxy Settings', 'feedzy-rss-feeds' ); ?></h2>
 		<div class="fz-form-group">
 			<label><?php echo __( 'Host', 'feedzy-rss-feeds' ); ?>:</label>
 		</div>
@@ -85,11 +85,11 @@
 	<?php
 			break;
 		default:
-			$field	= apply_filters( 'feedzy_display_tab_settings', array(), $active_tab );
+			$field  = apply_filters( 'feedzy_display_tab_settings', array(), $active_tab );
 			if ( $field ) {
 				echo $field['content'];
 				if ( isset( $field['ajax'] ) && $field['ajax'] ) {
-					$show_button	= false;
+					$show_button    = false;
 				}
 			}
 			break;
@@ -100,11 +100,11 @@
 
 		<?php
 			wp_nonce_field( $active_tab, 'nonce' );
-			if ( $show_button ) {
+		if ( $show_button ) {
 		?>
-		<button type="submit" class="fz-btn fz-btn-submit fz-btn-activate" id="feedzy-settings-submit" name="feedzy-settings-submit"><?php _e( 'Save', 'feedzy-rss-feeds' );?></button>
+		<button type="submit" class="fz-btn fz-btn-submit fz-btn-activate" id="feedzy-settings-submit" name="feedzy-settings-submit"><?php _e( 'Save', 'feedzy-rss-feeds' ); ?></button>
 		<?php
-			}
+		}
 		?>
 	</form>
 	</div>
