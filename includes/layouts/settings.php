@@ -44,43 +44,43 @@
 		case 'headers':
 	?>
 		<h2><?php _e( 'Headers', 'feedzy-rss-feeds' );?></h2>
-		<div class="form-group">
+		<div class="fz-form-group">
 			<label><?php echo __( 'User Agent', 'feedzy-rss-feeds' ); ?>:</label>
 		</div>
-		<div class="form-group">
-			<input type="text" class="form-control" name="user-agent" value="<?php echo isset( $settings['header']['user-agent'] ) ? $settings['header']['user-agent'] : ''; ?>">
+		<div class="fz-form-group">
+			<input type="text" class="fz-form-control" name="user-agent" value="<?php echo isset( $settings['header']['user-agent'] ) ? $settings['header']['user-agent'] : ''; ?>">
 		</div>
 	<?php
 			break;
 		case 'proxy':
 	?>
 		<h2><?php _e( 'Proxy Settings', 'feedzy-rss-feeds' );?></h2>
-		<div class="form-group">
+		<div class="fz-form-group">
 			<label><?php echo __( 'Host', 'feedzy-rss-feeds' ); ?>:</label>
 		</div>
-		<div class="form-group">
-			<input type="text" class="form-control" name="proxy-host" value="<?php echo isset( $settings['proxy']['host'] ) ? $settings['proxy']['host'] : ''; ?>">
+		<div class="fz-form-group">
+			<input type="text" class="fz-form-control" name="proxy-host" value="<?php echo isset( $settings['proxy']['host'] ) ? $settings['proxy']['host'] : ''; ?>">
 		</div>
 
-		<div class="form-group">
+		<div class="fz-form-group">
 			<label><?php echo __( 'Port', 'feedzy-rss-feeds' ); ?>:</label>
 		</div>
-		<div class="form-group">
-			<input type="number" min="0" max="65535" class="form-control" name="proxy-port" value="<?php echo isset( $settings['proxy']['port'] ) ? $settings['proxy']['port'] : ''; ?>">
+		<div class="fz-form-group">
+			<input type="number" min="0" max="65535" class="fz-form-control" name="proxy-port" value="<?php echo isset( $settings['proxy']['port'] ) ? $settings['proxy']['port'] : ''; ?>">
 		</div>
 
-		<div class="form-group">
+		<div class="fz-form-group">
 			<label><?php echo __( 'Username', 'feedzy-rss-feeds' ); ?>:</label>
 		</div>
-		<div class="form-group">
-			<input type="text" class="form-control" name="proxy-user" value="<?php echo isset( $settings['proxy']['user'] ) ? $settings['proxy']['user'] : ''; ?>">
+		<div class="fz-form-group">
+			<input type="text" class="fz-form-control" name="proxy-user" value="<?php echo isset( $settings['proxy']['user'] ) ? $settings['proxy']['user'] : ''; ?>">
 		</div>
 
-		<div class="form-group">
+		<div class="fz-form-group">
 			<label><?php echo __( 'Password', 'feedzy-rss-feeds' ); ?>:</label>
 		</div>
-		<div class="form-group">
-			<input type="password" class="form-control" name="proxy-pass" value="<?php echo isset( $settings['proxy']['pass'] ) ? $settings['proxy']['pass'] : ''; ?>">
+		<div class="fz-form-group">
+			<input type="password" class="fz-form-control" name="proxy-pass" value="<?php echo isset( $settings['proxy']['pass'] ) ? $settings['proxy']['pass'] : ''; ?>">
 		</div>
 	<?php
 			break;
@@ -102,7 +102,7 @@
 			wp_nonce_field( $active_tab, 'nonce' );
 			if ( $show_button ) {
 		?>
-		<button type="submit" class="btn btn-submit btn-activate" id="feedzy-settings-submit" name="feedzy-settings-submit"><?php _e( 'Save', 'feedzy-rss-feeds' );?></button>
+		<button type="submit" class="fz-btn fz-btn-submit fz-btn-activate" id="feedzy-settings-submit" name="feedzy-settings-submit"><?php _e( 'Save', 'feedzy-rss-feeds' );?></button>
 		<?php
 			}
 		?>
