@@ -216,3 +216,23 @@
 		display: none;
 	}
 }
+
+#fz-features.fz-settings .fz-feature{
+	margin-top:0px;
+	border:none;
+}
+#fz-features.fz-settings  .nav-tab-wrapper{
+	border-bottom: none;
+}
+#fz-features.fz-settings   .nav-tab-wrapper a.nav-tab-active,
+#fz-features.fz-settings  .nav-tab-wrapper a:hover{
+	background: #fff;
+}
+#fz-features.fz-settings  .nav-tab-wrapper a{
+	padding: 10px 20px;
+	background: #E0E0E0;
+	color: #000;
+	box-shadow: 0 1px 1px 0 rgba(0,0,0,0.1);
+	margin-top:10px;
+	border:0px;
+}

@@ -17,4 +17,5 @@ dist
 artifact
 composer.json
 composer.lock
+package-lock.json
 key.enc
