@@ -312,8 +312,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		return $feedURL;
 	}
-    /*
-     *
+
+	/**
+	 *
 	 * Method to avoid using core implementation in order
 	 * order to fix issues reported here: https://core.trac.wordpress.org/ticket/41304
 	 * Bug: #41304 with WP wp_kses sanitizer used by WP SimplePie implementation.
@@ -355,7 +356,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		return $feed;
 	}
 
-	/** 
+	/**
 	 * Fetch the content feed from a group of urls.
 	 *
 	 * @since   3.0.0
