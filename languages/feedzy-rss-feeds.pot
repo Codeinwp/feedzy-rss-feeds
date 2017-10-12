@@ -2,9 +2,9 @@
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: Feedzy RSS Feeds Lite 3.2.0\n"
+"Project-Id-Version: Feedzy RSS Feeds Lite 3.2.1\n"
 "Report-Msgid-Bugs-To: https://github.com/Codeinwp/feedzy-rss-feeds/issues\n"
-"POT-Creation-Date: 2017-08-17 13:49:33+00:00\n"
+"POT-Creation-Date: 2017-10-12 09:53:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -32,109 +32,117 @@ msgstr ""
 msgid "Sorry, this feed is currently unavailable or does not exists anymore."
 msgstr ""
 
-#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:407
-#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:414
+#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:426
+#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:433
 msgid "Feed URL: %s not valid and removed from fetch."
 msgstr ""
 
-#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:695
+#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:717
 msgid "by"
 msgstr ""
 
-#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:701
+#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:723
 msgid "on"
 msgstr ""
 
-#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:703
+#: includes/abstract/feedzy-rss-feeds-admin-abstract.php:725
 msgid "at"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:110
+#: includes/admin/feedzy-rss-feeds-admin.php:128
 msgid "Feed Categories"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:111
+#: includes/admin/feedzy-rss-feeds-admin.php:129
 msgid "Feed Category"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:112
-#: includes/admin/feedzy-rss-feeds-admin.php:113
+#: includes/admin/feedzy-rss-feeds-admin.php:130
+#: includes/admin/feedzy-rss-feeds-admin.php:131
 msgid "Add Category"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:114
+#: includes/admin/feedzy-rss-feeds-admin.php:132
 msgid "Edit Category"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:115
+#: includes/admin/feedzy-rss-feeds-admin.php:133
 msgid "New Feed Category"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:116
+#: includes/admin/feedzy-rss-feeds-admin.php:134
 msgid "View Category"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:117
+#: includes/admin/feedzy-rss-feeds-admin.php:135
 msgid "Search Category"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:118
+#: includes/admin/feedzy-rss-feeds-admin.php:136
 msgid "No categories found"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:119
+#: includes/admin/feedzy-rss-feeds-admin.php:137
 msgid "No categories in the trash"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:149
+#: includes/admin/feedzy-rss-feeds-admin.php:167
 msgid "Category Feeds"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:155
+#: includes/admin/feedzy-rss-feeds-admin.php:173
 msgid "Increase your social media presence"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:185
+#: includes/admin/feedzy-rss-feeds-admin.php:203
 msgid "Place your URL's here followed by a comma."
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:246
+#: includes/admin/feedzy-rss-feeds-admin.php:264
 msgid "Category Title"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:247
-#: includes/admin/feedzy-rss-feeds-admin.php:250
+#: includes/admin/feedzy-rss-feeds-admin.php:265
+#: includes/admin/feedzy-rss-feeds-admin.php:268
 msgid "Slug"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:274
+#: includes/admin/feedzy-rss-feeds-admin.php:292
 msgid "Undefined"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:299
+#: includes/admin/feedzy-rss-feeds-admin.php:317
 msgid "Documentation and examples"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:300
+#: includes/admin/feedzy-rss-feeds-admin.php:318
 msgid "More Plugins"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:300
-#: includes/admin/feedzy-rss-feeds-admin.php:319
+#: includes/admin/feedzy-rss-feeds-admin.php:318
+#: includes/admin/feedzy-rss-feeds-admin.php:337
 msgid "More Features"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:316
+#: includes/admin/feedzy-rss-feeds-admin.php:334
 #: includes/admin/feedzy-wp-widget.php:40
 msgid "Feedzy RSS Feeds"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:316
+#: includes/admin/feedzy-rss-feeds-admin.php:334
 msgid "Feedzy RSS"
 msgstr ""
 
-#: includes/admin/feedzy-rss-feeds-admin.php:329
+#: includes/admin/feedzy-rss-feeds-admin.php:347
 msgid "Import Posts"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-admin.php:351
+msgid "Settings"
+msgstr ""
+
+#: includes/admin/feedzy-rss-feeds-admin.php:366
+msgid "Your settings were saved."
 msgstr ""
 
 #: includes/admin/feedzy-rss-feeds-ui-lang.php:52
@@ -391,14 +399,40 @@ msgstr ""
 msgid "Intro text"
 msgstr ""
 
-#: vendor/codeinwp/themeisle-sdk/class-themeisle-sdk-licenser.php:453
-msgid ""
-"Updating this theme will lose any customizations you have made. Cancel to "
-"stop, OK to update."
+#: includes/layouts/settings.php:12 includes/layouts/settings.php:45
+msgid "Headers"
 msgstr ""
 
-#: vendor/codeinwp/themeisle-sdk/class-themeisle-sdk-widget-dashboard-blog.php:197
-msgid "Install"
+#: includes/layouts/settings.php:14
+msgid "Proxy"
+msgstr ""
+
+#: includes/layouts/settings.php:47
+msgid "User Agent to use when accessing the feed"
+msgstr ""
+
+#: includes/layouts/settings.php:57
+msgid "Proxy Settings"
+msgstr ""
+
+#: includes/layouts/settings.php:59
+msgid "Host"
+msgstr ""
+
+#: includes/layouts/settings.php:67
+msgid "Port"
+msgstr ""
+
+#: includes/layouts/settings.php:75
+msgid "Username"
+msgstr ""
+
+#: includes/layouts/settings.php:83
+msgid "Password"
+msgstr ""
+
+#: includes/layouts/settings.php:110
+msgid "Save"
 msgstr ""
 
 #. Plugin Name of the plugin/theme

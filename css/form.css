@@ -4,7 +4,6 @@
  */
 
 html {
-	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 	font-size: 62.5%;
 }
@@ -21,7 +20,6 @@ body {
 *,
 *:after,
 *:before {
-	-webkit-box-sizing: inherit;
 	box-sizing: inherit;
 }
 
@@ -178,7 +176,6 @@ input[type="text"],
 input[type="url"],
 textarea,
 select {
-	-webkit-box-sizing: inherit;
 	box-sizing: inherit;
 	width: 100%;
 	height: 3.8rem;
@@ -186,7 +183,6 @@ select {
 	border: 0.1rem solid #d1d1d1;
 	border-radius: 0.4rem;
 	background-color: transparent;
-	-webkit-box-shadow: none;
 	box-shadow: none;
 
 	-webkit-appearance: none;

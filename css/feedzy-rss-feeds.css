@@ -2,7 +2,7 @@
  * feedzy-rss-feeds.css
  * Feedzy RSS Feed
  * Copyright: (c) 2016 Themeisle, themeisle.com
- * Version: 3.2.0
+ * Version: 3.2.1
  * Plugin Name: FEEDZY RSS Feeds
  * Plugin URI: http://themeisle.com/plugins/feedzy-rss-feeds/
  * Author: Themeisle
@@ -223,7 +223,6 @@ i.mce-i-feedzy-icon {
 }
 
 .feedzy-rss .feedzy-style1 .rss_item:hover .rss_image a {
-	-webkit-box-shadow: 0 0 10px rgba(0,0,0,0.25);
 	box-shadow: 0 0 10px rgba(0,0,0,0.25);
 }
 
@@ -476,7 +475,6 @@ input:checked + .feedzy-track {
 }
 
 input:focus + .feedzy-track {
-	-webkit-box-shadow: 0 0 1px #0085ba;
 	box-shadow: 0 0 1px #0085ba;
 }
 

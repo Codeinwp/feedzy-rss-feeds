@@ -11,13 +11,6 @@
  */
 class Test_Feedzy extends WP_UnitTestCase {
 	/**
-	 * Check if we have SDK loaded.
-	 */
-	public function test_sdk_exists() {
-		$this->assertTrue( class_exists( 'ThemeIsle_SDK_Loader' ) );
-	}
-
-	/**
 	 * Test method to check Create | Update and Feed from Slug
 	 *
 	 * @since   3.0.12

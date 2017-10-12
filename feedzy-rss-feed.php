@@ -15,7 +15,7 @@
  * Plugin Name:       Feedzy RSS Feeds Lite
  * Plugin URI:        https://themeisle.com/plugins/feedzy-rss-feeds-lite/
  * Description:       A small and lightweight RSS aggregator plugin. Fast and very easy to use, it allows you to aggregate multiple RSS feeds into your WordPress site through fully customizable shortcodes & widgets.
- * Version:           3.2.0
+ * Version:           3.2.1
  * Author:            Themeisle
  * Author URI:        http://themeisle.com
  * License:           GPL-2.0+
@@ -102,19 +102,40 @@ function run_feedzy_rss_feeds() {
 	define( 'FEEDZY_ABSURL', plugins_url( '/', __FILE__ ) );
 	define( 'FEEDZY_ABSPATH', dirname( __FILE__ ) );
 	define( 'FEEDZY_UPSELL_LINK', 'https://themeisle.com/plugins/feedzy-rss-feeds/' );
+	define( 'FEEDZY_NAME', 'Feedzy RSS Feeds' );
+
+	// always make this true before testing
+	define( 'FEEDZY_DISABLE_CACHE_FOR_TESTING', false );
 	$feedzy = Feedzy_Rss_Feeds::instance();
 	$feedzy->run();
 	$vendor_file = FEEDZY_ABSPATH . '/vendor/autoload_52.php';
 	if ( is_readable( $vendor_file ) ) {
 		require_once $vendor_file;
 	}
-	add_filter(
-		'themeisle_sdk_products', function ( $products ) {
-			$products[] = FEEDZY_BASEFILE;
 
-			return $products;
-		}
-	);
+	add_filter( 'themeisle_sdk_products', 'feedzy_register_sdk', 10, 1 );
+	add_filter( 'pirate_parrot_log', 'feedzy_register_parrot', 10, 1 );
+
+}
+
+/**
+ * Registers with the SDK
+ *
+ * @since    1.0.0
+ */
+function feedzy_register_sdk( $products ) {
+	$products[] = FEEDZY_BASEFILE;
+	return $products;
+}
+
+/**
+ * Registers with the parrot plugin
+ *
+ * @since    1.0.0
+ */
+function feedzy_register_parrot( $plugins ) {
+	$plugins[] = FEEDZY_NAME;
+	return $plugins;
 }
 
 spl_autoload_register( 'feedzy_rss_feeds_autoload' );

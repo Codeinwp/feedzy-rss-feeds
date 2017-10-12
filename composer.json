@@ -6,12 +6,6 @@
     "feeds",
     "rss"
   ],
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/Codeinwp/themeisle-sdk"
-    }
-  ],
   "homepage": "https://themeisle.com/plugins/feedzy-rss-feeds/",
   "license": "GPL-2.0+",
   "authors": [
