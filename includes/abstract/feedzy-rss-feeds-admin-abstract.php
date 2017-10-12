@@ -314,49 +314,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	}
 
 	/**
-	 *
-	 * Method to avoid using core implementation in order
-	 * order to fix issues reported here: https://core.trac.wordpress.org/ticket/41304
-	 * Bug: #41304 with WP wp_kses sanitizer used by WP SimplePie implementation.
-	 *
-	 * NOTE: This is temporary should be removed as soon as #41304 is patched.
-	 *
-	 * @since   3.1.7
-	 * @access  private
-	 * @param   string $feedURL The feed URL.
-	 * @param   string $cache The cache string (eg. 1_hour, 30_min etc.).
-	 * @return SimplePie
-	 */
-	private function init_feed( $feedURL, $cache ) {
-		$unit_defaults = array(
-			'mins' => MINUTE_IN_SECONDS,
-			'hours' => HOUR_IN_SECONDS,
-			'days' => DAY_IN_SECONDS,
-		);
-		$cache_time = 12 * HOUR_IN_SECONDS;
-		if ( isset( $cache ) && $cache != '' ) {
-			list( $value, $unit ) = explode( '_', $cache );
-			if ( isset( $value ) && is_numeric( $value ) && $value >= 1 && $value <= 100 ) {
-				if ( isset( $unit ) && in_array( strtolower( $unit ), array( 'mins', 'hours', 'days' ) ) ) {
-					$cache_time = $value * $unit_defaults[ $unit ];
-				}
-			}
-		}
-
-		$feed = new SimplePie();
-		$feed->set_file_class( 'WP_SimplePie_File' );
-		if ( ! FEEDZY_DISABLE_CACHE_FOR_TESTING ) {
-			$feed->set_cache_class( 'WP_Feed_Cache' );
-			$feed->set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', $cache_time, $feedURL ) );
-		}
-		$feed->set_feed_url( $feedURL );
-		$feed->init();
-		$feed->handle_content_type();
-
-		return $feed;
-	}
-
-	/**
 	 * Fetch the content feed from a group of urls.
 	 *
 	 * @since   3.0.0
@@ -370,14 +327,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function fetch_feed( $feedURL, $cache = '12_hours' ) {
 		// Load SimplePie if not already
-		if ( ! class_exists( 'SimplePie' ) ) {
-			require_once( ABSPATH . WPINC . '/feed.php' );
-		}
-
 		do_action( 'feedzy_pre_http_setup', $feedURL );
 
 		// Load SimplePie Instance
-		$feed = fetch_feed( $feedURL ); // Not used as log as #41304 is Opened.
+		$feed = $this->init_feed( $feedURL, $cache ); // Not used as log as #41304 is Opened.
 
 		// Report error when is an error loading the feed
 		if ( is_wp_error( $feed ) ) {
@@ -390,14 +343,65 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 			$feedURL = $this->get_valid_feed_urls( $feedURL, $cache );
 
-			// $feed = fetch_feed( $validFeedURL ); // Not used as log as #41304 is Opened.
-		}
+			$feed = $this->init_feed( $feedURL, $cache ); // Not used as log as #41304 is Opened.
 
-		$feed = $this->init_feed( $feedURL, $cache ); // Added in 3.1.7 -- TODO: Remove this line when #41304 is fixed.
+		}
 
 		do_action( 'feedzy_post_http_teardown', $feedURL );
 
 		// var_dump( $feed );
+		return $feed;
+	}
+
+	/**
+	 *
+	 * Method to avoid using core implementation in order
+	 * order to fix issues reported here: https://core.trac.wordpress.org/ticket/41304
+	 * Bug: #41304 with WP wp_kses sanitizer used by WP SimplePie implementation.
+	 *
+	 * NOTE: This is temporary should be removed as soon as #41304 is patched.
+	 *
+	 * @since   3.1.7
+	 * @access  private
+	 *
+	 * @param   string $feedURL The feed URL.
+	 * @param   string $cache The cache string (eg. 1_hour, 30_min etc.).
+	 *
+	 * @return SimplePie
+	 */
+	private function init_feed( $feedURL, $cache ) {
+		if ( ! class_exists( 'SimplePie' ) ) {
+			require_once( ABSPATH . WPINC . '/class-simplepie.php' );
+			require_once( ABSPATH . WPINC . '/class-wp-feed-cache.php' );
+			require_once( ABSPATH . WPINC . '/class-wp-feed-cache-transient.php' );
+			require_once( ABSPATH . WPINC . '/class-wp-simplepie-file.php' );
+		}
+		$unit_defaults = array(
+			'mins'  => MINUTE_IN_SECONDS,
+			'hours' => HOUR_IN_SECONDS,
+			'days'  => DAY_IN_SECONDS,
+		);
+		$cache_time    = 12 * HOUR_IN_SECONDS;
+		if ( isset( $cache ) && $cache != '' ) {
+			list( $value, $unit ) = explode( '_', $cache );
+			if ( isset( $value ) && is_numeric( $value ) && $value >= 1 && $value <= 100 ) {
+				if ( isset( $unit ) && in_array( strtolower( $unit ), array( 'mins', 'hours', 'days' ) ) ) {
+					$cache_time = $value * $unit_defaults[ $unit ];
+				}
+			}
+		}
+
+		$feed = new SimplePie();
+		$feed->set_file_class( 'WP_SimplePie_File' );
+		$feed->set_useragent( apply_filters( 'http_headers_useragent', SIMPLEPIE_USERAGENT ) );
+		if ( ! FEEDZY_DISABLE_CACHE_FOR_TESTING ) {
+			$feed->set_cache_class( 'WP_Feed_Cache' );
+			$feed->set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', $cache_time, $feedURL ) );
+		}
+		$feed->set_feed_url( $feedURL );
+		$feed->init();
+		$feed->handle_content_type();
+
 		return $feed;
 	}
 
