@@ -1,4 +1,10 @@
 
+ ### v3.2.1 - 2017-10-12 
+ **Changes:** 
+ * Adds global settings page. 
+* Adds User Agent and Proxy settings. 
+* Fix for some edge cases regarding images in the feed.
+ 
  ### v3.2.0 - 2017-08-17 
  **Changes:** 
  * Fix for image URL issue following some strange patterns. 
