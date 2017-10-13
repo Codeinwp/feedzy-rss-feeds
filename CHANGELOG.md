@@ -1,4 +1,9 @@
 
+ ### v3.2.2 - 2017-10-13 
+ **Changes:** 
+ * Fix for assets enqueue, loading them where are needed only.
+* Removes duplicates readme.md files.
+ 
  ### v3.2.1 - 2017-10-12 
  **Changes:** 
  * Adds global settings page. 
