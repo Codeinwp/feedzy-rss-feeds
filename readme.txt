@@ -221,6 +221,12 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 == Changelog ==
+= 3.2.2 - 2017-10-13  = 
+
+* Fix for assets enqueue, loading them where are needed only.
+* Removes duplicates readme.md files.
+
+
 = 3.2.1 - 2017-10-12  = 
 
 * Adds global settings page. 
