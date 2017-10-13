@@ -1,4 +1,8 @@
 
+ ### v3.2.4 - 2017-10-13 
+ **Changes:** 
+ * Fix for undefined function error.
+ 
  ### v3.2.3 - 2017-10-13 
  **Changes:** 
   

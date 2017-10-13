@@ -221,6 +221,11 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 == Changelog ==
+= 3.2.4 - 2017-10-13  = 
+
+* Fix for undefined function error.
+
+
 = 3.2.3 - 2017-10-13  = 
 
 
