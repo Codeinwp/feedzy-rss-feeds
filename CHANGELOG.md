@@ -1,4 +1,7 @@
 
+ ### v3.2.3 - 2017-10-13 
+ **Changes:** 
+  
  ### v3.2.2 - 2017-10-13 
  **Changes:** 
  * Fix for assets enqueue, loading them where are needed only.
