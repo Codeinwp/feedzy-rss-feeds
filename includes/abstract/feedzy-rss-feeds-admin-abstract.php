@@ -987,7 +987,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return mixed
 	 */
 	public function load_layout( $layout_name ) {
-		wp_enqueue_style( 'feedzy-upsell', FEEDZY_ABSURL . '/includes/layouts/css/upsell.css' );
 		include( FEEDZY_ABSPATH . '/includes/layouts/' . $layout_name . '.php' );
 	}
 

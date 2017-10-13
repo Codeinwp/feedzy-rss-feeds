@@ -89,9 +89,20 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		 */
 
 		wp_enqueue_style( $this->plugin_name, FEEDZY_ABSURL . 'css/feedzy-rss-feeds.css', array( 'feedzy-settings' ), $this->version, 'all' );
+		$screen = get_current_screen();
+		if ( empty( $screen ) ) {
+			return;
+		}
+		if ( ! isset( $screen->base ) ) {
+			return;
+		}
 
-		wp_enqueue_style( 'feedzy-upsell', FEEDZY_ABSURL . '/includes/layouts/css/upsell.css' );
+		$upsell_screens = array( 'feedzy-rss_page_feedzy-settings', 'feedzy-rss_page_feedzy-admin-menu-pro-upsell' );
 
+		if ( ! in_array( $screen->base, $upsell_screens ) && strpos( $screen->id, 'feedzy' ) === false ) {
+			return;
+		}
+		wp_enqueue_style( 'feedzy-upsell', FEEDZY_ABSURL . 'includes/layouts/css/upsell.css' );
 		wp_enqueue_style( 'feedzy-settings', FEEDZY_ABSURL . 'css/metabox-settings.css', array( 'feedzy-upsell' ) );
 	}
 
@@ -315,7 +326,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( strpos( $file, 'feedzy-rss-feed.php' ) !== false ) {
 			$new_links = array(
 				'doc'           => '<a href="http://docs.themeisle.com/article/277-feedzy-rss-feeds-hooks" target="_blank" title="' . __( 'Documentation and examples', 'feedzy-rss-feeds' ) . '">' . __( 'Documentation and examples', 'feedzy-rss-feeds' ) . '</a>',
-				'more_features' => '<a href="' . FEEDZY_UPSELL_LINK . '" target="_blank" title="' . __( 'More Plugins', 'feedzy-rss-feeds' ) . '">' . __( 'More Features', 'feedzy-rss-feeds' ) . '<i class="dashicons dashicons-unlock more-features-icon"></i></a>',
+				'more_features' => '<a href="' . FEEDZY_UPSELL_LINK . '" target="_blank" title="' . __( 'More Plugins', 'feedzy-rss-feeds' ) . '">' . __( 'More Features', 'feedzy-rss-feeds' ) . '<i style="width: 17px; height: 17px; margin-left: 4px; color: #ffca54; font-size: 17px; vertical-align: -3px;" class="dashicons dashicons-unlock more-features-icon"></i></a>',
 			);
 			$links     = array_merge( $links, $new_links );
 		}
@@ -335,7 +346,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! class_exists( 'Feedzy_Rss_Feeds_Pro' ) ) {
 			add_submenu_page(
 				'feedzy-admin-menu', __( 'More Features', 'feedzy-rss-feeds' ), __( 'More Features', 'feedzy-rss-feeds' ) . '<span class="dashicons 
-		dashicons-star-filled more-features-icon"></span>', 'manage_options', 'feedzy-admin-menu-pro-upsell',
+		dashicons-star-filled more-features-icon" style="width: 17px; height: 17px; margin-left: 4px; color: #ffca54; font-size: 17px; vertical-align: -3px;"></span>', 'manage_options', 'feedzy-admin-menu-pro-upsell',
 				array(
 					$this,
 					'render_upsell',
