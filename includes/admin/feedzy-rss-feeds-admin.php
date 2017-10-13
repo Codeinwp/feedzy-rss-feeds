@@ -89,6 +89,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		 */
 
 		wp_enqueue_style( $this->plugin_name, FEEDZY_ABSURL . 'css/feedzy-rss-feeds.css', array(), $this->version, 'all' );
+		if ( ! is_admin() ) {
+			return;
+		}
 		$screen = get_current_screen();
 		if ( empty( $screen ) ) {
 			return;
@@ -102,8 +105,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! in_array( $screen->base, $upsell_screens ) && strpos( $screen->id, 'feedzy' ) === false ) {
 			return;
 		}
-		wp_enqueue_style( $this->plugin_name.'-upsell', FEEDZY_ABSURL . 'includes/layouts/css/upsell.css' );
-		wp_enqueue_style( $this->plugin_name.'-settings', FEEDZY_ABSURL . 'css/metabox-settings.css', array( $this->plugin_name.'-upsell' ) );
+		wp_enqueue_style( $this->plugin_name . '-upsell', FEEDZY_ABSURL . 'includes/layouts/css/upsell.css' );
+		wp_enqueue_style( $this->plugin_name . '-settings', FEEDZY_ABSURL . 'css/metabox-settings.css', array( $this->plugin_name . '-upsell' ) );
 	}
 
 	/**
