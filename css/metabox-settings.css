@@ -1824,9 +1824,7 @@ a:focus.dropdown-item {
 	border-color: #f35b3f;
 }
 
-input[type="text"],
-input[type="password"],
-textarea,
+input[type="password"].fz-form-control,
 textarea.fz-form-control {
 	width: 100%;
 	height: 44px;
@@ -1846,7 +1844,6 @@ textarea.fz-form-control {
 	transition: all 0.3s;
 }
 
-textarea,
 textarea.fz-form-control {
 	height: 90px;
 	padding-top: 8px;
@@ -1854,9 +1851,6 @@ textarea.fz-form-control {
 	line-height: 30px;
 }
 
-input[type="text"]:focus,
-input[type="password"]:focus,
-textarea:focus,
 textarea.fz-form-control:focus {
 	border: 1px solid #ccc;
 	outline: 0;
@@ -1864,30 +1858,18 @@ textarea.fz-form-control:focus {
 	box-shadow: none;
 }
 
-input[type="text"]:-moz-placeholder,
-input[type="password"]:-moz-placeholder,
-textarea:-moz-placeholder,
 textarea.fz-form-control:-moz-placeholder {
 	color: #888;
 }
 
-input[type="text"]:-ms-input-placeholder,
-input[type="password"]:-ms-input-placeholder,
-textarea:-ms-input-placeholder,
 textarea.fz-form-control:-ms-input-placeholder {
 	color: #888;
 }
 
-input[type="text"]::-webkit-input-placeholder,
-input[type="password"]::-webkit-input-placeholder,
-textarea::-webkit-input-placeholder,
 textarea.fz-form-control::-webkit-input-placeholder {
 	color: #888;
 }
 
-label {
-	font-weight: 300;
-}
 
 button.fz-btn {
 	min-width: 105px;
@@ -1977,10 +1959,7 @@ Toggle switches
 }
 
 input.feedzy-toggle-round + label {
-	width: 60px;
-	height: 30px;
 	padding: 2px;
-	border-radius: 30px;
 	background-color: #ddd;
 }
 
