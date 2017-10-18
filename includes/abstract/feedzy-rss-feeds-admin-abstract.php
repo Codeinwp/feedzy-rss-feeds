@@ -955,7 +955,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$path = '/' . $path;
 		}
 		// Return a well encoded image url
-		return $url_tab['scheme'] . '://' . $url_tab['host'] . '/' . $path . $query;
+		return $url_tab['scheme'] . '://' . $url_tab['host'] . $path . $query;
 	}
 
 	/**
