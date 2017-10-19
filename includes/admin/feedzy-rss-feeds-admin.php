@@ -443,21 +443,27 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 				return;
 			}
-			if ( isset( $settings['proxy']['host'] ) ) {
+
+			$proxied    = false;
+			if ( isset( $settings['proxy']['host'] ) && ! empty( $settings['proxy']['host'] ) ) {
+				$proxied    = true;
 				define( 'WP_PROXY_HOST', $settings['proxy']['host'] );
 			}
-			if ( isset( $settings['proxy']['port'] ) ) {
+			if ( isset( $settings['proxy']['port'] ) && ! empty( $settings['proxy']['port'] ) ) {
+				$proxied    = true;
 				define( 'WP_PROXY_PORT', $settings['proxy']['port'] );
 			}
-			if ( isset( $settings['proxy']['user'] ) ) {
+			if ( isset( $settings['proxy']['user'] ) && ! empty( $settings['proxy']['user'] ) ) {
+				$proxied    = true;
 				define( 'WP_PROXY_USERNAME', $settings['proxy']['user'] );
 			}
-			if ( isset( $settings['proxy']['pass'] ) ) {
+			if ( isset( $settings['proxy']['pass'] ) && ! empty( $settings['proxy']['pass'] ) ) {
+				$proxied    = true;
 				define( 'WP_PROXY_PASSWORD', $settings['proxy']['pass'] );
 			}
 
 			// temporary constant for use in the pre_http_send_through_proxy filter.
-			if ( ! defined( 'FEEZY_URL_THRU_PROXY' ) ) {
+			if ( $proxied && ! defined( 'FEEZY_URL_THRU_PROXY' ) ) {
 				define( 'FEEZY_URL_THRU_PROXY', $url );
 			}
 			add_filter( 'pre_http_send_through_proxy', array( $this, 'send_through_proxy' ), 10, 4 );
