@@ -179,15 +179,15 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	public function add_feedzy_post_type_metaboxes() {
 		add_meta_box(
 			'feedzy_category_feeds', __( 'Category Feeds', 'feedzy-rss-feeds' ), array(
-			$this,
-			'feedzy_category_feed',
-		), 'feedzy_categories', 'normal', 'high'
+				$this,
+				'feedzy_category_feed',
+			), 'feedzy_categories', 'normal', 'high'
 		);
 		add_meta_box(
 			'feedzy_category_feeds_rn', __( 'Increase your social media presence', 'feedzy-rss-feeds' ), array(
-			$this,
-			'render_upsell_rn',
-		), 'feedzy_categories', 'side', 'low'
+				$this,
+				'render_upsell_rn',
+			), 'feedzy_categories', 'side', 'low'
 		);
 	}
 
