@@ -443,16 +443,16 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 				return;
 			}
-			if ( isset( $settings['proxy']['host'] ) ) {
+			if ( isset( $settings['proxy']['host'] ) && ! empty( $settings['proxy']['host'] ) ) {
 				define( 'WP_PROXY_HOST', $settings['proxy']['host'] );
 			}
-			if ( isset( $settings['proxy']['port'] ) ) {
+			if ( isset( $settings['proxy']['port'] ) && ! empty( $settings['proxy']['port'] ) ) {
 				define( 'WP_PROXY_PORT', $settings['proxy']['port'] );
 			}
-			if ( isset( $settings['proxy']['user'] ) ) {
+			if ( isset( $settings['proxy']['user'] ) && ! empty( $settings['proxy']['user'] ) ) {
 				define( 'WP_PROXY_USERNAME', $settings['proxy']['user'] );
 			}
-			if ( isset( $settings['proxy']['pass'] ) ) {
+			if ( isset( $settings['proxy']['pass'] ) && ! empty( $settings['proxy']['pass'] ) ) {
 				define( 'WP_PROXY_PASSWORD', $settings['proxy']['pass'] );
 			}
 
