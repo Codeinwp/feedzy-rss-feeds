@@ -400,6 +400,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 		$feed->set_feed_url( $feedURL );
 		$feed->init();
+		$feed->force_feed( true );
 		$feed->handle_content_type();
 
 		return $feed;
