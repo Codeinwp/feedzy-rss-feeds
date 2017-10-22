@@ -949,7 +949,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( isset( $url_tab['query'] ) ) {
 			$query = '?' . $url_tab['query'];
 		}
-		$path = $url_tab['path'];
+		$path = ltrim( $url_tab['path'], '/' );
 
 		// Return a well encoded image url
 		return $url_tab['scheme'] . '://' . $url_tab['host'] . '/' . $path . $query;
