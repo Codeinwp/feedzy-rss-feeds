@@ -950,7 +950,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( isset( $url_tab['query'] ) ) {
 			$query = '?' . $url_tab['query'];
 		}
-		$path = $url_tab['path'];
+		$path = ltrim( $url_tab['path'], '/' );
 
 		if ( substr( $path, 0, 0 ) === '/' ) {
 			$path = '/' . $path;
