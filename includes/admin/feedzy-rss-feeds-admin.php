@@ -427,6 +427,18 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	public function pre_http_setup( $url ) {
 		$this->add_proxy( $url );
 		add_filter( 'http_headers_useragent', array( $this, 'add_user_agent' ) );
+		add_filter( 'http_request_args', array( $this, 'http_request_args' ) );
+	}
+
+	/**
+	 * Add additional HTTP request args.
+	 *
+	 * @access  public
+	 */
+	public function http_request_args( $args ) {
+		// allow private IPs.
+		$args['reject_unsafe_urls'] = false;
+		return $args;
 	}
 
 	/**
