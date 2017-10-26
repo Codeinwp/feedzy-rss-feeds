@@ -952,7 +952,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 		$path = ltrim( $url_tab['path'], '/' );
 
-		if ( substr( $path, 0, 0 ) === '/' ) {
+		if ( substr( $path, 0, 0 ) !== '/' ) {
 			$path = '/' . $path;
 		}
 		// Return a well encoded image url
