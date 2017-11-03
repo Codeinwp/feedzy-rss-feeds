@@ -1,6 +1,6 @@
 {
   "name": "feedzy-rss-feeds",
-  "version": "3.2.4",
+  "version": "3.2.5",
   "description": "Feedzy RSS Feeds - lite version",
   "repository": {
     "type": "git",
@@ -23,7 +23,8 @@
   },
   "devDependencies": {
     "grunt": "^1.0.1",
-    "grunt-plugin-fleet": "codeinwp/grunt-plugin-fleet",
+    "grunt-helpscout-faq": "~0.1.0",
+    "grunt-plugin-fleet": "github:codeinwp/grunt-plugin-fleet",
     "load-project-config": "~0.2.0"
   },
   "wraithSlug": [

@@ -8,7 +8,11 @@
 module.exports = function (grunt) {
 	'use strict';
 
-	var loader = require( 'load-project-config' ),
-		config = require( 'grunt-plugin-fleet' );
-	loader( grunt, config ).init();
+	var loader = require('load-project-config'),
+		config = require('grunt-plugin-fleet');
+	config = config();
+	// jshint ignore: start
+	config.taskMap['faq_builder'] = 'grunt-helpscout-faq';
+	// jshint ignore: end
+	loader(grunt, config).init();
 };

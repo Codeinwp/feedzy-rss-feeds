@@ -179,15 +179,15 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	public function add_feedzy_post_type_metaboxes() {
 		add_meta_box(
 			'feedzy_category_feeds', __( 'Category Feeds', 'feedzy-rss-feeds' ), array(
-			$this,
-			'feedzy_category_feed',
-		), 'feedzy_categories', 'normal', 'high'
+				$this,
+				'feedzy_category_feed',
+			), 'feedzy_categories', 'normal', 'high'
 		);
 		add_meta_box(
 			'feedzy_category_feeds_rn', __( 'Increase your social media presence', 'feedzy-rss-feeds' ), array(
-			$this,
-			'render_upsell_rn',
-		), 'feedzy_categories', 'side', 'low'
+				$this,
+				'render_upsell_rn',
+			), 'feedzy_categories', 'side', 'low'
 		);
 	}
 
@@ -427,6 +427,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	public function pre_http_setup( $url ) {
 		$this->add_proxy( $url );
 		add_filter( 'http_headers_useragent', array( $this, 'add_user_agent' ) );
+		add_filter( 'http_request_args', array( $this, 'http_request_args' ) );
 	}
 
 	/**
@@ -443,25 +444,43 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 				return;
 			}
-			if ( isset( $settings['proxy']['host'] ) ) {
+
+			$proxied = false;
+			if ( isset( $settings['proxy']['host'] ) && ! empty( $settings['proxy']['host'] ) ) {
+				$proxied = true;
 				define( 'WP_PROXY_HOST', $settings['proxy']['host'] );
 			}
-			if ( isset( $settings['proxy']['port'] ) ) {
+			if ( isset( $settings['proxy']['port'] ) && ! empty( $settings['proxy']['port'] ) ) {
+				$proxied = true;
 				define( 'WP_PROXY_PORT', $settings['proxy']['port'] );
 			}
-			if ( isset( $settings['proxy']['user'] ) ) {
+			if ( isset( $settings['proxy']['user'] ) && ! empty( $settings['proxy']['user'] ) ) {
+				$proxied = true;
 				define( 'WP_PROXY_USERNAME', $settings['proxy']['user'] );
 			}
-			if ( isset( $settings['proxy']['pass'] ) ) {
+			if ( isset( $settings['proxy']['pass'] ) && ! empty( $settings['proxy']['pass'] ) ) {
+				$proxied = true;
 				define( 'WP_PROXY_PASSWORD', $settings['proxy']['pass'] );
 			}
 
 			// temporary constant for use in the pre_http_send_through_proxy filter.
-			if ( ! defined( 'FEEZY_URL_THRU_PROXY' ) ) {
+			if ( $proxied && ! defined( 'FEEZY_URL_THRU_PROXY' ) ) {
 				define( 'FEEZY_URL_THRU_PROXY', $url );
 			}
 			add_filter( 'pre_http_send_through_proxy', array( $this, 'send_through_proxy' ), 10, 4 );
 		}
+	}
+
+	/**
+	 * Add additional HTTP request args.
+	 *
+	 * @access  public
+	 */
+	public function http_request_args( $args ) {
+		// allow private IPs.
+		$args['reject_unsafe_urls'] = false;
+
+		return $args;
 	}
 
 	/**

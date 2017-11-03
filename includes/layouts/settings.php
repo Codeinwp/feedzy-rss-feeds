@@ -44,7 +44,8 @@
 							?>
 							<h2><?php _e( 'Headers', 'feedzy-rss-feeds' ); ?></h2>
 							<div class="fz-form-group">
-								<label><?php echo __( 'User Agent to use when accessing the feed', 'feedzy-rss-feeds' ); ?>:</label>
+								<label><?php echo __( 'User Agent to use when accessing the feed', 'feedzy-rss-feeds' ); ?>
+									:</label>
 							</div>
 							<div class="fz-form-group">
 								<input type="text" class="fz-form-control" name="user-agent"
