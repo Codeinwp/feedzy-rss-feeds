@@ -431,17 +431,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	}
 
 	/**
-	 * Add additional HTTP request args.
-	 *
-	 * @access  public
-	 */
-	public function http_request_args( $args ) {
-		// allow private IPs.
-		$args['reject_unsafe_urls'] = false;
-		return $args;
-	}
-
-	/**
 	 * Add the proxy settings as specified in the settings.
 	 *
 	 * @access  private
@@ -456,21 +445,21 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				return;
 			}
 
-			$proxied    = false;
+			$proxied = false;
 			if ( isset( $settings['proxy']['host'] ) && ! empty( $settings['proxy']['host'] ) ) {
-				$proxied    = true;
+				$proxied = true;
 				define( 'WP_PROXY_HOST', $settings['proxy']['host'] );
 			}
 			if ( isset( $settings['proxy']['port'] ) && ! empty( $settings['proxy']['port'] ) ) {
-				$proxied    = true;
+				$proxied = true;
 				define( 'WP_PROXY_PORT', $settings['proxy']['port'] );
 			}
 			if ( isset( $settings['proxy']['user'] ) && ! empty( $settings['proxy']['user'] ) ) {
-				$proxied    = true;
+				$proxied = true;
 				define( 'WP_PROXY_USERNAME', $settings['proxy']['user'] );
 			}
 			if ( isset( $settings['proxy']['pass'] ) && ! empty( $settings['proxy']['pass'] ) ) {
-				$proxied    = true;
+				$proxied = true;
 				define( 'WP_PROXY_PASSWORD', $settings['proxy']['pass'] );
 			}
 
@@ -480,6 +469,18 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 			add_filter( 'pre_http_send_through_proxy', array( $this, 'send_through_proxy' ), 10, 4 );
 		}
+	}
+
+	/**
+	 * Add additional HTTP request args.
+	 *
+	 * @access  public
+	 */
+	public function http_request_args( $args ) {
+		// allow private IPs.
+		$args['reject_unsafe_urls'] = false;
+
+		return $args;
 	}
 
 	/**
