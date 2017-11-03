@@ -1,6 +1,7 @@
 /**
  * Faq builder for Grunt
  */
+//jshint ignore: start
 module.exports = {
 	options: {
 		filename: 'readme.txt',
