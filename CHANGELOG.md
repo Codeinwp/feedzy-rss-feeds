@@ -1,6 +1,9 @@
 
  ### v3.2.5 - 2017-11-03 
  **Changes:** 
+ * Fix for double slash issue in image path. 
+ * Fix for private ips when proxy is used. 
+ * Add FAQ in sync with helpscout docs.
   
  ### v3.2.4 - 2017-10-13 
  **Changes:**
