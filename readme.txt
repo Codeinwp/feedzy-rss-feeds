@@ -249,6 +249,11 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 == Changelog ==
+= 3.2.6 - 2017-11-16  = 
+
+* Adds compatibility with WordPress 4.9
+
+
 = 3.2.5 - 2017-11-03  =
  * Fix for double slash issue in image path.
  * Fix for private ips when proxy is used.

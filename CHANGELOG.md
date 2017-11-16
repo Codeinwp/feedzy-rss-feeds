@@ -1,4 +1,8 @@
 
+ ### v3.2.6 - 2017-11-16 
+ **Changes:** 
+ * Adds compatibility with WordPress 4.9
+ 
  ### v3.2.5 - 2017-11-03 
  **Changes:** 
  * Fix for double slash issue in image path. 
