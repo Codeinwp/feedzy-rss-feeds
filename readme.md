@@ -221,16 +221,12 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 ## Changelog ##
+### 3.2.5 - 2017-11-03  ###
+
+
+
+
 ### 3.2.4 - 2017-10-13  ###
-
-* Fix for undefined function error.
-
-
-### 3.2.3 - 2017-10-13  ###
-
-
-
-### 3.2.2 - 2017-10-13  ###
 
 * Fix for assets enqueue, loading them where are needed only.
 * Removes duplicates readme.md files.

@@ -138,6 +138,7 @@ Become a translator and send me your translation! [Contact-me](http://themeisle.
 
 == Frequently Asked Questions ==
 
+
 = Is it responsive friendly? =
 
 Yes it is.
@@ -212,7 +213,34 @@ You have to check first if your feed is valid. Please test it here: https://vali
 = How to use feedzy categories =
 [http://docs.themeisle.com/article/640-how-to-use-feedzy-categories](http://docs.themeisle.com/article/640-how-to-use-feedzy-categories)
 
-== Screenshots ==
+= How to add a read more link to Feedzy = 
+ [http://docs.themeisle.com/article/544-how-to-add-a-read-more-link-to-feedzy](http://docs.themeisle.com/article/544-how-to-add-a-read-more-link-to-feedzy) 
+
+ = How to move Feedzy templates to your theme = 
+ [http://docs.themeisle.com/article/573-how-to-move-feedzy-templates-to-your-theme](http://docs.themeisle.com/article/573-how-to-move-feedzy-templates-to-your-theme) 
+
+ = How to eliminate duplicate feed items. = 
+ [http://docs.themeisle.com/article/638-how-to-eliminate-duplicate-feed-items](http://docs.themeisle.com/article/638-how-to-eliminate-duplicate-feed-items) 
+
+ = How to check whether the RSS feed is valid or not in Feedzy = 
+ [http://docs.themeisle.com/article/716-feedzy-how-to-check-whether-the-rss-feed-is-valid-or-not](http://docs.themeisle.com/article/716-feedzy-how-to-check-whether-the-rss-feed-is-valid-or-not) 
+
+ = How to change user agent in Feedzy = 
+ [http://docs.themeisle.com/article/713-how-to-change-user-agent-in-feedzy](http://docs.themeisle.com/article/713-how-to-change-user-agent-in-feedzy) 
+
+ = How to use proxy settings in Feedzy = 
+ [http://docs.themeisle.com/article/714-how-to-use-proxy-settings-in-feezy](http://docs.themeisle.com/article/714-how-to-use-proxy-settings-in-feezy) 
+
+ = How to import posts from feeds in Feedzy = 
+ [http://docs.themeisle.com/article/742-how-to-import-posts-from-feeds-in-feedzy](http://docs.themeisle.com/article/742-how-to-import-posts-from-feeds-in-feedzy) 
+
+ = Where can I find the import posts options in Feedzy = 
+ [http://docs.themeisle.com/article/743-where-can-i-find-the-import-posts-options-in-feedzy](http://docs.themeisle.com/article/743-where-can-i-find-the-import-posts-options-in-feedzy) 
+
+ = How to use WordAI to Rephrase RSS content in Feedzy = 
+ [http://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy](http://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy) 
+
+ == Screenshots ==
 
 1. Simple example
 2. Inserting a shortcode in the WYSIWYG
@@ -221,6 +249,10 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 == Changelog ==
+= 3.2.5 - 2017-11-03  = 
+
+
+
 
 = 3.2.4 - 2017-10-13  =
 
