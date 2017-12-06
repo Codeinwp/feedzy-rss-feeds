@@ -837,28 +837,28 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	public function feedzy_return_image( $string ) {
 		$img     = html_entity_decode( $string, ENT_QUOTES, 'UTF-8' );
 		$pattern = '/<img[^>]+\>/i';
-		preg_match( $pattern, $img, $matches );
+		preg_match_all( $pattern, $img, $matches );
+
+		$image		= null;
 		if ( isset( $matches[0] ) ) {
-			$blacklistCount = 0;
-			foreach ( $matches as $matche ) {
-				$link      = $this->feedzy_scrape_image( $matche );
-				$blacklist = array();
-				$blacklist = apply_filters( 'feedzy_feed_blacklist_images', $this->feedzy_blacklist_images( $blacklist ) );
+			foreach ( $matches[0] as $match ) {
+				$link      = $this->feedzy_scrape_image( $match );
+				$blacklist = $this->feedzy_blacklist_images();
+				$is_blacklist = false;
 				foreach ( $blacklist as $string ) {
 					if ( strpos( (string) $link, $string ) !== false ) {
-						$blacklistCount ++;
+						$is_blacklist = true;
+						break;
 					}
 				}
-				if ( $blacklistCount == 0 ) {
+				if ( ! $is_blacklist ) {
+					$image = $link;
 					break;
 				}
 			}
-			if ( $blacklistCount == 0 ) {
-				return $link;
-			}
 		}
 
-		return '';
+		return $image;
 	}
 
 	/**
@@ -889,11 +889,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @since   3.0.0
 	 * @access  public
 	 *
-	 * @param   array $blacklist An array with blacklisted resources.
-	 *
 	 * @return  array
 	 */
-	public function feedzy_blacklist_images( $blacklist ) {
+	public function feedzy_blacklist_images() {
 		$blacklist = array(
 			'frownie.png',
 			'icon_arrow.gif',
@@ -923,7 +921,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'simple-smile.png',
 		);
 
-		return $blacklist;
+		return apply_filters( 'feedzy_feed_blacklist_images', $blacklist );
 	}
 
 	/**
