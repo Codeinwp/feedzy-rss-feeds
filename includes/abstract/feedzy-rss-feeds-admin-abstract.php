@@ -839,7 +839,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$pattern = '/<img[^>]+\>/i';
 		preg_match_all( $pattern, $img, $matches );
 
-		$image		= null;
+		$image = null;
 		if ( isset( $matches[0] ) ) {
 			foreach ( $matches[0] as $match ) {
 				$link      = $this->feedzy_scrape_image( $match );
