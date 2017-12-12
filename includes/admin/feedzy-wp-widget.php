@@ -78,7 +78,7 @@ class feedzy_wp_widget extends WP_Widget {
 	 * @return mixed
 	 */
 	public function form( $instance ) {
-		$screen		= get_current_screen();
+		$screen = get_current_screen();
 		// to prevent conflicts with plugins such as siteorigin page builder that call this function from outside of the 'widgets' screen.
 		if ( 'widgets' !== $screen->id ) {
 			return;
