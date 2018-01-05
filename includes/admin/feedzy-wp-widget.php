@@ -78,6 +78,11 @@ class feedzy_wp_widget extends WP_Widget {
 	 * @return mixed
 	 */
 	public function form( $instance ) {
+		$screen = get_current_screen();
+		// to prevent conflicts with plugins such as siteorigin page builder that call this function from outside of the 'widgets' screen.
+		if ( 'widgets' !== $screen->id ) {
+			return;
+		}
 		$instance    = wp_parse_args( $instance, $this->get_widget_defaults() );
 		$widget_form = '<p>
 				<label for="' . $this->get_field_id( 'title' ) . '">' . __( 'Widget Title', 'feedzy-rss-feeds' ) . '</label>
