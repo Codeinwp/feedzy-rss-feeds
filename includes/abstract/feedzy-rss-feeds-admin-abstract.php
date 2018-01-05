@@ -754,6 +754,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'item_date'          => $item->get_date( 'U' ),
 			'item_author'        => $item->get_author(),
 			'item_description'   => $contentSummary,
+			'item_content'       => apply_filters( 'feedzy_content', $item->get_content( false ) ),
 		);
 		$itemArray = apply_filters( 'feedzy_item_filter', $itemArray, $item );
 
