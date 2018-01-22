@@ -139,6 +139,7 @@ Become a translator and send me your translation! [Contact-me](http://themeisle.
 == Frequently Asked Questions ==
 
 
+
 = Is it responsive friendly? =
 
 Yes it is.
@@ -240,6 +241,9 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = How to use WordAI to Rephrase RSS content in Feedzy = 
  [http://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy](http://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy) 
 
+ = Install and use the premium version of Feedzy RSS Feeds = 
+ [http://docs.themeisle.com/article/783-install-and-use-the-premium-version-of-feedzy-rss-feeds](http://docs.themeisle.com/article/783-install-and-use-the-premium-version-of-feedzy-rss-feeds) 
+
  == Screenshots ==
 
 1. Simple example
@@ -249,6 +253,13 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 == Changelog ==
+= 3.2.7 - 2018-01-05  = 
+
+* Fix compatibility with SiteOrigin Page Builder.
+* Adds full content import from feed.
+* Fix issue with img scraped from articles.
+
+
 = 3.2.6 - 2017-11-16  = 
 
 * Adds compatibility with WordPress 4.9

@@ -52,7 +52,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  string
 	 */
 	public function feedzy_default_error_notice( $error, $feedURL ) {
-		error_log( 'Feedzy RSS Feeds - related feed: ' . print_r( $feedURL ) . ' - Error message: ' . $this->feedzy_array_obj_string( $error ) );
+		error_log( 'Feedzy RSS Feeds - related feed: ' . print_r( $feedURL, true ) . ' - Error message: ' . $this->feedzy_array_obj_string( $error ) );
 
 		return '<div id="message" class="error" data-error"' . esc_attr( $this->feedzy_array_obj_string( $error ) ) . '"><p>' . __( 'Sorry, this feed is currently unavailable or does not exists anymore.', 'feedzy-rss-feeds' ) . '</p></div>';
 	}
@@ -393,16 +393,15 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$feed = new SimplePie();
 		$feed->set_file_class( 'WP_SimplePie_File' );
-		$feed->set_useragent( apply_filters( 'http_headers_useragent', SIMPLEPIE_USERAGENT ) );
+		$feed->set_useragent( apply_filters( 'http_headers_useragent', FEEDZY_USER_AGENT ) );
 		if ( ! FEEDZY_DISABLE_CACHE_FOR_TESTING ) {
 			$feed->set_cache_class( 'WP_Feed_Cache' );
 			$feed->set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', $cache_time, $feedURL ) );
 		}
 		$feed->set_feed_url( $feedURL );
-		$feed->init();
 		$feed->force_feed( true );
+		$feed->init();
 		$feed->handle_content_type();
-
 		return $feed;
 	}
 
@@ -603,7 +602,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$feedURL = array();
 			// Remove SSL from HTTP request to prevent fetching errors
 			foreach ( $feeds as $feed ) {
-				$feedURL[] = preg_replace( '/^https:/i', 'http:', $feed );
+				if ( FEEDZY_ALLOW_HTTPS ) {
+					$feedURL[] = $feed;
+				} else {
+					$feedURL[] = preg_replace( '/^https:/i', 'http:', $feed );
+				}
 			}
 			if ( count( $feedURL ) === 1 ) {
 				$feedURL = $feedURL[0];

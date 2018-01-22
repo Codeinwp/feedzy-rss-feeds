@@ -249,6 +249,13 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 ## Changelog ##
+### 3.2.7 - 2018-01-05  ###
+
+* Fix compatibility with SiteOrigin Page Builder.
+* Adds full content import from feed.
+* Fix issue with img scraped from articles.
+
+
 ### 3.2.6 - 2017-11-16  ###
 
 * Adds compatibility with WordPress 4.9
