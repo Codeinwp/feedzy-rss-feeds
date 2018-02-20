@@ -393,7 +393,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$feed = new SimplePie();
 		$feed->set_file_class( 'WP_SimplePie_File' );
-		$feed->set_useragent( apply_filters( 'http_headers_useragent', FEEDZY_USER_AGENT ) );
+		$default_agent = $this->get_default_user_agent( $feedURL );
+		$feed->set_useragent( apply_filters( 'http_headers_useragent', $default_agent ) );
 		if ( ! FEEDZY_DISABLE_CACHE_FOR_TESTING ) {
 			$feed->set_cache_class( 'WP_Feed_Cache' );
 			$feed->set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', $cache_time, $feedURL ) );
@@ -403,7 +404,30 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		do_action( 'feedzy_modify_feed_config', $feed );
 		$feed->init();
 		$feed->handle_content_type();
+
 		return $feed;
+	}
+
+	/**
+	 * Change the default user agent based on the feed url.
+	 *
+	 * @param string|array $urls Feed urls.
+	 *
+	 * @return string Optimal User Agent
+	 */
+	private function get_default_user_agent( $urls ) {
+
+		$set = array();
+		if ( ! is_array( $urls ) ) {
+			$set[] = $urls;
+		}
+		foreach ( $set as $url ) {
+			if ( strpos( $url, 'medium.com' ) !== false ) {
+				return FEEDZY_USER_AGENT;
+			}
+		}
+
+		return SIMPLEPIE_USERAGENT;
 	}
 
 	/**
@@ -851,8 +875,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$image = null;
 		if ( isset( $matches[0] ) ) {
 			foreach ( $matches[0] as $match ) {
-				$link      = $this->feedzy_scrape_image( $match );
-				$blacklist = $this->feedzy_blacklist_images();
+				$link         = $this->feedzy_scrape_image( $match );
+				$blacklist    = $this->feedzy_blacklist_images();
 				$is_blacklist = false;
 				foreach ( $blacklist as $string ) {
 					if ( strpos( (string) $link, $string ) !== false ) {
