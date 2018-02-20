@@ -52,7 +52,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  string
 	 */
 	public function feedzy_default_error_notice( $error, $feedURL ) {
-		error_log( 'Feedzy RSS Feeds - related feed: ' . print_r( $feedURL ) . ' - Error message: ' . $this->feedzy_array_obj_string( $error ) );
+		error_log( 'Feedzy RSS Feeds - related feed: ' . print_r( $feedURL, true ) . ' - Error message: ' . $this->feedzy_array_obj_string( $error ) );
 
 		return '<div id="message" class="error" data-error"' . esc_attr( $this->feedzy_array_obj_string( $error ) ) . '"><p>' . __( 'Sorry, this feed is currently unavailable or does not exists anymore.', 'feedzy-rss-feeds' ) . '</p></div>';
 	}
