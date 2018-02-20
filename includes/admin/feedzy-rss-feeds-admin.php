@@ -479,6 +479,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	public function http_request_args( $args ) {
 		// allow private IPs.
 		$args['reject_unsafe_urls'] = false;
+		// allow SSLs to go through without certificate verification.
+		$args['sslverify'] = false;
 
 		return $args;
 	}
