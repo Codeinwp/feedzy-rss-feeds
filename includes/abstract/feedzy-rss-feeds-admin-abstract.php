@@ -399,8 +399,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$feed->set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', $cache_time, $feedURL ) );
 		}
 		$feed->set_feed_url( $feedURL );
-		$feed->init();
 		$feed->force_feed( true );
+		do_action( 'feedzy_modify_feed_config', $feed );
+		$feed->init();
 		$feed->handle_content_type();
 
 		return $feed;

@@ -1,4 +1,10 @@
 
+ ### v3.2.7 - 2018-01-05 
+ **Changes:** 
+ * Fix compatibility with SiteOrigin Page Builder.
+* Adds full content import from feed.
+* Fix issue with img scraped from articles.
+ 
  ### v3.2.6 - 2017-11-16 
  **Changes:** 
  * Adds compatibility with WordPress 4.9
