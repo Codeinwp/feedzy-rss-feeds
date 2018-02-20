@@ -400,6 +400,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 		$feed->set_feed_url( $feedURL );
 		$feed->force_feed( true );
+		do_action( 'feedzy_modify_feed_config', $feed );
 		$feed->init();
 		$feed->handle_content_type();
 		return $feed;
@@ -601,12 +602,17 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$feeds   = explode( ',', $feeds );
 			$feedURL = array();
 			// Remove SSL from HTTP request to prevent fetching errors
-			foreach ( $feeds as $feed ) {
+			foreach ( $feeds as $feed ) { 
 				if ( FEEDZY_ALLOW_HTTPS ) {
 					$feedURL[] = $feed;
 				} else {
 					$feedURL[] = preg_replace( '/^https:/i', 'http:', $feed );
+				} 
+				// scheme-less URLs.
+				if ( strpos( $feed, 'http' ) !== 0 ) {
+					$feed = 'http://' . $feed;
 				}
+ 
 			}
 			if ( count( $feedURL ) === 1 ) {
 				$feedURL = $feedURL[0];
