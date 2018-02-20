@@ -602,17 +602,16 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$feeds   = explode( ',', $feeds );
 			$feedURL = array();
 			// Remove SSL from HTTP request to prevent fetching errors
-			foreach ( $feeds as $feed ) { 
+			foreach ( $feeds as $feed ) {
 				if ( FEEDZY_ALLOW_HTTPS ) {
 					$feedURL[] = $feed;
 				} else {
 					$feedURL[] = preg_replace( '/^https:/i', 'http:', $feed );
-				} 
+				}
 				// scheme-less URLs.
 				if ( strpos( $feed, 'http' ) !== 0 ) {
 					$feed = 'http://' . $feed;
 				}
- 
 			}
 			if ( count( $feedURL ) === 1 ) {
 				$feedURL = $feedURL[0];
