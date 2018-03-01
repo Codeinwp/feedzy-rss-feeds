@@ -52,7 +52,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  string
 	 */
 	public function feedzy_default_error_notice( $error, $feedURL ) {
-		error_log( 'Feedzy RSS Feeds - related feed: ' . print_r( $feedURL ) . ' - Error message: ' . $this->feedzy_array_obj_string( $error ) );
+		error_log( 'Feedzy RSS Feeds - related feed: ' . print_r( $feedURL, true ) . ' - Error message: ' . $this->feedzy_array_obj_string( $error ) );
 
 		return '<div id="message" class="error" data-error"' . esc_attr( $this->feedzy_array_obj_string( $error ) ) . '"><p>' . __( 'Sorry, this feed is currently unavailable or does not exists anymore.', 'feedzy-rss-feeds' ) . '</p></div>';
 	}
@@ -393,17 +393,41 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$feed = new SimplePie();
 		$feed->set_file_class( 'WP_SimplePie_File' );
-		$feed->set_useragent( apply_filters( 'http_headers_useragent', SIMPLEPIE_USERAGENT ) );
+		$default_agent = $this->get_default_user_agent( $feedURL );
+		$feed->set_useragent( apply_filters( 'http_headers_useragent', $default_agent ) );
 		if ( ! FEEDZY_DISABLE_CACHE_FOR_TESTING ) {
 			$feed->set_cache_class( 'WP_Feed_Cache' );
 			$feed->set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', $cache_time, $feedURL ) );
 		}
 		$feed->set_feed_url( $feedURL );
-		$feed->init();
 		$feed->force_feed( true );
+		do_action( 'feedzy_modify_feed_config', $feed );
+		$feed->init();
 		$feed->handle_content_type();
 
 		return $feed;
+	}
+
+	/**
+	 * Change the default user agent based on the feed url.
+	 *
+	 * @param string|array $urls Feed urls.
+	 *
+	 * @return string Optimal User Agent
+	 */
+	private function get_default_user_agent( $urls ) {
+
+		$set = array();
+		if ( ! is_array( $urls ) ) {
+			$set[] = $urls;
+		}
+		foreach ( $set as $url ) {
+			if ( strpos( $url, 'medium.com' ) !== false ) {
+				return FEEDZY_USER_AGENT;
+			}
+		}
+
+		return SIMPLEPIE_USERAGENT;
 	}
 
 	/**
@@ -603,7 +627,15 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$feedURL = array();
 			// Remove SSL from HTTP request to prevent fetching errors
 			foreach ( $feeds as $feed ) {
-				$feedURL[] = preg_replace( '/^https:/i', 'http:', $feed );
+				if ( FEEDZY_ALLOW_HTTPS ) {
+					$feedURL[] = $feed;
+				} else {
+					$feedURL[] = preg_replace( '/^https:/i', 'http:', $feed );
+				}
+				// scheme-less URLs.
+				if ( strpos( $feed, 'http' ) !== 0 ) {
+					$feed = 'http://' . $feed;
+				}
 			}
 			if ( count( $feedURL ) === 1 ) {
 				$feedURL = $feedURL[0];
@@ -843,8 +875,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$image = null;
 		if ( isset( $matches[0] ) ) {
 			foreach ( $matches[0] as $match ) {
-				$link      = $this->feedzy_scrape_image( $match );
-				$blacklist = $this->feedzy_blacklist_images();
+				$link         = $this->feedzy_scrape_image( $match );
+				$blacklist    = $this->feedzy_blacklist_images();
 				$is_blacklist = false;
 				foreach ( $blacklist as $string ) {
 					if ( strpos( (string) $link, $string ) !== false ) {
