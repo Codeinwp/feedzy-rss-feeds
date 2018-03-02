@@ -1,4 +1,10 @@
 
+ ### v3.2.8 - 2018-02-20 
+ **Changes:** 
+ * Fix issue with medium feeds.
+* Improves extensibility using various hooks. 
+* Fix feeds without schema protocol.
+ 
  ### v3.2.7 - 2018-01-05 
  **Changes:** 
  * Fix compatibility with SiteOrigin Page Builder.
