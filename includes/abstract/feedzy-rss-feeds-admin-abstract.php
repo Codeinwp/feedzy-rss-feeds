@@ -232,7 +232,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$sc      = $this->get_short_code_attributes( $atts );
 		$feedURL = $this->normalize_urls( $sc['feeds'] );
 		$cache   = $sc['refresh'];
-		$feed    = $this->fetch_feed( $feedURL, $cache );
+		$feed    = $this->fetch_feed( $feedURL, $cache, $sc );
 		if ( is_string( $feed ) ) {
 			return $feed;
 		}
@@ -281,6 +281,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'keywords_title' => '',
 				// cache refresh
 				'refresh'        => '12_hours',
+				// sorting.
+				'sort'        => '',
 				// only display item if title contains specific keywords (comma-separated list/case sensitive)
 			), $atts, 'feedzy_default'
 		);
@@ -322,15 +324,16 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @param   array  $feedURL The feeds urls to fetch content from.
 	 * @param   string $cache The cache string (eg. 1_hour, 30_min etc.).
+	 * @param   array $sc The shortcode attributes.
 	 *
 	 * @return SimplePie|string|void|WP_Error The feed resource.
 	 */
-	public function fetch_feed( $feedURL, $cache = '12_hours' ) {
+	public function fetch_feed( $feedURL, $cache = '12_hours', $sc ) {
 		// Load SimplePie if not already
 		do_action( 'feedzy_pre_http_setup', $feedURL );
 
 		// Load SimplePie Instance
-		$feed = $this->init_feed( $feedURL, $cache ); // Not used as log as #41304 is Opened.
+		$feed = $this->init_feed( $feedURL, $cache, $sc ); // Not used as log as #41304 is Opened.
 
 		// Report error when is an error loading the feed
 		if ( is_wp_error( $feed ) ) {
@@ -343,7 +346,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 			$feedURL = $this->get_valid_feed_urls( $feedURL, $cache );
 
-			$feed = $this->init_feed( $feedURL, $cache ); // Not used as log as #41304 is Opened.
+			$feed = $this->init_feed( $feedURL, $cache, $sc ); // Not used as log as #41304 is Opened.
 
 		}
 
@@ -366,16 +369,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @param   string $feedURL The feed URL.
 	 * @param   string $cache The cache string (eg. 1_hour, 30_min etc.).
+	 * @param   array $sc The shortcode attributes.
 	 *
 	 * @return SimplePie
 	 */
-	private function init_feed( $feedURL, $cache ) {
-		if ( ! class_exists( 'SimplePie' ) ) {
-			require_once( ABSPATH . WPINC . '/class-simplepie.php' );
-			require_once( ABSPATH . WPINC . '/class-wp-feed-cache.php' );
-			require_once( ABSPATH . WPINC . '/class-wp-feed-cache-transient.php' );
-			require_once( ABSPATH . WPINC . '/class-wp-simplepie-file.php' );
-		}
+	private function init_feed( $feedURL, $cache, $sc ) {
 		$unit_defaults = array(
 			'mins'  => MINUTE_IN_SECONDS,
 			'hours' => HOUR_IN_SECONDS,
@@ -391,7 +389,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 		}
 
-		$feed = new SimplePie();
+		$feed = new Feedzy_Rss_Feeds_Util_SimplePie( $sc );
 		$feed->set_file_class( 'WP_SimplePie_File' );
 		$default_agent = $this->get_default_user_agent( $feedURL );
 		$feed->set_useragent( apply_filters( 'http_headers_useragent', $default_agent ) );
