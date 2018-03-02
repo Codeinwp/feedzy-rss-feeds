@@ -286,7 +286,48 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		);
 		$sc = array_merge( $sc, apply_filters( 'feedzy_get_short_code_attributes_filter', $atts ) );
 
+		$sc = $this->smart_convert_feed_args( $sc );
+
 		return $sc;
+	}
+
+	/**
+	 * Converts the feed URL depending on the shortcode attributes.
+	 *
+	 * @param	array	$attributes	The array of shortcode attributes.
+	 */
+	private function smart_convert_feed_args( $attributes ) {
+		global $wp_version;
+
+		$feeds		= explode( ',', $attributes['feeds'] );
+		$new_feeds	= array();
+
+		foreach ( $feeds as $feed ) {
+			$feed		= htmlspecialchars_decode( $feed );
+			$parsed_url	= parse_url( $feed );
+			$host		= parse_url( $feed, PHP_URL_HOST );
+			if ( version_compare( $wp_version, '4.7.0', '>=' ) ) {
+				$parsed_url	= wp_parse_url( $feed );
+				$host		= wp_parse_url( $feed, PHP_URL_HOST );
+			}
+			switch ( $host ) {
+				default:
+					if ( false !== strpos( $host, 'news.google.' ) ) {
+						$query_args	= version_compare( $wp_version, '4.7.0', '>=' ) ? wp_parse_url( $feed, PHP_URL_QUERY ) : parse_url( $feed, PHP_URL_QUERY );
+						$args		= array();
+						parse_str( $query_args, $args );
+						if ( array_key_exists( 'num', $args ) ) {
+							$args['num']	= $attributes['max'];
+						}
+						$parsed_url['query'] = http_build_query( $args );
+						$feed		= $this->unparse_url( $parsed_url );
+					}
+			}
+			$new_feeds[]	= $feed;
+		}
+
+		$attributes['feeds'] = implode( ',', $new_feeds );
+		return $attributes;
 	}
 
 	/**
