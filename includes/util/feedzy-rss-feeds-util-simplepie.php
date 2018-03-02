@@ -50,7 +50,7 @@ class Feedzy_Rss_Feeds_Util_SimplePie extends SimplePie {
 	 * @param   array $sc The shortcode attributes.
 	 */
 	public function __construct( $sc ) {
-		self::$sc	= $sc;
+		self::$sc = $sc;
 		if ( array_key_exists( 'sort', self::$sc ) && ! empty( self::$sc['sort'] ) ) {
 			if ( 'date_desc' === self::$sc['sort'] ) {
 				$this->enable_order_by_date( true );
@@ -62,13 +62,13 @@ class Feedzy_Rss_Feeds_Util_SimplePie extends SimplePie {
 	}
 
 	/**
-	* Sorting callback for items
-	*
-	* @access public
-	* @param SimplePie $a
-	* @param SimplePie $b
-	* @return boolean
-	*/
+	 * Sorting callback for items
+	 *
+	 * @access public
+	 * @param SimplePie $a The SimplePieItem.
+	 * @param SimplePie $b The SimplePieItem.
+	 * @return boolean
+	 */
 	public static function sort_items( $a, $b ) {
 		if ( self::$custom_sorting ) {
 			switch ( self::$sc['sort'] ) {
@@ -77,7 +77,7 @@ class Feedzy_Rss_Feeds_Util_SimplePie extends SimplePie {
 				case 'title_asc':
 					return $a->get_title() > $b->get_title();
 				case 'date_asc':
-					return $a->get_date('U') > $b->get_date('U');
+					return $a->get_date( 'U' ) > $b->get_date( 'U' );
 			}
 		}
 		return parent::sort_items( $a, $b );

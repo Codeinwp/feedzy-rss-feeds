@@ -282,7 +282,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				// cache refresh
 				'refresh'        => '12_hours',
 				// sorting.
-				'sort'        => '',
+				'sort'           => '',
 				// only display item if title contains specific keywords (comma-separated list/case sensitive)
 			), $atts, 'feedzy_default'
 		);
@@ -324,7 +324,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @param   array  $feedURL The feeds urls to fetch content from.
 	 * @param   string $cache The cache string (eg. 1_hour, 30_min etc.).
-	 * @param   array $sc The shortcode attributes.
+	 * @param   array  $sc The shortcode attributes.
 	 *
 	 * @return SimplePie|string|void|WP_Error The feed resource.
 	 */
@@ -369,7 +369,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @param   string $feedURL The feed URL.
 	 * @param   string $cache The cache string (eg. 1_hour, 30_min etc.).
-	 * @param   array $sc The shortcode attributes.
+	 * @param   array  $sc The shortcode attributes.
 	 *
 	 * @return SimplePie
 	 */
