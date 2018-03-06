@@ -313,14 +313,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			switch ( $host ) {
 				default:
 					if ( false !== strpos( $host, 'news.google.' ) ) {
-						$query_args = version_compare( $wp_version, '4.7.0', '>=' ) ? wp_parse_url( $feed, PHP_URL_QUERY ) : parse_url( $feed, PHP_URL_QUERY );
-						$args       = array();
-						parse_str( $query_args, $args );
-						if ( array_key_exists( 'num', $args ) ) {
-							$args['num'] = $attributes['max'];
-						}
-						$parsed_url['query'] = http_build_query( $args );
-						$feed       = $this->unparse_url( $parsed_url );
+						$feed		= add_query_arg( 'num', $attributes['max'], $feed );
 					}
 			}
 			$new_feeds[] = $feed;
