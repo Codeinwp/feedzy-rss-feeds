@@ -313,7 +313,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			switch ( $host ) {
 				default:
 					if ( false !== strpos( $host, 'news.google.' ) ) {
-						$feed		= add_query_arg( 'num', $attributes['max'], $feed );
+						$feed = add_query_arg( 'num', $attributes['max'], $feed );
 					}
 			}
 			$new_feeds[] = $feed;
