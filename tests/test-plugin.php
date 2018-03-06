@@ -163,8 +163,8 @@ class Test_Feedzy extends WP_UnitTestCase {
 		$array = array();
 		foreach ( $xml->channel->item as $item ) {
 			$array[] = array(
-				$key   => iconv( 'UTF-8', 'ASCII//IGNORE', (string) $item->$key ),
-				$value => iconv( 'UTF-8', 'ASCII//IGNORE', (string) $item->$value ),
+				$key   => iconv( 'UTF-8', 'ASCII//IGNORE', trim( (string) $item->$key ) ),
+				$value => iconv( 'UTF-8', 'ASCII//IGNORE', trim( (string) $item->$value ) ),
 			);
 		}
 		return $array;
