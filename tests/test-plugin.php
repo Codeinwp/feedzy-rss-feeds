@@ -94,7 +94,7 @@ class Test_Feedzy extends WP_UnitTestCase {
 	 */
 	public function googleNewsDataProvider() {
 		return array(
-			array( 'http://news.google.com/news?hl=en&gl=us&q=google&num=2&um=1&ie=UTF-8&output=rss', 'num' ),
+			array( 'http://news.google.com/news?hl=en&gl=us&q=united&num=2&um=1&ie=UTF-8&output=rss', 'num' ),
 		);
 	}
 
