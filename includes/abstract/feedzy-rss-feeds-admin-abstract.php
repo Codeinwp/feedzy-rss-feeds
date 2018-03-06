@@ -333,7 +333,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Convert back from parse_url.
 	 *
-	 * @param $parsed_url
+	 * @param array $parsed_url The parsed url.
 	 *
 	 * @return string
 	 */

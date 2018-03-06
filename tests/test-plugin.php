@@ -70,13 +70,13 @@ class Test_Feedzy extends WP_UnitTestCase {
 	 * @access  public
 	 */
 	public function test_google_news_like_feeds( $feed, $query_arg, $max = 5 ) {
-		$content = do_shortcode('[feedzy-rss feeds="' . $feed . '" max="' . $max . '" target="_blank" refresh="1_hours" title="120" meta="yes" summary="yes" summarylength="275" size="160"]' );
+		$content = do_shortcode( '[feedzy-rss feeds="' . $feed . '" max="' . $max . '" target="_blank" refresh="1_hours" title="120" meta="yes" summary="yes" summarylength="275" size="160"]' );
 
-		$lists		= $this->parse_content( $content, array( 'li' ) );
+		$lists = $this->parse_content( $content, array( 'li' ) );
 		$this->assertGreaterThan( 0, count( $lists ) );
 
 		// let's be sure to only extract those LIs that have rss_item as the class.
-		$count		= 0;
+		$count = 0;
 		foreach ( $lists as $list ) {
 			if ( isset( $list['class'] ) && 'rss_item' === $list['class'] ) {
 				$count++;
