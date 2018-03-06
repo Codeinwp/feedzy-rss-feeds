@@ -72,21 +72,20 @@ class Test_Feedzy extends WP_UnitTestCase {
 
 		// let's extact the titles from the default shortcode. These titles are the ones we will compare with subsequent "sorted" shortcodes.
 		$content = wp_remote_retrieve_body( wp_remote_get( $feed ) );
-		$items	= $this->parse_xml( $content, 'title', 'pubDate' );
-		$titles		= wp_list_pluck( $items, 'title' );
+		$items  = $this->parse_xml( $content, 'title', 'pubDate' );
+		$titles     = wp_list_pluck( $items, 'title' );
 		sort( $titles );
 
 		// sort by title ascending.
-		$content_asc	= do_shortcode('[feedzy-rss feeds="' . $feed . '" max="' . count( $items ) . '" target="_blank" summary="no" sort="title_asc"]' );
-		$title_asc	= $this->get_titles( $content_asc );
+		$content_asc    = do_shortcode( '[feedzy-rss feeds="' . $feed . '" max="' . count( $items ) . '" target="_blank" summary="no" sort="title_asc"]' );
+		$title_asc  = $this->get_titles( $content_asc );
 		$this->assertEquals( $titles, $title_asc );
 
 		// sort by title descending.
-		$content_desc	= do_shortcode('[feedzy-rss feeds="' . $feed . '" max="' . count( $items ) . '" target="_blank" summary="no" sort="title_desc"]' );
-		$title_desc	= $this->get_titles( $content_desc );
+		$content_desc   = do_shortcode( '[feedzy-rss feeds="' . $feed . '" max="' . count( $items ) . '" target="_blank" summary="no" sort="title_desc"]' );
+		$title_desc = $this->get_titles( $content_desc );
 		rsort( $titles );
 		$this->assertEquals( $titles, $title_desc );
-
 
 	}
 
@@ -122,14 +121,14 @@ class Test_Feedzy extends WP_UnitTestCase {
 	 * Extracts the title of the feed posts from the content.
 	 */
 	private function get_titles( $content ) {
-		$lists		= $this->parse_content( $content, array( 'li' ) );
+		$lists = $this->parse_content( $content, array( 'li' ) );
 		$this->assertGreaterThan( 0, count( $lists ) );
 
 		// let's be sure to only extract those LIs that have rss_item as the class.
-		$titles		= array();
+		$titles = array();
 		foreach ( $lists as $list ) {
 			if ( isset( $list['class'] ) && 'rss_item' === $list['class'] ) {
-				$titles[]	= iconv('UTF-8', 'ASCII//IGNORE', trim( $list['span'][0]['a'][0]['#text'] ) );
+				$titles[] = iconv( 'UTF-8', 'ASCII//IGNORE', trim( $list['span'][0]['a'][0]['#text'] ) );
 			}
 		}
 		return $titles;
@@ -144,10 +143,10 @@ class Test_Feedzy extends WP_UnitTestCase {
 	 */
 	private function get_rand_feeds( $how_many = 1 ) {
 		$sections  = array( 'economics', 'china', 'europe', 'united-states', 'international', 'science-technology' );
-		$feeds		= array();
-		for( $x = 0; $x < $how_many; $x++ ) {
-			$section	= $sections[ mt_rand( 0, 5 ) ];
-			$feeds[]	= 'http://www.economist.com/sections/' . $section . '/rss.xml';
+		$feeds      = array();
+		for ( $x = 0; $x < $how_many; $x++ ) {
+			$section    = $sections[ mt_rand( 0, 5 ) ];
+			$feeds[]    = 'http://www.economist.com/sections/' . $section . '/rss.xml';
 		}
 
 		return implode( ',', $feeds );
@@ -163,8 +162,8 @@ class Test_Feedzy extends WP_UnitTestCase {
 		$array = array();
 		foreach ( $xml->channel->item as $item ) {
 			$array[] = array(
-					$key => iconv('UTF-8', 'ASCII//IGNORE', (string) $item->$key ),
-					$value => iconv('UTF-8', 'ASCII//IGNORE', (string) $item->$value ),
+				$key   => iconv( 'UTF-8', 'ASCII//IGNORE', (string) $item->$key ),
+				$value => iconv( 'UTF-8', 'ASCII//IGNORE', (string) $item->$value ),
 			);
 		}
 		return $array;
