@@ -64,7 +64,7 @@ class Test_Feedzy extends WP_UnitTestCase {
 
 	/**
 	 * Test feeds for sorting order.
-	 *
+	 * @requires PHP 5.5
 	 * @access  public
 	 */
 	public function test_shortcode_order_param() {
