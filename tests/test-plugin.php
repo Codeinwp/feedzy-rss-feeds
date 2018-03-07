@@ -70,6 +70,7 @@ class Test_Feedzy extends WP_UnitTestCase {
 	 * @access  public
 	 */
 	public function test_google_news_like_feeds( $feed, $query_arg, $max = 5 ) {
+		add_filter( 'https_ssl_verify', '__return_false' );
 		$content = do_shortcode( '[feedzy-rss feeds="' . $feed . '" max="' . $max . '" target="_blank" refresh="1_hours" title="120" meta="yes" summary="yes" summarylength="275" size="160"]' );
 
 		$lists = $this->parse_content( $content, array( 'li' ) );
