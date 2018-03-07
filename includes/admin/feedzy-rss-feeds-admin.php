@@ -403,6 +403,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					'pass' => $_POST['proxy-pass'],
 				);
 				break;
+			default:
+				$settings = apply_filters( 'feedzy_save_tab_settings', $settings, $_POST['tab'] );
 		}
 
 		update_option( 'feedzy-settings', $settings );
