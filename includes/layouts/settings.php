@@ -90,11 +90,13 @@
 							<?php
 							break;
 						default:
-							$field = apply_filters( 'feedzy_display_tab_settings', array(), $active_tab );
-							if ( $field ) {
-								echo $field['content'];
-								if ( isset( $field['ajax'] ) && $field['ajax'] ) {
-									$show_button = false;
+							$fields = apply_filters( 'feedzy_display_tab_settings', array(), $active_tab );
+							if ( $fields ) {
+								foreach ( $fields as $field ) {
+									echo $field['content'];
+									if ( isset( $field['ajax'] ) && $field['ajax'] ) {
+										$show_button = false;
+									}
 								}
 							}
 							break;

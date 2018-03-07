@@ -304,13 +304,39 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$feedURL = apply_filters( 'feedzy_get_feed_url', $feeds );
 		if ( is_array( $feedURL ) ) {
 			foreach ( $feedURL as $index => $url ) {
-				$feedURL[ $index ] = htmlspecialchars_decode( $url );
+				$feedURL[ $index ] = $this->smart_convert( $url );
 			}
 		} else {
-			$feedURL = htmlspecialchars_decode( $feedURL );
+			$feedURL = $this->smart_convert( $feedURL );
 		}
 
 		return $feedURL;
+	}
+
+	/**
+	 * Converts the feed URL.
+	 *
+	 * @param   string $url The feed url.
+	 */
+	private function smart_convert( $url ) {
+
+		$url = htmlspecialchars_decode( $url );
+
+		// Automatically fix deprecated google news feeds.
+		if ( false !== strpos( $url, 'news.google.' ) ) {
+
+			$parts = parse_url( $url );
+			parse_str( $parts['query'], $query );
+
+			if ( isset( $query['q'] ) ) {
+				$search_query = $query['q'];
+				unset( $query['q'] );
+				$url = sprintf( 'https://news.google.com/news/rss/search/section/q/%s/%s?%s', $search_query, $search_query, http_build_query( $query ) );
+
+			}
+		}
+
+		return apply_filters( 'feedzy_alter_feed_url', $url );
 	}
 
 	/**
