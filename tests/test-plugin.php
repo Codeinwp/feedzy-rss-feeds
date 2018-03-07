@@ -105,8 +105,8 @@ class Test_Feedzy extends WP_UnitTestCase {
 	 * @access  public
 	 */
 	public function test_google_news_like_feeds( $feed, $query_arg, $max = 5 ) {
-		$check_travis = getenv( 'TRAVIS' );
-		if ( boolval( $check_travis ) ) {
+		$check_travis = (boolean) getenv( 'TRAVIS' );
+		if ( ( $check_travis ) ) {
 			return;
 		}
 		$content = do_shortcode( '[feedzy-rss feeds="' . $feed . '" max="' . $max . '" target="_blank" refresh="1_hours" title="120" meta="yes" summary="yes" summarylength="275" size="160"]' );
