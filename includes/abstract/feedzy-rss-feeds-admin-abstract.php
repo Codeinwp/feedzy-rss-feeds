@@ -286,41 +286,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		);
 		$sc = array_merge( $sc, apply_filters( 'feedzy_get_short_code_attributes_filter', $atts ) );
 
-		$sc = $this->smart_convert_feed_args( $sc );
-
 		return $sc;
-	}
-
-	/**
-	 * Converts the feed URL depending on the shortcode attributes.
-	 *
-	 * @param   array $attributes The array of shortcode attributes.
-	 */
-	private function smart_convert_feed_args( $attributes ) {
-		global $wp_version;
-
-		$feeds      = explode( ',', $attributes['feeds'] );
-		$new_feeds  = array();
-
-		foreach ( $feeds as $feed ) {
-			$feed       = htmlspecialchars_decode( $feed );
-			$parsed_url = parse_url( $feed );
-			$host       = parse_url( $feed, PHP_URL_HOST );
-			if ( version_compare( $wp_version, '4.7.0', '>=' ) ) {
-				$parsed_url = wp_parse_url( $feed );
-				$host       = wp_parse_url( $feed, PHP_URL_HOST );
-			}
-			switch ( $host ) {
-				default:
-					if ( false !== strpos( $host, 'news.google.' ) ) {
-						$feed = add_query_arg( 'num', $attributes['max'], $feed );
-					}
-			}
-			$new_feeds[] = $feed;
-		}
-
-		$attributes['feeds'] = implode( ',', $new_feeds );
-		return $attributes;
 	}
 
 	/**
@@ -338,13 +304,39 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$feedURL = apply_filters( 'feedzy_get_feed_url', $feeds );
 		if ( is_array( $feedURL ) ) {
 			foreach ( $feedURL as $index => $url ) {
-				$feedURL[ $index ] = htmlspecialchars_decode( $url );
+				$feedURL[ $index ] = $this->smart_convert( $url );
 			}
 		} else {
-			$feedURL = htmlspecialchars_decode( $feedURL );
+			$feedURL = $this->smart_convert( $feedURL );
 		}
 
 		return $feedURL;
+	}
+
+	/**
+	 * Converts the feed URL.
+	 *
+	 * @param   string $url The feed url.
+	 */
+	private function smart_convert( $url ) {
+
+		$url = htmlspecialchars_decode( $url );
+
+		// Automatically fix deprecated google news feeds.
+		if ( false !== strpos( $url, 'news.google.' ) ) {
+
+			$parts = parse_url( $url );
+			parse_str( $parts['query'], $query );
+
+			if ( isset( $query['q'] ) ) {
+				$search_query = $query['q'];
+				unset( $query['q'] );
+				$url = sprintf( 'https://news.google.com/news/rss/search/section/q/%s/%s?%s', $search_query, $search_query, http_build_query( $query ) );
+
+			}
+		}
+
+		return apply_filters( 'feedzy_alter_feed_url', $url );
 	}
 
 	/**
