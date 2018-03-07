@@ -313,14 +313,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			switch ( $host ) {
 				default:
 					if ( false !== strpos( $host, 'news.google.' ) ) {
-						$query_args = version_compare( $wp_version, '4.7.0', '>=' ) ? wp_parse_url( $feed, PHP_URL_QUERY ) : parse_url( $feed, PHP_URL_QUERY );
-						$args       = array();
-						parse_str( $query_args, $args );
-						if ( array_key_exists( 'num', $args ) ) {
-							$args['num'] = $attributes['max'];
-						}
-						$parsed_url['query'] = http_build_query( $args );
-						$feed       = $this->unparse_url( $parsed_url );
+						$feed = add_query_arg( 'num', $attributes['max'], $feed );
 					}
 			}
 			$new_feeds[] = $feed;
@@ -328,6 +321,30 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$attributes['feeds'] = implode( ',', $new_feeds );
 		return $attributes;
+	}
+
+	/**
+	 * Convert back from parse_url.
+	 *
+	 * @param array $parsed_url The parsed url.
+	 *
+	 * @return string
+	 */
+	private function unparse_url( $parsed_url ) {
+		$scheme = isset( $parsed_url['scheme'] ) ? $parsed_url['scheme'] . '://' : '';
+		$host   = isset( $parsed_url['host'] ) ? $parsed_url['host'] : '';
+		if ( ! empty( $host ) && empty( $scheme ) ) {
+			$scheme = '//';
+		}
+		$port     = isset( $parsed_url['port'] ) ? ':' . $parsed_url['port'] : '';
+		$user     = isset( $parsed_url['user'] ) ? $parsed_url['user'] : '';
+		$pass     = isset( $parsed_url['pass'] ) ? ':' . $parsed_url['pass'] : '';
+		$pass     = ( $user || $pass ) ? "$pass@" : '';
+		$path     = isset( $parsed_url['path'] ) ? $parsed_url['path'] : '';
+		$query    = isset( $parsed_url['query'] ) ? '?' . $parsed_url['query'] : '';
+		$fragment = isset( $parsed_url['fragment'] ) ? '#' . $parsed_url['fragment'] : '';
+
+		return "$scheme$user$pass$host$port$path$query$fragment";
 	}
 
 	/**
