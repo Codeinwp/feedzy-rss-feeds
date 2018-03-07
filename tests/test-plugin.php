@@ -64,115 +64,6 @@ class Test_Feedzy extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test feeds (like google news) whose query arguments need to be smartly changed depending on the short code parameters.
-	 *
-	 * @dataProvider googleNewsDataProvider
-	 * @access  public
-	 */
-	public function test_google_news_like_feeds( $feed, $query_arg, $max = 5 ) {
-		add_filter( 'https_ssl_verify', '__return_false' );
-		$content = do_shortcode( '[feedzy-rss feeds="' . $feed . '" max="' . $max . '" target="_blank" refresh="1_hours" title="120" meta="yes" summary="yes" summarylength="275" size="160"]' );
-
-		$lists = $this->parse_content( $content, array( 'li' ) );
-		$this->assertGreaterThan( 0, count( $lists ) );
-
-		// let's be sure to only extract those LIs that have rss_item as the class.
-		$count = 0;
-		foreach ( $lists as $list ) {
-			if ( isset( $list['class'] ) && 'rss_item' === $list['class'] ) {
-				$count++;
-			}
-		}
-
-		$this->assertEquals( $max, $count );
-	}
-
-	/**
-	 * Provide google news like feeds.
-	 *
-	 * @access  public
-	 * @return array
-	 */
-	public function googleNewsDataProvider() {
-		return array(
-			array( 'http://news.google.com/news?hl=en&gl=us&q=united&num=2&um=1&ie=UTF-8&output=rss', 'num' ),
-		);
-	}
-
-	/**
-	 * Generates the HTML source of the given link.
-	 */
-	private function get_page_source( $link ) {
-		$html = '<html>';
-		$this->go_to( $link );
-		ob_start();
-		do_action( 'wp_head' );
-		$html .= '<head>' . ob_get_clean() . '</head>';
-
-		ob_start();
-		do_action( 'wp_footer' );
-		$html .= '<body>' . /* somehow get the body too?? */ ob_get_clean() . '</body>';
-		return $html . '</html>';
-	}
-
-	/**
-	 * Creates the HTML of the given link and returns the nodes requested.
-	 */
-	private function parse_html( $link, $tags = array(), $debug = false ) {
-		$html = $this->get_page_source( $link );
-		if ( $debug ) {
-			error_log( "$link === $html" );
-		}
-		return $this->parse_content( $html, $tags );
-	}
-
-	/**
-	 * Parses the HTML content and returns the nodes requested.
-	 */
-	private function parse_content( $html, $tags = array() ) {
-		libxml_use_internal_errors( true );
-		$dom = new DOMDocument();
-		$dom->loadHTML( $html );
-
-		$array = array();
-		foreach ( $tags as $tag ) {
-			foreach ( $dom->getElementsByTagName( $tag ) as $node ) {
-				$array[] = $this->get_node_as_array( $node );
-			}
-		}
-		return $array;
-	}
-
-	// @codingStandardsIgnoreStart WordPress.NamingConventions.ValidVariableName.NotSnakeCase
-	/**
-	 * Extracts the node from the HTML source.
-	 */
-	private function get_node_as_array( $node ) {
-		$array = false;
-
-		if ( $node->hasAttributes() ) {
-			foreach ( $node->attributes as $attr ) {
-				$array[ $attr->nodeName ] = $attr->nodeValue;
-			}
-		}
-
-		if ( $node->hasChildNodes() ) {
-			if ( $node->childNodes->length == 1 ) {
-				$array[ $node->firstChild->nodeName ] = $node->firstChild->nodeValue;
-			} else {
-				foreach ( $node->childNodes as $childNode ) {
-					if ( $childNode->nodeType != XML_TEXT_NODE ) {
-						$array[ $childNode->nodeName ][] = $this->get_node_as_array( $childNode );
-					}
-				}
-			}
-		}
-
-		return $array;
-	}
-	// @codingStandardsIgnoreEnd WordPress.NamingConventions.ValidVariableName.NotSnakeCase
-
-	/**
 	 * Utility method to generate a random 5 char string.
 	 *
 	 * @since   3.0.12
@@ -205,5 +96,122 @@ class Test_Feedzy extends WP_UnitTestCase {
 		$feed_urls .= 'http://www.economist.com/sections/' . $section . '/rss.xml' . PHP_EOL;
 
 		return $feed_urls;
+	}
+
+	/**
+	 * Test feeds (like google news) whose query arguments need to be smartly changed depending on the short code parameters.
+	 *
+	 * @dataProvider googleNewsDataProvider
+	 * @access  public
+	 */
+	public function test_google_news_like_feeds( $feed, $query_arg, $max = 5 ) {
+		$check_travis = getenv( 'TRAVIS' );
+		if ( boolval( $check_travis ) ) {
+			return;
+		}
+		$content = do_shortcode( '[feedzy-rss feeds="' . $feed . '" max="' . $max . '" target="_blank" refresh="1_hours" title="120" meta="yes" summary="yes" summarylength="275" size="160"]' );
+
+		$lists = $this->parse_content( $content, array( 'li' ) );
+		$this->assertGreaterThan( 0, count( $lists ) );
+
+		// let's be sure to only extract those LIs that have rss_item as the class.
+		$count = 0;
+		foreach ( $lists as $list ) {
+			if ( isset( $list['class'] ) && 'rss_item' === $list['class'] ) {
+				$count ++;
+			}
+		}
+
+		$this->assertEquals( $max, $count );
+	}
+
+	/**
+	 * Parses the HTML content and returns the nodes requested.
+	 */
+	private function parse_content( $html, $tags = array() ) {
+		libxml_use_internal_errors( true );
+		$dom = new DOMDocument();
+		$dom->loadHTML( $html );
+
+		$array = array();
+		foreach ( $tags as $tag ) {
+			foreach ( $dom->getElementsByTagName( $tag ) as $node ) {
+				$array[] = $this->get_node_as_array( $node );
+			}
+		}
+
+		return $array;
+	}
+
+	/**
+	 * Extracts the node from the HTML source.
+	 */
+	private function get_node_as_array( $node ) {
+		$array = false;
+
+		if ( $node->hasAttributes() ) {
+			foreach ( $node->attributes as $attr ) {
+				$array[ $attr->nodeName ] = $attr->nodeValue;
+			}
+		}
+
+		if ( $node->hasChildNodes() ) {
+			if ( $node->childNodes->length == 1 ) {
+				$array[ $node->firstChild->nodeName ] = $node->firstChild->nodeValue;
+			} else {
+				foreach ( $node->childNodes as $childNode ) {
+					if ( $childNode->nodeType != XML_TEXT_NODE ) {
+						$array[ $childNode->nodeName ][] = $this->get_node_as_array( $childNode );
+					}
+				}
+			}
+		}
+
+		return $array;
+	}
+
+	// @codingStandardsIgnoreStart WordPress.NamingConventions.ValidVariableName.NotSnakeCase
+
+	/**
+	 * Provide google news like feeds.
+	 *
+	 * @access  public
+	 * @return array
+	 */
+	public function googleNewsDataProvider() {
+		return array(
+			array( 'http://news.google.com/news?hl=en&gl=us&q=united&num=2&um=1&ie=UTF-8&output=rss', 'num' ),
+		);
+	}
+	// @codingStandardsIgnoreEnd WordPress.NamingConventions.ValidVariableName.NotSnakeCase
+
+	/**
+	 * Creates the HTML of the given link and returns the nodes requested.
+	 */
+	private function parse_html( $link, $tags = array(), $debug = false ) {
+		$html = $this->get_page_source( $link );
+		if ( $debug ) {
+			error_log( "$link === $html" );
+		}
+
+		return $this->parse_content( $html, $tags );
+	}
+
+	/**
+	 * Generates the HTML source of the given link.
+	 */
+	private function get_page_source( $link ) {
+		$html = '<html>';
+		$this->go_to( $link );
+		ob_start();
+		do_action( 'wp_head' );
+		$html .= '<head>' . ob_get_clean() . '</head>';
+
+		ob_start();
+		do_action( 'wp_footer' );
+		$html .= '<body>' . /* somehow get the body too?? */
+				 ob_get_clean() . '</body>';
+
+		return $html . '</html>';
 	}
 }
