@@ -77,6 +77,12 @@ function feedzy_rss_feeds_autoload( $class ) {
 
 				return true;
 			}
+			$filename = plugin_dir_path( __FILE__ ) . 'includes/util/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
+			if ( is_readable( $filename ) ) {
+				require_once $filename;
+
+				return true;
+			}
 		}
 	}
 	if ( is_readable( plugin_dir_path( __FILE__ ) . 'includes/admin/feedzy-wp-widget.php' ) ) {
