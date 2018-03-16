@@ -1,4 +1,9 @@
 
+ ### v3.2.9 - 2018-03-07 
+ **Changes:** 
+ * Automatically fix deprecated google  news feeds. 
+* Improve compatibility with the pro version.
+ 
  ### v3.2.8 - 2018-02-20 
  **Changes:** 
  * Fix issue with medium feeds.

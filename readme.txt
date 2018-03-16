@@ -141,6 +141,7 @@ Become a translator and send me your translation! [Contact-me](http://themeisle.
 
 
 
+
 = Is it responsive friendly? =
 
 Yes it is.
@@ -338,6 +339,12 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = How to sort feed items by date = 
  [https://docs.themeisle.com/article/817-how-to-sort-feed-items-by-date](https://docs.themeisle.com/article/817-how-to-sort-feed-items-by-date) 
 
+ = How to add rel="nofollow" to feed links = 
+ [https://docs.themeisle.com/article/839-how-to-add-relnofollow-to-feed-links](https://docs.themeisle.com/article/839-how-to-add-relnofollow-to-feed-links) 
+
+ = What to do when you get Warning: ./cache is not writeable = 
+ [https://docs.themeisle.com/article/840-what-to-do-when-you-get-warning-cache-is-not-writeable](https://docs.themeisle.com/article/840-what-to-do-when-you-get-warning-cache-is-not-writeable) 
+
  == Screenshots ==
 
 1. Simple example
@@ -347,6 +354,12 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 == Changelog ==
+= 3.2.9 - 2018-03-07  = 
+
+* Automatically fix deprecated google  news feeds. 
+* Improve compatibility with the pro version.
+
+
 = 3.2.8 - 2018-02-20  = 
 
 * Fix issue with medium feeds.

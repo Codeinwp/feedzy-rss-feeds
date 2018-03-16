@@ -97,4 +97,5 @@ class Test_Feedzy extends WP_UnitTestCase {
 
 		return $feed_urls;
 	}
+
 }
