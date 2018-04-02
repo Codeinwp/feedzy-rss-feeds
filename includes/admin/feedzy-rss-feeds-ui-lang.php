@@ -151,6 +151,29 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 							),
 						),
 					),
+					'sort'       => array(
+						'label' => __( 'Sorting order.', 'feedzy-rss-feeds' ),
+						'type'  => 'select',
+						'value' => '',
+						'opts'  => array(
+							'date_desc'  => array(
+								'label' => __( 'Date Descending', 'feedzy-rss-feeds' ),
+								'value' => 'date_desc',
+							),
+							'date_asc'   => array(
+								'label' => __( 'Date Ascending', 'feedzy-rss-feeds' ),
+								'value' => 'date_asc',
+							),
+							'title_desc' => array(
+								'label' => __( 'Title Descending', 'feedzy-rss-feeds' ),
+								'value' => 'title_desc',
+							),
+							'title_asc'  => array(
+								'label' => __( 'Title Ascending', 'feedzy-rss-feeds' ),
+								'value' => 'title_asc',
+							),
+						),
+					),
 				),
 			),
 			'section_item'  => array(
