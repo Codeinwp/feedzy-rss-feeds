@@ -142,6 +142,7 @@ Become a translator and send me your translation! [Contact-me](http://themeisle.
 
 
 
+
 = Is it responsive friendly? =
 
 Yes it is.
@@ -345,6 +346,12 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = What to do when you get Warning: ./cache is not writeable = 
  [https://docs.themeisle.com/article/840-what-to-do-when-you-get-warning-cache-is-not-writeable](https://docs.themeisle.com/article/840-what-to-do-when-you-get-warning-cache-is-not-writeable) 
 
+ = How to exclude feeds with certain words in it = 
+ [https://docs.themeisle.com/article/850-how-to-exclude-feeds-with-certain-words-in-it](https://docs.themeisle.com/article/850-how-to-exclude-feeds-with-certain-words-in-it) 
+
+ = How to add canonical tags for imported posts = 
+ [https://docs.themeisle.com/article/841-how-to-add-canonical-tags-for-imported-posts](https://docs.themeisle.com/article/841-how-to-add-canonical-tags-for-imported-posts) 
+
  == Screenshots ==
 
 1. Simple example
@@ -354,6 +361,12 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 == Changelog ==
+= 3.2.10 - 2018-04-02  = 
+
+* Adds shortcode attribute for feed items order ( title ASC/DESC, date ASC/DESC).
+* Improve documentation and examples. 
+
+
 = 3.2.9 - 2018-03-07  = 
 
 * Automatically fix deprecated google  news feeds. 
