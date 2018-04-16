@@ -427,7 +427,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$feed->force_feed( true );
 		do_action( 'feedzy_modify_feed_config', $feed );
 		$feed->init();
-		$feed->handle_content_type();
 
 		return $feed;
 	}
