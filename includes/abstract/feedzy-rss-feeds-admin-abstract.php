@@ -416,6 +416,14 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		$feed = new Feedzy_Rss_Feeds_Util_SimplePie( $sc );
+		if ( ! FEEDZY_ALLOW_HTTPS ) {
+			$feed->set_curl_options(
+				array(
+					CURLOPT_SSL_VERIFYHOST => false,
+					CURLOPT_SSL_VERIFYPEER => false,
+				)
+			);
+		}
 		$feed->set_file_class( 'WP_SimplePie_File' );
 		$default_agent = $this->get_default_user_agent( $feedURL );
 		$feed->set_useragent( apply_filters( 'http_headers_useragent', $default_agent ) );

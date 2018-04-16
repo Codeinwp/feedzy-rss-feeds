@@ -1,4 +1,9 @@
 
+ ### v3.2.10 - 2018-04-02 
+ **Changes:** 
+ * Adds shortcode attribute for feed items order ( title ASC/DESC, date ASC/DESC).
+* Improve documentation and examples. 
+ 
  ### v3.2.9 - 2018-03-07 
  **Changes:** 
  * Automatically fix deprecated google  news feeds. 
