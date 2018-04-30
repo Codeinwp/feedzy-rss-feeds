@@ -215,11 +215,11 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		if ( ( ! $feed->get_title() ) && ( ! $feed->get_title() ) && ( ! $feed->get_title() ) ) {
 			$feedy['channel'] = null;
 		} else {
-			$feedy['channel'] = [
+			$feedy['channel'] = array(
 				'title'       => ( ( $feed->get_title() ) ? $feed->get_title() : null ),
 				'description' => ( ( $feed->get_description() ) ? $feed->get_description() : null ),
 				'permalink'   => ( ( $feed->get_permalink() ) ? $feed->get_permalink() : null ),
-			];
+			);
 		}
 
 		if ( feedzy_is_pro() ) {
@@ -233,7 +233,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 				$item_attrs = $pro->feedzy_pro_add_data_to_item( array(), $item );
 			}
 			array_push(
-				$feedy['items'], [
+				$feedy['items'], array(
 					'title'       => ( ( $item->get_title() ) ? $item->get_title() : null ),
 					'link'        => ( ( $item->get_permalink() ) ? $item->get_permalink() : null ),
 					'creator'     => ( ( $item->get_author() ) ? $item->get_author()->get_name() : null ),
@@ -244,7 +244,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 					'thumbnail'   => $admin->feedzy_retrieve_image( $item ),
 					'price'       => ( ( feedzy_is_pro() && $item_attrs['item_price'] ) ? $item_attrs['item_price'] : null ),
 					'media'       => ( ( feedzy_is_pro() && $item_attrs['item_media'] ) ? $item_attrs['item_media'] : null ),
-				]
+				)
 			);
 		}
 
