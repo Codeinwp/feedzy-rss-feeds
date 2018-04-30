@@ -77,7 +77,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 	 */
 	public function feedzy_register_block_type() {
 		register_block_type(
-			'feedzy-rss-feeds/feedzy-block', [
+			'feedzy-rss-feeds/feedzy-block', array(
 				'render_callback' => array( $this, 'feedzy_gutenberg_block_callback' ),
 				'attributes'      => array(
 					'feeds'          => array(
@@ -150,7 +150,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 						'default' => 'default',
 					),
 				),
-			]
+			)
 		);
 	}
 
