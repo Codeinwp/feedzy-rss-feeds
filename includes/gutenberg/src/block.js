@@ -36,6 +36,9 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 		__( 'RSS' ),
 		__( 'Feeds' ),
 	],
+	supports: {
+		html: false,
+	},
 	attributes: blockAttributes,
 	edit: props => {
 		const onChangeFeeds = value => {
