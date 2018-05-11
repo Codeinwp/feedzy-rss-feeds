@@ -692,7 +692,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$continue = apply_filters( 'feedzy_item_keyword', true, $sc, $item, $feedURL );
 				if ( $continue == true ) {
 					// Count items. This should be > and not >= because max, when not defined and empty, becomes 0.
-					if ( $count > $sc['max'] ) {
+					if ( $count >= $sc['max'] ) {
 						break;
 					}
 					$itemAttr                         = apply_filters( 'feedzy_item_attributes', $itemAttr = '', $sizes, $item, $feedURL, $sc );
