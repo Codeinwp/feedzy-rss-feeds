@@ -767,11 +767,16 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				if ( ! $authorName = $author->get_name() ) {
 					$authorName = $author->get_email();
 				}
+
+				$authorName = apply_filters( 'feedzy_author_name', $authorName, $feedURL, $item );
+
 				if ( $authorName ) {
-					$domain      = parse_url( $newLink );
-					$authorURL   = '//' . $domain['host'];
-					$authorURL   = apply_filters( 'feedzy_author_url', $authorURL, $authorName, $feedURL );
-					$contentMeta .= __( 'by', 'feedzy-rss-feeds' ) . ' <a href="' . $authorURL . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $authorName . '</a> ';
+					if ( $authorName ) {
+						$domain      = parse_url( $newLink );
+						$authorURL   = '//' . $domain['host'];
+						$authorURL   = apply_filters( 'feedzy_author_url', $authorURL, $authorName, $feedURL );
+						$contentMeta .= __( 'by', 'feedzy-rss-feeds' ) . ' <a href="' . $authorURL . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $authorName . '</a> ';
+					}
 				}
 			}
 			if ( $metaArgs['date'] ) {
