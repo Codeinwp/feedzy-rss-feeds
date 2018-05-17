@@ -777,9 +777,13 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			if ( $metaArgs['date'] ) {
 				$date_time   = $item->get_date( 'U' );
 				$date_time   = apply_filters( 'feedzy_feed_timestamp', $date_time, $feedURL );
-				$contentMeta .= __( 'on', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $metaArgs['date_format'], $date_time );
-				$contentMeta .= ' ';
-				$contentMeta .= __( 'at', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $metaArgs['time_format'], $date_time );
+				if ( ! empty( $metaArgs['date_format'] ) ) {
+					$contentMeta .= __( 'on', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $metaArgs['date_format'], $date_time );
+					$contentMeta .= ' ';
+				}
+				if ( ! empty( $metaArgs['time_format'] ) ) {
+					$contentMeta .= __( 'at', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $metaArgs['time_format'], $date_time );
+				}
 			}
 		}
 		$contentMeta    = apply_filters( 'feedzy_meta_output', $contentMeta, $feedURL );
