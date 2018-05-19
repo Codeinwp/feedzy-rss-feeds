@@ -416,6 +416,14 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		$feed = new Feedzy_Rss_Feeds_Util_SimplePie( $sc );
+		if ( ! FEEDZY_ALLOW_HTTPS ) {
+			$feed->set_curl_options(
+				array(
+					CURLOPT_SSL_VERIFYHOST => false,
+					CURLOPT_SSL_VERIFYPEER => false,
+				)
+			);
+		}
 		$feed->set_file_class( 'WP_SimplePie_File' );
 		$default_agent = $this->get_default_user_agent( $feedURL );
 		$feed->set_useragent( apply_filters( 'http_headers_useragent', $default_agent ) );
@@ -424,10 +432,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$feed->set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', $cache_time, $feedURL ) );
 		}
 		$feed->set_feed_url( $feedURL );
-		$feed->force_feed( true );
+		$feed->force_feed( apply_filters( 'feedzy_force_feed', true ) );
 		do_action( 'feedzy_modify_feed_config', $feed );
 		$feed->init();
-		$feed->handle_content_type();
 
 		return $feed;
 	}
@@ -767,6 +774,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				if ( ! $authorName = $author->get_name() ) {
 					$authorName = $author->get_email();
 				}
+
+				$authorName = apply_filters( 'feedzy_author_name', $authorName, $feedURL, $item );
+
 				if ( $authorName ) {
 					$domain      = parse_url( $newLink );
 					$authorURL   = '//' . $domain['host'];
@@ -777,9 +787,13 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			if ( $metaArgs['date'] ) {
 				$date_time   = $item->get_date( 'U' );
 				$date_time   = apply_filters( 'feedzy_feed_timestamp', $date_time, $feedURL, $item );
-				$contentMeta .= __( 'on', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $metaArgs['date_format'], $date_time );
-				$contentMeta .= ' ';
-				$contentMeta .= __( 'at', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $metaArgs['time_format'], $date_time );
+				if ( ! empty( $metaArgs['date_format'] ) ) {
+					$contentMeta .= __( 'on', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $metaArgs['date_format'], $date_time );
+					$contentMeta .= ' ';
+				}
+				if ( ! empty( $metaArgs['time_format'] ) ) {
+					$contentMeta .= __( 'at', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $metaArgs['time_format'], $date_time );
+				}
 			}
 		}
 		$contentMeta    = apply_filters( 'feedzy_meta_output', $contentMeta, $feedURL, $item );
