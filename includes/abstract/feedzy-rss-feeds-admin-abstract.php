@@ -892,6 +892,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$theThumbnail    = $this->feedzy_return_image( $feedDescription );
 		}
 
+		$theThumbnail = apply_filters( 'feedzy_retrieve_image', $theThumbnail, $item );
+
 		return $theThumbnail;
 	}
 
