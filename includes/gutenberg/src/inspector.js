@@ -13,10 +13,9 @@ const { __ } = wp.i18n;
 const { 
 	InspectorControls,
 	MediaUpload,
-} = wp.blocks;
+} = wp.editor;
 
 const {
-	Disabled,
 	PanelBody,
 	RangeControl,
 	TextControl,
@@ -54,12 +53,11 @@ const Inspector = (props) => {
 					initialOpen={ true } >
 					<RangeControl
 						label={ __( 'Number of Feeds' ) }
-						value={ props.attributes.max || 5	}
+						value={ Number( props.attributes.max ) || 5 }
 						onChange={ props.onChangeMax }
 						min={ 1 }
 						max={ props.attributes.feedData['items'].length || 10 }
 						beforeIcon="sort"
-						allowReset
 					/>
 					{ ( ( props.attributes.feedData['channel'] !== null ) ) && (
 					<ToggleControl
