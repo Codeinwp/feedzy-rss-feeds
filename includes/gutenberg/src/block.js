@@ -21,7 +21,6 @@ const {
 	TextControl,
 	Button,
 	Spinner,
-	SelectControl,
 } = wp.components;
 
 /**
