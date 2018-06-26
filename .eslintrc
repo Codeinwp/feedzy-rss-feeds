@@ -9,10 +9,16 @@ env:
   jquery: true
   node: true
 
+parser: "babel-eslint"
+
+parserOptions:
+  sourceType: "module"
+  allowImportExportEverywhere: true
+
 # http://eslint.org/docs/rules/
 rules:
   # Possible Errors
-  comma-dangle: [2, never]
+  comma-dangle: 0
   no-cond-assign: 2
   no-console: 0
   no-constant-condition: 2
@@ -24,7 +30,7 @@ rules:
   no-empty: 2
   no-empty-character-class: 2
   no-ex-assign: 2
-  no-extra-boolean-cast: 2
+  no-extra-boolean-cast: 0
   no-extra-parens: 0
   no-extra-semi: 2
   no-func-assign: 2
@@ -44,7 +50,7 @@ rules:
   # Best Practices
   accessor-pairs: 2
   block-scoped-var: 0
-  complexity: [2, 6]
+  complexity: 0
   consistent-return: 0
   curly: 0
   default-case: 0
@@ -57,7 +63,7 @@ rules:
   no-case-declarations: 2
   no-div-regex: 2
   no-else-return: 0
-  no-empty-label: 2
+  no-empty-label: 0
   no-empty-pattern: 2
   no-eq-null: 2
   no-eval: 2

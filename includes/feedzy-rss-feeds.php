@@ -104,7 +104,7 @@ class Feedzy_Rss_Feeds {
 	 */
 	public function init() {
 		self::$plugin_name = 'feedzy-rss-feeds';
-		self::$version = '3.2.10';
+		self::$version = '3.2.11';
 		self::$instance->load_dependencies();
 		self::$instance->set_locale();
 		self::$instance->define_admin_hooks();
@@ -216,6 +216,12 @@ class Feedzy_Rss_Feeds {
 		self::$instance->loader->add_action( 'admin_enqueue_scripts', self::$instance->admin, 'enqueue_styles' );
 		$plugin_widget = new feedzy_wp_widget();
 		self::$instance->loader->add_action( 'widgets_init', $plugin_widget, 'registerWidget', 10 );
+		add_action(
+			'plugins_loaded', function () {
+				if ( function_exists( 'register_block_type' ) ) {
+					Feedzy_Rss_Feeds_Gutenberg_Block::get_instance();
+				}}
+		);
 	}
 
 	/**
