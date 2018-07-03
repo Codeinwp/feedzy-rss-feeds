@@ -392,6 +392,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	private function save_settings() {
 		$settings = apply_filters( 'feedzy_get_settings', array() );
 		switch ( $_POST['tab'] ) {
+			case 'general':
+				$settings['general']['rss-feeds'] = isset( $_POST['rss-feeds'] ) ? $_POST['rss-feeds'] : '';
+				break;
 			case 'headers':
 				$settings['header']['user-agent'] = $_POST['user-agent'];
 				break;
