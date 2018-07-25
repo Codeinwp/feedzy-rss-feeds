@@ -162,6 +162,15 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 		}
 
+		$keywords_ban = $sc['keywords_ban'];
+		if ( ! empty( $keywords_ban ) ) {
+			foreach ( $keywords_ban as $keyword ) {
+				if ( strpos( $item->get_title(), $keyword ) !== false ) {
+					return false;
+				}
+			}
+		}
+
 		return $continue;
 	}
 
