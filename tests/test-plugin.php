@@ -33,7 +33,7 @@ class Test_Feedzy extends WP_UnitTestCase {
 			)
 		);
 
-		$urls = $this->get_two_rand_feeds();
+		$urls = $this->get_rand_feeds( 2 );
 
 		$_POST[ 'feedzy_categories' . '_noncename' ] = wp_create_nonce( FEEDZY_BASEFILE );
 		$_POST['post_type']                          = 'feedzy_categories';
@@ -49,7 +49,7 @@ class Test_Feedzy extends WP_UnitTestCase {
 		$this->assertEquals( $urls, $post_meta_urls );
 
 		// Test Update Feedzy Category
-		$urls_changed                  = $this->get_two_rand_feeds();
+		$urls_changed                  = $this->get_rand_feeds( 2 );
 		$_POST['feedzy_category_feed'] = $urls_changed;
 		do_action( 'save_post', $p->ID, $p );
 		$post_meta_urls = get_post_meta( $p->ID, 'feedzy_category_feed', true );
@@ -108,16 +108,6 @@ class Test_Feedzy extends WP_UnitTestCase {
 		return $result;
 	}
 
-	/**
-	 * Utility method to generate a random feed urls.
-	 *
-	 * @since   3.0.12
-	 * @access  private
-	 * @return string
-	 */
-	private function get_two_rand_feeds() {
-		return $this->get_rand_feeds( 2 );
-	}
 
 	/**
 	 * Extracts the title of the feed posts from the content.
@@ -144,11 +134,11 @@ class Test_Feedzy extends WP_UnitTestCase {
 	 * @return string
 	 */
 	private function get_rand_feeds( $how_many = 1 ) {
-		$sections  = array( 'economics', 'china', 'europe', 'united-states', 'international', 'science-technology' );
+		$urls       = array( 'https://themeisle.com/blog/feed/', 'https://www.codeinwp.com/feed/' );
+
 		$feeds      = array();
 		for ( $x = 0; $x < $how_many; $x++ ) {
-			$section    = $sections[ mt_rand( 0, 5 ) ];
-			$feeds[]    = 'http://www.economist.com/sections/' . $section . '/rss.xml';
+			$feeds[]    = $urls[ mt_rand( 0, count( $url ) - 1 ) ];
 		}
 
 		return implode( ',', $feeds );
