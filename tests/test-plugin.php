@@ -138,7 +138,7 @@ class Test_Feedzy extends WP_UnitTestCase {
 
 		$feeds      = array();
 		for ( $x = 0; $x < $how_many; $x++ ) {
-			$feeds[]    = $urls[ mt_rand( 0, count( $url ) - 1 ) ];
+			$feeds[]    = $urls[ mt_rand( 0, count( $urls ) - 1 ) ];
 		}
 
 		return implode( ',', $feeds );
