@@ -3,11 +3,13 @@
 	<?php load_template( FEEDZY_ABSPATH . '/includes/layouts/header.php' ); ?>
 
 	<?php
-	$active_tab  = isset( $_REQUEST['tab'] ) ? sanitize_text_field( $_REQUEST['tab'] ) : 'headers';
+	$active_tab  = isset( $_REQUEST['tab'] ) ? sanitize_text_field( $_REQUEST['tab'] ) : 'general';
 	$show_button = true;
 	?>
 
 	<h2 class="nav-tab-wrapper">
+		<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=general' ) ); ?>"
+		   class="nav-tab <?php echo $active_tab == 'general' ? 'nav-tab-active' : ''; ?>"><?php _e( 'General', 'feedzy-rss-feeds' ); ?></a>
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=headers' ) ); ?>"
 		   class="nav-tab <?php echo $active_tab == 'headers' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Headers', 'feedzy-rss-feeds' ); ?></a>
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=proxy' ) ); ?>"
@@ -39,7 +41,23 @@
 
 				<form method="post" action="">
 					<?php
+					$disble_featured_image = '';
+					if ( isset( $settings['general']['rss-feeds'] ) && 1 === intval( $settings['general']['rss-feeds'] ) ) {
+						$disble_featured_image = 'checked';
+					}
+
 					switch ( $active_tab ) {
+						case 'general':
+							?>
+							<h2><?php _e( 'General', 'feedzy-rss-feeds' ); ?></h2>
+							<div class="fz-form-group">
+								<input type="checkbox" id="rss-feeds" class="fz-form-control" name="rss-feeds"
+									   value="1" <?php echo $disble_featured_image; ?> />
+								<label for="rss-feeds"><?php echo __( 'Do NOT add the featured image to the website\'s RSS feed.', 'feedzy-rss-feeds' ); ?></label>
+
+							</div>
+							<?php
+							break;
 						case 'headers':
 							?>
 							<h2><?php _e( 'Headers', 'feedzy-rss-feeds' ); ?></h2>

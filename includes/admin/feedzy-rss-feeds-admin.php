@@ -154,16 +154,19 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			'title',
 		);
 		$args     = array(
-			'labels'               => $labels,
-			'supports'             => $supports,
-			'public'               => true,
-			'exclude_from_search'  => true,
-			'publicly_queryable'   => false,
-			'show_in_nav_menus'    => false,
-			'capability_type'      => 'post',
-			'rewrite'              => array( 'slug' => 'feedzy-category' ),
-			'show_in_menu'         => 'feedzy-admin-menu',
-			'register_meta_box_cb' => array( $this, 'add_feedzy_post_type_metaboxes' ),
+			'labels'                => $labels,
+			'supports'              => $supports,
+			'public'                => true,
+			'exclude_from_search'   => true,
+			'publicly_queryable'    => false,
+			'show_in_nav_menus'     => false,
+			'capability_type'       => 'post',
+			'rewrite'               => array( 'slug' => 'feedzy-category' ),
+			'show_in_menu'          => 'feedzy-admin-menu',
+			'register_meta_box_cb'  => array( $this, 'add_feedzy_post_type_metaboxes' ),
+			'show_in_rest'          => true,
+			'rest_base'             => 'feedzy_categories',
+			'rest_controller_class' => 'WP_REST_Posts_Controller',
 		);
 		$args     = apply_filters( 'feedzy_post_type_args', $args );
 		register_post_type( 'feedzy_categories', $args );
@@ -392,6 +395,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	private function save_settings() {
 		$settings = apply_filters( 'feedzy_get_settings', array() );
 		switch ( $_POST['tab'] ) {
+			case 'general':
+				$settings['general']['rss-feeds'] = isset( $_POST['rss-feeds'] ) ? $_POST['rss-feeds'] : '';
+				break;
 			case 'headers':
 				$settings['header']['user-agent'] = $_POST['user-agent'];
 				break;
