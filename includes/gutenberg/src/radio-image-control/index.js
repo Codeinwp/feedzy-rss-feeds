@@ -10,10 +10,9 @@ import './style.scss';
  */
 const { isEmpty } = lodash;
 
-const {
-	BaseControl,
-	withInstanceId,
-} = wp.components;
+const { BaseControl } = wp.components;
+
+const { withInstanceId } = wp.compose;
 
 
 function RadioImageControl( { label, selected, help, instanceId, onChange, disabled, options = [] } ) {
