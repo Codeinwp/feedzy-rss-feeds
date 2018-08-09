@@ -40,7 +40,7 @@ function activate_feedzy_rss_feeds() {
 
 /**
  * The code that runs during plugin deactivation.
- * This action is documented in includes/feedzy-rss-feeds-deactivator.php
+ * This action is  documented in includes/feedzy-rss-feeds-deactivator.php
  *
  * @since    3.0.0
  */
