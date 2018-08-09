@@ -107,7 +107,7 @@ function feedzy_rss_feeds_autoload( $class ) {
  * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.s
  *
- * @since    3.0.0
+ * @since    3.0.0.
  */
 function run_feedzy_rss_feeds() {
 	define( 'FEEDZY_BASEFILE', __FILE__ );
