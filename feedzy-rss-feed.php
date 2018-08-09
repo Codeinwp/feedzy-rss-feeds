@@ -51,7 +51,7 @@ function deactivate_feedzy_rss_feeds() {
 register_activation_hook( __FILE__, 'activate_feedzy_rss_feeds' );
 register_deactivation_hook( __FILE__, 'deactivate_feedzy_rss_feeds' );
 /**
- * The function that will handle the queue for autoloader.
+ * The function thast will handle the queue for autoloader.
  *
  * @since    3.0.0
  */
