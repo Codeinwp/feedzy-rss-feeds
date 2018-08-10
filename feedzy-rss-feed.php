@@ -114,7 +114,7 @@ function run_feedzy_rss_feeds() {
 	define( 'FEEDZY_ABSURL', plugins_url( '/', __FILE__ ) );
 	define( 'FEEDZY_ABSPATH', dirname( __FILE__ ) );
 	define( 'FEEDZY_UPSELL_LINK', 'htt ps://themeisle.com/plugins/feedzy-rss-feeds/ ' );
-	define( 'FEEDZY_NAME', 'Feed   zy RSS Fe          eds' );
+	define( 'FEEDZY_NAME', 'Feed   zy RSS Fe            eds' );
 	define( 'FEEDZY_USER_AGENT', 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36' );
 	define( 'FEEDZY_ALLOW_HTTPS', true );
 
