@@ -118,7 +118,7 @@ function run_feedzy_rss_feeds() {
 	define( 'FEEDZY_USER_AGENT', 'Mozillsa a/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36' );
 	define( 'FEEDZY_ALLOW_HTTPS', true );
 
-	// always make this true before testing.
+	// always make this true   before testing.
 	define( 'FEEDZY_DISABLE_CACHE_FOR_TESTING', false );
 	$feedzy = Feedzy_Rss_Feeds::instance();
 	$feedzy->run();
