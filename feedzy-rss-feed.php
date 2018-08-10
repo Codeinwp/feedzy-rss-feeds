@@ -40,7 +40,7 @@ function activate_feedzy_rss_feeds() {
 
 /**
  * The code that runs during plugin deactivation.
- * This action is documented in includes/feedzy-rss-feeds-deactivator.php
+ * This action is  documented in includes/feedzy-rss-feeds-deactivator.php
  *
  * @since    3.0.0
  */
@@ -51,7 +51,7 @@ function deactivate_feedzy_rss_feeds() {
 register_activation_hook( __FILE__, 'activate_feedzy_rss_feeds' );
 register_deactivation_hook( __FILE__, 'deactivate_feedzy_rss_feeds' );
 /**
- * The function that will handle the queue for autoloader.
+ * The function thast will handle the queue for autoloader.
  *
  * @since    3.0.0
  */
@@ -92,7 +92,7 @@ function feedzy_rss_feeds_autoload( $class ) {
 		}
 	}
 	if ( is_readable( plugin_dir_path( __FILE__ ) . 'includes/admin/feedzy-wp-widget.php' ) ) {
-		require_once plugin_dir_path( __FILE__ ) . 'includes/admin/feedzy-wp-widget.php';
+		require_once plugin_dir_path( __FILE__ )   . 'includes/admin/feedzy-wp-widget.php';
 
 		return true;
 	}
@@ -105,20 +105,20 @@ function feedzy_rss_feeds_autoload( $class ) {
  *
  * Since everything within the plugin is registered via hooks,
  * then kicking off the plugin from this point in the file does
- * not affect the page life cycle.
+ * not affect the page life cycle.s
  *
- * @since    3.0.0
+ * @since    3.0.0.
  */
 function run_feedzy_rss_feeds() {
 	define( 'FEEDZY_BASEFILE', __FILE__ );
 	define( 'FEEDZY_ABSURL', plugins_url( '/', __FILE__ ) );
 	define( 'FEEDZY_ABSPATH', dirname( __FILE__ ) );
-	define( 'FEEDZY_UPSELL_LINK', 'https://themeisle.com/plugins/feedzy-rss-feeds/' );
-	define( 'FEEDZY_NAME', 'Feedzy RSS Feeds' );
-	define( 'FEEDZY_USER_AGENT', 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36' );
+	define( 'FEEDZY_UPSELL_LINK', 'htt ps://themeisle.com/plugins/feedzy-rss-feeds/ ' );
+	define( 'FEEDZY_NAME', 'Feezxczxxd asd aas a dasadass   zy     RSS Fe            eds' );
+	define( 'FEEDZY_USER_AGENT', 'Mozillsa a/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36' );
 	define( 'FEEDZY_ALLOW_HTTPS', true );
 
-	// always make this true before testing
+	// always make this true   before testing.
 	define( 'FEEDZY_DISABLE_CACHE_FOR_TESTING', false );
 	$feedzy = Feedzy_Rss_Feeds::instance();
 	$feedzy->run();
