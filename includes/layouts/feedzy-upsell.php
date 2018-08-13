@@ -56,7 +56,16 @@ Layout For Upsell Page of Feedzy RSS Feeds
 				<p>Feature affiliate links on your site with Feedzy. Pro automatically includes your referral/affiliate ID on feed links. You can even import prices from product sources to create extra value for your readers.</p>
 			</div>
 			<div class="fz-feature-image">
-				<img src="<?php echo FEEDZY_ABSURL; ?>/img/features-affiliate-ready.jpg" alt="Affiliate ready">
+				<img src="<?php echo FEEDZY_ABSURL; ?>/img/features-affiliate-ready.jpg" alt="Protect your Brand">
+			</div>
+		</div>
+		<div class="fz-feature">
+			<div class="fz-feature-features">
+				<h2>Protect your Brand</h2>
+				<p>Take control of your content: blacklist specific keywords to show only the content you want to display on your site.</p>
+			</div>
+			<div class="fz-feature-image">
+				<img src="<?php echo FEEDZY_ABSURL; ?>/img/Protect-your-Brand.jpg" alt="Affiliate ready">
 			</div>
 		</div>
 		<div class="fz-feature">
@@ -66,6 +75,15 @@ Layout For Upsell Page of Feedzy RSS Feeds
 			</div>
 			<div class="fz-feature-image">
 				<img src="<?php echo FEEDZY_ABSURL; ?>/img/feedzy-rss-feeds-wordai.jpg" alt="WordAi integration">
+			</div>
+		</div>
+		<div class="fz-feature">
+			<div class="fz-feature-features">
+				<h2>World-class support</h2>
+				<p>We’re proud to serve over 10,000 happy customers and provide unlimited support/updates for the duration of your subscription. If you need help, our customer service and developer teams are on-hand to offer personalized, priority assistance to Pro customers.</p>
+			</div>
+			<div class="fz-feature-image">
+				<img src="<?php echo FEEDZY_ABSURL; ?>/img/World-class-support.jpg" alt="World Class Support">
 			</div>
 		</div>
 
