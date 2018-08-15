@@ -57,9 +57,7 @@
 }
 
 #fz-features .header-btns {
-	float: right;
-	margin: 7px 20px;
-	text-align: right;
+	margin: 7px auto;
 }
 
 #fz-features .header-btns .buy-now {
@@ -233,4 +231,8 @@
 	color: #000;
 	background: #e0e0e0;
 	box-shadow: 0 1px 1px 0 rgba(0,0,0,0.1);
+}
+
+.fz-feature-centered {
+	text-align: center;
 }
