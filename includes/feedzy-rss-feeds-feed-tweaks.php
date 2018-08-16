@@ -8,14 +8,20 @@
  * @package    feedzy-rss-feeds
  * @subpackage feedzy-rss-feeds/includes
  */
-// @codingStandardsIgnoreStart
+
 /**
- * @param string $content
+ * Adds the featured image to the website's RSS feed.
+ *
+ * @param string $content The content of feed.
  *
  * @return string
  */
-function feedzy_insert_thumbnail_RSS( $content ) {
-// @codingStandardsIgnoreEnd
+function feedzy_insert_thumbnail( $content ) {
+	$settings = apply_filters( 'feedzy_get_settings', array() );
+	if ( isset( $settings['general']['rss-feeds'] ) && 1 === intval( $settings['general']['rss-feeds'] ) ) {
+		return $content;
+	}
+
 	global $post;
 	if ( has_post_thumbnail( $post->ID ) ) {
 		$content = '' . get_the_post_thumbnail( $post->ID, 'thumbnail' ) . '' . $content;
@@ -25,8 +31,8 @@ function feedzy_insert_thumbnail_RSS( $content ) {
 }
 
 // Alter the main blog feed to insert the thumbnail image.
-add_filter( 'the_excerpt_rss', 'feedzy_insert_thumbnail_RSS' );
-add_filter( 'the_content_feed', 'feedzy_insert_thumbnail_RSS' );
+add_filter( 'the_excerpt_rss', 'feedzy_insert_thumbnail' );
+add_filter( 'the_content_feed', 'feedzy_insert_thumbnail' );
 
 /**
  * Boostrap the plugin view.

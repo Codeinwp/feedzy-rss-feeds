@@ -43,6 +43,7 @@ const Inspector = (props) => {
 					isLarge
 					type="submit"
 					onClick={ props.loadFeed }
+					className="loadFeed"
 				>
 					{ __( 'Load Feed' ) }
 				</Button>

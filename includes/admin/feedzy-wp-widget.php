@@ -238,6 +238,7 @@ class feedzy_wp_widget extends WP_Widget {
 			'default'        => $instance['default'],
 			'size'           => $instance['size'],
 			'keywords_title' => $instance['keywords_title'],
+			'keywords_ban' => $instance['keywords_ban'],
 		);
 		$feedzy_widget_shortcode_attributes = apply_filters( 'feedzy_widget_shortcode_attributes_filter', $feedzy_widget_shortcode_attributes, $args, $instance );
 

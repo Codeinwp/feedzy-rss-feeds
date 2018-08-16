@@ -56,6 +56,7 @@ export const filterData = ( arr, sortType, allowedKeywords, bannedKeywords, maxS
 };
 
 export const inArray = ( value, arr ) => {
+	if ( arr === undefined ) return false;
 	let exists = false;
 	for( let i = 0; i < arr.length; i++ ) {
 		let name = arr[i];
