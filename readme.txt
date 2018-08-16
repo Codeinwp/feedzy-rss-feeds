@@ -1,4 +1,4 @@
-=== FEEDZY RSS Feeds Lite ===
+=== FEEDZY RSS Feeds Lite === 
 Contributors: themeisle,codeinwp,hardeepasrani
 Tags: RSS, SimplePie, shortcode, feed, thumbnail, image, rss feeds, aggregator, tinyMCE, WYSIWYG, MCE, UI, flux, plugin, WordPress, widget, importer, XML, ATOM, API, parser
 Requires at least: 3.7
