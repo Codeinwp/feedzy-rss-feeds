@@ -1,4 +1,11 @@
 
+ ### v3.2.12 - 2018-08-16 
+ **Changes:** 
+ * Fixed compatibility with the Gutenberg block
+* Added option to disable the featured image from being added to the website RSS feed
+* Fixed problem with excluding keywords not working
+* Updated the readme file
+ 
  ### v3.2.11 - 2018-06-26 
  **Changes:** 
  * New Gutenberg block for Feedzy RSS Feeds

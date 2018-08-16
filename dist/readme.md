@@ -143,6 +143,7 @@ Become a translator and send me your translation! [Contact-me](http://themeisle.
 
 
 
+
 ### Is it responsive friendly? ###
 
 Yes it is.
@@ -352,6 +353,12 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = How to add canonical tags for imported posts = 
  [https://docs.themeisle.com/article/841-how-to-add-canonical-tags-for-imported-posts](https://docs.themeisle.com/article/841-how-to-add-canonical-tags-for-imported-posts) 
 
+ = How to display thumbnail image from the feeds = 
+ [https://docs.themeisle.com/article/871-how-to-display-thumbnail-image-from-the-feeds](https://docs.themeisle.com/article/871-how-to-display-thumbnail-image-from-the-feeds) 
+
+ = How to change feed items order = 
+ [https://docs.themeisle.com/article/864-how-to-change-feed-items-order](https://docs.themeisle.com/article/864-how-to-change-feed-items-order) 
+
  == Screenshots ==
 
 1. Simple example
@@ -361,6 +368,14 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 ## Changelog ##
+### 3.2.12 - 2018-08-16  ###
+
+* Fixed compatibility with the Gutenberg block
+* Added option to disable the featured image from being added to the website RSS feed
+* Fixed problem with excluding keywords not working
+* Updated the readme file
+
+
 ### 3.2.11 - 2018-06-26  ###
 
 * New Gutenberg block for Feedzy RSS Feeds

@@ -144,6 +144,7 @@ Become a translator and send me your translation! [Contact-me](http://themeisle.
 
 
 
+
 = Is it responsive friendly? =
 
 Yes it is.
@@ -359,6 +360,15 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = How to change feed items order = 
  [https://docs.themeisle.com/article/864-how-to-change-feed-items-order](https://docs.themeisle.com/article/864-how-to-change-feed-items-order) 
 
+ = How to use WordAI or SpinnerChief to Rephrase RSS content in Feedzy = 
+ [https://docs.themeisle.com/article/746-how-to-use-wordai-or-spinnerchief-to-rephrase-rss-content-in-feedzy](https://docs.themeisle.com/article/746-how-to-use-wordai-or-spinnerchief-to-rephrase-rss-content-in-feedzy) 
+
+ = How to add affiliate referrals to feed URLs in Feedzy = 
+ [https://docs.themeisle.com/article/715-how-to-add-affiliate-referrals-to-feed-urls-in-feedzy](https://docs.themeisle.com/article/715-how-to-add-affiliate-referrals-to-feed-urls-in-feedzy) 
+
+ = How price is displayed from the feed = 
+ [https://docs.themeisle.com/article/923-how-price-is-displayed-from-the-feed](https://docs.themeisle.com/article/923-how-price-is-displayed-from-the-feed) 
+
  == Screenshots ==
 
 1. Simple example
@@ -368,6 +378,14 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 == Changelog ==
+= 3.2.12 - 2018-08-16  = 
+
+* Fixed compatibility with the Gutenberg block
+* Added option to disable the featured image from being added to the website RSS feed
+* Fixed problem with excluding keywords not working
+* Updated the readme file
+
+
 = 3.2.11 - 2018-06-26  = 
 
 * New Gutenberg block for Feedzy RSS Feeds

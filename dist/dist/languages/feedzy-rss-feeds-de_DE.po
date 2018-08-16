@@ -1,0 +1,141 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: FEEDZY RSS Feeds by b*web\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: Fri Jul 17 2015 11:41:38 GMT+0200\n"
+"PO-Revision-Date: Fri Jul 17 2015 11:59:48 GMT+0200\n"
+"Last-Translator: Ralf Steck <rsteck@engineeringspot.de>\n"
+"Language-Team: \n"
+"Language: German\n"
+"Plural-Forms: nplurals=2; plural=n != 1\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: ..\n"
+"X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;"
+"__:1;_e:1;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;__ngettext_noop:1,2;"
+"_x:1,2c;_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;_nx_js:1,2,3c;"
+"esc_attr__:1;esc_html__:1;esc_attr_e:1;esc_html_e:1;esc_attr_x:1,2c;"
+"esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2\n"
+"X-Loco-Target-Locale: de_DE\n"
+"X-Generator: Loco - https://localise.biz/"
+
+#: ../feedzy-rss-feed.php:52 ../feedzy-rss-feed.php:52
+msgid "Documentation and examples"
+msgstr "Dokumentation und Beispiele"
+
+#: ../feedzy-rss-feed.php:53 ../feedzy-rss-feed.php:53
+msgid "More b*web Plugins"
+msgstr "Weitere b*web Plugins"
+
+#: ../feedzy-rss-feed.php:54 ../feedzy-rss-feed.php:54
+msgid "Donate to this plugin &#187;"
+msgstr "Spenden Sie für dieses Plugin  &#187;"
+
+#: ../feedzy-rss-feeds-widget.php:18
+msgid "Feedzy RSS Feeds"
+msgstr "Feedzy RSS Feeds"
+
+#: ../feedzy-rss-feeds-widget.php:57
+msgid "Widget Title"
+msgstr "Widget-Titel"
+
+#: ../feedzy-rss-feeds-widget.php:61
+msgid "Intro text"
+msgstr "Einleitungstext"
+
+#: ../feedzy-rss-feeds-widget.php:65 ../feedzy-rss-feeds-ui-lang.php:20
+msgid "The feed(s) URL (comma-separated list)."
+msgstr "Feed URLs (kommaseparierte Liste)."
+
+#: ../feedzy-rss-feeds-widget.php:69 ../feedzy-rss-feeds-ui-lang.php:21
+msgid "Number of items to display."
+msgstr "Anzahl der darzustellenden Elemente"
+
+#: ../feedzy-rss-feeds-widget.php:73 ../feedzy-rss-feeds-ui-lang.php:23
+msgid "Links may be opened in the same window or a new tab."
+msgstr "Links können im selben Fenster oder einem neuen Tab geöffnet werden"
+
+#: ../feedzy-rss-feeds-widget.php:84 ../feedzy-rss-feeds-ui-lang.php:24
+msgid "Trim the title of the item after X characters."
+msgstr "Titel nach X Zeichen abschneiden"
+
+#: ../feedzy-rss-feeds-widget.php:89 ../feedzy-rss-feeds-ui-lang.php:25
+msgid "Should we display the date of publication and the author name?"
+msgstr "Veröffentlichungsdatum und Autorname anzeigen?"
+
+#: ../feedzy-rss-feeds-widget.php:93 ../feedzy-rss-feeds-ui-lang.php:26
+msgid "Should we display a description (abstract) of the retrieved item?"
+msgstr "Kurzbeschreibung (Zusammenfassung) des Elements anzeigen?"
+
+#: ../feedzy-rss-feeds-widget.php:96 ../feedzy-rss-feeds-ui-lang.php:27
+msgid "Crop description (summary) of the element after X characters."
+msgstr "Kurzbeschreibung (Zusammenfassung) nach X Zeichen abschneiden"
+
+#: ../feedzy-rss-feeds-widget.php:100 ../feedzy-rss-feeds-ui-lang.php:28
+msgid "Should we display the first image of the content if it is available?"
+msgstr "Erstes Bild - wenn vorhanden - des Inhalts anzeigen?"
+
+#: ../feedzy-rss-feeds-widget.php:111 ../feedzy-rss-feeds-ui-lang.php:33
+msgid "No"
+msgstr "Nein"
+
+#: ../feedzy-rss-feeds-widget.php:112 ../feedzy-rss-feeds-ui-lang.php:34
+msgid "Yes"
+msgstr "Ja"
+
+#: ../feedzy-rss-feeds-widget.php:113 ../feedzy-rss-feeds-ui-lang.php:35
+msgid "Auto"
+msgstr "Auto"
+
+#: ../feedzy-rss-feeds-widget.php:123 ../feedzy-rss-feeds-ui-lang.php:29
+msgid "Default thumbnail URL if no image is found."
+msgstr "Standard-Thumnail-Bild, wenn kein Bild im Text vorhanden ist."
+
+#: ../feedzy-rss-feeds-widget.php:127 ../feedzy-rss-feeds-ui-lang.php:30
+msgid "Thumblails dimension. Do not include \"px\". Eg: 150"
+msgstr "Thumbnail-Größe. Bitte ohne \"px\" angeben, z.B. 150"
+
+#: ../feedzy-rss-feeds-widget.php:131 ../feedzy-rss-feeds-ui-lang.php:31
+msgid ""
+"Only display item if title contains specific keyword(s) (comma-separated "
+"list/case sensitive)."
+msgstr ""
+"Elemente nur anzeigen, wenn sie folgende Keywords enthalten (Kommaseparierte "
+"Liste)."
+
+#: ../feedzy-rss-feeds-ui-lang.php:19
+msgid "Insert FEEDZY RSS Feeds Shortcode"
+msgstr "FEEDZY RSS Feeds Shortcode einfügen"
+
+#: ../feedzy-rss-feeds-ui-lang.php:22
+msgid "Should we display the RSS title?"
+msgstr "RSS-Titel darstellen?"
+
+#: ../feedzy-rss-feeds-ui-lang.php:32
+msgid "Do not specify"
+msgstr "nicht angeben"
+
+#: ../feedzy-rss-feeds-shortcode.php:98
+msgid "Sorry, this feed is currently unavailable or does not exists anymore."
+msgstr ""
+"Tut uns leid, dieser Feed ist derzeit nicht verfügbar oder existiert nicht "
+"mehr."
+
+#: ../feedzy-rss-feeds-shortcode.php:205
+msgid "Posted"
+msgstr "Veröffentlicht"
+
+#: ../feedzy-rss-feeds-shortcode.php:216
+msgid "by"
+msgstr "von"
+
+#: ../feedzy-rss-feeds-shortcode.php:222
+msgid "on"
+msgstr "am"
+
+#: ../feedzy-rss-feeds-shortcode.php:222
+msgid "at"
+msgstr "um"
