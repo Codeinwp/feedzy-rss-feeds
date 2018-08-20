@@ -1,6 +1,6 @@
 === FEEDZY RSS Feeds Lite ===
 Contributors: themeisle,codeinwp,hardeepasrani
-Tags: RSS, SimplePie, shortcode, feed, thumbnail, image, rss feeds, aggregator, tinyMCE, WYSIWYG, MCE, UI, flux, plugin, WordPress, widget, importer, XML, ATOM, API, parser
+Tags: RSS feed, autoblogging, autoblog, rss aggregator, feed to post 
 Requires at least: 3.7
 Tested up to: 4.9
 Stable tag: trunk
@@ -8,43 +8,53 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 
-FEEDZY RSS Feeds is a small & lightweight plugin. Fast and easy to use, it aggregates RSS feeds into your site with shortcodes & widgets.
+FEEDZY RSS Feeds is an easy-to-use plugin giving you RSS aggregator and autoblogging functionality. Bring the best RSS feeds to your site.
+
+## Description ##
+
+## RSS FEEDS WITH FEEDZY: AUTOBLOGGING MADE SIMPLE ##
+
+Feedzy is an easy-to-install RSS aggregator WordPress plugin which lets you collate content from all over the internet onto your site. Add your RSS feeds, and then use shortcodes and RSS feeds to get your site running within minutes.
+
+The plugin is easy to use, but we’ve got you covered on all the features you need, including responsive design, caching control, autoblogging (PRO), extra templates and custom post types (PRO) and a lot more.
+
+## A FEW REASONS WHY YOU’LL LOVE FEEDZY RSS FEEDS LITE:  ##
+
+**1. Simple to install**
+Install the plugin, add your RSS feeds, and then use shortcodes and widgets to display content on your site. Easy!
 
 
-== Description ==
+**2. Pretty as a picture**
+Create beautiful RSS feeds with images, from all your favorite sites (yes, including complex media from sites like YouTube).
 
-FEEDZY RSS Feeds is a small and lightweight RSS aggregator plugin. Fast and very easy to use, it allows you to aggregate multiple RSS feeds into your WordPress site through fully customizable shortcodes & widgets.
 
-> **Time-saving features available in the FULL version:**
+**3. Responsive & intuitive**
+No matter the platform, your content will be fully responsive across mobile and tablet.
+
+
+**4. Caching control**
+Choose right from the shortcode how often you want content from your RSS feeds to get updated.
+ 
+**5. Choose your categories**
+Group your RSS feeds into categories, and reuse them across your content without worrying about their URL.
+ 
+**6. You’re in great company**
+Join over 20,000 Feedzy users, and the half a million WordPress sites using ThemeIsle prodcuts :)
+
+
+> **UPGRADE TO THE FEEDZY PRO FOR THESE ADDED FEATURES:**
 >
 > * Integration with WordAI to avoid duplicate content
-> * Audio playback template
-> * Convert feed items to WordPress posts/pages/any
-> * Multiple templates for feed items
-> * Automatically build affiliate links
-> * Parse price from product feeds
-> * Blacklist specific keywords from feeds
-> * Priority email support from the developer of the plugin
-> * Support and updates for 12 months
+> * Automatically convert RSS feed items to WordPress pages & posts (feed to post)
+> * Choice of templates to display content, including audio playback template
+> * Automatically add your affiliate links to RSS feeds for business autoblogging
+> * Parse and display pricing from product feeds
+> * Control your feed: blacklist specific keywords
+> * Unlimited support and updates from our team for the duration of your licence
 >
-> **[Learn more about Feedzy Full version]( https://themeisle.com/plugins/feedzy-rss-feeds/ )**
+> **[Learn more about Feedzy Pro]( https://themeisle.com/plugins/feedzy-rss-feeds/ )**
 
-
-The plugin uses the SimplePie php CLASS natively included in WordPress. SimplePie is a RSS parser that can read the information contained in a feed, process it, and finally display it.
-
-**Full cache control**
-
-Choose right from the shortcode how often do you want your content from feeds to get updated.
-
-**Feed Categories**
-
-You can now group feeds into categories and reuse them across your content without worrying of their url.
-
-
-FEEDZY RSS Feeds therefore supports any additional library and uses only the bare minimum to ensure good performance (minimalistic CSS + cache). This will ensure compatibility with any hosting provider that supports WordPress, but if for any reason it doesn't work for yours feel free to <a href="http://themeisle.com/contact/" rel="nofollow">contact us</a>.
-
-
- = See how Feedzy can integrate with your website  =
+ ## See how Feedzy can integrate with your website
 
 * [Audio playback template](https://demo.themeisle.com/feedzy-rss-feeds/audio-feed-template/)
 * [Shop feed – 3 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/shop-feed/)
@@ -56,12 +66,15 @@ FEEDZY RSS Feeds therefore supports any additional library and uses only the bar
 * [Blog layout – 1 column layout](https://demo.themeisle.com/feedzy-rss-feeds/blog-layout/)
 
 
-You may use this plugin in your widgets and your pages and reuse the shortcode + widget several times within the same page.
+You can use this plugin in your widgets or pages, reusing the shortcode and widget several times within the same page.
+ 
+By activating this plugin, your cover image will be inserted into your RSS feeds, making it will easier for external sites to retrieve images from your feeds.
 
-By activating this plugin, your cover picture will be inserted into your RSS feeds. By doing so, you'll make it will easier for external sites to retrieve images from your feeds.
+## TECHNICAL NOTES:
+
+FEEDZY RSS Feeds supports any additional library and takes up minimal space in your cache/CSS to ensure high performance. This ensures compatibility with any hosting provider that supports WordPress, but if for any reason it doesn’t work for yours feel free to [contact us](http://themeisle.com/contact/).
 
 **Please ask for help or report bugs if anything goes wrong. It is the best way to make the community benefit!**
-
 
  = Shortcode Parameters =
 
