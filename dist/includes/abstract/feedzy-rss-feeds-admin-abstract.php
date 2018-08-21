@@ -1030,7 +1030,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		// Encode image name only en keep extra parameters
 		$query = '';
 		if ( isset( $url_tab['query'] ) ) {
-			$query = '?' . $url_tab['query'];
+			$query = '?' . urlencode( $url_tab['query'] );
 		}
 		$path = ltrim( $url_tab['path'], '/' );
 

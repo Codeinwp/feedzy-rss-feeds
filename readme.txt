@@ -392,6 +392,13 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 == Changelog ==
+= 3.3.0 - 2018-08-21  = 
+
+* Improve readme plugin description.
+* Improves compatibility with Gutenberg plugin.
+* Improves image detection from feeds.
+
+
 = 3.2.12 - 2018-08-16  = 
 
 * Fixed compatibility with the Gutenberg block
