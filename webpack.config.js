@@ -7,7 +7,7 @@ const ExtractTextPlugin = require( 'extract-text-webpack-plugin' );
 
 // Set different CSS extraction for editor only and common block styles
 const blockCSSPlugin = new ExtractTextPlugin( {
-  filename: './includes/gutenberg/dist/block.css',
+  filename: './includes/gutenberg/build/block.css',
 } );
 
 // Configuration for the ExtractTextPlugin.
@@ -32,7 +32,7 @@ const extractConfig = {
 
 module.exports = {
   entry: {
-    './includes/gutenberg/dist/block' : './includes/gutenberg/src/block.js',
+    './includes/gutenberg/build/block' : './includes/gutenberg/src/block.js',
   },
   output: {
     path: path.resolve( __dirname ),
