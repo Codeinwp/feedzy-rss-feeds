@@ -2,6 +2,7 @@
 Contributors: themeisle,codeinwp,hardeepasrani
 Tags: RSS feed, autoblogging, autoblog, rss aggregator, feed to post 
 Requires at least: 3.7
+Requires PHP: 5.3
 Tested up to: 4.9
 Stable tag: trunk
 License: GPLv2 or later
