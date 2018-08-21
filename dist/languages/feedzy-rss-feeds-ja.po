@@ -1,0 +1,189 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: FEEDZY RSS Feeds by b*web v2.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2015-06-28 08:42+0900\n"
+"Last-Translator: Shinichiro Sato <sama55@cmsbox.jp>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n>1;\n"
+"X-Generator: Poedit 1.8.1\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2\n"
+"X-Textdomain-Support: yes\n"
+"Language: fr_FR\n"
+"X-Poedit-SearchPath-0: .\n"
+
+# @ feedzy-rss-feeds
+#: feedzy-rss-feeds-shortcode.php:120
+msgid "Sorry, this feed is currently unavailable or does not exists anymore."
+msgstr "このフィードは現在利用できないか存在しません。"
+
+# @ feedzy-rss-feeds
+#: feedzy-rss-feeds-shortcode.php:298
+msgid "on"
+msgstr "on"
+
+# @ feedzy-rss-feeds
+#: feedzy-rss-feeds-shortcode.php:298
+msgid "at"
+msgstr "at"
+
+# @ feedzy-rss-feeds
+#: feedzy-rss-feed.php:37
+msgid "Documentation and examples"
+msgstr "ドキュメントと例"
+
+# @ feedzy-rss-feeds
+#: feedzy-rss-feed.php:38
+msgid "More b*web Plugins"
+msgstr "他の b*web プラグイン"
+
+# @ feedzy-rss-feeds
+#: feedzy-rss-feeds-ui-lang.php:19
+msgid "Insert FEEDZY RSS Feeds Shortcode"
+msgstr "FEEDZY RSSフィード ショートコードを追加"
+
+# @ feedzy-rss-feeds
+#: feedzy-rss-feeds-ui-lang.php:21 feedzy-rss-feeds-widget.php:69
+msgid "Number of items to display."
+msgstr "表示数:"
+
+# @ feedzy-rss-feeds
+#: feedzy-rss-feeds-ui-lang.php:23 feedzy-rss-feeds-widget.php:73
+msgid "Links may be opened in the same window or a new tab."
+msgstr "リンク先の開き方:"
+
+# @ feedzy-rss-feeds
+#: feedzy-rss-feeds-ui-lang.php:24 feedzy-rss-feeds-widget.php:84
+msgid "Trim the title of the item after X characters."
+msgstr "タイトルの切り取り文字数:"
+
+# @ feedzy-rss-feeds
+#: feedzy-rss-feeds-ui-lang.php:25 feedzy-rss-feeds-widget.php:89
+msgid "Should we display the date of publication and the author name?"
+msgstr "公開日と著作者を表示:"
+
+# @ feedzy-rss-feeds
+#: feedzy-rss-feeds-ui-lang.php:26 feedzy-rss-feeds-widget.php:93
+msgid "Should we display a description (abstract) of the retrieved item?"
+msgstr "詳細を表示:"
+
+# @ feedzy-rss-feeds
+#: feedzy-rss-feeds-ui-lang.php:27 feedzy-rss-feeds-widget.php:96
+msgid "Crop description (summary) of the element after X characters."
+msgstr "詳細の切り取り文字数:"
+
+# @ feedzy-rss-feeds
+#: feedzy-rss-feeds-ui-lang.php:28 feedzy-rss-feeds-widget.php:101
+msgid "Should we display the first image of the content if it is available?"
+msgstr "最初の画像を表示:"
+
+# @ feedzy-rss-feeds
+#: feedzy-rss-feeds-ui-lang.php:29 feedzy-rss-feeds-widget.php:104
+msgid "Default thumbnail URL if no image is found."
+msgstr "画像がない場合のデフォルトサムネイル:"
+
+# @ feedzy-rss-feeds
+#: feedzy-rss-feeds-ui-lang.php:30 feedzy-rss-feeds-widget.php:108
+msgid "Thumblails dimension. Do not include \"px\". Eg: 150"
+msgstr "サムネイルのサイズ（\"px\"はなし 例:150）:"
+
+# @ feedzy-rss-feeds
+#: feedzy-rss-feeds-ui-lang.php:31 feedzy-rss-feeds-widget.php:112
+msgid "Only display item if title contains specific keyword(s) (comma-separated list/case sensitive)."
+msgstr "特定なキーワードがタイトルに含まれる項目のみ表示 (複数指定時は大文字小文字を意識してカンマ区切り):"
+
+# @ feedzy-rss-feeds
+#: feedzy-rss-feeds-ui-lang.php:32
+msgid "Do not specify"
+msgstr "指定しない"
+
+# @ feedzy-rss-feeds
+#: feedzy-rss-feeds-ui-lang.php:33
+msgid "No"
+msgstr "しない"
+
+# @ feedzy-rss-feeds
+#: feedzy-rss-feeds-ui-lang.php:34
+msgid "Yes"
+msgstr "する"
+
+# @ feedzy-rss-feeds
+#: feedzy-rss-feeds-ui-lang.php:20 feedzy-rss-feeds-widget.php:65
+msgid "The feed(s) URL (comma-separated list)."
+msgstr "フィードアドレス (複数指定する場合はカンマ区切り):"
+
+# @ feedzy-rss-feeds
+#: feedzy-rss-feeds-ui-lang.php:22
+msgid "Should we display the RSS title?"
+msgstr "タイトルを表示:"
+
+# @ feedzy-rss-feeds
+#. translators: plugin header field 'Name'
+#: feedzy-rss-feed.php:0
+msgid "FEEDZY RSS Feeds by b*web"
+msgstr "FEEDZY RSS Feeds by b*web"
+
+# @ feedzy-rss-feeds
+#. translators: plugin header field 'Description'
+#: feedzy-rss-feed.php:0
+msgid "FEEDZY RSS Feeds is a small and lightweight plugin. Fast and easy to use, it aggregates RSS feeds into your WordPress site through simple shortcodes."
+msgstr "FEEDZY RSS Feeds は小さく軽いプラグインです。高速で使い方も簡単。あなたのワードプレスサイトにシンプルなショートコードによるRSSフィードの収集機能を追加します。"
+
+# @ feedzy-rss-feeds
+#. translators: plugin header field 'Author'
+#: feedzy-rss-feed.php:0
+msgid "Brice CAPOBIANCO"
+msgstr "Brice CAPOBIANCO"
+
+# @ feedzy-rss-feeds
+#. translators: plugin header field 'AuthorURI'
+#: feedzy-rss-feed.php:0
+msgid "http://b-website.com/"
+msgstr "http://b-website.com/"
+
+# @ feedzy-rss-feeds
+#. translators: plugin header field 'PluginURI'
+#: feedzy-rss-feed.php:0
+msgid "http://b-website.com/feedzy-rss-feeds-wordpress-plugin-using-simplepie"
+msgstr "http://b-website.com/feedzy-rss-feeds-wordpress-plugin-using-simplepie"
+
+# @ feedzy_wp_widget
+#: feedzy-rss-feeds-widget.php:18
+msgid "Feedzy RSS Feeds"
+msgstr "Feedzy RSS フィード"
+
+# @ feedzy-rss-feeds
+#: feedzy-rss-feeds-widget.php:57
+msgid "Widget Title"
+msgstr "タイトル"
+
+# @ feedzy-rss-feeds
+#: feedzy-rss-feeds-widget.php:61
+msgid "Intro text"
+msgstr "イントロテキスト"
+
+# @ default
+#: feedzy-rss-feed.php:39
+msgid "Donate to this plugin &#187;"
+msgstr "このプラグインに寄付 &#187;"
+
+# @ feedzy-rss-feeds
+#. translators: plugin header field 'Version'
+#: feedzy-rss-feed.php:0
+msgid "2.2"
+msgstr "2.2"
+
+# @ feedzy-rss-feeds
+#: feedzy-rss-feeds-shortcode.php:289
+msgid "Posted"
+msgstr "投稿日"
+
+# @ feedzy-rss-feeds
+#: feedzy-rss-feeds-shortcode.php:294
+msgid "by"
+msgstr "by"
