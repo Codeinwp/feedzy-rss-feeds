@@ -51,13 +51,13 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 	 */
 	public function feedzy_gutenberg_scripts() {
 		if ( FEEDZY_DISABLE_CACHE_FOR_TESTING ) {
-			$version = filemtime( FEEDZY_ABSPATH . '/includes/gutenberg/dist/block.js' );
+			$version = filemtime( FEEDZY_ABSPATH . '/includes/gutenberg/build/block.js' );
 		} else {
 			$version = $this->version;
 		}
 
 		// Enqueue the bundled block JS file
-		wp_enqueue_script( 'feedzy-gutenberg-block-js', FEEDZY_ABSURL . 'includes/gutenberg/dist/block.js', array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-compose', 'wp-api', 'lodash' ), $version );
+		wp_enqueue_script( 'feedzy-gutenberg-block-js', FEEDZY_ABSURL . 'includes/gutenberg/build/block.js', array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-compose', 'wp-api', 'lodash' ), $version );
 
 		// Pass in REST URL
 		wp_localize_script(
@@ -69,7 +69,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		);
 
 		// Enqueue editor block styles
-		wp_enqueue_style( 'feedzy-gutenberg-block-css', FEEDZY_ABSURL . 'includes/gutenberg/dist/block.css', '', $version );
+		wp_enqueue_style( 'feedzy-gutenberg-block-css', FEEDZY_ABSURL . 'includes/gutenberg/build/block.css', '', $version );
 	}
 
 	/**

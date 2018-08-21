@@ -9,15 +9,8 @@ sudo: false
 matrix:
   fast_finish: true
   include:
-  - php: "5.6"
-    install: true
-    before_script: chmod +x bin/wraith.sh
-    env: TEST_SUITE=Wraith_Visual_Regression_Testing WRAITH_FAIL=5
-    script:  ./bin/wraith.sh
   - php: '5.3'
     dist: precise
-  allow_failures:
-    - env: TEST_SUITE=Wraith_Visual_Regression_Testing WRAITH_FAIL=5
 branches:
   except:
   - "/^*-v[0-9]/"
