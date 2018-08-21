@@ -13,6 +13,7 @@ module.exports = function (grunt) {
 	config = config();
 	// jshint ignore: start
 	config.taskMap['faq_builder'] = 'grunt-helpscout-faq';
+	config.files.js.push( '!includes/gutenberg/build/*.js' );
 	// jshint ignore: end
 	loader(grunt, config).init();
 };
