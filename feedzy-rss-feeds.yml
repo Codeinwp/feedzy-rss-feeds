@@ -1,0 +1,31 @@
+# The type of the repository
+# If auto it will scan style.css or first level .php files
+# for `Theme Name` or `Plugin Name`
+# can have one of this values
+# type: wordpress-plugin|wordpress-theme|vuejs-kit|auto
+type: wordpress-plugin
+
+# A list of paths to use
+# Eg.
+# paths:
+#   - "/home"
+#   - "/blog"
+#   - "/page1"
+paths:
+  - "blog"
+  - "group-feeds-categories"
+  - "feed-with-image"
+  - "thumbnails"
+
+# A list of sizes to use
+# Eg.
+# size:
+#   - 1360
+#   - 480
+size:
+  - 1366
+  - 360
+
+theme: hestia
+# Path to a js file to inject and use before taking screenshots.
+#extra_js: "http://c23b6950.ngrok.io/docker_stash/test.js"
