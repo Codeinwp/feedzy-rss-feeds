@@ -1,7 +1,7 @@
 # The type of the repository
 # If auto it will scan style.css or first level .php files
 # for `Theme Name` or `Plugin Name`
-# can have one of this valuessdada a a
+# can have one of this valuessdadsdaa a a
 # type: wordpress-plugin|wordpress-theme|vuejs-kit|auto
 type: wordpress-plugin
 
