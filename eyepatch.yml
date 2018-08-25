@@ -2,7 +2,7 @@
 # If auto it will scan style.css or first slevel .php files
 # for `Theme Name` or `Plugin Name` 
 # can have one of this valuessdadsdaa a a
-# type: wordpress-plugin|wordpress-theme|vuejs-kit|auto
+# type: wordpress-plugin|wordpress-theme|vuejs-kit|dsadauto
 type: wordpress-plugin
 
 # A list of paths to use
