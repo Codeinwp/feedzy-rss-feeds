@@ -1,4 +1,10 @@
 
+ ### v3.3.0 - 2018-08-21 
+ **Changes:** 
+ * Improve readme plugin description.
+* Improves compatibility with Gutenberg plugin.
+* Improves image detection from feeds.
+ 
  ### v3.2.12 - 2018-08-16 
  **Changes:** 
  * Fixed compatibility with the Gutenberg block
