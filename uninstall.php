@@ -22,3 +22,10 @@
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
+
+
+// clean up after ourselves, that's a good plugin!
+delete_option( 'feedzy_rss_feeds_logger_flag' );
+delete_option( 'feedzy_logger_flag' );
+delete_option( 'feedzy-settings' );
+delete_option( 'feedzy-rss-feeds' );
