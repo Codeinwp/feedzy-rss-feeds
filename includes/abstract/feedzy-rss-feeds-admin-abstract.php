@@ -461,7 +461,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 			if ( is_string( $feedURL ) || ( is_array( $feedURL ) && 1 === count( $feedURL ) ) ) {
 				do_action( 'themeisle_log_event', FEEDZY_NAME, 'Trying to use raw data', 'debug', __FILE__, __LINE__ );
-				$data   = file_get_contents( $feedURL );
+				$data   = wp_remote_retrieve_body( wp_remote_get( $feedURL, array( 'user-agent' => $default_agent ) ) );
 				$cloned_feed->set_raw_data( $data );
 				$cloned_feed->init();
 				$feed = $cloned_feed;
