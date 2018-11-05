@@ -373,8 +373,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				)
 			);
 		} else {
-			// feedzy_is_license_of_type should be enough but if someone has new lite and old pro, they would lose the functionality.
-			// so let's make it backward compatible.
+			// feedzy_is_license_of_type should be enough but if someone has new lite and old pro, they would lose the functionality so let's make it backward compatible.
 			$is_pro = apply_filters( 'feedzy_is_license_of_type', false, 'pro' ) || apply_filters( 'feedzy_is_business_filter', false );
 			if ( $is_pro ) {
 				add_submenu_page( 'feedzy-admin-menu', __( 'Import Posts', 'feedzy-rss-feeds' ), __( 'Import Posts', 'feedzy-rss-feeds' ), 'manage_options', 'edit.php?post_type=feedzy_imports' );
