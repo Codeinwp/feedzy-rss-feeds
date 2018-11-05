@@ -392,6 +392,12 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 ## Changelog ##
+### 3.3.1 - 2018-11-05  ###
+
+* Import Posts enabled for plan 1 users
+* Fixed issue with some idiosyncratic feeds
+
+
 ### 3.3.0 - 2018-08-21  ###
 
 * Improve readme plugin description.
