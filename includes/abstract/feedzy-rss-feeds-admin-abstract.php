@@ -1049,19 +1049,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$string = $imgUrl[0][0];
 			}
 		}
-		// Encode image name only en keep extra parameters
-		$query = '';
-		if ( isset( $url_tab['query'] ) ) {
-			$query = '?' . esc_url( $url_tab['query'] );
-		}
-		$path = ltrim( $url_tab['path'], '/' );
 
-		if ( substr( $path, 0, 0 ) !== '/' ) {
-			$path = '/' . $path;
-		}
-
-		// Return a well encoded image url
-		return $url_tab['scheme'] . '://' . $url_tab['host'] . $path . $query;
+		$return = apply_filters( 'feedzy_image_encode', esc_url( $string ), $string );
+		do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Changing image URL from %s to %s', $string, $return ), 'debug', __FILE__, __LINE__ );
+		return $return;
 	}
 
 	/**
