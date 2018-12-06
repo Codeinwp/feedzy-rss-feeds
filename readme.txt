@@ -1,5 +1,5 @@
 === FEEDZY RSS Feeds Lite ===
-Contributors: themeisle,codeinwp,hardeepasrani
+Contributors: themeisle,codeinwp,hardeepasrani,contactashish13
 Tags: RSS feed, autoblogging, autoblog, rss aggregator, feed to post 
 Requires at least: 3.7
 Requires PHP: 5.3
