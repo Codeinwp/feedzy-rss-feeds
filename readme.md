@@ -3,7 +3,7 @@
 **Tags:** RSS feed, autoblogging, autoblog, rss aggregator, feed to post   
 **Requires at least:** 3.7  
 **Requires PHP:** 5.3  
-**Tested up to:** 4.9  
+**Tested up to:** 5.0  
 **Stable tag:** trunk  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
