@@ -294,7 +294,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'refresh'        => '12_hours',
 				// sorting.
 				'sort'           => '',
-				// only display item if title contains specific keywords (comma-separated list/case sensitive)
+				// http images, https = force https|default = fall back to default image|auto = continue as it is
+				'http'         => 'auto',
 			),
 			$atts,
 			'feedzy_default'
@@ -764,7 +765,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$newLink  = apply_filters( 'feedzy_item_url_filter', $itemLink, $sc, $item );
 		// Fetch image thumbnail
 		if ( $sc['thumb'] == 'yes' || $sc['thumb'] == 'auto' ) {
-			$theThumbnail = $this->feedzy_retrieve_image( $item );
+			$theThumbnail = $this->feedzy_retrieve_image( $item, $sc );
 		}
 		if ( $sc['thumb'] == 'yes' || $sc['thumb'] == 'auto' ) {
 			$contentThumb = '';
@@ -849,7 +850,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'item_url_target'    => $sc['target'],
 			'item_url_title'     => $item->get_title(),
 			'item_img'           => $contentThumb,
-			'item_img_path'      => $this->feedzy_retrieve_image( $item ),
+			'item_img_path'      => $this->feedzy_retrieve_image( $item, $sc ),
 			'item_title'         => $contentTitle,
 			'item_content_class' => 'rss_content',
 			'item_content_style' => '',
@@ -871,10 +872,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @access  public
 	 *
 	 * @param   object $item The item object.
+	 * @param   array  $sc The shorcode attributes array.
 	 *
 	 * @return  string
 	 */
-	public function feedzy_retrieve_image( $item ) {
+	public function feedzy_retrieve_image( $item, $sc ) {
 		$theThumbnail = '';
 		if ( $enclosures = $item->get_enclosures() ) {
 			foreach ( (array) $enclosures as $enclosure ) {
@@ -923,6 +925,18 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( empty( $theThumbnail ) ) {
 			$feedDescription = $item->get_description();
 			$theThumbnail    = $this->feedzy_return_image( $feedDescription );
+		}
+
+		// handle HTTP images.
+		if ( 0 === strpos( $theThumbnail, 'http://' ) ) {
+			switch ( $sc['http'] ) {
+				case 'https':
+					$theThumbnail = str_replace( 'http://', 'https://', $theThumbnail );
+					break;
+				case 'default':
+					$theThumbnail = $sc['default'];
+					break;
+			}
 		}
 
 		$theThumbnail = apply_filters( 'feedzy_retrieve_image', $theThumbnail, $item );
