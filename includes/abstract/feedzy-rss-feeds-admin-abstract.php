@@ -290,12 +290,13 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'size'           => '',
 				// thumbs pixel size
 				'keywords_title' => '',
-				// cache refresh
+				// only display item if title contains specific keywords (comma-separated list/case sensitive)
 				'refresh'        => '12_hours',
-				// sorting.
+				// cache refresh
 				'sort'           => '',
-				// http images, https = force https|default = fall back to default image|auto = continue as it is
+				// sorting.
 				'http'         => 'auto',
+				// http images, https = force https|default = fall back to default image|auto = continue as it is
 			),
 			$atts,
 			'feedzy_default'
