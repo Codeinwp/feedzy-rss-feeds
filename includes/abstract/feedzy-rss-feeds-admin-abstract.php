@@ -275,6 +275,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				// display feed title yes/no
 				'target'         => '_blank',
 				// _blank, _self
+				'follow'         => '',
+				// empty or no for nofollow
 				'title'          => '',
 				// strip title after X char
 				'meta'           => 'yes',
@@ -290,11 +292,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'size'           => '',
 				// thumbs pixel size
 				'keywords_title' => '',
-				// cache refresh
-				'refresh'        => '12_hours',
-				// sorting.
-				'sort'           => '',
 				// only display item if title contains specific keywords (comma-separated list/case sensitive)
+				'refresh'        => '12_hours',
+				// cache refresh
+				'sort'           => '',
+				// sorting.
 			),
 			$atts,
 			'feedzy_default'
@@ -624,20 +626,18 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$content .= '</div>';
 		}
 		$content .= '<ul>';
+		$anchor1 = '<a href="%s" target="%s" rel="%s" title="%s" style="%s">%s</a>';
+		$anchor2 = '<a href="%s" target="%s" rel="%s">%s</a>';
 		foreach ( $feed_items as $item ) {
 			$content .= '
             <li ' . $item['itemAttr'] . '>
                 ' . ( ( ! empty( $item['item_img'] ) && $sc['thumb'] != 'no' ) ? '
-                <div class="' . $item['item_img_class'] . '" style="' . $item['item_img_style'] . '">
-					<a href="' . $item['item_url'] . '" target="' . $item['item_url_target'] . '" title="' . $item['item_url_title'] . '"   style="' . $item['item_img_style'] . '">
-						' . $item['item_img'] . '
-					</a>
-				</div>' : '' ) . '
-				<span class="title">
-					<a href="' . $item['item_url'] . '" target="' . $item['item_url_target'] . '">
-						' . $item['item_title'] . '
-					</a>
-				</span>
+                <div class="' . $item['item_img_class'] . '" style="' . $item['item_img_style'] . '">'
+				. sprintf( $anchor1, $item['item_url'], $item['item_url_target'], $item['item_url_follow'], $item['item_url_title'], $item['item_img_style'], $item['item_img'] )
+				. '</div>' : '' )
+				. '<span class="title">'
+				. sprintf( $anchor2, $item['item_url'], $item['item_url_target'], $item['item_url_follow'], $item['item_title'] )
+				. '</span>
 				<div class="' . $item['item_content_class'] . '" style="' . $item['item_content_style'] . '">
 					' . ( ! empty( $item['item_meta'] ) ? '<small>
 						' . $item['item_meta'] . '
@@ -649,7 +649,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 		$content .= '</ul> </div>';
 		$content = apply_filters( 'feedzy_global_output', $content, $sc, $feed_title, $feed_items );
-
 		return $content;
 	}
 
@@ -847,6 +846,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'item_img_style'     => 'width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px;',
 			'item_url'           => $newLink,
 			'item_url_target'    => $sc['target'],
+			'item_url_follow'    => 'no' === $sc['follow'] ? 'nofollow' : '',
 			'item_url_title'     => $item->get_title(),
 			'item_img'           => $contentThumb,
 			'item_img_path'      => $this->feedzy_retrieve_image( $item ),
