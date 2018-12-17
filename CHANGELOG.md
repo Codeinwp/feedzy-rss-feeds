@@ -1,4 +1,24 @@
 
+ ### v3.3.0 - 2018-08-21 
+ **Changes:** 
+ * Improve readme plugin description.
+* Improves compatibility with Gutenberg plugin.
+* Improves image detection from feeds.
+ 
+ ### v3.2.12 - 2018-08-16 
+ **Changes:** 
+ * Fixed compatibility with the Gutenberg block
+* Added option to disable the featured image from being added to the website RSS feed
+* Fixed problem with excluding keywords not working
+* Updated the readme file
+ 
+ ### v3.2.11 - 2018-06-26 
+ **Changes:** 
+ * New Gutenberg block for Feedzy RSS Feeds
+* Fixed curl SSL problem with Feeds with HTTPS
+* Fix content type, conflicting with Gutenberg
+* Added compatibility with the pro version for full text import
+ 
  ### v3.2.10 - 2018-04-02 
  **Changes:** 
  * Adds shortcode attribute for feed items order ( title ASC/DESC, date ASC/DESC).

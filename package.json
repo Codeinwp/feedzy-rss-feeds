@@ -1,6 +1,6 @@
 {
   "name": "feedzy-rss-feeds",
-  "version": "3.2.11",
+  "version": "3.3.1",
   "description": "Feedzy RSS Feeds - lite version",
   "repository": {
     "type": "git",
@@ -53,8 +53,5 @@
     "sass-loader": "^6.0.6",
     "style-loader": "^0.19.1",
     "webpack": "^3.10.0"
-  },
-  "wraithSlug": [
-    "feedzy-rss-feeds"
-  ]
+  }
 }

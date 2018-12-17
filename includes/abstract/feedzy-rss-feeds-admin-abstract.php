@@ -295,7 +295,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				// sorting.
 				'sort'           => '',
 				// only display item if title contains specific keywords (comma-separated list/case sensitive)
-			), $atts, 'feedzy_default'
+			),
+			$atts,
+			'feedzy_default'
 		);
 		$sc = array_merge( $sc, apply_filters( 'feedzy_get_short_code_attributes_filter', $atts ) );
 
@@ -442,11 +444,31 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$feed->set_cache_class( 'WP_Feed_Cache' );
 			$feed->set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', $cache_time, $feedURL ) );
 		}
-		$feed->set_feed_url( $feedURL );
+
 		$feed->force_feed( apply_filters( 'feedzy_force_feed', true ) );
 		do_action( 'feedzy_modify_feed_config', $feed );
+
+		$cloned_feed = clone $feed;
+
+		// set the url as the last step, because we need to be able to close this feed without the url being set
+		// so that we can fall back to raw data in case of an error
+		$feed->set_feed_url( $feedURL );
 		$feed->init();
 
+		$error = $feed->error();
+		if ( ! empty( $error ) ) {
+			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Error while parsing feed: %s', print_r( $error, true ) ), 'error', __FILE__, __LINE__ );
+
+			if ( is_string( $feedURL ) || ( is_array( $feedURL ) && 1 === count( $feedURL ) ) ) {
+				do_action( 'themeisle_log_event', FEEDZY_NAME, 'Trying to use raw data', 'debug', __FILE__, __LINE__ );
+				$data   = wp_remote_retrieve_body( wp_remote_get( $feedURL, array( 'user-agent' => $default_agent ) ) );
+				$cloned_feed->set_raw_data( $data );
+				$cloned_feed->init();
+				$feed = $cloned_feed;
+			} else {
+				do_action( 'themeisle_log_event', FEEDZY_NAME, 'Cannot use raw data as this is a multifeed URL', 'debug', __FILE__, __LINE__ );
+			}
+		}
 		return $feed;
 	}
 
@@ -1027,19 +1049,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$string = $imgUrl[0][0];
 			}
 		}
-		// Encode image name only en keep extra parameters
-		$query = '';
-		if ( isset( $url_tab['query'] ) ) {
-			$query = '?' . $url_tab['query'];
-		}
-		$path = ltrim( $url_tab['path'], '/' );
 
-		if ( substr( $path, 0, 0 ) !== '/' ) {
-			$path = '/' . $path;
-		}
-
-		// Return a well encoded image url
-		return $url_tab['scheme'] . '://' . $url_tab['host'] . $path . $query;
+		$return = apply_filters( 'feedzy_image_encode', esc_url( $string ), $string );
+		do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Changing image URL from %s to %s', $string, $return ), 'debug', __FILE__, __LINE__ );
+		return $return;
 	}
 
 	/**

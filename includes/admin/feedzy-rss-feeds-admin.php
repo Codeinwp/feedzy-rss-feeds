@@ -181,16 +181,26 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function add_feedzy_post_type_metaboxes() {
 		add_meta_box(
-			'feedzy_category_feeds', __( 'Category Feeds', 'feedzy-rss-feeds' ), array(
+			'feedzy_category_feeds',
+			__( 'Category Feeds', 'feedzy-rss-feeds' ),
+			array(
 				$this,
 				'feedzy_category_feed',
-			), 'feedzy_categories', 'normal', 'high'
+			),
+			'feedzy_categories',
+			'normal',
+			'high'
 		);
 		add_meta_box(
-			'feedzy_category_feeds_rn', __( 'Increase your social media presence', 'feedzy-rss-feeds' ), array(
+			'feedzy_category_feeds_rn',
+			__( 'Increase your social media presence', 'feedzy-rss-feeds' ),
+			array(
 				$this,
 				'render_upsell_rn',
-			), 'feedzy_categories', 'side', 'low'
+			),
+			'feedzy_categories',
+			'side',
+			'low'
 		);
 	}
 
@@ -351,21 +361,31 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		add_menu_page( __( 'Feedzy RSS Feeds', 'feedzy-rss-feeds' ), __( 'Feedzy RSS', 'feedzy-rss-feeds' ), 'manage_options', 'feedzy-admin-menu', '', $svg_base64_icon, 98.7666 );
 		if ( ! class_exists( 'Feedzy_Rss_Feeds_Pro' ) ) {
 			add_submenu_page(
-				'feedzy-admin-menu', __( 'More Features', 'feedzy-rss-feeds' ), __( 'More Features', 'feedzy-rss-feeds' ) . '<span class="dashicons 
-		dashicons-star-filled more-features-icon" style="width: 17px; height: 17px; margin-left: 4px; color: #ffca54; font-size: 17px; vertical-align: -3px;"></span>', 'manage_options', 'feedzy-admin-menu-pro-upsell',
+				'feedzy-admin-menu',
+				__( 'More Features', 'feedzy-rss-feeds' ),
+				__( 'More Features', 'feedzy-rss-feeds' ) . '<span class="dashicons 
+		dashicons-star-filled more-features-icon" style="width: 17px; height: 17px; margin-left: 4px; color: #ffca54; font-size: 17px; vertical-align: -3px;"></span>',
+				'manage_options',
+				'feedzy-admin-menu-pro-upsell',
 				array(
 					$this,
 					'render_upsell',
 				)
 			);
 		} else {
-			$is_business = apply_filters( 'feedzy_is_business_filter', false );
-			if ( $is_business != false ) {
+			// feedzy_is_license_of_type should be enough but if someone has new lite and old pro, they would lose the functionality so let's make it backward compatible.
+			$is_pro = apply_filters( 'feedzy_is_license_of_type', false, 'pro' ) || apply_filters( 'feedzy_is_business_filter', false );
+			if ( $is_pro ) {
 				add_submenu_page( 'feedzy-admin-menu', __( 'Import Posts', 'feedzy-rss-feeds' ), __( 'Import Posts', 'feedzy-rss-feeds' ), 'manage_options', 'edit.php?post_type=feedzy_imports' );
 			}
 		}
 		add_submenu_page(
-			'feedzy-admin-menu', __( 'Settings', 'feedzy-rss-feeds' ), __( 'Settings', 'feedzy-rss-feeds' ), 'manage_options', 'feedzy-settings', array(
+			'feedzy-admin-menu',
+			__( 'Settings', 'feedzy-rss-feeds' ),
+			__( 'Settings', 'feedzy-rss-feeds' ),
+			'manage_options',
+			'feedzy-settings',
+			array(
 				$this,
 				'feedzy_settings_page',
 			)

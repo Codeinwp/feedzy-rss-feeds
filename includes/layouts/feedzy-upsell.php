@@ -20,10 +20,10 @@ Layout For Upsell Page of Feedzy RSS Feeds
 		<div class="header-btns">
 			<?php
 			if ( ! defined( 'FEEDZY_PRO_ABSURL' ) ) :
-			?>
+				?>
 			<a target="_blank" href="<?php echo FEEDZY_UPSELL_LINK; ?>" class="buy-now"><span
 			class="dashicons dashicons-cart"></span> Upgrade to Pro now</a>
-			<?php
+				<?php
 			endif;
 			?>
 		</div>
@@ -93,10 +93,10 @@ Layout For Upsell Page of Feedzy RSS Feeds
 		<div class="header-btns">
 			<?php
 			if ( ! defined( 'FEEDZY_PRO_ABSURL' ) ) :
-			?>
+				?>
 			<a target="_blank" href="<?php echo FEEDZY_UPSELL_LINK; ?>" class="buy-now"><span
 			class="dashicons dashicons-cart"></span> Get Feedzy Pro</a>
-			<?php
+				<?php
 			endif;
 			?>
 		</div>

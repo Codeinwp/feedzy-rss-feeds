@@ -1,11 +1,13 @@
 # FEEDZY RSS Feeds Lite #
-**Contributors:** [themeisle](https://profiles.wordpress.org/themeisle), [codeinwp](https://profiles.wordpress.org/codeinwp), [hardeepasrani](https://profiles.wordpress.org/hardeepasrani)  
-**Tags:** RSS feed, autoblogging, autoblog, rss aggregator, feed to post  
+**Contributors:** [themeisle](https://profiles.wordpress.org/themeisle), [codeinwp](https://profiles.wordpress.org/codeinwp), [hardeepasrani](https://profiles.wordpress.org/hardeepasrani), [contactashish13](https://profiles.wordpress.org/rozroz)    
+**Tags:** RSS feed, autoblogging, autoblog, rss aggregator, feed to post   
 **Requires at least:** 3.7  
-**Tested up to:** 4.9  
+**Requires PHP:** 5.3  
+**Tested up to:** 5.0  
 **Stable tag:** trunk  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
+
 
 FEEDZY RSS Feeds is an easy-to-use plugin giving you RSS aggregator and autoblogging functionality. Bring the best RSS feeds to your site.
 
@@ -74,7 +76,6 @@ By activating this plugin, your cover image will be inserted into your RSS feeds
 FEEDZY RSS Feeds supports any additional library and takes up minimal space in your cache/CSS to ensure high performance. This ensures compatibility with any hosting provider that supports WordPress, but if for any reason it doesn’t work for yours feel free to [contact us](http://themeisle.com/contact/).
 
 **Please ask for help or report bugs if anything goes wrong. It is the best way to make the community benefit!**
-
 
  = Shortcode Parameters =
 
@@ -150,6 +151,9 @@ Become a translator and send me your translation! [Contact-me](http://themeisle.
 2. Insert shortcode ! ;-)
 
 ## Frequently Asked Questions ##
+
+
+
 
 
 
@@ -358,6 +362,27 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = What to do when you get Warning: ./cache is not writeable = 
  [https://docs.themeisle.com/article/840-what-to-do-when-you-get-warning-cache-is-not-writeable](https://docs.themeisle.com/article/840-what-to-do-when-you-get-warning-cache-is-not-writeable) 
 
+ = How to exclude feeds with certain words in it = 
+ [https://docs.themeisle.com/article/850-how-to-exclude-feeds-with-certain-words-in-it](https://docs.themeisle.com/article/850-how-to-exclude-feeds-with-certain-words-in-it) 
+
+ = How to add canonical tags for imported posts = 
+ [https://docs.themeisle.com/article/841-how-to-add-canonical-tags-for-imported-posts](https://docs.themeisle.com/article/841-how-to-add-canonical-tags-for-imported-posts) 
+
+ = How to display thumbnail image from the feeds = 
+ [https://docs.themeisle.com/article/871-how-to-display-thumbnail-image-from-the-feeds](https://docs.themeisle.com/article/871-how-to-display-thumbnail-image-from-the-feeds) 
+
+ = How to change feed items order = 
+ [https://docs.themeisle.com/article/864-how-to-change-feed-items-order](https://docs.themeisle.com/article/864-how-to-change-feed-items-order) 
+
+ = How to use WordAI or SpinnerChief to Rephrase RSS content in Feedzy = 
+ [https://docs.themeisle.com/article/746-how-to-use-wordai-or-spinnerchief-to-rephrase-rss-content-in-feedzy](https://docs.themeisle.com/article/746-how-to-use-wordai-or-spinnerchief-to-rephrase-rss-content-in-feedzy) 
+
+ = How to add affiliate referrals to feed URLs in Feedzy = 
+ [https://docs.themeisle.com/article/715-how-to-add-affiliate-referrals-to-feed-urls-in-feedzy](https://docs.themeisle.com/article/715-how-to-add-affiliate-referrals-to-feed-urls-in-feedzy) 
+
+ = How price is displayed from the feed = 
+ [https://docs.themeisle.com/article/923-how-price-is-displayed-from-the-feed](https://docs.themeisle.com/article/923-how-price-is-displayed-from-the-feed) 
+
  == Screenshots ==
 
 1. Simple example
@@ -367,6 +392,29 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 ## Changelog ##
+### 3.3.0 - 2018-08-21  ###
+
+* Improve readme plugin description.
+* Improves compatibility with Gutenberg plugin.
+* Improves image detection from feeds.
+
+
+### 3.2.12 - 2018-08-16  ###
+
+* Fixed compatibility with the Gutenberg block
+* Added option to disable the featured image from being added to the website RSS feed
+* Fixed problem with excluding keywords not working
+* Updated the readme file
+
+
+### 3.2.11 - 2018-06-26  ###
+
+* New Gutenberg block for Feedzy RSS Feeds
+* Fixed curl SSL problem with Feeds with HTTPS
+* Fix content type, conflicting with Gutenberg
+* Added compatibility with the pro version for full text import
+
+
 ### 3.2.10 - 2018-04-02  ###
 
 * Adds shortcode attribute for feed items order ( title ASC/DESC, date ASC/DESC).
