@@ -558,6 +558,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @access  public
 	 */
 	public function on_activation( $plugin ) {
+		if ( defined( 'TI_UNIT_TESTING' ) ) {
+			return;
+		}
+
 		if ( $plugin == FEEDZY_BASENAME ) {
 			wp_redirect( admin_url( 'admin.php?page=feedzy-support&tab=help#shortcode' ) );
 			exit();
