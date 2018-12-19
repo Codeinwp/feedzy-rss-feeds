@@ -120,7 +120,12 @@ class Test_Feedzy extends WP_UnitTestCase {
 		$titles = array();
 		foreach ( $lists as $list ) {
 			if ( isset( $list['class'] ) && 'rss_item' === $list['class'] ) {
-				$titles[] = iconv( 'UTF-8', 'ASCII//IGNORE', trim( $list['span'][0]['a'][0]['#text'] ) );
+				$anchors = $list['span'][0]['a'];
+				$text   = $anchors;
+				if ( is_array( $anchors ) ) {
+					$text = $anchors[0]['#text'];
+				}
+				$titles[] = iconv( 'UTF-8', 'ASCII//IGNORE', trim( $anchors ) );
 			}
 		}
 		return $titles;
