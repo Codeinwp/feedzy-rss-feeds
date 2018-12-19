@@ -728,18 +728,16 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$count = 0;
 		$items = apply_filters( 'feedzy_feed_items', $feed->get_items(), $feedURL );
 		foreach ( (array) $items as $item ) {
-			if ( trim( $item->get_title() ) != '' ) {
-				$continue = apply_filters( 'feedzy_item_keyword', true, $sc, $item, $feedURL );
-				if ( $continue == true ) {
-					// Count items. This should be > and not >= because max, when not defined and empty, becomes 0.
-					if ( $count >= $sc['max'] ) {
-						break;
-					}
-					$itemAttr                         = apply_filters( 'feedzy_item_attributes', $itemAttr = '', $sizes, $item, $feedURL, $sc );
-					$feed_items[ $count ]             = $this->get_feed_item_filter( $sc, $sizes, $item, $feedURL );
-					$feed_items[ $count ]['itemAttr'] = $itemAttr;
-					$count ++;
+			$continue = apply_filters( 'feedzy_item_keyword', true, $sc, $item, $feedURL );
+			if ( $continue == true ) {
+				// TODO: This should be > and not >= because max, when not defined and empty, becomes 0.
+				if ( $count >= $sc['max'] ) {
+					break;
 				}
+				$itemAttr                         = apply_filters( 'feedzy_item_attributes', $itemAttr = '', $sizes, $item, $feedURL, $sc );
+				$feed_items[ $count ]             = $this->get_feed_item_filter( $sc, $sizes, $item, $feedURL );
+				$feed_items[ $count ]['itemAttr'] = $itemAttr;
+				$count ++;
 			}
 		}
 
