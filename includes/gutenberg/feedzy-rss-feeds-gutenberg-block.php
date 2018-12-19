@@ -57,7 +57,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		}
 
 		// Enqueue the bundled block JS file
-		wp_enqueue_script( 'feedzy-gutenberg-block-js', FEEDZY_ABSURL . 'includes/gutenberg/build/block.js', array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-compose', 'wp-api', 'lodash' ), $version );
+		wp_enqueue_script( 'feedzy-gutenberg-block-js', FEEDZY_ABSURL . 'includes/gutenberg/build/block.js', array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-compose', 'wp-editor', 'wp-api', 'lodash' ), $version );
 
 		// Pass in REST URL
 		wp_localize_script(
