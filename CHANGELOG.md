@@ -1,4 +1,9 @@
 
+ ### v3.3.1 - 2018-11-05 
+ **Changes:** 
+ * Import Posts enabled for plan 1 users
+* Fixed issue with some idiosyncratic feeds
+ 
  ### v3.3.0 - 2018-08-21 
  **Changes:** 
  * Improve readme plugin description.
