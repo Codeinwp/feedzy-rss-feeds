@@ -6,8 +6,6 @@ Layout For Upsell Page of Feedzy RSS Feeds
 -->
 <div id="fz-features">
 
-	 <?php load_template( FEEDZY_ABSPATH . '/includes/layouts/header.php' ); ?>
-
 	<div class="fz-features-content">
 	
 	<div class="fz-feature">

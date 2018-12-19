@@ -1070,8 +1070,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @since   3.0.12
 	 * @access  public
 	 */
-	public function render_upsell() {
-		$this->load_layout( 'feedzy-upsell' );
+	public function render_support() {
+		$this->load_layout( 'feedzy-support' );
 	}
 
 	/**
