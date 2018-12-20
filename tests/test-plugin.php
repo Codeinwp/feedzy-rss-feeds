@@ -76,7 +76,12 @@ class Test_Feedzy extends WP_UnitTestCase {
 		$content = wp_remote_retrieve_body( wp_remote_get( $feed ) );
 		$items  = $this->parse_xml( $content, 'title', 'pubDate' );
 		$titles     = wp_list_pluck( $items, 'title' );
-		sort( $titles );
+		$new        = $titles;
+		sort( $new );
+		$titles     = array();
+		foreach ( $new as $title ) {
+			$titles[] = iconv( 'UTF-8', 'ASCII//IGNORE', trim( $title ) );
+		}
 
 		// sort by title ascending.
 		$content_asc    = do_shortcode( '[feedzy-rss feeds="' . $feed . '" max="' . count( $items ) . '" target="_blank" summary="no" sort="title_asc"]' );
@@ -86,7 +91,11 @@ class Test_Feedzy extends WP_UnitTestCase {
 		// sort by title descending.
 		$content_desc   = do_shortcode( '[feedzy-rss feeds="' . $feed . '" max="' . count( $items ) . '" target="_blank" summary="no" sort="title_desc"]' );
 		$title_desc = $this->get_titles( $content_desc );
-		rsort( $titles );
+		rsort( $new );
+		$titles     = array();
+		foreach ( $new as $title ) {
+			$titles[] = iconv( 'UTF-8', 'ASCII//IGNORE', trim( $title ) );
+		}
 		$this->assertEquals( $titles, $title_desc );
 
 	}
@@ -125,7 +134,7 @@ class Test_Feedzy extends WP_UnitTestCase {
 				if ( is_array( $anchors ) ) {
 					$text = $anchors[0]['#text'];
 				}
-				$titles[] = iconv( 'UTF-8', 'ASCII//IGNORE', trim( $anchors ) );
+				$titles[] = iconv( 'UTF-8', 'ASCII//IGNORE', trim( $text ) );
 			}
 		}
 		return $titles;
@@ -159,8 +168,8 @@ class Test_Feedzy extends WP_UnitTestCase {
 		$array = array();
 		foreach ( $xml->channel->item as $item ) {
 			$array[] = array(
-				$key   => iconv( 'UTF-8', 'ASCII//IGNORE', trim( (string) $item->$key ) ),
-				$value => iconv( 'UTF-8', 'ASCII//IGNORE', trim( (string) $item->$value ) ),
+				$key   => trim( (string) $item->$key ),
+				$value => trim( (string) $item->$value ),
 			);
 		}
 		return $array;
