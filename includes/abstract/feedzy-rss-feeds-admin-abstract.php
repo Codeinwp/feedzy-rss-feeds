@@ -736,7 +736,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 						break;
 					}
 					$itemAttr                         = apply_filters( 'feedzy_item_attributes', $itemAttr = '', $sizes, $item, $feedURL, $sc );
-					$feed_items[ $count ]             = $this->get_feed_item_filter( $sc, $sizes, $item, $feedURL );
+					$feed_items[ $count ]             = $this->get_feed_item_filter( $sc, $sizes, $item, $feedURL, $count );
 					$feed_items[ $count ]['itemAttr'] = $itemAttr;
 					$count ++;
 				}
@@ -756,10 +756,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @param   array  $sizes The sizes array.
 	 * @param   object $item The feed item object.
 	 * @param   string $feedURL The feed url.
+	 * @param   int    $index The item number.
 	 *
 	 * @return array
 	 */
-	private function get_feed_item_filter( $sc, $sizes, $item, $feedURL ) {
+	private function get_feed_item_filter( $sc, $sizes, $item, $feedURL, $index ) {
 		$itemLink = $item->get_permalink();
 		$newLink  = apply_filters( 'feedzy_item_url_filter', $itemLink, $sc, $item );
 		// Fetch image thumbnail
@@ -859,7 +860,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'item_description'   => $contentSummary,
 			'item_content'       => apply_filters( 'feedzy_content', $item->get_content( false ), $item ),
 		);
-		$itemArray = apply_filters( 'feedzy_item_filter', $itemArray, $item );
+		$itemArray = apply_filters( 'feedzy_item_filter', $itemArray, $item, $sc, $index );
 
 		return $itemArray;
 	}
