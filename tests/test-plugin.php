@@ -125,7 +125,7 @@ class Test_Feedzy extends WP_UnitTestCase {
 				if ( is_array( $anchors ) ) {
 					$text = $anchors[0]['#text'];
 				}
-				$titles[] = iconv( 'UTF-8', 'ASCII//IGNORE', trim( $anchors ) );
+				$titles[] = iconv( 'UTF-8', 'ASCII//IGNORE', trim( $text ) );
 			}
 		}
 		return $titles;
