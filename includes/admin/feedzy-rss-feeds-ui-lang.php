@@ -210,6 +210,21 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 							),
 						),
 					),
+					'follow'         => array(
+						'label' => __( 'Make this link a "nofollow" link?', 'feedzy-rss-feeds' ),
+						'type'  => 'select',
+						'value' => '',
+						'opts'  => array(
+							'auto'      => array(
+								'label' => __( 'No', 'feedzy-rss-feeds' ),
+								'value' => '',
+							),
+							'_blank'    => array(
+								'label' => __( 'Yes', 'feedzy-rss-feeds' ),
+								'value' => 'no',
+							),
+						),
+					),
 					'title'          => array(
 						'label'       => __( 'Trim the title of the item after X characters.', 'feedzy-rss-feeds' ),
 						'placeholder' => __( '(eg: 160)', 'feedzy-rss-feeds' ),
