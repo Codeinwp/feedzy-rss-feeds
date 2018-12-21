@@ -320,6 +320,25 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'type'        => 'text',
 						'value'       => '',
 					),
+					'http'   => array(
+						'label' => __( 'How should we treat HTTP images?', 'feedzy-rss-feeds' ),
+						'type'  => 'select',
+						'value' => '',
+						'opts'  => array(
+							'auto' => array(
+								'label' => __( 'Show with HTTP link', 'feedzy-rss-feeds' ),
+								'value' => '',
+							),
+							'yes'  => array(
+								'label' => __( 'Force HTTPS (please verify that the images exist on HTTPS)', 'feedzy-rss-feeds' ),
+								'value' => 'force',
+							),
+							'no'   => array(
+								'label' => __( 'Ignore and show the default image instead', 'feedzy-rss-feeds' ),
+								'value' => 'default',
+							),
+						),
+					),
 				),
 			),
 			'section_pro'   => array(
