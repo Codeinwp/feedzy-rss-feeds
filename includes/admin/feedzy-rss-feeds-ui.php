@@ -63,22 +63,32 @@ class Feedzy_Rss_Feeds_Ui {
 	}
 
 	/**
+	 * Checks if this is being called inside the Gutenberg block editor.
+	 *
+	 * @since   3.3.2
+	 * @access  private
+	 */
+	private function is_block_editor() {
+		require_once( ABSPATH . 'wp-admin/includes/screen.php' );
+		global $current_screen;
+		$current_screen = get_current_screen();
+		return method_exists( $current_screen, 'is_block_editor' ) && $current_screen->is_block_editor();
+	}
+
+	/**
 	 * Initialize the hooks and filters for the tinymce button
 	 *
 	 * @since   3.0.0
 	 * @access  public
 	 */
 	public function register_init() {
-		if ( current_user_can( 'edit_posts' ) && current_user_can( 'edit_pages' ) ) {
-			if ( 'true' == get_user_option( 'rich_editing' ) ) {
+		if ( ! $this->is_block_editor() && current_user_can( 'edit_posts' ) && current_user_can( 'edit_pages' ) && 'true' == get_user_option( 'rich_editing' ) ) {
+			$this->loader->add_filter( 'mce_external_plugins', $this, 'feedzy_tinymce_plugin', 10, 1 );
+			$this->loader->add_filter( 'mce_buttons', $this, 'feedzy_register_mce_button', 10, 1 );
 
-				$this->loader->add_filter( 'mce_external_plugins', $this, 'feedzy_tinymce_plugin', 10, 1 );
-				$this->loader->add_filter( 'mce_buttons', $this, 'feedzy_register_mce_button', 10, 1 );
+			$this->loader->add_action( 'admin_enqueue_scripts', $this, 'enqueue_scripts', 10 );
 
-				$this->loader->add_action( 'admin_enqueue_scripts', $this, 'enqueue_scripts', 10 );
-
-				$this->loader->run();
-			}
+			$this->loader->run();
 		}
 	}
 
