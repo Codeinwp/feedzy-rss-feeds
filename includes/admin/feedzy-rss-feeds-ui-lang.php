@@ -210,6 +210,21 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 							),
 						),
 					),
+					'follow'         => array(
+						'label' => __( 'Make this link a "nofollow" link?', 'feedzy-rss-feeds' ),
+						'type'  => 'select',
+						'value' => '',
+						'opts'  => array(
+							'auto'      => array(
+								'label' => __( 'No', 'feedzy-rss-feeds' ),
+								'value' => '',
+							),
+							'_blank'    => array(
+								'label' => __( 'Yes', 'feedzy-rss-feeds' ),
+								'value' => 'no',
+							),
+						),
+					),
 					'title'          => array(
 						'label'       => __( 'Trim the title of the item after X characters.', 'feedzy-rss-feeds' ),
 						'placeholder' => __( '(eg: 160)', 'feedzy-rss-feeds' ),
@@ -304,6 +319,25 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'placeholder' => __( '(eg: 150)', 'feedzy-rss-feeds' ),
 						'type'        => 'text',
 						'value'       => '',
+					),
+					'http'   => array(
+						'label' => __( 'How should we treat HTTP images?', 'feedzy-rss-feeds' ),
+						'type'  => 'select',
+						'value' => '',
+						'opts'  => array(
+							'auto' => array(
+								'label' => __( 'Show with HTTP link', 'feedzy-rss-feeds' ),
+								'value' => '',
+							),
+							'yes'  => array(
+								'label' => __( 'Force HTTPS (please verify that the images exist on HTTPS)', 'feedzy-rss-feeds' ),
+								'value' => 'force',
+							),
+							'no'   => array(
+								'label' => __( 'Ignore and show the default image instead', 'feedzy-rss-feeds' ),
+								'value' => 'default',
+							),
+						),
 					),
 				),
 			),
