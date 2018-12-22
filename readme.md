@@ -1,5 +1,5 @@
 # FEEDZY RSS Feeds Lite #
-**Contributors:** [themeisle](https://profiles.wordpress.org/themeisle), [codeinwp](https://profiles.wordpress.org/codeinwp), [hardeepasrani](https://profiles.wordpress.org/hardeepasrani), [contactashish13](https://profiles.wordpress.org/rozroz)    
+**Contributors:** [themeisle](https://profiles.wordpress.org/themeisle), [codeinwp](https://profiles.wordpress.org/codeinwp), [hardeepasrani](https://profiles.wordpress.org/hardeepasrani), [contactashish13](https://profiles.wordpress.org/contactashish13)  
 **Tags:** RSS feed, autoblogging, autoblog, rss aggregator, feed to post   
 **Requires at least:** 3.7  
 **Requires PHP:** 5.3  
@@ -392,6 +392,15 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 ## Changelog ##
+### 3.3.2 - 2018-12-22  ###
+
+* Option to handle HTTP images in the shortcode
+* Option to specify nofollow for links in the shortcode
+* Fix Gutenberg block
+* Add video tutorials under Help menu
+* Add support for extracting price from custom feed tags
+
+
 ### 3.3.1 - 2018-11-05  ###
 
 * Import Posts enabled for plan 1 users

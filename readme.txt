@@ -159,6 +159,7 @@ Become a translator and send me your translation! [Contact-me](http://themeisle.
 
 
 
+
 = Is it responsive friendly? =
 
 Yes it is.
@@ -383,6 +384,12 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = How price is displayed from the feed = 
  [https://docs.themeisle.com/article/923-how-price-is-displayed-from-the-feed](https://docs.themeisle.com/article/923-how-price-is-displayed-from-the-feed) 
 
+ = How to find Feed URL for Feedzy RSS Feeds = 
+ [https://docs.themeisle.com/article/799-how-to-find-feed-url-for-feedzy-rss-feeds](https://docs.themeisle.com/article/799-how-to-find-feed-url-for-feedzy-rss-feeds) 
+
+ = In Feedzy how do I... = 
+ [https://docs.themeisle.com/article/942-in-feedzy-how-do-i](https://docs.themeisle.com/article/942-in-feedzy-how-do-i) 
+
  == Screenshots ==
 
 1. Simple example
@@ -392,6 +399,15 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 == Changelog ==
+= 3.3.2 - 2018-12-22  = 
+
+* Option to handle HTTP images in the shortcode
+* Option to specify nofollow for links in the shortcode
+* Fix Gutenberg block
+* Add video tutorials under Help menu
+* Add support for extracting price from custom feed tags
+
+
 = 3.3.1 - 2018-11-05  = 
 
 * Import Posts enabled for plan 1 users
