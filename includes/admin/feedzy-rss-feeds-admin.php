@@ -359,26 +359,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	public function feedzy_menu_pages() {
 		$svg_base64_icon = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4NTAuMzkiIGhlaWdodD0iODUwLjM5Ij48cGF0aCBmaWxsPSIjREIzOTM5IiBkPSJNNDI1LjIgMkMxOTAuMzYgMiAwIDE5MS45MiAwIDQyNi4yYzAgMjM0LjI3IDE5MC4zNyA0MjQuMiA0MjUuMiA0MjQuMiAyMzQuODIgMCA0MjUuMi0xODkuOTMgNDI1LjItNDI0LjJDODUwLjQgMTkxLjkgNjYwIDIgNDI1LjIgMnptLTQ2LjU1IDY2OC42NmgtOTEuNTh2LTU3LjFMMjM3LjUgNTY0LjFoLTU3LjI2di05MS4yNGg5NS4yNWwxMDMuMTUgMTAyLjh2OTV6bTE1Mi41MiAwSDQzOS42di0xMzMuM0wzMTMuODUgNDExLjk0aC0xMzMuNnYtOTEuMzZIMzUxLjdMNTMxLjE4IDQ5OS42djE3MS4wNnptMTUyLjU1IDBoLTkxLjU4VjQ2MS4yTDM5MC4wNiAyNTkuNzRIMTgwLjI0di05MS4zNmgyNDcuOGwyNTUuNjggMjU1LjA3djI0Ny4yMnoiLz48L3N2Zz4=';
 		add_menu_page( __( 'Feedzy RSS Feeds', 'feedzy-rss-feeds' ), __( 'Feedzy RSS', 'feedzy-rss-feeds' ), 'manage_options', 'feedzy-admin-menu', '', $svg_base64_icon, 98.7666 );
-		if ( ! class_exists( 'Feedzy_Rss_Feeds_Pro' ) ) {
-			add_submenu_page(
-				'feedzy-admin-menu',
-				__( 'More Features', 'feedzy-rss-feeds' ),
-				__( 'More Features', 'feedzy-rss-feeds' ) . '<span class="dashicons 
-		dashicons-star-filled more-features-icon" style="width: 17px; height: 17px; margin-left: 4px; color: #ffca54; font-size: 17px; vertical-align: -3px;"></span>',
-				'manage_options',
-				'feedzy-admin-menu-pro-upsell',
-				array(
-					$this,
-					'render_upsell',
-				)
-			);
-		} else {
-			// feedzy_is_license_of_type should be enough but if someone has new lite and old pro, they would lose the functionality so let's make it backward compatible.
-			$is_pro = apply_filters( 'feedzy_is_license_of_type', false, 'pro' ) || apply_filters( 'feedzy_is_business_filter', false );
-			if ( $is_pro ) {
-				add_submenu_page( 'feedzy-admin-menu', __( 'Import Posts', 'feedzy-rss-feeds' ), __( 'Import Posts', 'feedzy-rss-feeds' ), 'manage_options', 'edit.php?post_type=feedzy_imports' );
-			}
-		}
+
 		add_submenu_page(
 			'feedzy-admin-menu',
 			__( 'Settings', 'feedzy-rss-feeds' ),
@@ -388,6 +369,17 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			array(
 				$this,
 				'feedzy_settings_page',
+			)
+		);
+		add_submenu_page(
+			'feedzy-admin-menu',
+			__( 'Support', 'feedzy-rss-feeds' ),
+			__( 'Support', 'feedzy-rss-feeds' ) . '<span class="dashicons dashicons-editor-help more-features-icon" style="width: 17px; height: 17px; margin-left: 4px; color: #ffca54; font-size: 17px; vertical-align: -3px;"></span>',
+			'manage_options',
+			'feedzy-support',
+			array(
+				$this,
+				'render_support',
 			)
 		);
 	}
@@ -551,6 +543,22 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function post_http_teardown( $url ) {
 		remove_filter( 'http_headers_useragent', array( $this, 'add_user_agent' ) );
+	}
+
+	/**
+	 * On activation of the plugin
+	 *
+	 * @access  public
+	 */
+	public function on_activation( $plugin ) {
+		if ( defined( 'TI_UNIT_TESTING' ) ) {
+			return;
+		}
+
+		if ( $plugin == FEEDZY_BASENAME ) {
+			wp_redirect( admin_url( 'admin.php?page=feedzy-support&tab=help#shortcode' ) );
+			exit();
+		}
 	}
 
 

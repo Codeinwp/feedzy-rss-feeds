@@ -104,7 +104,7 @@ class Feedzy_Rss_Feeds {
 	 */
 	public function init() {
 		self::$plugin_name = 'feedzy-rss-feeds';
-		self::$version = '3.3.1';
+		self::$version = '3.3.2';
 		self::$instance->load_dependencies();
 		self::$instance->set_locale();
 		self::$instance->define_admin_hooks();
@@ -187,11 +187,12 @@ class Feedzy_Rss_Feeds {
 	 */
 	private function define_admin_hooks() {
 		$plugin_ui = new Feedzy_Rss_Feeds_Ui( self::$instance->get_plugin_name(), self::$instance->get_version(), self::$instance->loader );
-		self::$instance->loader->add_action( 'init', $plugin_ui, 'register_init' );
+		self::$instance->loader->add_action( 'admin_enqueue_scripts', $plugin_ui, 'register_init' );
 		self::$instance->loader->add_action( 'init', self::$instance->admin, 'register_post_type' );
 		self::$instance->loader->add_action( 'save_post', self::$instance->admin, 'save_feedzy_post_type_meta', 1, 2 );
 		self::$instance->loader->add_action( 'feedzy_pre_http_setup', self::$instance->admin, 'pre_http_setup', 10, 1 );
 		self::$instance->loader->add_action( 'feedzy_post_http_teardown', self::$instance->admin, 'post_http_teardown', 10, 1 );
+		self::$instance->loader->add_action( 'activated_plugin', self::$instance->admin, 'on_activation', 10, 1 );
 
 		self::$instance->loader->add_action( 'manage_feedzy_categories_posts_custom_column', self::$instance->admin, 'manage_feedzy_category_columns', 10, 2 );
 		self::$instance->loader->add_filter( 'manage_feedzy_categories_posts_columns', self::$instance->admin, 'feedzy_category_columns' );
