@@ -428,5 +428,5 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 
 }
 
-$feedzyLangClass = new Feedzy_Rss_Feeds_Ui_Lang();
-$strings         = $feedzyLangClass->feedzy_tinymce_translation();
+$feedzy_lang_class = new Feedzy_Rss_Feeds_Ui_Lang();
+$strings         = $feedzy_lang_class->feedzy_tinymce_translation();
