@@ -876,7 +876,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @return  string
 	 */
-	public function feedzy_retrieve_image( $item, $sc ) {
+	public function feedzy_retrieve_image( $item, $sc = null ) {
 		$theThumbnail = '';
 		if ( $enclosures = $item->get_enclosures() ) {
 			foreach ( (array) $enclosures as $enclosure ) {
@@ -928,7 +928,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		// handle HTTP images.
-		if ( 0 === strpos( $theThumbnail, 'http://' ) ) {
+		if ( $sc && 0 === strpos( $theThumbnail, 'http://' ) ) {
 			switch ( $sc['http'] ) {
 				case 'https':
 					$theThumbnail = str_replace( 'http://', 'https://', $theThumbnail );
