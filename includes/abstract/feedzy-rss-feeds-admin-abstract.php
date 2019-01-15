@@ -631,7 +631,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$content .= '<ul>';
 
 		// Display the error message and quit (before showing the template for pro).
-		if ( empty( $feed_items) ) {
+		if ( empty( $feed_items ) ) {
 			$content .= $msg;
 			return $content;
 		}
