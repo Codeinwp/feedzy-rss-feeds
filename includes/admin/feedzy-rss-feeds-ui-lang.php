@@ -174,6 +174,12 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 							),
 						),
 					),
+					'error_empty'       => array(
+						'label' => __( 'Message to show when feed is empty', 'feedzy-rss-feeds' ),
+						'placeholder' => __( 'Feed has no items.', 'feedzy-rss-feeds' ),
+						'type'        => 'text',
+						'value'       => '',
+					),
 				),
 			),
 			'section_item'  => array(

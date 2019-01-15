@@ -54,7 +54,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	public function feedzy_default_error_notice( $error, $feed_url ) {
 		error_log( 'Feedzy RSS Feeds - related feed: ' . print_r( $feed_url, true ) . ' - Error message: ' . $this->feedzy_array_obj_string( $error ) );
 
-		return '<div id="message" class="error" data-error"' . esc_attr( $this->feedzy_array_obj_string( $error ) ) . '"><p>' . __( 'Sorry, this feed is currently unavailable or does not exists anymore.', 'feedzy-rss-feeds' ) . '</p></div>';
+		return '<div id="message" class="error" data-error"' . esc_attr( $this->feedzy_array_obj_string( $error ) ) . '"><p>' . __( 'Sorry, this feed is currently unavailable or does not exist anymore.', 'feedzy-rss-feeds' ) . '</p></div>';
 	}
 
 	/**
@@ -235,7 +235,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @access  public
 	 *
 	 * @param   array  $atts Shortcode attributes.
-	 * @param   string $content The error message to show if the feed is empty.
+	 * @param   string $content The item feed content.
 	 *
 	 * @return  mixed
 	 */
@@ -299,6 +299,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				// sorting.
 				'http'         => 'auto',
 				// http images, https = force https|default = fall back to default image|auto = continue as it is
+				'error_empty'   => 'Feed has no items.',
+				// message to show when feed is empty
 			),
 			$atts,
 			'feedzy_default'
@@ -599,12 +601,12 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @param   array  $sc The shorcode attributes array.
 	 * @param   object $feed The feed object.
-	 * @param   string $msg The error message to show if the feed is empty.
+	 * @param   string $content The original content.
 	 * @param   string $feed_url The feed url.
 	 *
 	 * @return  string
 	 */
-	private function render_content( $sc, $feed, $msg, $feed_url ) {
+	private function render_content( $sc, $feed, $content = '', $feed_url ) {
 		$count                   = 0;
 		$sizes                   = array(
 			'width'  => $sc['size'],
@@ -632,7 +634,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		// Display the error message and quit (before showing the template for pro).
 		if ( empty( $feed_items ) ) {
-			$content .= $msg;
+			$content .= $sc['error_empty'];
 			return $content;
 		}
 
