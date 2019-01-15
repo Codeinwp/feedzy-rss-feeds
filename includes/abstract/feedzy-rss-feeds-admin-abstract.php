@@ -235,7 +235,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @access  public
 	 *
 	 * @param   array  $atts Shortcode attributes.
-	 * @param   string $content The item feed content.
+	 * @param   string $content The error message to show if the feed is empty.
 	 *
 	 * @return  mixed
 	 */
@@ -595,16 +595,16 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * Render the content to be displayed
 	 *
 	 * @since   3.0.0
-	 * @access  public
+	 * @access  private
 	 *
 	 * @param   array  $sc The shorcode attributes array.
 	 * @param   object $feed The feed object.
-	 * @param   string $content The original content.
+	 * @param   string $msg The error message to show if the feed is empty.
 	 * @param   string $feed_url The feed url.
 	 *
 	 * @return  string
 	 */
-	public function render_content( $sc, $feed, $content = '', $feed_url ) {
+	private function render_content( $sc, $feed, $msg, $feed_url ) {
 		$count                   = 0;
 		$sizes                   = array(
 			'width'  => $sc['size'],
@@ -616,10 +616,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$feed_title              = $this->get_feed_title_filter( $feed );
 			$feed_title['use_title'] = true;
 		}
-		// Display the error message
+		// Display the error message and quit (before showing the template for pro).
 		if ( $feed->error() ) {
-			$content .= apply_filters( 'feedzy_default_error', $feed->error(), $feed_url );
+			return apply_filters( 'feedzy_default_error', $feed->error(), $feed_url );
 		}
+
 		$feed_items = apply_filters( 'feedzy_get_feed_array', array(), $sc, $feed, $feed_url, $sizes );
 		$content    = '<div class="feedzy-rss">';
 		if ( $feed_title['use_title'] ) {
@@ -628,6 +629,13 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$content .= '</div>';
 		}
 		$content .= '<ul>';
+
+		// Display the error message and quit (before showing the template for pro).
+		if ( empty( $feed_items) ) {
+			$content .= $msg;
+			return $content;
+		}
+
 		$anchor1 = '<a href="%s" target="%s" rel="%s" title="%s" style="%s">%s</a>';
 		$anchor2 = '<a href="%s" target="%s" rel="%s">%s</a>';
 		foreach ( $feed_items as $item ) {
