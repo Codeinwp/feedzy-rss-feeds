@@ -161,6 +161,10 @@ run_feedzy_rss_feeds();
 
 if ( FEEDZY_LOCAL_DEBUG ) {
 	add_action( 'themeisle_log_event', 'feedzy_themeisle_log_event', 10, 5 );
+
+	/**
+	 * Redirect themeisle_log_event to error log.
+	 */
 	function feedzy_themeisle_log_event( $name, $msg, $type, $file, $line ) {
 		if ( $name === FEEDZY_NAME ) {
 			error_log( sprintf( '%s (%s:%d): %s', $type, $file, $line, $msg ) );
