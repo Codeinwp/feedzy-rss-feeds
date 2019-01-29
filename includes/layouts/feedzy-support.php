@@ -15,7 +15,7 @@
 		?>
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-support&tab=more' ) ); ?>"
 	   class="nav-tab <?php echo $active_tab == 'more' ? 'nav-tab-active' : ''; ?>"><?php _e( 'More Features', 'feedzy-rss-feeds' ); ?></a>
-		<?php
+			<?php
 		}
 		?>
 	</h2>
