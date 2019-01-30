@@ -386,6 +386,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'type'     => 'text',
 						'disabled' => true,
 						'value'    => '',
+						'placeholder'    => '',
 					),
 					'template'     => array(
 						'label'    => __( 'Template to use when displaying the feed.', 'feedzy-rss-feeds' ),
