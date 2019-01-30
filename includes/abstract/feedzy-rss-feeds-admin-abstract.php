@@ -54,7 +54,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	public function feedzy_default_error_notice( $error, $feed_url ) {
 		error_log( 'Feedzy RSS Feeds - related feed: ' . print_r( $feed_url, true ) . ' - Error message: ' . $this->feedzy_array_obj_string( $error ) );
 
-		return '<div id="message" class="error" data-error"' . esc_attr( $this->feedzy_array_obj_string( $error ) ) . '"><p>' . __( 'Sorry, this feed is currently unavailable or does not exists anymore.', 'feedzy-rss-feeds' ) . '</p></div>';
+		return '<div id="message" class="error" data-error"' . esc_attr( $this->feedzy_array_obj_string( $error ) ) . '"><p>' . __( 'Sorry, this feed is currently unavailable or does not exist anymore.', 'feedzy-rss-feeds' ) . '</p></div>';
 	}
 
 	/**
@@ -299,6 +299,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				// sorting.
 				'http'         => 'auto',
 				// http images, https = force https|default = fall back to default image|auto = continue as it is
+				'error_empty'   => 'Feed has no items.',
+				// message to show when feed is empty
 			),
 			$atts,
 			'feedzy_default'
@@ -595,7 +597,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * Render the content to be displayed
 	 *
 	 * @since   3.0.0
-	 * @access  public
+	 * @access  private
 	 *
 	 * @param   array  $sc The shorcode attributes array.
 	 * @param   object $feed The feed object.
@@ -604,7 +606,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @return  string
 	 */
-	public function render_content( $sc, $feed, $content = '', $feed_url ) {
+	private function render_content( $sc, $feed, $content = '', $feed_url ) {
 		$count                   = 0;
 		$sizes                   = array(
 			'width'  => $sc['size'],
@@ -616,10 +618,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$feed_title              = $this->get_feed_title_filter( $feed );
 			$feed_title['use_title'] = true;
 		}
-		// Display the error message
+		// Display the error message and quit (before showing the template for pro).
 		if ( $feed->error() ) {
-			$content .= apply_filters( 'feedzy_default_error', $feed->error(), $feed_url );
+			return apply_filters( 'feedzy_default_error', $feed->error(), $feed_url );
 		}
+
 		$feed_items = apply_filters( 'feedzy_get_feed_array', array(), $sc, $feed, $feed_url, $sizes );
 		$content    = '<div class="feedzy-rss">';
 		if ( $feed_title['use_title'] ) {
@@ -628,6 +631,13 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$content .= '</div>';
 		}
 		$content .= '<ul>';
+
+		// Display the error message and quit (before showing the template for pro).
+		if ( empty( $feed_items ) ) {
+			$content .= $sc['error_empty'];
+			return $content;
+		}
+
 		$anchor1 = '<a href="%s" target="%s" rel="%s" title="%s" style="%s">%s</a>';
 		$anchor2 = '<a href="%s" target="%s" rel="%s">%s</a>';
 		foreach ( $feed_items as $item ) {
