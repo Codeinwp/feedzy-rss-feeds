@@ -82,7 +82,7 @@ $html_parts = Feedzy_Rss_Feeds_Ui_Lang::get_form_elements();
                                 ';
 							break;
 						default:
-							$element = '<input type="text" name="' . $name . '" data-feedzy="' . $name . '" value="' . $props['value'] . '" placeholder="' . $props['placeholder'] . '" ' . $disabled . ' />';
+							$element = '<input type="text" name="' . $name . '" data-feedzy="' . $name . '" value="' . $props['value'] . '" placeholder="' . ( isset( $props['placeholder'] ) ? $props['placeholder'] : '' ) . '" ' . $disabled . ' />';
 							break;
 					} // End switch().
 					$output .= '

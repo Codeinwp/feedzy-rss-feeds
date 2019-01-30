@@ -627,7 +627,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$content    = '<div class="feedzy-rss">';
 		if ( $feed_title['use_title'] ) {
 			$content .= '<div class="rss_header">';
-			$content .= '<h2><a href="' . $feed->get_permalink() . '" class="rss_title">' . html_entity_decode( $feed->get_title() ) . '</a> <span class="rss_description"> ' . $feed->get_description() . '</span></h2>';
+			$content .= '<h2><a href="' . $feed->get_permalink() . '" class="rss_title" rel="noopener">' . html_entity_decode( $feed->get_title() ) . '</a> <span class="rss_description"> ' . $feed->get_description() . '</span></h2>';
 			$content .= '</div>';
 		}
 		$content .= '<ul>';
@@ -638,8 +638,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			return $content;
 		}
 
-		$anchor1 = '<a href="%s" target="%s" rel="%s" title="%s" style="%s">%s</a>';
-		$anchor2 = '<a href="%s" target="%s" rel="%s">%s</a>';
+		$anchor1 = '<a href="%s" target="%s" rel="%s noopener" title="%s" style="%s">%s</a>';
+		$anchor2 = '<a href="%s" target="%s" rel="%s noopener">%s</a>';
 		foreach ( $feed_items as $item ) {
 			$content .= '
             <li ' . $item['itemAttr'] . '>
