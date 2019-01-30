@@ -4,29 +4,24 @@ Layout For Upsell Page of Feedzy RSS Feeds
 @since    3.0.12
 @package  feedzy-rss-feeds
 -->
+
 <div id="fz-features">
 
 	<div class="fz-features-content">
 	
-	<div class="fz-feature">
-		<div class="fz-feature-features fz-feature-centered">
-			<h2>Boost your Business with Pro Content</h4>
-				<h4>Aggregate unlimited RSS feeds in your posts, pages or custom content types</h3>
-					<br><hr><br>
-					<h4>Upgrade to Feedzy Pro to experience powerful benefits:</h4>
-					<h3>Add content on up to 30 of your own websites, automatically build affiliate links, integrate with WordAI and even add live product pricing feeds.</h3>
-		<div class="header-btns">
-			<?php
-			if ( ! defined( 'FEEDZY_PRO_ABSURL' ) ) :
-				?>
-			<a target="_blank" href="<?php echo FEEDZY_UPSELL_LINK; ?>" class="buy-now"><span
-			class="dashicons dashicons-cart"></span> Upgrade to Pro now</a>
-				<?php
-			endif;
-			?>
+	<?php if ( false === apply_filters( 'feedzy_is_license_of_type', false, 'pro' ) ) { ?>
+		<div class="fz-feature">
+			<div class="fz-feature-features fz-feature-centered">
+				<h2>Boost your Business with Pro Content</h4>
+					<h4>Aggregate unlimited RSS feeds in your posts, pages or custom content types</h3>
+						<br><hr><br>
+						<h4>Upgrade to Feedzy Pro to experience powerful benefits:</h4>
+						<h3>Add content on up to 30 of your own websites, automatically build affiliate links, integrate with WordAI and even add live product pricing feeds.</h3>
+						<div class="header-btns">
+							<a target="_blank" href="<?php echo FEEDZY_UPSELL_LINK; ?>" class="buy-now"><span class="dashicons dashicons-cart"></span> Upgrade to Pro now</a>
+						</div>
+			</div>
 		</div>
-		</div>
-	</div>
 		<div class="fz-feature">
 			<div class="fz-feature-features">
 			<h2>Unlimited Content</h2>
@@ -41,7 +36,7 @@ Layout For Upsell Page of Feedzy RSS Feeds
 		</div>
 		<div class="fz-feature">
 			<div class="fz-feature-features">
-				<h2>Templates to suit your style</h2>
+				<h2>Shortcode templates to suit your style</h2>
 				<p>Three beautiful templates are available for you to choose the style which best fits your design. We even have support for complex media such as audio playback and YouTube videos.</p>
 			</div>
 			<div class="fz-feature-image">
@@ -66,15 +61,32 @@ Layout For Upsell Page of Feedzy RSS Feeds
 				<img src="<?php echo FEEDZY_ABSURL; ?>/img/Protect-your-Brand.jpg" alt="Affiliate ready">
 			</div>
 		</div>
+		<?php } ?>
+		<?php if ( true === apply_filters( 'feedzy_is_license_of_type', false, 'pro' ) && false === apply_filters( 'feedzy_is_license_of_type', false, 'business' ) ) { ?>
+			<div class="fz-feature">
+				<div class="fz-feature-features">
+				<h2>Unlimited Content</h2>
+					<p>With Pro, collect RSS feeds from an unlimited number of sources and bring them to up to 30 of your own WordPress sites.</p>
+					<p>Feedzy will automatically filter each feed item and place it wherever you want in your site. Easy to install and ready to go.</p>
+					<h2>Feed to Post</h2>
+					<p>Convert feed items along with their <b>full content</b> into WordPress Posts, Pages, or any custom post type in a few easy steps.</p>
+				</div>
+				<div class="fz-feature-image">
+					<img src="<?php echo FEEDZY_ABSURL; ?>/img/features-feed-to-post.jpg" alt="Feed to post">
+				</div>
+			</div>
+		<?php } ?>
+		<?php if ( false === apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) { ?>
 		<div class="fz-feature">
 			<div class="fz-feature-features">
-				<h2>Word AI integration</h2>
-				<p>Through WordAI integration, Feedzy will give you unlimited new content. Your WordAI subscription (not included) integrates seamlessly with Feedzy, so you won’t ever have to worry about duplicate content – or Google penalties – again.</p>
+				<h2>Integration with SpinnerChief & WordAI</h2>
+				<p>Through WordAI integration, Feedzy will give you unlimited new content. Your SpinnerChief or WordAI subscriptions (not included) integrate seamlessly with Feedzy, so you won’t ever have to worry about duplicate content – or Google penalties – again.</p>
 			</div>
 			<div class="fz-feature-image">
 				<img src="<?php echo FEEDZY_ABSURL; ?>/img/feedzy-rss-feeds-wordai.jpg" alt="WordAi integration">
 			</div>
 		</div>
+		<?php } ?>
 		<div class="fz-feature">
 			<div class="fz-feature-features">
 				<h2>World-class support</h2>
@@ -89,14 +101,10 @@ Layout For Upsell Page of Feedzy RSS Feeds
 		<div class="fz-feature-features fz-feature-centered">
 			<h2>Grow your WordPress business with Feedzy today.</h4>
 		<div class="header-btns">
-			<?php
-			if ( ! defined( 'FEEDZY_PRO_ABSURL' ) ) :
-				?>
+			<?php if ( false === apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) { ?>
 			<a target="_blank" href="<?php echo FEEDZY_UPSELL_LINK; ?>" class="buy-now"><span
 			class="dashicons dashicons-cart"></span> Get Feedzy Pro</a>
-				<?php
-			endif;
-			?>
+			<?php } ?>
 		</div>
 
 	</div><!-- .fz-features-content -->
