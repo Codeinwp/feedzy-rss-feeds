@@ -39,12 +39,14 @@ Layout For Tutorial Page of Feedzy RSS Feeds
 			<h2>Grow your WordPress business with Feedzy today.</h4>
 		<div class="header-btns">
 			<?php
-			if ( ! defined( 'FEEDZY_PRO_ABSURL' ) ) :
+			$show_more = ! class_exists( 'Feedzy_Rss_Feeds_Pro' ) || false === apply_filters( 'feedzy_is_license_of_type', false, 'agency' );
+
+			if ( $show_more ) {
 				?>
-			<a target="_blank" href="<?php echo FEEDZY_UPSELL_LINK; ?>" class="buy-now"><span
-			class="dashicons dashicons-cart"></span> Get Feedzy Pro</a>
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-support&tab=more' ) ); ?>" class="buy-now"><span
+			class="dashicons dashicons-cart"></span> Click here to see the additional features in Feedzy Pro</a>
 				<?php
-			endif;
+			}
 			?>
 		</div>
 

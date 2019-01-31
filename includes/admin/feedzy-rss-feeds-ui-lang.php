@@ -174,6 +174,12 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 							),
 						),
 					),
+					'error_empty'       => array(
+						'label' => __( 'Message to show when feed is empty', 'feedzy-rss-feeds' ),
+						'placeholder' => __( 'Feed has no items.', 'feedzy-rss-feeds' ),
+						'type'        => 'text',
+						'value'       => '',
+					),
 				),
 			),
 			'section_item'  => array(
@@ -380,6 +386,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'type'     => 'text',
 						'disabled' => true,
 						'value'    => '',
+						'placeholder'    => '',
 					),
 					'template'     => array(
 						'label'    => __( 'Template to use when displaying the feed.', 'feedzy-rss-feeds' ),
@@ -428,5 +435,5 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 
 }
 
-$feedzyLangClass = new Feedzy_Rss_Feeds_Ui_Lang();
-$strings         = $feedzyLangClass->feedzy_tinymce_translation();
+$feedzy_lang_class = new Feedzy_Rss_Feeds_Ui_Lang();
+$strings         = $feedzy_lang_class->feedzy_tinymce_translation();

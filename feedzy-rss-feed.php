@@ -15,7 +15,7 @@
  * Plugin Name:       Feedzy RSS Feeds Lite
  * Plugin URI:        https://themeisle.com/plugins/feedzy-rss-feeds-lite/
  * Description:       A small and lightweight RSS aggregator plugin. Fast and very easy to use, it allows you to aggregate multiple RSS feeds into your WordPress site through fully customizable shortcodes & widgets.
- * Version:           3.3.2
+ * Version:           3.3.3
  * Author:            Themeisle
  * Author URI:        http://themeisle.com
  * License:           GPL-2.0+
@@ -118,6 +118,8 @@ function run_feedzy_rss_feeds() {
 	define( 'FEEDZY_NAME', 'Feedzy RSS Feeds' );
 	define( 'FEEDZY_USER_AGENT', 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36' );
 	define( 'FEEDZY_ALLOW_HTTPS', true );
+	// to redirect all themeisle_log_event to error log.
+	define( 'FEEDZY_LOCAL_DEBUG', false );
 
 	// always make this true before testing
 	define( 'FEEDZY_DISABLE_CACHE_FOR_TESTING', false );
@@ -155,3 +157,17 @@ function feedzy_register_parrot( $plugins ) {
 
 spl_autoload_register( 'feedzy_rss_feeds_autoload' );
 run_feedzy_rss_feeds();
+
+
+if ( FEEDZY_LOCAL_DEBUG ) {
+	add_action( 'themeisle_log_event', 'feedzy_themeisle_log_event', 10, 5 );
+
+	/**
+	 * Redirect themeisle_log_event to error log.
+	 */
+	function feedzy_themeisle_log_event( $name, $msg, $type, $file, $line ) {
+		if ( $name === FEEDZY_NAME ) {
+			error_log( sprintf( '%s (%s:%d): %s', $type, $file, $line, $msg ) );
+		}
+	}
+}
