@@ -399,6 +399,11 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 ## Changelog ##
+### 3.3.4 - 2019-02-08  ###
+
+* Multifeed shows an error and no content if even one feed has an error
+
+
 ### 3.3.3 - 2019-01-31  ###
 
 * Customize error message when no items in the feed
