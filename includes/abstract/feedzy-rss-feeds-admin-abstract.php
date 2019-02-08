@@ -46,15 +46,28 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @since   3.0.0
 	 * @access  public
 	 *
-	 * @param   object $error The error Object.
-	 * @param   string $feed_url The feed URL.
+	 * @param   object    $errors The error object.
+	 * @param   SimplePie $feed The SimplePie object.
+	 * @param   string    $feed_url The feed URL.
 	 *
 	 * @return  string
 	 */
-	public function feedzy_default_error_notice( $error, $feed_url ) {
-		error_log( 'Feedzy RSS Feeds - related feed: ' . print_r( $feed_url, true ) . ' - Error message: ' . $this->feedzy_array_obj_string( $error ) );
+	public function feedzy_default_error_notice( $errors, $feed, $feed_url ) {
+		// reason not to show the error
+		// If a feed URL goes out of whack, its not the user who is viewing or the user who has used the shortcode.
+		// So let's not penalize the site owner/viewer because they can always refer to error log.
+		$show_error = false;
+		$error_msg = '';
+		foreach ( $errors as $i => $error ) {
+			$error_msg .= sprintf( "%s : %s\n", $feed->multifeed_url[ $i ], $error );
+		}
 
-		return '<div id="message" class="error" data-error"' . esc_attr( $this->feedzy_array_obj_string( $error ) ) . '"><p>' . __( 'Sorry, this feed is currently unavailable or does not exist anymore.', 'feedzy-rss-feeds' ) . '</p></div>';
+		error_log( 'Feedzy RSS Feeds - related feed: ' . print_r( $feed_url, true ) . ' - Error message: ' . $error_msg );
+
+		if ( $show_error ) {
+			return '<div id="message" class="error" title="' . $error_msg . '"><p>' . __( 'Sorry, some part of this feed is currently unavailable or does not exist anymore.', 'feedzy-rss-feeds' ) . '</p></div>';
+		}
+		return '';
 	}
 
 	/**
@@ -620,11 +633,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 		// Display the error message and quit (before showing the template for pro).
 		if ( $feed->error() ) {
-			return apply_filters( 'feedzy_default_error', $feed->error(), $feed_url );
+			$content .= apply_filters( 'feedzy_default_error', $feed->error(), $feed, $feed_url );
 		}
 
 		$feed_items = apply_filters( 'feedzy_get_feed_array', array(), $sc, $feed, $feed_url, $sizes );
-		$content    = '<div class="feedzy-rss">';
+		$content    .= '<div class="feedzy-rss">';
 		if ( $feed_title['use_title'] ) {
 			$content .= '<div class="rss_header">';
 			$content .= '<h2><a href="' . $feed->get_permalink() . '" class="rss_title" rel="noopener">' . html_entity_decode( $feed->get_title() ) . '</a> <span class="rss_description"> ' . $feed->get_description() . '</span></h2>';
