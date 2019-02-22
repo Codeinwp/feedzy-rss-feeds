@@ -1,4 +1,8 @@
 
+ ### v3.3.4 - 2019-02-08 
+ **Changes:** 
+ * Multifeed shows an error and no content if even one feed has an error
+ 
  ### v3.3.3 - 2019-01-31 
  **Changes:** 
  * Customize error message when no items in the feed
