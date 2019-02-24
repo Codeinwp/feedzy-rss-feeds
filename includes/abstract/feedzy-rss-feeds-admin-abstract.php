@@ -58,8 +58,13 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		// So let's not penalize the site owner/viewer because they can always refer to error log.
 		$show_error = false;
 		$error_msg = '';
-		foreach ( $errors as $i => $error ) {
-			$error_msg .= sprintf( "%s : %s\n", $feed->multifeed_url[ $i ], $error );
+
+		if ( is_array( $errors ) ) {
+			foreach ( $errors as $i => $error ) {
+				$error_msg .= sprintf( "%s : %s\n", $feed->multifeed_url[ $i ], $error );
+			}
+		} elseif ( is_string( $errors ) ) {
+			$error_msg = $errors;
 		}
 
 		error_log( 'Feedzy RSS Feeds - related feed: ' . print_r( $feed_url, true ) . ' - Error message: ' . $error_msg );
