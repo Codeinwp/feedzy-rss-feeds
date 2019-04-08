@@ -653,6 +653,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		// Display the error message and quit (before showing the template for pro).
 		if ( empty( $feed_items ) ) {
 			$content .= $sc['error_empty'];
+			$content .= '</ul> </div>';
 			return $content;
 		}
 
