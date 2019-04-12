@@ -443,10 +443,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'days'  => DAY_IN_SECONDS,
 		);
 		$cache_time    = 12 * HOUR_IN_SECONDS;
-		if ( isset( $cache ) && $cache != '' ) {
+		if ( isset( $cache ) && $cache !== '' ) {
 			list( $value, $unit ) = explode( '_', $cache );
 			if ( isset( $value ) && is_numeric( $value ) && $value >= 1 && $value <= 100 ) {
-				if ( isset( $unit ) && in_array( strtolower( $unit ), array( 'mins', 'hours', 'days' ) ) ) {
+				if ( isset( $unit ) && in_array( strtolower( $unit ), array( 'mins', 'hours', 'days' ), true ) ) {
 					$cache_time = $value * $unit_defaults[ $unit ];
 				}
 			}
@@ -582,6 +582,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  mixed
 	 */
 	public function sanitize_attr( $sc, $feed_url ) {
+		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
 		if ( $sc['max'] == '0' ) {
 			$sc['max'] = '999';
 		} elseif ( empty( $sc['max'] ) || ! ctype_digit( $sc['max'] ) ) {
@@ -632,7 +633,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		);
 		$sizes                   = apply_filters( 'feedzy_thumb_sizes', $sizes, $feed_url );
 		$feed_title['use_title'] = false;
-		if ( $sc['feed_title'] == 'yes' ) {
+		if ( $sc['feed_title'] === 'yes' ) {
 			$feed_title              = $this->get_feed_title_filter( $feed );
 			$feed_title['use_title'] = true;
 		}
@@ -661,7 +662,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		foreach ( $feed_items as $item ) {
 			$content .= '
             <li ' . $item['itemAttr'] . '>
-                ' . ( ( ! empty( $item['item_img'] ) && $sc['thumb'] != 'no' ) ? '
+                ' . ( ( ! empty( $item['item_img'] ) && $sc['thumb'] !== 'no' ) ? '
                 <div class="' . $item['item_img_class'] . '" style="' . $item['item_img_style'] . '">'
 				. sprintf( $anchor1, $item['item_url'], $item['item_url_target'], $item['item_url_follow'], $item['item_url_title'], $item['item_img_style'], $item['item_img'] )
 				. '</div>' : '' )
@@ -758,7 +759,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$items = apply_filters( 'feedzy_feed_items', $feed->get_items(), $feed_url );
 		foreach ( (array) $items as $item ) {
 				$continue = apply_filters( 'feedzy_item_keyword', true, $sc, $item, $feed_url );
-			if ( $continue == true ) {
+			if ( $continue === true ) {
 				// Count items. This should be > and not >= because max, when not defined and empty, becomes 0.
 				if ( $count >= $sc['max'] ) {
 					break;
@@ -791,17 +792,17 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$item_link = $item->get_permalink();
 		$new_link  = apply_filters( 'feedzy_item_url_filter', $item_link, $sc, $item );
 		// Fetch image thumbnail
-		if ( $sc['thumb'] == 'yes' || $sc['thumb'] == 'auto' ) {
+		if ( $sc['thumb'] === 'yes' || $sc['thumb'] === 'auto' ) {
 			$the_thumbnail = $this->feedzy_retrieve_image( $item, $sc );
 		}
-		if ( $sc['thumb'] == 'yes' || $sc['thumb'] == 'auto' ) {
+		if ( $sc['thumb'] === 'yes' || $sc['thumb'] === 'auto' ) {
 			$content_thumb = '';
-			if ( ( ! empty( $the_thumbnail ) && $sc['thumb'] == 'auto' ) || $sc['thumb'] == 'yes' ) {
+			if ( ( ! empty( $the_thumbnail ) && $sc['thumb'] === 'auto' ) || $sc['thumb'] === 'yes' ) {
 				if ( ! empty( $the_thumbnail ) ) {
 					$the_thumbnail = $this->feedzy_image_encode( $the_thumbnail );
 					$content_thumb .= '<span class="fetched" style="background-image:  url(\'' . $the_thumbnail . '\');" title="' . esc_html( $item->get_title() ) . '"></span>';
 				}
-				if ( $sc['thumb'] == 'yes' ) {
+				if ( $sc['thumb'] === 'yes' ) {
 					$content_thumb .= '<span class="default" style="background-image:url(' . $sc['default'] . ');" title="' . esc_html( $item->get_title() ) . '"></span>';
 				}
 			}
@@ -828,7 +829,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		// Filter: feedzy_meta_args
 		$meta_args    = apply_filters( 'feedzy_meta_args', $meta_args, $feed_url, $item );
 		$content_meta = '';
-		if ( $sc['meta'] == 'yes' && ( $meta_args['author'] || $meta_args['date'] ) ) {
+		if ( $sc['meta'] === 'yes' && ( $meta_args['author'] || $meta_args['date'] ) ) {
 			$content_meta = '';
 			if ( $item->get_author() && $meta_args['author'] ) {
 				$author = $item->get_author();
@@ -859,7 +860,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 		$content_meta    = apply_filters( 'feedzy_meta_output', $content_meta, $feed_url, $item );
 		$content_summary = '';
-		if ( $sc['summary'] == 'yes' ) {
+		if ( $sc['summary'] === 'yes' ) {
 			$content_summary = '';
 			$description    = $item->get_description();
 			$description    = apply_filters( 'feedzy_summary_input', $description, $item->get_content(), $feed_url, $item );

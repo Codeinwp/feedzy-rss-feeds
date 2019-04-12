@@ -9,18 +9,18 @@
 
 	<h2 class="nav-tab-wrapper">
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=general' ) ); ?>"
-		   class="nav-tab <?php echo $active_tab == 'general' ? 'nav-tab-active' : ''; ?>"><?php _e( 'General', 'feedzy-rss-feeds' ); ?></a>
+		   class="nav-tab <?php echo $active_tab === 'general' ? 'nav-tab-active' : ''; ?>"><?php _e( 'General', 'feedzy-rss-feeds' ); ?></a>
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=headers' ) ); ?>"
-		   class="nav-tab <?php echo $active_tab == 'headers' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Headers', 'feedzy-rss-feeds' ); ?></a>
+		   class="nav-tab <?php echo $active_tab === 'headers' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Headers', 'feedzy-rss-feeds' ); ?></a>
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=proxy' ) ); ?>"
-		   class="nav-tab <?php echo $active_tab == 'proxy' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Proxy', 'feedzy-rss-feeds' ); ?></a>
+		   class="nav-tab <?php echo $active_tab === 'proxy' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Proxy', 'feedzy-rss-feeds' ); ?></a>
 		<?php
 		$tabs = apply_filters( 'feedzy_settings_tabs', array() );
 		if ( $tabs ) {
 			foreach ( $tabs as $tab => $label ) {
 				?>
 				<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=' . $tab ) ); ?>"
-				   class="nav-tab <?php echo $active_tab == $tab ? 'nav-tab-active' : ''; ?>"><?php echo $label; ?></a>
+				   class="nav-tab <?php echo $active_tab === $tab ? 'nav-tab-active' : ''; ?>"><?php echo $label; ?></a>
 				<?php
 			}
 		}
