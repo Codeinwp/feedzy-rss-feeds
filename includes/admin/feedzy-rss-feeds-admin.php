@@ -46,14 +46,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @var      string $version The current version of this plugin.
 	 */
 	protected $version;
-	/**
-	 * The ID of this plugin.
-	 *
-	 * @since    3.0.0
-	 * @access   private
-	 * @var      string $plugin_name The ID of this plugin.
-	 */
-	private $plugin_name;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -88,7 +80,31 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, FEEDZY_ABSURL . 'css/feedzy-rss-feeds.css', array(), $this->version, 'all' );
+		if ( is_admin() ) {
+			return;
+		}
+		wp_register_style( $this->plugin_name, FEEDZY_ABSURL . 'css/feedzy-rss-feeds.css', array(), $this->version, 'all' );
+	}
+
+	/**
+	 * Register the stylesheets for the admin area.
+	 *
+	 * @since   3.3.6
+	 * @access  public
+	 */
+	public function enqueue_styles_admin() {
+		/**
+		 * This function is provided for demonstration purposes only.
+		 *
+		 * An instance of this class should be passed to the run() function
+		 * defined in Feedzy_Rss_Feeds_Loader as all of the hooks are defined
+		 * in that particular class.
+		 *
+		 * The Feedzy_Rss_Feeds_Loader will then create the relationship
+		 * between the defined hooks and the functions defined in this
+		 * class.
+		 */
+
 		if ( ! is_admin() ) {
 			return;
 		}
@@ -105,6 +121,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! in_array( $screen->base, $upsell_screens ) && strpos( $screen->id, 'feedzy' ) === false ) {
 			return;
 		}
+		wp_enqueue_style( $this->plugin_name . '-admin', FEEDZY_ABSURL . 'css/admin.css', array(), $this->version, 'all' );
 		wp_enqueue_style( $this->plugin_name . '-upsell', FEEDZY_ABSURL . 'includes/layouts/css/upsell.css' );
 		wp_enqueue_style( $this->plugin_name . '-settings', FEEDZY_ABSURL . 'css/metabox-settings.css', array( $this->plugin_name . '-upsell' ) );
 	}

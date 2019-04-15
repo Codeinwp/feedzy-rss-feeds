@@ -20,6 +20,14 @@
  * @abstract
  */
 abstract class Feedzy_Rss_Feeds_Admin_Abstract {
+	/**
+	 * The ID of this plugin.
+	 *
+	 * @since    3.0.0
+	 * @access   private
+	 * @var      string $plugin_name The ID of this plugin.
+	 */
+	protected $plugin_name;
 
 	/**
 	 * Defines the default image to use on RSS Feeds
@@ -258,6 +266,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  mixed
 	 */
 	public function feedzy_rss( $atts, $content = '' ) {
+		wp_enqueue_style( $this->plugin_name );
 		$sc      = $this->get_short_code_attributes( $atts );
 		$feed_url = $this->normalize_urls( $sc['feeds'] );
 		$cache   = $sc['refresh'];
