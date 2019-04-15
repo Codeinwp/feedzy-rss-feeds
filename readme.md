@@ -399,6 +399,12 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 ## Changelog ##
+### 3.3.5 - 2019-02-24  ###
+
+* Tested with WP 5.1
+* Fix issue with single feeds that have errors
+
+
 ### 3.3.4 - 2019-02-08  ###
 
 * Multifeed shows an error and no content if even one feed has an error

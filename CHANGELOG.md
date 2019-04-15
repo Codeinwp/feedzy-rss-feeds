@@ -1,4 +1,9 @@
 
+ ### v3.3.5 - 2019-02-24 
+ **Changes:** 
+ * Tested with WP 5.1
+* Fix issue with single feeds that have errors
+ 
  ### v3.3.4 - 2019-02-08 
  **Changes:** 
  * Multifeed shows an error and no content if even one feed has an error

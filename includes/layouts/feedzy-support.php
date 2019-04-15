@@ -9,12 +9,12 @@
 
 	<h2 class="nav-tab-wrapper">
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-support&tab=help' ) ); ?>"
-		   class="nav-tab <?php echo $active_tab == 'help' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Support', 'feedzy-rss-feeds' ); ?></a>
+		   class="nav-tab <?php echo $active_tab === 'help' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Support', 'feedzy-rss-feeds' ); ?></a>
 		<?php
 		if ( $show_more ) {
 			?>
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-support&tab=more' ) ); ?>"
-	   class="nav-tab <?php echo $active_tab == 'more' ? 'nav-tab-active' : ''; ?>"><?php _e( 'More Features', 'feedzy-rss-feeds' ); ?></a>
+	   class="nav-tab <?php echo $active_tab === 'more' ? 'nav-tab-active' : ''; ?>"><?php _e( 'More Features', 'feedzy-rss-feeds' ); ?></a>
 			<?php
 		}
 		?>
