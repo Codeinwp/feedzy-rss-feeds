@@ -118,7 +118,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$upsell_screens = array( 'feedzy-rss_page_feedzy-settings', 'feedzy-rss_page_feedzy-admin-menu-pro-upsell' );
 
-		if ( ! in_array( $screen->base, $upsell_screens ) && strpos( $screen->id, 'feedzy' ) === false ) {
+		if ( ! in_array( $screen->base, $upsell_screens, true ) && strpos( $screen->id, 'feedzy' ) === false ) {
 			return;
 		}
 		wp_enqueue_style( $this->plugin_name . '-admin', FEEDZY_ABSURL . 'css/admin.css', array(), $this->version, 'all' );
@@ -273,7 +273,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( isset( $_POST['feedzy_category_feed'] ) ) {
 			$category_meta['feedzy_category_feed'] = $_POST['feedzy_category_feed'];
 		}
-		if ( $post->post_type == 'revision' ) {
+		if ( $post->post_type === 'revision' ) {
 			return true;
 		} else {
 			foreach ( $category_meta as $key => $value ) {
@@ -544,7 +544,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function send_through_proxy( $return, $uri, $check, $home ) {
 		$proxied = defined( 'FEEZY_URL_THRU_PROXY' ) ? FEEZY_URL_THRU_PROXY : null;
-		if ( $proxied && ( ( is_array( $proxied ) && in_array( $uri, $proxied ) ) || $uri === $proxied ) ) {
+		if ( $proxied && ( ( is_array( $proxied ) && in_array( $uri, $proxied, true ) ) || $uri === $proxied ) ) {
 			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'sending %s through proxy', $uri ), 'info', __FILE__, __LINE__ );
 
 			return true;
@@ -572,7 +572,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			return;
 		}
 
-		if ( $plugin == FEEDZY_BASENAME ) {
+		if ( $plugin === FEEDZY_BASENAME ) {
 			wp_redirect( admin_url( 'admin.php?page=feedzy-support&tab=help#shortcode' ) );
 			exit();
 		}
