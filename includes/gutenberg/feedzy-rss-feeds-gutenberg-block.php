@@ -29,7 +29,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 	 * Returns an instance of this class.
 	 */
 	public static function get_instance() {
-		if ( null == self::$instance ) {
+		if ( null === self::$instance ) {
 			self::$instance = new Feedzy_Rss_Feeds_Gutenberg_Block();
 		}
 		return self::$instance;
