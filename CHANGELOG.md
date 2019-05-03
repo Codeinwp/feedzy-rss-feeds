@@ -1,4 +1,11 @@
 
+ ### v3.3.6 - 2019-05-03 
+ **Changes:** 
+ * Add filter to disable DB caching
+* Fix issue with HTML tags not closed when feed has no items
+* Fix issue with CSS file being loaded everywhere
+* Tested up to WP 5.2
+ 
  ### v3.3.5 - 2019-02-24 
  **Changes:** 
  * Tested with WP 5.1

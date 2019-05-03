@@ -399,6 +399,14 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 ## Changelog ##
+### 3.3.6 - 2019-05-03  ###
+
+* Add filter to disable DB caching
+* Fix issue with HTML tags not closed when feed has no items
+* Fix issue with CSS file being loaded everywhere
+* Tested up to WP 5.2
+
+
 ### 3.3.5 - 2019-02-24  ###
 
 * Tested with WP 5.1
