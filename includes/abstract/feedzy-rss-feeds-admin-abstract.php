@@ -20,6 +20,14 @@
  * @abstract
  */
 abstract class Feedzy_Rss_Feeds_Admin_Abstract {
+	/**
+	 * The ID of this plugin.
+	 *
+	 * @since    3.0.0
+	 * @access   private
+	 * @var      string $plugin_name The ID of this plugin.
+	 */
+	protected $plugin_name;
 
 	/**
 	 * Defines the default image to use on RSS Feeds
@@ -258,6 +266,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  mixed
 	 */
 	public function feedzy_rss( $atts, $content = '' ) {
+		wp_enqueue_style( $this->plugin_name );
 		$sc      = $this->get_short_code_attributes( $atts );
 		$feed_url = $this->normalize_urls( $sc['feeds'] );
 		$cache   = $sc['refresh'];
@@ -464,9 +473,21 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$feed->set_file_class( 'WP_SimplePie_File' );
 		$default_agent = $this->get_default_user_agent( $feed_url );
 		$feed->set_useragent( apply_filters( 'http_headers_useragent', $default_agent ) );
-		if ( ! FEEDZY_DISABLE_CACHE_FOR_TESTING ) {
+		if ( false === apply_filters( 'feedzy_disable_db_cache', false, $feed_url ) ) {
 			$feed->set_cache_class( 'WP_Feed_Cache' );
 			$feed->set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', $cache_time, $feed_url ) );
+		} else {
+			require_once( ABSPATH . 'wp-admin/includes/file.php' );
+			WP_Filesystem();
+			global $wp_filesystem;
+
+			$dir    = $wp_filesystem->wp_content_dir() . 'uploads/simplepie';
+			if ( ! $wp_filesystem->exists( $dir ) ) {
+				if ( ( $done = $wp_filesystem->mkdir( $dir ) ) === false ) {
+					do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to create directory %s', $dir ), 'error', __FILE__, __LINE__ );
+				}
+			}
+			$feed->set_cache_location( $dir );
 		}
 
 		$feed->force_feed( apply_filters( 'feedzy_force_feed', true ) );
@@ -654,6 +675,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		// Display the error message and quit (before showing the template for pro).
 		if ( empty( $feed_items ) ) {
 			$content .= $sc['error_empty'];
+			$content .= '</ul> </div>';
 			return $content;
 		}
 

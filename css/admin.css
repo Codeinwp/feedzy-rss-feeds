@@ -1,0 +1,72 @@
+/*TinyMce UI button*/
+/*noinspection CssUnusedSymbol*/
+i.mce-i-feedzy-icon {
+	background-image: none, url("../img/feedzy.svg"), url("../img/feedzy.png");
+}
+
+#feedzy-rss-button-insert {
+	border-color: #4cae4c;
+	color: #fff;
+	background-color: #5cb85c;
+}
+
+#feedzy-rss-button-insert button {
+	color: #fff;
+}
+
+#feedzy-rss-button-insert:hover,
+#feedzy-rss-button-insert:focus {
+	border-color: #398439;
+	color: #fff;
+	background-color: #449d44;
+}
+
+#feedzy-rss-button-cancel {
+	border-color: #ccc;
+	color: #333;
+	background-color: #fff;
+}
+
+#feedzy-rss-button-cancel button {
+	color: #333;
+}
+
+#feedzy-rss-button-cancel:hover,
+#feedzy-rss-button-cancel:focus {
+	border-color: #adadad;
+	color: #333;
+	background-color: #e6e6e6;
+}
+
+#feedzy-rss-button-pro {
+	position: absolute;
+	left: 10px !important;
+	border-color: #46b8da;
+	color: #fff;
+	background-color: #5bc0de;
+}
+
+#feedzy-rss-button-pro button {
+	color: #fff;
+}
+
+#feedzy-rss-button-pro:hover,
+#feedzy-rss-button-pro:focus {
+	border-color: #269abc;
+	color: #fff;
+	background-color: #31b0d5;
+}
+
+#feedzy-rss-insert-dialog-title {
+	font-weight: 300;
+	text-align: center;
+}
+
+.post-type-feedzy_categories .postbox-container div#submitdiv,
+.post-type-feedzy_categories #feedzy_category_feeds_rn {
+	display: block !important;
+}
+
+.post-type-feedzy_categories .postbox-container > div > .postbox:not(#feedzy_category_feeds) {
+	display: none;
+}
