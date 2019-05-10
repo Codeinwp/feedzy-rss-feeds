@@ -48,7 +48,7 @@ $html_parts = Feedzy_Rss_Feeds_Ui_Lang::get_form_elements();
 							$element = '<select name="' . $name . '" data-feedzy="' . $name . '" ' . $disabled . ' >';
 							foreach ( $props['opts'] as $opt => $values ) {
 								$checked = '';
-								if ( $props['value'] == $values['value'] ) {
+								if ( $props['value'] === $values['value'] ) {
 									$checked = 'selected';
 								}
 								$element .= '<option value="' . $values['value'] . '" ' . $checked . ' > ' . $values['label'] . '</option>';
@@ -58,7 +58,7 @@ $html_parts = Feedzy_Rss_Feeds_Ui_Lang::get_form_elements();
 						case 'radio':
 							foreach ( $props['opts'] as $opt => $values ) {
 								$checked = '';
-								if ( $props['value'] == $values['value'] ) {
+								if ( $props['value'] === $values['value'] ) {
 									$checked = 'checked="checked"';
 								}
 								$element .= '<label class="feedzy-radio-image feedzy-template-' . $values['value']
@@ -69,7 +69,7 @@ $html_parts = Feedzy_Rss_Feeds_Ui_Lang::get_form_elements();
 						case 'checkbox':
 							foreach ( $props['opts'] as $opt => $values ) {
 								$checked = '';
-								if ( $props['value'] == $values['value'] ) {
+								if ( $props['value'] === $values['value'] ) {
 									$checked = 'checked="checked"';
 								}
 								$element .= '<input type="checkbox" name="' . $name . '" data-feedzy="' . $name . '" value="' . $values['value'] . '" ' . $checked . ' ' . $disabled . ' /> ' . $values['label'];
@@ -82,7 +82,7 @@ $html_parts = Feedzy_Rss_Feeds_Ui_Lang::get_form_elements();
                                 ';
 							break;
 						default:
-							$element = '<input type="text" name="' . $name . '" data-feedzy="' . $name . '" value="' . $props['value'] . '" placeholder="' . $props['placeholder'] . '" ' . $disabled . ' />';
+							$element = '<input type="text" name="' . $name . '" data-feedzy="' . $name . '" value="' . $props['value'] . '" placeholder="' . ( isset( $props['placeholder'] ) ? $props['placeholder'] : '' ) . '" ' . $disabled . ' />';
 							break;
 					} // End switch().
 					$output .= '

@@ -1,4 +1,27 @@
 
+ ### v3.3.5 - 2019-02-24 
+ **Changes:** 
+ * Tested with WP 5.1
+* Fix issue with single feeds that have errors
+ 
+ ### v3.3.4 - 2019-02-08 
+ **Changes:** 
+ * Multifeed shows an error and no content if even one feed has an error
+ 
+ ### v3.3.3 - 2019-01-31 
+ **Changes:** 
+ * Customize error message when no items in the feed
+* Outgoing links should have rel=noopener
+* Fixed fatal error in Feedzy_Rss_Feeds_Admin_Abstract::feedzy_retrieve_image
+ 
+ ### v3.3.2 - 2018-12-22 
+ **Changes:** 
+ * Option to handle HTTP images in the shortcode
+* Option to specify nofollow for links in the shortcode
+* Fix Gutenberg block
+* Add video tutorials under Help menu
+* Add support for extracting price from custom feed tags
+ 
  ### v3.3.1 - 2018-11-05 
  **Changes:** 
  * Import Posts enabled for plan 1 users

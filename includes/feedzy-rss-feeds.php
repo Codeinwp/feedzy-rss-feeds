@@ -104,7 +104,7 @@ class Feedzy_Rss_Feeds {
 	 */
 	public function init() {
 		self::$plugin_name = 'feedzy-rss-feeds';
-		self::$version = '3.3.1';
+		self::$version = '3.3.6';
 		self::$instance->load_dependencies();
 		self::$instance->set_locale();
 		self::$instance->define_admin_hooks();
@@ -187,7 +187,7 @@ class Feedzy_Rss_Feeds {
 	 */
 	private function define_admin_hooks() {
 		$plugin_ui = new Feedzy_Rss_Feeds_Ui( self::$instance->get_plugin_name(), self::$instance->get_version(), self::$instance->loader );
-		self::$instance->loader->add_action( 'init', $plugin_ui, 'register_init' );
+		self::$instance->loader->add_action( 'admin_enqueue_scripts', $plugin_ui, 'register_init' );
 		self::$instance->loader->add_action( 'init', self::$instance->admin, 'register_post_type' );
 		self::$instance->loader->add_action( 'save_post', self::$instance->admin, 'save_feedzy_post_type_meta', 1, 2 );
 		self::$instance->loader->add_action( 'feedzy_pre_http_setup', self::$instance->admin, 'pre_http_setup', 10, 1 );
@@ -201,7 +201,7 @@ class Feedzy_Rss_Feeds {
 		self::$instance->loader->add_filter( 'mce_external_languages', $plugin_ui, 'feedzy_add_tinymce_lang', 10, 1 );
 		self::$instance->loader->add_filter( 'plugin_row_meta', self::$instance->admin, 'feedzy_filter_plugin_row_meta', 10, 2 );
 		self::$instance->loader->add_filter( 'feedzy_default_image', self::$instance->admin, 'feedzy_define_default_image' );
-		self::$instance->loader->add_filter( 'feedzy_default_error', self::$instance->admin, 'feedzy_default_error_notice', 9, 2 );
+		self::$instance->loader->add_filter( 'feedzy_default_error', self::$instance->admin, 'feedzy_default_error_notice', 9, 3 );
 		self::$instance->loader->add_filter( 'feedzy_item_attributes', self::$instance->admin, 'feedzy_add_item_padding', 10, 2 );
 		self::$instance->loader->add_filter( 'feedzy_item_attributes', self::$instance->admin, 'feedzy_classes_item', 99, 5 );
 		self::$instance->loader->add_filter( 'feedzy_register_options', self::$instance->admin, 'register_options' );
@@ -214,7 +214,7 @@ class Feedzy_Rss_Feeds {
 		add_shortcode( 'feedzy-rss', array( self::$instance->admin, 'feedzy_rss' ) );
 		self::$instance->loader->add_action( 'wp_ajax_get_tinymce_form', self::$instance->admin, 'get_tinymce_form' );
 		self::$instance->loader->add_action( 'wp_enqueue_scripts', self::$instance->admin, 'enqueue_styles' );
-		self::$instance->loader->add_action( 'admin_enqueue_scripts', self::$instance->admin, 'enqueue_styles' );
+		self::$instance->loader->add_action( 'admin_enqueue_scripts', self::$instance->admin, 'enqueue_styles_admin' );
 		$plugin_widget = new feedzy_wp_widget();
 		self::$instance->loader->add_action( 'widgets_init', $plugin_widget, 'registerWidget', 10 );
 

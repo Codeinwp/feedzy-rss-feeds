@@ -29,7 +29,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 	 * Returns an instance of this class.
 	 */
 	public static function get_instance() {
-		if ( null == self::$instance ) {
+		if ( null === self::$instance ) {
 			self::$instance = new Feedzy_Rss_Feeds_Gutenberg_Block();
 		}
 		return self::$instance;
@@ -195,7 +195,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 			$feed = $data['category'];
 		}
 
-		$metaArgs = array(
+		$meta_args = array(
 			'date_format' => get_option( 'date_format' ),
 			'time_format' => get_option( 'time_format' ),
 		);
@@ -238,8 +238,8 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 					'link'        => ( ( $item->get_permalink() ) ? $item->get_permalink() : null ),
 					'creator'     => ( ( $item->get_author() ) ? $item->get_author()->get_name() : null ),
 					'pubDate'     => ( ( $item->get_date() ) ? $item->get_date( 'U' ) : null ),
-					'date'        => ( ( $item->get_date() ) ? date_i18n( $metaArgs['date_format'], $item->get_date( 'U' ) ) : null ),
-					'time'        => ( ( $item->get_date() ) ? date_i18n( $metaArgs['time_format'], $item->get_date( 'U' ) ) : null ),
+					'date'        => ( ( $item->get_date() ) ? date_i18n( $meta_args['date_format'], $item->get_date( 'U' ) ) : null ),
+					'time'        => ( ( $item->get_date() ) ? date_i18n( $meta_args['time_format'], $item->get_date( 'U' ) ) : null ),
 					'description' => ( ( $item->get_description() ) ? $item->get_description() : null ),
 					'thumbnail'   => $admin->feedzy_retrieve_image( $item ),
 					'price'       => ( ( feedzy_is_pro() && $item_attrs['item_price'] ) ? $item_attrs['item_price'] : null ),

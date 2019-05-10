@@ -3,7 +3,7 @@ Contributors: themeisle,codeinwp,hardeepasrani,contactashish13
 Tags: RSS feed, autoblogging, autoblog, rss aggregator, feed to post 
 Requires at least: 3.7
 Requires PHP: 5.3
-Tested up to: 5.0
+Tested up to: 5.2
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -151,6 +151,7 @@ Become a translator and send me your translation! [Contact-me](http://themeisle.
 2. Insert shortcode ! ;-)
 
 == Frequently Asked Questions ==
+
 
 
 
@@ -383,6 +384,12 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = How price is displayed from the feed = 
  [https://docs.themeisle.com/article/923-how-price-is-displayed-from-the-feed](https://docs.themeisle.com/article/923-how-price-is-displayed-from-the-feed) 
 
+ = How to find Feed URL for Feedzy RSS Feeds = 
+ [https://docs.themeisle.com/article/799-how-to-find-feed-url-for-feedzy-rss-feeds](https://docs.themeisle.com/article/799-how-to-find-feed-url-for-feedzy-rss-feeds) 
+
+ = In Feedzy how do I... = 
+ [https://docs.themeisle.com/article/942-in-feedzy-how-do-i](https://docs.themeisle.com/article/942-in-feedzy-how-do-i) 
+
  == Screenshots ==
 
 1. Simple example
@@ -392,6 +399,33 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 == Changelog ==
+= 3.3.5 - 2019-02-24  = 
+
+* Tested with WP 5.1
+* Fix issue with single feeds that have errors
+
+
+= 3.3.4 - 2019-02-08  = 
+
+* Multifeed shows an error and no content if even one feed has an error
+
+
+= 3.3.3 - 2019-01-31  = 
+
+* Customize error message when no items in the feed
+* Outgoing links should have rel=noopener
+* Fixed fatal error in Feedzy_Rss_Feeds_Admin_Abstract::feedzy_retrieve_image
+
+
+= 3.3.2 - 2018-12-22  = 
+
+* Option to handle HTTP images in the shortcode
+* Option to specify nofollow for links in the shortcode
+* Fix Gutenberg block
+* Add video tutorials under Help menu
+* Add support for extracting price from custom feed tags
+
+
 = 3.3.1 - 2018-11-05  = 
 
 * Import Posts enabled for plan 1 users
