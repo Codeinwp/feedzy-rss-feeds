@@ -159,9 +159,13 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 	 */
 	public function feedzy_gutenberg_block_callback( $attr ) {
 		$attr['default'] = ( ! empty( $attr['default'] ) ? $attr['default']['url'] : '' );
-		$paramss = wp_parse_args( $attr );
-		return feedzy_rss( $paramss );
-	}
+		if ( ! empty( $attr['feed_title'] ) ) $attr['feed_title'] = 'yes';
+		if ( ! empty( $attr['meta'] ) ) $attr['meta'] = 'yes';
+		if ( ! empty( $attr['summary'] ) ) $attr['summary'] = 'yes';
+		if ( ! empty( $attr['price'] ) ) $attr['price'] = 'yes';
+		$params = wp_parse_args( $attr );
+		return feedzy_rss( $params );
+    }
 
 	/**
 	 * Register Rest Route for Feedzy

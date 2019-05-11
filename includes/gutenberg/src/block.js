@@ -231,7 +231,7 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 									{ ( ( item['thumbnail'] && props.attributes.thumb === 'auto' ) || props.attributes.thumb === 'yes' ) && (
 										<div className="rss_image" style={ { width: props.attributes.size + 'px', height: props.attributes.size + 'px' } }>
 											<a title={ unescapeHTML( item['title'] ) } style={ { width: props.attributes.size + 'px', height: props.attributes.size + 'px' } }>
-												<span className="fetched" style={ { backgroundImage: 'url(' + ( ( item['thumbnail'] ) ? item['thumbnail'] : ( ( props.attributes.default ) ? props.attributes.default.url : feedzyjs.imagepath + 'feedzy-default.jpg' ) ) + ')' } } title={ unescapeHTML( item['title'] ) }></span>
+												<span className="fetched" style={ { width: props.attributes.size + 'px', height: props.attributes.size + 'px', backgroundImage: 'url(' + ( ( item['thumbnail'] ) ? item['thumbnail'] : ( ( props.attributes.default ) ? props.attributes.default.url : feedzyjs.imagepath + 'feedzy-default.jpg' ) ) + ')' } } title={ unescapeHTML( item['title'] ) }></span>
 											</a>
 										</div>
 									) }
