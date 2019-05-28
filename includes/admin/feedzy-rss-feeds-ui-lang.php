@@ -369,7 +369,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 					),
 					'referral_url' => array(
 						'label'       => __( 'Referral URL parameters (w/o "?").', 'feedzy-rss-feeds' ),
-						'placeholder' => __( '(eg. promo_code=feedzy_is_awesome)', 'feedzy-rss-feeds' ),
+						'placeholder' => __( '(eg. promo_code=feedzy_is_awesome) OR https://shareasale.com/r.cfm?b=&u=&m=&urllink=#url#', 'feedzy-rss-feeds' ),
 						'type'        => 'text',
 						'disabled'    => true,
 						'value'       => '',
