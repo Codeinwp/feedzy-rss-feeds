@@ -35,6 +35,7 @@
 	position: relative;
 	border: none;
 	text-decoration: none;
+	max-width: 100%;
 }
 
 .feedzy-rss .rss_item .rss_image span {
