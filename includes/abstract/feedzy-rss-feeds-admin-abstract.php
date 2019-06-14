@@ -269,6 +269,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		wp_enqueue_style( $this->plugin_name );
 		$sc      = $this->get_short_code_attributes( $atts );
 		$feed_url = $this->normalize_urls( $sc['feeds'] );
+		if ( empty( $feed_url ) ) {
+			return $content;
+		}
 		$cache   = $sc['refresh'];
 		$feed    = $this->fetch_feed( $feed_url, $cache, $sc );
 		if ( is_string( $feed ) ) {
