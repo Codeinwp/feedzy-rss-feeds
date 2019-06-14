@@ -73,7 +73,7 @@ By activating this plugin, your cover image will be inserted into your RSS feeds
 
 ## TECHNICAL NOTES:
 
-FEEDZY RSS Feeds supports any additional library and takes up minimal space in your cache/CSS to ensure high performance. This ensures compatibility with any hosting provider that supports WordPress, but if for any reason it doesn’t work for yours feel free to [contact us](http://themeisle.com/contact/).
+FEEDZY RSS Feeds supports any additional library and takes up minimal space in your cache/CSS to ensure high performance. This ensures compatibility with any hosting provider that supports WordPress, but if for any reason it doesn’t work for yours feel free to [create a new support topic](https://wordpress.org/support/plugin/feedzy-rss-feeds/#new-post).
 
 **Please ask for help or report bugs if anything goes wrong. It is the best way to make the community benefit!**
 
@@ -200,7 +200,7 @@ You have to check first if your feed is valid. Please test it here: https://vali
 [http://docs.themeisle.com/article/545-how-to-remove-plugin-css](http://docs.themeisle.com/article/545-how-to-remove-plugin-css)
 
 = How to remove links =
-[http://docs.themeisle.com/article/541-how-to-remove-links](http://docs.themeisle.com/article/541-how-to-remove-links)
+[https://docs.themeisle.com/article/1049-how-to-remove-links-in-feedzy](https://docs.themeisle.com/article/1049-how-to-remove-links-in-feedzy)
 
 = How to add a read more link =
 [http://docs.themeisle.com/article/544-how-to-add-a-read-more-link](http://docs.themeisle.com/article/544-how-to-add-a-read-more-link)
