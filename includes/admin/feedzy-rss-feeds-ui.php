@@ -82,6 +82,7 @@ class Feedzy_Rss_Feeds_Ui {
 	 * @access  public
 	 */
 	public function register_init() {
+		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
 		if ( ! $this->is_block_editor() && current_user_can( 'edit_posts' ) && current_user_can( 'edit_pages' ) && 'true' == get_user_option( 'rich_editing' ) ) {
 			$this->loader->add_filter( 'mce_external_plugins', $this, 'feedzy_tinymce_plugin', 10, 1 );
 			$this->loader->add_filter( 'mce_buttons', $this, 'feedzy_register_mce_button', 10, 1 );
