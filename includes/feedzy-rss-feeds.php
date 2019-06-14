@@ -104,7 +104,7 @@ class Feedzy_Rss_Feeds {
 	 */
 	public function init() {
 		self::$plugin_name = 'feedzy-rss-feeds';
-		self::$version = '3.3.6';
+		self::$version = '3.3.7';
 		self::$instance->load_dependencies();
 		self::$instance->set_locale();
 		self::$instance->define_admin_hooks();
