@@ -368,8 +368,8 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						),
 					),
 					'referral_url' => array(
-						'label'       => __( 'Referral URL parameters (w/o "?").', 'feedzy-rss-feeds' ),
-						'placeholder' => __( '(eg. promo_code=feedzy_is_awesome)', 'feedzy-rss-feeds' ),
+						'label'       => sprintf( __( 'Referral URL parameters as per %1$sthis document here%2$s', 'feedzy-rss-feeds' ), '<a href="https://docs.themeisle.com/article/1073-how-to-add-referral-parameters-in-feedzy" target="_blank">', '</a>' ),
+						'placeholder' => '',
 						'type'        => 'text',
 						'disabled'    => true,
 						'value'       => '',
