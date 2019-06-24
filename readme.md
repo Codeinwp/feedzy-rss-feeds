@@ -55,7 +55,7 @@ Join over 20,000 Feedzy users, and the half a million WordPress sites using Them
 >
 > **[Learn more about Feedzy Pro]( https://themeisle.com/plugins/feedzy-rss-feeds/ )**
 
- ## See how Feedzy can integrate with your website
+ ## See how Feedzy PRO can integrate with your website
 
 * [Audio playback template](https://demo.themeisle.com/feedzy-rss-feeds/audio-feed-template/)
 * [Shop feed – 3 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/shop-feed/)
