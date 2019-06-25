@@ -134,15 +134,6 @@ FEEDZY RSS Feeds supports any additional library and takes up minimal space in y
 
 This plugin is maintained and supported by Themeisle, check out some of the other <a href="http://themeisle.com/wordpress-plugins/" rel="nofollow">WordPress plugins</a> and <a href="http://themeisle.com/wordpress-themes/free/" rel="nofollow">free themes</a> we've developed.
 
-### Languages ###
-
-* English
-* French
-* Serbian
-* Japanese
-* German
-* Spanish
-
 
 ## Installation ##
 
