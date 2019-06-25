@@ -138,12 +138,11 @@ This plugin is maintained and supported by Themeisle, check out some of the othe
 
 * English
 * French
-* Serbian [Borisa Djuraskovic](http://www.webhostinghub.com/ "Borisa Djuraskovic")
-* Japanese [sama55](http://askive.cmsbox.jp/ "sama55")
-* German [ralfsteck](https://profiles.wordpress.org/ralfsteck/ "ralfsteck")
-* Spanish [Angel Calzado](http://sintaxisweb.es "Angel Calzado")
+* Serbian
+* Japanese
+* German
+* Spanish
 
-Become a translator and send me your translation! [Contact-me](http://themeisle.com/contact "Contact")
 
 ## Installation ##
 
