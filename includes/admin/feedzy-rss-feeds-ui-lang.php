@@ -232,7 +232,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						),
 					),
 					'title'          => array(
-						'label'       => __( 'Trim the title of the item after X characters.', 'feedzy-rss-feeds' ),
+						'label'       => __( 'Trim the title of the item after X characters. A value of 0 will remove the title.', 'feedzy-rss-feeds' ),
 						'placeholder' => __( '(eg: 160)', 'feedzy-rss-feeds' ),
 						'type'        => 'text',
 						'value'       => '',
