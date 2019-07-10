@@ -40,7 +40,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  string
 	 */
 	public function feedzy_define_default_image( $image_src ) {
-		$default_img = FEEDZY_ABSURL . '/img/feedzy-default.jpg';
+		$default_img = FEEDZY_ABSURL . '/img/feedzy.svg';
 
 		return apply_filters( 'feedzy_define_default_image_filter', $default_img );
 	}
