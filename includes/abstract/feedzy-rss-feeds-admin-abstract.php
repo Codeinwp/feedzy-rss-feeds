@@ -331,6 +331,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'http'         => 'auto',
 				// message to show when feed is empty
 				'error_empty'   => 'Feed has no items.',
+				// to disable amp support, use 'no'. This is currently not available as part of the shortcode tinymce form.
+				'amp'           => 'yes',
 			),
 			$atts,
 			'feedzy_default'
@@ -823,15 +825,24 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				if ( ! empty( $the_thumbnail ) ) {
 					$the_thumbnail = $this->feedzy_image_encode( $the_thumbnail );
 					$content_thumb .= '<span class="fetched" style="background-image:  url(\'' . $the_thumbnail . '\');" title="' . esc_html( $item->get_title() ) . '"></span>';
+					if ( ! isset( $sc['amp'] ) || 'no' !== $sc['amp'] ) {
+						$content_thumb .= '<amp-img width="' . $sizes['width'] . '" height="' . $sizes['height'] . '" src="' . $the_thumbnail . '">';
+					}
 				}
 				if ( $sc['thumb'] === 'yes' ) {
 					$content_thumb .= '<span class="default" style="background-image:url(' . $sc['default'] . ');" title="' . esc_html( $item->get_title() ) . '"></span>';
+					if ( ! isset( $sc['amp'] ) || 'no' !== $sc['amp'] ) {
+						$content_thumb .= '<amp-img width="' . $sizes['width'] . '" height="' . $sizes['height'] . '" src="' . $sc['default'] . '">';
+					}
 				}
 			}
 			$content_thumb = apply_filters( 'feedzy_thumb_output', $content_thumb, $feed_url, $sizes, $item );
 		} else {
 			$content_thumb = '';
 			$content_thumb .= '<span class="default" style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:url(' . $sc['default'] . ');" title="' . $item->get_title() . '"></span>';
+			if ( ! isset( $sc['amp'] ) || 'no' !== $sc['amp'] ) {
+				$content_thumb .= '<amp-img width="' . $sizes['width'] . '" height="' . $sizes['height'] . '" src="' . $sc['default'] . '">';
+			}
 			$content_thumb = apply_filters( 'feedzy_thumb_output', $content_thumb, $feed_url, $sizes, $item );
 		}
 		$content_title = $item->get_title();
