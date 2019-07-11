@@ -55,7 +55,7 @@ Join over 20,000 Feedzy users, and the half a million WordPress sites using Them
 >
 > **[Learn more about Feedzy Pro]( https://themeisle.com/plugins/feedzy-rss-feeds/ )**
 
- ## See how Feedzy can integrate with your website
+ ## See how Feedzy PRO can integrate with your website
 
 * [Audio playback template](https://demo.themeisle.com/feedzy-rss-feeds/audio-feed-template/)
 * [Shop feed – 3 columns layout](https://demo.themeisle.com/feedzy-rss-feeds/shop-feed/)
@@ -134,16 +134,6 @@ FEEDZY RSS Feeds supports any additional library and takes up minimal space in y
 
 This plugin is maintained and supported by Themeisle, check out some of the other <a href="http://themeisle.com/wordpress-plugins/" rel="nofollow">WordPress plugins</a> and <a href="http://themeisle.com/wordpress-themes/free/" rel="nofollow">free themes</a> we've developed.
 
-### Languages ###
-
-* English
-* French
-* Serbian [Borisa Djuraskovic](http://www.webhostinghub.com/ "Borisa Djuraskovic")
-* Japanese [sama55](http://askive.cmsbox.jp/ "sama55")
-* German [ralfsteck](https://profiles.wordpress.org/ralfsteck/ "ralfsteck")
-* Spanish [Angel Calzado](http://sintaxisweb.es "Angel Calzado")
-
-Become a translator and send me your translation! [Contact-me](http://themeisle.com/contact "Contact")
 
 ## Installation ##
 
