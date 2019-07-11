@@ -156,6 +156,10 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'type'  => 'select',
 						'value' => '',
 						'opts'  => array(
+							''  => array(
+								'label' => __( 'Default', 'feedzy-rss-feeds' ),
+								'value' => '',
+							),
 							'date_desc'  => array(
 								'label' => __( 'Date Descending', 'feedzy-rss-feeds' ),
 								'value' => 'date_desc',
