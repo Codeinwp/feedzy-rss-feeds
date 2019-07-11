@@ -93,7 +93,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 				'title'    => __( 'Feed Source', 'feedzy-rss-feeds' ),
 				'elements' => array(
 					'feeds'      => array(
-						'label'       => __( 'The feed(s) URL (comma-separated list).', 'feedzy-rss-feeds' ) . ' ' . sprintf( __( 'Click %shere%s to check feed is valid.', 'feedzy-rss-feeds' ), '<a href="https://validator.w3.org/feed/" target="_new">', '</a>' ),
+						'label'       => __( 'The feed(s) URL (comma-separated list).', 'feedzy-rss-feeds' ) . ' ' . sprintf( __( 'Click %shere%s to check if feed is valid.', 'feedzy-rss-feeds' ), '<a href="https://validator.w3.org/feed/" target="_new">', '</a>' ),
 						'placeholder' => __( 'Feed URL', 'feedzy-rss-feeds' ),
 						'type'        => 'text',
 						'value'       => '',
