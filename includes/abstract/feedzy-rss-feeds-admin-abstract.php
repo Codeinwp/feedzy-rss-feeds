@@ -310,7 +310,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'title'          => '',
 				// strip title after X char
 				'meta'           => 'yes',
-				// yes, no
+				// yes (author, date, time), no (NEITHER), author, date, time
 				'summary'        => 'yes',
 				// strip title
 				'summarylength'  => '',
@@ -855,17 +855,19 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$content_title .= $item->get_title();
 		}
 		$content_title = apply_filters( 'feedzy_title_output', $content_title, $feed_url, $item );
-		// Define Meta args
+		// Define Meta args.
+		// meta=yes is for backward compatibility, otherwise its always better to provide the fields with granularity.
 		$meta_args = array(
-			'author'      => true,
-			'date'        => true,
+			'author'      => $sc['meta'] === 'yes' || strpos( $sc['meta'], 'author' ) !== false,
+			'date'        => $sc['meta'] === 'yes' || strpos( $sc['meta'], 'date' ) !== false,
+			'time'        => $sc['meta'] === 'yes' || strpos( $sc['meta'], 'time' ) !== false,
 			'date_format' => get_option( 'date_format' ),
 			'time_format' => get_option( 'time_format' ),
 		);
 		// Filter: feedzy_meta_args
 		$meta_args    = apply_filters( 'feedzy_meta_args', $meta_args, $feed_url, $item );
 		$content_meta = '';
-		if ( $sc['meta'] === 'yes' && ( $meta_args['author'] || $meta_args['date'] ) ) {
+		if ( $meta_args['author'] || $meta_args['date'] || $meta_args['time'] ) {
 			$content_meta = '';
 			if ( $item->get_author() && $meta_args['author'] ) {
 				$author = $item->get_author();
@@ -882,16 +884,17 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 					$content_meta .= __( 'by', 'feedzy-rss-feeds' ) . ' <a href="' . $author_url . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $author_name . '</a> ';
 				}
 			}
-			if ( $meta_args['date'] ) {
-				$date_time   = $item->get_date( 'U' );
-				$date_time   = apply_filters( 'feedzy_feed_timestamp', $date_time, $feed_url, $item );
-				if ( ! empty( $meta_args['date_format'] ) ) {
-					$content_meta .= __( 'on', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $meta_args['date_format'], $date_time );
-					$content_meta .= ' ';
-				}
-				if ( ! empty( $meta_args['time_format'] ) ) {
-					$content_meta .= __( 'at', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $meta_args['time_format'], $date_time );
-				}
+
+			$date_time   = $item->get_date( 'U' );
+			$date_time   = apply_filters( 'feedzy_feed_timestamp', $date_time, $feed_url, $item );
+
+			if ( $meta_args['date'] && ! empty( $meta_args['date_format'] ) ) {
+				$content_meta .= __( 'on', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $meta_args['date_format'], $date_time );
+				$content_meta .= ' ';
+			}
+
+			if ( $meta_args['time'] && ! empty( $meta_args['time_format'] ) ) {
+				$content_meta .= __( 'at', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $meta_args['time_format'], $date_time );
 			}
 		}
 		$content_meta    = apply_filters( 'feedzy_meta_output', $content_meta, $feed_url, $item );
