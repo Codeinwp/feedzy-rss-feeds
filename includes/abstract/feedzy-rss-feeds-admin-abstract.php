@@ -297,42 +297,42 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		// Retrieve & extract shorcode parameters
 		$sc = shortcode_atts(
 			array(
-				'feeds'          => '',
 				// comma separated feeds url
-				'max'            => '5',
+				'feeds'          => '',
 				// number of feeds items (0 for unlimited)
-				'feed_title'     => 'yes',
+				'max'            => '5',
 				// display feed title yes/no
-				'target'         => '_blank',
+				'feed_title'     => 'yes',
 				// _blank, _self
-				'follow'         => '',
+				'target'         => '_blank',
 				// empty or no for nofollow
+				'follow'         => '',
+				// strip title after X char. X can be 0 too, which will remove the title.
 				'title'          => '',
-				// strip title after X char
-				'meta'           => 'yes',
 				// yes (author, date, time), no (NEITHER), author, date, time
-				'summary'        => 'yes',
+				'meta'           => 'yes',
 				// strip title
-				'summarylength'  => '',
+				'summary'        => 'yes',
 				// strip summary after X char
-				'thumb'          => 'auto',
+				'summarylength'  => '',
 				// yes, no, auto
-				'default'        => '',
+				'thumb'          => 'auto',
 				// default thumb URL if no image found (only if thumb is set to yes or auto)
-				'size'           => '',
+				'default'        => '',
 				// thumbs pixel size
-				'keywords_title' => '',
+				'size'           => '',
 				// only display item if title contains specific keywords (comma-separated list/case sensitive)
-				'refresh'        => '12_hours',
+				'keywords_title' => '',
 				// cache refresh
-				'sort'           => '',
+				'refresh'        => '12_hours',
 				// sorting.
-				'http'         => 'auto',
+				'sort'           => '',
 				// http images, https = force https|default = fall back to default image|auto = continue as it is
-				'error_empty'   => 'Feed has no items.',
+				'http'         => 'auto',
 				// message to show when feed is empty
-				'amp'           => 'yes',
+				'error_empty'   => 'Feed has no items.',
 				// to disable amp support, use 'no'. This is currently not available as part of the shortcode tinymce form.
+				'amp'           => 'yes',
 			),
 			$atts,
 			'feedzy_default'
@@ -633,9 +633,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( empty( $sc['size'] ) || ! ctype_digit( $sc['size'] ) ) {
 			$sc['size'] = '150';
 		}
-		if ( ! empty( $sc['title'] ) && ! ctype_digit( $sc['title'] ) ) {
-			$sc['title'] = '';
-		}
 		if ( ! empty( $sc['keywords_title'] ) ) {
 			$sc['keywords_title'] = rtrim( $sc['keywords_title'], ',' );
 			$sc['keywords_title'] = array_map( 'trim', explode( ',', $sc['keywords_title'] ) );
@@ -864,11 +861,14 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 			$content_thumb = apply_filters( 'feedzy_thumb_output', $content_thumb, $feed_url, $sizes, $item );
 		}
-		$content_title = '';
-		if ( is_numeric( $sc['title'] ) && strlen( $item->get_title() ) > $sc['title'] ) {
-			$content_title .= preg_replace( '/\s+?(\S+)?$/', '', substr( $item->get_title(), 0, $sc['title'] ) ) . '...';
-		} else {
-			$content_title .= $item->get_title();
+		$content_title = $item->get_title();
+		if ( is_numeric( $sc['title'] ) ) {
+			$length = intval( $sc['title'] );
+			if ( $length > 0 && strlen( $content_title ) > $length ) {
+				$content_title = preg_replace( '/\s+?(\S+)?$/', '', substr( $content_title, 0, $length ) ) . '...';
+			} elseif ( $length === 0 ) {
+				$content_title = '';
+			}
 		}
 		$content_title = apply_filters( 'feedzy_title_output', $content_title, $feed_url, $item );
 		// Define Meta args.
@@ -916,13 +916,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$content_meta    = apply_filters( 'feedzy_meta_output', $content_meta, $feed_url, $item );
 		$content_summary = '';
 		if ( $sc['summary'] === 'yes' ) {
-			$content_summary = '';
 			$description    = $item->get_description();
 			$description    = apply_filters( 'feedzy_summary_input', $description, $item->get_content(), $feed_url, $item );
+			$content_summary = $description;
 			if ( is_numeric( $sc['summarylength'] ) && strlen( $description ) > $sc['summarylength'] ) {
-				$content_summary .= preg_replace( '/\s+?(\S+)?$/', '', substr( $description, 0, $sc['summarylength'] ) ) . ' […]';
-			} else {
-				$content_summary .= $description . ' […]';
+				$content_summary = preg_replace( '/\s+?(\S+)?$/', '', substr( $description, 0, $sc['summarylength'] ) ) . ' […]';
 			}
 			$content_summary = apply_filters( 'feedzy_summary_output', $content_summary, $new_link, $feed_url, $item );
 		}
