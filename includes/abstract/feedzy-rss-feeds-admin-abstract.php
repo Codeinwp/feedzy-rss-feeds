@@ -503,6 +503,22 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		// set the url as the last step, because we need to be able to close this feed without the url being set
 		// so that we can fall back to raw data in case of an error
 		$feed->set_feed_url( $feed_url );
+
+		global $feedzy_current_error_reporting;
+		$feedzy_current_error_reporting = error_reporting();
+
+		// to avoid the Warning! Non-numeric value encountered. This can be removed once SimplePie in core is fixed.
+		if ( version_compare( phpversion(), '7.1', '>=' ) ) {
+			error_reporting( E_ALL ^ E_WARNING );
+			// reset the error_reporting back to its original value.
+			add_action(
+				'shutdown', function() {
+					global $feedzy_current_error_reporting;
+					error_reporting( $feedzy_current_error_reporting );
+				}
+			);
+		}
+
 		$feed->init();
 
 		$error = $feed->error();
