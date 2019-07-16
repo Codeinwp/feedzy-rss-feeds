@@ -40,7 +40,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  string
 	 */
 	public function feedzy_define_default_image( $image_src ) {
-		$default_img = FEEDZY_ABSURL . '/img/feedzy-default.jpg';
+		$default_img = FEEDZY_ABSURL . '/img/feedzy.svg';
 
 		return apply_filters( 'feedzy_define_default_image_filter', $default_img );
 	}
@@ -832,7 +832,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 						$content_thumb .= '<amp-img width="' . $sizes['width'] . '" height="' . $sizes['height'] . '" src="' . $the_thumbnail . '">';
 					}
 				}
-				if ( $sc['thumb'] === 'yes' ) {
+				if ( empty( $the_thumbnail ) && $sc['thumb'] === 'yes' ) {
 					$content_thumb .= '<span class="default" style="background-image:url(' . $sc['default'] . ');" title="' . esc_html( $item->get_title() ) . '"></span>';
 					if ( ! isset( $sc['amp'] ) || 'no' !== $sc['amp'] ) {
 						$content_thumb .= '<amp-img width="' . $sizes['width'] . '" height="' . $sizes['height'] . '" src="' . $sc['default'] . '">';
