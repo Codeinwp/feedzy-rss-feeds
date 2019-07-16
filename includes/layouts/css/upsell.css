@@ -97,8 +97,6 @@
 
 #fz-features .fz-features-header,
 #fz-features .fz-feature {
-	display: table;
-	float: left;
 	box-sizing: border-box;
 	width: 100%;
 	margin: 30px 0 0;
@@ -109,7 +107,6 @@
 
 #fz-features .fz-feature .fz-feature-features,
 #fz-features .fz-feature .fz-feature-image {
-	display: table-cell;
 	margin: 0;
 	vertical-align: middle;
 }
@@ -119,8 +116,12 @@
 	padding: 0 0 20px;
 }
 
-#fz-features .fz-feature .fz-feature-image {
-	width: 470px;
+#fz-features .fz-feature .fz-feature-image img {
+	max-width: 470px;
+}
+
+#fz-features .fz-feature .fz-feature-image iframe {
+	max-width: 100%;
 }
 
 #fz-features .fz-feature .fz-feature-features h2 {
