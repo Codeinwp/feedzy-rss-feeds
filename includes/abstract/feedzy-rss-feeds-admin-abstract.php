@@ -40,7 +40,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  string
 	 */
 	public function feedzy_define_default_image( $image_src ) {
-		$default_img = FEEDZY_ABSURL . '/img/feedzy-default.jpg';
+		$default_img = FEEDZY_ABSURL . '/img/feedzy.svg';
 
 		return apply_filters( 'feedzy_define_default_image_filter', $default_img );
 	}
@@ -309,7 +309,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'follow'         => '',
 				// strip title after X char. X can be 0 too, which will remove the title.
 				'title'          => '',
-				// yes, no
+				// yes (author, date, time), no (NEITHER), author, date, time
 				'meta'           => 'yes',
 				// strip title
 				'summary'        => 'yes',
@@ -503,6 +503,22 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		// set the url as the last step, because we need to be able to close this feed without the url being set
 		// so that we can fall back to raw data in case of an error
 		$feed->set_feed_url( $feed_url );
+
+		global $feedzy_current_error_reporting;
+		$feedzy_current_error_reporting = error_reporting();
+
+		// to avoid the Warning! Non-numeric value encountered. This can be removed once SimplePie in core is fixed.
+		if ( version_compare( phpversion(), '7.1', '>=' ) ) {
+			error_reporting( E_ALL ^ E_WARNING );
+			// reset the error_reporting back to its original value.
+			add_action(
+				'shutdown', function() {
+					global $feedzy_current_error_reporting;
+					error_reporting( $feedzy_current_error_reporting );
+				}
+			);
+		}
+
 		$feed->init();
 
 		$error = $feed->error();
@@ -829,7 +845,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 						$content_thumb .= '<amp-img width="' . $sizes['width'] . '" height="' . $sizes['height'] . '" src="' . $the_thumbnail . '">';
 					}
 				}
-				if ( $sc['thumb'] === 'yes' ) {
+				if ( empty( $the_thumbnail ) && $sc['thumb'] === 'yes' ) {
 					$content_thumb .= '<span class="default" style="background-image:url(' . $sc['default'] . ');" title="' . esc_html( $item->get_title() ) . '"></span>';
 					if ( ! isset( $sc['amp'] ) || 'no' !== $sc['amp'] ) {
 						$content_thumb .= '<amp-img width="' . $sizes['width'] . '" height="' . $sizes['height'] . '" src="' . $sc['default'] . '">';
@@ -855,17 +871,19 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 		}
 		$content_title = apply_filters( 'feedzy_title_output', $content_title, $feed_url, $item );
-		// Define Meta args
+		// Define Meta args.
+		// meta=yes is for backward compatibility, otherwise its always better to provide the fields with granularity.
 		$meta_args = array(
-			'author'      => true,
-			'date'        => true,
+			'author'      => $sc['meta'] === 'yes' || strpos( $sc['meta'], 'author' ) !== false,
+			'date'        => $sc['meta'] === 'yes' || strpos( $sc['meta'], 'date' ) !== false,
+			'time'        => $sc['meta'] === 'yes' || strpos( $sc['meta'], 'time' ) !== false,
 			'date_format' => get_option( 'date_format' ),
 			'time_format' => get_option( 'time_format' ),
 		);
 		// Filter: feedzy_meta_args
 		$meta_args    = apply_filters( 'feedzy_meta_args', $meta_args, $feed_url, $item );
 		$content_meta = '';
-		if ( $sc['meta'] === 'yes' && ( $meta_args['author'] || $meta_args['date'] ) ) {
+		if ( $meta_args['author'] || $meta_args['date'] || $meta_args['time'] ) {
 			$content_meta = '';
 			if ( $item->get_author() && $meta_args['author'] ) {
 				$author = $item->get_author();
@@ -882,16 +900,17 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 					$content_meta .= __( 'by', 'feedzy-rss-feeds' ) . ' <a href="' . $author_url . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $author_name . '</a> ';
 				}
 			}
-			if ( $meta_args['date'] ) {
-				$date_time   = $item->get_date( 'U' );
-				$date_time   = apply_filters( 'feedzy_feed_timestamp', $date_time, $feed_url, $item );
-				if ( ! empty( $meta_args['date_format'] ) ) {
-					$content_meta .= __( 'on', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $meta_args['date_format'], $date_time );
-					$content_meta .= ' ';
-				}
-				if ( ! empty( $meta_args['time_format'] ) ) {
-					$content_meta .= __( 'at', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $meta_args['time_format'], $date_time );
-				}
+
+			$date_time   = $item->get_date( 'U' );
+			$date_time   = apply_filters( 'feedzy_feed_timestamp', $date_time, $feed_url, $item );
+
+			if ( $meta_args['date'] && ! empty( $meta_args['date_format'] ) ) {
+				$content_meta .= __( 'on', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $meta_args['date_format'], $date_time );
+				$content_meta .= ' ';
+			}
+
+			if ( $meta_args['time'] && ! empty( $meta_args['time_format'] ) ) {
+				$content_meta .= __( 'at', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $meta_args['time_format'], $date_time );
 			}
 		}
 		$content_meta    = apply_filters( 'feedzy_meta_output', $content_meta, $feed_url, $item );
