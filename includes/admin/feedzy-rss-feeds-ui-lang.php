@@ -93,7 +93,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 				'title'    => __( 'Feed Source', 'feedzy-rss-feeds' ),
 				'elements' => array(
 					'feeds'      => array(
-						'label'       => __( 'The feed(s) URL (comma-separated list).', 'feedzy-rss-feeds' ) . ' ' . sprintf( __( 'Click %1$shere%2$s to check if feed is valid.', 'feedzy-rss-feeds' ), '<a href="https://validator.w3.org/feed/" target="_new">', '</a>' ),
+						'label'       => __( 'The feed(s) URL (comma-separated list).', 'feedzy-rss-feeds' ) . ' ' . sprintf( __( 'Click %1$shere%2$s to check if feed is valid.', 'feedzy-rss-feeds' ), '<a href="https://validator.w3.org/feed/" target="_new">', '</a>' ) . '<br><b>' . __( 'Invalid feeds will NOT display items.', 'feedzy-rss-feeds' ) . '</b>',
 						'placeholder' => __( 'Feed URL', 'feedzy-rss-feeds' ),
 						'type'        => 'text',
 						'value'       => '',
@@ -276,7 +276,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'disabled'    => feedzy_is_new(),
 					),
 					'keywords_ban'   => array(
-						'label'       => __( 'Exclude items if title or content contains specific keyword(s) (comma-separated list/case sensitive). ', 'feedzy-rss-feeds' ),
+						'label'       => __( 'Exclude items if title contains specific keyword(s) (comma-separated list/case sensitive). ', 'feedzy-rss-feeds' ),
 						'placeholder' => __( '(eg: politics, gossip etc.)', 'feedzy-rss-feeds' ),
 						'type'        => 'text',
 						'value'       => '',
