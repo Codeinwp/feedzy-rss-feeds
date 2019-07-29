@@ -309,7 +309,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'follow'         => '',
 				// strip title after X char. X can be 0 too, which will remove the title.
 				'title'          => '',
-				// yes (author, date, time), no (NEITHER), author, date, time
+				// yes (author, date, time), no (NEITHER), author, date, time,
+				// tz=local (for date/time in blog time)
+				// tz=gmt (for date/time in UTC time, this is the default)
+				// tz=no (for date/time in the feed, without conversion)
 				'meta'           => 'yes',
 				// strip title
 				'summary'        => 'yes',
@@ -877,9 +880,22 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'author'      => $sc['meta'] === 'yes' || strpos( $sc['meta'], 'author' ) !== false,
 			'date'        => $sc['meta'] === 'yes' || strpos( $sc['meta'], 'date' ) !== false,
 			'time'        => $sc['meta'] === 'yes' || strpos( $sc['meta'], 'time' ) !== false,
+			'tz'        => 'gmt',
 			'date_format' => get_option( 'date_format' ),
 			'time_format' => get_option( 'time_format' ),
 		);
+		// parse the x=y type setting e.g. tz=local or tz=gmt.
+		if ( strpos( $sc['meta'], '=' ) !== false ) {
+			$components = array_map( 'trim', explode( ',', $sc['meta'] ) );
+			foreach ( $components as $configs ) {
+				if ( strpos( $configs, '=' ) === false ) {
+					continue;
+				}
+				$config = explode( '=', $configs );
+				$meta_args[ $config[0] ] = $config[1];
+			}
+		}
+
 		// Filter: feedzy_meta_args
 		$meta_args    = apply_filters( 'feedzy_meta_args', $meta_args, $feed_url, $item );
 		$content_meta = '';
@@ -902,6 +918,15 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 
 			$date_time   = $item->get_date( 'U' );
+			if ( $meta_args['tz'] === 'local' ) {
+				$date_time  = get_date_from_gmt( $item->get_date( 'Y-m-d H:i:s' ), 'U' );
+			} elseif ( $meta_args['tz'] === 'no' ) {
+				// change the tz component of the date to UTC.
+				$raw_date = preg_replace( '/\++(\d\d\d\d)/', '+0000', $item->get_date( '' ) );
+				$date = DateTime::createFromFormat( DATE_RFC2822, $raw_date );
+				$date_time  = $date->format( 'U' );
+			}
+
 			$date_time   = apply_filters( 'feedzy_feed_timestamp', $date_time, $feed_url, $item );
 
 			if ( $meta_args['date'] && ! empty( $meta_args['date_format'] ) ) {
