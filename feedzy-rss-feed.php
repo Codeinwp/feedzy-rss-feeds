@@ -119,7 +119,7 @@ function run_feedzy_rss_feeds() {
 	define( 'FEEDZY_USER_AGENT', 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36' );
 	define( 'FEEDZY_ALLOW_HTTPS', true );
 	// to redirect all themeisle_log_event to error log.
-	define( 'FEEDZY_LOCAL_DEBUG', true );
+	define( 'FEEDZY_LOCAL_DEBUG', false );
 
 	// always make this true before testing
 	define( 'FEEDZY_DISABLE_CACHE_FOR_TESTING', false );

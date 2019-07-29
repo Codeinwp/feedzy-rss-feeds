@@ -17,6 +17,7 @@ const { __ } = wp.i18n;
 const { registerBlockType } = wp.blocks;
 
 const {
+	ExternalLink,
 	Placeholder,
 	TextControl,
 	Button,
@@ -205,7 +206,13 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 							onClick={ loadFeed }
 						>
 							{ __( 'Load Feed' ) }
-						</Button>
+						</Button>,
+						<span>
+							<ExternalLink href="https://validator.w3.org/feed/">
+								{ __( 'Click here to check if feed is valid. ' ) }
+							</ExternalLink>
+							{ __( 'Invalid feeds will NOT display items.' ) }
+						</span>
 					] }
 					</Placeholder>
 				</div>
