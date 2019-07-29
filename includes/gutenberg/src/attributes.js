@@ -18,7 +18,7 @@ const attributes = {
 	},
 	sort: {
 		type: 'string',
-		default: 'date_desc',
+		default: 'default',
 	},
 	target: {
 		type: 'string',

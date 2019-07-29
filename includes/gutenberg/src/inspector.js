@@ -29,29 +29,34 @@ const {
 * Create an Inspector Controls wrapper Component
 */
 
-const Inspector = (props) => {
+const Inspector = props => {
     return (
 		<InspectorControls key="inspector">
-			{ ( props.attributes.status !== 0 ) && [
-				<TextControl
-					label={ __( 'Feed Source' ) }
-					className="feedzy-source"
-					value={ props.attributes.feeds }
-					onChange={ props.onChangeFeeds }
-				/>,
-				<Button
-					isLarge
-					type="submit"
-					onClick={ props.loadFeed }
-					className="loadFeed"
-				>
-					{ __( 'Load Feed' ) }
-				</Button>
-			] }
+			{ ( props.attributes.status !== 0 ) && (
+				<PanelBody>
+					<TextControl
+						label={ __( 'Feed Source' ) }
+						className="feedzy-source"
+						value={ props.attributes.feeds }
+						onChange={ props.onChangeFeeds }
+					/>
+
+					<Button
+						isLarge
+						type="submit"
+						onClick={ props.loadFeed }
+						className="loadFeed"
+					>
+						{ __( 'Load Feed' ) }
+					</Button>
+				</PanelBody>
+			) }
+
 			{ ( props.attributes.status === 2 ) && [
 				<PanelBody
 					title={ __( 'Feed Settings' ) }
-					initialOpen={ true } >
+					initialOpen={ true }
+				>
 					<RangeControl
 						label={ __( 'Number of Feeds' ) }
 						value={ Number( props.attributes.max ) || 5 }
@@ -60,13 +65,15 @@ const Inspector = (props) => {
 						max={ props.attributes.feedData['items'].length || 10 }
 						beforeIcon="sort"
 					/>
+
 					{ ( ( props.attributes.feedData['channel'] !== null ) ) && (
-					<ToggleControl
-						label={ __( 'Display feed title?' ) }
-						checked={ !! props.attributes.feed_title }
-						onChange={ props.toggleFeedTitle }
-					/>
+						<ToggleControl
+							label={ __( 'Display feed title?' ) }
+							checked={ !! props.attributes.feed_title }
+							onChange={ props.toggleFeedTitle }
+						/>
 					) }
+
 					<SelectControl
 						label={ __( 'Feed Caching Time' ) }
 						value={ props.attributes.refresh }
@@ -98,10 +105,15 @@ const Inspector = (props) => {
 						] }
 						onChange={ props.onRefresh }
 					/>
+
 					<SelectControl
 						label={ __( 'Sorting Order' ) }
 						value={ props.attributes.sort }
 						options={ [
+							{
+								label: __( 'Default' ),
+								value: 'default',
+							},
 							{
 								label: __( 'Date Descending' ),
 								value: 'date_desc',
@@ -138,6 +150,7 @@ const Inspector = (props) => {
 						] }
 						onChange={ props.onTarget }
 					/>
+
 					<TextControl
 						label={ __( 'Title Character Limit' ) }
 						help={ __( 'Leave empty to show full title.' ) }
@@ -145,16 +158,19 @@ const Inspector = (props) => {
 						value={ props.attributes.title }
 						onChange={ props.onTitle }
 					/>
+
 					<ToggleControl
 						label={ __( 'Display post date & author?' ) }
 						checked={ !! props.attributes.meta }
 						onChange={ props.toggleMeta }
 					/>
+
 					<ToggleControl
 						label={ __( 'Display post description?' ) }
 						checked={ !! props.attributes.summary }
 						onChange={ props.toggleSummary }
 					/>
+
 					{ ( props.attributes.summary ) && (
 						<TextControl
 							label={ __( 'Description Character Limit' ) }
@@ -164,6 +180,7 @@ const Inspector = (props) => {
 							onChange={ props.onSummaryLength }
 						/>
 					) }
+
 					{ ( ( feedzyjs.isPro ) && [
 						<TextControl
 							label={ __( 'Only display if title contains:' ) }
@@ -199,6 +216,7 @@ const Inspector = (props) => {
 						] }
 						onChange={ props.onThumb }
 					/>
+
 					{ ( props.attributes.thumb !== 'no' ) && [
 						( props.attributes.thumb !== 'auto' ) && (
 							<div className="feedzy-blocks-base-control">
@@ -252,6 +270,7 @@ const Inspector = (props) => {
 							checked={ !! props.attributes.price }
 							onChange={ props.togglePrice }
 						/>
+
 						<TextControl
 							label={ __( 'Referral URL parameters.' ) }
 							help={ __( 'Without ("?")' ) }
@@ -259,6 +278,7 @@ const Inspector = (props) => {
 							value={ props.attributes.referral_url }
 							onChange={ props.onReferralURL }
 						/>
+
 						<RangeControl
 							label={ __( 'Columns' ) }
 							help={ __( 'How many columns we should use to display the feed items?' ) }
@@ -269,6 +289,7 @@ const Inspector = (props) => {
 							beforeIcon="sort"
 							allowReset
 						/>
+
 						<RadioImageControl
 							label={ __( 'Feed Template' ) }
 							selected={ props.attributes.template }

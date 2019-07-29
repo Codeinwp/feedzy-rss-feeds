@@ -97,7 +97,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 					),
 					'sort'           => array(
 						'type'    => 'string',
-						'default' => 'date_desc',
+						'default' => 'default',
 					),
 					'target'         => array(
 						'type'    => 'string',
@@ -170,6 +170,9 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		}
 		if ( ! empty( $attr['price'] ) ) {
 			$attr['price'] = 'yes';
+		}
+		if ( ! empty( $attr['sort'] ) && 'default' === $attr['sort'] ) {
+			unset( $attr['sort'] ); 
 		}
 		$params = wp_parse_args( $attr );
 		return feedzy_rss( $params );
