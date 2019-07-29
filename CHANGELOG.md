@@ -1,4 +1,19 @@
 
+ ### v3.3.7 - 2019-06-15 
+ **Changes:** 
+ * Fix: Not working in the block editor
+* Feat: Referral URL can now include the URL of the item as a parameter
+* Fix: Image size on mobile was overflowing the viewport
+* Fix: Shortcode builder icon not visible in classic editor
+* Fix: Widget options not visible in theme customizer
+ 
+ ### v3.3.6 - 2019-05-03 
+ **Changes:** 
+ * Add filter to disable DB caching
+* Fix issue with HTML tags not closed when feed has no items
+* Fix issue with CSS file being loaded everywhere
+* Tested up to WP 5.2
+ 
  ### v3.3.5 - 2019-02-24 
  **Changes:** 
  * Tested with WP 5.1
