@@ -243,7 +243,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 					),
 					'meta'           => array(
 						'label' => sprintf( __( 'Should we display additional meta fields out of %1$sauthor%2$s, %3$sdate%4$s and %5$stime%6$s? (comma-separated list). View documentation %7$shere%8$s.', 'feedzy-rss-feeds' ), '<code>', '</code>', '<code>', '</code>', '<code>', '</code>', '<a href="https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed" target="_new">', '</a>' ),
-						'placeholder' => __( '(eg: author, date, time OR author, date OR author)', 'feedzy-rss-feeds' ),
+						'placeholder' => __( '(eg: author, date, time, tz=local)', 'feedzy-rss-feeds' ),
 						'type'  => 'text',
 						'value' => '',
 					),

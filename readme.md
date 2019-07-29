@@ -106,7 +106,7 @@ FEEDZY RSS Feeds supports any additional library and takes up minimal space in y
 
 ### Advanced example ###
 
-`[feedzy-rss feeds="http://themeisle.com/feed" max="2" feed_title="yes" target="_blank"  refresh="12_hours" title="50" meta="yes" summary="yes" summarylength="300" thumb="yes" size="100" default="http://your-site/default-image.jpg" keywords_title="WordPress"]`
+`[feedzy-rss feeds="http://themeisle.com/feed" max="2" feed_title="yes" target="_blank"  refresh="12_hours" title="50" meta="author, date, time, tz=local" summary="yes" summarylength="300" thumb="yes" size="100" default="http://your-site/default-image.jpg" keywords_title="WordPress"]`
 
 
 ### Available Hooks ###
