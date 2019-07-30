@@ -928,15 +928,15 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 
 			$date_time   = apply_filters( 'feedzy_feed_timestamp', $date_time, $feed_url, $item );
-
+			$content_meta_date = $date_time;
 			if ( $meta_args['date'] && ! empty( $meta_args['date_format'] ) ) {
-				$content_meta .= __( 'on', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $meta_args['date_format'], $date_time );
-				$content_meta .= ' ';
+				$content_meta_date = __( 'on', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $meta_args['date_format'], $date_time ) . ' ';
 			}
 
 			if ( $meta_args['time'] && ! empty( $meta_args['time_format'] ) ) {
-				$content_meta .= __( 'at', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $meta_args['time_format'], $date_time );
+				$content_meta_date .= __( 'at', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $meta_args['time_format'], $date_time );
 			}
+			$content_meta .= $content_meta_date;
 		}
 		$content_meta    = apply_filters( 'feedzy_meta_output', $content_meta, $feed_url, $item );
 		$content_summary = '';
@@ -963,6 +963,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'item_content_style' => '',
 			'item_meta'          => $content_meta,
 			'item_date'          => $item->get_date( 'U' ),
+			'item_date_formatted' => $content_meta_date,
 			'item_author'        => $item->get_author(),
 			'item_description'   => $content_summary,
 			'item_content'       => apply_filters( 'feedzy_content', $item->get_content( false ), $item ),
