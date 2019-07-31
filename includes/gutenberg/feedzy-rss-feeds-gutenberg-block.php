@@ -177,7 +177,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 			$attr['price'] = 'yes';
 		}
 		if ( ! empty( $attr['sort'] ) && 'default' === $attr['sort'] ) {
-			unset( $attr['sort'] ); 
+			unset( $attr['sort'] );
 		}
 		$params = wp_parse_args( $attr );
 		return feedzy_rss( $params );
