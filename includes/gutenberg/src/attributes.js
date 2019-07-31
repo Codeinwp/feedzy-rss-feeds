@@ -31,6 +31,10 @@ const attributes = {
 		type: 'boolean',
 		default: true,
 	},
+	metafields: {
+		type: 'string',
+		default: '',
+	},
 	summary: {
 		type: 'boolean',
 		default: true,

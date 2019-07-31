@@ -159,10 +159,11 @@ const Inspector = props => {
 						onChange={ props.onTitle }
 					/>
 
-					<ToggleControl
-						label={ __( 'Display post date & author?' ) }
-						checked={ !! props.attributes.meta }
-						onChange={ props.toggleMeta }
+					<TextControl
+						label={ __( 'Should we display additional meta fields out of author, date and time? (comma-separated list).' ) }
+						placeholder={ __( '(eg: author, date, time, tz=local) ') }
+						value={ props.attributes.metafields }
+						onChange={ props.changeMeta }
 					/>
 
 					<ToggleControl

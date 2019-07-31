@@ -108,7 +108,9 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 					),
 					'meta'           => array(
 						'type'    => 'boolean',
-						'default' => true,
+					),
+					'metafields'      => array(
+						'type'    => 'string',
 					),
 					'summary'        => array(
 						'type'    => 'boolean',
@@ -164,6 +166,9 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		}
 		if ( ! empty( $attr['meta'] ) ) {
 			$attr['meta'] = 'yes';
+		}
+		if ( ! empty( $attr['metafields'] ) ) {
+			$attr['meta'] = $attr['metafields'];
 		}
 		if ( ! empty( $attr['summary'] ) ) {
 			$attr['summary'] = 'yes';
