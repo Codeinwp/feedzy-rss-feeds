@@ -920,6 +920,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$date_time   = $item->get_date( 'U' );
 			if ( $meta_args['tz'] === 'local' ) {
 				$date_time  = get_date_from_gmt( $item->get_date( 'Y-m-d H:i:s' ), 'U' );
+				// strings such as Asia/Kolkata need special handling.
+				$tz = get_option( 'timezone_string' );
+				if ( $tz ) {
+					$date_time = gmdate( 'U', $date_time + get_option( 'gmt_offset' ) * HOUR_IN_SECONDS );
+				}
 			} elseif ( $meta_args['tz'] === 'no' ) {
 				// change the tz component of the date to UTC.
 				$raw_date = preg_replace( '/\++(\d\d\d\d)/', '+0000', $item->get_date( '' ) );
