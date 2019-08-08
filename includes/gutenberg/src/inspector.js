@@ -16,6 +16,8 @@ const {
 } = wp.editor;
 
 const {
+	BaseControl,
+	ExternalLink,
 	PanelBody,
 	RangeControl,
 	TextControl,
@@ -159,12 +161,18 @@ const Inspector = props => {
 						onChange={ props.onTitle }
 					/>
 
-					<TextControl
-						label={ __( 'Should we display additional meta fields out of author, date and time? (comma-separated list).' ) }
-						placeholder={ __( '(eg: author, date, time, tz=local) ') }
-						value={ props.attributes.metafields }
-						onChange={ props.changeMeta }
-					/>
+					<BaseControl>
+						<TextControl
+							label={ __( 'Should we display additional meta fields out of author, date and time? (comma-separated list).' ) }
+							placeholder={ __( '(eg: author, date, time, tz=local) ') }
+							value={ props.attributes.metafields }
+							onChange={ props.changeMeta }
+						/>
+
+						<ExternalLink href="https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed">
+							{ __( 'You can find more info about available meta field values here.' ) }
+						</ExternalLink>
+					</BaseControl>
 
 					<ToggleControl
 						label={ __( 'Display post description?' ) }
