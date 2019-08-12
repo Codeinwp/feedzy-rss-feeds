@@ -69,6 +69,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		);
 
 		// Enqueue editor block styles
+		wp_enqueue_style( 'feedzy-block-css', FEEDZY_ABSURL . 'css/feedzy-rss-feeds.css', '', $version );
 		wp_enqueue_style( 'feedzy-gutenberg-block-css', FEEDZY_ABSURL . 'includes/gutenberg/build/block.css', '', $version );
 	}
 
@@ -97,7 +98,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 					),
 					'sort'           => array(
 						'type'    => 'string',
-						'default' => 'date_desc',
+						'default' => 'default',
 					),
 					'target'         => array(
 						'type'    => 'string',
@@ -108,7 +109,9 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 					),
 					'meta'           => array(
 						'type'    => 'boolean',
-						'default' => true,
+					),
+					'metafields'      => array(
+						'type'    => 'string',
 					),
 					'summary'        => array(
 						'type'    => 'boolean',
@@ -165,11 +168,17 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		if ( ! empty( $attr['meta'] ) ) {
 			$attr['meta'] = 'yes';
 		}
+		if ( ! empty( $attr['metafields'] ) ) {
+			$attr['meta'] = $attr['metafields'];
+		}
 		if ( ! empty( $attr['summary'] ) ) {
 			$attr['summary'] = 'yes';
 		}
 		if ( ! empty( $attr['price'] ) ) {
 			$attr['price'] = 'yes';
+		}
+		if ( ! empty( $attr['sort'] ) && 'default' === $attr['sort'] ) {
+			unset( $attr['sort'] );
 		}
 		$params = wp_parse_args( $attr );
 		return feedzy_rss( $params );

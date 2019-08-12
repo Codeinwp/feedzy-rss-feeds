@@ -16,7 +16,7 @@ Layout For Tutorial Page of Feedzy RSS Feeds
 				<p>You can view our documentation <a href="https://docs.themeisle.com/article/658-feedzy-rss-feeds" target="_blank">here</a></p>
 			</div>
 			<div class="fz-feature-image">
-				<iframe width="603" height="508" src="https://www.youtube.com/embed/GEFAY2IxxEc?start=84" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+				<iframe width="600" height="300" src="https://www.youtube.com/embed/GEFAY2IxxEc?start=84" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 			</div>
 		</div>
 
@@ -29,7 +29,7 @@ Layout For Tutorial Page of Feedzy RSS Feeds
 				<p>You can view our documentation <a href="https://docs.themeisle.com/article/742-how-to-import-posts-from-feeds-in-feedzy" target="_blank">here</a></p>		
 			</div>
 			<div class="fz-feature-image">
-				<iframe width="603" height="508" src="https://www.youtube.com/embed/Fzx5W_PfQsQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+				<iframe width="600" height="300" src="https://www.youtube.com/embed/Fzx5W_PfQsQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 			</div>
 		</div>
 		<?php } ?>
