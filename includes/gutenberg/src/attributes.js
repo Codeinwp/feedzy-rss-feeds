@@ -18,7 +18,7 @@ const attributes = {
 	},
 	sort: {
 		type: 'string',
-		default: 'date_desc',
+		default: 'default',
 	},
 	target: {
 		type: 'string',
@@ -30,6 +30,10 @@ const attributes = {
 	meta: {
 		type: 'boolean',
 		default: true,
+	},
+	metafields: {
+		type: 'string',
+		default: '',
 	},
 	summary: {
 		type: 'boolean',
