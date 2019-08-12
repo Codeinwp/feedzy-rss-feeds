@@ -1,4 +1,13 @@
 
+ ### v3.3.8 - 2019-08-12 
+ **Changes:** 
+ * - Fix issue with AMP pages not showing image
+* - In the short code, separate behavior of meta into author, date and time
+* - Add option to remove title entirely
+* - Don't show [...] if summary is shorter than required
+* - Add option to use default sorting when generating the short code
+* - Add ability to show date/time in local timezone
+ 
  ### v3.3.7 - 2019-06-15 
  **Changes:** 
  * Fix: Not working in the block editor

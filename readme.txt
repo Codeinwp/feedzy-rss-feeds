@@ -151,6 +151,7 @@ This plugin is maintained and supported by Themeisle, check out some of the othe
 
 
 
+
 = Is it responsive friendly? =
 
 Yes it is.
@@ -411,6 +412,12 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = How to link featured image to original post in Slider Revolution = 
  [https://docs.themeisle.com/article/1069-how-to-link-featured-image-to-original-post-in-slider-revolution](https://docs.themeisle.com/article/1069-how-to-link-featured-image-to-original-post-in-slider-revolution) 
 
+ = How to display author, date, time (or a combination) from the feed = 
+ [https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed](https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed) 
+
+ = How to get videos from YouTube with Feedzy = 
+ [https://docs.themeisle.com/article/1113-how-to-get-videos-from-youtube-with-feedzy](https://docs.themeisle.com/article/1113-how-to-get-videos-from-youtube-with-feedzy) 
+
  == Screenshots ==
 
 1. Simple example
@@ -420,6 +427,16 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 == Changelog ==
+= 3.3.8 - 2019-08-12  = 
+
+* - Fix issue with AMP pages not showing image
+* - In the short code, separate behavior of meta into author, date and time
+* - Add option to remove title entirely
+* - Don't show [...] if summary is shorter than required
+* - Add option to use default sorting when generating the short code
+* - Add ability to show date/time in local timezone
+
+
 = 3.3.7 - 2019-06-15  = 
 
 * Fix: Not working in the block editor
