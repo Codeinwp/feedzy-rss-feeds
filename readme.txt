@@ -427,6 +427,11 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 == Changelog ==
+= 3.3.9 - 2019-08-13  = 
+
+* Fix PHP notice that shows up if meta=no
+
+
 = 3.3.8 - 2019-08-12  = 
 
 * - Fix issue with AMP pages not showing image

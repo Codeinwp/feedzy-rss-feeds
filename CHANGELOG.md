@@ -1,4 +1,8 @@
 
+ ### v3.3.9 - 2019-08-13 
+ **Changes:** 
+ * Fix PHP notice that shows up if meta=no
+ 
  ### v3.3.8 - 2019-08-12 
  **Changes:** 
  * - Fix issue with AMP pages not showing image
