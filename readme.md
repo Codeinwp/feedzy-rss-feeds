@@ -134,13 +134,13 @@ FEEDZY RSS Feeds supports any additional library and takes up minimal space in y
 
 This plugin is maintained and supported by Themeisle, check out some of the other <a href="http://themeisle.com/wordpress-plugins/" rel="nofollow">WordPress plugins</a> and <a href="http://themeisle.com/wordpress-themes/free/" rel="nofollow">free themes</a> we've developed.
 
-
 ## Installation ##
 
 1. Upload and activate the plugin (or install it through the WP admin console)
 2. Insert shortcode ! ;-)
 
 ## Frequently Asked Questions ##
+
 
 
 
@@ -384,6 +384,33 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = How to import iTunes audio feed = 
  [https://docs.themeisle.com/article/1041-how-to-import-itunes-audio-feed](https://docs.themeisle.com/article/1041-how-to-import-itunes-audio-feed) 
 
+ = Feedzy RSS Feeds Documentation = 
+ [https://docs.themeisle.com/article/658-feedzy-rss-feeds](https://docs.themeisle.com/article/658-feedzy-rss-feeds) 
+
+ = How to check whether the RSS feed is valid or not in Feedzy = 
+ [https://docs.themeisle.com/article/716-feedzy-how-to-check-whether-the-rss-feed-is-valid-or-not](https://docs.themeisle.com/article/716-feedzy-how-to-check-whether-the-rss-feed-is-valid-or-not) 
+
+ = How to change thumbs size and aspect ratio Feedzy = 
+ [https://docs.themeisle.com/article/551-how-to-change-thumbs-size-and-aspect-ratio](https://docs.themeisle.com/article/551-how-to-change-thumbs-size-and-aspect-ratio) 
+
+ = How to use proxy settings in Feedzy = 
+ [https://docs.themeisle.com/article/714-how-to-use-proxy-settings-in-feezy](https://docs.themeisle.com/article/714-how-to-use-proxy-settings-in-feezy) 
+
+ = How to decode item title = 
+ [https://docs.themeisle.com/article/548-how-to-decode-item-title-with](https://docs.themeisle.com/article/548-how-to-decode-item-title-with) 
+
+ = How to add affiliate referrals to feed URLs in Feedzy = 
+ [https://docs.themeisle.com/article/715-feedzy-how-to-add-affiliate-referrals-to-feed-urls](https://docs.themeisle.com/article/715-feedzy-how-to-add-affiliate-referrals-to-feed-urls) 
+
+ = How to add rel="nofollow" to feed links = 
+ [https://docs.themeisle.com/article/839-how-to-add-rel-nofollow-to-feed-links](https://docs.themeisle.com/article/839-how-to-add-rel-nofollow-to-feed-links) 
+
+ = How to import iTunes audio feed = 
+ [https://docs.themeisle.com/article/1041-import-itunes-audio-feed](https://docs.themeisle.com/article/1041-import-itunes-audio-feed) 
+
+ = How to link featured image to original post in Slider Revolution = 
+ [https://docs.themeisle.com/article/1069-how-to-link-featured-image-to-original-post-in-slider-revolution](https://docs.themeisle.com/article/1069-how-to-link-featured-image-to-original-post-in-slider-revolution) 
+
  == Screenshots ==
 
 1. Simple example
@@ -393,6 +420,16 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 ## Changelog ##
+### 3.3.8 - 2019-08-12  ###
+
+* - Fix issue with AMP pages not showing image
+* - In the short code, separate behavior of meta into author, date and time
+* - Add option to remove title entirely
+* - Don't show [...] if summary is shorter than required
+* - Add option to use default sorting when generating the short code
+* - Add ability to show date/time in local timezone
+
+
 ### 3.3.7 - 2019-06-15  ###
 
 * Fix: Not working in the block editor
