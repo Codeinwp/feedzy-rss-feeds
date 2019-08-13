@@ -898,7 +898,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		// Filter: feedzy_meta_args
 		$meta_args    = apply_filters( 'feedzy_meta_args', $meta_args, $feed_url, $item );
-		$content_meta = '';
+		$content_meta = $content_meta_date = '';
 		if ( $meta_args['author'] || $meta_args['date'] || $meta_args['time'] ) {
 			$content_meta = '';
 			if ( $item->get_author() && $meta_args['author'] ) {
