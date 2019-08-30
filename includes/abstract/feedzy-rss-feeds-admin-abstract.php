@@ -950,7 +950,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$description    = apply_filters( 'feedzy_summary_input', $description, $item->get_content(), $feed_url, $item );
 			$content_summary = $description;
 			if ( is_numeric( $sc['summarylength'] ) && strlen( $description ) > $sc['summarylength'] ) {
-				$content_summary = preg_replace( '/\s+?(\S+)?$/', '', substr( $description, 0, $sc['summarylength'] ) ) . ' […]';
+				$content_summary = preg_replace( '/\s+?(\S+)?$/', '', substr( $description, 0, $sc['summarylength'] ) ) . ' [&hellip;]';
 			}
 			$content_summary = apply_filters( 'feedzy_summary_output', $content_summary, $new_link, $feed_url, $item );
 		}
