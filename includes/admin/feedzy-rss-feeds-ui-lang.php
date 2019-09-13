@@ -93,7 +93,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 				'title'    => __( 'Feed Source', 'feedzy-rss-feeds' ),
 				'elements' => array(
 					'feeds'      => array(
-						'label'       => __( 'The feed(s) URL (comma-separated list).', 'feedzy-rss-feeds' ) . ' ' . __( 'Check feed before insert.', 'feedzy-rss-feeds' ),
+						'label'       => __( 'The feed(s) URL (comma-separated list).', 'feedzy-rss-feeds' ) . ' ' . sprintf( __( 'Click %1$shere%2$s to check if feed is valid.', 'feedzy-rss-feeds' ), '<a href="https://validator.w3.org/feed/" target="_new">', '</a>' ) . '<br><b>' . __( 'Invalid feeds will NOT display items.', 'feedzy-rss-feeds' ) . '</b>',
 						'placeholder' => __( 'Feed URL', 'feedzy-rss-feeds' ),
 						'type'        => 'text',
 						'value'       => '',
@@ -156,6 +156,10 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'type'  => 'select',
 						'value' => '',
 						'opts'  => array(
+							''  => array(
+								'label' => __( 'Default', 'feedzy-rss-feeds' ),
+								'value' => '',
+							),
 							'date_desc'  => array(
 								'label' => __( 'Date Descending', 'feedzy-rss-feeds' ),
 								'value' => 'date_desc',
@@ -232,25 +236,16 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						),
 					),
 					'title'          => array(
-						'label'       => __( 'Trim the title of the item after X characters.', 'feedzy-rss-feeds' ),
+						'label'       => __( 'Trim the title of the item after X characters. A value of 0 will remove the title.', 'feedzy-rss-feeds' ),
 						'placeholder' => __( '(eg: 160)', 'feedzy-rss-feeds' ),
 						'type'        => 'text',
 						'value'       => '',
 					),
 					'meta'           => array(
-						'label' => __( 'Should we display the date of publication and the author name?', 'feedzy-rss-feeds' ),
-						'type'  => 'select',
+						'label' => sprintf( __( 'Should we display additional meta fields out of %1$sauthor%2$s, %3$sdate%4$s and %5$stime%6$s? (comma-separated list). View documentation %7$shere%8$s.', 'feedzy-rss-feeds' ), '<code>', '</code>', '<code>', '</code>', '<code>', '</code>', '<a href="https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed" target="_new">', '</a>' ),
+						'placeholder' => __( '(eg: author, date, time, tz=local)', 'feedzy-rss-feeds' ),
+						'type'  => 'text',
 						'value' => '',
-						'opts'  => array(
-							'yes' => array(
-								'label' => __( 'Yes', 'feedzy-rss-feeds' ),
-								'value' => 'yes',
-							),
-							'no'  => array(
-								'label' => __( 'No', 'feedzy-rss-feeds' ),
-								'value' => 'no',
-							),
-						),
 					),
 					'summary'        => array(
 						'label' => __( 'Should we display a description (abstract) of the retrieved item?', 'feedzy-rss-feeds' ),
@@ -281,7 +276,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'disabled'    => feedzy_is_new(),
 					),
 					'keywords_ban'   => array(
-						'label'       => __( 'Exclude items if title or content contains specific keyword(s) (comma-separated list/case sensitive). ', 'feedzy-rss-feeds' ),
+						'label'       => __( 'Exclude items if title contains specific keyword(s) (comma-separated list/case sensitive). ', 'feedzy-rss-feeds' ),
 						'placeholder' => __( '(eg: politics, gossip etc.)', 'feedzy-rss-feeds' ),
 						'type'        => 'text',
 						'value'       => '',
@@ -368,8 +363,8 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						),
 					),
 					'referral_url' => array(
-						'label'       => __( 'Referral URL parameters (w/o "?").', 'feedzy-rss-feeds' ),
-						'placeholder' => __( '(eg. promo_code=feedzy_is_awesome)', 'feedzy-rss-feeds' ),
+						'label'       => sprintf( __( 'Referral URL parameters as per %1$sthis document here%2$s', 'feedzy-rss-feeds' ), '<a href="https://docs.themeisle.com/article/1073-how-to-add-referral-parameters-in-feedzy" target="_blank">', '</a>' ),
+						'placeholder' => '',
 						'type'        => 'text',
 						'disabled'    => true,
 						'value'       => '',

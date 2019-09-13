@@ -2,7 +2,7 @@
  * feedzy-rss-feeds.css
  * Feedzy RSS Feed
  * Copyright: (c) 2016 Themeisle, themeisle.com
- * Version: 3.3.6
+ * Version: 3.3.10
  * Plugin Name: FEEDZY RSS Feeds
  * Plugin URI: http://themeisle.com/plugins/feedzy-rss-feeds/
  * Author: Themeisle
@@ -35,6 +35,7 @@
 	position: relative;
 	border: none;
 	text-decoration: none;
+	max-width: 100%;
 }
 
 .feedzy-rss .rss_item .rss_image span {
@@ -82,25 +83,6 @@
 	padding: 0;
 }
 
-/* Default */
-/*
-.feedzy-rss .feedzy-default .rss_image,
-.feedzy-rss .feedzy-default .rss_content_wrap {
-	display: inline-block;
-	width: 100%;
-}
-
-.feedzy-rss .feedzy-default .rss_image {
-	float: none;
-	padding: 0;
-	text-align: center;
-	width: 100%;
-}
-
-.feedzy-rss .feedzy-default .rss_content_wrap {
-	margin: 10px 0 0;
-	padding: 0;
-}*/
 
 /* Style1 */
 .feedzy-rss .feedzy-style1 .rss_image,

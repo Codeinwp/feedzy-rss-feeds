@@ -80,7 +80,7 @@ class feedzy_wp_widget extends WP_Widget {
 	public function form( $instance ) {
 		$screen = get_current_screen();
 		// to prevent conflicts with plugins such as siteorigin page builder that call this function from outside of the 'widgets' screen.
-		if ( ! empty( $screen ) && 'widgets' !== $screen->id ) {
+		if ( ! empty( $screen ) && ! in_array( $screen->id, apply_filters( 'feedzy_allow_widgets_in_screen', array( 'widgets', 'customize' ) ), true ) ) {
 			return;
 		}
 		$instance    = wp_parse_args( $instance, $this->get_widget_defaults() );
