@@ -1,6 +1,13 @@
 language: php
 sudo: false
 dist: trusty
+addons:
+  apt:
+    packages:
+      # Ubuntu 16+ does not install this dependency by default, so we need to install it ourselves
+      - libgconf-2-4
+services:
+    - docker
 matrix:
   fast_finish: true
   include:
@@ -15,6 +22,13 @@ matrix:
     - php: 5.3
       env: WP_VERSION=5.1
       dist: precise
+    - name: Cypress
+      language: node_js
+      node_js:
+        - 10.8
+      script:
+        - docker-compose -f docker-compose.travis.yml up -d
+        - chmod +x ./bin/run-e2e-tests.sh ./bin/wp-init.sh && ./bin/wp-init.sh && ./bin/run-e2e-tests.sh
 branches:
   except:
   - "/^*-v[0-9]/"
