@@ -88,6 +88,11 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 	 * @return array|mixed|void
 	 */
 	public static function get_form_elements() {
+		$meta       = sprintf( __( 'Should we display additional meta fields out of %1$sauthor%2$s, %3$sdate%4$s and %5$stime%6$s? (comma-separated list). View documentation %7$shere%8$s.', 'feedzy-rss-feeds' ), '<code>', '</code>', '<code>', '</code>', '<code>', '</code>', '<a href="https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed" target="_new">', '</a>' );
+		if ( has_filter( 'feedzy_retrieve_categories' ) ) {
+			$meta       = sprintf( __( 'Should we display additional meta fields out of %1$sauthor%2$s, %3$sdate%4$s, %5$stime%6$s and %7$scategories%8$s? (comma-separated list). View documentation %9$shere%10$s.', 'feedzy-rss-feeds' ), '<code>', '</code>', '<code>', '</code>', '<code>', '</code>', '<code>', '</code>', '<a href="https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed" target="_new">', '</a>' );
+		}
+
 		$elements = array(
 			'section_feed'  => array(
 				'title'    => __( 'Feed Source', 'feedzy-rss-feeds' ),
@@ -242,7 +247,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'value'       => '',
 					),
 					'meta'           => array(
-						'label' => sprintf( __( 'Should we display additional meta fields out of %1$sauthor%2$s, %3$sdate%4$s and %5$stime%6$s? (comma-separated list). View documentation %7$shere%8$s.', 'feedzy-rss-feeds' ), '<code>', '</code>', '<code>', '</code>', '<code>', '</code>', '<a href="https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed" target="_new">', '</a>' ),
+						'label' => $meta,
 						'placeholder' => __( '(eg: author, date, time, tz=local)', 'feedzy-rss-feeds' ),
 						'type'  => 'text',
 						'value' => '',
