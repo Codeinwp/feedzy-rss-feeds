@@ -18,7 +18,9 @@
   },
   "scripts": {
     "dev": "cross-env BABEL_ENV=default webpack --watch",
-    "build": "cross-env BABEL_ENV=default NODE_ENV=production webpack"
+    "build": "cross-env BABEL_ENV=default NODE_ENV=production webpack",
+    "cypress:open": "cypress open",
+    "cypress:run": "cd cypress && docker-compose up --exit-code-from cypress"
   },
   "pot": {
     "reportmsgidbugsto": "https://github.com/Codeinwp/feedzy-rss-feeds/issues",
@@ -52,6 +54,7 @@
     "raw-loader": "^0.5.1",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.19.1",
-    "webpack": "^3.10.0"
+    "webpack": "^3.10.0",
+    "cypress": "^3.2.0"
   }
 }
