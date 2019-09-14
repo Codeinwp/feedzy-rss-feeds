@@ -156,7 +156,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function feedzy_summary_input_filter( $description, $content, $feed_url ) {
 		$description = trim( strip_tags( $description ) );
-		$description = trim( str_replace( '[&hellip;]', '', $description ) );
+		$description = trim( str_replace( array( '[â€¦]', '[…]', '[&hellip;]' ), '', $description ) );
 
 		return $description;
 	}
