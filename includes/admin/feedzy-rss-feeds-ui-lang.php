@@ -88,6 +88,11 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 	 * @return array|mixed|void
 	 */
 	public static function get_form_elements() {
+		$meta       = sprintf( __( 'Should we display additional meta fields out of %1$sauthor%2$s, %3$sdate%4$s and %5$stime%6$s? (comma-separated list). View documentation %7$shere%8$s.', 'feedzy-rss-feeds' ), '<code>', '</code>', '<code>', '</code>', '<code>', '</code>', '<a href="https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed" target="_new">', '</a>' );
+		if ( has_filter( 'feedzy_retrieve_categories' ) ) {
+			$meta       = sprintf( __( 'Should we display additional meta fields out of %1$sauthor%2$s, %3$sdate%4$s, %5$stime%6$s and %7$scategories%8$s? (comma-separated list). View documentation %9$shere%10$s.', 'feedzy-rss-feeds' ), '<code>', '</code>', '<code>', '</code>', '<code>', '</code>', '<code>', '</code>', '<a href="https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed" target="_new">', '</a>' );
+		}
+
 		$elements = array(
 			'section_feed'  => array(
 				'title'    => __( 'Feed Source', 'feedzy-rss-feeds' ),
@@ -242,7 +247,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'value'       => '',
 					),
 					'meta'           => array(
-						'label' => sprintf( __( 'Should we display additional meta fields out of %1$sauthor%2$s, %3$sdate%4$s and %5$stime%6$s? (comma-separated list). View documentation %7$shere%8$s.', 'feedzy-rss-feeds' ), '<code>', '</code>', '<code>', '</code>', '<code>', '</code>', '<a href="https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed" target="_new">', '</a>' ),
+						'label' => $meta,
 						'placeholder' => __( '(eg: author, date, time, tz=local)', 'feedzy-rss-feeds' ),
 						'type'  => 'text',
 						'value' => '',
@@ -347,7 +352,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 				'description' => __( 'Get access to more options and customizations with full version of Feedzy RSS Feeds . Use existing templates or extend them and make them your own.', 'feedzy-rss-feeds' ) . '<br/>' . '<a href="' . FEEDZY_UPSELL_LINK . '" target="_blank"><small>' . __( 'See more features of Feedzy RSS Feeds ', 'feedzy-rss-feeds' ) . '</small></a>',
 				'elements'    => array(
 					'price'        => array(
-						'label'    => __( 'Should we display the price from the feed if it is available? <br/> You can read about how to extract price from a custom tag %1$shere%2$s', 'feedzy-rss-feeds' ),
+						'label'    => sprintf( __( 'Should we display the price from the feed if it is available? <br/> You can read about how to extract price from a custom tag %1$shere%2$s', 'feedzy-rss-feeds' ), '<a href="https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy" target="_blank">', '</a>' ),
 						'type'     => 'select',
 						'disabled' => true,
 						'value'    => '',

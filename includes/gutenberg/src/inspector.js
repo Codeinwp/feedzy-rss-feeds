@@ -10,7 +10,7 @@ import RadioImageControl from './radio-image-control/';
  */
 const { __ } = wp.i18n;
 
-const { 
+const {
 	InspectorControls,
 	MediaUpload,
 } = wp.editor;
@@ -163,8 +163,8 @@ const Inspector = props => {
 
 					<BaseControl>
 						<TextControl
-							label={ __( 'Should we display additional meta fields out of author, date and time? (comma-separated list).' ) }
-							placeholder={ __( '(eg: author, date, time, tz=local) ') }
+							label={ feedzyjs.isPro ? __( 'Should we display additional meta fields out of author, date, time or categories? (comma-separated list).' ) : __( 'Should we display additional meta fields out of author, date or time? (comma-separated list).' ) }
+							placeholder={ feedzyjs.isPro ? __( '(eg: author, date, time, tz=local, categories)' ) : __( '(eg: author, date, time, tz=local)' ) }
 							value={ props.attributes.metafields }
 							onChange={ props.changeMeta }
 						/>
@@ -325,7 +325,7 @@ const Inspector = props => {
 				) )
 			] }
 		</InspectorControls>
-    )   
+    )
 }
 
 export default Inspector;

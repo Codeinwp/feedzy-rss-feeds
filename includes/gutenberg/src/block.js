@@ -247,6 +247,7 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 							const itemDateTime = ( item['date'] || '' ) + ' ' + ( item['time'] || '' ) + ' UTC +0000';
 							let itemDate = unescapeHTML( item['date'] ) || '';
 							let itemTime = unescapeHTML( item['time'] ) || '';
+							let categories = unescapeHTML( item['categories'] ) || '';
 							if ( metaExists( 'tz=local' ) ) {
 								itemDate = date( 'F jS, \o', itemDateTime );
 								itemTime = date( 'h:i A', itemDateTime );
@@ -290,6 +291,12 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 														__( 'at' ),
 														' ',
 														unescapeHTML( itemTime )
+													] }
+													{ ( feedzyjs.isPro && metaExists( 'categories' ) ) && [
+														' ',
+														__( 'in' ),
+														' ',
+														unescapeHTML( categories )
 													] }
 												</small>
 											) }
