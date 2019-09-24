@@ -164,7 +164,7 @@ const Inspector = props => {
 					<BaseControl>
 						<TextControl
 							label={ feedzyjs.isPro ? __( 'Should we display additional meta fields out of author, date, time or categories? (comma-separated list).' ) : __( 'Should we display additional meta fields out of author, date or time? (comma-separated list).' ) }
-							placeholder={ feedzyjs.isPro ? __( '(eg: author, date, time, tz=local or categories)' ) : __( '(eg: author, date, time, tz=local)' ) }
+							placeholder={ feedzyjs.isPro ? __( '(eg: author, date, time, tz=local, categories)' ) : __( '(eg: author, date, time, tz=local)' ) }
 							value={ props.attributes.metafields }
 							onChange={ props.changeMeta }
 						/>
