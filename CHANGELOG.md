@@ -1,4 +1,8 @@
 
+ ### v3.3.10 - 2019-08-20 
+ **Changes:** 
+ * Fix issue with undefined index: proxy
+ 
  ### v3.3.9 - 2019-08-13 
  **Changes:** 
  * Fix PHP notice that shows up if meta=no

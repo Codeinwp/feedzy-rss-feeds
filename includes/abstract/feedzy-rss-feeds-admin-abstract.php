@@ -156,7 +156,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function feedzy_summary_input_filter( $description, $content, $feed_url ) {
 		$description = trim( strip_tags( $description ) );
-		$description = trim( chop( $description, '[&hellip;]' ) );
+		$description = trim( str_replace( array( '[â€¦]', '[…]', '[&hellip;]' ), '', $description ) );
 
 		return $description;
 	}
@@ -309,7 +309,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'follow'         => '',
 				// strip title after X char. X can be 0 too, which will remove the title.
 				'title'          => '',
-				// yes (author, date, time), no (NEITHER), author, date, time,
+				// yes (author, date, time), no (NEITHER), author, date, time, categories
 				// tz=local (for date/time in blog time)
 				// tz=gmt (for date/time in UTC time, this is the default)
 				// tz=no (for date/time in the feed, without conversion)
@@ -880,6 +880,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'author'      => $sc['meta'] === 'yes' || strpos( $sc['meta'], 'author' ) !== false,
 			'date'        => $sc['meta'] === 'yes' || strpos( $sc['meta'], 'date' ) !== false,
 			'time'        => $sc['meta'] === 'yes' || strpos( $sc['meta'], 'time' ) !== false,
+			'categories'  => strpos( $sc['meta'], 'categories' ) !== false,
 			'tz'        => 'gmt',
 			'date_format' => get_option( 'date_format' ),
 			'time_format' => get_option( 'time_format' ),
@@ -899,50 +900,56 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		// Filter: feedzy_meta_args
 		$meta_args    = apply_filters( 'feedzy_meta_args', $meta_args, $feed_url, $item );
 		$content_meta = $content_meta_date = '';
-		if ( $meta_args['author'] || $meta_args['date'] || $meta_args['time'] ) {
-			$content_meta = '';
-			if ( $item->get_author() && $meta_args['author'] ) {
-				$author = $item->get_author();
-				if ( ! $author_name = $author->get_name() ) {
-					$author_name = $author->get_email();
-				}
 
-				$author_name = apply_filters( 'feedzy_author_name', $author_name, $feed_url, $item );
-
-				if ( $author_name ) {
-					$domain      = parse_url( $new_link );
-					$author_url   = '//' . $domain['host'];
-					$author_url   = apply_filters( 'feedzy_author_url', $author_url, $author_name, $feed_url, $item );
-					$content_meta .= __( 'by', 'feedzy-rss-feeds' ) . ' <a href="' . $author_url . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $author_name . '</a> ';
-				}
+		if ( $item->get_author() && $meta_args['author'] ) {
+			$author = $item->get_author();
+			if ( ! $author_name = $author->get_name() ) {
+				$author_name = $author->get_email();
 			}
 
-			$date_time   = $item->get_date( 'U' );
-			if ( $meta_args['tz'] === 'local' ) {
-				$date_time  = get_date_from_gmt( $item->get_date( 'Y-m-d H:i:s' ), 'U' );
-				// strings such as Asia/Kolkata need special handling.
-				$tz = get_option( 'timezone_string' );
-				if ( $tz ) {
-					$date_time = gmdate( 'U', $date_time + get_option( 'gmt_offset' ) * HOUR_IN_SECONDS );
-				}
-			} elseif ( $meta_args['tz'] === 'no' ) {
-				// change the tz component of the date to UTC.
-				$raw_date = preg_replace( '/\++(\d\d\d\d)/', '+0000', $item->get_date( '' ) );
-				$date = DateTime::createFromFormat( DATE_RFC2822, $raw_date );
-				$date_time  = $date->format( 'U' );
-			}
+			$author_name = apply_filters( 'feedzy_author_name', $author_name, $feed_url, $item );
 
-			$date_time   = apply_filters( 'feedzy_feed_timestamp', $date_time, $feed_url, $item );
-			$content_meta_date = $date_time;
-			if ( $meta_args['date'] && ! empty( $meta_args['date_format'] ) ) {
-				$content_meta_date = __( 'on', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $meta_args['date_format'], $date_time ) . ' ';
+			if ( $author_name ) {
+				$domain      = parse_url( $new_link );
+				$author_url   = '//' . $domain['host'];
+				$author_url   = apply_filters( 'feedzy_author_url', $author_url, $author_name, $feed_url, $item );
+				$content_meta .= __( 'by', 'feedzy-rss-feeds' ) . ' <a href="' . $author_url . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $author_name . '</a> ';
 			}
-
-			if ( $meta_args['time'] && ! empty( $meta_args['time_format'] ) ) {
-				$content_meta_date .= __( 'at', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $meta_args['time_format'], $date_time );
-			}
-			$content_meta .= $content_meta_date;
 		}
+
+		$date_time   = $item->get_date( 'U' );
+		if ( $meta_args['tz'] === 'local' ) {
+			$date_time  = get_date_from_gmt( $item->get_date( 'Y-m-d H:i:s' ), 'U' );
+			// strings such as Asia/Kolkata need special handling.
+			$tz = get_option( 'timezone_string' );
+			if ( $tz ) {
+				$date_time = gmdate( 'U', $date_time + get_option( 'gmt_offset' ) * HOUR_IN_SECONDS );
+			}
+		} elseif ( $meta_args['tz'] === 'no' ) {
+			// change the tz component of the date to UTC.
+			$raw_date = preg_replace( '/\++(\d\d\d\d)/', '+0000', $item->get_date( '' ) );
+			$date = DateTime::createFromFormat( DATE_RFC2822, $raw_date );
+			$date_time  = $date->format( 'U' );
+		}
+
+		$date_time   = apply_filters( 'feedzy_feed_timestamp', $date_time, $feed_url, $item );
+		if ( $meta_args['date'] && ! empty( $meta_args['date_format'] ) ) {
+			$content_meta_date = __( 'on', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $meta_args['date_format'], $date_time ) . ' ';
+		}
+
+		if ( $meta_args['time'] && ! empty( $meta_args['time_format'] ) ) {
+			$content_meta_date .= __( 'at', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $meta_args['time_format'], $date_time ) . ' ';
+		}
+
+		$content_meta .= $content_meta_date;
+
+		if ( $meta_args['categories'] && has_filter( 'feedzy_retrieve_categories' ) ) {
+			$categories = apply_filters( 'feedzy_retrieve_categories', null, $item );
+			if ( ! empty( $categories ) ) {
+				$content_meta .= __( 'in', 'feedzy-rss-feeds' ) . ' ' . $categories . ' ';
+			}
+		}
+
 		$content_meta    = apply_filters( 'feedzy_meta_output', $content_meta, $feed_url, $item );
 		$content_summary = '';
 		if ( $sc['summary'] === 'yes' ) {
@@ -950,7 +957,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$description    = apply_filters( 'feedzy_summary_input', $description, $item->get_content(), $feed_url, $item );
 			$content_summary = $description;
 			if ( is_numeric( $sc['summarylength'] ) && strlen( $description ) > $sc['summarylength'] ) {
-				$content_summary = preg_replace( '/\s+?(\S+)?$/', '', substr( $description, 0, $sc['summarylength'] ) ) . ' […]';
+				$content_summary = preg_replace( '/\s+?(\S+)?$/', '', substr( $description, 0, $sc['summarylength'] ) ) . ' [&hellip;]';
 			}
 			$content_summary = apply_filters( 'feedzy_summary_output', $content_summary, $new_link, $feed_url, $item );
 		}

@@ -253,6 +253,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 			if ( feedzy_is_pro() ) {
 				$item_attrs = $pro->feedzy_pro_add_data_to_item( array(), $item );
 			}
+
 			array_push(
 				$feedy['items'], array(
 					'title'       => ( ( $item->get_title() ) ? $item->get_title() : null ),
@@ -265,6 +266,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 					'thumbnail'   => $admin->feedzy_retrieve_image( $item ),
 					'price'       => ( ( feedzy_is_pro() && $item_attrs['item_price'] ) ? $item_attrs['item_price'] : null ),
 					'media'       => ( ( feedzy_is_pro() && $item_attrs['item_media'] ) ? $item_attrs['item_media'] : null ),
+					'categories'  => ( ( feedzy_is_pro() && $item_attrs['item_categories'] ) ? $item_attrs['item_categories'] : null ),
 				)
 			);
 		}
