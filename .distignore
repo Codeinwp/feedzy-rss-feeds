@@ -21,3 +21,4 @@ key.enc
 includes/gutenberg/src
 webpack.config.js
 dist
+cypress

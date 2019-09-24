@@ -434,6 +434,11 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 == Changelog ==
+= 3.3.10 - 2019-08-20  = 
+
+* Fix issue with undefined index: proxy
+
+
 = 3.3.9 - 2019-08-13  = 
 
 * Fix PHP notice that shows up if meta=no
