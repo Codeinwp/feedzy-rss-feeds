@@ -218,6 +218,8 @@ class Feedzy_Rss_Feeds {
 		$plugin_widget = new feedzy_wp_widget();
 		self::$instance->loader->add_action( 'widgets_init', $plugin_widget, 'registerWidget', 10 );
 
+		$this->init_events();
+
 		if ( ! defined( 'TI_UNIT_TESTING' ) ) {
 			add_action(
 				'plugins_loaded', function () {
@@ -226,6 +228,19 @@ class Feedzy_Rss_Feeds {
 					}}
 			);
 		}
+	}
+
+	/**
+	 * Add the hooks for all event related information.
+	 *
+	 * @since    ?
+	 * @access   public
+	 */
+	public function init_events() {
+		self::$instance->loader->add_action( 'transition_post_status', self::$instance->admin, 'transition_post_status', 10, 3 );
+		self::$instance->loader->add_action( 'feedzy_add_event', self::$instance->admin, 'add_event', 10, 1 );
+		self::$instance->loader->add_filter( 'feedzy_rss_feeds_logger_data', self::$instance->admin, 'get_logger_data', 10, 1 );
+		self::$instance->loader->add_filter( 'feedzy_rss_feeds_logger_data_is_multiple', self::$instance->admin, 'get_logger_data_is_multiple', 10, 1 );
 	}
 
 	/**

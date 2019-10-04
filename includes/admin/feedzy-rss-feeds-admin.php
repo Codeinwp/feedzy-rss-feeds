@@ -571,6 +571,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @access  public
 	 */
 	public function on_activation( $plugin ) {
+		do_action( 'feedzy_add_event', array( 'name' => 'activate' ) );
+
 		if ( defined( 'TI_UNIT_TESTING' ) ) {
 			return;
 		}
@@ -581,5 +583,82 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 	}
 
+	/**
+	 * Does the logger need to create multiple rows?
+	 *
+	 * @access  public
+	 */
+	public function get_logger_data_is_multiple( $dummy = false ) {
+		return true;
+	}
+
+	/**
+	 * Get the logger data.
+	 *
+	 * @access  public
+	 */
+	public function get_logger_data( $data ) {
+		$data = get_transient( 'feedzy_data' );
+		delete_transient( 'feedzy_data' );
+		return $data;
+	}
+
+	/**
+	 * Add the events that the logger can later act upon.
+	 *
+	 * @access  public
+	 */
+	public function add_event( $event ) {
+		$data = get_transient( 'feedzy_data' );
+		if ( empty( $data ) ) {
+			$data = array();
+		}
+		$datum  = array(
+			'event' => $event['name'],
+			'time'  => current_time( 'timestamp' ),
+			'data'  => array_key_exists( 'data', $event ) ? $event['data'] : null,
+			'id'    => site_url() . '-' . get_current_user_id(),
+			'site'  => site_url(),
+			'type'  => feedzy_is_pro() ? 1 : 0,
+			'license' => apply_filters( 'feedzy_rss_feeds_pro_license_status', '' ),
+		);
+		error_log( 'adding event ' . print_r( $datum, true ) );
+		$data[] = $datum;
+		set_transient( 'feedzy_data', $data );
+	}
+
+	/**
+	 * Monitor events for post transitions for adding to the logger.
+	 *
+	 * @access  public
+	 */
+	public function transition_post_status( $new_status, $old_status, $post ) {
+		switch ( $post->post_type ) {
+			case 'feedzy_categories':
+				do_action( 'feedzy_add_event', array( 'name' => 'category_' . $new_status, 'data' => array( 'slug' => sanitize_title( $post->post_title ), 'feeds' => get_post_meta( $post->ID, 'feedzy_category_feed', true ) ) ) );
+				break;
+			case 'feedzy_imports':
+				$src    = get_post_meta( $post->ID, 'source', true );
+				$type   = 2;
+				if ( strpos( $src, 'http' ) !== false ) {
+					$type   = 1;
+				}
+				$include = get_post_meta( $post->ID, 'inc_key', true );
+				$exclude = get_post_meta( $post->ID, 'exc_key', true );
+				$data   = array(
+					'source' => $type,
+					'meta' => $src,
+					'filters' => array(
+						'include' => empty( $include ) ? 0 : 1,
+						'exclude' => empty( $exclude ) ? 0 : 1,
+						'count' => get_post_meta( $post->ID, 'import_feed_limit', true ),
+					),
+					'delete' => get_post_meta( $post->ID, 'import_feed_delete_days', true ),
+					'active' => $post->post_status === 'publish' ? 1 : 0,
+				);
+				do_action( 'feedzy_add_event', array( 'name' => 'import_' . $new_status, 'data' => $data ) );
+				break;
+		}
+	}
 
 }

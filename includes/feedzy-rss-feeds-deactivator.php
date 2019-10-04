@@ -30,7 +30,7 @@ class Feedzy_Rss_Feeds_Deactivator {
 	 * @access   public
 	 */
 	public static function deactivate() {
-
+		do_action( 'feedzy_add_event', array( 'name' => 'deactivate' ) );
 	}
 
 }
