@@ -22,3 +22,6 @@ includes/gutenberg/src
 webpack.config.js
 dist
 cypress
+cypress.json
+cypress.env.json.template
+docker-compose.travis.yml
