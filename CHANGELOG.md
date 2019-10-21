@@ -1,4 +1,10 @@
 
+ ### v3.3.11 - 2019-09-24 
+ **Changes:** 
+ * Fix issue with replacing ellipsis
+* Fix issue in widget where error message cannot be overridden
+* Fix issues with some summaries getting truncated
+ 
  ### v3.3.10 - 2019-08-20 
  **Changes:** 
  * Fix issue with undefined index: proxy

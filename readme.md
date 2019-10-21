@@ -427,6 +427,13 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 ## Changelog ##
+### 3.3.11 - 2019-09-24  ###
+
+* Fix issue with replacing ellipsis
+* Fix issue in widget where error message cannot be overridden
+* Fix issues with some summaries getting truncated
+
+
 ### 3.3.10 - 2019-08-20  ###
 
 * Fix issue with undefined index: proxy
