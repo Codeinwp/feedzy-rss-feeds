@@ -46,6 +46,41 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	}
 
 	/**
+	 * Fetches the SDK logger data.
+	 *
+	 * @param array $data The default data that needs to be sent.
+	 *
+	 * @access public
+	 */
+	public function get_usage_data( $data ) {
+		global $wpdb;
+
+		// how many categories created
+		$categories = count( get_terms( array( 'taxonomy' => 'feedzy_categories' ) ) );
+		// imports
+		$imports    = array();
+		if ( feedzy_is_pro() ) {
+			$imports    = array(
+				// how many active imports are created
+				'publish' => count( get_posts( array( 'post_type' => 'feedzy_imports', 'post_status' => 'publish', 'numberposts' => 299, 'fields' => 'ids' ) ) ),
+				// how many draft imports are created
+				'draft' => count( get_posts( array( 'post_type' => 'feedzy_imports', 'post_status' => 'draft', 'numberposts' => 299, 'fields' => 'ids' ) ) ),
+				// how many posts were imported by the imports
+				'imported' => count( get_posts( array( 'post_type' => 'post', 'post_status' => array( 'publish', 'private', 'draft', 'trash' ), 'numberposts' => 2999, 'fields' => 'ids', 'meta_key' => 'feedzy', 'meta_value' => 1 ) ) ),
+			);
+		}
+		// how many posts contain the shortcode
+		$shortcodes = $wpdb->get_var( "SELECT count(*) FROM wp_posts WHERE post_status IN ('publish', 'private') AND post_content LIKE '%[feedzy-rss %'" );
+		$data = array(
+			'categories'    => $categories,
+			'imports'       => $imports,
+			'shortcodes'    => $shortcodes,
+		);
+
+		return $data;
+	}
+
+	/**
 	 * Defines the default error notice
 	 *
 	 * Logs error to the log file
