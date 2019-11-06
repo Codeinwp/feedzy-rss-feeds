@@ -59,23 +59,59 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$categories = count( get_terms( array( 'taxonomy' => 'feedzy_categories' ) ) );
 		// imports
 		$imports    = array();
+		$license    = 'free';
 		if ( feedzy_is_pro() ) {
-			$imports    = array(
-				// how many active imports are created
-				'publish' => count( get_posts( array( 'post_type' => 'feedzy_imports', 'post_status' => 'publish', 'numberposts' => 299, 'fields' => 'ids' ) ) ),
-				// how many draft imports are created
-				'draft' => count( get_posts( array( 'post_type' => 'feedzy_imports', 'post_status' => 'draft', 'numberposts' => 299, 'fields' => 'ids' ) ) ),
-				// how many posts were imported by the imports
-				'imported' => count( get_posts( array( 'post_type' => 'post', 'post_status' => array( 'publish', 'private', 'draft', 'trash' ), 'numberposts' => 2999, 'fields' => 'ids', 'meta_key' => 'feedzy', 'meta_value' => 1 ) ) ),
+			$license    = 'pro';
+			if ( apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) {
+				$license = 'agency';
+			} elseif ( apply_filters( 'feedzy_is_license_of_type', false, 'business' ) ) {
+				$license = 'business';
+			}
+
+			$integrations = array();
+			$settings   = get_option( 'feedzy-rss-feeds-settings' );
+			if ( 'agency' === $license && $settings ) {
+				if ( isset( $settings['spinnerchief_licence'] ) && 'yes' === $settings['spinnerchief_licence'] ) {
+					$integrations[] = 'spinnerchief';
+				}
+				if ( isset( $settings['wordai_licence'] ) && 'yes' === $settings['wordai_licence'] ) {
+					$integrations[] = 'wordai';
+				}
+			}
+
+			$imports    = apply_filters(
+				'feedzy_usage_data', array(
+					// how many active imports are created
+					'publish' => count( get_posts( array( 'post_type' => 'feedzy_imports', 'post_status' => 'publish', 'numberposts' => 299, 'fields' => 'ids' ) ) ),
+					// how many draft imports are created
+					'draft' => count( get_posts( array( 'post_type' => 'feedzy_imports', 'post_status' => 'draft', 'numberposts' => 299, 'fields' => 'ids' ) ) ),
+					// how many posts were imported by the imports
+					'imported' => count( get_posts( array( 'post_type' => 'post', 'post_status' => array( 'publish', 'private', 'draft', 'trash' ), 'numberposts' => 2999, 'fields' => 'ids', 'meta_key' => 'feedzy', 'meta_value' => 1 ) ) ),
+					// integrations
+					'integrations'  => $integrations,
+				)
 			);
 		}
+
+		$settings = apply_filters( 'feedzy_get_settings', null );
+		$config     = array();
+		if ( $settings ) {
+			if ( isset( $settings['proxy'] ) && is_array( $settings['proxy'] ) && ! empty( $settings['proxy'] ) && ! empty( array_filter( $settings['proxy'] ) ) ) {
+				$config[] = 'proxy';
+			}
+		}
+
 		// how many posts contain the shortcode
 		$shortcodes = $wpdb->get_var( "SELECT count(*) FROM wp_posts WHERE post_status IN ('publish', 'private') AND post_content LIKE '%[feedzy-rss %'" );
 		$data = array(
 			'categories'    => $categories,
 			'imports'       => $imports,
 			'shortcodes'    => $shortcodes,
+			'license'       => $license,
+			'config'        => $config,
 		);
+
+		// error_log(print_r($data,true));
 
 		return $data;
 	}
