@@ -218,6 +218,8 @@ class Feedzy_Rss_Feeds {
 		$plugin_widget = new feedzy_wp_widget();
 		self::$instance->loader->add_action( 'widgets_init', $plugin_widget, 'registerWidget', 10 );
 
+		self::$instance->loader->add_filter( 'feedzy_rss_feeds_logger_data', self::$instance->admin, 'get_usage_data', 10 );
+
 		if ( ! defined( 'TI_UNIT_TESTING' ) ) {
 			add_action(
 				'plugins_loaded', function () {
