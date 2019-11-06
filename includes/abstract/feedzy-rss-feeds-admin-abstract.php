@@ -96,7 +96,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$settings = apply_filters( 'feedzy_get_settings', null );
 		$config     = array();
 		if ( $settings ) {
-			if ( isset( $settings['proxy'] ) && is_array( $settings['proxy'] ) && ! empty( $settings['proxy'] ) && ! empty( array_filter( $settings['proxy'] ) ) ) {
+			$proxy = isset( $settings['proxy'] ) && is_array( $settings['proxy'] ) && ! empty( $settings['proxy'] ) ? array_filter( $settings['proxy'] ) : array();
+			if ( ! empty( $proxy ) ) {
 				$config[] = 'proxy';
 			}
 		}
