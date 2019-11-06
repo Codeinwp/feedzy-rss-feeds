@@ -112,8 +112,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'config'        => $config,
 		);
 
-		// error_log(print_r($data,true));
-
 		return $data;
 	}
 
