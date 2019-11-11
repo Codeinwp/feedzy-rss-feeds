@@ -714,7 +714,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$sc['keywords_ban'] = rtrim( $sc['keywords_ban'], ',' );
 			$sc['keywords_ban'] = array_map( 'trim', explode( ',', $sc['keywords_ban'] ) );
 		}
-		if ( ! empty( $sc['summarylength'] ) && ( ! ctype_digit( $sc['summarylength'] ) && ! is_numeric( $sc['summarylength'] )  ) ) {
+		if ( ! empty( $sc['summarylength'] ) && ( ! ctype_digit( $sc['summarylength'] ) && ! is_numeric( $sc['summarylength'] ) ) ) {
 			$sc['summarylength'] = '';
 		}
 		if ( empty( $sc['default'] ) ) {
