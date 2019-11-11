@@ -152,6 +152,7 @@ This plugin is maintained and supported by Themeisle, check out some of the othe
 
 
 
+
 ### Is it responsive friendly? ###
 
 Yes it is.
@@ -418,6 +419,9 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = How to get videos from YouTube with Feedzy = 
  [https://docs.themeisle.com/article/1113-how-to-get-videos-from-youtube-with-feedzy](https://docs.themeisle.com/article/1113-how-to-get-videos-from-youtube-with-feedzy) 
 
+ = How to use Feedzy with a shortcode = 
+ [https://docs.themeisle.com/article/1130-how-to-use-feedzy-with-a-shortcode](https://docs.themeisle.com/article/1130-how-to-use-feedzy-with-a-shortcode) 
+
  == Screenshots ==
 
 1. Simple example
@@ -427,6 +431,11 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 ## Changelog ##
+### 3.3.12 - 2019-11-11  ###
+
+* Tested up to 5.3
+
+
 ### 3.3.11 - 2019-09-24  ###
 
 * Fix issue with replacing ellipsis
