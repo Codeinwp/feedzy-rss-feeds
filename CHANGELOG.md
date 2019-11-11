@@ -1,4 +1,8 @@
 
+ ### v3.3.12 - 2019-11-11 
+ **Changes:** 
+ * Tested up to 5.3
+ 
  ### v3.3.11 - 2019-09-24 
  **Changes:** 
  * Fix issue with replacing ellipsis

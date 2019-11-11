@@ -153,6 +153,7 @@ This plugin is maintained and supported by Themeisle, check out some of the othe
 
 
 
+
 = Is it responsive friendly? =
 
 Yes it is.
@@ -422,6 +423,15 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = How to use Feedzy with a shortcode = 
  [https://docs.themeisle.com/article/1130-how-to-use-feedzy-with-a-shortcode](https://docs.themeisle.com/article/1130-how-to-use-feedzy-with-a-shortcode) 
 
+ = Feedzy RSS Feeds Documentation = 
+ [https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation](https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation) 
+
+ = How to use Feed to Post feature in Feedzy = 
+ [https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy](https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy) 
+
+ = Feedzy Troubleshooting Guide = 
+ [https://docs.themeisle.com/article/1155-feedzy-troubleshooting-guide](https://docs.themeisle.com/article/1155-feedzy-troubleshooting-guide) 
+
  == Screenshots ==
 
 1. Simple example
@@ -431,6 +441,11 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 == Changelog ==
+= 3.3.12 - 2019-11-11  = 
+
+* Tested up to 5.3
+
+
 = 3.3.11 - 2019-09-24  = 
 
 * Fix issue with replacing ellipsis
