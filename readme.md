@@ -3,7 +3,7 @@
 **Tags:** RSS feed, autoblogging, autoblog, rss aggregator, feed to post   
 **Requires at least:** 3.7  
 **Requires PHP:** 5.3  
-**Tested up to:** 5.2  
+**Tested up to:** 5.3  
 **Stable tag:** trunk  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
@@ -140,6 +140,7 @@ This plugin is maintained and supported by Themeisle, check out some of the othe
 2. Insert shortcode ! ;-)
 
 ## Frequently Asked Questions ##
+
 
 
 
@@ -418,6 +419,9 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = How to get videos from YouTube with Feedzy = 
  [https://docs.themeisle.com/article/1113-how-to-get-videos-from-youtube-with-feedzy](https://docs.themeisle.com/article/1113-how-to-get-videos-from-youtube-with-feedzy) 
 
+ = How to use Feedzy with a shortcode = 
+ [https://docs.themeisle.com/article/1130-how-to-use-feedzy-with-a-shortcode](https://docs.themeisle.com/article/1130-how-to-use-feedzy-with-a-shortcode) 
+
  == Screenshots ==
 
 1. Simple example
@@ -427,6 +431,18 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
 ## Changelog ##
+### 3.3.12 - 2019-11-11  ###
+
+* Tested up to 5.3
+
+
+### 3.3.11 - 2019-09-24  ###
+
+* Fix issue with replacing ellipsis
+* Fix issue in widget where error message cannot be overridden
+* Fix issues with some summaries getting truncated
+
+
 ### 3.3.10 - 2019-08-20  ###
 
 * Fix issue with undefined index: proxy
