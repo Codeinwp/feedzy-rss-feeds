@@ -934,7 +934,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 			$content_thumb = apply_filters( 'feedzy_thumb_output', $content_thumb, $feed_url, $sizes, $item );
 		}
-		$content_title = $item->get_title();
+		$content_title = html_entity_decode( $item->get_title(), ENT_QUOTES, 'UTF-8' );
 		if ( is_numeric( $sc['title'] ) ) {
 			$length = intval( $sc['title'] );
 			if ( $length > 0 && strlen( $content_title ) > $length ) {
