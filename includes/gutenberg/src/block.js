@@ -62,7 +62,7 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 			props.setAttributes( { target: value } );
 		};
 		const onTitle = value => {
-			props.setAttributes( { title: value } );
+			props.setAttributes( { title: Number( value ) } );
 		};
 		const changeMeta = value => {
 			props.setAttributes( { metafields: value } );
@@ -71,7 +71,7 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 			props.setAttributes( { summary: ! props.attributes.summary } );
 		};
 		const onSummaryLength = value => {
-			props.setAttributes( { summarylength: value } );
+			props.setAttributes( { summarylength: Number( value ) } );
 		};
 		const onKeywordsTitle = value => {
 			props.setAttributes( { keywords_title: value } );
@@ -86,7 +86,7 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 			props.setAttributes( { default: value } );
 		};
 		const onSize = value => {
-			props.setAttributes( { size: value } );
+			props.setAttributes( { size: Number( value ) } );
 		};
 		const onReferralURL = value => {
 			props.setAttributes( { referral_url: value } );
