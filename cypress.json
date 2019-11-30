@@ -2,6 +2,6 @@
   "env": {
     "shortcode": "[feedzy-rss feeds='https://s3.amazonaws.com/downloads.themeisle.com/sample-feed.xml' max='10' feed_title='yes' refresh='1_hours' meta='yes' summary='yes' price='yes' mapping='price=im:price' thumb='yes' keywords_title='God, Mendes, Cyrus' keywords_ban='Cyrus' template='style1']"
   },
-  "projectId": "vj4ftg",
-  "videoUploadOnPasses": false
+  "videoUploadOnPasses": false,
+  "projectId": "frqcxp"
 }
