@@ -600,6 +600,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 			// curl: (60) SSL certificate problem: unable to get local issuer certificate
 			if ( strpos( $error, 'SSL certificate' ) !== false ) {
+				do_action( 'themeisle_log_event', FEEDZY_NAME, 'Got an SSL Error, retrying by ignoring SSL', 'debug', __FILE__, __LINE__ );
 				$feed = $this->init_feed( $feed_url, $cache, $sc, false );
 			} elseif ( is_string( $feed_url ) || ( is_array( $feed_url ) && 1 === count( $feed_url ) ) ) {
 				do_action( 'themeisle_log_event', FEEDZY_NAME, 'Trying to use raw data', 'debug', __FILE__, __LINE__ );
