@@ -406,6 +406,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'error_empty'   => 'Feed has no items.',
 				// to disable amp support, use 'no'. This is currently not available as part of the shortcode tinymce form.
 				'amp'           => 'yes',
+				// paginate
+				'offset'		=> 0,
 			),
 			$atts,
 			'feedzy_default'
@@ -869,7 +871,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function get_feed_array( $feed_items, $sc, $feed, $feed_url, $sizes ) {
 		$count = 0;
-		$items = apply_filters( 'feedzy_feed_items', $feed->get_items(), $feed_url );
+		$items = apply_filters( 'feedzy_feed_items', $feed->get_items( $sc['offset'] ), $feed_url );
 		foreach ( (array) $items as $item ) {
 				$continue = apply_filters( 'feedzy_item_keyword', true, $sc, $item, $feed_url );
 			if ( $continue === true ) {
