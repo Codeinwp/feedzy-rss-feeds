@@ -406,6 +406,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'error_empty'   => 'Feed has no items.',
 				// to disable amp support, use 'no'. This is currently not available as part of the shortcode tinymce form.
 				'amp'           => 'yes',
+				// paginate
+				'offset'        => 0,
 			),
 			$atts,
 			'feedzy_default'
@@ -523,7 +525,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @return SimplePie
 	 */
-	private function init_feed( $feed_url, $cache, $sc ) {
+	private function init_feed( $feed_url, $cache, $sc, $allow_https = FEEDZY_ALLOW_HTTPS ) {
 		$unit_defaults = array(
 			'mins'  => MINUTE_IN_SECONDS,
 			'hours' => HOUR_IN_SECONDS,
@@ -540,7 +542,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		$feed = new Feedzy_Rss_Feeds_Util_SimplePie( $sc );
-		if ( ! FEEDZY_ALLOW_HTTPS ) {
+		if ( ! $allow_https ) {
 			$feed->set_curl_options(
 				array(
 					CURLOPT_SSL_VERIFYHOST => false,
@@ -573,7 +575,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$cloned_feed = clone $feed;
 
-		// set the url as the last step, because we need to be able to close this feed without the url being set
+		// set the url as the last step, because we need to be able to clone this feed without the url being set
 		// so that we can fall back to raw data in case of an error
 		$feed->set_feed_url( $feed_url );
 
@@ -598,7 +600,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! empty( $error ) ) {
 			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Error while parsing feed: %s', print_r( $error, true ) ), 'error', __FILE__, __LINE__ );
 
-			if ( is_string( $feed_url ) || ( is_array( $feed_url ) && 1 === count( $feed_url ) ) ) {
+			// curl: (60) SSL certificate problem: unable to get local issuer certificate
+			if ( strpos( $error, 'SSL certificate' ) !== false ) {
+				do_action( 'themeisle_log_event', FEEDZY_NAME, 'Got an SSL Error, retrying by ignoring SSL', 'debug', __FILE__, __LINE__ );
+				$feed = $this->init_feed( $feed_url, $cache, $sc, false );
+			} elseif ( is_string( $feed_url ) || ( is_array( $feed_url ) && 1 === count( $feed_url ) ) ) {
 				do_action( 'themeisle_log_event', FEEDZY_NAME, 'Trying to use raw data', 'debug', __FILE__, __LINE__ );
 				$data   = wp_remote_retrieve_body( wp_remote_get( $feed_url, array( 'user-agent' => $default_agent ) ) );
 				$cloned_feed->set_raw_data( $data );
@@ -869,7 +875,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function get_feed_array( $feed_items, $sc, $feed, $feed_url, $sizes ) {
 		$count = 0;
-		$items = apply_filters( 'feedzy_feed_items', $feed->get_items(), $feed_url );
+		$items = apply_filters( 'feedzy_feed_items', $feed->get_items( $sc['offset'] ), $feed_url );
 		foreach ( (array) $items as $item ) {
 				$continue = apply_filters( 'feedzy_item_keyword', true, $sc, $item, $feed_url );
 			if ( $continue === true ) {

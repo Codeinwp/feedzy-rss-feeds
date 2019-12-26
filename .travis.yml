@@ -24,7 +24,6 @@ matrix:
       env: WP_VERSION=5.1
       dist: precise
     - name: Cypress
-      if: branch = development
       language: node_js
       node_js:
         - 10.8

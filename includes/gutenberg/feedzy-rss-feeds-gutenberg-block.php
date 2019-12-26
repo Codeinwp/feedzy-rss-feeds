@@ -88,6 +88,10 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 						'type'    => 'string',
 						'default' => '5',
 					),
+					'offset'            => array(
+						'type'    => 'number',
+						'default' => '0',
+					),
 					'feed_title'     => array(
 						'type'    => 'boolean',
 						'default' => true,

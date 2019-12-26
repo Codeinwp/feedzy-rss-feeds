@@ -8,6 +8,10 @@ const attributes = {
 		type: 'number',
 		default: 5,
 	},
+	offset: {
+		type: 'number',
+		default: 0,
+	},
 	feed_title: {
 		type: 'boolean',
 		default: true,
