@@ -407,7 +407,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				// to disable amp support, use 'no'. This is currently not available as part of the shortcode tinymce form.
 				'amp'           => 'yes',
 				// paginate
-				'offset'		=> 0,
+				'offset'        => 0,
 			),
 			$atts,
 			'feedzy_default'
