@@ -109,6 +109,12 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'type'        => 'text',
 						'value'       => '',
 					),
+					'offset'        => array(
+						'label'       => __( 'Ignore the first N items of the feed.', 'feedzy-rss-feeds' ),
+						'placeholder' => __( '(eg: 5, if you want to start from the 6th item.)', 'feedzy-rss-feeds' ),
+						'type'        => 'text',
+						'value'       => '0',
+					),
 					'feed_title' => array(
 						'label' => __( 'Should we display the RSS title?', 'feedzy-rss-feeds' ),
 						'type'  => 'select',
