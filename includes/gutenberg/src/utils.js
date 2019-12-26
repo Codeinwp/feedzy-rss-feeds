@@ -9,7 +9,7 @@ export const unescapeHTML = value => {
 	return htmlNode.textContent;
 };
 
-export const filterData = ( arr, sortType, allowedKeywords, bannedKeywords, maxSize ) => {
+export const filterData = ( arr, sortType, allowedKeywords, bannedKeywords, maxSize, offset ) => {
 	arr = Array.from( arr ).sort( (a, b) => {
 		let firstElement, secondElement;
 		if ( sortType === 'date_desc' || sortType === 'date_asc' ) {
@@ -51,7 +51,7 @@ export const filterData = ( arr, sortType, allowedKeywords, bannedKeywords, maxS
 				.every( el =>  item['title'].includes( el.trim() ) === false );
 		}
 		return true;
-	}).slice( 0, maxSize );
+	}).slice( offset, maxSize );
 	return arr;
 };
 
