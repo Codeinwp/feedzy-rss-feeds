@@ -131,10 +131,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  string
 	 */
 	public function feedzy_default_error_notice( $errors, $feed, $feed_url ) {
-		// reason not to show the error
-		// If a feed URL goes out of whack, its not the user who is viewing or the user who has used the shortcode.
-		// So let's not penalize the site owner/viewer because they can always refer to error log.
-		$show_error = false;
+		global $post;
+		// Show the error message only if the user who has created this post (which contains the feed) is logged in.
+		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+		$show_error = is_user_logged_in() && $post && get_current_user_id() == $post->post_author;
 		$error_msg = '';
 
 		if ( is_array( $errors ) ) {
@@ -145,10 +145,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$error_msg = $errors;
 		}
 
-		error_log( 'Feedzy RSS Feeds - related feed: ' . print_r( $feed_url, true ) . ' - Error message: ' . $error_msg );
-
 		if ( $show_error ) {
-			return '<div id="message" class="error" title="' . $error_msg . '"><p>' . __( 'Sorry, some part of this feed is currently unavailable or does not exist anymore.', 'feedzy-rss-feeds' ) . '</p></div>';
+			return '<div id="message" class="error"><p>' . sprintf( __( 'Sorry, some part of this feed is currently unavailable or does not exist anymore. The detailed error is %1$s %2$s(Only you are seeing this detailed error because you are the creator of this post. Other users will see the error message as below.)%3$s', 'feedzy-rss-feeds' ), '<p style="font-weight: bold">' . $error_msg . '</p>', '<small>', '</small>' ) . '</p></div>';
+		} else {
+			error_log( 'Feedzy RSS Feeds - related feed: ' . print_r( $feed_url, true ) . ' - Error message: ' . $error_msg );
 		}
 		return '';
 	}
