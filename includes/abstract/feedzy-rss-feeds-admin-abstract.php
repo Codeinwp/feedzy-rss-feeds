@@ -131,10 +131,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  string
 	 */
 	public function feedzy_default_error_notice( $errors, $feed, $feed_url ) {
-		// reason not to show the error
-		// If a feed URL goes out of whack, its not the user who is viewing or the user who has used the shortcode.
-		// So let's not penalize the site owner/viewer because they can always refer to error log.
-		$show_error = false;
+		global $post;
+		// Show the error message only if the user who has created this post (which contains the feed) is logged in.
+		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+		$show_error = is_user_logged_in() && $post && get_current_user_id() == $post->post_author;
 		$error_msg = '';
 
 		if ( is_array( $errors ) ) {
@@ -145,10 +145,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$error_msg = $errors;
 		}
 
-		error_log( 'Feedzy RSS Feeds - related feed: ' . print_r( $feed_url, true ) . ' - Error message: ' . $error_msg );
-
 		if ( $show_error ) {
-			return '<div id="message" class="error" title="' . $error_msg . '"><p>' . __( 'Sorry, some part of this feed is currently unavailable or does not exist anymore.', 'feedzy-rss-feeds' ) . '</p></div>';
+			return '<div id="message" class="error"><p>' . sprintf( __( 'Sorry, some part of this feed is currently unavailable or does not exist anymore. The detailed error is %1$s %2$s(Only you are seeing this detailed error because you are the creator of this post. Other users will see the error message as below.)%3$s', 'feedzy-rss-feeds' ), '<p style="font-weight: bold">' . $error_msg . '</p>', '<small>', '</small>' ) . '</p></div>';
+		} else {
+			error_log( 'Feedzy RSS Feeds - related feed: ' . print_r( $feed_url, true ) . ' - Error message: ' . $error_msg );
 		}
 		return '';
 	}
@@ -525,7 +525,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @return SimplePie
 	 */
-	private function init_feed( $feed_url, $cache, $sc ) {
+	private function init_feed( $feed_url, $cache, $sc, $allow_https = FEEDZY_ALLOW_HTTPS ) {
 		$unit_defaults = array(
 			'mins'  => MINUTE_IN_SECONDS,
 			'hours' => HOUR_IN_SECONDS,
@@ -542,7 +542,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		$feed = new Feedzy_Rss_Feeds_Util_SimplePie( $sc );
-		if ( ! FEEDZY_ALLOW_HTTPS ) {
+		if ( ! $allow_https ) {
 			$feed->set_curl_options(
 				array(
 					CURLOPT_SSL_VERIFYHOST => false,
@@ -575,7 +575,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$cloned_feed = clone $feed;
 
-		// set the url as the last step, because we need to be able to close this feed without the url being set
+		// set the url as the last step, because we need to be able to clone this feed without the url being set
 		// so that we can fall back to raw data in case of an error
 		$feed->set_feed_url( $feed_url );
 
@@ -600,7 +600,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! empty( $error ) ) {
 			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Error while parsing feed: %s', print_r( $error, true ) ), 'error', __FILE__, __LINE__ );
 
-			if ( is_string( $feed_url ) || ( is_array( $feed_url ) && 1 === count( $feed_url ) ) ) {
+			// curl: (60) SSL certificate problem: unable to get local issuer certificate
+			if ( strpos( $error, 'SSL certificate' ) !== false ) {
+				do_action( 'themeisle_log_event', FEEDZY_NAME, 'Got an SSL Error, retrying by ignoring SSL', 'debug', __FILE__, __LINE__ );
+				$feed = $this->init_feed( $feed_url, $cache, $sc, false );
+			} elseif ( is_string( $feed_url ) || ( is_array( $feed_url ) && 1 === count( $feed_url ) ) ) {
 				do_action( 'themeisle_log_event', FEEDZY_NAME, 'Trying to use raw data', 'debug', __FILE__, __LINE__ );
 				$data   = wp_remote_retrieve_body( wp_remote_get( $feed_url, array( 'user-agent' => $default_agent ) ) );
 				$cloned_feed->set_raw_data( $data );
