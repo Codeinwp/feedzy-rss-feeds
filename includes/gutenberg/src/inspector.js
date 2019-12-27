@@ -13,7 +13,7 @@ const { __ } = wp.i18n;
 const {
 	InspectorControls,
 	MediaUpload,
-} = wp.editor;
+} = wp.blockEditor || wp.editor;
 
 const {
 	BaseControl,
