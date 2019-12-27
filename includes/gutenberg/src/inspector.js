@@ -60,11 +60,20 @@ const Inspector = props => {
 					initialOpen={ true }
 				>
 					<RangeControl
-						label={ __( 'Number of Feeds' ) }
+						label={ __( 'Number of Items' ) }
 						value={ Number( props.attributes.max ) || 5 }
 						onChange={ props.onChangeMax }
 						min={ 1 }
 						max={ props.attributes.feedData['items'].length || 10 }
+						beforeIcon="sort"
+					/>
+
+					<RangeControl
+						label={ __( 'Ignore first N items' ) }
+						value={ Number( props.attributes.offset ) || 0 }
+						onChange={ props.onChangeOffset }
+						min={ 0 }
+						max={ props.attributes.feedData['items'].length }
 						beforeIcon="sort"
 					/>
 

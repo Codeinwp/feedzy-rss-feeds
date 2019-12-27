@@ -158,6 +158,7 @@ This plugin is maintained and supported by Themeisle, check out some of the othe
 
 
 
+
 = Is it responsive friendly? =
 
 Yes it is.
@@ -432,6 +433,12 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  = Feedzy Troubleshooting Guide = 
  [https://docs.themeisle.com/article/1155-feedzy-troubleshooting-guide](https://docs.themeisle.com/article/1155-feedzy-troubleshooting-guide) 
+
+ = How to use Feedzy with a shortcode = 
+ [https://docs.themeisle.com/article/1130-how-to-use-feedzy-with-a-shortcode](https://docs.themeisle.com/article/1130-how-to-use-feedzy-with-a-shortcode) 
+
+ = Feedzy custom templates = 
+ [https://docs.themeisle.com/article/1162-feedzy-custom-templates](https://docs.themeisle.com/article/1162-feedzy-custom-templates) 
 
  == Screenshots ==
 

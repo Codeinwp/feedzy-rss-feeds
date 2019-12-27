@@ -1,4 +1,10 @@
 
+ ### v3.3.13 - 2019-11-30 
+ **Changes:** 
+ * Scrub item titles for HTML entities
+* Fix widget to use all settings configured
+* Fix issue with saving description length
+ 
  ### v3.3.12 - 2019-11-11 
  **Changes:** 
  * Tested up to 5.3
