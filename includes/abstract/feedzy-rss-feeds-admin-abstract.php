@@ -384,6 +384,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				// tz=gmt (for date/time in UTC time, this is the default)
 				// tz=no (for date/time in the feed, without conversion)
 				'meta'           => 'yes',
+				// yes (all), no (NEITHER)
+				// source: show feed title
+				'multiple_meta'       => 'no',
 				// strip title
 				'summary'        => 'yes',
 				// strip summary after X char
@@ -956,6 +959,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'author'      => $sc['meta'] === 'yes' || strpos( $sc['meta'], 'author' ) !== false,
 			'date'        => $sc['meta'] === 'yes' || strpos( $sc['meta'], 'date' ) !== false,
 			'time'        => $sc['meta'] === 'yes' || strpos( $sc['meta'], 'time' ) !== false,
+			'source'        => $sc['multiple_meta'] === 'yes' || strpos( $sc['multiple_meta'], 'source' ) !== false,
 			'categories'  => strpos( $sc['meta'], 'categories' ) !== false,
 			'tz'        => 'gmt',
 			'date_format' => get_option( 'date_format' ),
@@ -977,6 +981,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$meta_args    = apply_filters( 'feedzy_meta_args', $meta_args, $feed_url, $item );
 		$content_meta = $content_meta_date = '';
 
+		// multiple sources?
+		$is_multiple    = is_array( $feed_url );
+
 		if ( $item->get_author() && $meta_args['author'] ) {
 			$author = $item->get_author();
 			if ( ! $author_name = $author->get_name() ) {
@@ -984,6 +991,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 
 			$author_name = apply_filters( 'feedzy_author_name', $author_name, $feed_url, $item );
+
+			$feed_source = $is_multiple && $meta_args['source'] && ! empty( $item->get_feed()->get_title() ) ? $item->get_feed()->get_title() : '';
+			if ( $feed_source ) {
+				$author_name .= sprintf( ' (%s)', $feed_source );
+			}
 
 			if ( $author_name ) {
 				$domain      = parse_url( $new_link );

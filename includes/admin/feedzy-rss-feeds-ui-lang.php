@@ -93,6 +93,8 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 			$meta       = sprintf( __( 'Should we display additional meta fields out of %1$sauthor%2$s, %3$sdate%4$s, %5$stime%6$s and %7$scategories%8$s? (comma-separated list). View documentation %9$shere%10$s.', 'feedzy-rss-feeds' ), '<code>', '</code>', '<code>', '</code>', '<code>', '</code>', '<code>', '</code>', '<a href="https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed" target="_new">', '</a>' );
 		}
 
+		$multiple       = sprintf( __( 'When using multiple sources, should we display additional meta fields? %1$ssource%2$s (feed title).', 'feedzy-rss-feeds' ), '<code>', '</code>', '<a href="https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed" target="_new">', '</a>' );
+
 		$elements = array(
 			'section_feed'  => array(
 				'title'    => __( 'Feed Source', 'feedzy-rss-feeds' ),
@@ -255,6 +257,12 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 					'meta'           => array(
 						'label' => $meta,
 						'placeholder' => __( '(eg: author, date, time, tz=local)', 'feedzy-rss-feeds' ),
+						'type'  => 'text',
+						'value' => '',
+					),
+					'multiple_meta'           => array(
+						'label' => $multiple,
+						'placeholder' => __( '(eg: source)', 'feedzy-rss-feeds' ),
 						'type'  => 'text',
 						'value' => '',
 					),

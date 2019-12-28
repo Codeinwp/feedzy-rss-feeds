@@ -117,6 +117,9 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 					'metafields'      => array(
 						'type'    => 'string',
 					),
+					'multiple_meta'      => array(
+						'type'    => 'string',
+					),
 					'summary'        => array(
 						'type'    => 'boolean',
 						'default' => true,
@@ -174,6 +177,9 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		}
 		if ( ! empty( $attr['metafields'] ) ) {
 			$attr['meta'] = $attr['metafields'];
+		}
+		if ( ! empty( $attr['multiple_meta'] ) ) {
+			$attr['multiple_meta'] = $attr['multiple_meta'];
 		}
 		if ( ! empty( $attr['summary'] ) ) {
 			$attr['summary'] = 'yes';
@@ -253,6 +259,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 
 		$feedy['items'] = array();
 		$items = $feed->get_items();
+		$is_multiple = ! empty( $feed->multifeed_url ) && is_array( $feed->multifeed_url );
 		foreach ( $items as $item ) {
 			if ( feedzy_is_pro() ) {
 				$item_attrs = $pro->feedzy_pro_add_data_to_item( array(), $item );
@@ -263,6 +270,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 					'title'       => ( ( $item->get_title() ) ? $item->get_title() : null ),
 					'link'        => ( ( $item->get_permalink() ) ? $item->get_permalink() : null ),
 					'creator'     => ( ( $item->get_author() ) ? $item->get_author()->get_name() : null ),
+					'source'     => $is_multiple && $item->get_feed()->get_title() ? $item->get_feed()->get_title() : '',
 					'pubDate'     => ( ( $item->get_date() ) ? $item->get_date( 'U' ) : null ),
 					'date'        => ( ( $item->get_date() ) ? date_i18n( $meta_args['date_format'], $item->get_date( 'U' ) ) : null ),
 					'time'        => ( ( $item->get_date() ) ? date_i18n( $meta_args['time_format'], $item->get_date( 'U' ) ) : null ),
