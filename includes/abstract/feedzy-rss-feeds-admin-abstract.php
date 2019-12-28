@@ -992,8 +992,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 			$author_name = apply_filters( 'feedzy_author_name', $author_name, $feed_url, $item );
 
-			$feed_source = $is_multiple && $meta_args['source'] && ! empty( $item->get_feed()->get_title() ) ? $item->get_feed()->get_title() : '';
-			if ( $feed_source ) {
+			$feed_source = $item->get_feed()->get_title();
+			if ( $is_multiple && $meta_args['source'] && ! empty( $feed_source ) ) {
 				$author_name .= sprintf( ' (%s)', $feed_source );
 			}
 
