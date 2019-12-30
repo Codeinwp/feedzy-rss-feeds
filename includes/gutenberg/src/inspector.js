@@ -177,6 +177,12 @@ const Inspector = props => {
 							value={ props.attributes.metafields }
 							onChange={ props.changeMeta }
 						/>
+						<TextControl
+							label={ __( 'When using multiple sources, should we display additional meta fields? - source (comma-separated list).' ) }
+							placeholder={ __( '(eg: source)' ) }
+							value={ props.attributes.multiple_meta }
+							onChange={ props.changeMultipleMeta }
+						/>
 
 						<ExternalLink href="https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed">
 							{ __( 'You can find more info about available meta field values here.' ) }
