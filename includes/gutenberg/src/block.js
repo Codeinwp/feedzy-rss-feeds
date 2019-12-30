@@ -70,6 +70,9 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 		const changeMeta = value => {
 			props.setAttributes( { metafields: value } );
 		}
+		const changeMultipleMeta = value => {
+			props.setAttributes( { multiple_meta: value } );
+		}
 		const toggleSummary = value => {
 			props.setAttributes( { summary: ! props.attributes.summary } );
 		};
@@ -175,6 +178,9 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 		const metaExists = value => {
 			return ( 0 <= ( props.attributes.metafields.replace(/\s/g,'').split( ',' ) ).indexOf( value ) || '' === props.attributes.metafields );
 		};
+		const multipleMetaExists = value => {
+			return ( 0 <= ( props.attributes.multiple_meta.replace(/\s/g,'').split( ',' ) ).indexOf( value ) || '' === props.attributes.multiple_meta );
+		};
 		if ( props.attributes.categories === undefined ) {
 			if ( ! props.attributes.meta ) {
 				props.setAttributes( {
@@ -188,7 +194,7 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 			// Inspector
 			!! props.isSelected && (
 				<Inspector 
-					{ ...{ onChangeFeeds, onChangeMax, onChangeOffset, toggleFeedTitle, onRefresh, onSort, onTarget, onTitle, changeMeta, toggleSummary, onSummaryLength, onKeywordsTitle, onKeywordsBan, onThumb, onDefault, onSize, onReferralURL, onColumns, onTemplate, togglePrice, loadFeed, ...props } }
+					{ ...{ onChangeFeeds, onChangeMax, onChangeOffset, toggleFeedTitle, onRefresh, onSort, onTarget, onTitle, changeMeta, changeMultipleMeta, toggleSummary, onSummaryLength, onKeywordsTitle, onKeywordsBan, onThumb, onDefault, onSize, onReferralURL, onColumns, onTemplate, togglePrice, loadFeed, ...props } }
 				/>
 			),
 			props.attributes.status !== 2 && (
@@ -256,6 +262,13 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 								itemTime = date( 'h:i A', itemDateTime );
 							}
 
+                            let author = item['creator'] && metaExists( 'author' ) ? item['creator'] : '';
+                            if ( props.attributes.multiple_meta !== '' && props.attributes.multiple_meta !== 'no') {
+                                if ( ( multipleMetaExists( 'source' ) || multipleMetaExists( 'yes' ) ) && author !== '' && item['source'] !== '' ) {
+                                    author = author + ' (' + item['source'] + ')';
+                                }
+                            }
+
 							return (
 								<li key={i} style={ { padding: '15px 0 25px' } } className={ `rss_item feedzy-rss-col-${ props.attributes.columns }` }>
 									{ ( ( item['thumbnail'] && props.attributes.thumb === 'auto' ) || props.attributes.thumb === 'yes' ) && (
@@ -281,7 +294,7 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 													{ ( item['creator'] && metaExists( 'author' ) ) && [
 														__( 'by' ),
 														' ',
-														<a>{ unescapeHTML( item['creator'] ) }</a>,
+														<a>{ author }</a>,
 														' '
 													] }
 													{ ( metaExists( 'date' ) ) && [

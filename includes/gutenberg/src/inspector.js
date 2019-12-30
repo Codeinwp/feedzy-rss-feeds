@@ -13,7 +13,7 @@ const { __ } = wp.i18n;
 const {
 	InspectorControls,
 	MediaUpload,
-} = wp.editor;
+} = wp.blockEditor || wp.editor;
 
 const {
 	BaseControl,
@@ -176,6 +176,12 @@ const Inspector = props => {
 							placeholder={ feedzyjs.isPro ? __( '(eg: author, date, time, tz=local, categories)' ) : __( '(eg: author, date, time, tz=local)' ) }
 							value={ props.attributes.metafields }
 							onChange={ props.changeMeta }
+						/>
+						<TextControl
+							label={ __( 'When using multiple sources, should we display additional meta fields? - source (comma-separated list).' ) }
+							placeholder={ __( '(eg: source)' ) }
+							value={ props.attributes.multiple_meta }
+							onChange={ props.changeMultipleMeta }
 						/>
 
 						<ExternalLink href="https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed">

@@ -39,6 +39,10 @@ const attributes = {
 		type: 'string',
 		default: '',
 	},
+	multiple_meta: {
+		type: 'string',
+		default: '',
+	},
 	summary: {
 		type: 'boolean',
 		default: true,
