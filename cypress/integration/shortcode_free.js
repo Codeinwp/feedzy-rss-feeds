@@ -61,8 +61,8 @@ describe('Test Shortcode for free', function() {
         cy.get('div.feedzy-rss div.rss_content').should('contain', 'by');
 
         // multiple feed meta should not be present 
-        cy.get('div.feedzy-rss div.rss_content').should('not.contain', '(');
-        cy.get('div.feedzy-rss div.rss_content').should('not.contain', ')');
+        cy.get('div.feedzy-rss div.rss_content').first().should('not.contain', '(');
+        cy.get('div.feedzy-rss div.rss_content').last().should('not.contain', ')');
 
         // description
         cy.get('div.feedzy-rss div.rss_content p').should('have.length', 10);
