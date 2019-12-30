@@ -18,6 +18,7 @@
 			<?php
 		}
 		?>
+		<?php echo apply_filters( 'feedzy_support_tab_heading', '', $_REQUEST['tab'] ); ?>
 	</h2>
 
 	<div class="fz-features-content">
@@ -33,6 +34,11 @@
 								load_template( FEEDZY_ABSPATH . '/includes/layouts/feedzy-upsell.php' );
 							}
 							break;
+						default:
+							$template = apply_filters( 'feedzy_support_tab_content', '', $active_tab );
+							if ( ! empty( $template ) ) {
+								load_template( $template );
+							}
 					}
 					?>
 			</div>
