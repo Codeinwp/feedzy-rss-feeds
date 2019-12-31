@@ -411,6 +411,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'amp'           => 'yes',
 				// paginate
 				'offset'        => 0,
+				// class name of this block
+				'className'     => '',
 			),
 			$atts,
 			'feedzy_default'
@@ -755,7 +757,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$sizes                   = apply_filters( 'feedzy_thumb_sizes', $sizes, $feed_url );
 		$feed_title['use_title'] = false;
 		if ( $sc['feed_title'] === 'yes' ) {
-			$feed_title              = $this->get_feed_title_filter( $feed );
+			$feed_title              = $this->get_feed_title_filter( $feed, $sc, $feed_url );
 			$feed_title['use_title'] = true;
 		}
 		// Display the error message and quit (before showing the template for pro).
@@ -764,7 +766,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		$feed_items = apply_filters( 'feedzy_get_feed_array', array(), $sc, $feed, $feed_url, $sizes );
-		$content    .= '<div class="feedzy-rss">';
+		$class  = array_filter( apply_filters( 'feedzy_add_classes_block', array( $sc['className'], 'feedzy-' . md5( $feed_url ) ), $sc, $feed, $feed_url ) );
+		$content    .= '<div class="feedzy-rss ' . implode( ' ', $class ) . '">';
 		if ( $feed_title['use_title'] ) {
 			$content .= '<div class="rss_header">';
 			$content .= '<h2><a href="' . $feed->get_permalink() . '" class="rss_title" rel="noopener">' . html_entity_decode( $feed->get_title() ) . '</a> <span class="rss_description"> ' . $feed->get_description() . '</span></h2>';
@@ -812,16 +815,19 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @access  private
 	 *
 	 * @param   object $feed The feed object.
+	 * @param   array  $sc The shorcode attributes array.
+	 * @param   string $feed_url The feed url.
 	 *
 	 * @return array
 	 */
-	private function get_feed_title_filter( $feed ) {
+	private function get_feed_title_filter( $feed, $sc, $feed_url ) {
 		return array(
 			'rss_url'               => $feed->get_permalink(),
 			'rss_title_class'       => 'rss_title',
 			'rss_title'             => html_entity_decode( $feed->get_title() ),
 			'rss_description_class' => 'rss_description',
 			'rss_description'       => $feed->get_description(),
+			'rss_classes'               => array( $sc['className'], 'feedzy-' . md5( $feed_url ) ),
 		);
 	}
 
