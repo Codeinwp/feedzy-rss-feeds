@@ -1,4 +1,11 @@
 
+ ### v3.3.14 - 2019-12-31 
+ **Changes:** 
+ * Show detailed error message to logged in users if feed is not working
+* Add offset parameter to skip items in a feed
+* When using multiple sources, optionally show feed title
+* Fix support for additional class(es) in Gutenberg
+ 
  ### v3.3.13 - 2019-11-30 
  **Changes:** 
  * Scrub item titles for HTML entities
