@@ -131,10 +131,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  string
 	 */
 	public function feedzy_default_error_notice( $errors, $feed, $feed_url ) {
-		// reason not to show the error
-		// If a feed URL goes out of whack, its not the user who is viewing or the user who has used the shortcode.
-		// So let's not penalize the site owner/viewer because they can always refer to error log.
-		$show_error = false;
+		global $post;
+		// Show the error message only if the user who has created this post (which contains the feed) is logged in.
+		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+		$show_error = is_user_logged_in() && $post && get_current_user_id() == $post->post_author;
 		$error_msg = '';
 
 		if ( is_array( $errors ) ) {
@@ -145,10 +145,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$error_msg = $errors;
 		}
 
-		error_log( 'Feedzy RSS Feeds - related feed: ' . print_r( $feed_url, true ) . ' - Error message: ' . $error_msg );
-
 		if ( $show_error ) {
-			return '<div id="message" class="error" title="' . $error_msg . '"><p>' . __( 'Sorry, some part of this feed is currently unavailable or does not exist anymore.', 'feedzy-rss-feeds' ) . '</p></div>';
+			return '<div id="message" class="error"><p>' . sprintf( __( 'Sorry, some part of this feed is currently unavailable or does not exist anymore. The detailed error is %1$s %2$s(Only you are seeing this detailed error because you are the creator of this post. Other users will see the error message as below.)%3$s', 'feedzy-rss-feeds' ), '<p style="font-weight: bold">' . $error_msg . '</p>', '<small>', '</small>' ) . '</p></div>';
+		} else {
+			error_log( 'Feedzy RSS Feeds - related feed: ' . print_r( $feed_url, true ) . ' - Error message: ' . $error_msg );
 		}
 		return '';
 	}
@@ -384,6 +384,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				// tz=gmt (for date/time in UTC time, this is the default)
 				// tz=no (for date/time in the feed, without conversion)
 				'meta'           => 'yes',
+				// yes (all), no (NEITHER)
+				// source: show feed title
+				'multiple_meta'       => 'no',
 				// strip title
 				'summary'        => 'yes',
 				// strip summary after X char
@@ -406,6 +409,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'error_empty'   => 'Feed has no items.',
 				// to disable amp support, use 'no'. This is currently not available as part of the shortcode tinymce form.
 				'amp'           => 'yes',
+				// paginate
+				'offset'        => 0,
+				// class name of this block
+				'className'     => '',
 			),
 			$atts,
 			'feedzy_default'
@@ -523,7 +530,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @return SimplePie
 	 */
-	private function init_feed( $feed_url, $cache, $sc ) {
+	private function init_feed( $feed_url, $cache, $sc, $allow_https = FEEDZY_ALLOW_HTTPS ) {
 		$unit_defaults = array(
 			'mins'  => MINUTE_IN_SECONDS,
 			'hours' => HOUR_IN_SECONDS,
@@ -540,7 +547,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		$feed = new Feedzy_Rss_Feeds_Util_SimplePie( $sc );
-		if ( ! FEEDZY_ALLOW_HTTPS ) {
+		if ( ! $allow_https ) {
 			$feed->set_curl_options(
 				array(
 					CURLOPT_SSL_VERIFYHOST => false,
@@ -573,7 +580,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$cloned_feed = clone $feed;
 
-		// set the url as the last step, because we need to be able to close this feed without the url being set
+		// set the url as the last step, because we need to be able to clone this feed without the url being set
 		// so that we can fall back to raw data in case of an error
 		$feed->set_feed_url( $feed_url );
 
@@ -598,7 +605,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! empty( $error ) ) {
 			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Error while parsing feed: %s', print_r( $error, true ) ), 'error', __FILE__, __LINE__ );
 
-			if ( is_string( $feed_url ) || ( is_array( $feed_url ) && 1 === count( $feed_url ) ) ) {
+			// curl: (60) SSL certificate problem: unable to get local issuer certificate
+			if ( strpos( $error, 'SSL certificate' ) !== false ) {
+				do_action( 'themeisle_log_event', FEEDZY_NAME, 'Got an SSL Error, retrying by ignoring SSL', 'debug', __FILE__, __LINE__ );
+				$feed = $this->init_feed( $feed_url, $cache, $sc, false );
+			} elseif ( is_string( $feed_url ) || ( is_array( $feed_url ) && 1 === count( $feed_url ) ) ) {
 				do_action( 'themeisle_log_event', FEEDZY_NAME, 'Trying to use raw data', 'debug', __FILE__, __LINE__ );
 				$data   = wp_remote_retrieve_body( wp_remote_get( $feed_url, array( 'user-agent' => $default_agent ) ) );
 				$cloned_feed->set_raw_data( $data );
@@ -746,7 +757,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$sizes                   = apply_filters( 'feedzy_thumb_sizes', $sizes, $feed_url );
 		$feed_title['use_title'] = false;
 		if ( $sc['feed_title'] === 'yes' ) {
-			$feed_title              = $this->get_feed_title_filter( $feed );
+			$feed_title              = $this->get_feed_title_filter( $feed, $sc, $feed_url );
 			$feed_title['use_title'] = true;
 		}
 		// Display the error message and quit (before showing the template for pro).
@@ -755,7 +766,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		$feed_items = apply_filters( 'feedzy_get_feed_array', array(), $sc, $feed, $feed_url, $sizes );
-		$content    .= '<div class="feedzy-rss">';
+		$class  = array_filter( apply_filters( 'feedzy_add_classes_block', array( $sc['className'], 'feedzy-' . md5( $feed_url ) ), $sc, $feed, $feed_url ) );
+		$content    .= '<div class="feedzy-rss ' . implode( ' ', $class ) . '">';
 		if ( $feed_title['use_title'] ) {
 			$content .= '<div class="rss_header">';
 			$content .= '<h2><a href="' . $feed->get_permalink() . '" class="rss_title" rel="noopener">' . html_entity_decode( $feed->get_title() ) . '</a> <span class="rss_description"> ' . $feed->get_description() . '</span></h2>';
@@ -803,16 +815,19 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @access  private
 	 *
 	 * @param   object $feed The feed object.
+	 * @param   array  $sc The shorcode attributes array.
+	 * @param   string $feed_url The feed url.
 	 *
 	 * @return array
 	 */
-	private function get_feed_title_filter( $feed ) {
+	private function get_feed_title_filter( $feed, $sc, $feed_url ) {
 		return array(
 			'rss_url'               => $feed->get_permalink(),
 			'rss_title_class'       => 'rss_title',
 			'rss_title'             => html_entity_decode( $feed->get_title() ),
 			'rss_description_class' => 'rss_description',
 			'rss_description'       => $feed->get_description(),
+			'rss_classes'               => array( $sc['className'], 'feedzy-' . md5( $feed_url ) ),
 		);
 	}
 
@@ -869,7 +884,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function get_feed_array( $feed_items, $sc, $feed, $feed_url, $sizes ) {
 		$count = 0;
-		$items = apply_filters( 'feedzy_feed_items', $feed->get_items(), $feed_url );
+		$items = apply_filters( 'feedzy_feed_items', $feed->get_items( $sc['offset'] ), $feed_url );
 		foreach ( (array) $items as $item ) {
 				$continue = apply_filters( 'feedzy_item_keyword', true, $sc, $item, $feed_url );
 			if ( $continue === true ) {
@@ -950,6 +965,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'author'      => $sc['meta'] === 'yes' || strpos( $sc['meta'], 'author' ) !== false,
 			'date'        => $sc['meta'] === 'yes' || strpos( $sc['meta'], 'date' ) !== false,
 			'time'        => $sc['meta'] === 'yes' || strpos( $sc['meta'], 'time' ) !== false,
+			'source'        => $sc['multiple_meta'] === 'yes' || strpos( $sc['multiple_meta'], 'source' ) !== false,
 			'categories'  => strpos( $sc['meta'], 'categories' ) !== false,
 			'tz'        => 'gmt',
 			'date_format' => get_option( 'date_format' ),
@@ -971,6 +987,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$meta_args    = apply_filters( 'feedzy_meta_args', $meta_args, $feed_url, $item );
 		$content_meta = $content_meta_date = '';
 
+		// multiple sources?
+		$is_multiple    = is_array( $feed_url );
+
 		if ( $item->get_author() && $meta_args['author'] ) {
 			$author = $item->get_author();
 			if ( ! $author_name = $author->get_name() ) {
@@ -978,6 +997,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 
 			$author_name = apply_filters( 'feedzy_author_name', $author_name, $feed_url, $item );
+
+			$feed_source = $item->get_feed()->get_title();
+			if ( $is_multiple && $meta_args['source'] && ! empty( $feed_source ) ) {
+				$author_name .= sprintf( ' (%s)', $feed_source );
+			}
 
 			if ( $author_name ) {
 				$domain      = parse_url( $new_link );

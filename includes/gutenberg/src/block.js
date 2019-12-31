@@ -47,7 +47,10 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 			props.setAttributes( { feeds: value } );
 		};
 		const onChangeMax = value => {
-			props.setAttributes( { max: value.toString() } );
+			props.setAttributes( { max: Number( value ) } );
+		};
+		const onChangeOffset = value => {
+			props.setAttributes( { offset: Number( value ) } );
 		};
 		const toggleFeedTitle = value => {
 			props.setAttributes( { feed_title: ! props.attributes.feed_title } );
@@ -66,6 +69,9 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 		};
 		const changeMeta = value => {
 			props.setAttributes( { metafields: value } );
+		}
+		const changeMultipleMeta = value => {
+			props.setAttributes( { multiple_meta: value } );
 		}
 		const toggleSummary = value => {
 			props.setAttributes( { summary: ! props.attributes.summary } );
@@ -172,6 +178,9 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 		const metaExists = value => {
 			return ( 0 <= ( props.attributes.metafields.replace(/\s/g,'').split( ',' ) ).indexOf( value ) || '' === props.attributes.metafields );
 		};
+		const multipleMetaExists = value => {
+			return ( 0 <= ( props.attributes.multiple_meta.replace(/\s/g,'').split( ',' ) ).indexOf( value ) || '' === props.attributes.multiple_meta );
+		};
 		if ( props.attributes.categories === undefined ) {
 			if ( ! props.attributes.meta ) {
 				props.setAttributes( {
@@ -185,7 +194,7 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 			// Inspector
 			!! props.isSelected && (
 				<Inspector 
-					{ ...{ onChangeFeeds, onChangeMax, toggleFeedTitle, onRefresh, onSort, onTarget, onTitle, changeMeta, toggleSummary, onSummaryLength, onKeywordsTitle, onKeywordsBan, onThumb, onDefault, onSize, onReferralURL, onColumns, onTemplate, togglePrice, loadFeed, ...props } }
+					{ ...{ onChangeFeeds, onChangeMax, onChangeOffset, toggleFeedTitle, onRefresh, onSort, onTarget, onTitle, changeMeta, changeMultipleMeta, toggleSummary, onSummaryLength, onKeywordsTitle, onKeywordsBan, onThumb, onDefault, onSize, onReferralURL, onColumns, onTemplate, togglePrice, loadFeed, ...props } }
 				/>
 			),
 			props.attributes.status !== 2 && (
@@ -203,7 +212,6 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 						</div>
 					):
 					[
-						( props.attributes.status === 3 ) &&  <span>{ __( 'Feed URL Invalid') }</span>,
 						<TextControl
 							type="url"
 							className="feedzy-source"
@@ -218,6 +226,7 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 						>
 							{ __( 'Load Feed' ) }
 						</Button>,
+						( props.attributes.status === 3 ) &&  <span>{ __( 'Feed URL Invalid') }</span>,
 						<span>
 							<ExternalLink href="https://validator.w3.org/feed/">
 								{ __( 'Click here to check if feed is valid. ' ) }
@@ -243,7 +252,7 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 						</div>
 					) }
 					<ul className={ `feedzy-${ props.attributes.template }` }>
-						{ filterData( props.attributes.feedData['items'], props.attributes.sort, props.attributes.keywords_title, props.attributes.keywords_ban, props.attributes.max ).map( ( item, i ) => {
+						{ filterData( props.attributes.feedData['items'], props.attributes.sort, props.attributes.keywords_title, props.attributes.keywords_ban, props.attributes.max, props.attributes.offset ).map( ( item, i ) => {
 							const itemDateTime = ( item['date'] || '' ) + ' ' + ( item['time'] || '' ) + ' UTC +0000';
 							let itemDate = unescapeHTML( item['date'] ) || '';
 							let itemTime = unescapeHTML( item['time'] ) || '';
@@ -252,6 +261,13 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 								itemDate = date( 'F jS, \o', itemDateTime );
 								itemTime = date( 'h:i A', itemDateTime );
 							}
+
+                            let author = item['creator'] && metaExists( 'author' ) ? item['creator'] : '';
+                            if ( props.attributes.multiple_meta !== '' && props.attributes.multiple_meta !== 'no') {
+                                if ( ( multipleMetaExists( 'source' ) || multipleMetaExists( 'yes' ) ) && author !== '' && item['source'] !== '' ) {
+                                    author = author + ' (' + item['source'] + ')';
+                                }
+                            }
 
 							return (
 								<li key={i} style={ { padding: '15px 0 25px' } } className={ `rss_item feedzy-rss-col-${ props.attributes.columns }` }>
@@ -278,7 +294,7 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 													{ ( item['creator'] && metaExists( 'author' ) ) && [
 														__( 'by' ),
 														' ',
-														<a>{ unescapeHTML( item['creator'] ) }</a>,
+														<a>{ author }</a>,
 														' '
 													] }
 													{ ( metaExists( 'date' ) ) && [

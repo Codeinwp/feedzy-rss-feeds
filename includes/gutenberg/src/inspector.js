@@ -13,7 +13,7 @@ const { __ } = wp.i18n;
 const {
 	InspectorControls,
 	MediaUpload,
-} = wp.editor;
+} = wp.blockEditor || wp.editor;
 
 const {
 	BaseControl,
@@ -60,11 +60,20 @@ const Inspector = props => {
 					initialOpen={ true }
 				>
 					<RangeControl
-						label={ __( 'Number of Feeds' ) }
+						label={ __( 'Number of Items' ) }
 						value={ Number( props.attributes.max ) || 5 }
 						onChange={ props.onChangeMax }
 						min={ 1 }
 						max={ props.attributes.feedData['items'].length || 10 }
+						beforeIcon="sort"
+					/>
+
+					<RangeControl
+						label={ __( 'Ignore first N items' ) }
+						value={ Number( props.attributes.offset ) || 0 }
+						onChange={ props.onChangeOffset }
+						min={ 0 }
+						max={ props.attributes.feedData['items'].length }
 						beforeIcon="sort"
 					/>
 
@@ -167,6 +176,12 @@ const Inspector = props => {
 							placeholder={ feedzyjs.isPro ? __( '(eg: author, date, time, tz=local, categories)' ) : __( '(eg: author, date, time, tz=local)' ) }
 							value={ props.attributes.metafields }
 							onChange={ props.changeMeta }
+						/>
+						<TextControl
+							label={ __( 'When using multiple sources, should we display additional meta fields? - source (comma-separated list).' ) }
+							placeholder={ __( '(eg: source)' ) }
+							value={ props.attributes.multiple_meta }
+							onChange={ props.changeMultipleMeta }
 						/>
 
 						<ExternalLink href="https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed">
