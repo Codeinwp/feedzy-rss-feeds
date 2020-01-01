@@ -85,7 +85,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 						'type' => 'string',
 					),
 					'max'            => array(
-						'type'    => 'string',
+						'type'    => 'number',
 						'default' => '5',
 					),
 					'offset'            => array(
