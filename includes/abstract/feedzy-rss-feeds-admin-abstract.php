@@ -711,9 +711,14 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
 		if ( $sc['max'] == '0' ) {
 			$sc['max'] = '999';
-		} elseif ( empty( $sc['max'] ) || ! ctype_digit( $sc['max'] ) ) {
+		} elseif ( empty( $sc['max'] ) || ! is_numeric( $sc['max'] ) ) {
 			$sc['max'] = '5';
 		}
+
+		if ( empty( $sc['offset'] ) || ! is_numeric( $sc['offset'] ) ) {
+			$sc['offset'] = '0';
+		}
+
 		if ( empty( $sc['size'] ) || ! ctype_digit( $sc['size'] ) ) {
 			$sc['size'] = '150';
 		}
@@ -725,7 +730,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$sc['keywords_ban'] = rtrim( $sc['keywords_ban'], ',' );
 			$sc['keywords_ban'] = array_map( 'trim', explode( ',', $sc['keywords_ban'] ) );
 		}
-		if ( ! empty( $sc['summarylength'] ) && ( ! ctype_digit( $sc['summarylength'] ) && ! is_numeric( $sc['summarylength'] ) ) ) {
+		if ( empty( $sc['summarylength'] ) || ! is_numeric( $sc['summarylength'] ) ) {
 			$sc['summarylength'] = '';
 		}
 		if ( empty( $sc['default'] ) ) {
