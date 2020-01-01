@@ -1,4 +1,8 @@
 
+ ### v3.3.15 - 2020-01-01 
+ **Changes:** 
+ * fix Gutenberg bug that limits max items per feed
+ 
  ### v3.3.14 - 2019-12-31 
  **Changes:** 
  * Show detailed error message to logged in users if feed is not working
