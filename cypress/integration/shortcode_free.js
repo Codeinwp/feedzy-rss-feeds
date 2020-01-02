@@ -1,5 +1,7 @@
 describe('Test Shortcode for free', function() {
     before(function(){
+        Cypress.config('baseUrl', Cypress.env('host') + 'wp-admin/');
+
         // login to WP
         cy.visit(Cypress.env('host') + 'wp-login.php');
         cy.get('#user_login').clear().type( Cypress.env('login') );
@@ -10,8 +12,6 @@ describe('Test Shortcode for free', function() {
     const PREFIX = "feedzy-sc-0-" + Cypress.moment().unix() + " ";
 
     it('Create the shortcode', function() {
-        Cypress.config('baseUrl', Cypress.env('host') + 'wp-admin/');
-
         cy.visit('/post-new.php');
 
         // fill up the form
@@ -23,8 +23,6 @@ describe('Test Shortcode for free', function() {
     });
 
     it('View the shortcode', function() {
-        Cypress.config('baseUrl', Cypress.env('host') + 'wp-admin/');
-
         cy.visit('/edit.php?post_type=post')
 
         // should have 1 post.
@@ -75,8 +73,6 @@ describe('Test Shortcode for free', function() {
     });
 
     it('Create the shortcode (multiple feeds)', function() {
-        Cypress.config('baseUrl', Cypress.env('host') + 'wp-admin/');
-
         cy.visit('/post-new.php');
 
         // fill up the form
@@ -88,8 +84,6 @@ describe('Test Shortcode for free', function() {
     });
 
     it('View the shortcode (multiple feeds)', function() {
-        Cypress.config('baseUrl', Cypress.env('host') + 'wp-admin/');
-
         cy.visit('/edit.php?post_type=post')
 
         // should have 1 post.

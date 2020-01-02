@@ -1,7 +1,8 @@
 {
   "env": {
     "shortcode": "[feedzy-rss feeds='https://s3.amazonaws.com/downloads.themeisle.com/sample-feed.xml' max='10' feed_title='yes' refresh='1_hours' meta='yes' multiple_meta='yes' summary='yes' price='yes' mapping='price=im:price' thumb='yes' keywords_title='God, Mendes, Cyrus' keywords_ban='Cyrus' template='style1']",
-    "shortcode-multiple": "[feedzy-rss feeds='https://s3.amazonaws.com/downloads.themeisle.com/sample-feed-multiple1.xml, https://s3.amazonaws.com/downloads.themeisle.com/sample-feed-multiple2.xml' max='10' feed_title='no' refresh='1_hours' meta='yes' multiple_meta='yes' summary='yes' thumb='yes' template='style1']"
+    "shortcode-multiple": "[feedzy-rss feeds='https://s3.amazonaws.com/downloads.themeisle.com/sample-feed-multiple1.xml, https://s3.amazonaws.com/downloads.themeisle.com/sample-feed-multiple2.xml' max='10' feed_title='no' refresh='1_hours' meta='yes' multiple_meta='yes' summary='yes' thumb='yes' template='style1']",
+    "url": "https://s3.amazonaws.com/downloads.themeisle.com/sample-feed.xml"
   },
   "videoUploadOnPasses": false,
   "projectId": "frqcxp"
