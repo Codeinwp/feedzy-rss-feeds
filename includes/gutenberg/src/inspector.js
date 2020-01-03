@@ -58,6 +58,7 @@ const Inspector = props => {
 				<PanelBody
 					title={ __( 'Feed Settings' ) }
 					initialOpen={ true }
+                    className='feedzy-options'
 				>
 					<RangeControl
 						label={ __( 'Number of Items' ) }
@@ -150,7 +151,7 @@ const Inspector = props => {
                         className="feedzy-sort"
 					/>
 				</PanelBody>,
-				<PanelBody title={ __( 'Item Options' ) } initialOpen={ false } >
+				<PanelBody title={ __( 'Item Options' ) } initialOpen={ false } className='feedzy-item-options'>
 					<SelectControl
 						label={ __( 'Open Links In' ) }
 						value={ props.attributes.target }
@@ -232,7 +233,7 @@ const Inspector = props => {
 						/>
 					 ] ) }
 				</PanelBody>,
-				<PanelBody title={ __( 'Item Image Options' ) } initialOpen={ false } >
+				<PanelBody title={ __( 'Item Image Options' ) } initialOpen={ false } className='feedzy-image-options'>
 					<SelectControl
 						label={ __( 'Display first image if available?' ) }
 						value={ props.attributes.thumb }
@@ -251,6 +252,7 @@ const Inspector = props => {
 							},
 						] }
 						onChange={ props.onThumb }
+                        className="feedzy-thumb"
 					/>
 
 					{ ( props.attributes.thumb !== 'no' ) && [
@@ -299,7 +301,7 @@ const Inspector = props => {
 					] }
 				</PanelBody>,
 				( ( feedzyjs.isPro ) && (
-					<PanelBody title={ __( 'Pro Features' ) } initialOpen={ false } >
+					<PanelBody title={ __( 'Pro Features' ) } initialOpen={ false } className='feedzy-pro-options'>
 						<ToggleControl
 							label={ __( 'Display price if available?' ) }
 							help={ ( props.attributes.price && props.attributes.template === 'default' ) ? __( 'Choose a different template for this to work.' ) : null }

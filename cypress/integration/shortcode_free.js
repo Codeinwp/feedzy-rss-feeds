@@ -17,7 +17,7 @@ describe('Test Shortcode for free', function() {
         // fill up the form
         cy.get('#title').type( PREFIX + 'shortcode-single');
         cy.get('#content_ifr').then(function ($iframe) {
-            const $body = $iframe.contents().find("body").html( Cypress.env('shortcode') );
+            const $body = $iframe.contents().find("body").html( Cypress.env('shortcode').single );
         });
         cy.get('#publish').click({force: true});
     });
@@ -42,18 +42,18 @@ describe('Test Shortcode for free', function() {
         cy.get('ul.feedzy-style1').should('have.length', 0);
 
         // # of items
-        cy.get('ul li.rss_item').should('have.length', 10);
+        cy.get('ul li.rss_item').should('have.length', Cypress.env('shortcode').single_results);
 
         // a valid image
-        cy.get('div.rss_image .fetched').first().invoke('attr', 'style').should('contain', 'https://is4-ssl.mzstatic.com/image/thumb/Music123/v4/99/73/63/99736372-7338-45ad-37de-c61bfb765c26/054391945495.jpg/100x100bb.png');
+        cy.get('div.rss_image .fetched').first().invoke('attr', 'style').should('contain', 'https://is3-ssl.mzstatic.com/image/thumb/Music123/v4/ba/e2/2a/bae22a5e-c878-da64-0ecc-4a3584a1a139/190295411411.jpg/100x100bb.png');
         cy.get('div.rss_image .fetched').last().invoke('attr', 'style').should('contain', 'https://is3-ssl.mzstatic.com/image/thumb/Music123/v4/c6/04/02/c604029f-732b-ba65-425c-45f2cf91151e/4050538505542.jpg/100x100bb.png');
 
         // title
-        cy.get('div.feedzy-rss span.title').first().should('contain', 'Blake Shelton');
+        cy.get('div.feedzy-rss span.title').first().should('contain', 'Ed Sheeran');
         cy.get('div.feedzy-rss span.title').last().should('contain', 'Blanco Brown');
 
         // meta - there is no class "meta" which is different from style1
-        cy.get('div.feedzy-rss div.rss_content').should('have.length', 10);
+        cy.get('div.feedzy-rss div.rss_content').should('have.length', Cypress.env('shortcode').single_results);
         cy.get('div.feedzy-rss div.rss_content').first().should('contain', 'August 16, 2019 at 7:54 am');
         cy.get('div.feedzy-rss div.rss_content').last().should('contain', 'August 16, 2019 at 7:54 am');
         cy.get('div.feedzy-rss div.rss_content').should('contain', 'by');
@@ -63,7 +63,7 @@ describe('Test Shortcode for free', function() {
         cy.get('div.feedzy-rss div.rss_content').last().should('not.contain', ')');
 
         // description
-        cy.get('div.feedzy-rss div.rss_content p').should('have.length', 10);
+        cy.get('div.feedzy-rss div.rss_content p').should('have.length', Cypress.env('shortcode').single_results);
 
         // the audio controls
         cy.get('div.feedzy-rss div.rss_content audio').should('have.length', 0);
@@ -78,7 +78,7 @@ describe('Test Shortcode for free', function() {
         // fill up the form
         cy.get('#title').type( PREFIX + 'shortcode-multiple');
         cy.get('#content_ifr').then(function ($iframe) {
-            const $body = $iframe.contents().find("body").html( Cypress.env('shortcode-multiple') );
+            const $body = $iframe.contents().find("body").html( Cypress.env('shortcode').multiple );
         });
         cy.get('#publish').click({force: true});
     });
@@ -102,14 +102,14 @@ describe('Test Shortcode for free', function() {
         cy.get('ul.feedzy-style1').should('have.length', 0);
 
         // # of items
-        cy.get('ul li.rss_item').should('have.length', 10);
+        cy.get('ul li.rss_item').should('have.length', Cypress.env('shortcode').multiple_results);
 
         // title
         cy.get('div.feedzy-rss span.title').first().should('contain', '10+ Best Themes');
         cy.get('div.feedzy-rss span.title').last().should('contain', 'Bluehost vs Hostinger');
 
         // meta - there is no class "meta" which is different from style1
-        cy.get('div.feedzy-rss div.rss_content').should('have.length', 10);
+        cy.get('div.feedzy-rss div.rss_content').should('have.length', Cypress.env('shortcode').multiple_results);
         cy.get('div.feedzy-rss div.rss_content').first().should('contain', 'December 27, 2019 at 12:26 pm');
         cy.get('div.feedzy-rss div.rss_content').last().should('contain', 'December 17, 2019 at 8:36 am');
         cy.get('div.feedzy-rss div.rss_content').should('contain', 'by');
@@ -121,7 +121,7 @@ describe('Test Shortcode for free', function() {
         cy.get('div.feedzy-rss div.rss_content').last().should('contain', 'ThemeIsle Blog');
 
         // description
-        cy.get('div.feedzy-rss div.rss_content p').should('have.length', 10);
+        cy.get('div.feedzy-rss div.rss_content p').should('have.length', Cypress.env('shortcode').multiple_results);
 
         // the audio controls
         cy.get('div.feedzy-rss div.rss_content audio').should('have.length', 0);
