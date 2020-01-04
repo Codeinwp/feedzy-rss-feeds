@@ -9,7 +9,7 @@ describe('Test Free - gutenberg', function() {
         cy.get('#wp-submit').click();
     });
 
-    const PREFIX = "feedzy-sc-1-" + Cypress.moment().unix();
+    const PREFIX = "feedzy-sc-0-" + Cypress.moment().unix();
 
     it('Insert a block', function() {
         cy.visit('/post-new.php');
@@ -123,6 +123,8 @@ describe('Test Free - gutenberg', function() {
 
         // we want to do this so that the next test succeeds - otherwise it will throw up an alert box and stop the page
         cy.get('button.editor-post-publish-button').click();
+
+        cy.visit('/edit.php?post_type=post')
 
     });
 
