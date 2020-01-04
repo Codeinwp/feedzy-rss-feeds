@@ -120,6 +120,9 @@ describe('Test Free - gutenberg', function() {
         cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-image-options button.components-panel__body-toggle').click().then( () => {
             cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-image-options div.components-base-control.feedzy-thumb select.components-select-control__input').invoke('prop', 'selectedIndex').should('equal', 1);
         });
+
+        cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"]').blur();
+
     });
 
     it('View the shortcode', function() {
