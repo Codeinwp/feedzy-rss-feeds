@@ -121,7 +121,7 @@ describe('Test Free - gutenberg', function() {
             cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-image-options div.components-base-control.feedzy-thumb select.components-select-control__input').invoke('prop', 'selectedIndex').should('equal', 1);
         });
 
-        cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"]').blur();
+        cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"]').focus().blur();
 
     });
 
