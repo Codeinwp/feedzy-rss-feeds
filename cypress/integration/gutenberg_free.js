@@ -121,7 +121,8 @@ describe('Test Free - gutenberg', function() {
             cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-image-options div.components-base-control.feedzy-thumb select.components-select-control__input').invoke('prop', 'selectedIndex').should('equal', 1);
         });
 
-        cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"]').focus().blur();
+        // we want to do this so that the next test succeeds - otherwise it will throw up an alert box and stop the page
+        cy.get('button.editor-post-publish-button').click();
 
     });
 
@@ -132,7 +133,7 @@ describe('Test Free - gutenberg', function() {
 
         // should have 1 post.
         cy.get('tr td a.row-title:contains("' + PREFIX + '")').should('have.length', 1);
-return;
+
         // click to view post
         cy.get('tr td a.row-title:contains("' + PREFIX + '")').first().parent().parent().find('span.view a').click({ force: true });
 
