@@ -547,7 +547,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		$feed = new Feedzy_Rss_Feeds_Util_SimplePie( $sc );
-		if ( ! $allow_https ) {
+		if ( ! $allow_https && method_exists( $feed, 'set_curl_options' ) ) {
 			$feed->set_curl_options(
 				array(
 					CURLOPT_SSL_VERIFYHOST => false,
