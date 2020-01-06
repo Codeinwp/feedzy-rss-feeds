@@ -575,7 +575,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$feed->set_cache_location( $dir );
 		}
 
-		$feed->force_feed( apply_filters( 'feedzy_force_feed', true ) );
+		// Do not use force_feed for multiple URLs.
+		$feed->force_feed( apply_filters( 'feedzy_force_feed', ( is_string( $feed_url ) || ( is_array( $feed_url ) && 1 === count( $feed_url ) ) ) ) );
+
 		do_action( 'feedzy_modify_feed_config', $feed );
 
 		$cloned_feed = clone $feed;
