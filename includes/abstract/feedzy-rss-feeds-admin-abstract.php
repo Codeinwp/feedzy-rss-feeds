@@ -1063,7 +1063,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		foreach ( $meta_order as $meta ) {
 			if ( isset( $content_meta_values[ $meta ] ) ) {
 				// collect date/time values separately too.
-				if ( in_array( $meta, array( 'date', 'time' ) ) ) {
+				if ( in_array( $meta, array( 'date', 'time' ), true ) ) {
 					$content_meta_date .= $content_meta_values[ $meta ];
 				}
 				$content_meta .= $content_meta_values[ $meta ];
