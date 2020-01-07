@@ -448,6 +448,8 @@ You have to check first if your feed is valid. Please test it here: https://vali
 4. Widget render
 
 
+ == Changelog ==
+
 = 3.3.12 - 2019-11-11  = 
 
 * Tested up to 5.3
