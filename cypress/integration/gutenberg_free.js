@@ -12,6 +12,8 @@ describe('Test Free - gutenberg', function() {
     const PREFIX = "feedzy-sc-0-" + Cypress.moment().unix();
 
     it('Insert a block', function() {
+        Cypress.config('baseUrl', Cypress.env('host') + 'wp-admin/');
+
         cy.visit('/post-new.php');
 
         // get rid of that irritating popup
@@ -79,6 +81,7 @@ describe('Test Free - gutenberg', function() {
 
     it('Verify inserted block', function() {
         Cypress.config('baseUrl', Cypress.env('host') + 'wp-admin/');
+
         cy.visit('/edit.php?post_type=post');
 
         var gutenberg = Cypress.env("gutenberg");
