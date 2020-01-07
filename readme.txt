@@ -450,6 +450,29 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
+= 3.3.16 - 2020-01-07  =
+
+* Fix fatal error with new version of SimplePie
+* Allow user to dictate order of meta data
+* Do not use force_feed for multi feeds
+
+= 3.3.15 - 2020-01-01  =
+
+* fix Gutenberg bug that limits max items per feed
+
+= 3.3.14 - 2019-12-31  =
+
+* Show detailed error message to logged in users if feed is not working
+* Add offset parameter to skip items in a feed
+* When using multiple sources, optionally show feed title
+* Fix support for additional class(es) in Gutenberg
+
+= 3.3.13 - 2019-11-30  =
+
+* Scrub item titles for HTML entities
+* Fix widget to use all settings configured
+* Fix issue with saving description length
+
 = 3.3.12 - 2019-11-11  = 
 
 * Tested up to 5.3

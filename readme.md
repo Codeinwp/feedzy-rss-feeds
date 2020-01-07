@@ -470,7 +470,7 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 * Scrub item titles for HTML entities
 * Fix widget to use all settings configured
-*Fix issue with saving description length
+* Fix issue with saving description length
 
 ### 3.3.12 - 2019-11-11  ###
 
