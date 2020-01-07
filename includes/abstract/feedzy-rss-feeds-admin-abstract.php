@@ -56,7 +56,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		global $wpdb;
 
 		// how many categories created
-		$categories = count( get_terms( array( 'taxonomy' => 'feedzy_categories' ) ) );
+		$categories = 0;
+		$terms = get_terms( array( 'taxonomy' => 'feedzy_categories' ) );
+		if ( is_array( $terms ) ) {
+			$categories = count( $terms );
+		}
 		// imports
 		$imports    = array();
 		$license    = 'free';
