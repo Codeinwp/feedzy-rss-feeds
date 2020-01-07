@@ -78,7 +78,8 @@ describe('Test Free - gutenberg', function() {
     });
 
     it('Verify inserted block', function() {
-        cy.visit('/edit.php?post_type=post')
+        Cypress.config('baseUrl', Cypress.env('host') + 'wp-admin/');
+        cy.visit('/edit.php?post_type=post');
 
         var gutenberg = Cypress.env("gutenberg");
 
