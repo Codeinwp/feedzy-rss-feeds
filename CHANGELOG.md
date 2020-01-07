@@ -1,4 +1,10 @@
 
+ ### v3.3.16 - 2020-01-07 
+ **Changes:** 
+ * Fix fatal error with new version of SimplePie
+* Allow user to dictate order of meta data
+* Do not use force_feed for multi feeds
+ 
  ### v3.3.15 - 2020-01-01 
  **Changes:** 
  * fix Gutenberg bug that limits max items per feed
