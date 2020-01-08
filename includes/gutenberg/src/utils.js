@@ -10,6 +10,7 @@ export const unescapeHTML = value => {
 };
 
 export const filterData = ( arr, sortType, allowedKeywords, bannedKeywords, maxSize, offset ) => {
+    console.log("max, offset, size = " + maxSize + ", " + offset + ", " + arr.length);
 	arr = Array.from( arr ).sort( (a, b) => {
 		let firstElement, secondElement;
 		if ( sortType === 'date_desc' || sortType === 'date_asc' ) {
@@ -51,7 +52,7 @@ export const filterData = ( arr, sortType, allowedKeywords, bannedKeywords, maxS
 				.every( el =>  item['title'].includes( el.trim() ) === false );
 		}
 		return true;
-	}).slice( offset, maxSize );
+	}).slice( offset, maxSize + offset );
 	return arr;
 };
 
