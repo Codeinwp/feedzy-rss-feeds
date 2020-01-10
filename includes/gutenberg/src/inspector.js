@@ -58,6 +58,7 @@ const Inspector = props => {
 				<PanelBody
 					title={ __( 'Feed Settings' ) }
 					initialOpen={ true }
+                    className='feedzy-options'
 				>
 					<RangeControl
 						label={ __( 'Number of Items' ) }
@@ -66,6 +67,7 @@ const Inspector = props => {
 						min={ 1 }
 						max={ props.attributes.feedData['items'].length || 10 }
 						beforeIcon="sort"
+                        className="feedzy-max"
 					/>
 
 					<RangeControl
@@ -75,6 +77,7 @@ const Inspector = props => {
 						min={ 0 }
 						max={ props.attributes.feedData['items'].length }
 						beforeIcon="sort"
+                        className="feedzy-offset"
 					/>
 
 					{ ( ( props.attributes.feedData['channel'] !== null ) ) && (
@@ -82,6 +85,7 @@ const Inspector = props => {
 							label={ __( 'Display feed title?' ) }
 							checked={ !! props.attributes.feed_title }
 							onChange={ props.toggleFeedTitle }
+                            className="feedzy-title"
 						/>
 					) }
 
@@ -115,6 +119,7 @@ const Inspector = props => {
 							},
 						] }
 						onChange={ props.onRefresh }
+                        className="feedzy-refresh"
 					/>
 
 					<SelectControl
@@ -143,9 +148,10 @@ const Inspector = props => {
 							},
 						] }
 						onChange={ props.onSort }
+                        className="feedzy-sort"
 					/>
 				</PanelBody>,
-				<PanelBody title={ __( 'Item Options' ) } initialOpen={ false } >
+				<PanelBody title={ __( 'Item Options' ) } initialOpen={ false } className='feedzy-item-options'>
 					<SelectControl
 						label={ __( 'Open Links In' ) }
 						value={ props.attributes.target }
@@ -168,6 +174,7 @@ const Inspector = props => {
 						type="number"
 						value={ props.attributes.title }
 						onChange={ props.onTitle }
+                        className="feedzy-title-length"
 					/>
 
 					<BaseControl>
@@ -176,12 +183,14 @@ const Inspector = props => {
 							placeholder={ feedzyjs.isPro ? __( '(eg: author, date, time, tz=local, categories)' ) : __( '(eg: author, date, time, tz=local)' ) }
 							value={ props.attributes.metafields }
 							onChange={ props.changeMeta }
+                            className="feedzy-meta"
 						/>
 						<TextControl
 							label={ __( 'When using multiple sources, should we display additional meta fields? - source (comma-separated list).' ) }
 							placeholder={ __( '(eg: source)' ) }
 							value={ props.attributes.multiple_meta }
 							onChange={ props.changeMultipleMeta }
+                            className="feedzy-multiple-meta"
 						/>
 
 						<ExternalLink href="https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed">
@@ -193,6 +202,7 @@ const Inspector = props => {
 						label={ __( 'Display post description?' ) }
 						checked={ !! props.attributes.summary }
 						onChange={ props.toggleSummary }
+                        className="feedzy-summary"
 					/>
 
 					{ ( props.attributes.summary ) && (
@@ -202,6 +212,7 @@ const Inspector = props => {
 							type="number"
 							value={ props.attributes.summarylength }
 							onChange={ props.onSummaryLength }
+                            className="feedzy-summary-length"
 						/>
 					) }
 
@@ -211,16 +222,18 @@ const Inspector = props => {
 							help={ __( 'Comma-separated list/case sensitive.' ) }
 							value={ props.attributes.keywords_title }
 							onChange={ props.onKeywordsTitle }
+                            className="feedzy-include"
 						/>,
 						<TextControl
 							label={ __( 'Exclude if title contains:' ) }
 							help={ __( 'Comma-separated list/case sensitive.' ) }
 							value={ props.attributes.keywords_ban }
 							onChange={ props.onKeywordsBan }
+                            className="feedzy-ban"
 						/>
 					 ] ) }
 				</PanelBody>,
-				<PanelBody title={ __( 'Item Image Options' ) } initialOpen={ false } >
+				<PanelBody title={ __( 'Item Image Options' ) } initialOpen={ false } className='feedzy-image-options'>
 					<SelectControl
 						label={ __( 'Display first image if available?' ) }
 						value={ props.attributes.thumb }
@@ -239,6 +252,7 @@ const Inspector = props => {
 							},
 						] }
 						onChange={ props.onThumb }
+                        className="feedzy-thumb"
 					/>
 
 					{ ( props.attributes.thumb !== 'no' ) && [
@@ -287,12 +301,13 @@ const Inspector = props => {
 					] }
 				</PanelBody>,
 				( ( feedzyjs.isPro ) && (
-					<PanelBody title={ __( 'Pro Features' ) } initialOpen={ false } >
+					<PanelBody title={ __( 'Pro Features' ) } initialOpen={ false } className='feedzy-pro-options'>
 						<ToggleControl
 							label={ __( 'Display price if available?' ) }
 							help={ ( props.attributes.price && props.attributes.template === 'default' ) ? __( 'Choose a different template for this to work.' ) : null }
 							checked={ !! props.attributes.price }
 							onChange={ props.togglePrice }
+                            className="feedzy-pro-price"
 						/>
 
 						<TextControl
@@ -335,6 +350,7 @@ const Inspector = props => {
 								},
 							] }
 							onChange={ props.onTemplate }
+                            className="feedzy-pro-template"
 						/>
 					</PanelBody>
 				) )
