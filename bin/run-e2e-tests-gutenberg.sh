@@ -18,9 +18,6 @@ set -e
 
 export CYPRESS_HOST=$wp_host
 
-# test ONLY free
-export CYPRESS_SPEC_TO_RUN="shortcode_free.js"
+docker exec $args feedzy_wordpress wp --quiet plugin deactivate classic-editor
+export CYPRESS_SPEC_TO_RUN="gutenberg_free.js"
 npm run cypress:run
-
-
-# docker exec -it feedzy_wordpress cat /var/www/html/wp-content/debug.log

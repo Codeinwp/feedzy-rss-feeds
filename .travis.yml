@@ -30,6 +30,13 @@ matrix:
       script:
         - docker-compose -f docker-compose.travis.yml up -d
         - chmod +x ./bin/run-e2e-tests.sh ./bin/wp-init.sh && ./bin/wp-init.sh && ./bin/run-e2e-tests.sh
+    - name: Cypress Gutenberg
+      language: node_js
+      node_js:
+        - 10.8
+      script:
+        - docker-compose -f docker-compose.travis.yml up -d
+        - chmod +x ./bin/run-e2e-tests-gutenberg.sh ./bin/wp-init.sh && ./bin/wp-init.sh && ./bin/run-e2e-tests-gutenberg.sh
 branches:
   except:
   - "/^*-v[0-9]/"
