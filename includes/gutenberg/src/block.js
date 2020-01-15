@@ -47,7 +47,7 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 			props.setAttributes( { feeds: value } );
 		};
 		const onChangeMax = value => {
-			props.setAttributes( { max: Number( value ) } );
+			props.setAttributes( { max: ! value ? 5 : Number( value ) } );
 		};
 		const onChangeOffset = value => {
 			props.setAttributes( { offset: Number( value ) } );
@@ -92,7 +92,7 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 			props.setAttributes( { default: value } );
 		};
 		const onSize = value => {
-			props.setAttributes( { size: Number( value ) } );
+			props.setAttributes( { size: ! value ? 150 : Number( value ) } );
 		};
 		const onReferralURL = value => {
 			props.setAttributes( { referral_url: value } );
