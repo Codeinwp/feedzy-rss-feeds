@@ -67,3 +67,20 @@ export const inArray = ( value, arr ) => {
 	}
 	return exists;
 };
+
+export const arrangeMeta = ( values, fields ) => {
+    let meta = '';
+
+    if(fields === ''){
+        return meta;
+    }
+
+    let arr = fields.replace(/\s/g,'').split( ',' );
+
+    for(let i = 0; i < arr.length; i++){
+        if(typeof values[ arr[i] ] !== 'undefined'){
+            meta = meta + ' ' + values[ arr[i] ];
+        }
+    }
+    return meta;
+};
