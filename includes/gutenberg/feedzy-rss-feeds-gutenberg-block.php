@@ -265,6 +265,8 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 				$item_attrs = $pro->feedzy_pro_add_data_to_item( array(), $item );
 			}
 
+			$description = isset( $item_attrs['item_description'] ) ? $item_attrs['item_description'] : ( $item->get_description() ? $item->get_description() : null );
+
 			array_push(
 				$feedy['items'], array(
 					'title'       => ( ( $item->get_title() ) ? $item->get_title() : null ),
@@ -274,7 +276,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 					'pubDate'     => ( ( $item->get_date() ) ? $item->get_date( 'U' ) : null ),
 					'date'        => ( ( $item->get_date() ) ? date_i18n( $meta_args['date_format'], $item->get_date( 'U' ) ) : null ),
 					'time'        => ( ( $item->get_date() ) ? date_i18n( $meta_args['time_format'], $item->get_date( 'U' ) ) : null ),
-					'description' => ( ( $item->get_description() ) ? $item->get_description() : null ),
+					'description' => $description,
 					'thumbnail'   => $admin->feedzy_retrieve_image( $item ),
 					'price'       => ( ( feedzy_is_pro() && $item_attrs['item_price'] ) ? $item_attrs['item_price'] : null ),
 					'media'       => ( ( feedzy_is_pro() && $item_attrs['item_media'] ) ? $item_attrs['item_media'] : null ),
