@@ -122,7 +122,9 @@ function run_feedzy_rss_feeds() {
 	define( 'FEEDZY_LOCAL_DEBUG', false );
 
 	// always make this true before testing
+	// also used in gutenberg.
 	define( 'FEEDZY_DISABLE_CACHE_FOR_TESTING', false );
+
 	$feedzy = Feedzy_Rss_Feeds::instance();
 	$feedzy->run();
 	$vendor_file = FEEDZY_ABSPATH . '/vendor/autoload_52.php';
