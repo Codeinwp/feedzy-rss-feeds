@@ -72,7 +72,7 @@ export const arrangeMeta = ( values, fields ) => {
     let meta = '';
 
     if(fields === ''){
-        return meta;
+        fields = 'author, date, time';
     }
 
     let arr = fields.replace(/\s/g,'').split( ',' );
