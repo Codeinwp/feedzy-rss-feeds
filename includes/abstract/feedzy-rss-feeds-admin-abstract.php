@@ -625,7 +625,12 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$data   = wp_remote_retrieve_body( wp_remote_get( $feed_url, array( 'user-agent' => $default_agent ) ) );
 				$cloned_feed->set_raw_data( $data );
 				$cloned_feed->init();
-				$feed = $cloned_feed;
+				$error_raw = $cloned_feed->error();
+				if ( empty( $error_raw ) ) {
+					// only if using the raw url produces no errors, will we consider the new feed as good to go.
+					// otherwise we will use the old feed
+					$feed = $cloned_feed;
+				}
 			} else {
 				do_action( 'themeisle_log_event', FEEDZY_NAME, 'Cannot use raw data as this is a multifeed URL', 'debug', __FILE__, __LINE__ );
 			}
