@@ -18,7 +18,7 @@
 			<?php
 		}
 		?>
-		<?php echo apply_filters( 'feedzy_support_tab_heading', '', $_REQUEST['tab'] ); ?>
+		<?php echo apply_filters( 'feedzy_support_tab_heading', '', $active_tab ); ?>
 	</h2>
 
 	<div class="fz-features-content">
