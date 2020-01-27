@@ -1038,7 +1038,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$domain      = parse_url( $new_link );
 				$author_url   = '//' . $domain['host'];
 				$author_url   = apply_filters( 'feedzy_author_url', $author_url, $author_name, $feed_url, $item );
-				$content_meta_values['author'] = __( 'by', 'feedzy-rss-feeds' ) . ' <a href="' . $author_url . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $author_name . '</a> ';
+				$content_meta_values['author'] = apply_filters( 'feedzy_meta_author', __( 'by', 'feedzy-rss-feeds' ) . ' <a href="' . $author_url . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $author_name . '</a> ', $author_name, $author_url, $feed_source, $feed_url, $item );
 			}
 		}
 
@@ -1060,18 +1060,18 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$date_time   = apply_filters( 'feedzy_feed_timestamp', $date_time, $feed_url, $item );
 		if ( $meta_args['date'] && ! empty( $meta_args['date_format'] ) ) {
-			$content_meta_values['date'] = __( 'on', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $meta_args['date_format'], $date_time ) . ' ';
+			$content_meta_values['date'] = apply_filters( 'feedzy_meta_date', __( 'on', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $meta_args['date_format'], $date_time ) . ' ', $date_time, $feed_url, $item );
 		}
 
 		if ( $meta_args['time'] && ! empty( $meta_args['time_format'] ) ) {
-			$content_meta_values['time'] = __( 'at', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $meta_args['time_format'], $date_time ) . ' ';
+			$content_meta_values['time'] = apply_filters( 'feedzy_meta_time', __( 'at', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $meta_args['time_format'], $date_time ) . ' ', $date_time, $feed_url, $item );
 		}
 
 		// categories.
 		if ( $meta_args['categories'] && has_filter( 'feedzy_retrieve_categories' ) ) {
 			$categories = apply_filters( 'feedzy_retrieve_categories', null, $item );
 			if ( ! empty( $categories ) ) {
-				$content_meta_values['categories'] = __( 'in', 'feedzy-rss-feeds' ) . ' ' . $categories . ' ';
+				$content_meta_values['categories'] = apply_filters( 'feedzy_meta_categories', __( 'in', 'feedzy-rss-feeds' ) . ' ' . $categories . ' ', $categories, $feed_url, $item );
 			}
 		}
 
