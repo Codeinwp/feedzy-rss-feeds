@@ -608,19 +608,29 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$feed->init();
 
 		$error = $feed->error();
+		// error could be an array, so let's join the different errors.
+		if ( is_array( $error ) ) {
+			$error = implode( '|', $error );
+		}
+
 		if ( ! empty( $error ) ) {
-			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Error while parsing feed: %s', print_r( $error, true ) ), 'error', __FILE__, __LINE__ );
+			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Error while parsing feed: %s', $error ), 'error', __FILE__, __LINE__ );
 
 			// curl: (60) SSL certificate problem: unable to get local issuer certificate
 			if ( strpos( $error, 'SSL certificate' ) !== false ) {
-				do_action( 'themeisle_log_event', FEEDZY_NAME, 'Got an SSL Error, retrying by ignoring SSL', 'debug', __FILE__, __LINE__ );
+				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Got an SSL Error (%s), retrying by ignoring SSL', $error ), 'debug', __FILE__, __LINE__ );
 				$feed = $this->init_feed( $feed_url, $cache, $sc, false );
 			} elseif ( is_string( $feed_url ) || ( is_array( $feed_url ) && 1 === count( $feed_url ) ) ) {
 				do_action( 'themeisle_log_event', FEEDZY_NAME, 'Trying to use raw data', 'debug', __FILE__, __LINE__ );
 				$data   = wp_remote_retrieve_body( wp_remote_get( $feed_url, array( 'user-agent' => $default_agent ) ) );
 				$cloned_feed->set_raw_data( $data );
 				$cloned_feed->init();
-				$feed = $cloned_feed;
+				$error_raw = $cloned_feed->error();
+				if ( empty( $error_raw ) ) {
+					// only if using the raw url produces no errors, will we consider the new feed as good to go.
+					// otherwise we will use the old feed
+					$feed = $cloned_feed;
+				}
 			} else {
 				do_action( 'themeisle_log_event', FEEDZY_NAME, 'Cannot use raw data as this is a multifeed URL', 'debug', __FILE__, __LINE__ );
 			}
