@@ -1,4 +1,8 @@
 
+ ### v3.3.17 - 2020-01-30 
+ **Changes:** 
+ * Release
+ 
  ### v3.3.16 - 2020-01-07 
  **Changes:** 
  * Fix fatal error with new version of SimplePie
