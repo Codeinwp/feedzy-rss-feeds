@@ -28,15 +28,13 @@ matrix:
       node_js:
         - 10.8
       script:
-        - docker-compose -f docker-compose.travis.yml up -d
-        - bash ./bin/wp-init.sh && bash ./bin/run-e2e-tests.sh
+        - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then docker-compose -f docker-compose.travis.yml up -d; bash ./bin/wp-init.sh && bash ./bin/run-e2e-tests.sh; fi;
     - name: Cypress Gutenberg
       language: node_js
       node_js:
         - 10.8
       script:
-        - docker-compose -f docker-compose.travis.yml up -d
-        - bash ./bin/wp-init.sh && bash ./bin/run-e2e-tests-gutenberg.sh
+        - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then docker-compose -f docker-compose.travis.yml up -d; bash ./bin/wp-init.sh && bash ./bin/run-e2e-tests-gutenberg.sh; fi;
 branches:
   except:
   - "/^*-v[0-9]/"
