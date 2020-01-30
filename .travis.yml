@@ -24,23 +24,21 @@ matrix:
       env: WP_VERSION=5.1
       dist: precise
     - name: Cypress
+      if: $TRAVIS_PULL_REQUEST != "false"
       language: node_js
       node_js:
         - 10.8
       script:
         - docker-compose -f docker-compose.travis.yml up -d
         - bash ./bin/wp-init.sh && bash ./bin/run-e2e-tests.sh
-      on:
-        condition: $TRAVIS_PULL_REQUEST != "false"
     - name: Cypress Gutenberg
+      if: $TRAVIS_PULL_REQUEST != "false"
       language: node_js
       node_js:
         - 10.8
       script:
         - docker-compose -f docker-compose.travis.yml up -d
         - bash ./bin/wp-init.sh && bash ./bin/run-e2e-tests-gutenberg.sh
-      on:
-        condition: $TRAVIS_PULL_REQUEST != "false"
 branches:
   except:
   - "/^*-v[0-9]/"
