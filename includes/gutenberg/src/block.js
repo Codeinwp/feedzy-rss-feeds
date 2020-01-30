@@ -7,7 +7,7 @@ import './style.scss';
 import queryString from 'query-string';
 import blockAttributes from './attributes';
 import Inspector from './inspector';
-import { unescapeHTML, filterData, inArray } from './utils';
+import { unescapeHTML, filterData, inArray, arrangeMeta } from './utils';
 
 /**
  * Internal block libraries
@@ -47,7 +47,7 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 			props.setAttributes( { feeds: value } );
 		};
 		const onChangeMax = value => {
-			props.setAttributes( { max: Number( value ) } );
+			props.setAttributes( { max: ! value ? 5 : Number( value ) } );
 		};
 		const onChangeOffset = value => {
 			props.setAttributes( { offset: Number( value ) } );
@@ -92,7 +92,7 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 			props.setAttributes( { default: value } );
 		};
 		const onSize = value => {
-			props.setAttributes( { size: Number( value ) } );
+			props.setAttributes( { size: ! value ? 150 : Number( value ) } );
 		};
 		const onReferralURL = value => {
 			props.setAttributes( { referral_url: value } );
@@ -269,6 +269,12 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
                                 }
                             }
 
+                            let meta_values = new Object();
+                            meta_values['author'] = __( 'by' ) + ' ' + author;
+                            meta_values['date'] = __( 'on' ) + ' ' + unescapeHTML( itemDate );
+                            meta_values['time'] = __( 'at' ) + ' ' + unescapeHTML( itemTime );
+                            meta_values['categories'] = __( 'in' ) + ' ' + unescapeHTML( categories );
+
 							return (
 								<li key={i} style={ { padding: '15px 0 25px' } } className={ `rss_item feedzy-rss-col-${ props.attributes.columns }` }>
 									{ ( ( item['thumbnail'] && props.attributes.thumb === 'auto' ) || props.attributes.thumb === 'yes' ) && (
@@ -291,29 +297,7 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 										<div className="rss_content">
 											{ ( props.attributes.metafields !== 'no' ) && (
 												<small className="meta">
-													{ ( item['creator'] && metaExists( 'author' ) ) && [
-														__( 'by' ),
-														' ',
-														<a>{ author }</a>,
-														' '
-													] }
-													{ ( metaExists( 'date' ) ) && [
-														__( 'on' ),
-														' ',
-														unescapeHTML( itemDate ),
-														' '
-													] }
-													{ ( metaExists( 'time' ) ) && [
-														__( 'at' ),
-														' ',
-														unescapeHTML( itemTime )
-													] }
-													{ ( feedzyjs.isPro && metaExists( 'categories' ) ) && [
-														' ',
-														__( 'in' ),
-														' ',
-														unescapeHTML( categories )
-													] }
+                                                { arrangeMeta( meta_values, props.attributes.metafields ) }
 												</small>
 											) }
 											{ ( props.attributes.summary ) && (

@@ -15,7 +15,7 @@
  * Plugin Name:       Feedzy RSS Feeds Lite
  * Plugin URI:        https://themeisle.com/plugins/feedzy-rss-feeds-lite/
  * Description:       A small and lightweight RSS aggregator plugin. Fast and very easy to use, it allows you to aggregate multiple RSS feeds into your WordPress site through fully customizable shortcodes & widgets.
- * Version:           3.3.16
+ * Version:           3.3.17
  * Author:            Themeisle
  * Author URI:        http://themeisle.com
  * License:           GPL-2.0+
@@ -122,7 +122,9 @@ function run_feedzy_rss_feeds() {
 	define( 'FEEDZY_LOCAL_DEBUG', false );
 
 	// always make this true before testing
+	// also used in gutenberg.
 	define( 'FEEDZY_DISABLE_CACHE_FOR_TESTING', false );
+
 	$feedzy = Feedzy_Rss_Feeds::instance();
 	$feedzy->run();
 	$vendor_file = FEEDZY_ABSPATH . '/vendor/autoload_52.php';

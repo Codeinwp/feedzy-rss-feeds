@@ -608,19 +608,29 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$feed->init();
 
 		$error = $feed->error();
+		// error could be an array, so let's join the different errors.
+		if ( is_array( $error ) ) {
+			$error = implode( '|', $error );
+		}
+
 		if ( ! empty( $error ) ) {
-			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Error while parsing feed: %s', print_r( $error, true ) ), 'error', __FILE__, __LINE__ );
+			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Error while parsing feed: %s', $error ), 'error', __FILE__, __LINE__ );
 
 			// curl: (60) SSL certificate problem: unable to get local issuer certificate
 			if ( strpos( $error, 'SSL certificate' ) !== false ) {
-				do_action( 'themeisle_log_event', FEEDZY_NAME, 'Got an SSL Error, retrying by ignoring SSL', 'debug', __FILE__, __LINE__ );
+				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Got an SSL Error (%s), retrying by ignoring SSL', $error ), 'debug', __FILE__, __LINE__ );
 				$feed = $this->init_feed( $feed_url, $cache, $sc, false );
 			} elseif ( is_string( $feed_url ) || ( is_array( $feed_url ) && 1 === count( $feed_url ) ) ) {
 				do_action( 'themeisle_log_event', FEEDZY_NAME, 'Trying to use raw data', 'debug', __FILE__, __LINE__ );
 				$data   = wp_remote_retrieve_body( wp_remote_get( $feed_url, array( 'user-agent' => $default_agent ) ) );
 				$cloned_feed->set_raw_data( $data );
 				$cloned_feed->init();
-				$feed = $cloned_feed;
+				$error_raw = $cloned_feed->error();
+				if ( empty( $error_raw ) ) {
+					// only if using the raw url produces no errors, will we consider the new feed as good to go.
+					// otherwise we will use the old feed
+					$feed = $cloned_feed;
+				}
 			} else {
 				do_action( 'themeisle_log_event', FEEDZY_NAME, 'Cannot use raw data as this is a multifeed URL', 'debug', __FILE__, __LINE__ );
 			}
@@ -1028,7 +1038,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$domain      = parse_url( $new_link );
 				$author_url   = '//' . $domain['host'];
 				$author_url   = apply_filters( 'feedzy_author_url', $author_url, $author_name, $feed_url, $item );
-				$content_meta_values['author'] = __( 'by', 'feedzy-rss-feeds' ) . ' <a href="' . $author_url . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $author_name . '</a> ';
+				$content_meta_values['author'] = apply_filters( 'feedzy_meta_author', __( 'by', 'feedzy-rss-feeds' ) . ' <a href="' . $author_url . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $author_name . '</a> ', $author_name, $author_url, $feed_source, $feed_url, $item );
 			}
 		}
 
@@ -1050,18 +1060,18 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$date_time   = apply_filters( 'feedzy_feed_timestamp', $date_time, $feed_url, $item );
 		if ( $meta_args['date'] && ! empty( $meta_args['date_format'] ) ) {
-			$content_meta_values['date'] = __( 'on', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $meta_args['date_format'], $date_time ) . ' ';
+			$content_meta_values['date'] = apply_filters( 'feedzy_meta_date', __( 'on', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $meta_args['date_format'], $date_time ) . ' ', $date_time, $feed_url, $item );
 		}
 
 		if ( $meta_args['time'] && ! empty( $meta_args['time_format'] ) ) {
-			$content_meta_values['time'] = __( 'at', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $meta_args['time_format'], $date_time ) . ' ';
+			$content_meta_values['time'] = apply_filters( 'feedzy_meta_time', __( 'at', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $meta_args['time_format'], $date_time ) . ' ', $date_time, $feed_url, $item );
 		}
 
 		// categories.
 		if ( $meta_args['categories'] && has_filter( 'feedzy_retrieve_categories' ) ) {
 			$categories = apply_filters( 'feedzy_retrieve_categories', null, $item );
 			if ( ! empty( $categories ) ) {
-				$content_meta_values['categories'] = __( 'in', 'feedzy-rss-feeds' ) . ' ' . $categories . ' ';
+				$content_meta_values['categories'] = apply_filters( 'feedzy_meta_categories', __( 'in', 'feedzy-rss-feeds' ) . ' ' . $categories . ' ', $categories, $feed_url, $item );
 			}
 		}
 
