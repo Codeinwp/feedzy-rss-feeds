@@ -246,6 +246,7 @@ class feedzy_wp_widget extends WP_Widget {
 			'refresh' => $instance['refresh'],
 			'follow' => $instance['follow'],
 			'http' => $instance['http'],
+			'offset' => $instance['offset'],
 		);
 		$feedzy_widget_shortcode_attributes = apply_filters( 'feedzy_widget_shortcode_attributes_filter', $feedzy_widget_shortcode_attributes, $args, $instance );
 
