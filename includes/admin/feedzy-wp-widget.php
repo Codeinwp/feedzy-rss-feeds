@@ -246,6 +246,7 @@ class feedzy_wp_widget extends WP_Widget {
 			'refresh' => $instance['refresh'],
 			'follow' => $instance['follow'],
 			'http' => $instance['http'],
+			'lazy' => self::bool_to_enum( $instance['lazy'] ),
 		);
 		$feedzy_widget_shortcode_attributes = apply_filters( 'feedzy_widget_shortcode_attributes_filter', $feedzy_widget_shortcode_attributes, $args, $instance );
 

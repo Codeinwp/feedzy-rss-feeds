@@ -114,6 +114,10 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 					'meta'           => array(
 						'type'    => 'boolean',
 					),
+					'lazy'           => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
 					'metafields'      => array(
 						'type'    => 'string',
 					),

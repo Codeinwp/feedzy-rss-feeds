@@ -89,6 +89,14 @@ const Inspector = props => {
 						/>
 					) }
 
+					<ToggleControl
+                        label={ __( 'Lazy load feed?' ) }
+						checked={ !! props.attributes.lazy }
+						onChange={ props.toggleLazy }
+                        className="feedzy-lazy"
+						help={ __( 'Only on the front end.' ) }
+					/>
+
 					<SelectControl
 						label={ __( 'Feed Caching Time' ) }
 						value={ props.attributes.refresh }
