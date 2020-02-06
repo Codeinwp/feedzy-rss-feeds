@@ -364,7 +364,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$html = "<div class='feedzy-lazy' $attributes>";
 			// the first time the shortcode is being called it will not have any content.
 			if ( empty( $content ) ) {
-				$content = __( 'Loading', 'visualizer' ) . '...';
+				$content = __( 'Loading', 'feedzy-rss-feeds' ) . '...';
 			}
 			$html .= "$content</div>";
 
