@@ -22,5 +22,8 @@ export CYPRESS_HOST=$wp_host
 export CYPRESS_SPEC_TO_RUN="shortcode_free.js"
 npm run cypress:run
 
+# test ONLY free lazy loading
+export CYPRESS_SPEC_TO_RUN="shortcode_lazy_free.js"
+npm run cypress:run
 
 # docker exec -it feedzy_wordpress cat /var/www/html/wp-content/debug.log
