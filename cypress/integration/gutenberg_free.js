@@ -46,10 +46,10 @@ describe('Test Free - gutenberg', function() {
             // change settings
             // clear does not work on number fields. Targetting slider and triggering 'change' doesn't work either. So we have to mix n match.
 
-            cy.get('div.edit-post-sidebar div.components-base-control.feedzy-max input.components-range-control__number').invoke('val', '').clear().type(gutenberg.max).blur();
+            cy.get('div.edit-post-sidebar div.components-base-control.feedzy-max input.components-range-control__number').invoke('val', '').clear({force:true}).type(gutenberg.max, {force:true}).blur({force:true});
             cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] div.feedzy-rss ul.feedzy-default li').should('have.length', gutenberg.max);
 
-            cy.get('div.edit-post-sidebar div.components-base-control.feedzy-offset input.components-range-control__number').invoke('val', '').clear().type(gutenberg.offset).blur();
+            cy.get('div.edit-post-sidebar div.components-base-control.feedzy-offset input.components-range-control__number').invoke('val', '').clear({force:true}).type(gutenberg.offset, {force:true}).blur({force:true});
             cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] div.feedzy-rss ul.feedzy-default li').should('have.length', parseInt(gutenberg.max) - parseInt(gutenberg.offset));
 
             // item options
