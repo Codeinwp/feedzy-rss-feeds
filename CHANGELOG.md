@@ -1,4 +1,12 @@
 
+ ### v3.3.17 - 2020-01-30 
+ **Changes:** 
+ * Allow user to dictate order of meta data in the editor as well
+* Ability to filter each meta data
+* Fixed offset option not working correctly in the editor
+* Default number of items now resets to 5
+* Fixed invalid feeds causing the plugin to hang
+ 
  ### v3.3.16 - 2020-01-07 
  **Changes:** 
  * Fix fatal error with new version of SimplePie

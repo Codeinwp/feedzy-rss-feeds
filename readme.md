@@ -447,7 +447,13 @@ You have to check first if your feed is valid. Please test it here: https://vali
 3. Widget admin
 4. Widget render
 
+
  == Changelog ==
+### 3.3.17 - 2020-01-30  ###
+
+* Release
+
+
 
 ### 3.3.16 - 2020-01-07  ###
 
