@@ -247,6 +247,8 @@ class feedzy_wp_widget extends WP_Widget {
 			'follow' => $instance['follow'],
 			'http' => $instance['http'],
 			'lazy' => self::bool_to_enum( $instance['lazy'] ),
+			'offset' => $instance['offset'],
+			'multiple_meta' => $instance['multiple_meta'],
 		);
 		$feedzy_widget_shortcode_attributes = apply_filters( 'feedzy_widget_shortcode_attributes_filter', $feedzy_widget_shortcode_attributes, $args, $instance );
 

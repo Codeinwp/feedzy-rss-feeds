@@ -187,7 +187,7 @@ class Feedzy_Rss_Feeds {
 	 */
 	private function define_admin_hooks() {
 		$plugin_ui = new Feedzy_Rss_Feeds_Ui( self::$instance->get_plugin_name(), self::$instance->get_version(), self::$instance->loader );
-		self::$instance->loader->add_action( 'admin_enqueue_scripts', $plugin_ui, 'register_init' );
+		self::$instance->loader->add_action( 'admin_init', $plugin_ui, 'register_init' );
 		self::$instance->loader->add_action( 'init', self::$instance->admin, 'register_post_type' );
 		self::$instance->loader->add_action( 'save_post', self::$instance->admin, 'save_feedzy_post_type_meta', 1, 2 );
 		self::$instance->loader->add_action( 'feedzy_pre_http_setup', self::$instance->admin, 'pre_http_setup', 10, 1 );
@@ -198,7 +198,6 @@ class Feedzy_Rss_Feeds {
 		self::$instance->loader->add_filter( 'manage_feedzy_categories_posts_columns', self::$instance->admin, 'feedzy_category_columns' );
 
 		self::$instance->loader->add_action( 'admin_menu', self::$instance->admin, 'feedzy_menu_pages' );
-		self::$instance->loader->add_filter( 'mce_external_languages', $plugin_ui, 'feedzy_add_tinymce_lang', 10, 1 );
 		self::$instance->loader->add_filter( 'plugin_row_meta', self::$instance->admin, 'feedzy_filter_plugin_row_meta', 10, 2 );
 		self::$instance->loader->add_filter( 'feedzy_default_image', self::$instance->admin, 'feedzy_define_default_image' );
 		self::$instance->loader->add_filter( 'feedzy_default_error', self::$instance->admin, 'feedzy_default_error_notice', 9, 3 );
