@@ -348,9 +348,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 		$cache   = $sc['refresh'];
 
+		// Disregard the pseudo-shortcode coming from Gutenberg as a lazy one.
 		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
-		$lazy   = $sc['lazy'] == 'yes';
-		if ( $lazy ) {
+		if ( $sc['lazy'] == 'yes' && ! isset( $sc['gutenberg'] ) ) {
 			$attributes = '';
 			foreach ( $sc as $key => $val ) {
 				if ( is_array( $val ) ) {
