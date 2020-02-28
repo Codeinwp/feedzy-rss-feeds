@@ -347,6 +347,37 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			return $content;
 		}
 		$cache   = $sc['refresh'];
+
+		// Disregard the pseudo-shortcode coming from Gutenberg as a lazy one.
+		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+		if ( $sc['lazy'] == 'yes' && ! isset( $sc['gutenberg'] ) ) {
+			$attributes = '';
+			foreach ( $sc as $key => $val ) {
+				// ignore the feedData, its not required.
+				if ( $key === 'feedData' ) {
+					continue;
+				}
+				if ( is_array( $val ) ) {
+					$val = implode( ',', $val );
+				}
+				$attributes .= 'data-' . $key . '="' . esc_attr( $val ) . '"';
+			}
+			$content = get_transient( sprintf( 'feedzy-lazy-%s', is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ) );
+
+			$class  = array_filter( apply_filters( 'feedzy_add_classes_block', array( $sc['className'], 'feedzy-' . md5( $feed_url ) ), $sc, null, $feed_url ) );
+			$html = "<div class='feedzy-lazy' $attributes>";
+			// the first time the shortcode is being called it will not have any content.
+			if ( empty( $content ) ) {
+				$content = apply_filters( 'feedzy_lazyload_loading_msg', __( 'Loading', 'feedzy-rss-feeds' ) . '...', $feed_url );
+			}
+			$html .= "$content</div>";
+
+			wp_register_script( $this->plugin_name . '-lazy', FEEDZY_ABSURL . 'js/feedzy-lazy.js', array( 'jquery' ), $this->version, 'all' );
+			wp_enqueue_script( $this->plugin_name . '-lazy' );
+			wp_localize_script( $this->plugin_name . '-lazy', 'feedzy', array( 'url' => get_rest_url( null, 'feedzy/v' . FEEDZY_REST_VERSION . '/lazy/' ), 'rest_nonce' => wp_create_nonce( 'wp_rest' ), 'nonce' => wp_create_nonce( 'feedzy' ) ) );
+			return $html;
+		}
+
 		$feed    = $this->fetch_feed( $feed_url, $cache, $sc );
 		if ( is_string( $feed ) ) {
 			return $feed;
@@ -355,6 +386,52 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$content = $this->render_content( $sc, $feed, $content, $feed_url );
 
 		return $content;
+	}
+
+
+	/**
+	 * Register Rest Route for Feedzy lazy loader.
+	 */
+	public function rest_route() {
+		register_rest_route(
+			'feedzy/v' . FEEDZY_REST_VERSION, '/lazy/', array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'feedzy_lazy_load' ),
+				'args' => array(
+					'nonce' => array(
+						'validate_callback' => function( $value ) {
+							return wp_verify_nonce( $value, 'feedzy' );
+						},
+						'required' => true,
+					),
+				),
+			)
+		);
+	}
+
+	/**
+	 * Parse the feed and send it to the front-end to display.
+	 *
+	 * @since   ?
+	 * @access  public
+	 *
+	 * @param   array $data The attributes passed by the ajax call.
+	 */
+	public function feedzy_lazy_load( $data ) {
+		$atts = $data['args'];
+		$sc = $this->get_short_code_attributes( $atts );
+		$feed_url = $this->normalize_urls( $sc['feeds'] );
+		$feed    = $this->fetch_feed( $feed_url, $sc['refresh'], $sc );
+		if ( is_string( $feed ) ) {
+			return $feed;
+		}
+		$sc      = $this->sanitize_attr( $sc, $feed_url );
+		$content = $this->render_content( $sc, $feed, '', $feed_url );
+
+		// save the content as a transient so that whenever the feed is refreshed next, this stale content is displayed first.
+		set_transient( sprintf( 'feedzy-lazy-%s', ( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ) ), $content, apply_filters( 'feedzy_lazyload_cache_time', DAY_IN_SECONDS, $feed_url ) );
+
+		wp_send_json_success( array( 'content' => $content ) );
 	}
 
 	/**
@@ -417,6 +494,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'offset'        => 0,
 				// class name of this block
 				'className'     => '',
+				// lazy loading of feeds?
+				'lazy'          => 'no',
 			),
 			$atts,
 			'feedzy_default'

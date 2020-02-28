@@ -431,3 +431,10 @@ input:checked + .feedzy-track:before {
 	font-size: 14px;
 	font-weight: bold;
 }
+
+/* lazy loading feeds */
+.feedzy-lazy.loading {
+	z-index: 1001;
+	background: url(/wp-includes/images/wpspin-2x.gif) no-repeat center center;
+
+}

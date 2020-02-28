@@ -246,6 +246,7 @@ class feedzy_wp_widget extends WP_Widget {
 			'refresh' => $instance['refresh'],
 			'follow' => $instance['follow'],
 			'http' => $instance['http'],
+			'lazy' => self::bool_to_enum( $instance['lazy'] ),
 			'offset' => $instance['offset'],
 			'multiple_meta' => $instance['multiple_meta'],
 		);
