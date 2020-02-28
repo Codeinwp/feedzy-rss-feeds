@@ -353,6 +353,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( $sc['lazy'] == 'yes' && ! isset( $sc['gutenberg'] ) ) {
 			$attributes = '';
 			foreach ( $sc as $key => $val ) {
+				// ignore the feedData, its not required.
+				if ( $key === 'feedData' ) {
+					continue;
+				}
 				if ( is_array( $val ) ) {
 					$val = implode( ',', $val );
 				}
