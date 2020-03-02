@@ -1274,6 +1274,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 		}
 
+		$the_thumbnail = html_entity_decode( $the_thumbnail, ENT_QUOTES, 'UTF-8' );
 		$the_thumbnail = apply_filters( 'feedzy_retrieve_image', $the_thumbnail, $item );
 
 		return $the_thumbnail;
