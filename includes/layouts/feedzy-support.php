@@ -18,6 +18,9 @@
 			<?php
 		}
 		?>
+		<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-support&tab=improve' ) ); ?>"
+		   class="nav-tab <?php echo $active_tab === 'improve' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Help us improve!', 'feedzy-rss-feeds' ); ?></a>
+
 		<?php echo apply_filters( 'feedzy_support_tab_heading', '', $active_tab ); ?>
 	</h2>
 
@@ -33,6 +36,9 @@
 							if ( $show_more ) {
 								load_template( FEEDZY_ABSPATH . '/includes/layouts/feedzy-upsell.php' );
 							}
+							break;
+						case 'improve':
+							load_template( FEEDZY_ABSPATH . '/includes/layouts/feedzy-improve.php' );
 							break;
 						default:
 							$template = apply_filters( 'feedzy_support_tab_content', '', $active_tab );
