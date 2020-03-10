@@ -629,6 +629,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 		}
 
+		require_once( ABSPATH . WPINC . '/class-wp-feed-cache.php' );
+		require_once( ABSPATH . WPINC . '/class-wp-feed-cache-transient.php' );
+		require_once( ABSPATH . WPINC . '/class-wp-simplepie-file.php' );
+
 		$feed = new Feedzy_Rss_Feeds_Util_SimplePie( $sc );
 		if ( ! $allow_https && method_exists( $feed, 'set_curl_options' ) ) {
 			$feed->set_curl_options(
