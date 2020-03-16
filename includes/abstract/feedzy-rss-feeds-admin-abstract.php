@@ -638,6 +638,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				)
 			);
 		}
+
+		require_once( ABSPATH . WPINC . '/class-wp-feed-cache.php' );
+		require_once( ABSPATH . WPINC . '/class-wp-feed-cache-transient.php' );
+		require_once( ABSPATH . WPINC . '/class-wp-simplepie-file.php' );
+
 		$feed->set_file_class( 'WP_SimplePie_File' );
 		$default_agent = $this->get_default_user_agent( $feed_url );
 		$feed->set_useragent( apply_filters( 'http_headers_useragent', $default_agent ) );
