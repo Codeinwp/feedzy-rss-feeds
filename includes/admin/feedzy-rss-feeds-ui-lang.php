@@ -197,6 +197,21 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'type'        => 'text',
 						'value'       => '',
 					),
+					'lazy'       => array(
+						'label' => __( 'Lazy load the feed (without slowing down the page)', 'feedzy-rss-feeds' ),
+						'type'  => 'select',
+						'value' => 'no',
+						'opts'  => array(
+							'yes' => array(
+								'label' => __( 'Yes', 'feedzy-rss-feeds' ),
+								'value' => 'yes',
+							),
+							'no'  => array(
+								'label' => __( 'No', 'feedzy-rss-feeds' ),
+								'value' => 'no',
+							),
+						),
+					),
 				),
 			),
 			'section_item'  => array(
@@ -445,6 +460,18 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 		$translated = 'tinyMCE.addI18n("' . $locale . '.feedzy_tinymce_plugin", ' . json_encode( $this->strings ) . ");\n";
 
 		return $translated;
+	}
+
+	/**
+	 *
+	 * The method that returns the strings array
+	 *
+	 * @since    ?
+	 * @access   public
+	 * @return array
+	 */
+	public function get_strings() {
+		return $this->strings;
 	}
 
 }

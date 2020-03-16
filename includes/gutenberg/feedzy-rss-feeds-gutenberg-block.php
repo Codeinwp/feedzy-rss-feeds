@@ -114,6 +114,10 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 					'meta'           => array(
 						'type'    => 'boolean',
 					),
+					'lazy'           => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
 					'metafields'      => array(
 						'type'    => 'string',
 					),
@@ -168,6 +172,9 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 	 * Feedzy Gutenberg Block Callback Function
 	 */
 	public function feedzy_gutenberg_block_callback( $attr ) {
+		if ( is_admin() ) {
+			$attr['gutenberg'] = true;
+		}
 		$attr['default'] = ( ! empty( $attr['default'] ) ? $attr['default']['url'] : '' );
 		if ( ! empty( $attr['feed_title'] ) ) {
 			$attr['feed_title'] = 'yes';

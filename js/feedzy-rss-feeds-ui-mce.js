@@ -10,31 +10,31 @@
 (function($) {
 	tinymce.PluginManager.add('feedzy_mce_button', function( editor, url ) {
 		editor.addButton( 'feedzy_mce_button', {
-			title: editor.getLang( 'feedzy_tinymce_plugin.plugin_label' ),
-			label: editor.getLang( 'feedzy_tinymce_plugin.plugin_label' ),
+			title: getTranslation( editor, 'plugin_label' ),
+			label: getTranslation( editor, 'plugin_label' ),
 			icon: 'feedzy-icon',
 			onclick: function() {
 				editor.windowManager.open( {
-					title: editor.getLang( 'feedzy_tinymce_plugin.plugin_title' ),
-					url: editor.getLang( 'feedzy_tinymce_plugin.popup_url' ) + '&amp;action=get_tinymce_form',
+					title: getTranslation( editor, 'plugin_title' ),
+					url: getTranslation( editor, 'popup_url' ) + '&amp;action=get_tinymce_form',
 					width: $( window ).width() * 0.7,
 					height: ($( window ).height() - 36 - 50) * 0.7,
 					inline: 1,
 					id: 'feedzy-rss-insert-dialog',
 					buttons: [{
-						text: editor.getLang( 'feedzy_tinymce_plugin.pro_button' ),
+						text: getTranslation( editor, 'pro_button' ),
 						id: 'feedzy-rss-button-pro',
 						onclick: function( e ) {
 							openProLink( e, editor );
 						},
 					},
 						{
-							text: editor.getLang( 'feedzy_tinymce_plugin.cancel_button' ),
+							text: getTranslation( editor, 'cancel_button' ),
 							id: 'feedzy-rss-button-cancel',
 							onclick: 'close'
 					},
 						{
-							text: editor.getLang( 'feedzy_tinymce_plugin.insert_button' ),
+							text: getTranslation( editor, 'insert_button' ),
 							id: 'feedzy-rss-button-insert',
 							class: 'insert',
 							onclick: function( e ) {
@@ -50,6 +50,20 @@
 			}
 		});
 	});
+
+    /**
+     * Gets the translation from the editor (when classic editor is enabled)
+     * OR
+     * from the settings array inside the editor (when classic block inside gutenberg)
+     */
+    function getTranslation(editor, slug){
+        var string = editor.getLang('feedzy_tinymce_plugin.' + slug);
+        // if the string is the same as the slug being requested for, look in the settings.
+        if(string === '{#feedzy_tinymce_plugin.' + slug + '}'){
+            string = editor.settings.feedzy_tinymce_plugin[slug];
+        }
+        return string;
+    }
 
 	function insertShortcode( e, editor ) {
 		var frame = $( e.currentTarget ).find( 'iframe' ).get( 0 );
@@ -91,6 +105,6 @@
 	}
 
 	function openProLink( e , editor ) {
-		window.open( editor.getLang( 'feedzy_tinymce_plugin.pro_url' ), '_blank' );
+		window.open( getTranslation( editor, 'pro_url' ), '_blank' );
 	}
 })(jQuery);
