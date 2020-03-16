@@ -154,7 +154,6 @@ class Feedzy_Rss_Feeds_Ui {
 	 * @return  array
 	 */
 	public function feedzy_tinymce_plugin( $plugin_array ) {
-		error_log( 'called mce_external_plugins' );
 		$plugin_array['feedzy_mce_button'] = FEEDZY_ABSURL . 'js/feedzy-rss-feeds-ui-mce.js';
 		return $plugin_array;
 	}
