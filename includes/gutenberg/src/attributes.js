@@ -35,6 +35,10 @@ const attributes = {
 		type: 'boolean',
 		default: true,
 	},
+	lazy: {
+		type: 'boolean',
+		default: false,
+	},
 	metafields: {
 		type: 'string',
 		default: '',

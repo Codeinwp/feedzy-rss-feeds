@@ -239,13 +239,16 @@ class feedzy_wp_widget extends WP_Widget {
 			'thumb'          => self::bool_to_enum( $instance['thumb'] ),
 			'default'        => $instance['default'],
 			'size'           => $instance['size'],
-			'keywords_title' => $instance['keywords_title'],
-			'keywords_ban' => $instance['keywords_ban'],
+			'keywords_title' => ! empty( $instance['keywords_title'] ) ? $instance['keywords_title'] : '',
+			'keywords_ban' => ! empty( $instance['keywords_ban'] ) ? $instance['keywords_ban'] : '',
 			'error_empty' => $instance['error_empty'],
 			'sort' => $instance['sort'],
 			'refresh' => $instance['refresh'],
 			'follow' => $instance['follow'],
 			'http' => $instance['http'],
+			'lazy' => ! empty( $instance['lazy'] ) ? self::bool_to_enum( $instance['lazy'] ) : false,
+			'offset' => $instance['offset'],
+			'multiple_meta' => $instance['multiple_meta'],
 		);
 		$feedzy_widget_shortcode_attributes = apply_filters( 'feedzy_widget_shortcode_attributes_filter', $feedzy_widget_shortcode_attributes, $args, $instance );
 

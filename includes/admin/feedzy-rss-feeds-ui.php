@@ -83,14 +83,28 @@ class Feedzy_Rss_Feeds_Ui {
 	 */
 	public function register_init() {
 		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
-		if ( ! $this->is_block_editor() && current_user_can( 'edit_posts' ) && current_user_can( 'edit_pages' ) && 'true' == get_user_option( 'rich_editing' ) ) {
+		if ( current_user_can( 'edit_posts' ) && current_user_can( 'edit_pages' ) && 'true' == get_user_option( 'rich_editing' ) ) {
 			$this->loader->add_filter( 'mce_external_plugins', $this, 'feedzy_tinymce_plugin', 10, 1 );
 			$this->loader->add_filter( 'mce_buttons', $this, 'feedzy_register_mce_button', 10, 1 );
-
+			$this->loader->add_filter( 'mce_external_languages', $this, 'feedzy_add_tinymce_lang', 10, 1 );
 			$this->loader->add_action( 'admin_enqueue_scripts', $this, 'enqueue_scripts', 10 );
+			$this->loader->add_filter( 'tiny_mce_before_init', $this, 'get_strings_for_block', 10, 1 );
 
 			$this->loader->run();
 		}
+	}
+
+	/**
+	 * Add the strings required for the TinyMCE buttons for the classic block (not the classic editor).
+	 *
+	 * @since   ?
+	 * @access  friendly
+	 */
+	function get_strings_for_block( $settings ) {
+		$feedzy_lang_class = new Feedzy_Rss_Feeds_Ui_Lang();
+		$strings         = $feedzy_lang_class->get_strings();
+		$array = array( 'feedzy_tinymce_plugin' => json_encode( $strings ) );
+		return array_merge( $settings, $array );
 	}
 
 	/**
@@ -123,6 +137,8 @@ class Feedzy_Rss_Feeds_Ui {
 	 * @return  array
 	 */
 	public function feedzy_add_tinymce_lang( $arr ) {
+		error_log( 'called mce_external_languages' );
+
 		$feedzy_rss_feeds_ui_lang = FEEDZY_ABSPATH . '/includes/admin/feedzy-rss-feeds-ui-lang.php';
 		$feedzy_rss_feeds_ui_lang = apply_filters( 'feedzy_rss_feeds_ui_lang_filter', $feedzy_rss_feeds_ui_lang );
 		$arr[] = $feedzy_rss_feeds_ui_lang;

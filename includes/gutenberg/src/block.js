@@ -76,6 +76,9 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 		const toggleSummary = value => {
 			props.setAttributes( { summary: ! props.attributes.summary } );
 		};
+		const toggleLazy = value => {
+			props.setAttributes( { lazy: ! props.attributes.lazy } );
+		};
 		const onSummaryLength = value => {
 			props.setAttributes( { summarylength: Number( value ) } );
 		};
@@ -194,7 +197,7 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 			// Inspector
 			!! props.isSelected && (
 				<Inspector 
-					{ ...{ onChangeFeeds, onChangeMax, onChangeOffset, toggleFeedTitle, onRefresh, onSort, onTarget, onTitle, changeMeta, changeMultipleMeta, toggleSummary, onSummaryLength, onKeywordsTitle, onKeywordsBan, onThumb, onDefault, onSize, onReferralURL, onColumns, onTemplate, togglePrice, loadFeed, ...props } }
+					{ ...{ onChangeFeeds, onChangeMax, onChangeOffset, toggleFeedTitle, onRefresh, onSort, onTarget, onTitle, changeMeta, changeMultipleMeta, toggleSummary, toggleLazy, onSummaryLength, onKeywordsTitle, onKeywordsBan, onThumb, onDefault, onSize, onReferralURL, onColumns, onTemplate, togglePrice, loadFeed, ...props } }
 				/>
 			),
 			props.attributes.status !== 2 && (
