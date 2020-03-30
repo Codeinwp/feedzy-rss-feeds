@@ -214,11 +214,41 @@ class Feedzy_Rss_Feeds {
 		self::$instance->loader->add_action( 'wp_ajax_get_tinymce_form', self::$instance->admin, 'get_tinymce_form' );
 		self::$instance->loader->add_action( 'wp_enqueue_scripts', self::$instance->admin, 'enqueue_styles' );
 		self::$instance->loader->add_action( 'admin_enqueue_scripts', self::$instance->admin, 'enqueue_styles_admin' );
+		self::$instance->loader->add_filter( 'feedzy_rss_feeds_logger_data', self::$instance->admin, 'get_usage_data', 10 );
+
 		$plugin_widget = new feedzy_wp_widget();
 		self::$instance->loader->add_action( 'widgets_init', $plugin_widget, 'registerWidget', 10 );
 		self::$instance->loader->add_action( 'rest_api_init', self::$instance->admin, 'rest_route', 10 );
 
-		self::$instance->loader->add_filter( 'feedzy_rss_feeds_logger_data', self::$instance->admin, 'get_usage_data', 10 );
+		// do not include import feature if this is a pro version that does not know of this new support. 
+		if ( ! feedzy_is_pro() || ! feedzy_is_pro_older_than( '1.6.12' ) ) {
+			$plugin_import = new Feedzy_Rss_Feeds_Import( self::$instance->get_plugin_name(), self::$instance->get_version() );
+			self::$instance->loader->add_action( 'feedzy_upsell_class', $plugin_import, 'upsell_class', 10, 1 );
+			self::$instance->loader->add_action( 'feedzy_upsell_content', $plugin_import, 'upsell_content', 10, 1 );
+			self::$instance->loader->add_action( 'admin_enqueue_scripts', $plugin_import, 'enqueue_styles' );
+			self::$instance->loader->add_action( 'init', $plugin_import, 'register_import_post_type', 9, 1 );
+			self::$instance->loader->add_action( 'feedzy_cron', $plugin_import, 'run_cron' );
+			self::$instance->loader->add_action( 'save_post_feedzy_imports', $plugin_import, 'save_feedzy_import_feed_meta', 1, 2 );
+			self::$instance->loader->add_action( 'wp_ajax_import_status', $plugin_import, 'import_status' );
+			self::$instance->loader->add_action( 'wp_ajax_get_taxonomies', $plugin_import, 'get_taxonomies' );
+			self::$instance->loader->add_action( 'wp_ajax_run_now', $plugin_import, 'run_now' );
+			self::$instance->loader->add_action( 'manage_feedzy_imports_posts_custom_column', $plugin_import, 'manage_feedzy_import_columns', 10, 2 );
+
+			self::$instance->loader->add_filter( 'redirect_post_location', $plugin_import, 'redirect_post_location', 10, 2 );
+			self::$instance->loader->add_filter( 'manage_feedzy_imports_posts_columns', $plugin_import, 'feedzy_import_columns' );
+			self::$instance->loader->add_action( 'admin_notices', $plugin_import, 'admin_notices' );
+			self::$instance->loader->add_action( 'plugins_loaded', $plugin_import, 'add_cron' );
+			self::$instance->loader->add_filter( 'feedzy_item_filter', $plugin_import, 'add_data_to_item', 10, 4 );
+			self::$instance->loader->add_filter( 'feedzy_display_tab_settings', $plugin_import, 'display_tab_settings', 10, 2 );
+			self::$instance->loader->add_filter( 'feedzy_save_tab_settings', $plugin_import, 'save_tab_settings', 10, 2 );
+			self::$instance->loader->add_filter( 'feedzy_render_magic_tags', $plugin_import, 'render_magic_tags', 10, 3 );
+			self::$instance->loader->add_filter( 'feedzy_magic_tags_title', $plugin_import, 'magic_tags_title' );
+			self::$instance->loader->add_filter( 'feedzy_magic_tags_date', $plugin_import, 'magic_tags_date' );
+			self::$instance->loader->add_filter( 'feedzy_magic_tags_content', $plugin_import, 'magic_tags_content' );
+			self::$instance->loader->add_filter( 'feedzy_magic_tags_image', $plugin_import, 'magic_tags_image' );
+			self::$instance->loader->add_filter( 'feedzy_retrieve_categories', $plugin_import, 'retrieve_categories', 10, 2 );
+			self::$instance->loader->add_filter( 'feedzy_is_license_of_type', $plugin_import, 'feedzy_is_license_of_type', 10, 2 );
+		}
 
 		if ( ! defined( 'TI_UNIT_TESTING' ) ) {
 			add_action(

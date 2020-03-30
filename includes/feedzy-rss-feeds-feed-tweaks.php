@@ -70,3 +70,13 @@ function feedzy_is_new() {
 function feedzy_is_pro() {
 	return defined( 'FEEDZY_PRO_ABSPATH' );
 }
+
+
+/**
+ * Checks if the PRO version is older than a particular version.
+ *
+ * @since ?
+ */
+function feedzy_is_pro_older_than( $version ) {
+	return version_compare( FEEDZY_PRO_VERSION, $version, '<' );
+}
