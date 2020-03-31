@@ -1,4 +1,13 @@
 
+ ### v3.3.18 - 2020-03-24 
+ **Changes:** 
+ * [Feat] Add support for lazyloading feed items
+* [Fix] multiple_meta and offset parameters in the Feedzy widget
+* [Fix] Missing Feedzy button in the Classic editor in Gutenberg
+* [Fix] Conflict with RSS Aggregator in the Gutenberg editor
+* [Fix] Notices when using Avada theme
+* [Fix] Warnings when using multiple feeds in the shortcode
+ 
  ### v3.3.17 - 2020-01-30 
  **Changes:** 
  * Allow user to dictate order of meta data in the editor as well

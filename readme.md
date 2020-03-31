@@ -3,7 +3,7 @@
 **Tags:** rss aggregator, news aggregator, autoblogging, feed to post, rss import  
 **Requires at least:** 3.7  
 **Requires PHP:** 5.3  
-**Tested up to:** 5.3  
+**Tested up to:** 5.4  
 **Stable tag:** trunk  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
@@ -146,6 +146,7 @@ This plugin is maintained and supported by Themeisle, check out some of the othe
 2. Insert shortcode ! ;-)
 
 ## Frequently Asked Questions ##
+
 
 
 
@@ -440,6 +441,9 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = Feedzy custom templates = 
  [https://docs.themeisle.com/article/1162-feedzy-custom-templates](https://docs.themeisle.com/article/1162-feedzy-custom-templates) 
 
+ = How to change the date format RSS items in Feedzy = 
+ [https://docs.themeisle.com/article/1200-how-to-change-the-date-format-for-rss-items-in-feedzy](https://docs.themeisle.com/article/1200-how-to-change-the-date-format-for-rss-items-in-feedzy) 
+
  == Screenshots ==
 
 1. Simple example
@@ -449,6 +453,16 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
  == Changelog ==
+### 3.3.18 - 2020-03-24  ###
+
+* [Feat] Add support for lazyloading feed items
+* [Fix] multiple_meta and offset parameters in the Feedzy widget
+* [Fix] Missing Feedzy button in the Classic editor in Gutenberg
+* [Fix] Conflict with RSS Aggregator in the Gutenberg editor
+* [Fix] Notices when using Avada theme
+* [Fix] Warnings when using multiple feeds in the shortcode
+
+
 ### 3.3.17 - 2020-01-30  ###
 
 * Release
