@@ -1627,12 +1627,17 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 	text-transform: uppercase;
 }
 
-a.dropdown-item {
+a.dropdown-item,
+span.dropdown-item[disabled] {
 	display: block;
 	padding: 5px 8px;
 	color: #f35b3f;
 	text-align: center;
 	text-decoration: none;
+}
+
+span.dropdown-item[disabled] {
+	color: #808080;
 }
 
 a:hover.dropdown-item,
@@ -2108,4 +2113,9 @@ span.feedzy-spinner {
 
 .only-pro-content a:hover {
 	background: #ce484c;
+}
+
+.feedzy-highlight {
+	background-color: #ccff00;
+	padding: 1%;
 }

@@ -220,8 +220,8 @@ class Feedzy_Rss_Feeds {
 		self::$instance->loader->add_action( 'widgets_init', $plugin_widget, 'registerWidget', 10 );
 		self::$instance->loader->add_action( 'rest_api_init', self::$instance->admin, 'rest_route', 10 );
 
-		// do not include import feature if this is a pro version that does not know of this new support. 
-		if ( ! feedzy_is_pro() || ! feedzy_is_pro_older_than( '1.6.12' ) ) {
+		// do not include import feature if this is a pro version that does not know of this new support.
+		if ( ! feedzy_is_pro() || has_filter( 'feedzy_free_has_import' ) ) {
 			$plugin_import = new Feedzy_Rss_Feeds_Import( self::$instance->get_plugin_name(), self::$instance->get_version() );
 			self::$instance->loader->add_action( 'feedzy_upsell_class', $plugin_import, 'upsell_class', 10, 1 );
 			self::$instance->loader->add_action( 'feedzy_upsell_content', $plugin_import, 'upsell_content', 10, 1 );
@@ -234,6 +234,8 @@ class Feedzy_Rss_Feeds {
 			self::$instance->loader->add_action( 'wp_ajax_run_now', $plugin_import, 'run_now' );
 			self::$instance->loader->add_action( 'manage_feedzy_imports_posts_custom_column', $plugin_import, 'manage_feedzy_import_columns', 10, 2 );
 
+			self::$instance->loader->add_filter( 'feedzy_items_limit', $plugin_import, 'items_limit', 10, 2 );
+			self::$instance->loader->add_filter( 'feedzy_settings_tabs', $plugin_import, 'settings_tabs', 10, 1 );
 			self::$instance->loader->add_filter( 'redirect_post_location', $plugin_import, 'redirect_post_location', 10, 2 );
 			self::$instance->loader->add_filter( 'manage_feedzy_imports_posts_columns', $plugin_import, 'feedzy_import_columns' );
 			self::$instance->loader->add_action( 'admin_notices', $plugin_import, 'admin_notices' );

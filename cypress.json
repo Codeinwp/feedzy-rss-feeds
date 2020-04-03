@@ -18,7 +18,48 @@
         "multiple_meta": "yes",
         "thumb": "yes"
     }
-  },
+    "import-feed": {
+      "url": "https://s3.amazonaws.com/downloads.themeisle.com/sample-feed-import.xml",
+      "title": "[#item_date] [#item_custom_guid] [#item_title]",
+      "content": "[#item_content] start:[#item_categories]:end",
+      "items": "10",
+      "taxonomy": [
+        "c_feedzy-1",
+        "t_feedzy-1"
+      ],
+      "image": {
+        "url": "https://source.unsplash.com/random",
+        "tag": "[#item_image]"
+      },
+      "wait": 10000,
+      "tags": {
+        "disallowed": {
+          "plan1": [
+            "full_content",
+            "wordai",
+            "spinnerchief"
+          ],
+          "plan2": [
+            "wordai",
+            "spinnerchief"
+          ]
+        },
+        "mandatory": {
+          "plan2": [
+            "item_full_content"
+          ],
+          "plan3": [
+            "item_full_content",
+            "title_wordai",
+            "content_wordai",
+            "full_content_wordai",
+            "title_spinnerchief",
+            "content_spinnerchief",
+            "full_content_spinnerchief"
+          ]
+        }
+      }
+    },  },
   "videoUploadOnPasses": false,
   "projectId": "frqcxp"
 }

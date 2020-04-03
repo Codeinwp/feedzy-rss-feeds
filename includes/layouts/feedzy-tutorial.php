@@ -33,7 +33,6 @@ Layout For Tutorial Page of Feedzy RSS Feeds
 		</div>
 		<?php } ?>
 
-		<?php if ( class_exists( 'Feedzy_Rss_Feeds_Pro' ) ) { ?>
 		<a name="import"></a>
 		<div class="fz-feature">
 			<div class="fz-feature-features">
@@ -45,7 +44,6 @@ Layout For Tutorial Page of Feedzy RSS Feeds
 				<iframe width="600" height="300" src="https://www.youtube.com/embed/Fzx5W_PfQsQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 			</div>
 		</div>
-		<?php } ?>
 
 		<?php if ( true === apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) { ?>
 		<div class="fz-feature">

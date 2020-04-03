@@ -101,8 +101,8 @@ class Feedzy_Rss_Feeds_Import {
 				<div class="only-pro-content">
 					<div class="only-pro-container">
 						<div class="only-pro-inner">
-							<p>' . __( 'Upgrade to PRO to activate this feature!', 'feedzy-rss-feeds') . '
-							<a target="_blank" href="' . FEEDZY_UPSELL_LINK . '" title="' . __( 'Buy Now', 'feedzy-rss-feeds') . '">' . __( 'Buy Now', 'feedzy-rss-feeds') . '</a>
+							<p>' . __( 'This feature is only enabled in the Pro version! To learn more about the benefits of Pro and how you can upgrade', 'feedzy-rss-feeds') . '
+							<a target="_blank" href="' . FEEDZY_UPSELL_LINK . '" title="' . __( 'Buy Now', 'feedzy-rss-feeds') . '">' . __( 'Click here!', 'feedzy-rss-feeds') . '</a>
 							</p>
 						</div>
 					</div>
@@ -124,13 +124,12 @@ class Feedzy_Rss_Feeds_Import {
 			wp_enqueue_style( $this->plugin_name . '_chosen', FEEDZY_ABSURL . 'includes/views/css/chosen.css', array(), $this->version, 'all' );
 			wp_enqueue_style( $this->plugin_name . '_metabox_edit', FEEDZY_ABSURL . 'includes/views/css/import-metabox-edit.css', array(), $this->version, 'all' );
 			wp_enqueue_script( $this->plugin_name . '_chosen_scipt', FEEDZY_ABSURL . 'includes/views/js/chosen.js', array( 'jquery' ), $this->version, true );
-			wp_enqueue_script( $this->plugin_name . '_dropdown_scipt', FEEDZY_ABSURL . 'includes/views/js/dropdown.js', array( 'jquery' ), $this->version, true );
 			wp_enqueue_script(
 				$this->plugin_name . '_metabox_edit_script',
 				FEEDZY_ABSURL . 'includes/views/js/import-metabox-edit.js',
 				array(
 					'jquery',
-					$this->plugin_name . '_dropdown_scipt',
+					$this->plugin_name . '_chosen_scipt',
 				),
 				$this->version,
 				true
@@ -281,6 +280,7 @@ class Feedzy_Rss_Feeds_Import {
 		$import_date          = get_post_meta( $post->ID, 'import_post_date', true );
 		$import_content       = get_post_meta( $post->ID, 'import_post_content', true );
 		$import_featured_img  = get_post_meta( $post->ID, 'import_post_featured_img', true );
+
 		$import_link_author_admin         = get_post_meta( $post->ID, 'import_link_author_admin', true );
 		$import_link_author_public        = get_post_meta( $post->ID, 'import_link_author_public', true );
 
@@ -303,6 +303,13 @@ class Feedzy_Rss_Feeds_Import {
         ';
 		include FEEDZY_ABSPATH . '/includes/views/import-metabox-edit.php';
 		echo $output;
+	}
+
+	public function items_limit( $range, $post ) {
+		if ( ! feedzy_is_pro() ) {
+			$range = range( 10, 10, 10 );
+		}
+		return $range;
 	}
 
 	/**
@@ -676,12 +683,10 @@ class Feedzy_Rss_Feeds_Import {
 		// all goes sideways.
 		// also if the user provides multiple date types, local will win.
 		$meta               = 'yes';
-		if ( ! Feedzy_Rss_Feeds_Pro::is_free_older_than( '3.3.8' ) ) {
-			if ( strpos( $import_title, '[#item_date_local]' ) !== false ) {
-				$meta           = 'author, date, time, tz=local';
-			} elseif ( strpos( $import_title, '[#item_date_feed]' ) !== false ) {
-				$meta           = 'author, date, time, tz=no';
-			}
+		if ( strpos( $import_title, '[#item_date_local]' ) !== false ) {
+			$meta           = 'author, date, time, tz=local';
+		} elseif ( strpos( $import_title, '[#item_date_feed]' ) !== false ) {
+			$meta           = 'author, date, time, tz=no';
 		}
 
 		$options = apply_filters(
@@ -746,9 +751,7 @@ class Feedzy_Rss_Feeds_Import {
 
 			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 			$item_date = date( get_option( 'date_format' ) . ' at ' . get_option( 'time_format' ), $item['item_date'] );
-			if ( ! Feedzy_Rss_Feeds_Pro::is_free_older_than( '3.3.8' ) ) {
-				$item_date = $item['item_date_formatted'];
-			}
+			$item_date = $item['item_date_formatted'];
 
 			$post_title = str_replace(
 				array(
@@ -1179,9 +1182,22 @@ class Feedzy_Rss_Feeds_Import {
 	 * @return string
 	 */
 	private function render_view( $name ) {
-		ob_start();
-		include FEEDZY_ABSPATH . '/includes/views/' . $name . '-view.php';
+		$file = null;
+		switch ( $name ) {
+			case 'misc':
+				$file = FEEDZY_ABSPATH . '/includes/views/' . $name . '-view.php';
+				break;
+			default:
+				$file = apply_filters( 'feedzy_render_view', $file, $name );
+				break;
+		}
 
+		if ( ! $file ) {
+			return;
+		}
+
+		ob_start();
+		include $file;
 		return ob_get_clean();
 	}
 
@@ -1193,8 +1209,19 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	public function render_magic_tags( $default, $tags, $type ) {
 		if ( $tags ) {
+			$disabled = array();
 			foreach ( $tags as $tag => $label ) {
+				if ( strpos( $tag, ':disabled' ) !== false ) {
+					$disabled[ str_replace( ':disabled', '', $tag ) ] = $label;
+					continue;
+				}
 				$default    .= '<a class="dropdown-item" href="#" data-field-name="' . $type . '" data-field-tag="' . $tag . '">' . $label . ' -- <small>[#' . $tag . ']</small></a>';
+			}
+
+			if ( $disabled ) {
+				foreach ( $disabled as $tag => $label ) {
+					$default    .= '<span disabled title="' . __( 'Upgrade your license to use this tag', 'feedzy-rss-feeds' ) . '" class="dropdown-item">' . $label . ' -- <small>[#' . $tag . ']</small></span>';
+				}
 			}
 		}
 		return $default;
@@ -1214,6 +1241,12 @@ class Feedzy_Rss_Feeds_Import {
 		$default['item_date']   = __( 'Item Date (UTC/GMT)', 'feedzy-rss-feeds' );
 		$default['item_date_local']   = __( 'Item Date (local timezone)', 'feedzy-rss-feeds' );
 		$default['item_date_feed']   = __( 'Item Date (feed timezone)', 'feedzy-rss-feeds' );
+
+		// disabled tags
+		if ( ! feedzy_is_pro() ) {
+			$default['title_spinnerchief:disabled']    = __( 'Title from SpinnerChief', 'feedzy-rss-feeds' );
+			$default['title_wordai:disabled']    = __( 'Title from WordAI', 'feedzy-rss-feeds' );
+		}
 		return $default;
 	}
 
@@ -1245,6 +1278,15 @@ class Feedzy_Rss_Feeds_Import {
 		$default['item_image']      = __( 'Item Image', 'feedzy-rss-feeds' );
 		$default['item_url']        = __( 'Item URL', 'feedzy-rss-feeds' );
 		$default['item_categories']        = __( 'Item Categories', 'feedzy-rss-feeds' );
+
+		// disabled tags
+		if ( ! feedzy_is_pro() ) {
+			$default['item_full_content:disabled']    = __( 'Item Full Content', 'feedzy-rss-feeds' );
+			$default['content_spinnerchief:disabled']    = __( 'Content from SpinnerChief', 'feedzy-rss-feeds' );
+			$default['full_content_spinnerchief:disabled']    = __( 'Full content from SpinnerChief', 'feedzy-rss-feeds' );
+			$default['content_wordai:disabled']    = __( 'Content from WordAI', 'feedzy-rss-feeds' );
+			$default['full_content_wordai:disabled']    = __( 'Full content from WordAI', 'feedzy-rss-feeds' );
+		}
 		return $default;
 	}
 

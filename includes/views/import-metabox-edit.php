@@ -85,7 +85,9 @@
 			<select id="feedzy_item_limit" class="form-control feedzy-chosen" name="feedzy_meta_data[import_feed_limit]" >
 				<?php
 				$limits = apply_filters( 'feedzy_items_limit', range( 10, 100, 10 ), $post );
-				$limits[] = 9999;
+				if ( feedzy_is_pro() ) {
+					$limits[] = 9999;
+				}
 				if ( '' === $import_feed_limit ) {
 					$import_feed_limit = 20;
 				}
@@ -141,15 +143,7 @@
 	<fieldset>
 		<h4><?php echo __( 'Feed assign:', 'feedzy-rss-feeds' ); ?></h4>
 		<p><?php echo __( 'Map post elements to custom post from feed imports.', 'feedzy-rss-feeds' ); ?></p>
-		<p class="dashicons dashicons-megaphone" style="width: auto; font-size: medium;"><b>
-		<?php
-		if ( apply_filters( 'feedzy_is_license_of_type', false, 'business' ) ) {
-			echo sprintf( __( 'You can add custom magic tags to extract custom elements from your feed as explained %1$shere%2$s. Note that this will work only for single-feeds (not if you have specified a feed category that contains multiple feeds).', 'feedzy-rss-feeds' ), '<a href="https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy" target="_blank">', '</a>' );
-		} else {
-			echo sprintf( __( 'Want to extract custom elements from your feed as explained %1$shere%2$s? Upgrade your %3$slicense%4$s today!', 'feedzy-rss-feeds' ), '<a href="https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy" target="_blank">', '</a>', '<a href="https://themeisle.com/plugins/feedzy-rss-feeds/#pricing" target="_blank">', '</a>' );
-		}
-		?>
-		</b></p>
+
 		<div class="feedzy-rows">
 			<div class="feedzy-row">
 				<div class="label_description">
@@ -300,6 +294,17 @@
 						__( ' tags to append the feed item content for the generated post content.', 'feedzy-rss-feeds' );
 					?>
 					</small>
+
+					<p class="feedzy-highlight"><i class="dashicons dashicons-megaphone"></i>
+					<?php
+					if ( apply_filters( 'feedzy_is_license_of_type', false, 'business' ) ) {
+						echo sprintf( __( 'You can add custom magic tags to extract custom elements from your feed as explained %1$shere%2$s. This will work only for single-feeds (not if you have specified a feed category that contains multiple feeds).', 'feedzy-rss-feeds' ), '<a href="https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy" target="_blank">', '</a>' );
+					} else {
+						echo sprintf( __( 'Want to extract custom elements from your feed as explained %1$shere%2$s? Upgrade your %3$slicense%4$s today!', 'feedzy-rss-feeds' ), '<a href="https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy" target="_blank">', '</a>', '<a href="https://themeisle.com/plugins/feedzy-rss-feeds/#pricing" target="_blank">', '</a>' );
+					}
+					?>
+					</p>
+
 				</div>
 				<div class="feedzy-separator dashicons dashicons-leftright"></div>
 				<div class="form-group input-group form_item">
@@ -348,7 +353,8 @@
 					</small>
 				</div>
 				<div class="feedzy-separator dashicons dashicons-leftright"></div>
-				<div class="form-group input-group form_item">
+				<div class="form-group input-group form_item <?php echo apply_filters( 'feedzy_upsell_class', '' );?>">
+					<?php echo apply_filters( 'feedzy_upsell_content', '' );?>
 					<div>
 						<input type="checkbox" name="feedzy_meta_data[import_link_author_admin]" id="import_link_author_admin" value="yes" <?php echo $import_link_author[0]; ?>/>
 						<label class="feedzy-inline" for="import_link_author_admin"><?php echo __( 'In the backend', 'feedzy-rss-feeds' ); ?></label>
