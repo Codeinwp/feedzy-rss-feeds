@@ -438,3 +438,12 @@ input:checked + .feedzy-track:before {
 	background: url(/wp-includes/images/wpspin-2x.gif) no-repeat center center;
 
 }
+
+/* gutenberg */
+.wp-block-feedzy-rss-feeds-feedzy-block .feedzy-source {
+	width: 400px;
+}
+
+.wp-block-feedzy-rss-feeds-feedzy-block .wp-block-embed.is-loading {
+	margin: auto !important;
+}
