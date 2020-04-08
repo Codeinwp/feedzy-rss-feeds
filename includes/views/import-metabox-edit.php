@@ -70,13 +70,13 @@
 
 	<fieldset>
 		<h4><?php echo __( 'Feed filters:', 'feedzy-rss-feeds' ); ?></h4>
-		<div class="form-group <?php echo apply_filters( 'feedzy_upsell_class', '' );?>">
-			<?php echo apply_filters( 'feedzy_upsell_content', '' );?>
+		<div class="form-group <?php echo apply_filters( 'feedzy_upsell_class', '' ); ?>">
+			<?php echo apply_filters( 'feedzy_upsell_content', '' ); ?>
 			<label class="feedzy-sr-only"><?php echo __( 'Only display item if title contains specific keyword(s) (comma-separated list/case sensitive).', 'feedzy-rss-feeds' ); ?></label>
 			<input type="text" name="feedzy_meta_data[inc_key]" placeholder="<?php echo __( '(eg. news, sports etc.)', 'feedzy-rss-feeds' ); ?>" class="form-control" value="<?php echo $inc_key; ?>"/>
 		</div>
-		<div class="form-group <?php echo apply_filters( 'feedzy_upsell_class', '' );?>">
-			<?php echo apply_filters( 'feedzy_upsell_content', '' );?>
+		<div class="form-group <?php echo apply_filters( 'feedzy_upsell_class', '' ); ?>">
+			<?php echo apply_filters( 'feedzy_upsell_content', '' ); ?>
 			<label class="feedzy-sr-only"><?php echo __( 'Exclude items if title contains specific keyword(s) (comma-separated list/case sensitive).', 'feedzy-rss-feeds' ); ?></label>
 			<input type="text" name="feedzy_meta_data[exc_key]" placeholder="<?php echo __( '(eg. news, sports etc.)', 'feedzy-rss-feeds' ); ?>" class="form-control" value="<?php echo $exc_key; ?>"/>
 		</div>
@@ -108,8 +108,8 @@
 				?>
 			</select>
 		</div>
-		<div class="form-group <?php echo apply_filters( 'feedzy_upsell_class', '' );?>">
-			<?php echo apply_filters( 'feedzy_upsell_content', '' );?>
+		<div class="form-group <?php echo apply_filters( 'feedzy_upsell_class', '' ); ?>">
+			<?php echo apply_filters( 'feedzy_upsell_content', '' ); ?>
 			<label class="feedzy-sr-only"><?php _e( 'Delete the posts created for this import after how many days?', 'feedzy-rss-feeds' ); ?></label>
 			<select id="feedzy_delete_limit" class="form-control feedzy-chosen" name="feedzy_meta_data[import_feed_delete_days]" >
 				<?php
@@ -353,8 +353,8 @@
 					</small>
 				</div>
 				<div class="feedzy-separator dashicons dashicons-leftright"></div>
-				<div class="form-group input-group form_item <?php echo apply_filters( 'feedzy_upsell_class', '' );?>">
-					<?php echo apply_filters( 'feedzy_upsell_content', '' );?>
+				<div class="form-group input-group form_item <?php echo apply_filters( 'feedzy_upsell_class', '' ); ?>">
+					<?php echo apply_filters( 'feedzy_upsell_content', '' ); ?>
 					<div>
 						<input type="checkbox" name="feedzy_meta_data[import_link_author_admin]" id="import_link_author_admin" value="yes" <?php echo $import_link_author[0]; ?>/>
 						<label class="feedzy-inline" for="import_link_author_admin"><?php echo __( 'In the backend', 'feedzy-rss-feeds' ); ?></label>
@@ -367,8 +367,8 @@
 			</div>
 
 
-			<div class="custom_fields <?php echo apply_filters( 'feedzy_upsell_class', '' );?>">
-				<?php echo apply_filters( 'feedzy_upsell_content', '' );?>
+			<div class="custom_fields <?php echo apply_filters( 'feedzy_upsell_class', '' ); ?>">
+				<?php echo apply_filters( 'feedzy_upsell_content', '' ); ?>
 				<!-- Custom Fields Added By JS -->
 				<?php
 				if ( isset( $import_custom_fields ) && ! empty( $import_custom_fields ) ) {

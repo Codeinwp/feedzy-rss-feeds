@@ -101,8 +101,8 @@ class Feedzy_Rss_Feeds_Import {
 				<div class="only-pro-content">
 					<div class="only-pro-container">
 						<div class="only-pro-inner">
-							<p>' . __( 'This feature is only enabled in the Pro version! To learn more about the benefits of Pro and how you can upgrade', 'feedzy-rss-feeds') . '
-							<a target="_blank" href="' . FEEDZY_UPSELL_LINK . '" title="' . __( 'Buy Now', 'feedzy-rss-feeds') . '">' . __( 'Click here!', 'feedzy-rss-feeds') . '</a>
+							<p>' . __( 'This feature is only enabled in the Pro version! To learn more about the benefits of Pro and how you can upgrade', 'feedzy-rss-feeds' ) . '
+							<a target="_blank" href="' . FEEDZY_UPSELL_LINK . '" title="' . __( 'Buy Now', 'feedzy-rss-feeds' ) . '">' . __( 'Click here!', 'feedzy-rss-feeds' ) . '</a>
 							</p>
 						</div>
 					</div>
@@ -305,6 +305,9 @@ class Feedzy_Rss_Feeds_Import {
 		echo $output;
 	}
 
+	/**
+	 * Change number of posts imported.
+	 */
 	public function items_limit( $range, $post ) {
 		if ( ! feedzy_is_pro() ) {
 			$range = range( 10, 10, 10 );
@@ -514,7 +517,7 @@ class Feedzy_Rss_Feeds_Import {
 						$msg .= '</div>';
 					}
 
-					$msg	= apply_filters( 'feedzy_import_column', $msg, 'last_run', $post_id );
+					$msg    = apply_filters( 'feedzy_import_column', $msg, 'last_run', $post_id );
 				}
 				echo $msg;
 				break;
