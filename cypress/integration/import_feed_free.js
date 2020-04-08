@@ -163,7 +163,7 @@ describe('Test Free - Import Feed', function() {
         cy.get('tr td.tags:contains("' + PREFIX.trim() + '")').should('have.length', feed.items);
 
         // all authors should be wordpress
-        cy.get('tr td.author:contains("wordpress") a.row-title:contains("' + PREFIX + '")').should('have.length.of.at.least', feed.items);
+        cy.get('tr td.author:contains("wordpress")').should('have.length.of.at.least', feed.items);
 
         // click to view post
         cy.get('tr td a.row-title:contains("' + PREFIX + '")').first().parent().parent().find('span.view a').click({ force: true });
