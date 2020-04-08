@@ -9,7 +9,7 @@ describe('Test Free - Import Feed', function() {
         cy.get('#wp-submit').click();
     });
 
-    const PREFIX = "feedzy-0 ";
+    const PREFIX = "feedzy-1 ";
     const feed = Cypress.env('import-feed');
 
     it.skip('Temporary test', function() {
@@ -65,7 +65,7 @@ describe('Test Free - Import Feed', function() {
 
         cy.get('.f1 fieldset:nth-of-type(2) .f1-buttons button.btn-next').scrollIntoView().click();
 
-        // feed item author for admin and user
+        // feed item author for admin and user - DO NOT MOVE IT FROM HERE, OTHERWISE IT WILL FAIL.
         cy.get('[name="feedzy_meta_data[import_link_author_admin]"]').should('not.be.visible');
         cy.get('[name="feedzy_meta_data[import_link_author_public]"]').should('not.be.visible');
 
