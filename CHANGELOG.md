@@ -1,4 +1,8 @@
 
+ ### v3.3.19 - 2020-04-08 
+ **Changes:** 
+ * Tested up to 5.4
+ 
  ### v3.3.18 - 2020-03-24 
  **Changes:** 
  * [Feat] Add support for lazyloading feed items
