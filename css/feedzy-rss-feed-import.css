@@ -8,12 +8,6 @@
  * Author: Themeisle
  */
 
-/*TinyMce UI button*/
-i.mce-i-feedzy-icon {
-	background-image: url("../img/feedzy_pro.png") !important;
-	background-image: none, url("../img/feedzy_pro.svg"), url("../img/feedzy_pro.png") !important;
-}
-
 #feedzy_import_feeds h4 {
 	margin: 20px 0 10px;
 	font-size: 16px;

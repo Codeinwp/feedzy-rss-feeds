@@ -1,5 +1,8 @@
 {
   "env": {
+    "settings": {
+        "tabs": 4
+    },
     "shortcode": {
         "single": "[feedzy-rss feeds='https://s3.amazonaws.com/downloads.themeisle.com/sample-feed.xml' max='11' offset='1' feed_title='yes' refresh='1_hours' meta='yes' multiple_meta='yes' summary='yes' price='yes' mapping='price=im:price' thumb='yes' keywords_title='God, Mendes, Cyrus, Taylor' keywords_ban='Cyrus' template='style1']",
         "single_results": 9,
@@ -17,8 +20,9 @@
         "meta": "yes",
         "multiple_meta": "yes",
         "thumb": "yes"
-    }
+    },
     "import-feed": {
+      "locked": 5,
       "url": "https://s3.amazonaws.com/downloads.themeisle.com/sample-feed-import.xml",
       "title": "[#item_date] [#item_custom_guid] [#item_title]",
       "content": "[#item_content] start:[#item_categories]:end",
@@ -31,6 +35,10 @@
         "url": "https://source.unsplash.com/random",
         "tag": "[#item_image]"
       },
+      "fullcontent": {
+        "content": "[#item_full_content]",
+        "items": "1"
+      },
       "wait": 10000,
       "tags": {
         "disallowed": {
@@ -38,28 +46,11 @@
             "full_content",
             "wordai",
             "spinnerchief"
-          ],
-          "plan2": [
-            "wordai",
-            "spinnerchief"
-          ]
-        },
-        "mandatory": {
-          "plan2": [
-            "item_full_content"
-          ],
-          "plan3": [
-            "item_full_content",
-            "title_wordai",
-            "content_wordai",
-            "full_content_wordai",
-            "title_spinnerchief",
-            "content_spinnerchief",
-            "full_content_spinnerchief"
           ]
         }
       }
-    },  },
+    }
+   },
   "videoUploadOnPasses": false,
   "projectId": "frqcxp"
 }

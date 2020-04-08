@@ -111,7 +111,7 @@
 		<div class="form-group <?php echo apply_filters( 'feedzy_upsell_class', '' );?>">
 			<?php echo apply_filters( 'feedzy_upsell_content', '' );?>
 			<label class="feedzy-sr-only"><?php _e( 'Delete the posts created for this import after how many days?', 'feedzy-rss-feeds' ); ?></label>
-			<select id="feedzy_item_limit" class="form-control feedzy-chosen" name="feedzy_meta_data[import_feed_delete_days]" >
+			<select id="feedzy_delete_limit" class="form-control feedzy-chosen" name="feedzy_meta_data[import_feed_delete_days]" >
 				<?php
 				// 0 is never delete.
 				$days = apply_filters( 'feedzy_items_delete_days', range( 0, 100, 1 ), $post );

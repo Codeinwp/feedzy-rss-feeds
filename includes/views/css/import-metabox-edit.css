@@ -2095,7 +2095,8 @@ span.feedzy-spinner {
 }
 
 .only-pro-content p {
-	margin: 15px 15px;
+	margin: 0px 15px;
+	padding: 15px;
 	font-size: 14px;
 	font-weight: 700;
 }

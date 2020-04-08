@@ -12,6 +12,38 @@ describe('Test Free - Import Feed', function() {
     const PREFIX = "feedzy-0 ";
     const feed = Cypress.env('import-feed');
 
+    it.skip('Temporary test', function() {
+        cy.visit('/edit.php?post_type=feedzy_imports');
+        cy.get('tr:nth-of-type(1) .row-title').click();
+        cy.get('.f1 fieldset:nth-of-type(1) .f1-buttons button.btn-next').scrollIntoView().click();
+
+        // locked for pro?
+        cy.get('.only-pro').should('have.length', feed.locked);
+        cy.get('[name="feedzy_meta_data[inc_key]"]').should('not.be.visible');
+        cy.get('[name="feedzy_meta_data[exc_key]"]').should('not.be.visible');
+        cy.get('[name="feedzy_meta_data[import_feed_delete_days]"]').should('not.be.visible');
+
+        //cy.wait(2000);
+
+        cy.get('.f1 fieldset:nth-of-type(2) .f1-buttons button.btn-next').scrollIntoView().click();
+        cy.get('[name="feedzy_meta_data[import_link_author_admin]"]').should('not.be.visible');
+        cy.get('[name="feedzy_meta_data[import_link_author_public]"]').should('not.be.visible');
+
+        const tags = feed.tags.disallowed;
+        cy.get('a.dropdown-item').each(function(anchor){
+            cy.wrap(tags.plan1).each(function(disallowed){
+                cy.wrap(anchor).invoke('attr', 'data-field-tag').should('not.contain', disallowed);
+            });
+        });
+    });
+
+    it('Check Settings', function() {
+        cy.visit('/admin.php?page=feedzy-settings');
+
+        const settings = Cypress.env('settings');
+        cy.get('.nav-tab').should('have.length', settings.tabs);
+    })
+
     it('Creates a new import', function() {
         cy.visit('/post-new.php?post_type=feedzy_imports');
 
@@ -20,15 +52,18 @@ describe('Test Free - Import Feed', function() {
         cy.get('[name="feedzy_meta_data[source]"]').type( feed.url );
         cy.get('.f1 fieldset:nth-of-type(1) .f1-buttons button.btn-next').scrollIntoView().click();
 
+        // locked for pro?
+        cy.get('.only-pro').should('have.length', feed.locked);
         cy.get('[name="feedzy_meta_data[inc_key]"]').should('not.be.visible');
         cy.get('[name="feedzy_meta_data[exc_key]"]').should('not.be.visible');
-        return;
+        cy.get('[name="feedzy_meta_data[import_feed_delete_days]"]').should('not.be.visible');
 
         // because we cannot use chosen, we use the HTML element by forcing it to show
         cy.get('#feedzy_item_limit').invoke('show');
+        cy.get('#feedzy_item_limit option').should('have.length', 1);
         cy.get('#feedzy_item_limit').select(feed.items);
 
-        cy.get('.f1 fieldset:nth-of-type(2) .f1-buttons button.btn-next').scrollIntoView().click({force:true});
+        cy.get('.f1 fieldset:nth-of-type(2) .f1-buttons button.btn-next').scrollIntoView().click();
 
         cy.get('#feedzy_post_terms').invoke('show').then( () => {
             cy.get('#feedzy_post_terms').select(feed.taxonomy, {force:true});
@@ -40,9 +75,9 @@ describe('Test Free - Import Feed', function() {
         // image from URL
         cy.get('[name="feedzy_meta_data[import_post_featured_img]"]').scrollIntoView().type( feed.image.url, {force:true} );
 
-        // show feed item author for admin and user
-        cy.get('[name="feedzy_meta_data[import_link_author_admin]"]').scrollIntoView().check();
-        cy.get('[name="feedzy_meta_data[import_link_author_public]"]').scrollIntoView().check();
+        // feed item author for admin and user
+        cy.get('[name="feedzy_meta_data[import_link_author_admin]"]').should('not.be.visible');
+        cy.get('[name="feedzy_meta_data[import_link_author_public]"]').should('not.be.visible');
 
         // check disallowd magic tags
         const tags = feed.tags.disallowed;
@@ -84,10 +119,6 @@ describe('Test Free - Import Feed', function() {
         // image from URL
         cy.get('[name="feedzy_meta_data[import_post_featured_img]"]').should('have.value', feed.image.url);
 
-        // show feed item author for admin and user
-        cy.get('[name="feedzy_meta_data[import_link_author_admin]"]').should('be.checked');
-        cy.get('[name="feedzy_meta_data[import_link_author_public]"]').should('be.checked');
-
         // publish
         cy.get('button[type="submit"][name="publish"]').scrollIntoView().click({force:true});
         cy.url().should('include', 'edit.php?post_type=feedzy_imports');
@@ -95,7 +126,7 @@ describe('Test Free - Import Feed', function() {
         cy.get('tr:nth-of-type(1) .feedzy-run-now').should('be.visible');
     })
 
-    it.skip('Toggle the new import', function() {
+    it('Toggle the new import', function() {
         cy.visit('/edit.php?post_type=feedzy_imports');
         cy.get('tr:nth-of-type(1) .feedzy-toggle').uncheck({force:true});
 
@@ -107,7 +138,7 @@ describe('Test Free - Import Feed', function() {
         cy.get('tr:nth-of-type(1) .feedzy-toggle').should('be.checked');
     })
 
-    it.skip('Runs the new import', function() {
+    it('Runs the new import', function() {
         cy.visit('/edit.php?post_type=feedzy_imports')
 
         // run import
@@ -118,7 +149,7 @@ describe('Test Free - Import Feed', function() {
 
     })
 
-    it.skip('Verifies the new imported items', function() {
+    it('Verifies the new imported items', function() {
         cy.visit('/edit.php?post_type=post')
 
         // should have N posts.
@@ -131,8 +162,8 @@ describe('Test Free - Import Feed', function() {
         cy.get('tr td.categories:contains("' + PREFIX.trim() + '")').should('have.length', feed.items);
         cy.get('tr td.tags:contains("' + PREFIX.trim() + '")').should('have.length', feed.items);
 
-        // no author should be wordpress
-        cy.get('tr td.author:contains("wordpress") a.row-title:contains("' + PREFIX + '")').should('have.length', 0);
+        // all authors should be wordpress
+        cy.get('tr td.author:contains("wordpress") a.row-title:contains("' + PREFIX + '")').should('have.length', feed.items);
 
         // click to view post
         cy.get('tr td a.row-title:contains("' + PREFIX + '")').first().parent().parent().find('span.view a').click({ force: true });
@@ -154,14 +185,11 @@ describe('Test Free - Import Feed', function() {
         // featured image should exist.
         cy.get('.attachment-post-thumbnail.size-post-thumbnail.wp-post-image').should('have.length', 1);
 
-        // author should not be wordpress
+        // author should be wordpress
         cy.get('li.post-author').should('have.length', 1);
-        cy.get('li.post-author span.meta-text a:contains("wordpress")').should('have.length', 0);
+        cy.get('li.post-author span.meta-text a:contains("wordpress")').should('have.length', 1);
 
     })
 
-    it.skip('Temp test', function() {
-        // empty.
-    });
 
 })
