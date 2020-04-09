@@ -24,18 +24,6 @@ Layout For Upsell Page of Feedzy RSS Feeds
 		</div>
 		<div class="fz-feature">
 			<div class="fz-feature-features">
-			<h2>Unlimited Content</h2>
-				<p>With Pro, collect RSS feeds from an unlimited number of sources and bring them to up to 30 of your own WordPress sites.</p>
-				<p>Feedzy will automatically filter each feed item and place it wherever you want in your site. Easy to install and ready to go.</p>
-				<h2>Feed to Post</h2>
-				<p>Convert feed items into WordPress Posts, Pages, or any custom post type in a few easy steps.</p>
-			</div>
-			<div class="fz-feature-image">
-				<img src="<?php echo FEEDZY_ABSURL; ?>/img/features-feed-to-post.jpg" alt="Feed to post">
-			</div>
-		</div>
-		<div class="fz-feature">
-			<div class="fz-feature-features">
 				<h2>Shortcode templates to suit your style</h2>
 				<p><a href="https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation#examples" target="_blank">Three beautiful templates</a> are available for you to choose the style which best fits your design. We even have support for complex media such as <a href="https://demo.themeisle.com/feedzy-rss-feeds/audio-feed-template/" target="_blank">audio playback</a> and <a href="https://docs.themeisle.com/article/1113-how-to-get-videos-from-youtube-with-feedzy" target="_blank">YouTube videos</a>.</p>
 				<p>If you like to roll your own templates, <a href="https://docs.themeisle.com/article/1162-feedzy-custom-templates" target="_blank">template tags</a> are available to help you do just that!</p>
@@ -62,20 +50,6 @@ Layout For Upsell Page of Feedzy RSS Feeds
 				<img src="<?php echo FEEDZY_ABSURL; ?>/img/Protect-your-Brand.jpg" alt="Affiliate ready">
 			</div>
 		</div>
-		<?php } ?>
-		<?php if ( true === apply_filters( 'feedzy_is_license_of_type', false, 'pro' ) && false === apply_filters( 'feedzy_is_license_of_type', false, 'business' ) ) { ?>
-			<div class="fz-feature">
-				<div class="fz-feature-features">
-				<h2>Unlimited Content</h2>
-					<p>With Pro, collect RSS feeds from an unlimited number of sources and bring them to up to 30 of your own WordPress sites.</p>
-					<p>Feedzy will automatically filter each feed item and place it wherever you want in your site. Easy to install and ready to go.</p>
-					<h2>Feed to Post</h2>
-					<p>Convert feed items along with their <b>full content</b> into WordPress Posts, Pages, or any custom post type in a few easy steps.</p>
-				</div>
-				<div class="fz-feature-image">
-					<img src="<?php echo FEEDZY_ABSURL; ?>/img/features-feed-to-post.jpg" alt="Feed to post">
-				</div>
-			</div>
 		<?php } ?>
 		<?php if ( false === apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) { ?>
 		<div class="fz-feature">
