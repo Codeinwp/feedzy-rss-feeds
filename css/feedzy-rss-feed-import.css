@@ -44,6 +44,7 @@
 
 #feedzy_import_feeds .chosen-container-single .chosen-drop {
 	border-color: #ddd;
+	z-index: 99999999;
 }
 
 #feedzy_import_feeds .chosen-container-single .chosen-search input[type="text"] {

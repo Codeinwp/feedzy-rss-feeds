@@ -85,9 +85,7 @@
 			<select id="feedzy_item_limit" class="form-control feedzy-chosen" name="feedzy_meta_data[import_feed_limit]" >
 				<?php
 				$limits = apply_filters( 'feedzy_items_limit', range( 10, 100, 10 ), $post );
-				if ( feedzy_is_pro() ) {
-					$limits[] = 9999;
-				}
+				$limits[] = 9999;
 				if ( '' === $import_feed_limit ) {
 					$import_feed_limit = 20;
 				}
@@ -100,6 +98,11 @@
 					$display = $v;
 					if ( $v === 9999 ) {
 						$display = __( 'All (check that your server configuration can support this)', 'feedzy-rss-feeds' );
+						if ( ! feedzy_is_pro() ) {
+							$display = __( 'More options available in PRO.', 'feedzy-rss-feeds' );
+							$selected = 'disabled';
+							$v = '';
+						}
 					}
 					?>
 					<option value="<?php echo $v; ?>" <?php echo $selected; ?>><?php echo $display; ?></option>
@@ -300,7 +303,7 @@
 					if ( apply_filters( 'feedzy_is_license_of_type', false, 'business' ) ) {
 						echo sprintf( __( 'You can add custom magic tags to extract custom elements from your feed as explained %1$shere%2$s. This will work only for single-feeds (not if you have specified a feed category that contains multiple feeds).', 'feedzy-rss-feeds' ), '<a href="https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy" target="_blank">', '</a>' );
 					} else {
-						echo sprintf( __( 'Want to extract custom elements from your feed as explained %1$shere%2$s? Upgrade your %3$slicense%4$s today!', 'feedzy-rss-feeds' ), '<a href="https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy" target="_blank">', '</a>', '<a href="https://themeisle.com/plugins/feedzy-rss-feeds/#pricing" target="_blank">', '</a>' );
+						echo sprintf( __( 'Want to extract custom elements from your feed as explained %1$shere%2$s? Upgrade your %3$slicense%4$s today!', 'feedzy-rss-feeds' ), '<a href="https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy" target="_blank">', '</a>', '<a href="' . FEEDZY_UPSELL_LINK . '" target="_blank">', '</a>' );
 					}
 					?>
 					</p>

@@ -1158,6 +1158,7 @@ input[type="button"].btn-block {
 
 .open > .dropdown-menu {
 	display: block;
+	z-index: 99999999;
 }
 
 .open > a {
@@ -1961,7 +1962,6 @@ input.feedzy-toggle-round + label:before {
 }
 
 input.feedzy-toggle-round + label:after {
-	top: -1px;
 	width: 23px;
 	height: 23px;
 	border-radius: 100%;
@@ -2077,6 +2077,7 @@ span.feedzy-spinner {
 .only-pro:hover button,
 .only-pro:hover textarea,
 .only-pro:hover select,
+.only-pro:hover button,
 .only-pro:hover .chosen-container,
 .only-pro:hover .chosen-single,
 .only-pro:hover select option {
