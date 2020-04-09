@@ -60,7 +60,7 @@ describe('Test Free - Import Feed', function() {
 
         // because we cannot use chosen, we use the HTML element by forcing it to show
         cy.get('#feedzy_item_limit').invoke('show');
-        cy.get('#feedzy_item_limit option').should('have.length', 1);
+        cy.get('#feedzy_item_limit option').should('have.length', 2);
         cy.get('#feedzy_item_limit').select(feed.items);
 
         cy.get('.f1 fieldset:nth-of-type(2) .f1-buttons button.btn-next').scrollIntoView().click();
