@@ -220,10 +220,6 @@ class Feedzy_Rss_Feeds {
 		self::$instance->loader->add_action( 'widgets_init', $plugin_widget, 'registerWidget', 10 );
 		self::$instance->loader->add_action( 'rest_api_init', self::$instance->admin, 'rest_route', 10 );
 
-		// this hook will indicate to pro that free supports import feeds.
-		// avoids doing this by comparing versions.
-		add_filter( 'feedzy_has_import', '__return_true' );
-
 		// do not include import feature if this is a pro version that does not know of this new support.
 		if ( ! feedzy_is_pro() || has_filter( 'feedzy_free_has_import' ) ) {
 			$plugin_import = new Feedzy_Rss_Feeds_Import( self::$instance->get_plugin_name(), self::$instance->get_version() );
