@@ -160,6 +160,7 @@ This plugin is maintained and supported by Themeisle, check out some of the othe
 
 
 
+
 = Is it responsive friendly? =
 
 Yes it is.
@@ -444,6 +445,9 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = How to change the date format RSS items in Feedzy = 
  [https://docs.themeisle.com/article/1200-how-to-change-the-date-format-for-rss-items-in-feedzy](https://docs.themeisle.com/article/1200-how-to-change-the-date-format-for-rss-items-in-feedzy) 
 
+ = Lazy loading feed items with Feedzy = 
+ [https://docs.themeisle.com/article/1220-lazy-loading-feed-items-with-feedzy](https://docs.themeisle.com/article/1220-lazy-loading-feed-items-with-feedzy) 
+
  == Screenshots ==
 
 1. Simple example
@@ -453,6 +457,11 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
  == Changelog ==
+= 3.3.19 - 2020-04-08  = 
+
+* Tested up to 5.4
+
+
 = 3.3.18 - 2020-03-24  = 
 
 * [Feat] Add support for lazyloading feed items

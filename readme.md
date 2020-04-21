@@ -453,6 +453,11 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
  == Changelog ==
+### 3.3.19 - 2020-04-08  ###
+
+* Tested up to 5.4
+
+
 ### 3.3.18 - 2020-03-24  ###
 
 * [Feat] Add support for lazyloading feed items
