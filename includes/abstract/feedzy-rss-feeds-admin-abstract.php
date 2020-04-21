@@ -1023,7 +1023,12 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	private function get_feed_item_filter( $sc, $sizes, $item, $feed_url, $index ) {
 		$item_link = $item->get_permalink();
+		// if the item has no link (possible in some cases), use the feed link
+		if ( empty( $item_link ) ) {
+			$item_link = $item->get_feed()->get_permalink();
+		}
 		$new_link  = apply_filters( 'feedzy_item_url_filter', $item_link, $sc, $item );
+
 		// Fetch image thumbnail
 		if ( $sc['thumb'] === 'yes' || $sc['thumb'] === 'auto' ) {
 			$the_thumbnail = $this->feedzy_retrieve_image( $item, $sc );
