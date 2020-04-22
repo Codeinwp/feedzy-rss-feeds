@@ -224,6 +224,7 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 						/>,
 						<Button
 							isLarge
+							isPrimary
 							type="submit"
 							onClick={ loadFeed }
 						>
