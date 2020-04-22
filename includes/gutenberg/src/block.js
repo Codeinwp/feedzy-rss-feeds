@@ -184,6 +184,12 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 		const multipleMetaExists = value => {
 			return ( 0 <= ( props.attributes.multiple_meta.replace(/\s/g,'').split( ',' ) ).indexOf( value ) || '' === props.attributes.multiple_meta );
 		};
+
+        let validateURL = 'https://validator.w3.org/feed/';
+        if ( props.attributes.feeds ) {
+            validateURL += 'check.cgi?url=' + props.attributes.feeds;
+        }
+
 		if ( props.attributes.categories === undefined ) {
 			if ( ! props.attributes.meta ) {
 				props.setAttributes( {
@@ -230,8 +236,7 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 						>
 							{ __( 'Load Feed' ) }
 						</Button>,
-                        <ExternalLink href="https://validator.w3.org/feed/" title={ __( 'Validate Feed ' ) }>
-                        </ExternalLink>,
+                        <ExternalLink href={ validateURL } title={ __( 'Validate Feed ' ) }>{ __( 'Validate ' ) }</ExternalLink>,
 						( props.attributes.status === 3 ) && <div>{ __( 'Feed URL is invalid. Invalid feeds will NOT display items.') }</div>
 					] }
 					</Placeholder>
