@@ -571,7 +571,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @access  public
 	 */
-	public function admin_init( $plugin ) {
+	public function admin_init() {
 		if ( defined( 'TI_UNIT_TESTING' ) ) {
 			return;
 		}
