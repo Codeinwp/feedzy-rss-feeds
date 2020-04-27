@@ -43,7 +43,7 @@ class Feedzy_Rss_Feeds_Activator {
 				)
 			);
 		}
-
+		add_option( 'feedzy-activated', true );
 	}
 
 }

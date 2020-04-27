@@ -567,18 +567,21 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	}
 
 	/**
-	 * On activation of the plugin
+	 * Check if plugin has been activated and then redirect to the correct page.
 	 *
 	 * @access  public
 	 */
-	public function on_activation( $plugin ) {
+	public function admin_init() {
 		if ( defined( 'TI_UNIT_TESTING' ) ) {
 			return;
 		}
 
-		if ( $plugin === FEEDZY_BASENAME ) {
-			wp_redirect( admin_url( 'admin.php?page=feedzy-support&tab=help#shortcode' ) );
-			exit();
+		if ( get_option( 'feedzy-activated' ) ) {
+			delete_option( 'feedzy-activated' );
+			if ( ! headers_sent() ) {
+				wp_redirect( add_query_arg( array( 'page' => 'feedzy-support', 'tab' => 'help#shortcode' ), admin_url( 'admin.php' ) ) );
+				exit();
+			}
 		}
 	}
 
