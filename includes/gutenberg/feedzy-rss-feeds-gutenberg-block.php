@@ -200,7 +200,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		$params = wp_parse_args( $attr );
 
 		// manually delete the transient so that correct cache time can be used.
-		delete_transient( 'feed_' . md5( $attr['feeds'] ) );
+		//delete_transient( 'feed_' . md5( $attr['feeds'] ) );
 		return feedzy_rss( $params );
 	}
 
