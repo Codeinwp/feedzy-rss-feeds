@@ -260,10 +260,6 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 			);
 		}
 
-		if ( feedzy_is_pro() ) {
-			$pro = new Feedzy_Rss_Feeds_Pro_Admin( $instance->get_plugin_name(), $instance->get_version() );
-		}
-
 		$feedy['items'] = array();
 		$items = $feed->get_items();
 		$is_multiple = ! empty( $feed->multifeed_url ) && is_array( $feed->multifeed_url );
