@@ -12,7 +12,7 @@ Layout For Tutorial Page of Feedzy RSS Feeds
 		<div class="fz-feature">
 			<div class="fz-feature-features">
 			<h2>Shortcode</h2>
-				<p>Show feed items using the <code>[feedzy-rss-feeds]</code>shortcode in a few easy steps.</p>
+				<p>Show feed items using the <code>[feedzy-rss]</code>shortcode in a few easy steps.</p>
 				<p>You can view our documentation <a href="https://docs.themeisle.com/article/658-feedzy-rss-feeds" target="_blank">here</a></p>
 			</div>
 			<div class="fz-feature-image">
