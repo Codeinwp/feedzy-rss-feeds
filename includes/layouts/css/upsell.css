@@ -1,14 +1,5 @@
-/**
- * upsell.css
- * Feedzy RSS Feed Upsell Style
- *
- * @since   3.0.12
- * @package feedzy-rss-feeds
- */
-
 #fz-features .fz-features-header {
-	box-sizing: border-box;
-	padding: 20px 30px 30px;
+	padding: 20px 10px;
 	border-top: 5px solid #252b37;
 	background: #fff;
 }
@@ -19,9 +10,9 @@
 	padding: 0 0 0 70px;
 	color: #3c3c3c;
 	background: url(../../../img/feedzy.svg) no-repeat left center;
-	background-size: 48px;
+	background-size: 50px;
 	font-family: "Open Sans", sans-serif;
-	font-size: 28px;
+	font-size: 2em;
 	font-weight: 700;
 	line-height: 60px;
 	letter-spacing: -1px;
@@ -29,13 +20,12 @@
 
 #fz-features .slogan {
 	display: inline-block;
-	margin: 0 0 0 8px;
+	margin: 0 0 0 5px;
 	padding: 0;
 	color: #858585;
 	font-family: "Open Sans", sans-serif;
 	font-size: 17px;
-	line-height: 1;
-	vertical-align: 4px;
+	line-height: 3.5;
 }
 
 #fz-features .slogan a {
@@ -43,7 +33,6 @@
 	font-weight: 600;
 	font-style: italic;
 	text-decoration: none;
-	-webkit-transition: all 0.250s ease-in-out;
 	transition: all 0.250s ease-in-out;
 }
 
@@ -54,10 +43,6 @@
 #fz-features .slogan a:focus {
 	outline: none;
 	box-shadow: none;
-}
-
-#fz-features .header-btns {
-	margin: 7px auto;
 }
 
 #fz-features .header-btns .buy-now {
@@ -74,7 +59,6 @@
 	font-weight: bold;
 	text-decoration: none;
 	text-transform: uppercase;
-	-webkit-transition: all 0.250s ease-in-out;
 	transition: all 0.250s ease-in-out;
 }
 
@@ -86,59 +70,42 @@
 	padding-right: 3px;
 }
 
-#fz-features {
-	padding: 0;
-}
-
-#fz-features .fz-features-content {
-	width: 100%;
-	padding: 0;
-}
-
 #fz-features .fz-features-header,
 #fz-features .fz-feature {
-	box-sizing: border-box;
-	width: 100%;
-	margin: 30px 0 0;
-	padding: 30px;
-	background-color: #fff;
+	display: block;
+	margin: 10px;
 	box-shadow: 0 1px 1px 0 rgba(0,0,0,0.1);
 }
 
 #fz-features .fz-feature .fz-feature-features,
 #fz-features .fz-feature .fz-feature-image {
+	display: table-cell;
 	margin: 0;
 	vertical-align: middle;
 }
 
 #fz-features .fz-feature .fz-feature-features {
 	box-sizing: border-box;
-	padding: 0 0 20px;
+	padding: 30px;
 }
 
-#fz-features .fz-feature .fz-feature-image img {
-	max-width: 470px;
-}
-
-#fz-features .fz-feature .fz-feature-image iframe {
-	max-width: 100%;
+#fz-features .fz-feature .fz-feature-image {
+	width: 470px;
 }
 
 #fz-features .fz-feature .fz-feature-features h2 {
 	margin: 0 0 20px;
 	font-size: 28px;
-	font-weight: 700;
-	line-height: 1.2;
 }
 
 #fz-features .fz-feature .fz-feature-features h4 {
 	margin: 0 0 10px;
-	font-size: 24px;
+	font-size: 20px;
 }
 
 #fz-features .fz-feature .fz-feature-features p {
 	margin: 0 0 15px;
-	font-size: 18px;
+	font-size: 16px;
 	line-height: 1.5;
 }
 
@@ -147,33 +114,20 @@
 	height: auto;
 }
 
-@media screen and (min-width: 768px) {
-	#fz-features {
-		padding: 0 15px;
-	}
-}
-
-@media screen and (min-width: 1200px) {
-	#fz-features .fz-feature {
-		padding: 30px 60px;
+@media screen and (max-width: 1200px) {
+	#fz-features .fz-feature .fz-feature-features,
+	#fz-features .fz-feature .fz-feature-image {
+		display: block;
 	}
 
-	#fz-features .fz-feature .fz-feature-features {
-		padding: 0 30px 0 0;
+	#fz-features .fz-feature .fz-feature-image {
+		width: 470px;
+		margin: 0 auto 20px;
+		text-align: center;
 	}
 
-	#fz-features .fz-feature .fz-feature-features h2 {
-		font-size: 30px;
-	}
-
-	#fz-features .fz-feature .fz-feature-features p {
-		font-size: 20px;
-	}
-}
-
-@media screen and (min-width: 1500px) {
-	#fz-features .fz-feature .fz-feature-features {
-		padding: 0 120px 0 0;
+	#fz-features .slogan {
+		display: none;
 	}
 }
 
@@ -189,49 +143,31 @@
 	#fz-features .header-btns {
 		display: block;
 		float: none;
-		margin: 10px 0 0;
+		margin: 0 0 10px 0;
 		text-align: center;
 	}
 }
 
-@media screen and (max-width: 1200px) {
-	#fz-features .fz-feature .fz-feature-features,
-	#fz-features .fz-feature .fz-feature-image {
-		display: block;
+@media screen and (max-width: 782px) {
+	#cwp_form #header .button {
+		padding: 0 4px 1px !important;
+		font-size: 11px !important;
+	}
+
+	#cwp_form #header .logo h2 {
+		margin: 0 !important;
+		padding: 0 !important;
 	}
 
 	#fz-features .fz-feature .fz-feature-image {
-		display: inline-block;
-		max-width: 100%;
-		margin: 0 auto 30px;
-	}
-
-	#fz-features .slogan {
-		display: none;
+		width: 100%;
 	}
 }
 
-#fz-features.fz-settings .fz-feature {
-	margin-top: 0;
-	border: none;
-}
-
-#fz-features.fz-settings  .nav-tab-wrapper {
-	border-bottom: none;
-}
-
-#fz-features.fz-settings   .nav-tab-wrapper a.nav-tab-active,
-#fz-features.fz-settings  .nav-tab-wrapper a:hover {
+#fz-features .fz-feature .fz-feature-inner {
+	display: table;
+	width: 100%;
 	background: #fff;
-}
-
-#fz-features.fz-settings  .nav-tab-wrapper a {
-	margin-top: 10px;
-	padding: 10px 20px;
-	border: 0;
-	color: #000;
-	background: #e0e0e0;
-	box-shadow: 0 1px 1px 0 rgba(0,0,0,0.1);
 }
 
 .fz-feature-centered {
