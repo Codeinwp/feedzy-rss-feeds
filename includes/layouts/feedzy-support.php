@@ -4,7 +4,7 @@
 
 	<?php
 	$active_tab  = isset( $_REQUEST['tab'] ) ? sanitize_text_field( $_REQUEST['tab'] ) : 'help';
-	$show_more = ! class_exists( 'Feedzy_Rss_Feeds_Pro' ) || false === apply_filters( 'feedzy_is_license_of_type', false, 'agency' );
+	$show_more = ! feedzy_is_pro() || false === apply_filters( 'feedzy_is_license_of_type', false, 'agency' );
 	?>
 
 	<h2 class="nav-tab-wrapper">
@@ -25,7 +25,6 @@
 	</h2>
 
 	<div class="fz-features-content">
-		<div class="fz-feature">
 			<div id="feedzy_import_feeds" class="fz-feature-features">
 					<?php
 					switch ( $active_tab ) {
@@ -48,7 +47,6 @@
 					}
 					?>
 			</div>
-		</div>
 	</div>
 
 </div>
