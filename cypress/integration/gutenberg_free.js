@@ -123,8 +123,6 @@ describe('Test Free - gutenberg', function() {
         // we want to do this so that the next test succeeds - otherwise it will throw up an alert box and stop the page
         cy.get('button.editor-post-publish-button').click();
 
-        cy.visit('/edit.php?post_type=post')
-
     });
 
     it('View the post', function() {

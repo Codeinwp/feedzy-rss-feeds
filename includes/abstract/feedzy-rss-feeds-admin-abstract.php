@@ -648,7 +648,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$feed->set_useragent( apply_filters( 'http_headers_useragent', $default_agent ) );
 		if ( false === apply_filters( 'feedzy_disable_db_cache', false, $feed_url ) ) {
 			$feed->set_cache_class( 'WP_Feed_Cache' );
-			$feed->set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', $cache_time, $feed_url ) );
+			add_filter(
+				'wp_feed_cache_transient_lifetime', function( $time ) use ( $cache_time ) {
+					return $cache_time;
+				}, 10, 1
+			);
 		} else {
 			require_once( ABSPATH . 'wp-admin/includes/file.php' );
 			WP_Filesystem();
