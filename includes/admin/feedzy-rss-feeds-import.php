@@ -1306,6 +1306,54 @@ class Feedzy_Rss_Feeds_Import {
 		return $default;
 	}
 
+	/**
+	 * Register the meta tags.
+	 *
+	 * @access      public
+	 */
+	public function wp() {
+		global $wp_version;
 
+		$free_settings = get_option( 'feedzy-settings', array() );
+		if ( ! isset( $free_settings['canonical'] ) || 1 !== intval( $free_settings['canonical'] ) ) {
+			return;
+		}
+
+		// Yoast.
+		add_filter( 'wpseo_canonical', array( $this, 'get_canonical_url' ) );
+
+		// All In One SEO.
+		add_filter( 'aioseop_canonical_url', array( $this, 'get_canonical_url' ) );
+
+		if ( version_compare( $wp_version, '4.6.0', '>=' ) ) {
+			// Fallback if none of the above plugins is present.
+			add_filter( 'get_canonical_url', array( $this, 'get_canonical_url' ) );
+		}
+	}
+
+	/**
+	 * Return the canonical URL.
+	 *
+	 * @access      public
+	 */
+	public function get_canonical_url( $canonical_url ) {
+		if ( ! is_singular() ) {
+			return $canonical_url;
+		}
+
+		global $post;
+		if ( ! $post ) {
+			return $canonical_url;
+		}
+
+		// let's check if the post has been imported by feedzy.
+		if ( 1 === intval( get_post_meta( $post->ID, 'feedzy', true ) ) ) {
+			$url    = get_post_meta( $post->ID, 'feedzy_item_url', true );
+			if ( ! empty( $url ) ) {
+				$canonical_url = $url;
+			}
+		}
+		return $canonical_url;
+	}
 
 }

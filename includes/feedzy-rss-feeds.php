@@ -233,6 +233,7 @@ class Feedzy_Rss_Feeds {
 			self::$instance->loader->add_action( 'wp_ajax_get_taxonomies', $plugin_import, 'get_taxonomies' );
 			self::$instance->loader->add_action( 'wp_ajax_run_now', $plugin_import, 'run_now' );
 			self::$instance->loader->add_action( 'manage_feedzy_imports_posts_custom_column', $plugin_import, 'manage_feedzy_import_columns', 10, 2 );
+			self::$instance->loader->add_action( 'wp', $plugin_import, 'wp' );
 
 			self::$instance->loader->add_filter( 'feedzy_items_limit', $plugin_import, 'items_limit', 10, 2 );
 			self::$instance->loader->add_filter( 'feedzy_settings_tabs', $plugin_import, 'settings_tabs', 10, 1 );
