@@ -184,6 +184,12 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 		const multipleMetaExists = value => {
 			return ( 0 <= ( props.attributes.multiple_meta.replace(/\s/g,'').split( ',' ) ).indexOf( value ) || '' === props.attributes.multiple_meta );
 		};
+
+        let validateURL = 'https://validator.w3.org/feed/';
+        if ( props.attributes.feeds ) {
+            validateURL += 'check.cgi?url=' + props.attributes.feeds;
+        }
+
 		if ( props.attributes.categories === undefined ) {
 			if ( ! props.attributes.meta ) {
 				props.setAttributes( {
@@ -224,18 +230,14 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 						/>,
 						<Button
 							isLarge
+							isPrimary
 							type="submit"
 							onClick={ loadFeed }
 						>
 							{ __( 'Load Feed' ) }
 						</Button>,
-						( props.attributes.status === 3 ) &&  <span>{ __( 'Feed URL Invalid') }</span>,
-						<span>
-							<ExternalLink href="https://validator.w3.org/feed/">
-								{ __( 'Click here to check if feed is valid. ' ) }
-							</ExternalLink>
-							{ __( 'Invalid feeds will NOT display items.' ) }
-						</span>
+                        <ExternalLink href={ validateURL } title={ __( 'Validate Feed ' ) }>{ __( 'Validate ' ) }</ExternalLink>,
+						( props.attributes.status === 3 ) && <div>{ __( 'Feed URL is invalid. Invalid feeds will NOT display items.') }</div>
 					] }
 					</Placeholder>
 				</div>

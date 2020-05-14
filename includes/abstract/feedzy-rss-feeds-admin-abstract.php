@@ -648,7 +648,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$feed->set_useragent( apply_filters( 'http_headers_useragent', $default_agent ) );
 		if ( false === apply_filters( 'feedzy_disable_db_cache', false, $feed_url ) ) {
 			$feed->set_cache_class( 'WP_Feed_Cache' );
-			$feed->set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', $cache_time, $feed_url ) );
+			add_filter(
+				'wp_feed_cache_transient_lifetime', function( $time ) use ( $cache_time ) {
+					return $cache_time;
+				}, 10, 1
+			);
 		} else {
 			require_once( ABSPATH . 'wp-admin/includes/file.php' );
 			WP_Filesystem();
@@ -1023,7 +1027,12 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	private function get_feed_item_filter( $sc, $sizes, $item, $feed_url, $index ) {
 		$item_link = $item->get_permalink();
+		// if the item has no link (possible in some cases), use the feed link
+		if ( empty( $item_link ) ) {
+			$item_link = $item->get_feed()->get_permalink();
+		}
 		$new_link  = apply_filters( 'feedzy_item_url_filter', $item_link, $sc, $item );
+
 		// Fetch image thumbnail
 		if ( $sc['thumb'] === 'yes' || $sc['thumb'] === 'auto' ) {
 			$the_thumbnail = $this->feedzy_retrieve_image( $item, $sc );
