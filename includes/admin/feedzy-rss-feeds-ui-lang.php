@@ -366,7 +366,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 							),
 							'yes'  => array(
 								'label' => __( 'Force HTTPS (please verify that the images exist on HTTPS)', 'feedzy-rss-feeds' ),
-								'value' => 'force',
+								'value' => 'https',
 							),
 							'no'   => array(
 								'label' => __( 'Ignore and show the default image instead', 'feedzy-rss-feeds' ),
