@@ -484,7 +484,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'refresh'        => '12_hours',
 				// sorting.
 				'sort'           => '',
-				// http images, https = force https|default = fall back to default image|auto = continue as it is
+				// https = force https
+				// default = fall back to default image
+				// auto = continue as it is
 				'http'         => 'auto',
 				// message to show when feed is empty
 				'error_empty'   => 'Feed has no items.',
@@ -1271,6 +1273,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( $sc && 0 === strpos( $the_thumbnail, 'http://' ) ) {
 			switch ( $sc['http'] ) {
 				case 'https':
+					// fall-through.
+				case 'force':
 					$the_thumbnail = str_replace( 'http://', 'https://', $the_thumbnail );
 					break;
 				case 'default':
