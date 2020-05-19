@@ -1112,6 +1112,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		// multiple sources?
 		$is_multiple    = is_array( $feed_url );
+		$feed_source    = $item->get_feed()->get_title();
 
 		// author.
 		if ( $item->get_author() && $meta_args['author'] ) {
@@ -1122,7 +1123,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 			$author_name = apply_filters( 'feedzy_author_name', $author_name, $feed_url, $item );
 
-			$feed_source = $item->get_feed()->get_title();
 			if ( $is_multiple && $meta_args['source'] && ! empty( $feed_source ) ) {
 				$author_name .= sprintf( ' (%s)', $feed_source );
 			}
@@ -1208,6 +1208,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'item_author'        => $item->get_author(),
 			'item_description'   => $content_summary,
 			'item_content'       => apply_filters( 'feedzy_content', $item->get_content( false ), $item ),
+			'item_source'       => $feed_source,
 		);
 		$item_array = apply_filters( 'feedzy_item_filter', $item_array, $item, $sc, $index );
 
