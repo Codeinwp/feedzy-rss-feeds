@@ -32,6 +32,15 @@ const {
 */
 
 const Inspector = props => {
+
+    let http_help = '';
+    if ( props.attributes.http === 'https' ) {
+        http_help += __( 'Please verify that the images exist on HTTPS.' );
+    }
+    if ( props.attributes.http === 'https' || props.attributes.http === 'default' ) {
+        http_help += ' ' + __( 'This affects images only on the front end.' );
+    }
+
     return (
 		<InspectorControls key="inspector">
 			{ ( props.attributes.status !== 0 ) && (
@@ -306,7 +315,29 @@ const Inspector = props => {
 							type="number"
 							value={ props.attributes.size }
 							onChange={ props.onSize }
-						/>
+						/>,
+                        <SelectControl
+                            label={ __( 'How should we treat HTTP images?' ) }
+                            value={ props.attributes.http }
+                            options={ [
+                                {
+                                    label: __( 'Show with HTTP link' ),
+                                    value: 'auto',
+                                },
+                                {
+                                    label: __( 'Force HTTPS' ),
+                                    value: 'https',
+                                },
+                                {
+                                    label: __( 'Ignore and show the default image instead' ),
+                                    value: 'default',
+                                },
+                            ] }
+                            onChange={ props.onHTTP }
+                            className="feedzy-http"
+                            help={ http_help }
+                        />
+
 					] }
 				</PanelBody>,
 				( ( feedzyjs.isPro ) && (

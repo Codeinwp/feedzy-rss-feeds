@@ -1270,7 +1270,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		// handle HTTP images.
-		if ( $sc && 0 === strpos( $the_thumbnail, 'http://' ) ) {
+		if ( $sc && isset( $sc['http'] ) && 0 === strpos( $the_thumbnail, 'http://' ) ) {
 			switch ( $sc['http'] ) {
 				case 'https':
 					// fall-through.

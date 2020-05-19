@@ -148,6 +148,9 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 						'type'    => 'number',
 						'default' => 150,
 					),
+					'http'           => array(
+						'type'    => 'string',
+					),
 					'price'          => array(
 						'type'    => 'boolean',
 						'default' => true,
@@ -207,7 +210,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 	public function feedzy_register_rest_route() {
 		register_rest_route(
 			'feedzy/v1', '/feed/', array(
-				'methods'  => 'GET',
+				'methods'  => 'POST',
 				'callback' => array( $this, 'feedzy_rest_route' ),
 				'args'     => array(
 					'url'      => array(
@@ -224,7 +227,11 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 	/**
 	 * Output Feed JSON
 	 */
-	public function feedzy_rest_route( $data ) {
+	public function feedzy_rest_route( WP_REST_Request $request ) {
+		$data = $request->get_params();
+		unset( $data['feedData'] );
+
+error_log(print_r($data,true));
 
 		$feed = $data;
 		if ( ! empty( $data['url'] ) ) {
@@ -240,7 +247,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 
 		$instance = Feedzy_Rss_Feeds::instance();
 		$admin = $instance->get_admin();
-		$feed = $admin->fetch_feed( $feed, '12_hours', array( '' ) );
+		$feed = $admin->fetch_feed( $feed, '12_hours', $data );
 
 		$feedy = array();
 
@@ -284,7 +291,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 					'date'        => ( ( $item->get_date() ) ? date_i18n( $meta_args['date_format'], $item->get_date( 'U' ) ) : null ),
 					'time'        => ( ( $item->get_date() ) ? date_i18n( $meta_args['time_format'], $item->get_date( 'U' ) ) : null ),
 					'description' => $description,
-					'thumbnail'   => $admin->feedzy_retrieve_image( $item ),
+					'thumbnail'   => $admin->feedzy_retrieve_image( $item, $data ),
 					'price'       => ( ( feedzy_is_pro() && $item_attrs['item_price'] ) ? $item_attrs['item_price'] : null ),
 					'media'       => ( ( feedzy_is_pro() && $item_attrs['item_media'] ) ? $item_attrs['item_media'] : null ),
 					'categories'  => ( ( feedzy_is_pro() && $item_attrs['item_categories'] ) ? $item_attrs['item_categories'] : null ),

@@ -97,6 +97,10 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 		const onSize = value => {
 			props.setAttributes( { size: ! value ? 150 : Number( value ) } );
 		};
+		const onHTTP = value => {
+			props.setAttributes( { http: value } );
+            loadFeed();
+		};
 		const onReferralURL = value => {
 			props.setAttributes( { referral_url: value } );
 		};
@@ -129,7 +133,8 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 				url = queryString.stringify( { url}, { arrayFormat: 'bracket' } );
 			}
 
-			wp.apiRequest( { path: `/feedzy/v1/feed?${ url }` } )
+console.log( 'b4 api', props.attributes );
+			wp.apiRequest( { path: `/feedzy/v1/feed?${ url }`, method: 'POST', data: props.attributes } )
 				.then(
 					( data ) => {
 						if ( this.unmounting ) {
@@ -197,7 +202,7 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 			// Inspector
 			!! props.isSelected && (
 				<Inspector 
-					{ ...{ onChangeFeeds, onChangeMax, onChangeOffset, toggleFeedTitle, onRefresh, onSort, onTarget, onTitle, changeMeta, changeMultipleMeta, toggleSummary, toggleLazy, onSummaryLength, onKeywordsTitle, onKeywordsBan, onThumb, onDefault, onSize, onReferralURL, onColumns, onTemplate, togglePrice, loadFeed, ...props } }
+					{ ...{ onChangeFeeds, onChangeMax, onChangeOffset, toggleFeedTitle, onRefresh, onSort, onTarget, onTitle, changeMeta, changeMultipleMeta, toggleSummary, toggleLazy, onSummaryLength, onKeywordsTitle, onKeywordsBan, onThumb, onDefault, onSize, onHTTP, onReferralURL, onColumns, onTemplate, togglePrice, loadFeed, ...props } }
 				/>
 			),
 			props.attributes.status !== 2 && (

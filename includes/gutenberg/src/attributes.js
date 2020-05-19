@@ -71,6 +71,9 @@ const attributes = {
 		type: 'number',
 		default: 150,
 	},
+	http: {
+		type: 'string',
+	},
 	referral_url: {
 		type: 'string',
 	},
