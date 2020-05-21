@@ -283,9 +283,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			foreach ( $category_meta as $key => $value ) {
 				$value = implode( ',', (array) $value );
 				if ( get_post_meta( $post_id, $key, false ) ) {
-					update_post_meta( $post_id, $key, $value );
+					update_post_meta( $post_id, $key, sanitize_text_field( $value ) );
 				} else {
-					add_post_meta( $post_id, $key, $value );
+					add_post_meta( $post_id, $key, sanitize_text_field( $value ) );
 				}
 				if ( ! $value ) {
 					delete_post_meta( $post_id, $key );

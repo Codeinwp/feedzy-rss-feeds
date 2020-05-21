@@ -354,9 +354,9 @@ class Feedzy_Rss_Feeds_Import {
 			foreach ( $data_meta as $key => $value ) {
 				$value = is_array( $value ) ? implode( ',', $value ) : implode( ',', (array) $value );
 				if ( get_post_meta( $post_id, $key, false ) ) {
-					update_post_meta( $post_id, $key, $value );
+					update_post_meta( $post_id, $key, sanitize_text_field( $value ) );
 				} else {
-					add_post_meta( $post_id, $key, $value );
+					add_post_meta( $post_id, $key, sanitize_text_field( $value ) );
 				}
 				if ( ! $value ) {
 					delete_post_meta( $post_id, $key );
@@ -900,9 +900,9 @@ class Feedzy_Rss_Feeds_Import {
 
 			// indicate that this post was imported by feedzy.
 			update_post_meta( $new_post_id, 'feedzy', 1 );
-			update_post_meta( $new_post_id, 'feedzy_item_url', $item['item_url'] );
+			update_post_meta( $new_post_id, 'feedzy_item_url', esc_url_raw( $item['item_url'] ) );
 			update_post_meta( $new_post_id, 'feedzy_job', $job->ID );
-			update_post_meta( $new_post_id, 'feedzy_item_author', $author );
+			update_post_meta( $new_post_id, 'feedzy_item_author', sanitize_text_field( $author ) );
 
 			do_action( 'feedzy_after_post_import', $new_post_id, $item, $this->settings );
 		}
