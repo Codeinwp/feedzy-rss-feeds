@@ -293,6 +293,9 @@ class Feedzy_Rss_Feeds_Import {
 			$import_link_author[1] = 'checked';
 		}
 
+		// maybe more options are required from pro?
+		$pro_options = apply_filters( 'feedzy_metabox_options', array(), $post->ID );
+
 		$import_custom_fields = get_post_meta( $post->ID, 'imports_custom_fields', true );
 		$import_feed_limit    = get_post_meta( $post->ID, 'import_feed_limit', true );
 		$import_feed_delete_days    = intval( get_post_meta( $post->ID, 'import_feed_delete_days', true ) );
@@ -712,6 +715,8 @@ class Feedzy_Rss_Feeds_Import {
 				'multiple_meta'  => 'no',
 			), $job
 		);
+
+		$options['__jobID'] = $job->ID;
 		$results = $this->get_job_feed( $options, $import_content, true );
 		$result = $results['items'];
 		update_post_meta( $job->ID, 'last_run', time() );
@@ -953,20 +958,6 @@ class Feedzy_Rss_Feeds_Import {
 			);
 		}
 		return $feed_items;
-	}
-
-	/**
-	 * Modifies the feed object before it is processed.
-	 *
-	 * @access  public
-	 *
-	 * @param   SimplePie $feed SimplePie object.
-	 */
-	public function feedzy_modify_feed_config( $feed ) {
-		// @codingStandardsIgnoreStart
-		// set_time_limit(0);
-		// @codingStandardsIgnoreEnd
-		$feed->set_timeout( 60 );
 	}
 
 	/**

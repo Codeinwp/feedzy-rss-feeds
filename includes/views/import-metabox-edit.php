@@ -28,10 +28,10 @@
 		</div>
 	</div>
 
-	<fieldset>
+	<fieldset class="feedzy-screen1">
 		<h4><?php echo __( 'Feed sources:', 'feedzy-rss-feeds' ); ?></h4>
 		<div class="form-group">
-			<label class="feedzy-sr-only"><?php echo __( 'Feedzy RSS Feed sources (URL\'s comma separated or Feed Categories slug)', 'feedzy-rss-feeds' ); ?></label>
+			<label class="feedzy-sr-only"><?php echo __( 'Feedzy RSS Feed sources (comma separated URLs or Feed Categories slug)', 'feedzy-rss-feeds' ); ?></label>
 		</div>
 		<div class="form-group input-group">
 			<input type="text" name="feedzy_meta_data[source]" placeholder="<?php echo __( 'Source', 'feedzy-rss-feeds' ); ?>" class="form-control  " value="<?php echo $source; ?>"/>
@@ -68,7 +68,7 @@
 		</div>
 	</fieldset>
 
-	<fieldset>
+	<fieldset class="feedzy-screen2">
 		<h4><?php echo __( 'Feed filters:', 'feedzy-rss-feeds' ); ?></h4>
 		<div class="form-group <?php echo apply_filters( 'feedzy_upsell_class', '' ); ?>">
 			<?php echo apply_filters( 'feedzy_upsell_content', '' ); ?>
@@ -143,7 +143,7 @@
 		</div>
 	</fieldset>
 
-	<fieldset>
+	<fieldset class="feedzy-screen3">
 		<h4><?php echo __( 'Feed assign:', 'feedzy-rss-feeds' ); ?></h4>
 		<p><?php echo __( 'Map post elements to custom post from feed imports.', 'feedzy-rss-feeds' ); ?></p>
 
@@ -322,6 +322,9 @@
 					</div>
 				</div>
 			</div>
+
+			<?php echo do_action( 'feedzy_metabox_show_rows', '', $post->ID, 'language-dropdown' ); ?>
+
 			<div class="feedzy-row">
 				<div class="label_description">
 					<label class="feedzy-sr-only" for="f1-post-content"><?php echo __( 'Featured Image', 'feedzy-rss-feeds' ); ?></label><br/>

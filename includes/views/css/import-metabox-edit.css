@@ -1849,6 +1849,14 @@ label {
 	font-weight: 300;
 }
 
+label.feedzy-sr-only {
+	font-weight: 400;
+}
+
+fieldset.feedzy-screen3 label.feedzy-sr-only {
+	font-size: larger;
+}
+
 button.btn {
 	min-width: 105px;
 	height: 44px;
