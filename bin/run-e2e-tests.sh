@@ -26,4 +26,7 @@ npm run cypress:run
 export CYPRESS_SPEC_TO_RUN="shortcode_lazy_free.js"
 npm run cypress:run
 
-# docker exec -it feedzy_wordpress cat /var/www/html/wp-content/debug.log
+# import feed
+export CYPRESS_SPEC_TO_RUN="import_feed_free.js"
+npm run cypress:run
+

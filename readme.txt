@@ -1,5 +1,5 @@
 === RSS Aggregator by Feedzy - Powerful WP Autoblogging and News Aggregator ===
-Contributors: themeisle,codeinwp,hardeepasrani,contactashish13
+Contributors: themeisle,codeinwp,hardeepasrani,rozroz
 Tags: rss aggregator, news aggregator, autoblogging, feed to post, rss import
 Requires at least: 3.7
 Requires PHP: 5.3
