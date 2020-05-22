@@ -161,6 +161,11 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	public function add_data_to_item( $itemArray, $item, $sc = null, $index = null ) {
 		$itemArray['item_categories'] = $this->retrieve_categories( null, $item );
+
+		// If set to true, SimplePie will return a unique MD5 hash for the item.
+		// If set to false, it will check <guid>, <link>, and <title> before defaulting to the hash.
+		$itemArray['item_id']   = $item->get_id( false );
+
 		$itemArray['item']      = $item;
 		return $itemArray;
 	}
@@ -492,7 +497,10 @@ class Feedzy_Rss_Feeds_Import {
 				$msg    = __( 'Never Run', 'feedzy-rss-feeds' );
 				if ( $last ) {
 					$items_count  = get_post_meta( $post_id, 'imported_items_count', true );
-					$items      = get_post_meta( $post_id, 'imported_items', true );
+					$items      = get_post_meta( $post_id, 'imported_items_hash', true );
+					if ( empty( $items ) ) {
+						$items      = get_post_meta( $post_id, 'imported_items', true );
+					}
 					$count  = $items_count;
 					if ( '' === $count && $items ) {
 						// backward compatibility where imported_items_count post_meta has not been populated yet
@@ -676,9 +684,18 @@ class Feedzy_Rss_Feeds_Import {
 			add_post_meta( $job->ID, 'import_post_status', 'publish' );
 			$import_post_status  = get_post_meta( $job->ID, 'import_post_status', true );
 		}
-		$imported_items       = get_post_meta( $job->ID, 'imported_items', true );
-		if ( ! is_array( $imported_items ) ) {
-			$imported_items = array();
+
+		// the array of imported items that uses the old scheme of custom hashing the url and date
+		$imported_items = array();
+		$imported_items_old       = get_post_meta( $job->ID, 'imported_items', true );
+		if ( ! is_array( $imported_items_old ) ) {
+			$imported_items_old = array();
+		}
+
+		// the array of imported items that uses the new scheme of SimplePie's hash/id
+		$imported_items_new       = get_post_meta( $job->ID, 'imported_items_hash', true );
+		if ( ! is_array( $imported_items_new ) ) {
+			$imported_items_new = array();
 		}
 
 		// Note: this implementation will only work if only one of the fields is allowed to provide
@@ -725,9 +742,19 @@ class Feedzy_Rss_Feeds_Import {
 		$import_errors = array();
 
 		do_action( 'feedzy_run_job_pre', $job, $result );
+
+		// check if we should be using the old scheme of custom hashing the url and date
+		// or the new scheme of depending on SimplePie's hash/id
+		// basically if the old scheme hasn't be used before, use the new scheme
+		// BUT if the old scheme has been used, continue with it.
+		$use_new_hash = empty( $imported_items_old );
+		$imported_items = $use_new_hash ? $imported_items_new : $imported_items_old;
+
 		foreach ( $result as $item ) {
-			$item_hash = hash( 'sha256', $item['item_url'] . '_' . $item['item_date'] );
-			if ( in_array( $item_hash, $imported_items, true ) ) {
+			$item_hash = $use_new_hash ? $item['item_id'] : hash( 'sha256', $item['item_url'] . '_' . $item['item_date'] );
+			$is_duplicate = $use_new_hash ? in_array( $item_hash, $imported_items_new, true ) : in_array( $item_hash, $imported_items_old, true );
+			if ( $is_duplicate ) {
+				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Ignoring %s as it is a duplicate (%s hash).', $item_hash, $use_new_hash ? 'new' : 'old' ), 'warn', __FILE__, __LINE__ );
 				$index++;
 				continue;
 			}
@@ -902,7 +929,11 @@ class Feedzy_Rss_Feeds_Import {
 			do_action( 'feedzy_after_post_import', $new_post_id, $item, $this->settings );
 		}
 
-		update_post_meta( $job->ID, 'imported_items', $imported_items );
+		if ( $use_new_hash ) {
+			update_post_meta( $job->ID, 'imported_items_hash', $imported_items );
+		} else {
+			update_post_meta( $job->ID, 'imported_items', $imported_items );
+		}
 		update_post_meta( $job->ID, 'imported_items_count', $count );
 
 		if ( $import_image_errors > 0 ) {
