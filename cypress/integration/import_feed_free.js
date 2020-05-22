@@ -138,7 +138,7 @@ describe('Test Free - Import Feed', function() {
         cy.get('tr:nth-of-type(1) .feedzy-toggle').should('be.checked');
     })
 
-    it('Runs the new import', function() {
+    it('Run the new import', function() {
         cy.visit('/edit.php?post_type=feedzy_imports')
 
         // run import
@@ -146,7 +146,16 @@ describe('Test Free - Import Feed', function() {
         cy.get('tr:nth-of-type(1) .feedzy-run-now').click();
         cy.wait(10 * parseInt(feed.wait));
         cy.get('tr:nth-of-type(1) .feedzy-error-critical').invoke('html').should('include', 'Successfully run');
+    })
 
+    it('Run the new import again', function() {
+        cy.visit('/edit.php?post_type=feedzy_imports')
+
+        // run import
+        cy.get('tr:nth-of-type(1) .feedzy-run-now').should('be.visible');
+        cy.get('tr:nth-of-type(1) .feedzy-run-now').click();
+        cy.wait(10 * parseInt(feed.wait));
+        cy.get('tr:nth-of-type(1) .feedzy-error-critical').invoke('html').should('include', 'Nothing imported');
     })
 
     it('Verifies the new imported items', function() {
