@@ -42,10 +42,26 @@
       "wait": 10000,
       "tags": {
         "disallowed": {
-          "plan1": [
+          "free": [
             "full_content",
             "wordai",
-            "spinnerchief"
+            "spinnerchief",
+            "title_wordai",
+            "content_wordai",
+            "full_content_wordai",
+            "title_spinnerchief",
+            "content_spinnerchief",
+            "full_content_spinnerchief"
+          ]
+        },
+        "mandatory": {
+          "free": [
+            "item_content",
+            "item_description",
+            "item_image",
+            "item_url",
+            "item_categories",
+            "item_source"
           ]
         }
       }

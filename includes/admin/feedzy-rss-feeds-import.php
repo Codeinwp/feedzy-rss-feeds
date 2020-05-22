@@ -790,6 +790,7 @@ class Feedzy_Rss_Feeds_Import {
 					'[#item_date]',
 					'[#item_date_local]',
 					'[#item_date_feed]',
+					'[#item_source]',
 				),
 				array(
 					$item['item_title'],
@@ -797,6 +798,7 @@ class Feedzy_Rss_Feeds_Import {
 					$item_date,
 					$item_date,
 					$item_date,
+					$item['item_source'],
 				),
 				$import_title
 			);
@@ -816,6 +818,7 @@ class Feedzy_Rss_Feeds_Import {
 					'[#item_image]',
 					'[#item_url]',
 					'[#item_categories]',
+					'[#item_source]',
 				),
 				array(
 					$item['item_description'],
@@ -823,6 +826,7 @@ class Feedzy_Rss_Feeds_Import {
 					$image_html,
 					$item_link,
 					$item['item_categories'],
+					$item['item_source'],
 				),
 				$import_content
 			);
@@ -1275,6 +1279,7 @@ class Feedzy_Rss_Feeds_Import {
 		$default['item_date']   = __( 'Item Date (UTC/GMT)', 'feedzy-rss-feeds' );
 		$default['item_date_local']   = __( 'Item Date (local timezone)', 'feedzy-rss-feeds' );
 		$default['item_date_feed']   = __( 'Item Date (feed timezone)', 'feedzy-rss-feeds' );
+		$default['item_source']        = __( 'Item Source', 'feedzy-rss-feeds' );
 
 		// disabled tags
 		if ( ! feedzy_is_pro() ) {
@@ -1312,6 +1317,7 @@ class Feedzy_Rss_Feeds_Import {
 		$default['item_image']      = __( 'Item Image', 'feedzy-rss-feeds' );
 		$default['item_url']        = __( 'Item URL', 'feedzy-rss-feeds' );
 		$default['item_categories']        = __( 'Item Categories', 'feedzy-rss-feeds' );
+		$default['item_source']        = __( 'Item Source', 'feedzy-rss-feeds' );
 
 		// disabled tags
 		if ( ! feedzy_is_pro() ) {

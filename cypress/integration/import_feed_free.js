@@ -13,28 +13,7 @@ describe('Test Free - Import Feed', function() {
     const feed = Cypress.env('import-feed');
 
     it.skip('Temporary test', function() {
-        cy.visit('/edit.php?post_type=feedzy_imports');
-        cy.get('tr:nth-of-type(1) .row-title').click();
-        cy.get('.f1 fieldset:nth-of-type(1) .f1-buttons button.btn-next').scrollIntoView().click();
-
-        // locked for pro?
-        cy.get('.only-pro').should('have.length', feed.locked);
-        cy.get('[name="feedzy_meta_data[inc_key]"]').should('not.be.visible');
-        cy.get('[name="feedzy_meta_data[exc_key]"]').should('not.be.visible');
-        cy.get('[name="feedzy_meta_data[import_feed_delete_days]"]').should('not.be.visible');
-
-        //cy.wait(2000);
-
-        cy.get('.f1 fieldset:nth-of-type(2) .f1-buttons button.btn-next').scrollIntoView().click();
-        cy.get('[name="feedzy_meta_data[import_link_author_admin]"]').should('not.be.visible');
-        cy.get('[name="feedzy_meta_data[import_link_author_public]"]').should('not.be.visible');
-
-        const tags = feed.tags.disallowed;
-        cy.get('a.dropdown-item').each(function(anchor){
-            cy.wrap(tags.plan1).each(function(disallowed){
-                cy.wrap(anchor).invoke('attr', 'data-field-tag').should('not.contain', disallowed);
-            });
-        });
+        // empty.
     });
 
     it('Check Settings', function() {
@@ -82,9 +61,22 @@ describe('Test Free - Import Feed', function() {
         // check disallowd magic tags
         const tags = feed.tags.disallowed;
         cy.get('a.dropdown-item').each(function(anchor){
-            cy.wrap(tags.plan1).each(function(disallowed){
+            cy.wrap(tags.free).each(function(disallowed){
                 cy.wrap(anchor).invoke('attr', 'data-field-tag').should('not.contain', disallowed);
             });
+        });
+
+        // check mandatory magic tags
+        const mandatory = feed.tags.mandatory;
+        var found_tags = [];
+        cy.wrap(mandatory.free).each(function(reqd){
+            cy.get('a.dropdown-item', {force: true}).each(function(element){
+                if(reqd === element.attr('data-field-tag')){
+                    found_tags.push(reqd);
+                }
+            });
+        }).then((dumb) => {
+            expect(found_tags).to.include.members(mandatory.free);
         });
 
         cy.get('button[type="submit"][name="save"]').scrollIntoView().click({force:true});
