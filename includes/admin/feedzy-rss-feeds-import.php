@@ -727,6 +727,7 @@ class Feedzy_Rss_Feeds_Import {
 				'columns'        => 1,
 				'offset'         => 0,
 				'multiple_meta'  => 'no',
+				'refresh'        => '55_mins',
 			), $job
 		);
 		$results = $this->get_job_feed( $options, $import_content, true );
