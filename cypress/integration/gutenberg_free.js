@@ -32,12 +32,12 @@ describe('Test Free - gutenberg', function() {
         // see the block has the correct elements.
         cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"]').should('have.length', 1);
         cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] input[type="url"]').should('have.length', 1);
-        cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] button.is-button.is-default').should('have.length', 1);
+        cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] button.is-primary.is-large').should('have.length', 1);
 
         var gutenberg = Cypress.env("gutenberg");
         // insert a feed
         cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] input[type="url"]').type( gutenberg.url );
-        cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] button.is-button.is-default').click().then( () => {
+        cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] button.is-primary.is-large').click().then( () => {
             cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] div.feedzy-rss').should('have.length', 1);
             cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] div.feedzy-rss div.rss_header').should('have.length', 1);
             cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] div.feedzy-rss ul.feedzy-default').should('have.length', 1);
@@ -91,7 +91,7 @@ describe('Test Free - gutenberg', function() {
         // see the block has the correct elements.
         cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"]').should('have.length', 1);
         cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] input[type="url"]').should('have.length', 0);
-        cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] button.is-button.is-default').should('have.length', 0);
+        cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] button.is-primary.is-large').should('have.length', 0);
 
         cy.get('textarea.editor-post-title__input').should('contain', PREFIX);
 
@@ -122,8 +122,6 @@ describe('Test Free - gutenberg', function() {
 
         // we want to do this so that the next test succeeds - otherwise it will throw up an alert box and stop the page
         cy.get('button.editor-post-publish-button').click();
-
-        cy.visit('/edit.php?post_type=post')
 
     });
 
