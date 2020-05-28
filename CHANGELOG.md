@@ -1,4 +1,17 @@
 
+ ### v3.4.0 - 2020-05-28 
+ **Changes:** 
+ * - [Feat] Options to import feeds to posts
+* - [Feat] New [#item_source] tag for Feed to Post to display the feed source name
+* - [Feat] Improved Settings page style and layout
+* - [Feat] Use SimplePieItem's get_id to determine the uniqueness of feed items
+* - [Fix] WP 5.4 Feedzy block compatibility
+* - [Fix] Feed Caching time stuck to 12 hours
+* - [Fix] PHP Notice: Undefined index errors in the widget
+* - [Fix] Bulk activation of plugin aborts activation of subsequent plugins
+* - [Fix] Wrong shortcode mentioned in the Support tab
+* - [Fix] Notice: Undefined index: host when item has no link element
+ 
  ### v3.3.19 - 2020-04-08 
  **Changes:** 
  * Tested up to 5.4
