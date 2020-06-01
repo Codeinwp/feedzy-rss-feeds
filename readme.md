@@ -19,6 +19,7 @@ With FEEDZY RSS Aggregator, you can sit back, let your site autoblog and always 
 
 ## What you can do with Feedzy RSS Aggregator:  ##
 
+* **[Feed to post](https://docs.themeisle.com/article/742-how-to-import-posts-from-feeds-in-feedzy)** (our most loved feature): automatically convert RSS feed items to Wordpress pages, posts, and custom post type.
 * **Automatically import** and aggregate unlimited RSS feeds from unlimited sources
 * **Bulk import and organize** multiple feed sources of similar topics into Categories. See how our user, Barry Seward, loves this feature [here](https://wordpress.org/support/topic/works-great-6051/)
 * **Easily display RSS feeds** using shortcodes, Gutenberg blocks, or widgets in your third-party page builders like Elementor
@@ -48,7 +49,6 @@ With FEEDZY RSS Aggregator, you can sit back, let your site autoblog and always 
 
 If you love FEEDZY RSS Aggregator, why not bring your site to the next level with more powerful tools to boost your SEO and keep your audience on your site for longer.
 
-* **[Feed to post](https://docs.themeisle.com/article/742-how-to-import-posts-from-feeds-in-feedzy)** (our most loved feature): automatically convert RSS feed items to Wordpress pages, posts, and custom post type.
 * **[Keyword filter](https://docs.themeisle.com/article/942-in-feedzy-how-do-i#specific-keywords)**: you can choose to import feed to post and display content if they include or exclude certain keywords.
 * **Map the imported feed elements to your post elements**: totally control and customize how your feed to post, such as using the feed’s image or your image as the featured image, importing only the feed’s content or both the content and image into the post content, creating post drafts first to review or publishing right away, and so many more.
 * **[Full text RSS feeds import (with image)](https://docs.themeisle.com/article/742-how-to-import-posts-from-feeds-in-feedzy)** (with image): by extracting the entire HTML from each feed item, you can import full text content to post, not just the feed excerpt.
