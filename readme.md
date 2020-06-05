@@ -33,8 +33,8 @@ With FEEDZY RSS Aggregator, you can sit back, let your site autoblog and always 
 
 ## You should use FEEDZY RSS Aggregator if: ##
 
-* You own a news site; you want a WP news aggregator to make sure your site always updated with the latest news
-* You own a blog; you need a WP content aggregator to autoblog and keep your audience engaged with fresh content
+* [You own a news site](https://themeisle.com/blog/wordpress-news-aggregator-website/); you want a WP news aggregator to make sure your site always updated with the latest news
+* You own a blog; you need a [WP content aggregator to autoblog](https://themeisle.com/blog/create-an-autoblogging-site-wordpress/) and keep your audience engaged with fresh content
 * You want to improve your SEO rankings. See how the SEO expert, MOZ, talked about 10 reasons “[How Fresh Content May Influence Google Rankings”](https://moz.com/blog/google-fresh-factor-new)“
 * You develop a site for your client and just want to quickly demo a news feed of frequently  updated content
 * You build a company website and want a news/blog page to enhance company’s reputation and SEO. Focus on your business and leave the content marketing work to FEEDZY RSS Aggregator.
