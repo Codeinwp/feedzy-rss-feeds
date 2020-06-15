@@ -108,7 +108,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		// how many posts contain the shortcode
 		global $wpdb;
-		$shortcodes = $wpdb->get_var( "SELECT count(*) FROM {$wpdb->prefix}_posts WHERE post_status IN ('publish', 'private') AND post_content LIKE '%[feedzy-rss %'" );
+		$shortcodes = $wpdb->get_var( "SELECT count(*) FROM {$wpdb->prefix}posts WHERE post_status IN ('publish', 'private') AND post_content LIKE '%[feedzy-rss %'" );
 		$data = array(
 			'categories'    => $categories,
 			'imports'       => $imports,
