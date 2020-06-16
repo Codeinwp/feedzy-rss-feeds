@@ -411,6 +411,11 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	public function feedzy_import_columns( $columns ) {
 		$columns['title'] = __( 'Import Title', 'feedzy-rss-feeds' );
+		if ( $new_columns = $this->array_insert_before( 'date', $columns, 'source', __( 'Source', 'feedzy-rss-feeds' ) ) ) {
+			$columns = $new_columns;
+		} else {
+			$columns['source'] = __( 'Source', 'feedzy-rss-feeds' );
+		}
 
 		if ( $new_columns = $this->array_insert_before( 'date', $columns, 'status', __( 'Current Status', 'feedzy-rss-feeds' ) ) ) {
 			$columns = $new_columns;
@@ -475,6 +480,18 @@ class Feedzy_Rss_Feeds_Import {
 	public function manage_feedzy_import_columns( $column, $post_id ) {
 		global $post;
 		switch ( $column ) {
+			case 'source':
+				$src = get_post_meta( $post_id, 'source', true );
+				// if the source is a category, link it.
+				if ( strpos( $src, 'http' ) === false && strpos( $src, 'https' ) === false ) {
+					$src = sprintf( '%s: %s%s%s', __( 'Feed Category', 'feedzy-rss-feeds' ), '<a href="' . admin_url( 'edit.php?post_type=feedzy_categories' ) . '" target="_blank">', $src, '</a>' );
+				} else {
+					// else link it to the feed but shorten it if it is too long.
+					$too_long = 65;
+					$src = sprintf( '%s%s%s', '<a href="' . $src . '" target="_blank" title="' . __( 'Click to view', 'feedzy-rss-feeds' ) . '">', ( strlen( $src ) > $too_long ? substr( $src, 0, $too_long ) . '...' : $src ), '</a>' );
+				}
+				echo $src;
+				break;
 			case 'status':
 				$status = $post->post_status;
 				if ( empty( $status ) ) {
