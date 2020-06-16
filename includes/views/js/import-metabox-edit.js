@@ -208,6 +208,30 @@
 			});
 		});
 
+        initSummary();
+
+	});
+
+    function initSummary() {
+        // pop-ups for informational text
+        $( '.feedzy-dialog' ).dialog({
+          modal: true,
+          autoOpen: false,
+          height: 400,
+          width: 500,
+          buttons: {
+            Ok: function() {
+              $( this ).dialog( 'close' );
+            }
+          }
+        });
+
+        $( '.feedzy-dialog-open' ).on('click', function(e){
+            e.preventDefault();
+            var dialog = $(this).attr('data-dialog');
+            $('.' + dialog).dialog( 'open' );
+        });
+
         // run now.
         $('.feedzy-run-now').on('click', function(e){
             e.preventDefault();
@@ -229,7 +253,7 @@
             });
         });
 
-	});
+    }
 
     function showSpinner(el){
         el.parent().find('.feedzy-spinner').addClass('is-active');

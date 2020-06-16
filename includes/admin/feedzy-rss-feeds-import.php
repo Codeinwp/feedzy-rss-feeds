@@ -122,13 +122,14 @@ class Feedzy_Rss_Feeds_Import {
 		wp_enqueue_style( $this->plugin_name, FEEDZY_ABSURL . 'css/feedzy-rss-feed-import.css', array(), $this->version, 'all' );
 		if ( get_current_screen()->post_type === 'feedzy_imports' ) {
 			wp_enqueue_style( $this->plugin_name . '_chosen', FEEDZY_ABSURL . 'includes/views/css/chosen.css', array(), $this->version, 'all' );
-			wp_enqueue_style( $this->plugin_name . '_metabox_edit', FEEDZY_ABSURL . 'includes/views/css/import-metabox-edit.css', array(), $this->version, 'all' );
+			wp_enqueue_style( $this->plugin_name . '_metabox_edit', FEEDZY_ABSURL . 'includes/views/css/import-metabox-edit.css', array( 'wp-jquery-ui-dialog' ), $this->version, 'all' );
 			wp_enqueue_script( $this->plugin_name . '_chosen_scipt', FEEDZY_ABSURL . 'includes/views/js/chosen.js', array( 'jquery' ), $this->version, true );
 			wp_enqueue_script(
 				$this->plugin_name . '_metabox_edit_script',
 				FEEDZY_ABSURL . 'includes/views/js/import-metabox-edit.js',
 				array(
 					'jquery',
+					'jquery-ui-dialog',
 					$this->plugin_name . '_chosen_scipt',
 				),
 				$this->version,
@@ -497,6 +498,7 @@ class Feedzy_Rss_Feeds_Import {
 				$msg    = __( 'Never Run', 'feedzy-rss-feeds' );
 				if ( $last ) {
 					$msg = $this->get_import_status( $post_id );
+					$msg .= $this->get_import_info( $post_id );
 					$msg .= $this->get_import_errors( $post_id );
 
 					// show the total items imported across all runs.
@@ -579,6 +581,50 @@ class Feedzy_Rss_Feeds_Import {
 		return $msg . $pro_msg;
 	}
 
+	/**
+	 * Creates the data by extracting the 'import_info' from each import.
+	 *
+	 * @since   ?
+	 * @access  private
+	 */
+	private function get_import_info( $post_id ) {
+		$msg = '';
+		$import_info = get_post_meta( $post_id, 'import_info', true );
+		if ( $import_info ) {
+			$msg = '';
+			foreach ( $import_info as $label => $value ) {
+				switch ( $label ) {
+					case 'total':
+						if ( count( $value ) > 0 ) {
+							$msg .= '<br>' . sprintf( '%s: %s%d%s', __( 'Total items found', 'feedzy-rss-feeds' ), '<a href="#" title="' . __( 'Click to view details', 'feedzy-rss-feeds' ) . '" class="feedzy-dialog-open" data-dialog="feedzy-items-found-' . $post_id . '">', count( $value ), '</a>' );
+						} else {
+							$msg .= '<br>' . sprintf( '%s: %d', __( 'Total items found', 'feedzy-rss-feeds' ), count( $value ) );
+						}
+						if ( $value ) {
+							$msg .= '<div class="feedzy-items-found-' . $post_id . ' feedzy-dialog" title="' . __( 'Total items found', 'feedzy-rss-feeds' ) . '"><ol>';
+							foreach ( $value as $url => $title ) {
+								$msg .= sprintf( '<li><p><a href="%s" target="_blank">%s</a></p></li>', esc_url( $url ), esc_html( $title ) );
+							}
+							$msg .= '</ol></div>';
+						}
+						break;
+					case 'duplicates':
+						if ( count( $value ) > 0 ) {
+							$msg .= '<br>' . sprintf( '%s: %s%d%s', __( 'Duplicates found', 'feedzy-rss-feeds' ), '<a href="#" title="' . __( 'Click to view details', 'feedzy-rss-feeds' ) . '" class="feedzy-dialog-open" data-dialog="feedzy-dups-found-' . $post_id . '">', count( $value ), '</a>' );
+						}
+						if ( $value ) {
+							$msg .= '<div class="feedzy-dups-found-' . $post_id . ' feedzy-dialog" title="' . __( 'Duplicates found', 'feedzy-rss-feeds' ) . '"><ol>';
+							foreach ( $value as $url => $title ) {
+								$msg .= sprintf( '<li><p><a href="%s" target="_blank">%s</a></p></li>', esc_url( $url ), esc_html( $title ) );
+							}
+							$msg .= '</ol></div>';
+						}
+						break;
+				}
+			}
+		}
+		return apply_filters( 'feedzy_run_status_info', $msg, $post_id );
+	}
 
 	/**
 	 * AJAX called method to update post status.
