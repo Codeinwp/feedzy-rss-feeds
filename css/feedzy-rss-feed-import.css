@@ -60,3 +60,8 @@
 .feedzy-error-critical {
 	color: #ff0000;
 }
+
+table.wp-list-table th.column-feedzy-status {
+	width: 100px;
+}
+

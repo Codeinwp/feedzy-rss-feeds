@@ -411,28 +411,28 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	public function feedzy_import_columns( $columns ) {
 		$columns['title'] = __( 'Import Title', 'feedzy-rss-feeds' );
-		if ( $new_columns = $this->array_insert_before( 'date', $columns, 'source', __( 'Source', 'feedzy-rss-feeds' ) ) ) {
+		if ( $new_columns = $this->array_insert_before( 'date', $columns, 'feedzy-source', __( 'Source', 'feedzy-rss-feeds' ) ) ) {
 			$columns = $new_columns;
 		} else {
-			$columns['source'] = __( 'Source', 'feedzy-rss-feeds' );
+			$columns['feedzy-source'] = __( 'Source', 'feedzy-rss-feeds' );
 		}
 
-		if ( $new_columns = $this->array_insert_before( 'date', $columns, 'status', __( 'Current Status', 'feedzy-rss-feeds' ) ) ) {
+		if ( $new_columns = $this->array_insert_before( 'date', $columns, 'feedzy-status', __( 'Current Status', 'feedzy-rss-feeds' ) ) ) {
 			$columns = $new_columns;
 		} else {
-			$columns['status'] = __( 'Current Status', 'feedzy-rss-feeds' );
+			$columns['feedzy-status'] = __( 'Current Status', 'feedzy-rss-feeds' );
 		}
 
-		if ( $new_columns = $this->array_insert_before( 'date', $columns, 'last_run', __( 'Last Run Status', 'feedzy-rss-feeds' ) ) ) {
+		if ( $new_columns = $this->array_insert_before( 'date', $columns, 'feedzy-last_run', __( 'Last Run Status', 'feedzy-rss-feeds' ) ) ) {
 			$columns = $new_columns;
 		} else {
-			$columns['last_run'] = __( 'Last Run Status', 'feedzy-rss-feeds' );
+			$columns['feedzy-last_run'] = __( 'Last Run Status', 'feedzy-rss-feeds' );
 		}
 
-		if ( $new_columns = $this->array_insert_before( 'date', $columns, 'next_run', __( 'Next Run', 'feedzy-rss-feeds' ) ) ) {
+		if ( $new_columns = $this->array_insert_before( 'date', $columns, 'feedzy-next_run', __( 'Next Run', 'feedzy-rss-feeds' ) ) ) {
 			$columns = $new_columns;
 		} else {
-			$columns['next_run'] = __( 'Next Run', 'feedzy-rss-feeds' );
+			$columns['feedzy-next_run'] = __( 'Next Run', 'feedzy-rss-feeds' );
 		}
 
 		return $columns;
@@ -480,7 +480,7 @@ class Feedzy_Rss_Feeds_Import {
 	public function manage_feedzy_import_columns( $column, $post_id ) {
 		global $post;
 		switch ( $column ) {
-			case 'source':
+			case 'feedzy-source':
 				$src = get_post_meta( $post_id, 'source', true );
 				// if the source is a category, link it.
 				if ( strpos( $src, 'http' ) === false && strpos( $src, 'https' ) === false ) {
@@ -492,7 +492,7 @@ class Feedzy_Rss_Feeds_Import {
 				}
 				echo $src;
 				break;
-			case 'status':
+			case 'feedzy-status':
 				$status = $post->post_status;
 				if ( empty( $status ) ) {
 					echo __( 'Undefined', 'feedzy-rss-feeds' );
@@ -510,7 +510,7 @@ class Feedzy_Rss_Feeds_Import {
                     ';
 				}
 				break;
-			case 'last_run':
+			case 'feedzy-last_run':
 				$last   = get_post_meta( $post_id, 'last_run', true );
 				$msg    = __( 'Never Run', 'feedzy-rss-feeds' );
 				if ( $last ) {
@@ -528,7 +528,7 @@ class Feedzy_Rss_Feeds_Import {
 				}
 				echo $msg;
 				break;
-			case 'next_run':
+			case 'feedzy-next_run':
 				$next = wp_next_scheduled( 'feedzy_cron' );
 				if ( $next ) {
 					$now  = new DateTime();
