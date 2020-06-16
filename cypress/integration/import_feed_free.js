@@ -143,7 +143,7 @@ describe('Test Free - Import Feed', function() {
         cy.visit('/edit.php?post_type=feedzy_imports')
 
         // check last run status column has all the data.
-        cy.get('tr:nth-of-type(1) td.last_run').invoke('html').then( ($html) => {
+        cy.get('tr:nth-of-type(1) td.feedzy-last_run').invoke('html').then( ($html) => {
             cy.wrap($html).should('include', 'Imported ' + feed.items + ' item(s)');
             cy.wrap($html).should('include', 'hours');
             cy.wrap($html).should('include', 'minutes ago');
@@ -169,7 +169,7 @@ describe('Test Free - Import Feed', function() {
         cy.visit('/edit.php?post_type=feedzy_imports')
 
         // check last run status column has all the data.
-        cy.get('tr:nth-of-type(1) td.last_run').invoke('html').then( ($html) => {
+        cy.get('tr:nth-of-type(1) td.feedzy-last_run').invoke('html').then( ($html) => {
             cy.wrap($html).should('include', 'Imported 0 item(s)');
             cy.wrap($html).should('include', 'hours');
             cy.wrap($html).should('include', 'minutes ago');
