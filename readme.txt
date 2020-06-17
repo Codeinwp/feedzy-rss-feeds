@@ -19,6 +19,7 @@ With FEEDZY RSS Aggregator, you can sit back, let your site autoblog and always 
 
 ## What you can do with Feedzy RSS Aggregator:  ##
 
+* **[Feed to post](https://docs.themeisle.com/article/742-how-to-import-posts-from-feeds-in-feedzy)** (our most loved feature): automatically convert RSS feed items to Wordpress pages, posts, and custom post type.
 * **Automatically import** and aggregate unlimited RSS feeds from unlimited sources
 * **Bulk import and organize** multiple feed sources of similar topics into Categories. See how our user, Barry Seward, loves this feature [here](https://wordpress.org/support/topic/works-great-6051/)
 * **Easily display RSS feeds** using shortcodes, Gutenberg blocks, or widgets in your third-party page builders like Elementor
@@ -32,8 +33,8 @@ With FEEDZY RSS Aggregator, you can sit back, let your site autoblog and always 
 
 ## You should use FEEDZY RSS Aggregator if: ##
 
-* You own a news site; you want a WP news aggregator to make sure your site always updated with the latest news
-* You own a blog; you need a WP content aggregator to autoblog and keep your audience engaged with fresh content
+* [You own a news site](https://themeisle.com/blog/wordpress-news-aggregator-website/); you want a WP news aggregator to make sure your site always updated with the latest news
+* You own a blog; you need a [WP content aggregator to autoblog](https://themeisle.com/blog/create-an-autoblogging-site-wordpress/) and keep your audience engaged with fresh content
 * You want to improve your SEO rankings. See how the SEO expert, MOZ, talked about 10 reasons “[How Fresh Content May Influence Google Rankings”](https://moz.com/blog/google-fresh-factor-new)“
 * You develop a site for your client and just want to quickly demo a news feed of frequently  updated content
 * You build a company website and want a news/blog page to enhance company’s reputation and SEO. Focus on your business and leave the content marketing work to FEEDZY RSS Aggregator.
@@ -48,7 +49,6 @@ With FEEDZY RSS Aggregator, you can sit back, let your site autoblog and always 
 
 If you love FEEDZY RSS Aggregator, why not bring your site to the next level with more powerful tools to boost your SEO and keep your audience on your site for longer.
 
-* **[Feed to post](https://docs.themeisle.com/article/742-how-to-import-posts-from-feeds-in-feedzy)** (our most loved feature): automatically convert RSS feed items to Wordpress pages, posts, and custom post type.
 * **[Keyword filter](https://docs.themeisle.com/article/942-in-feedzy-how-do-i#specific-keywords)**: you can choose to import feed to post and display content if they include or exclude certain keywords.
 * **Map the imported feed elements to your post elements**: totally control and customize how your feed to post, such as using the feed’s image or your image as the featured image, importing only the feed’s content or both the content and image into the post content, creating post drafts first to review or publishing right away, and so many more.
 * **[Full text RSS feeds import (with image)](https://docs.themeisle.com/article/742-how-to-import-posts-from-feeds-in-feedzy)** (with image): by extracting the entire HTML from each feed item, you can import full text content to post, not just the feed excerpt.
@@ -146,6 +146,7 @@ This plugin is maintained and supported by Themeisle, check out some of the othe
 2. Insert shortcode ! ;-)
 
 == Frequently Asked Questions ==
+
 
 
 
@@ -448,6 +449,9 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = Lazy loading feed items with Feedzy = 
  [https://docs.themeisle.com/article/1220-lazy-loading-feed-items-with-feedzy](https://docs.themeisle.com/article/1220-lazy-loading-feed-items-with-feedzy) 
 
+ = How to install and activate Feedzy Pro = 
+ [https://docs.themeisle.com/article/1247-how-to-install-and-activate-feedzy-pro](https://docs.themeisle.com/article/1247-how-to-install-and-activate-feedzy-pro) 
+
  == Screenshots ==
 
 1. Simple example
@@ -457,6 +461,20 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
  == Changelog ==
+= 3.4.0 - 2020-05-28  = 
+
+* - [Feat] Options to import feeds to posts
+* - [Feat] New [#item_source] tag for Feed to Post to display the feed source name
+* - [Feat] Improved Settings page style and layout
+* - [Feat] Use SimplePieItem's get_id to determine the uniqueness of feed items
+* - [Fix] WP 5.4 Feedzy block compatibility
+* - [Fix] Feed Caching time stuck to 12 hours
+* - [Fix] PHP Notice: Undefined index errors in the widget
+* - [Fix] Bulk activation of plugin aborts activation of subsequent plugins
+* - [Fix] Wrong shortcode mentioned in the Support tab
+* - [Fix] Notice: Undefined index: host when item has no link element
+
+
 = 3.3.19 - 2020-04-08  = 
 
 * Tested up to 5.4
