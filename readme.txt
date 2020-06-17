@@ -19,6 +19,7 @@ With FEEDZY RSS Aggregator, you can sit back, let your site autoblog and always 
 
 ## What you can do with Feedzy RSS Aggregator:  ##
 
+* **[Feed to post](https://docs.themeisle.com/article/742-how-to-import-posts-from-feeds-in-feedzy)** (our most loved feature): automatically convert RSS feed items to Wordpress pages, posts, and custom post type.
 * **Automatically import** and aggregate unlimited RSS feeds from unlimited sources
 * **Bulk import and organize** multiple feed sources of similar topics into Categories. See how our user, Barry Seward, loves this feature [here](https://wordpress.org/support/topic/works-great-6051/)
 * **Easily display RSS feeds** using shortcodes, Gutenberg blocks, or widgets in your third-party page builders like Elementor
@@ -32,8 +33,8 @@ With FEEDZY RSS Aggregator, you can sit back, let your site autoblog and always 
 
 ## You should use FEEDZY RSS Aggregator if: ##
 
-* You own a news site; you want a WP news aggregator to make sure your site always updated with the latest news
-* You own a blog; you need a WP content aggregator to autoblog and keep your audience engaged with fresh content
+* [You own a news site](https://themeisle.com/blog/wordpress-news-aggregator-website/); you want a WP news aggregator to make sure your site always updated with the latest news
+* You own a blog; you need a [WP content aggregator to autoblog](https://themeisle.com/blog/create-an-autoblogging-site-wordpress/) and keep your audience engaged with fresh content
 * You want to improve your SEO rankings. See how the SEO expert, MOZ, talked about 10 reasons “[How Fresh Content May Influence Google Rankings”](https://moz.com/blog/google-fresh-factor-new)“
 * You develop a site for your client and just want to quickly demo a news feed of frequently  updated content
 * You build a company website and want a news/blog page to enhance company’s reputation and SEO. Focus on your business and leave the content marketing work to FEEDZY RSS Aggregator.
@@ -48,7 +49,6 @@ With FEEDZY RSS Aggregator, you can sit back, let your site autoblog and always 
 
 If you love FEEDZY RSS Aggregator, why not bring your site to the next level with more powerful tools to boost your SEO and keep your audience on your site for longer.
 
-* **[Feed to post](https://docs.themeisle.com/article/742-how-to-import-posts-from-feeds-in-feedzy)** (our most loved feature): automatically convert RSS feed items to Wordpress pages, posts, and custom post type.
 * **[Keyword filter](https://docs.themeisle.com/article/942-in-feedzy-how-do-i#specific-keywords)**: you can choose to import feed to post and display content if they include or exclude certain keywords.
 * **Map the imported feed elements to your post elements**: totally control and customize how your feed to post, such as using the feed’s image or your image as the featured image, importing only the feed’s content or both the content and image into the post content, creating post drafts first to review or publishing right away, and so many more.
 * **[Full text RSS feeds import (with image)](https://docs.themeisle.com/article/742-how-to-import-posts-from-feeds-in-feedzy)** (with image): by extracting the entire HTML from each feed item, you can import full text content to post, not just the feed excerpt.
@@ -428,29 +428,29 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = How to get videos from YouTube with Feedzy =
  [https://docs.themeisle.com/article/1113-how-to-get-videos-from-youtube-with-feedzy](https://docs.themeisle.com/article/1113-how-to-get-videos-from-youtube-with-feedzy)
 
- = Feedzy RSS Feeds Documentation = 
- [https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation](https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation) 
+ = Feedzy RSS Feeds Documentation =
+ [https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation](https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation)
 
- = How to use Feed to Post feature in Feedzy = 
- [https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy](https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy) 
+ = How to use Feed to Post feature in Feedzy =
+ [https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy](https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy)
 
- = Feedzy Troubleshooting Guide = 
- [https://docs.themeisle.com/article/1155-feedzy-troubleshooting-guide](https://docs.themeisle.com/article/1155-feedzy-troubleshooting-guide) 
+ = Feedzy Troubleshooting Guide =
+ [https://docs.themeisle.com/article/1155-feedzy-troubleshooting-guide](https://docs.themeisle.com/article/1155-feedzy-troubleshooting-guide)
 
- = How to use Feedzy with a shortcode = 
- [https://docs.themeisle.com/article/1130-how-to-use-feedzy-with-a-shortcode](https://docs.themeisle.com/article/1130-how-to-use-feedzy-with-a-shortcode) 
+ = How to use Feedzy with a shortcode =
+ [https://docs.themeisle.com/article/1130-how-to-use-feedzy-with-a-shortcode](https://docs.themeisle.com/article/1130-how-to-use-feedzy-with-a-shortcode)
 
- = Feedzy custom templates = 
- [https://docs.themeisle.com/article/1162-feedzy-custom-templates](https://docs.themeisle.com/article/1162-feedzy-custom-templates) 
+ = Feedzy custom templates =
+ [https://docs.themeisle.com/article/1162-feedzy-custom-templates](https://docs.themeisle.com/article/1162-feedzy-custom-templates)
 
- = How to change the date format RSS items in Feedzy = 
- [https://docs.themeisle.com/article/1200-how-to-change-the-date-format-for-rss-items-in-feedzy](https://docs.themeisle.com/article/1200-how-to-change-the-date-format-for-rss-items-in-feedzy) 
+ = How to change the date format RSS items in Feedzy =
+ [https://docs.themeisle.com/article/1200-how-to-change-the-date-format-for-rss-items-in-feedzy](https://docs.themeisle.com/article/1200-how-to-change-the-date-format-for-rss-items-in-feedzy)
 
- = Lazy loading feed items with Feedzy = 
- [https://docs.themeisle.com/article/1220-lazy-loading-feed-items-with-feedzy](https://docs.themeisle.com/article/1220-lazy-loading-feed-items-with-feedzy) 
+ = Lazy loading feed items with Feedzy =
+ [https://docs.themeisle.com/article/1220-lazy-loading-feed-items-with-feedzy](https://docs.themeisle.com/article/1220-lazy-loading-feed-items-with-feedzy)
 
- = How to install and activate Feedzy Pro = 
- [https://docs.themeisle.com/article/1247-how-to-install-and-activate-feedzy-pro](https://docs.themeisle.com/article/1247-how-to-install-and-activate-feedzy-pro) 
+ = How to install and activate Feedzy Pro =
+ [https://docs.themeisle.com/article/1247-how-to-install-and-activate-feedzy-pro](https://docs.themeisle.com/article/1247-how-to-install-and-activate-feedzy-pro)
 
  == Screenshots ==
 
@@ -461,7 +461,7 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
  == Changelog ==
-= 3.4.0 - 2020-05-28  = 
+= 3.4.0 - 2020-05-28  =
 
 * - [Feat] Options to import feeds to posts
 * - [Feat] New [#item_source] tag for Feed to Post to display the feed source name
@@ -475,12 +475,12 @@ You have to check first if your feed is valid. Please test it here: https://vali
 * - [Fix] Notice: Undefined index: host when item has no link element
 
 
-= 3.3.19 - 2020-04-08  = 
+= 3.3.19 - 2020-04-08  =
 
 * Tested up to 5.4
 
 
-= 3.3.18 - 2020-03-24  = 
+= 3.3.18 - 2020-03-24  =
 
 * [Feat] Add support for lazyloading feed items
 * [Fix] multiple_meta and offset parameters in the Feedzy widget
@@ -490,7 +490,7 @@ You have to check first if your feed is valid. Please test it here: https://vali
 * [Fix] Warnings when using multiple feeds in the shortcode
 
 
-= 3.3.17 - 2020-01-30  = 
+= 3.3.17 - 2020-01-30  =
 
 * Release
 
@@ -519,11 +519,11 @@ You have to check first if your feed is valid. Please test it here: https://vali
 * Fix widget to use all settings configured
 * Fix issue with saving description length
 
-= 3.3.12 - 2019-11-11  = 
+= 3.3.12 - 2019-11-11  =
 
 * Tested up to 5.3
 
-= 3.3.11 - 2019-09-24  = 
+= 3.3.11 - 2019-09-24  =
 
 * Fix issue with replacing ellipsis
 * Fix issue in widget where error message cannot be overridden
