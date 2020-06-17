@@ -50,7 +50,7 @@ Layout For Tutorial Page of Feedzy RSS Feeds
 						<li><a target="_blank" href="https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy">How to use feed to post</a></li>
 						<li><a target="_blank" href="https://docs.themeisle.com/article/1130-how-to-use-feedzy-with-a-shortcode">Shortcodes</a></li>
 
-						<?php if ($is_pro) : ?>
+						<?php if ( $is_pro ) : ?>
 							<li><a target="_blank" href="https://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy">Rephrase RSS content automatically</a></li>
 							<li><a target="_blank" href="https://docs.themeisle.com/article/715-feedzy-how-to-add-affiliate-referrals-to-feed-urls">Add affiliate links automatically</a></li>
 							<li><a target="_blank" href="https://docs.themeisle.com/article/841-how-to-add-canonical-tags-for-imported-posts">Add canonical tags to imported posts</a></li>
@@ -73,7 +73,7 @@ Layout For Tutorial Page of Feedzy RSS Feeds
 					<p>Show feed items using the <code>[feedzy-rss]</code>shortcode in a few easy steps.</p>
 					<p>You can view our documentation about shortcodes <a href="https://docs.themeisle.com/article/1130-how-to-use-feedzy-with-a-shortcode" target="_blank">here</a></p>
 
-					<?php if ($is_pro) : ?>
+					<?php if ( $is_pro ) : ?>
 						<h3>Shortcode templates to suit your style</h3>
 						<p><a href="https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation#examples" target="_blank">Three beautiful templates</a> are available for you to choose the style which best fits your design. We even have support for complex media such as <a href="https://demo.themeisle.com/feedzy-rss-feeds/audio-feed-template/" target="_blank">audio playback</a> and <a href="https://docs.themeisle.com/article/1113-how-to-get-videos-from-youtube-with-feedzy" target="_blank">YouTube videos</a>.</p>
 						<p>If you like to roll your own templates, <a href="https://docs.themeisle.com/article/1162-feedzy-custom-templates" target="_blank">template tags</a> are available to help you do just that!</p>
