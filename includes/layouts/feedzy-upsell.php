@@ -33,7 +33,7 @@ Layout For Upsell Page of Feedzy RSS Feeds
 		<div class="fz-feature-features">
 			<h2>Unlimited Content with Feed to Post</h2>
 			<p>Convert feed items into WordPress Posts, Pages, or any custom post type in a few easy steps.</p>
-			<p>With Pro, collect RSS feeds from an unlimited number of sources and bring them to up to 30 of your own WordPress sites.</p>
+			<p>With Pro, collect RSS feeds from an unlimited number of sources and bring them to up to all of your own WordPress sites.</p>
 			<p>Feedzy will automatically filter each feed item and place it wherever you want in your site. Easy to install and ready to go.</p>
 		</div>
 		<div class="fz-feature-image">
@@ -97,7 +97,7 @@ Layout For Upsell Page of Feedzy RSS Feeds
 		<div class="fz-feature-features">
 			<h2>Unlimited Content with Feed to Post</h2>
 			<p>Convert feed items into WordPress Posts, Pages, or any custom post type in a few easy steps.</p>
-			<p>With Pro, collect RSS feeds from an unlimited number of sources and bring them to up to 30 of your own WordPress sites.</p>
+			<p>With Pro, collect RSS feeds from an unlimited number of sources and bring them to up to all of your own WordPress sites.</p>
 			<p>Feedzy will automatically filter each feed item and place it wherever you want in your site. Easy to install and ready to go.</p>
 		</div>
 		<div class="fz-feature-image">

@@ -916,7 +916,7 @@ class Feedzy_Rss_Feeds_Import {
 
 			$index++;
 
-			if ( trim( $import_featured_img ) !== '' ) {
+			if ( trim( $import_featured_img ) !== '' && ! empty( $item['item_img_path'] ) ) {
 				$image_url = str_replace( '[#item_image]', $item['item_img_path'], $import_featured_img );
 				if ( $image_url !== '' && isset( $item['item_img_path'] ) && $item['item_img_path'] !== '' ) {
 					$this->generate_featured_image( $image_url, $new_post_id, $item['item_title'] );
