@@ -970,7 +970,7 @@ class Feedzy_Rss_Feeds_Import {
 
 		$feedURL = apply_filters( 'feedzy_import_feed_url', $feedURL, $import_content, $options );
 
-		$feed    = $admin->fetch_feed( $feedURL, '12_hours', $options );
+		$feed    = $admin->fetch_feed( $feedURL, isset( $options['refresh'] ) ? $options['refresh'] : '12_hours', $options );
 
 		if ( is_string( $feed ) ) {
 			return array();
