@@ -131,7 +131,7 @@ Layout For Tutorial Page of Feedzy RSS Feeds
 						?>
 					<div class="header-btns">
 						<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-support&tab=more' ) ); ?>" class="buy-now">
-						<span class="dashicons dashicons-cart"></span> Click here to see the additional features in Feedzy Pro</a>
+						<span class="dashicons dashicons-cart"></span> Click here to see the additional features in <?php echo $is_pro ? 'the higher version' : 'Feedzy Pro'; ?></a>
 					</div>
 						<?php
 					}
