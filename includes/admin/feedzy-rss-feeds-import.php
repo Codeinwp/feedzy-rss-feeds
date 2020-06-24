@@ -727,6 +727,7 @@ class Feedzy_Rss_Feeds_Import {
 				'columns'        => 1,
 				'offset'         => 0,
 				'multiple_meta'  => 'no',
+				'refresh'        => '55_mins',
 			), $job
 		);
 		$results = $this->get_job_feed( $options, $import_content, true );
@@ -969,7 +970,7 @@ class Feedzy_Rss_Feeds_Import {
 
 		$feedURL = apply_filters( 'feedzy_import_feed_url', $feedURL, $import_content, $options );
 
-		$feed    = $admin->fetch_feed( $feedURL, '12_hours', $options );
+		$feed    = $admin->fetch_feed( $feedURL, isset( $options['refresh'] ) ? $options['refresh'] : '12_hours', $options );
 
 		if ( is_string( $feed ) ) {
 			return array();
