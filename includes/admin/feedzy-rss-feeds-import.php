@@ -298,6 +298,9 @@ class Feedzy_Rss_Feeds_Import {
 			$import_link_author[1] = 'checked';
 		}
 
+		// maybe more options are required from pro?
+		$pro_options = apply_filters( 'feedzy_metabox_options', array(), $post->ID );
+
 		$import_custom_fields = get_post_meta( $post->ID, 'imports_custom_fields', true );
 		$import_feed_limit    = get_post_meta( $post->ID, 'import_feed_limit', true );
 		$import_feed_delete_days    = intval( get_post_meta( $post->ID, 'import_feed_delete_days', true ) );
@@ -356,9 +359,9 @@ class Feedzy_Rss_Feeds_Import {
 			foreach ( $data_meta as $key => $value ) {
 				$value = is_array( $value ) ? implode( ',', $value ) : implode( ',', (array) $value );
 				if ( get_post_meta( $post_id, $key, false ) ) {
-					update_post_meta( $post_id, $key, $value );
+					update_post_meta( $post_id, $key, sanitize_text_field( $value ) );
 				} else {
-					add_post_meta( $post_id, $key, $value );
+					add_post_meta( $post_id, $key, sanitize_text_field( $value ) );
 				}
 				if ( ! $value ) {
 					delete_post_meta( $post_id, $key );
@@ -730,6 +733,8 @@ class Feedzy_Rss_Feeds_Import {
 				'refresh'        => '55_mins',
 			), $job
 		);
+
+		$options['__jobID'] = $job->ID;
 		$results = $this->get_job_feed( $options, $import_content, true );
 		$result = $results['items'];
 		update_post_meta( $job->ID, 'last_run', time() );
@@ -906,7 +911,12 @@ class Feedzy_Rss_Feeds_Import {
 					$array = explode( '_', $term );
 					$term_id = array_pop( $array );
 					$taxonomy = implode( '_', $array );
-					wp_remove_object_terms( $new_post_id, $uncategorized->slug, 'category' );
+
+					// uncategorized
+					// 1. may be the unmodified category ID 1
+					// 2. may have been recreated ('uncategorized') and may have a different slug in different languages.
+					wp_remove_object_terms( $new_post_id, apply_filters( 'feedzy_uncategorized', array( 1, 'uncategorized', $uncategorized->slug ), $job->ID ), 'category' );
+
 					$result = wp_set_object_terms( $new_post_id, intval( $term_id ), $taxonomy, true );
 					do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'After creating post in %s/%d, result = %s', $taxonomy, $term_id, print_r( $result, true ) ), 'debug', __FILE__, __LINE__ );
 				}
@@ -927,9 +937,9 @@ class Feedzy_Rss_Feeds_Import {
 
 			// indicate that this post was imported by feedzy.
 			update_post_meta( $new_post_id, 'feedzy', 1 );
-			update_post_meta( $new_post_id, 'feedzy_item_url', $item['item_url'] );
+			update_post_meta( $new_post_id, 'feedzy_item_url', esc_url_raw( $item['item_url'] ) );
 			update_post_meta( $new_post_id, 'feedzy_job', $job->ID );
-			update_post_meta( $new_post_id, 'feedzy_item_author', $author );
+			update_post_meta( $new_post_id, 'feedzy_item_author', sanitize_text_field( $author ) );
 
 			do_action( 'feedzy_after_post_import', $new_post_id, $item, $this->settings );
 		}
@@ -989,20 +999,6 @@ class Feedzy_Rss_Feeds_Import {
 			);
 		}
 		return $feed_items;
-	}
-
-	/**
-	 * Modifies the feed object before it is processed.
-	 *
-	 * @access  public
-	 *
-	 * @param   SimplePie $feed SimplePie object.
-	 */
-	public function feedzy_modify_feed_config( $feed ) {
-		// @codingStandardsIgnoreStart
-		// set_time_limit(0);
-		// @codingStandardsIgnoreEnd
-		$feed->set_timeout( 60 );
 	}
 
 	/**
