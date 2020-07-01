@@ -65,3 +65,13 @@ table.wp-list-table th.column-feedzy-status {
 	width: 100px;
 }
 
+table.wp-list-table td.column-feedzy-last_run .feedzy-api-error {
+	max-height: 120px;
+	overflow: hidden;
+}
+
+table.wp-list-table td.column-feedzy-last_run .feedzy-api-error.expand {
+	height: auto;
+	max-height: 1400px; /* arbitrary number */
+	overflow: visible;
+}

@@ -516,7 +516,7 @@ class Feedzy_Rss_Feeds_Import {
 				if ( $last ) {
 					$msg = $this->get_import_status( $post_id );
 					$msg .= $this->get_import_info( $post_id );
-					$msg .= $this->get_import_errors( $post_id );
+					$msg .= $this->get_import_errors( $post_id, false );
 
 					// show the total items imported across all runs.
 					$items      = get_post_meta( $post_id, 'imported_items_hash', true );
@@ -579,11 +579,12 @@ class Feedzy_Rss_Feeds_Import {
 	 * @since   ?
 	 * @access  private
 	 */
-	private function get_import_errors( $post_id ) {
+	private function get_import_errors( $post_id, $under_next_run ) {
 		$msg = '';
 		$import_errors = get_post_meta( $post_id, 'import_errors', true );
 		if ( $import_errors ) {
-			$msg = '<hr><div class="feedzy-error feedzy-api-error"><i class="dashicons dashicons-warning"></i>' . implode( '<i class="dashicons dashicons-warning"></i>', $import_errors ) . '</div>';
+			$title = ! $under_next_run ? __( 'Click to expand', 'feedzy-rss-feeds' ) : null;
+			$msg = '<hr><div class="feedzy-error feedzy-api-error" title="' . esc_attr( $title ) . '"><i class="dashicons dashicons-warning"></i>' . implode( '<i class="dashicons dashicons-warning"></i>', $import_errors ) . '</div>';
 		}
 
 		$pro_msg = apply_filters( 'feedzy_run_status_errors', '', $post_id );
@@ -718,7 +719,7 @@ class Feedzy_Rss_Feeds_Import {
 
 		$msg    = $count > 0 ? sprintf( __( 'Successfully run! %d items imported.', 'feedzy-rss-feeds' ), $count ) : __( 'Nothing imported!', 'feedzy-rss-feeds' );
 
-		$msg    .= $this->get_import_errors( $job->ID );
+		$msg    .= $this->get_import_errors( $job->ID, true );
 
 		wp_send_json_success( array( 'msg' => $msg ) );
 	}
@@ -944,6 +945,16 @@ class Feedzy_Rss_Feeds_Import {
 			if ( $this->feedzy_is_business() ) {
 				$full_content = ! empty( $item['item_full_content'] ) ? $item['item_full_content'] : $item['item_content'];
 				if ( false !== strpos( $post_content, '[#item_full_content]' ) ) {
+					// if full content is empty, log a message
+					if ( empty( $full_content ) ) {
+						// let's see if there is an error.
+						$full_content_error = isset( $item['full_content_error'] ) && ! empty( $item['full_content_error'] ) ? $item['full_content_error'] : '';
+						if ( empty( $full_content_error ) ) {
+							$full_content_error = __( 'Unknown', 'feedzy-rss-feeds' );
+						}
+						$import_errors[] = sprintf( __( 'Full content is empty. Error: %s', 'feedzy-rss-feeds' ), $full_content_error );
+					}
+
 					$post_content = str_replace(
 						array(
 							'[#item_full_content]',

@@ -253,6 +253,15 @@
             });
         });
 
+        // toggle the errors div to expand/collapse
+        $('td.column-feedzy-last_run .feedzy-api-error').on('click', function(e){
+            if($(this).hasClass('expand')){
+                $(this).removeClass('expand');
+            }else{
+                $(this).addClass('expand');
+            }
+        });
+
     }
 
     function showSpinner(el){
