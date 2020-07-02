@@ -22,7 +22,9 @@ Layout For Tutorial Page of Feedzy RSS Feeds
 						<li>Organize feeds into categories</li>
 						<?php if ( $is_pro ) { ?>
 						<li>Filter feeds based on keywords</li>
+							<?php if ( true === apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) { ?>
 						<li>WordAI and SpinnerChief integration</li>
+						<?php } ?>
 						<li>Add affiliate links and referral parameters</li>
 						<li>Automatically delete posts after X days</li>
 						<?php } ?>
@@ -50,11 +52,13 @@ Layout For Tutorial Page of Feedzy RSS Feeds
 						<li><a target="_blank" href="https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy">How to use feed to post</a></li>
 						<li><a target="_blank" href="https://docs.themeisle.com/article/1130-how-to-use-feedzy-with-a-shortcode">Shortcodes</a></li>
 
-						<?php if ( $is_pro ) : ?>
+						<?php if ( $is_pro ) { ?>
+							<?php if ( true === apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) { ?>
 							<li><a target="_blank" href="https://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy">Rephrase RSS content automatically</a></li>
+							<?php } ?>
 							<li><a target="_blank" href="https://docs.themeisle.com/article/715-feedzy-how-to-add-affiliate-referrals-to-feed-urls">Add affiliate links automatically</a></li>
 							<li><a target="_blank" href="https://docs.themeisle.com/article/841-how-to-add-canonical-tags-for-imported-posts">Add canonical tags to imported posts</a></li>
-						<?php endif; ?>
+						<?php } ?>
 
 						<li><a target="_blank" href="https://docs.themeisle.com/article/1155-feedzy-troubleshooting-guide">Troubleshooting Guide</a></li>
 						<li><a target="_blank" href="https://docs.themeisle.com/article/942-in-feedzy-how-do-i">Customizing Feedzy</a></li>
