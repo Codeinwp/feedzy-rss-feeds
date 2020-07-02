@@ -20,7 +20,7 @@ Layout For Upsell Page of Feedzy RSS Feeds
 		</div>
 		<div class="fz-feature-image">
 			<div class="header-btns">
-				<a target="_blank" href="<?php echo FEEDZY_UPSELL_LINK; ?>" class="buy-now"><span class="dashicons dashicons-cart"></span> Upgrade to Pro now</a>
+				<a target="_blank" href="<?php echo FEEDZY_UPSELL_LINK; ?>" class="buy-now"><span class="dashicons dashicons-cart"></span> Upgrade to Feedzy Pro now</a>
 			</div>
 		</div>
 		<div class="clear"></div>
@@ -151,11 +151,11 @@ Layout For Upsell Page of Feedzy RSS Feeds
 		<div class="fz-feature-features fz-feature-centered">
 			<h2>Grow your WordPress business with Feedzy today.</h2>
 			<?php
-			if ( false === apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) {
+			if ( $is_pro || false === apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) {
 				?>
 			<div class="header-btns">
 				<a href="<?php echo FEEDZY_UPSELL_LINK; ?>" class="buy-now">
-				<span class="dashicons dashicons-cart"></span> Upgrade to Feedzy Pro</a>
+				<span class="dashicons dashicons-cart"></span> Upgrade <?php echo $is_pro ? 'your license to a higher plan' : 'to Feedzy Pro'; ?></a>
 			</div>
 				<?php
 			}
