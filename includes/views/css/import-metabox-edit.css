@@ -2129,3 +2129,7 @@ span.feedzy-spinner {
 	background-color: #ccff00;
 	padding: 1%;
 }
+
+.feedzy-dialog {
+	display: none;
+}

@@ -138,6 +138,23 @@ describe('Test Free - Import Feed', function() {
         cy.get('tr:nth-of-type(1) .feedzy-run-now').click();
         cy.wait(10 * parseInt(feed.wait));
         cy.get('tr:nth-of-type(1) .feedzy-error-critical').invoke('html').should('include', 'Successfully run');
+        cy.get('tr:nth-of-type(1) .feedzy-error-critical').invoke('html').should('include', feed.items + ' items imported.');
+
+        cy.visit('/edit.php?post_type=feedzy_imports')
+
+        // check last run status column has all the data.
+        cy.get('tr:nth-of-type(1) td.feedzy-last_run').invoke('html').then( ($html) => {
+            cy.wrap($html).should('include', 'Imported ' + feed.items + ' item(s)');
+            cy.wrap($html).should('include', 'hours');
+            cy.wrap($html).should('include', 'minutes ago');
+            cy.wrap($html).should('include', 'Items imported across runs: <b>' + feed.items + '</b>');
+            cy.wrap($html).should('include', 'Total items found:');
+            cy.wrap($html).should('include', feed.items + '</a>');
+
+            // no duplicates.
+            cy.wrap($html).should('not.include', 'Duplicates found:');
+        });
+
     })
 
     it('Run the new import again', function() {
@@ -146,8 +163,24 @@ describe('Test Free - Import Feed', function() {
         // run import
         cy.get('tr:nth-of-type(1) .feedzy-run-now').should('be.visible');
         cy.get('tr:nth-of-type(1) .feedzy-run-now').click();
-        cy.wait(10 * parseInt(feed.wait));
+        cy.wait(2 * parseInt(feed.wait));
         cy.get('tr:nth-of-type(1) .feedzy-error-critical').invoke('html').should('include', 'Nothing imported');
+
+        cy.visit('/edit.php?post_type=feedzy_imports')
+
+        // check last run status column has all the data.
+        cy.get('tr:nth-of-type(1) td.feedzy-last_run').invoke('html').then( ($html) => {
+            cy.wrap($html).should('include', 'Imported 0 item(s)');
+            cy.wrap($html).should('include', 'hours');
+            cy.wrap($html).should('include', 'minutes ago');
+            cy.wrap($html).should('include', 'Items imported across runs: <b>' + feed.items + '</b>');
+            cy.wrap($html).should('include', 'Total items found:');
+            cy.wrap($html).should('include', feed.items + '</a>');
+
+            // duplicates found.
+            cy.wrap($html).should('include', 'Duplicates found:');
+        });
+
     })
 
     it('Verifies the new imported items', function() {
