@@ -28,6 +28,10 @@ docker exec -it feedzy_wordpress wp --quiet plugin activate feedzy-rss-feeds
 # set this constant so that the specific hooks are loaded
 docker exec -it feedzy_wordpress wp --quiet config set TI_CYPRESS_TESTING true --raw
 
+# create terms
+docker exec -it feedzy_wordpress wp --quiet term create category c_feedzy-1
+docker exec -it feedzy_wordpress wp --quiet term create post_tag t_feedzy-1
+
 # debugging
 docker exec -it feedzy_wordpress wp --quiet config set WP_DEBUG true --raw
 docker exec -it feedzy_wordpress wp --quiet config set WP_DEBUG_LOG true --raw

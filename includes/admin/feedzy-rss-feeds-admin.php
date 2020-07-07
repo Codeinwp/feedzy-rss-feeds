@@ -125,8 +125,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! in_array( $screen->base, $upsell_screens, true ) && strpos( $screen->id, 'feedzy' ) === false ) {
 			return;
 		}
-		wp_enqueue_style( $this->plugin_name . '-upsell', FEEDZY_ABSURL . 'includes/layouts/css/upsell.css' );
-		wp_enqueue_style( $this->plugin_name . '-settings', FEEDZY_ABSURL . 'css/metabox-settings.css', array( $this->plugin_name . '-upsell' ) );
+		wp_enqueue_style( $this->plugin_name . '-settings', FEEDZY_ABSURL . 'css/settings.css' );
+		wp_enqueue_style( $this->plugin_name . '-metabox', FEEDZY_ABSURL . 'css/metabox-settings.css', array( $this->plugin_name . '-settings' ) );
 	}
 
 	/**
@@ -283,9 +283,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			foreach ( $category_meta as $key => $value ) {
 				$value = implode( ',', (array) $value );
 				if ( get_post_meta( $post_id, $key, false ) ) {
-					update_post_meta( $post_id, $key, $value );
+					update_post_meta( $post_id, $key, sanitize_text_field( $value ) );
 				} else {
-					add_post_meta( $post_id, $key, $value );
+					add_post_meta( $post_id, $key, sanitize_text_field( $value ) );
 				}
 				if ( ! $value ) {
 					delete_post_meta( $post_id, $key );
@@ -361,10 +361,14 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function feedzy_filter_plugin_row_meta( $links, $file ) {
 		if ( strpos( $file, 'feedzy-rss-feed.php' ) !== false ) {
-			$new_links = array(
-				'doc'           => '<a href="https://docs.themeisle.com/article/658-feedzy-rss-feeds" target="_blank" title="' . __( 'Documentation and examples', 'feedzy-rss-feeds' ) . '">' . __( 'Documentation and examples', 'feedzy-rss-feeds' ) . '</a>',
-				'more_features' => '<a href="' . FEEDZY_UPSELL_LINK . '" target="_blank" title="' . __( 'More Plugins', 'feedzy-rss-feeds' ) . '">' . __( 'More Features', 'feedzy-rss-feeds' ) . '<i style="width: 17px; height: 17px; margin-left: 4px; color: #ffca54; font-size: 17px; vertical-align: -3px;" class="dashicons dashicons-unlock more-features-icon"></i></a>',
-			);
+			$new_links = array();
+			$new_links['doc'] = '<a href="https://docs.themeisle.com/article/658-feedzy-rss-feeds" target="_blank" title="' . __( 'Documentation and examples', 'feedzy-rss-feeds' ) . '">' . __( 'Documentation and examples', 'feedzy-rss-feeds' ) . '</a>';
+
+			if ( ! feedzy_is_pro() ) {
+				$new_links['more_features'] = '<a href="' . FEEDZY_UPSELL_LINK . '" target="_blank" title="' . __( 'More Features', 'feedzy-rss-feeds' ) . '">' . __( 'Upgrade to Pro', 'feedzy-rss-feeds' ) . '<i style="width: 17px; height: 17px; margin-left: 4px; color: #ffca54; font-size: 17px; vertical-align: -3px;" class="dashicons dashicons-unlock more-features-icon"></i></a>';
+			} elseif ( false === apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) {
+				$new_links['more_features'] = '<a href="' . FEEDZY_UPSELL_LINK . '" target="_blank" title="' . __( 'More Features', 'feedzy-rss-feeds' ) . '">' . __( 'Upgrade your license', 'feedzy-rss-feeds' ) . '<i style="width: 17px; height: 17px; margin-left: 4px; color: #ffca54; font-size: 17px; vertical-align: -3px;" class="dashicons dashicons-unlock more-features-icon"></i></a>';
+			}
 			$links     = array_merge( $links, $new_links );
 		}
 
@@ -567,18 +571,21 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	}
 
 	/**
-	 * On activation of the plugin
+	 * Check if plugin has been activated and then redirect to the correct page.
 	 *
 	 * @access  public
 	 */
-	public function on_activation( $plugin ) {
+	public function admin_init() {
 		if ( defined( 'TI_UNIT_TESTING' ) ) {
 			return;
 		}
 
-		if ( $plugin === FEEDZY_BASENAME ) {
-			wp_redirect( admin_url( 'admin.php?page=feedzy-support&tab=help#shortcode' ) );
-			exit();
+		if ( get_option( 'feedzy-activated' ) ) {
+			delete_option( 'feedzy-activated' );
+			if ( ! headers_sent() ) {
+				wp_redirect( add_query_arg( array( 'page' => 'feedzy-support', 'tab' => 'help#shortcode' ), admin_url( 'admin.php' ) ) );
+				exit();
+			}
 		}
 	}
 

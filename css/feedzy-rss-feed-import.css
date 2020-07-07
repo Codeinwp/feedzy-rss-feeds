@@ -1,0 +1,77 @@
+/**
+ * style.css
+ * FEEDZY RSS Feeds
+ * Copyright: (c) 2016 Themeisle, themeisle.com
+ * Version: 1.6.10
+ * Plugin Name: FEEDZY RSS Feeds
+ * Plugin URI: http://themeisle.com/plugins/feedzy-rss-feeds/
+ * Author: Themeisle
+ */
+
+#feedzy_import_feeds h4 {
+	margin: 20px 0 10px;
+	font-size: 16px;
+}
+
+#feedzy_import_feeds .form-group label {
+	display: block;
+	margin: 0 0 5px;
+}
+
+#feedzy_import_feeds .form-group .chosen-single {
+	height: 44px;
+	padding: 0 20px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	color: #888;
+	background: #fff;
+	box-shadow: none;
+	font-family: "Roboto", sans-serif;
+	font-size: 16px;
+	font-weight: 300;
+	line-height: 44px;
+}
+
+#feedzy_import_feeds .chosen-container-single .chosen-single div {
+	top: 10px;
+	right: -2px;
+}
+
+#feedzy_import_feeds #feedzy_post_type_chosen,
+#feedzy_import_feeds #feedzy_post_terms_chosen {
+	margin-bottom: 20px;
+}
+
+#feedzy_import_feeds .chosen-container-single .chosen-drop {
+	border-color: #ddd;
+	z-index: 99999999;
+}
+
+#feedzy_import_feeds .chosen-container-single .chosen-search input[type="text"] {
+	border-color: #ddd;
+}
+
+#feedzy_import_feeds .chosen-container .chosen-results li.highlighted {
+	background-color: #099bb2;
+	background-image: none;
+}
+
+.feedzy-api-error,
+.feedzy-error-critical {
+	color: #ff0000;
+}
+
+table.wp-list-table th.column-feedzy-status {
+	width: 100px;
+}
+
+table.wp-list-table td.column-feedzy-last_run .feedzy-api-error {
+	max-height: 120px;
+	overflow: hidden;
+}
+
+table.wp-list-table td.column-feedzy-last_run .feedzy-api-error.expand {
+	height: auto;
+	max-height: 1400px; /* arbitrary number */
+	overflow: visible;
+}
