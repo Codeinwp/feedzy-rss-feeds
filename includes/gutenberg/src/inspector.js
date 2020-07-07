@@ -49,13 +49,13 @@ const Inspector = props => {
 						label={ __( 'Feed Source' ) }
 						className="feedzy-source"
 						value={ props.attributes.feeds }
-						onChange={ props.onChangeFeeds }
+						onChange={ this.edit.onChangeFeed() }
 					/>
 
 					<Button
 						isLarge
 						type="submit"
-						onClick={ props.loadFeed }
+						onClick={ this.edit.loadFeed() }
 						className="loadFeed"
 					>
 						{ __( 'Load Feed' ) }
@@ -72,7 +72,7 @@ const Inspector = props => {
 					<RangeControl
 						label={ __( 'Number of Items' ) }
 						value={ Number( props.attributes.max ) || 5 }
-						onChange={ props.onChangeMax }
+						onChange={ this.edit.onChangeMax() }
 						min={ 1 }
 						max={ props.attributes.feedData['items'].length || 10 }
 						beforeIcon="sort"
@@ -82,7 +82,7 @@ const Inspector = props => {
 					<RangeControl
 						label={ __( 'Ignore first N items' ) }
 						value={ Number( props.attributes.offset ) || 0 }
-						onChange={ props.onChangeOffset }
+						onChange={ this.edit.onChangeOffset() }
 						min={ 0 }
 						max={ props.attributes.feedData['items'].length }
 						beforeIcon="sort"
@@ -93,7 +93,7 @@ const Inspector = props => {
 						<ToggleControl
 							label={ __( 'Display feed title?' ) }
 							checked={ !! props.attributes.feed_title }
-							onChange={ props.toggleFeedTitle }
+							onChange={ this.edit.onToggleFeedTitle() }
                             className="feedzy-title"
 						/>
 					) }
@@ -101,7 +101,7 @@ const Inspector = props => {
 					<ToggleControl
                         label={ __( 'Lazy load feed?' ) }
 						checked={ !! props.attributes.lazy }
-						onChange={ props.toggleLazy }
+						onChange={ this.edit.onToggleLazy() }
                         className="feedzy-lazy"
 						help={ __( 'Only on the front end.' ) }
 					/>
@@ -135,7 +135,7 @@ const Inspector = props => {
 								value: '15_days',
 							},
 						] }
-						onChange={ props.onRefresh }
+						onChange={ this.edit.onRefresh() }
                         className="feedzy-refresh"
 					/>
 
@@ -164,7 +164,7 @@ const Inspector = props => {
 								value: 'title_asc',
 							},
 						] }
-						onChange={ props.onSort }
+						onChange={ this.edit.onSort() }
                         className="feedzy-sort"
 					/>
 				</PanelBody>,
@@ -182,7 +182,7 @@ const Inspector = props => {
 								value: '_self',
 							},
 						] }
-						onChange={ props.onTarget }
+						onChange={ this.edit.onTarget() }
 					/>
 
 					<TextControl
@@ -190,7 +190,7 @@ const Inspector = props => {
 						help={ __( 'Leave empty to show full title.' ) }
 						type="number"
 						value={ props.attributes.title }
-						onChange={ props.onTitle }
+						onChange={ this.edit.onTitle() }
                         className="feedzy-title-length"
 					/>
 
@@ -200,14 +200,14 @@ const Inspector = props => {
                             help={ __( 'Leave empty to display all and "no" to display nothing.' ) }
 							placeholder={ feedzyjs.isPro ? __( '(eg: author, date, time, tz=local, categories)' ) : __( '(eg: author, date, time, tz=local)' ) }
 							value={ props.attributes.metafields }
-							onChange={ props.changeMeta }
+							onChange={ this.edit.onChangeMeta() }
                             className="feedzy-meta"
 						/>
 						<TextControl
 							label={ __( 'When using multiple sources, should we display additional meta fields? - source (comma-separated list).' ) }
 							placeholder={ __( '(eg: source)' ) }
 							value={ props.attributes.multiple_meta }
-							onChange={ props.changeMultipleMeta }
+							onChange={ this.edit.onChangeMultipleMeta() }
                             className="feedzy-multiple-meta"
 						/>
 
@@ -219,7 +219,7 @@ const Inspector = props => {
 					<ToggleControl
 						label={ __( 'Display post description?' ) }
 						checked={ !! props.attributes.summary }
-						onChange={ props.toggleSummary }
+						onChange={ this.edit.onToggleSummary() }
                         className="feedzy-summary"
 					/>
 
@@ -229,7 +229,7 @@ const Inspector = props => {
 							help={ __( 'Leave empty to show full description.' ) }
 							type="number"
 							value={ props.attributes.summarylength }
-							onChange={ props.onSummaryLength }
+							onChange={ this.edit.onSummaryLength() }
                             className="feedzy-summary-length"
 						/>
 					) }
@@ -239,14 +239,14 @@ const Inspector = props => {
 							label={ __( 'Only display if title contains:' ) }
 							help={ __( 'Comma-separated list/case sensitive.' ) }
 							value={ props.attributes.keywords_title }
-							onChange={ props.onKeywordsTitle }
+							onChange={ this.edit.onKeywordsTitle() }
                             className="feedzy-include"
 						/>,
 						<TextControl
 							label={ __( 'Exclude if title contains:' ) }
 							help={ __( 'Comma-separated list/case sensitive.' ) }
 							value={ props.attributes.keywords_ban }
-							onChange={ props.onKeywordsBan }
+							onChange={ this.edit.onKeywordsBan() }
                             className="feedzy-ban"
 						/>
 					 ] ) }
@@ -269,7 +269,7 @@ const Inspector = props => {
 								value: 'no',
 							},
 						] }
-						onChange={ props.onThumb }
+						onChange={ this.edit.onThumb() }
                         className="feedzy-thumb"
 					/>
 
@@ -281,7 +281,7 @@ const Inspector = props => {
 									type="image"
 									id="inspector-media-upload"
 									value={ props.attributes.default }
-									onSelect={ props.onDefault }
+									onSelect={ this.edit.onDefault() }
 									render={ ( { open } ) => [
 										( props.attributes.default !== undefined ) && [
 											<ResponsiveWrapper
@@ -314,7 +314,7 @@ const Inspector = props => {
 							label={ __( 'Thumbnails dimension.' ) }
 							type="number"
 							value={ props.attributes.size }
-							onChange={ props.onSize }
+							onChange={ this.edit.onSize() }
 						/>,
                         <SelectControl
                             label={ __( 'How should we treat HTTP images?' ) }
@@ -333,7 +333,7 @@ const Inspector = props => {
                                     value: 'default',
                                 },
                             ] }
-                            onChange={ props.onHTTP }
+                            onChange={ this.edit.onHTTP() }
                             className="feedzy-http"
                             help={ http_help }
                         />
@@ -346,7 +346,7 @@ const Inspector = props => {
 							label={ __( 'Display price if available?' ) }
 							help={ ( props.attributes.price && props.attributes.template === 'default' ) ? __( 'Choose a different template for this to work.' ) : null }
 							checked={ !! props.attributes.price }
-							onChange={ props.togglePrice }
+							onChange={ this.edit.onTogglePrice() }
                             className="feedzy-pro-price"
 						/>
 
@@ -355,14 +355,14 @@ const Inspector = props => {
 							help={ __( 'Without ("?")' ) }
 							placeholder={ _( '(eg. promo_code=feedzy_is_awesome)' ) }
 							value={ props.attributes.referral_url }
-							onChange={ props.onReferralURL }
+							onChange={ this.edit.onReferralURL() }
 						/>
 
 						<RangeControl
 							label={ __( 'Columns' ) }
 							help={ __( 'How many columns we should use to display the feed items?' ) }
 							value={ props.attributes.columns || 1	}
-							onChange={ props.onColumns }
+							onChange={ this.edit.onColumns() }
 							min={ 1 }
 							max={ 6 }
 							beforeIcon="sort"
@@ -389,7 +389,7 @@ const Inspector = props => {
 									value: 'style2',
 								},
 							] }
-							onChange={ props.onTemplate }
+							onChange={ this.edit.onTemplate() }
                             className="feedzy-pro-template"
 						/>
 					</PanelBody>
