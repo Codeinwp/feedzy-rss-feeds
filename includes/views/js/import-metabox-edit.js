@@ -66,7 +66,9 @@
 	    var status = $( this ).is( ':checked' );
 
 		var data = {
-			'action': 'import_status',
+            security    : feedzy.ajax.security,
+			'action': 'feedzy',
+			'_action': 'import_status',
 			'id': post_id,
 			'status': status
 		};
@@ -102,7 +104,9 @@
         }
 
 		var data = {
-			'action': 'get_taxonomies',
+            security    : feedzy.ajax.security,
+			'action': 'feedzy',
+			'_action': 'get_taxonomies',
 			'post_type': selected
 		};
 
@@ -244,7 +248,8 @@
                 data    : {
                     security    : feedzy.ajax.security,
                     id          : $(this).attr('data-id'),
-                    action      : 'run_now'
+                    action      : 'feedzy',
+                    _action      : 'run_now'
                 },
                 success: function(data){
                     hideSpinner(button);
