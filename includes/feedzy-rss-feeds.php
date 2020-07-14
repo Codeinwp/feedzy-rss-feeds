@@ -229,9 +229,7 @@ class Feedzy_Rss_Feeds {
 			self::$instance->loader->add_action( 'init', $plugin_import, 'register_import_post_type', 9, 1 );
 			self::$instance->loader->add_action( 'feedzy_cron', $plugin_import, 'run_cron' );
 			self::$instance->loader->add_action( 'save_post_feedzy_imports', $plugin_import, 'save_feedzy_import_feed_meta', 1, 2 );
-			self::$instance->loader->add_action( 'wp_ajax_import_status', $plugin_import, 'import_status' );
-			self::$instance->loader->add_action( 'wp_ajax_get_taxonomies', $plugin_import, 'get_taxonomies' );
-			self::$instance->loader->add_action( 'wp_ajax_run_now', $plugin_import, 'run_now' );
+			self::$instance->loader->add_action( 'wp_ajax_feedzy', $plugin_import, 'ajax' );
 			self::$instance->loader->add_action( 'manage_feedzy_imports_posts_custom_column', $plugin_import, 'manage_feedzy_import_columns', 10, 2 );
 			self::$instance->loader->add_action( 'wp', $plugin_import, 'wp' );
 

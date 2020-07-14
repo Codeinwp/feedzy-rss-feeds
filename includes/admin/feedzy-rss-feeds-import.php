@@ -648,12 +648,34 @@ class Feedzy_Rss_Feeds_Import {
 	}
 
 	/**
+	 * AJAX single-entry method.
+	 *
+	 * @since   3.4.1
+	 * @access  public
+	 */
+	public function ajax() {
+		check_ajax_referer( FEEDZY_NAME, 'security' );
+
+		switch ( $_POST['_action'] ) {
+			case 'import_status':
+				$this->import_status();
+				break;
+			case 'get_taxonomies':
+				$this->get_taxonomies();
+				break;
+			case 'run_now':
+				$this->run_now();
+				break;
+		}
+	}
+
+	/**
 	 * AJAX called method to update post status.
 	 *
 	 * @since   1.2.0
-	 * @access  public
+	 * @access  private
 	 */
-	public function import_status() {
+	private function import_status() {
 		global $wpdb;
 		$id      = $_POST['id'];
 		$status  = $_POST['status'];
@@ -683,9 +705,9 @@ class Feedzy_Rss_Feeds_Import {
 	 * AJAX method to get taxonomies for a given post_type.
 	 *
 	 * @since   1.2.0
-	 * @access  public
+	 * @access  private
 	 */
-	public function get_taxonomies() {
+	private function get_taxonomies() {
 		$post_type  = $_POST['post_type'];
 		$taxonomies = get_object_taxonomies(
 			array(
@@ -712,11 +734,9 @@ class Feedzy_Rss_Feeds_Import {
 	 * Run a specific job.
 	 *
 	 * @since   1.6.1
-	 * @access  public
+	 * @access  private
 	 */
-	public function run_now() {
-		check_ajax_referer( FEEDZY_NAME, 'security' );
-
+	private function run_now() {
 		$job    = get_post( $_POST['id'] );
 		$count  = $this->run_job( $job, 100 );
 
