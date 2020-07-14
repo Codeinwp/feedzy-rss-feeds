@@ -11,7 +11,7 @@
   "quotmark": "single",
   "trailing": true,
   "undef": true,
-  "unused": true,
+  "unused": false,
   "browser": true,
   "globals": {
     "_": false,
@@ -19,5 +19,7 @@
     "jQuery": false,
     "JSON": false,
     "wp": false
-  }
+  },
+  "esversion": 8,
+  "sub": true
 }

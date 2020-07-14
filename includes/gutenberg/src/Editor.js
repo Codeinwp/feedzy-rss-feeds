@@ -287,7 +287,6 @@ class Editor extends Component {
 
     render() {
 		return [
-			// Inspector
 			( 'fetched' === this.state.route ) && (
 				<Inspector
                     edit={ this }
