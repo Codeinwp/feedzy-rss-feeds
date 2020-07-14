@@ -207,7 +207,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 	public function feedzy_register_rest_route() {
 		register_rest_route(
 			'feedzy/v1', '/feed/', array(
-				'methods'  => 'GET',
+				'methods'  => 'POST',
 				'callback' => array( $this, 'feedzy_rest_route' ),
 				'args'     => array(
 					'url'      => array(

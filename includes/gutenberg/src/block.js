@@ -14,8 +14,6 @@ const { __ } = wp.i18n;
 
 const { registerBlockType } = wp.blocks;
 
-const { date } = wp.date;
-
 /**
  * Register block
  */

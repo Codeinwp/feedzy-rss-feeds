@@ -21,6 +21,8 @@ const {
 	Spinner,
 } = wp.components;
 
+const { date } = wp.date;
+
 import queryString from 'query-string';
 import Inspector from './inspector';
 import { unescapeHTML, filterData, inArray, arrangeMeta } from './utils';
@@ -33,6 +35,8 @@ class Editor extends Component {
 		this.loadCategories         = this.loadCategories.bind( this );
 		this.metaExists             = this.metaExists.bind( this );
 		this.multipleMetaExists     = this.multipleMetaExists.bind( this );
+		this.getImageURL            = this.getImageURL.bind( this );
+		this.getValidateURL         = this.getValidateURL.bind( this );
 
         this.onChangeFeed           = this.onChangeFeed.bind( this );
         this.onChangeMax            = this.onChangeMax.bind( this );
@@ -59,6 +63,9 @@ class Editor extends Component {
         this.onTogglePrice          = this.onTogglePrice.bind( this );
 
 		this.state = {
+            // home: when the block is just added
+            // fetched: when the feed is fetched
+            // reload: when the feed needs to be refetched
             route: this.props.attributes.route,
             loading: false,
             error: false,
@@ -66,8 +73,6 @@ class Editor extends Component {
 	}
 
 	async componentDidMount() {
-        console.log( 'componentDidMount', this.state );
-
         this.loadFeed();
 
 		if ( this.props.attributes.categories === undefined ) {
@@ -82,20 +87,18 @@ class Editor extends Component {
 
     }
   
-	async componentDidUpdate() {
-        console.log( 'componentDidUpdate', this.state );
+	async componentDidUpdate(prevProps) {
+        if ( 'reload' === this.state.route ) {
+            this.loadFeed();
+        }
     }
 
     loadFeed() {
-        console.log( 'loadFeed', this.state );
-
         let url = this.props.attributes.feeds;
 
         if ( url === undefined ) {
             return;
         }
-
-        //this.props.setAttributes( { status: 1 } );
 
         if ( inArray( url, this.props.attributes.categories ) ) {
             let category = url;
@@ -109,6 +112,7 @@ class Editor extends Component {
         }
 
         this.setState({
+            route: 'home',
             loading: true,
         });
 
@@ -124,7 +128,6 @@ class Editor extends Component {
                             route: 'fetched',
                             loading: false,
                         });
-                        //this.props.setAttributes( { status: 2 } );
                         return data;
                     } else {
                         this.setState({
@@ -132,7 +135,6 @@ class Editor extends Component {
                             loading: false,
                             error: true,
                         });
-                        //this.props.setAttributes( { status: 3 } );
                         return data;
                     }
                 },
@@ -143,7 +145,6 @@ class Editor extends Component {
                         loading: false,
                         error: true,
                     });
-                    //this.props.setAttributes( { status: 3 } );
                     return err;
                 }
             );
@@ -183,6 +184,25 @@ class Editor extends Component {
 
     multipleMetaExists(value) {
         return ( 0 <= ( this.props.attributes.multiple_meta.replace(/\s/g,'').split( ',' ) ).indexOf( value ) || '' === this.props.attributes.multiple_meta );
+    }
+
+    getImageURL(item, background){
+        let url = item['thumbnail'] ? item['thumbnail'] : ( this.props.attributes.default ? this.props.attributes.default.url : feedzyjs.imagepath + 'feedzy.svg' );
+        switch ( this.props.attributes.http ) {
+            case 'default':
+                if ( url.indexOf( 'https' ) === -1 && url.indexOf( 'http' ) === 0 ) {
+                    url = feedzyjs.imagepath + 'feedzy.svg';
+                }
+                break;
+            case 'https':
+                url = url.replace(/http:/g, 'https:');
+                break;
+        }
+
+        if ( background ){
+            url = 'url(' + url + ')';
+        }
+        return url;
     }
 
     onChangeFeed(value) {
@@ -241,6 +261,9 @@ class Editor extends Component {
     }
     onHTTP(value) {
         this.props.setAttributes( { http: value } );
+        this.setState({
+            route: 'reload'
+        });
     }
     onReferralURL(value) {
         this.props.setAttributes( { referral_url: value } );
@@ -254,15 +277,23 @@ class Editor extends Component {
     onTogglePrice(value) {
         this.props.setAttributes( { price: ! this.props.attributes.price } );
     }
+    getValidateURL() {
+        let url = 'https://validator.w3.org/feed/';
+        if ( this.props.attributes.feeds ) {
+            url += 'check.cgi?url=' + this.props.attributes.feeds;
+        }
+        return url;
+    }
 
     render() {
-
-        console.log( this.state );
-
 		return [
 			// Inspector
 			( 'fetched' === this.state.route ) && (
-				<Inspector { ...props } />
+				<Inspector
+                    edit={ this }
+                    state={ this.state }
+                    { ...this.props }
+                />
 			),
             ( 'home' === this.state.route ) && (
 				<div className={ this.props.className }>
@@ -275,31 +306,27 @@ class Editor extends Component {
 					(
 						<div key="loading" className="wp-block-embed is-loading">
 							<Spinner />
-							<p>{ __( 'Fetching…' ) }</p>
+							<p>{ __( 'Fetching...' ) }</p>
 						</div>
 					):
 					[
 						<TextControl
 							type="url"
 							className="feedzy-source"
-							placeholder={ __( 'Enter URL or category of your feed here…' ) }
+							placeholder={ __( 'Enter URL or category of your feed here...' ) }
 							onChange={ this.onChangeFeed }
 							value={ this.props.attributes.feeds }
 						/>,
 						<Button
 							isLarge
+							isPrimary
 							type="submit"
 							onClick={ this.loadFeed }
 						>
 							{ __( 'Load Feed' ) }
 						</Button>,
-						( this.state.error ) &&  <span>{ __( 'Feed URL Invalid') }</span>,
-						<span>
-							<ExternalLink href="https://validator.w3.org/feed/">
-								{ __( 'Click here to check if feed is valid. ' ) }
-							</ExternalLink>
-							{ __( 'Invalid feeds will NOT display items.' ) }
-						</span>
+                        <ExternalLink href={ this.getValidateURL() } title={ __( 'Validate Feed ' ) }>{ __( 'Validate ' ) }</ExternalLink>,
+                        ( this.state.error ) && <div>{ __( 'Feed URL is invalid. Invalid feeds will NOT display items.') }</div>
 					] }
 					</Placeholder>
 				</div>
@@ -347,7 +374,7 @@ class Editor extends Component {
 									{ ( ( item['thumbnail'] && this.props.attributes.thumb === 'auto' ) || this.props.attributes.thumb === 'yes' ) && (
 										<div className="rss_image" style={ { width: this.props.attributes.size + 'px', height: this.props.attributes.size + 'px' } }>
 											<a title={ unescapeHTML( item['title'] ) } style={ { width: this.props.attributes.size + 'px', height: this.props.attributes.size + 'px' } }>
-												<span className="fetched" style={ { width: this.props.attributes.size + 'px', height: this.props.attributes.size + 'px', backgroundImage: 'url(' + ( ( item['thumbnail'] ) ? item['thumbnail'] : ( ( this.props.attributes.default ) ? this.props.attributes.default.url : feedzyjs.imagepath + 'feedzy-default.jpg' ) ) + ')' } } title={ unescapeHTML( item['title'] ) }></span>
+												<span className="fetched" style={ { width: this.props.attributes.size + 'px', height: this.props.attributes.size + 'px', backgroundImage: this.getImageURL( item, true ) } } title={ unescapeHTML( item['title'] ) }></span>
 											</a>
 										</div>
 									) }
@@ -370,7 +397,7 @@ class Editor extends Component {
 											{ ( this.props.attributes.summary ) && (
 												<p className="description">
 												{ ( this.props.attributes.summarylength && unescapeHTML( item['description'] ).length > this.props.attributes.summarylength ) ? (
-													unescapeHTML( item['description'] ).substring( 0, this.props.attributes.summarylength ) + ' […]'
+													unescapeHTML( item['description'] ).substring( 0, this.props.attributes.summarylength ) + ' [...]'
 												):
 													unescapeHTML( item['description'] )
 												}
