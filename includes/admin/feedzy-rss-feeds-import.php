@@ -843,10 +843,8 @@ class Feedzy_Rss_Feeds_Import {
 		);
 
 		$options['__jobID'] = $job->ID;
-		$results = $this->get_job_feed( $options, $import_content, true );
-		$result = $results['items'];
-		update_post_meta( $job->ID, 'last_run', time() );
 
+		update_post_meta( $job->ID, 'last_run', time() );
 		delete_post_meta( $job->ID, 'import_errors' );
 		delete_post_meta( $job->ID, 'import_info' );
 
@@ -861,6 +859,15 @@ class Feedzy_Rss_Feeds_Import {
 		// the array that captures additional information about the import.
 		$import_info = array();
 
+		$results = $this->get_job_feed( $options, $import_content, true );
+		if ( is_wp_error( $results ) ) {
+			$import_errors[] = $results->get_error_message();
+			update_post_meta( $job->ID, 'import_errors', $import_errors );
+			update_post_meta( $job->ID, 'imported_items_count', 0 );
+			return;
+		}
+
+		$result = $results['items'];
 		do_action( 'feedzy_run_job_pre', $job, $result );
 
 		// check if we should be using the old scheme of custom hashing the url and date
@@ -1138,6 +1145,9 @@ class Feedzy_Rss_Feeds_Import {
 		$feedURL = $admin->normalize_urls( $options['feeds'] );
 
 		$feedURL = apply_filters( 'feedzy_import_feed_url', $feedURL, $import_content, $options );
+		if ( is_wp_error( $feedURL ) ) {
+			return $feedURL;
+		}
 
 		$feed    = $admin->fetch_feed( $feedURL, isset( $options['refresh'] ) ? $options['refresh'] : '12_hours', $options );
 
