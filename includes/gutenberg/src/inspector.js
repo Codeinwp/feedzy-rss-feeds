@@ -264,11 +264,11 @@ class Inspector extends Component {
                             value={ this.props.attributes.thumb }
                             options={ [
                                 {
-                                    label: __( 'Yes (with a fallback image)' ),
+                                    label: __( 'Yes (without  a fallback image)' ),
                                     value: 'auto',
                                 },
                                 {
-                                    label: __( 'Yes (without a fallback image)' ),
+                                    label: __( 'Yes (with a fallback image)' ),
                                     value: 'yes',
                                 },
                                 {
