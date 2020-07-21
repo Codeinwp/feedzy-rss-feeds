@@ -327,11 +327,11 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'value' => '',
 						'opts'  => array(
 							'auto' => array(
-								'label' => __( 'Auto', 'feedzy-rss-feeds' ),
+								'label' => __( 'Yes (without a fallback image)', 'feedzy-rss-feeds' ),
 								'value' => '',
 							),
 							'yes'  => array(
-								'label' => __( 'Yes', 'feedzy-rss-feeds' ),
+								'label' => __( 'Yes (with a fallback image)', 'feedzy-rss-feeds' ),
 								'value' => 'yes',
 							),
 							'no'   => array(
