@@ -283,7 +283,7 @@ class Inspector extends Component {
                         { ( this.props.attributes.thumb !== 'no' ) && [
                             ( this.props.attributes.thumb !== 'auto' ) && (
                                 <div className="feedzy-blocks-base-control">
-                                    <label className="blocks-base-control__label" for="inspector-media-upload">{ __( 'Default thumbnail URL if no image is found.' ) }</label>
+                                    <label className="blocks-base-control__label" for="inspector-media-upload">{ __( 'Fallback image if no image is found.' ) }</label>
                                     <MediaUpload
                                         type="image"
                                         id="inspector-media-upload"

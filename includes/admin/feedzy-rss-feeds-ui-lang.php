@@ -341,7 +341,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						),
 					),
 					'default' => array(
-						'label'       => __( 'Default thumbnail URL if no image is found.', 'feedzy-rss-feeds' ),
+						'label'       => __( 'Fallback image if no image is found.', 'feedzy-rss-feeds' ),
 						'placeholder' => __( 'Image URL', 'feedzy-rss-feeds' ),
 						'type'        => 'file',
 						'value'       => '',
