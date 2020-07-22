@@ -191,7 +191,7 @@ class Editor extends Component {
         switch ( this.props.attributes.http ) {
             case 'default':
                 if ( url.indexOf( 'https' ) === -1 && url.indexOf( 'http' ) === 0 ) {
-                    url = feedzyjs.imagepath + 'feedzy.svg';
+                    url = ( this.props.attributes.default ? this.props.attributes.default.url : feedzyjs.imagepath + 'feedzy.svg' );
                 }
                 break;
             case 'https':
@@ -255,6 +255,9 @@ class Editor extends Component {
     }
     onDefault(value) {
         this.props.setAttributes( { default: value } );
+        this.setState({
+            route: 'reload'
+        });
     }
     onSize(value) {
         this.props.setAttributes( { size: ! value ? 150 : Number( value ) } );
