@@ -267,6 +267,26 @@
             }
         });
 
+        // purge data ajax call
+        $('.feedzy_purge').on('click', function(e){
+            e.preventDefault();
+            var element = $(this);
+            showSpinner(element);
+
+            $.ajax({
+                url     : ajaxurl,
+                method  : 'post',
+                data    : {
+                    security    : feedzy.ajax.security,
+                    id          : $(this).find('a').attr('data-id'),
+                    action      : 'feedzy',
+                    _action      : 'purge'
+                },
+                success: function(){
+                    hideSpinner(element);
+                }
+            });
+        });
     }
 
     function showSpinner(el){

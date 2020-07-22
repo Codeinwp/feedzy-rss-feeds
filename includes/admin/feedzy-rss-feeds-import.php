@@ -666,6 +666,9 @@ class Feedzy_Rss_Feeds_Import {
 			case 'run_now':
 				$this->run_now();
 				break;
+			case 'purge':
+				$this->purge_data();
+				break;
 		}
 	}
 
@@ -1565,4 +1568,46 @@ class Feedzy_Rss_Feeds_Import {
 		return $canonical_url;
 	}
 
+	/**
+	 * Add/remove row actions for each import.
+	 *
+	 * @since   ?
+	 * @access  public
+	 */
+	public function add_import_actions( $actions, $post ) {
+		if ( $post->post_type === 'feedzy_imports' ) {
+
+			// don't need quick edit.
+			unset( $actions['inline hide-if-no-js'] );
+
+			$actions['feedzy_purge'] = sprintf(
+				'<a href="#" class="feedzy-purge" data-id="%d">%2$s</a><span class="feedzy-spinner spinner"></span>',
+				$post->ID,
+				esc_html( __( 'Purge &amp; Reset', 'feedzy-rss-feeds' ) )
+			);
+		}
+		return $actions;
+	}
+
+	/**
+	 * AJAX called method to purge imported items.
+	 *
+	 * @since   ?
+	 * @access  private
+	 */
+	private function purge_data() {
+		$id     = $_POST['id'];
+		$post   = get_post( $id );
+		if ( $post->post_type !== 'feedzy_imports' ) {
+			wp_die();
+		}
+
+		delete_post_meta( $id, 'imported_items_hash' );
+		delete_post_meta( $id, 'imported_items' );
+		delete_post_meta( $id, 'imported_items_count' );
+		delete_post_meta( $id, 'import_errors' );
+		delete_post_meta( $id, 'import_info' );
+		delete_post_meta( $id, 'last_run' );
+		wp_die();
+	}
 }
