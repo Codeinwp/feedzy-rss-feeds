@@ -104,7 +104,7 @@ class Feedzy_Rss_Feeds {
 	 */
 	public function init() {
 		self::$plugin_name = 'feedzy-rss-feeds';
-		self::$version = '3.4.0';
+		self::$version = '3.4.1';
 		self::$instance->load_dependencies();
 		self::$instance->set_locale();
 		self::$instance->define_admin_hooks();
@@ -229,9 +229,7 @@ class Feedzy_Rss_Feeds {
 			self::$instance->loader->add_action( 'init', $plugin_import, 'register_import_post_type', 9, 1 );
 			self::$instance->loader->add_action( 'feedzy_cron', $plugin_import, 'run_cron' );
 			self::$instance->loader->add_action( 'save_post_feedzy_imports', $plugin_import, 'save_feedzy_import_feed_meta', 1, 2 );
-			self::$instance->loader->add_action( 'wp_ajax_import_status', $plugin_import, 'import_status' );
-			self::$instance->loader->add_action( 'wp_ajax_get_taxonomies', $plugin_import, 'get_taxonomies' );
-			self::$instance->loader->add_action( 'wp_ajax_run_now', $plugin_import, 'run_now' );
+			self::$instance->loader->add_action( 'wp_ajax_feedzy', $plugin_import, 'ajax' );
 			self::$instance->loader->add_action( 'manage_feedzy_imports_posts_custom_column', $plugin_import, 'manage_feedzy_import_columns', 10, 2 );
 			self::$instance->loader->add_action( 'wp', $plugin_import, 'wp' );
 
@@ -251,6 +249,7 @@ class Feedzy_Rss_Feeds {
 			self::$instance->loader->add_filter( 'feedzy_magic_tags_image', $plugin_import, 'magic_tags_image' );
 			self::$instance->loader->add_filter( 'feedzy_retrieve_categories', $plugin_import, 'retrieve_categories', 10, 2 );
 			self::$instance->loader->add_filter( 'feedzy_is_license_of_type', $plugin_import, 'feedzy_is_license_of_type', 10, 2 );
+			self::$instance->loader->add_filter( 'post_row_actions', $plugin_import, 'add_import_actions', 10, 2 );
 		}
 
 		if ( ! defined( 'TI_UNIT_TESTING' ) ) {

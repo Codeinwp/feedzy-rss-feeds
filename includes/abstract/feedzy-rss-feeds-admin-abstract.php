@@ -107,7 +107,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		// how many posts contain the shortcode
-		$shortcodes = $wpdb->get_var( "SELECT count(*) FROM wp_posts WHERE post_status IN ('publish', 'private') AND post_content LIKE '%[feedzy-rss %'" );
+		global $wpdb;
+		$shortcodes = $wpdb->get_var( "SELECT count(*) FROM {$wpdb->prefix}posts WHERE post_status IN ('publish', 'private') AND post_content LIKE '%[feedzy-rss %'" );
 		$data = array(
 			'categories'    => $categories,
 			'imports'       => $imports,
@@ -484,7 +485,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'refresh'        => '12_hours',
 				// sorting.
 				'sort'           => '',
-				// http images, https = force https|default = fall back to default image|auto = continue as it is
+				// https = force https
+				// default = fall back to default image
+				// auto = continue as it is
 				'http'         => 'auto',
 				// message to show when feed is empty
 				'error_empty'   => 'Feed has no items.',
@@ -1278,9 +1281,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		// handle HTTP images.
-		if ( $sc && 0 === strpos( $the_thumbnail, 'http://' ) ) {
+		if ( $sc && isset( $sc['http'] ) && 0 === strpos( $the_thumbnail, 'http://' ) ) {
 			switch ( $sc['http'] ) {
 				case 'https':
+					// fall-through.
+				case 'force':
 					$the_thumbnail = str_replace( 'http://', 'https://', $the_thumbnail );
 					break;
 				case 'default':

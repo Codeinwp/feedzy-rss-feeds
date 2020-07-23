@@ -66,7 +66,9 @@
 	    var status = $( this ).is( ':checked' );
 
 		var data = {
-			'action': 'import_status',
+            security    : feedzy.ajax.security,
+			'action': 'feedzy',
+			'_action': 'import_status',
 			'id': post_id,
 			'status': status
 		};
@@ -102,7 +104,9 @@
         }
 
 		var data = {
-			'action': 'get_taxonomies',
+            security    : feedzy.ajax.security,
+			'action': 'feedzy',
+			'_action': 'get_taxonomies',
 			'post_type': selected
 		};
 
@@ -208,6 +212,30 @@
 			});
 		});
 
+        initSummary();
+
+	});
+
+    function initSummary() {
+        // pop-ups for informational text
+        $( '.feedzy-dialog' ).dialog({
+          modal: true,
+          autoOpen: false,
+          height: 400,
+          width: 500,
+          buttons: {
+            Ok: function() {
+              $( this ).dialog( 'close' );
+            }
+          }
+        });
+
+        $( '.feedzy-dialog-open' ).on('click', function(e){
+            e.preventDefault();
+            var dialog = $(this).attr('data-dialog');
+            $('.' + dialog).dialog( 'open' );
+        });
+
         // run now.
         $('.feedzy-run-now').on('click', function(e){
             e.preventDefault();
@@ -220,7 +248,8 @@
                 data    : {
                     security    : feedzy.ajax.security,
                     id          : $(this).attr('data-id'),
-                    action      : 'run_now'
+                    action      : 'feedzy',
+                    _action      : 'run_now'
                 },
                 success: function(data){
                     hideSpinner(button);
@@ -229,7 +258,36 @@
             });
         });
 
-	});
+        // toggle the errors div to expand/collapse
+        $('td.column-feedzy-last_run .feedzy-api-error').on('click', function(){
+            if($(this).hasClass('expand')){
+                $(this).removeClass('expand');
+            }else{
+                $(this).addClass('expand');
+            }
+        });
+
+        // purge data ajax call
+        $('.feedzy_purge').on('click', function(e){
+            e.preventDefault();
+            var element = $(this);
+            showSpinner(element);
+
+            $.ajax({
+                url     : ajaxurl,
+                method  : 'post',
+                data    : {
+                    security    : feedzy.ajax.security,
+                    id          : $(this).find('a').attr('data-id'),
+                    action      : 'feedzy',
+                    _action      : 'purge'
+                },
+                success: function(){
+                    hideSpinner(element);
+                }
+            });
+        });
+    }
 
     function showSpinner(el){
         el.parent().find('.feedzy-spinner').addClass('is-active');

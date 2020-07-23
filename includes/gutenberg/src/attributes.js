@@ -71,6 +71,9 @@ const attributes = {
 		type: 'number',
 		default: 150,
 	},
+	http: {
+		type: 'string',
+	},
 	referral_url: {
 		type: 'string',
 	},
@@ -86,13 +89,9 @@ const attributes = {
 		type: 'boolean',
 		default: true,
 	},
-	status: {
-		// 0 - Initial State
-		// 1 - Feed Loading
-		// 2 - Feed Loaded
-		// 3 - Feed Invalid
-		type: 'number',
-		default: 0,
+	route: {
+		type: 'string',
+		default: 'home',
 	},
 	feedData: {
 		type: 'object',

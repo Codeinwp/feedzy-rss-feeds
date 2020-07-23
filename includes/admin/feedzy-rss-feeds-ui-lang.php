@@ -327,11 +327,11 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'value' => '',
 						'opts'  => array(
 							'auto' => array(
-								'label' => __( 'Auto', 'feedzy-rss-feeds' ),
+								'label' => __( 'Yes (without a fallback image)', 'feedzy-rss-feeds' ),
 								'value' => '',
 							),
 							'yes'  => array(
-								'label' => __( 'Yes', 'feedzy-rss-feeds' ),
+								'label' => __( 'Yes (with a fallback image)', 'feedzy-rss-feeds' ),
 								'value' => 'yes',
 							),
 							'no'   => array(
@@ -341,7 +341,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						),
 					),
 					'default' => array(
-						'label'       => __( 'Default thumbnail URL if no image is found.', 'feedzy-rss-feeds' ),
+						'label'       => __( 'Fallback image if no image is found.', 'feedzy-rss-feeds' ),
 						'placeholder' => __( 'Image URL', 'feedzy-rss-feeds' ),
 						'type'        => 'file',
 						'value'       => '',
@@ -366,7 +366,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 							),
 							'yes'  => array(
 								'label' => __( 'Force HTTPS (please verify that the images exist on HTTPS)', 'feedzy-rss-feeds' ),
-								'value' => 'force',
+								'value' => 'https',
 							),
 							'no'   => array(
 								'label' => __( 'Ignore and show the default image instead', 'feedzy-rss-feeds' ),
@@ -378,7 +378,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 			),
 			'section_pro'   => array(
 				'title'       => __( 'PRO Options', 'feedzy-rss-feeds' ),
-				'description' => __( 'Get access to more options and customizations with full version of Feedzy RSS Feeds . Use existing templates or extend them and make them your own.', 'feedzy-rss-feeds' ) . '<br/>' . '<a href="' . FEEDZY_UPSELL_LINK . '" target="_blank"><small>' . __( 'See more features of Feedzy RSS Feeds ', 'feedzy-rss-feeds' ) . '</small></a>',
+				'description' => __( 'Get access to more options and customizations with full version of Feedzy RSS Feeds . Use existing templates or extend them and make them your own.', 'feedzy-rss-feeds' ) . '<br/>' . '<a href="' . FEEDZY_UPSELL_LINK . '" target="_blank"><small>' . __( 'See more features of Feedzy RSS Feeds PRO', 'feedzy-rss-feeds' ) . '</small></a>',
 				'elements'    => array(
 					'price'        => array(
 						'label'    => sprintf( __( 'Should we display the price from the feed if it is available? <br/> You can read about how to extract price from a custom tag %1$shere%2$s', 'feedzy-rss-feeds' ), '<a href="https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy" target="_blank">', '</a>' ),
