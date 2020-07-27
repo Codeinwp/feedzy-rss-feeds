@@ -245,10 +245,21 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		global $post;
 		$nonce  = wp_create_nonce( FEEDZY_BASEFILE );
 		$feed   = get_post_meta( $post->ID, 'feedzy_category_feed', true );
+		$invalid = get_post_meta( $post->ID, '__transient_feedzy_category_feed', true );
+		delete_post_meta( $post->ID, '__transient_feedzy_category_feed' );
+
 		$output = '
             <input type="hidden" name="feedzy_category_meta_noncename" id="feedzy_category_meta_noncename" value="' . $nonce . '" />
-			<strong>' . sprintf( __( 'Please be aware that multiple feeds, when mashed together, may sometimes not work as expected as explained %1$shere%2$s.', 'feedzy-rss-feeds' ), '<a href="http://simplepie.org/wiki/faq/typical_multifeed_gotchas" target="_blank">', '</a>' ) . '</strong><br/><br/>
-            <textarea name="feedzy_category_feed" rows="15" class="widefat" placeholder="' . __( 'Place your URL\'s here followed by a comma.', 'feedzy-rss-feeds' ) . '" >' . $feed . '</textarea>
+			<strong>' . sprintf( __( 'Please be aware that multiple feeds, when mashed together, may sometimes not work as expected as explained %1$shere%2$s.', 'feedzy-rss-feeds' ), '<a href="http://simplepie.org/wiki/faq/typical_multifeed_gotchas" target="_blank">', '</a>' ) . '</strong><br/><br/>';
+		if ( $invalid ) {
+			$output .= '<div class="feedzy-api-error"><i class="dashicons dashicons-warning"></i>' . __( 'We found the following invalid URLs that we have removed from the list', 'feedzy-rss-feeds' ) . ': <ol>';
+			foreach ( $invalid as $url ) {
+				$output .= '<li>' . esc_html( $url ) . '</li>';
+			}
+			$output .= '</ol></div>';
+		}
+
+		$output .= '<textarea name="feedzy_category_feed" rows="15" class="widefat" placeholder="' . __( 'Place your URL\'s here followed by a comma.', 'feedzy-rss-feeds' ) . '" >' . $feed . '</textarea>
         ';
 		echo $output;
 	}
@@ -589,5 +600,22 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 	}
 
+	public function validate_category_feeds( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
+		if ( 'feedzy_category_feed' === $meta_key ) {
+			remove_filter( current_filter(), array( $this, 'validate_category_feeds' ) );
+
+			$urls = $this->normalize_urls( $meta_value );
+			$valid = $this->get_valid_feed_urls( $urls, '1_mins', false );
+			$invalid = array_diff( $urls, $valid );
+			if ( ! empty( $invalid ) ) {
+				update_post_meta( $object_id, '__transient_feedzy_category_feed', $invalid );
+			}
+
+			update_post_meta( $object_id, $meta_key, implode( ', ', $valid ) );
+			return true;
+		}
+
+		return $check;
+	}
 
 }
