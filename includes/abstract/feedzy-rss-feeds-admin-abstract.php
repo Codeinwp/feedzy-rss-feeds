@@ -398,6 +398,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'feedzy/v' . FEEDZY_REST_VERSION, '/lazy/', array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'feedzy_lazy_load' ),
+				'permission_callback' => '__return_true',
 				'args' => array(
 					'nonce' => array(
 						'validate_callback' => function( $value ) {

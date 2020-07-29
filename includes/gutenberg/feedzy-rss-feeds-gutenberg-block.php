@@ -209,6 +209,9 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 			'feedzy/v1', '/feed/', array(
 				'methods'  => 'POST',
 				'callback' => array( $this, 'feedzy_rest_route' ),
+				'permission_callback' => function () {
+					return is_user_logged_in();
+				},
 				'args'     => array(
 					'url'      => array(
 						'sanitize_callback' => array( $this, 'feedzy_sanitize_feeds' ),
