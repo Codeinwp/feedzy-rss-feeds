@@ -27,8 +27,8 @@ describe('Test Free - Import Feed', function() {
         cy.visit('/post-new.php?post_type=feedzy_imports');
 
         // fill up the form
-        cy.get('#title').type( 'blah' );
-        cy.get('[name="feedzy_meta_data[source]"]').type( 'blah' );
+        cy.get('#title').clear().type( 'blah' );
+        cy.get('[name="feedzy_meta_data[source]"]').clear().type( 'blah' );
         cy.get('.f1 fieldset:nth-of-type(1) .f1-buttons button.btn-next').scrollIntoView().click();
 
         // locked for pro?
@@ -94,8 +94,8 @@ describe('Test Free - Import Feed', function() {
         cy.get('tr:nth-of-type(1) .row-title').click();
 
         // fill up the form
-        cy.get('#title').type( feed.url );
-        cy.get('[name="feedzy_meta_data[source]"]').type( feed.url );
+        cy.get('#title').clear().type( feed.url );
+        cy.get('[name="feedzy_meta_data[source]"]').clear().type( feed.url );
         cy.get('.f1 fieldset:nth-of-type(1) .f1-buttons button.btn-next').scrollIntoView().click();
 
         cy.get('.f1 fieldset:nth-of-type(2) .f1-buttons button.btn-next').scrollIntoView().click();
