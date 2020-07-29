@@ -140,12 +140,14 @@ describe('Test Free - Import Feed', function() {
     })
 
     it('Toggle the new import', function() {
+        // deactivate.
         cy.visit('/edit.php?post_type=feedzy_imports');
         cy.get('tr:nth-of-type(1) .feedzy-toggle').uncheck({force:true});
 
         cy.visit('/edit.php?post_type=feedzy_imports');
         cy.get('tr:nth-of-type(1) .feedzy-toggle').should('not.be.checked');
 
+        // activate.
         cy.get('tr:nth-of-type(1) .feedzy-toggle').check({force:true});
         cy.visit('/edit.php?post_type=feedzy_imports');
         cy.get('tr:nth-of-type(1) .feedzy-toggle').should('be.checked');

@@ -702,15 +702,16 @@ class Feedzy_Rss_Feeds_Import {
 		$publish = 'draft';
 
 		// no activation till source is not valid.
-		$invalid_urls = apply_filters( 'feedzy_check_source_validity', get_post_meta( $id, 'source', true ), $id, true, false );
-		if ( ! empty( $invalid_urls ) ) {
-			$msg = apply_filters( 'feedzy_get_source_validity_error', '', get_post( $id ), '' );
-			wp_send_json_error( array( 'msg' => $msg ) );
-		}
-
 		if ( $status === 'true' ) {
+			$invalid_urls = apply_filters( 'feedzy_check_source_validity', get_post_meta( $id, 'source', true ), $id, true, false );
+			if ( ! empty( $invalid_urls ) ) {
+				$msg = apply_filters( 'feedzy_get_source_validity_error', '', get_post( $id ), '' );
+				wp_send_json_error( array( 'msg' => $msg ) );
+			}
+
 			$publish = 'publish';
 		}
+
 		$new_post_status = array(
 			'ID'          => $id,
 			'post_status' => $publish,
@@ -724,7 +725,7 @@ class Feedzy_Rss_Feeds_Import {
 			$errors = $post_id->get_error_messages();
 			wp_send_json_error( array( 'msg' => implode( ', ', $errors ) ) );
 		}
-		wp_die(); // this is required to terminate immediately and return a proper response
+		wp_send_json_success();
 	}
 
 	/**
