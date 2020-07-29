@@ -23,12 +23,12 @@ describe('Test Free - Import Feed', function() {
         cy.get('.nav-tab').should('have.length', settings.tabs);
     })
 
-    it('Creates a new import', function() {
+    it('Create a new import with an INVALID url', function() {
         cy.visit('/post-new.php?post_type=feedzy_imports');
 
         // fill up the form
-        cy.get('#title').type( feed.url );
-        cy.get('[name="feedzy_meta_data[source]"]').type( feed.url );
+        cy.get('#title').type( 'blah' );
+        cy.get('[name="feedzy_meta_data[source]"]').type( 'blah' );
         cy.get('.f1 fieldset:nth-of-type(1) .f1-buttons button.btn-next').scrollIntoView().click();
 
         // locked for pro?
@@ -78,6 +78,27 @@ describe('Test Free - Import Feed', function() {
         }).then((dumb) => {
             expect(found_tags).to.include.members(mandatory.free);
         });
+
+        cy.get('button[type="submit"][name="save"]').scrollIntoView().click({force:true});
+
+        // should bring you back to the edit screen, not the listing screen
+        cy.url().should('not.include', 'edit.php?post_type=feedzy_imports');
+
+        // show a notice.
+        cy.get('div.notice.feedzy-error-critical').should('be.visible');
+    })
+
+    it('Update the new import with VALID url', function() {
+        cy.visit('/edit.php?post_type=feedzy_imports');
+
+        cy.get('tr:nth-of-type(1) .row-title').click();
+
+        // fill up the form
+        cy.get('#title').type( feed.url );
+        cy.get('[name="feedzy_meta_data[source]"]').type( feed.url );
+        cy.get('.f1 fieldset:nth-of-type(1) .f1-buttons button.btn-next').scrollIntoView().click();
+
+        cy.get('.f1 fieldset:nth-of-type(2) .f1-buttons button.btn-next').scrollIntoView().click();
 
         cy.get('button[type="submit"][name="save"]').scrollIntoView().click({force:true});
 
