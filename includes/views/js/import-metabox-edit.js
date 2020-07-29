@@ -74,6 +74,7 @@
 			'status': status
 		};
 
+        showSpinner(toggle);
         $.ajax({
             url: ajaxurl,
             data: data,
@@ -85,6 +86,9 @@
                     toggle.prop( 'checked', false );
                 }
             },
+            complete: function(){
+                hideSpinner(toggle);
+            }
         });
 		return true;
 	}

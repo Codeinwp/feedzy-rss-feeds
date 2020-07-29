@@ -526,6 +526,7 @@ class Feedzy_Rss_Feeds_Import {
                     <div class="switch">
                         <input id="feedzy-toggle_' . $post->ID . '" class="feedzy-toggle feedzy-toggle-round" type="checkbox" value="' . $post->ID . '" ' . $checked . '>
                         <label for="feedzy-toggle_' . $post->ID . '"></label>
+						<span class="feedzy-spinner spinner"></span>
                     </div>
                     ';
 				}
