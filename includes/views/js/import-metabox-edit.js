@@ -62,6 +62,7 @@
 	}
 
 	function update_status() {
+        var toggle = $( this );
 	    var post_id = $( this ).val();
 	    var status = $( this ).is( ':checked' );
 
@@ -73,8 +74,18 @@
 			'status': status
 		};
 
-		// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
-		$.post( ajaxurl, data, function() {} );
+        $.ajax({
+            url: ajaxurl,
+            data: data,
+            method: 'POST',
+            success: function(data){
+                if( ! data.success && status ) {
+                    toggle.parents('tr').find('td.feedzy-source').find('.feedzy-error-critical').remove();
+                    toggle.parents('tr').find('td.feedzy-source').append($(data.data.msg));
+                    toggle.prop( 'checked', false );
+                }
+            },
+        });
 		return true;
 	}
 

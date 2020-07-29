@@ -245,21 +245,13 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		global $post;
 		$nonce  = wp_create_nonce( FEEDZY_BASEFILE );
 		$feed   = get_post_meta( $post->ID, 'feedzy_category_feed', true );
-		$invalid = get_post_meta( $post->ID, '__transient_feedzy_category_feed', true );
-		delete_post_meta( $post->ID, '__transient_feedzy_category_feed' );
+		$invalid = $this->get_source_validity_error( '', $post );
 
 		$output = '
             <input type="hidden" name="feedzy_category_meta_noncename" id="feedzy_category_meta_noncename" value="' . $nonce . '" />
-			<strong>' . sprintf( __( 'Please be aware that multiple feeds, when mashed together, may sometimes not work as expected as explained %1$shere%2$s.', 'feedzy-rss-feeds' ), '<a href="http://simplepie.org/wiki/faq/typical_multifeed_gotchas" target="_blank">', '</a>' ) . '</strong><br/><br/>';
-		if ( $invalid ) {
-			$output .= '<div class="feedzy-api-error"><i class="dashicons dashicons-warning"></i>' . __( 'We found the following invalid URLs that we have removed from the list', 'feedzy-rss-feeds' ) . ': <ol>';
-			foreach ( $invalid as $url ) {
-				$output .= '<li>' . esc_html( $url ) . '</li>';
-			}
-			$output .= '</ol></div>';
-		}
-
-		$output .= '<textarea name="feedzy_category_feed" rows="15" class="widefat" placeholder="' . __( 'Place your URL\'s here followed by a comma.', 'feedzy-rss-feeds' ) . '" >' . $feed . '</textarea>
+			<strong>' . sprintf( __( 'Please be aware that multiple feeds, when mashed together, may sometimes not work as expected as explained %1$shere%2$s.', 'feedzy-rss-feeds' ), '<a href="http://simplepie.org/wiki/faq/typical_multifeed_gotchas" target="_blank">', '</a>' ) . '</strong><br/><br/>'
+			. $invalid
+			. '<textarea name="feedzy_category_feed" rows="15" class="widefat" placeholder="' . __( 'Place your URL\'s here followed by a comma.', 'feedzy-rss-feeds' ) . '" >' . $feed . '</textarea>
         ';
 		echo $output;
 	}
@@ -600,22 +592,95 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 	}
 
+	/**
+	 * Validates the URLs and removes the ones that were found to be invalid.
+	 *
+	 * @access  public
+	 */
 	public function validate_category_feeds( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
 		if ( 'feedzy_category_feed' === $meta_key ) {
 			remove_filter( current_filter(), array( $this, 'validate_category_feeds' ) );
-
-			$urls = $this->normalize_urls( $meta_value );
-			$valid = $this->get_valid_feed_urls( $urls, '1_mins', false );
-			$invalid = array_diff( $urls, $valid );
-			if ( ! empty( $invalid ) ) {
-				update_post_meta( $object_id, '__transient_feedzy_category_feed', $invalid );
-			}
-
+			$valid = $this->check_source_validity( $meta_value, $object_id, true, true );
 			update_post_meta( $object_id, $meta_key, implode( ', ', $valid ) );
 			return true;
 		}
 
 		return $check;
+	}
+
+	/**
+	 * Validates the source (category or URL(s)) and returns only the ones that were found to be valid.
+	 *
+	 * @access  public
+	 */
+	public function check_source_validity( $src, $post_id, $add_pseudo_transient, $return_valid ) {
+		$urls_in = $src;
+		$post_type = get_post_type( $post_id );
+		if ( 'feedzy_imports' === $post_type && strpos( $src, 'http' ) === false && strpos( $src, 'https' ) === false ) {
+			// category
+			$category = get_page_by_path( $src, OBJECT, 'feedzy_categories' );
+			if ( $category ) {
+				$urls_in = get_post_meta( $category->ID, 'feedzy_category_feed', true );
+			}
+		}
+
+		$urls = $this->normalize_urls( $urls_in );
+		if ( ! is_array( $urls ) ) {
+			$urls = array( $urls );
+		}
+		$valid = $this->get_valid_feed_urls( $urls, '1_mins', false );
+		$invalid = array_diff( $urls, $valid );
+		if ( $add_pseudo_transient && ( empty( $valid ) || ! empty( $invalid ) ) ) {
+			// let's save the invalid urls in a pseudo-transient so that we can show it in the import edit screen.
+			switch ( $post_type ) {
+				case 'feedzy_categories':
+					update_post_meta( $post_id, '__transient_feedzy_category_feed', $invalid );
+					break;
+				case 'feedzy_imports':
+					update_post_meta( $post_id, '__transient_feedzy_invalid_source', $invalid );
+					break;
+			}
+		}
+		if ( $return_valid ) {
+			return $valid;
+		}
+
+		return $invalid;
+	}
+
+	/**
+	 * Returns the error message to display if invalid URLs are found in the source (category or URL(s)).
+	 *
+	 * @access  public
+	 */
+	public function get_source_validity_error( $message = '', $post, $class = '' ) {
+		$invalid = $text = null;
+		switch ( $post->post_type ) {
+			case 'feedzy_categories':
+				$text = __( 'We found the following invalid URLs that we have removed from the list', 'feedzy-rss-feeds' );
+				$invalid = get_post_meta( $post->ID, '__transient_feedzy_category_feed', true );
+				delete_post_meta( $post->ID, '__transient_feedzy_category_feed' );
+				break;
+			case 'feedzy_imports':
+				$text = __( 'This source has invalid URLs. Please correct/remove the following', 'feedzy-rss-feeds' );
+				$invalid = get_post_meta( $post->ID, '__transient_feedzy_invalid_source', true );
+				delete_post_meta( $post->ID, '__transient_feedzy_invalid_source' );
+				break;
+			default:
+				return $message;
+		}
+
+		if ( $invalid ) {
+			if ( empty( $class ) ) {
+				$class = 'notice notice-error notice-alt feedzy-error-critical';
+			}
+			$message .= '<div class="' . $class . '"><p style="color: inherit"><i class="dashicons dashicons-warning"></i>' . $text . ': <ol style="color: inherit">';
+			foreach ( $invalid as $url ) {
+				$message .= '<li>' . ( empty( $url ) ? __( 'Empty URL', 'feedzy-rss-feeds' ) : esc_html( $url ) ) . '</li>';
+			}
+			$message .= '</ol></p></div>';
+		}
+		return $message;
 	}
 
 }

@@ -33,6 +33,9 @@
 		<div class="form-group">
 			<label class="feedzy-sr-only"><?php echo __( 'Feedzy RSS Feed sources (comma separated URLs or Feed Categories slug)', 'feedzy-rss-feeds' ); ?></label>
 		</div>
+
+		<?php echo $invalid_source_msg; ?>
+
 		<div class="form-group input-group">
 			<input type="text" name="feedzy_meta_data[source]" placeholder="<?php echo __( 'Source', 'feedzy-rss-feeds' ); ?>" class="form-control  " value="<?php echo $source; ?>"/>
 			<div class="input-group-btn">

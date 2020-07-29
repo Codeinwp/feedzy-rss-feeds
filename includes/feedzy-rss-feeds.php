@@ -214,6 +214,8 @@ class Feedzy_Rss_Feeds {
 		self::$instance->loader->add_filter( 'feedzy_get_feed_url', self::$instance->admin, 'get_feed_url', 10, 1 );
 		self::$instance->loader->add_filter( 'feedzy_get_settings', self::$instance->admin, 'get_settings', 10, 1 );
 		self::$instance->loader->add_filter( 'feedzy_rss_feeds_logger_data', self::$instance->admin, 'get_usage_data', 10 );
+		self::$instance->loader->add_filter( 'feedzy_check_source_validity', self::$instance->admin, 'check_source_validity', 10, 4 );
+		self::$instance->loader->add_filter( 'feedzy_get_source_validity_error', self::$instance->admin, 'get_source_validity_error', 10, 3 );
 
 		// do not load this with the loader as this will need a corresponding remove_filter also.
 		add_filter( 'update_post_metadata', array( self::$instance->admin, 'validate_category_feeds' ), 10, 5 );
