@@ -1085,10 +1085,13 @@ class Feedzy_Rss_Feeds_Import {
 
 			$index++;
 
-			if ( trim( $import_featured_img ) !== '' && ! empty( $item['item_img_path'] ) ) {
-				$image_url = str_replace( '[#item_image]', $item['item_img_path'], $import_featured_img );
+			if ( ! empty( $import_featured_img ) ) {
+				$image_url = '';
 				$img_success = true;
-				if ( $image_url !== '' && isset( $item['item_img_path'] ) && $item['item_img_path'] !== '' ) {
+				if ( ! empty( $item['item_img_path'] ) ) {
+					$image_url = str_replace( '[#item_image]', $item['item_img_path'], $import_featured_img );
+				}
+				if ( ! empty( $image_url ) && isset( $item['item_img_path'] ) && empty( $item['item_img_path'] ) ) {
 					$img_success = $this->generate_featured_image( $image_url, $new_post_id, $item['item_title'], $import_errors, $import_info );
 				} else {
 					$img_success = $this->generate_featured_image( $import_featured_img, $new_post_id, $item['item_title'], $import_errors, $import_info );
