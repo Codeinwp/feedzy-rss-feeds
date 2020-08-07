@@ -1,4 +1,13 @@
 
+ ### v3.4.1 - 2020-07-23 
+ **Changes:** 
+ * [Feat] Feed2Post - Provide more info on imported content and possible errors
+* [Feat] Feed2Post - New Purge & Reset button which allows to clear data of already imported items to reimport those again
+* [Fix] Feed2Post - Change cache time to 55 minutes that new items can be imported in the next run
+* [Fix] Conflict with Ultimate CSV Importer
+* [Fix] Sync item image options between classic and block editor
+* [Fix] Posts keeps "uncategorized" category in non-English sites
+ 
  ### v3.4.0 - 2020-05-28 
  **Changes:** 
  * [Feat] Options to import feeds to posts
