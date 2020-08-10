@@ -528,7 +528,7 @@ class Feedzy_Rss_Feeds_Import {
 					}
 					$count = $items ? count( $items ) : 0;
 					$url    = add_query_arg( array( 'feedzy_job_id' => $post_id, 'post_type' => get_post_meta( $post_id, 'import_post_type', true ) ), admin_url( 'edit.php' ) );
-					if ( $count > 0 ) {
+					if ( ! defined( 'TI_CYPRESS_TESTING' ) && $count > 0 ) {
 						$msg    .= '<hr>' . sprintf( '%s: <b><a href="%s" target="_blank" title="%s">%d</a></b>', __( 'Items imported across runs', 'feedzy-rss-feeds' ), $url, __( 'Click to view', 'feedzy-rss-feeds' ), $count );
 					} else {
 						$msg    .= '<hr>' . sprintf( '%s: <b>%d</b>', __( 'Items imported across runs', 'feedzy-rss-feeds' ), $count );
