@@ -598,7 +598,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @access  public
 	 */
 	public function validate_category_feeds( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
-		if ( 'feedzy_category_feed' === $meta_key ) {
+		if ( 'feedzy_category_feed' === $meta_key && 'feedzy_categories' === get_post_type( $object_id ) ) {
 			remove_filter( current_filter(), array( $this, 'validate_category_feeds' ) );
 			$valid = $this->check_source_validity( $meta_value, $object_id, true, true );
 			update_post_meta( $object_id, $meta_key, implode( ', ', $valid ) );
