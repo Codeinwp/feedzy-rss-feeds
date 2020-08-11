@@ -357,6 +357,10 @@ class Feedzy_Rss_Feeds_Import {
 			$custom_fields[ $key_value ] = $value;
 		}
 		if ( $post->post_type !== 'revision' ) {
+			// delete these checkbox related fields; if checked, they will be added below.
+			delete_post_meta( $post_id, 'import_link_author_admin' );
+			delete_post_meta( $post_id, 'import_link_author_public' );
+
 			foreach ( $data_meta as $key => $value ) {
 				$value = is_array( $value ) ? implode( ',', $value ) : implode( ',', (array) $value );
 				if ( get_post_meta( $post_id, $key, false ) ) {
