@@ -219,6 +219,7 @@ class Feedzy_Rss_Feeds {
 
 		// do not load this with the loader as this will need a corresponding remove_filter also.
 		add_filter( 'update_post_metadata', array( self::$instance->admin, 'validate_category_feeds' ), 10, 5 );
+		add_filter( 'add_post_metadata', array( self::$instance->admin, 'validate_category_feeds' ), 10, 5 );
 
 		add_shortcode( 'feedzy-rss', array( self::$instance->admin, 'feedzy_rss' ) );
 
