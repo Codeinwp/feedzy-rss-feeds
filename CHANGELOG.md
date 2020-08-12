@@ -1,8 +1,8 @@
 
  ### v3.4.2 - 2020-08-12 
  **Changes:** 
- * - [Fix] Compatibility with WP 5.5
-* - [Feat] Link to items imported across runs in Feed2Post
+ * [Fix] Compatibility with WP 5.5
+* [Feat] Link to items imported across runs in Feed2Post
  
  ### v3.4.1 - 2020-07-23 
  **Changes:** 
