@@ -601,7 +601,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( 'feedzy_category_feed' === $meta_key && 'feedzy_categories' === get_post_type( $object_id ) ) {
 			remove_filter( current_filter(), array( $this, 'validate_category_feeds' ) );
 			$valid = $this->check_source_validity( $meta_value, $object_id, true, true );
-			update_post_meta( $object_id, $meta_key, implode( ', ', $valid ) );
+			update_post_meta( $object_id, $meta_key, empty( $valid ) ? '' : implode( ', ', $valid ) );
 			return true;
 		}
 
@@ -624,12 +624,20 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 		}
 
+		// this method is fired through ajax when the category title is updated
+		// even without clicking the publish button
+		// thereby sending empty urls
+		if ( empty( $urls_in ) ) {
+			return array();
+		}
+
 		$urls = $this->normalize_urls( $urls_in );
 		if ( ! is_array( $urls ) ) {
 			$urls = array( $urls );
 		}
 		$valid = $this->get_valid_feed_urls( $urls, '1_mins', false );
 		$invalid = array_diff( $urls, $valid );
+
 		if ( $add_pseudo_transient && ( empty( $valid ) || ! empty( $invalid ) ) ) {
 			// let's save the invalid urls in a pseudo-transient so that we can show it in the import edit screen.
 			switch ( $post_type ) {
