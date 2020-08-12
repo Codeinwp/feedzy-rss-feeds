@@ -3,7 +3,7 @@ Contributors: themeisle,codeinwp,hardeepasrani,rozroz
 Tags: rss aggregator, news aggregator, autoblogging, feed to post, rss import
 Requires at least: 3.7
 Requires PHP: 5.3
-Tested up to: 5.4
+Tested up to: 5.5
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -461,6 +461,7 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
  == Changelog ==
+
 = 3.4.1 - 2020-07-23  = 
 
 * - [Feat] Feed2Post - Provide more info on imported content and possible errors
@@ -469,7 +470,6 @@ You have to check first if your feed is valid. Please test it here: https://vali
 * - [Fix] Conflict with Ultimate CSV Importer
 * - [Fix] Sync item image options between classic and block editor
 * - [Fix] Posts keeps "uncategorized" category in non-English sites
-
 
 = 3.4.0 - 2020-05-28  =
 

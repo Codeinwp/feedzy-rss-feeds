@@ -357,6 +357,10 @@ class Feedzy_Rss_Feeds_Import {
 			$custom_fields[ $key_value ] = $value;
 		}
 		if ( $post->post_type !== 'revision' ) {
+			// delete these checkbox related fields; if checked, they will be added below.
+			delete_post_meta( $post_id, 'import_link_author_admin' );
+			delete_post_meta( $post_id, 'import_link_author_public' );
+
 			foreach ( $data_meta as $key => $value ) {
 				$value = is_array( $value ) ? implode( ',', $value ) : implode( ',', (array) $value );
 				if ( get_post_meta( $post_id, $key, false ) ) {
@@ -527,7 +531,12 @@ class Feedzy_Rss_Feeds_Import {
 						$items      = get_post_meta( $post_id, 'imported_items', true );
 					}
 					$count = $items ? count( $items ) : 0;
-					$msg    .= '<hr>' . sprintf( '%s: <b>%d</b>', __( 'Items imported across runs', 'feedzy-rss-feeds' ), $count );
+					$url    = add_query_arg( array( 'feedzy_job_id' => $post_id, 'post_type' => get_post_meta( $post_id, 'import_post_type', true ) ), admin_url( 'edit.php' ) );
+					if ( ! defined( 'TI_CYPRESS_TESTING' ) && $count > 0 ) {
+						$msg    .= '<hr>' . sprintf( '%s: <b><a href="%s" target="_blank" title="%s">%d</a></b>', __( 'Items imported across runs', 'feedzy-rss-feeds' ), $url, __( 'Click to view', 'feedzy-rss-feeds' ), $count );
+					} else {
+						$msg    .= '<hr>' . sprintf( '%s: <b>%d</b>', __( 'Items imported across runs', 'feedzy-rss-feeds' ), $count );
+					}
 				}
 				echo $msg;
 				break;
@@ -1609,5 +1618,28 @@ class Feedzy_Rss_Feeds_Import {
 		delete_post_meta( $id, 'import_info' );
 		delete_post_meta( $id, 'last_run' );
 		wp_die();
+	}
+
+	/**
+	 * Load only those posts that are linked to a particular import job.
+	 *
+	 * @since   ?
+	 * @access  public
+	 */
+	public function pre_get_posts( $query ) {
+		if ( is_admin() && $query->is_main_query() && ! empty( $_GET['feedzy_job_id'] ) ) {
+			$query->set(
+				'meta_query', array(
+					array(
+						'key' => 'feedzy',
+						'value' => 1,
+					),
+					array(
+						'key' => 'feedzy_job',
+						'value' => $_GET['feedzy_job_id'],
+					),
+				)
+			);
+		}
 	}
 }
