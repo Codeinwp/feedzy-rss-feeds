@@ -461,6 +461,12 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
  == Changelog ==
+= 3.4.2 - 2020-08-12  = 
+
+* - [Fix] Compatibility with WP 5.5
+* - [Feat] Link to items imported across runs in Feed2Post
+
+
 
 = 3.4.1 - 2020-07-23  = 
 
