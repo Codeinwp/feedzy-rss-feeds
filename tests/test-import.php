@@ -308,19 +308,19 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 				$this->get_rand_name(),
 				$this->get_rand_name(),
 				$this->get_two_rand_feeds(),
-				'[#item_content]',
+				'<span>check if html tags are supported</span>[#item_content]',
 			),
 			array(
 				$this->get_rand_name(),
 				$this->get_rand_name(),
 				$this->get_two_rand_feeds(),
-				'[#item_categories]',
+				'<span>check if html tags are supported</span>[#item_categories]',
 			),
 			array(
 				$this->get_rand_name(),
 				$this->get_rand_name(),
 				$this->get_two_rand_feeds(),
-				'[#item_content]',
+				'<span>check if html tags are supported</span>[#item_content]',
 				true,
 			),
 		);
