@@ -430,17 +430,19 @@ class Feedzy_Rss_Feeds_Import {
 			$columns['feedzy-status'] = __( 'Current Status', 'feedzy-rss-feeds' );
 		}
 
+		if ( $new_columns = $this->array_insert_before( 'date', $columns, 'feedzy-next_run', __( 'Next Run', 'feedzy-rss-feeds' ) ) ) {
+			$columns = $new_columns;
+		} else {
+			$columns['feedzy-next_run'] = __( 'Next Run', 'feedzy-rss-feeds' );
+		}
+
 		if ( $new_columns = $this->array_insert_before( 'date', $columns, 'feedzy-last_run', __( 'Last Run Status', 'feedzy-rss-feeds' ) ) ) {
 			$columns = $new_columns;
 		} else {
 			$columns['feedzy-last_run'] = __( 'Last Run Status', 'feedzy-rss-feeds' );
 		}
 
-		if ( $new_columns = $this->array_insert_before( 'date', $columns, 'feedzy-next_run', __( 'Next Run', 'feedzy-rss-feeds' ) ) ) {
-			$columns = $new_columns;
-		} else {
-			$columns['feedzy-next_run'] = __( 'Next Run', 'feedzy-rss-feeds' );
-		}
+		unset( $columns['date'] );
 
 		return $columns;
 	}
@@ -580,7 +582,8 @@ class Feedzy_Rss_Feeds_Import {
 		$then = new DateTime();
 		$then = $then->setTimestamp( $last );
 		$in   = $now->diff( $then );
-		$msg  = sprintf( __( 'Imported %1$d item(s)<br>%2$d hours %3$d minutes ago', 'feedzy-rss-feeds' ), $count, $in->format( '%h' ), $in->format( '%i' ) );
+		$msg  = sprintf( __( 'Ran %d hours %d minutes ago', 'feedzy-rss-feeds' ), $in->format( '%h' ), $in->format( '%i' ) );
+		$msg  .= '<div class="feedzy-status-item">' . sprintf( __( 'Imported: %s%d%s', 'feedzy-rss-feeds' ), '<span class="feedzy-badge">', $count, '</span>' ) . '</div>';
 
 		return apply_filters( 'feedzy_run_status_status', $msg, $post_id );
 	}
@@ -626,9 +629,9 @@ class Feedzy_Rss_Feeds_Import {
 				switch ( $label ) {
 					case 'total':
 						if ( count( $value ) > 0 ) {
-							$msg .= '<br>' . sprintf( '%s: %s%d%s', __( 'Total items found', 'feedzy-rss-feeds' ), '<a href="#" title="' . __( 'Click to view details', 'feedzy-rss-feeds' ) . '" class="feedzy-dialog-open" data-dialog="feedzy-items-found-' . $post_id . '">', count( $value ), '</a>' );
+							$msg .=  '<div class="feedzy-status-item">' . sprintf( '%s%s%s: %s%d%s', '<span class="feedzy-status-label">', __( 'Items', 'feedzy-rss-feeds' ), '</span>', '<span class="feedzy-badge feedzy-badge-">', count( $value ), '</span>' ) . '<a href="#" title="' . __( 'Click to view details', 'feedzy-rss-feeds' ) . '" class="feedzy-dialog-open" data-dialog="feedzy-items-found-' . $post_id . '"><i class="dashicons dashicons-external"></i></a></div>';
 						} else {
-							$msg .= '<br>' . sprintf( '%s: %d', __( 'Total items found', 'feedzy-rss-feeds' ), count( $value ) );
+							$msg .=  '<div class="feedzy-status-item">' . sprintf( '%s: %s%d%s', __( 'Items', 'feedzy-rss-feeds' ), '<span class="feedzy-badge">', count( $value ), '</span>' ) . '</div>';
 						}
 						if ( $value ) {
 							$msg .= '<div class="feedzy-items-found-' . $post_id . ' feedzy-dialog" title="' . __( 'Total items found', 'feedzy-rss-feeds' ) . '"><ol>';
@@ -640,7 +643,9 @@ class Feedzy_Rss_Feeds_Import {
 						break;
 					case 'duplicates':
 						if ( count( $value ) > 0 ) {
-							$msg .= '<br>' . sprintf( '%s: %s%d%s', __( 'Duplicates found', 'feedzy-rss-feeds' ), '<a href="#" title="' . __( 'Click to view details', 'feedzy-rss-feeds' ) . '" class="feedzy-dialog-open" data-dialog="feedzy-dups-found-' . $post_id . '">', count( $value ), '</a>' );
+							$msg .=  '<div class="feedzy-status-item">' . sprintf( '%s%s%s: %s%d%s', '<span class="feedzy-status-label">', __( 'Duplicates', 'feedzy-rss-feeds' ), '</span>', '<span class="feedzy-badge">', count( $value ), '</span>' ) . '<a href="#" title="' . __( 'Click to view details', 'feedzy-rss-feeds' ) . '" class="feedzy-dialog-open" data-dialog="feedzy-dups-found-' . $post_id . '"><i class="dashicons dashicons-external"></i></a></div>';
+						} else {
+							$msg .=  '<div class="feedzy-status-item">' . sprintf( '%s: %s%d%s', __( 'Duplicates', 'feedzy-rss-feeds' ), '<span class="feedzy-badge">', count( $value ), '</span>' ) . '</div>';
 						}
 						if ( $value ) {
 							$msg .= '<div class="feedzy-dups-found-' . $post_id . ' feedzy-dialog" title="' . __( 'Duplicates found', 'feedzy-rss-feeds' ) . '"><ol>';
