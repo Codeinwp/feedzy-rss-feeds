@@ -205,7 +205,7 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 			$this->assertContains( 'Newark Watershed Conservation and Development Corp', $created[0]->post_content );
 		} else {
 			$this->assertArrayNotHasKey( 'item_full_content', $test[0] );
-			$this->assertEquals( $item_content, $created[0]->post_content );
+			$this->assertEquals( strip_tags( $item_content ), strip_tags( $created[0]->post_content ) );
 		}
 
 		$this->assertEquals( 1, count( $categories ) );
