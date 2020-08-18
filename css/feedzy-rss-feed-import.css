@@ -75,34 +75,3 @@ table.wp-list-table td.column-feedzy-last_run .feedzy-api-error.expand {
 	max-height: 1400px; /* arbitrary number */
 	overflow: visible;
 }
-
-.feedzy-badge {
-	display: inline-block;
-    padding: .25em .4em;
-    font-size: 75%;
-    font-weight: 700;
-    line-height: 1;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    border-radius: .25rem;
-	color: #ffffff;
-	background-color: #545b62;
-	text-decoration: none;
-}
-
-.feedzy-badge-no {
-	background-color: #bd2130;
-}
-
-.feedzy-badge-yes {
-	background-color: #1e7e34;
-}
-
-.feedzy-badge-amber {
-	background-color: #d39e00;
-}
-
-.feedzy-badge-info {
-	background-color: #117a8b;
-}
