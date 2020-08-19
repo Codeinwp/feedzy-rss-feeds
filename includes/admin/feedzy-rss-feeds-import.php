@@ -364,9 +364,9 @@ class Feedzy_Rss_Feeds_Import {
 			foreach ( $data_meta as $key => $value ) {
 				$value = is_array( $value ) ? implode( ',', $value ) : implode( ',', (array) $value );
 				if ( get_post_meta( $post_id, $key, false ) ) {
-					update_post_meta( $post_id, $key, sanitize_text_field( $value ) );
+					update_post_meta( $post_id, $key, wp_kses( $value, wp_kses_allowed_html( 'post' ) ) );
 				} else {
-					add_post_meta( $post_id, $key, sanitize_text_field( $value ) );
+					add_post_meta( $post_id, $key, wp_kses( $value, wp_kses_allowed_html( 'post' ) ) );
 				}
 				if ( ! $value ) {
 					delete_post_meta( $post_id, $key );

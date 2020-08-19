@@ -118,8 +118,9 @@ class Test_Feedzy extends WP_UnitTestCase {
 		$summaries      = $desc;
 		$summaries      = array();
 		foreach ( $desc as $d ) {
-			$summaries[] = trim( $d );
+			$summaries[] = iconv( 'UTF-8', 'ASCII//IGNORE', trim( $d ) );
 		}
+
 		sort( $summaries );
 
 		// no truncation.
@@ -191,7 +192,7 @@ class Test_Feedzy extends WP_UnitTestCase {
 				if ( is_array( $divs ) ) {
 					$text = $divs[0]['#text'];
 				}
-				$contents[] = trim( $text );
+				$contents[] = iconv( 'UTF-8', 'ASCII//IGNORE', trim( $text ) );
 			}
 		}
 		return $contents;
