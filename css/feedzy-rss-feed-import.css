@@ -75,3 +75,57 @@ table.wp-list-table td.column-feedzy-last_run .feedzy-api-error.expand {
 	max-height: 1400px; /* arbitrary number */
 	overflow: visible;
 }
+
+tr.feedzy-import-status-row > td {
+	margin: 0;
+	padding: 0
+}
+
+tr.feedzy-import-status-row table {
+	width: 25%;
+}
+
+tr.feedzy-import-status-row table tr td {
+	width: 18%;
+	background-color: #c0c0c0;
+	text-align: center;
+}
+
+tr.feedzy-import-status-row table tr:first-of-type td {
+	padding: 3px;
+	font-size: 22px;
+}
+
+tr.feedzy-import-status-row table tr:last-of-type td {
+	background-color: #000000;
+	color: #ffffff;
+	line-height: 3px;
+	text-transform: lowercase;
+}
+
+.feedzy-error-status i {
+	font-size: 28px;
+}
+
+.feedzy-error-status.import-error i {
+	color: #ca4a1f;
+}
+
+.feedzy-error-status.import-success i {
+	color: #00ff00;
+}
+
+a.feedzy-popup-details {
+	pointer-events: none;
+	color: inherit;
+}
+
+td.feedzy-has-popup {
+	cursor: pointer;
+}
+
+.feedzy-has-popup a.feedzy-popup-details {
+	text-decoration: underline;
+	cursor: pointer;
+	pointer-events: all;
+}

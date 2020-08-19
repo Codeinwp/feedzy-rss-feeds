@@ -217,6 +217,11 @@
 	});
 
     function initSummary() {
+        $('tr.type-feedzy_imports').each(function(i, e){
+            var $lastRunData = $(e).find('script.feedzy-last-run-data').html();
+            $($lastRunData).insertAfter(e);
+        });
+
         // pop-ups for informational text
         $( '.feedzy-dialog' ).dialog({
           modal: true,
