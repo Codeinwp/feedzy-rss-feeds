@@ -68,6 +68,7 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 				'post_title'  => $random_name2,
 				'post_type'   => 'feedzy_imports',
 				'post_author' => $user_id,
+				'feedzy_import_noncename' => wp_create_nonce( FEEDZY_BASEFILE ),
 			)
 		);
 
