@@ -68,7 +68,6 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 				'post_title'  => $random_name2,
 				'post_type'   => 'feedzy_imports',
 				'post_author' => $user_id,
-				'feedzy_import_noncename' => wp_create_nonce( FEEDZY_BASEFILE ),
 			)
 		);
 
@@ -88,7 +87,7 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 		$_POST['custom_vars_key']                                    = array();
 		$_POST['custom_vars_value']                                  = array();
 
-		do_action( 'save_post_feedzy_imports', $p->ID, $p );
+		do_action( 'save_post', $p->ID, $p );
 		$this->assertEquals( $p->post_title, $random_name2 );
 		$this->assertEquals( $p->post_type, 'feedzy_imports' );
 
