@@ -87,7 +87,7 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 		$_POST['custom_vars_key']                                    = array();
 		$_POST['custom_vars_value']                                  = array();
 
-		do_action( 'save_post', $p->ID, $p );
+		do_action( 'save_post_feedzy_imports', $p->ID, $p );
 		$this->assertEquals( $p->post_title, $random_name2 );
 		$this->assertEquals( $p->post_type, 'feedzy_imports' );
 
