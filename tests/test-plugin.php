@@ -35,7 +35,7 @@ class Test_Feedzy extends WP_UnitTestCase {
 
 		$urls = $this->get_rand_feeds();
 
-		$_POST[ 'feedzy_categories' . '_noncename' ] = wp_create_nonce( FEEDZY_BASEFILE );
+		$_POST['feedzy_category_meta_noncename']    = wp_create_nonce( FEEDZY_BASEFILE );
 		$_POST['post_type']                          = 'feedzy_categories';
 		$_POST['feedzy_category_feed']               = $urls;
 
