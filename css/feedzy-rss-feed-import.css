@@ -73,7 +73,7 @@ tr.feedzy-import-status-row table {
 
 tr.feedzy-import-status-row table tr td {
 	width: 25%;
-	background-color: #edecec;
+	background-color: #f1f1f1;
 	text-align: center;
 }
 
@@ -111,9 +111,9 @@ td.feedzy-has-popup {
 }
 
 .feedzy-has-popup a.feedzy-popup-details {
-	text-decoration: underline;
 	cursor: pointer;
 	pointer-events: all;
+	color: #0073aa;
 }
 
 .feedzy_run_now_msg {
