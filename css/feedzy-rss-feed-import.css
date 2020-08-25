@@ -101,6 +101,10 @@ tr.feedzy-import-status-row table tr:last-of-type td {
 	color: #149714;
 }
 
+td.feedzy-error-status a {
+    vertical-align: middle;
+}
+
 a.feedzy-popup-details {
 	pointer-events: none;
 	color: inherit;
