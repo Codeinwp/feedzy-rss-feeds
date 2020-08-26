@@ -140,7 +140,7 @@ class Feedzy_Rss_Feeds_Import {
 				'feedzy',
 				array(
 					'ajax' => array(
-						'security'  => wp_create_nonce( FEEDZY_NAME ),
+						'security'  => wp_create_nonce( FEEDZY_BASEFILE ),
 					),
 				)
 			);
@@ -308,7 +308,7 @@ class Feedzy_Rss_Feeds_Import {
 		$post_status          = $post->post_status;
 		$nonce                = wp_create_nonce( FEEDZY_BASEFILE );
 		$output               = '
-            <input type="hidden" name="feedzy_import_noncename" id="feedzy_category_meta_noncename" value="' . $nonce . '" />
+            <input type="hidden" name="feedzy_category_meta_noncename" id="feedzy_category_meta_noncename" value="' . $nonce . '" />
         ';
 		include FEEDZY_ABSPATH . '/includes/views/import-metabox-edit.php';
 		echo $output;
@@ -340,7 +340,7 @@ class Feedzy_Rss_Feeds_Import {
 		if (
 			empty( $_POST ) ||
 			get_post_type( $post_id ) !== 'feedzy_imports' ||
-			( isset( $_POST['feedzy_import_noncename'] ) && ! wp_verify_nonce( $_POST['feedzy_import_noncename'], FEEDZY_BASEFILE ) ) ||
+			( ! defined( 'TI_UNIT_TESTING' ) && ! wp_verify_nonce( $_POST['feedzy_category_meta_noncename'], FEEDZY_BASEFILE ) ) ||
 			! current_user_can( 'edit_post', $post_id )
 		) {
 			return $post_id;
@@ -663,7 +663,7 @@ class Feedzy_Rss_Feeds_Import {
 	 * @access  public
 	 */
 	public function ajax() {
-		check_ajax_referer( FEEDZY_NAME, 'security' );
+		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
 
 		switch ( $_POST['_action'] ) {
 			case 'import_status':
@@ -691,6 +691,7 @@ class Feedzy_Rss_Feeds_Import {
 		global $wpdb;
 		$id      = $_POST['id'];
 		$status  = $_POST['status'];
+		$_POST['feedzy_category_meta_noncename'] = $_POST['security'];
 		$publish = 'draft';
 		if ( $status === 'true' ) {
 			$publish = 'publish';
