@@ -35,7 +35,7 @@ class Test_Feedzy extends WP_UnitTestCase {
 
 		$urls = $this->get_rand_feeds();
 
-		$_POST[ 'feedzy_categories' . '_noncename' ] = wp_create_nonce( FEEDZY_BASEFILE );
+		$_POST['feedzy_category_meta_noncename']    = wp_create_nonce( FEEDZY_BASEFILE );
 		$_POST['post_type']                          = 'feedzy_categories';
 		$_POST['feedzy_category_feed']               = $urls;
 
@@ -118,8 +118,9 @@ class Test_Feedzy extends WP_UnitTestCase {
 		$summaries      = $desc;
 		$summaries      = array();
 		foreach ( $desc as $d ) {
-			$summaries[] = trim( $d );
+			$summaries[] = iconv( 'UTF-8', 'ASCII//IGNORE', trim( $d ) );
 		}
+
 		sort( $summaries );
 
 		// no truncation.
@@ -191,7 +192,7 @@ class Test_Feedzy extends WP_UnitTestCase {
 				if ( is_array( $divs ) ) {
 					$text = $divs[0]['#text'];
 				}
-				$contents[] = trim( $text );
+				$contents[] = iconv( 'UTF-8', 'ASCII//IGNORE', trim( $text ) );
 			}
 		}
 		return $contents;

@@ -48,9 +48,9 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 
 		$category_id    = wp_create_category( 'some name' );
 
-		$_POST[ 'feedzy_categories' . '_noncename' ]    = wp_create_nonce( FEEDZY_BASEFILE );
 		$_POST['post_type']                             = 'feedzy_categories';
 		$_POST['feedzy_category_feed']                = $urls;
+		$_POST['feedzy_category_meta_noncename']    = wp_create_nonce( FEEDZY_BASEFILE );
 
 		// Test Create Feedzy Category
 		do_action( 'save_post', $p->ID, $p );
@@ -71,7 +71,7 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 			)
 		);
 
-		$_POST[ 'feedzy_imports' . '_noncename' ]    = wp_create_nonce( FEEDZY_BASEFILE );
+		$_POST['feedzy_category_meta_noncename']    = wp_create_nonce( FEEDZY_BASEFILE );
 		$_POST['post_type']                      = 'feedzy_imports';
 		$_POST['feedzy_meta_data']['source']                           = $slug;
 		$_POST['feedzy_meta_data']['import_post_type']                 = 'post';
@@ -200,12 +200,12 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 		if ( '[#item_categories]' === $magic_tags ) {
 			$item_content   = ! empty( $test[0]['item_categories'] ) ? $test[0]['item_categories'] : '';
 			$this->assertArrayNotHasKey( 'item_full_content', $test[0] );
-			$this->assertEquals( $item_content, $created[0]->post_content );
+			$this->assertEquals( strip_tags( $item_content ), strip_tags( $created[0]->post_content ) );
 			$this->assertContains( 'Infrastructure (Public Works)', $created[0]->post_content );
 			$this->assertContains( 'Newark Watershed Conservation and Development Corp', $created[0]->post_content );
 		} else {
 			$this->assertArrayNotHasKey( 'item_full_content', $test[0] );
-			$this->assertEquals( $item_content, $created[0]->post_content );
+			$this->assertEquals( strip_tags( $item_content ), strip_tags( $created[0]->post_content ) );
 		}
 
 		$this->assertEquals( 1, count( $categories ) );
@@ -308,7 +308,7 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 				$this->get_rand_name(),
 				$this->get_rand_name(),
 				$this->get_two_rand_feeds(),
-				'[#item_content]',
+				'<span></span>[#item_content]',
 			),
 			array(
 				$this->get_rand_name(),
@@ -320,7 +320,7 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 				$this->get_rand_name(),
 				$this->get_rand_name(),
 				$this->get_two_rand_feeds(),
-				'[#item_content]',
+				'<span></span>[#item_content]',
 				true,
 			),
 		);
