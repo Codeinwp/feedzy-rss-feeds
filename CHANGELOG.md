@@ -1,4 +1,9 @@
 
+ ### v3.4.3 - 2020-08-26 
+ **Changes:** 
+ * [Fix] HTML tags being trimmed on save of the import job
+* [Fix] Issue with nonce not being checked correctly
+ 
  ### v3.4.2 - 2020-08-12 
  **Changes:** 
  * [Fix] Compatibility with WP 5.5

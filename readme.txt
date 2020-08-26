@@ -461,6 +461,12 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
  == Changelog ==
+= 3.4.3 - 2020-08-26  = 
+
+* [Fix] HTML tags being trimmed on save of the import job
+* [Fix] Issue with nonce not being checked correctly
+
+
 = 3.4.2 - 2020-08-12  = 
 
 * - [Fix] Compatibility with WP 5.5
