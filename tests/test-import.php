@@ -71,7 +71,7 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 			)
 		);
 
-		$_POST['feedzy_import_noncename']    = wp_create_nonce( FEEDZY_BASEFILE );
+		$_POST['feedzy_category_meta_noncename']    = wp_create_nonce( FEEDZY_BASEFILE );
 		$_POST['post_type']                      = 'feedzy_imports';
 		$_POST['feedzy_meta_data']['source']                           = $slug;
 		$_POST['feedzy_meta_data']['import_post_type']                 = 'post';
