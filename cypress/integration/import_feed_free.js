@@ -135,19 +135,19 @@ describe('Test Free - Import Feed', function() {
 
         // check last run status has all the initial data.
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(1)').invoke('data', 'value').should(($value) => {
-            expect($value).to.equal(0); // found
+            expect(parseInt($value)).to.equal(0); // found
         });
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(2)').invoke('data', 'value').should(($value) => {
-            expect($value).to.equal(0); // duplicate
+            expect(parseInt($value)).to.equal(0); // duplicate
         });
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(3)').invoke('data', 'value').should(($value) => {
-            expect($value).to.equal(0); // imported
+            expect(parseInt($value)).to.equal(0); // imported
         });
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(4)').invoke('data', 'value').should(($value) => {
-            expect($value).to.equal(0); // cumulative
+            expect(parseInt($value)).to.equal(0); // cumulative
         });
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(5)').invoke('data', 'value').should(($value) => {
-            expect($value).to.equal(-1); // success
+            expect(parseInt($value)).to.equal(-1); // success
         });
 
         // run import
@@ -161,19 +161,19 @@ describe('Test Free - Import Feed', function() {
 
         // check last run status has all the data.
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(1)').invoke('data', 'value').should(($value) => {
-            expect($value).to.equal(feed.items); // found
+            expect(parseInt($value)).to.equal(feed.items); // found
         });
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(2)').invoke('data', 'value').should(($value) => {
-            expect($value).to.equal(0); // duplicate
+            expect(parseInt($value)).to.equal(0); // duplicate
         });
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(3)').invoke('data', 'value').should(($value) => {
-            expect($value).to.equal(feed.items); // imported
+            expect(parseInt($value)).to.equal(feed.items); // imported
         });
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(4)').invoke('data', 'value').should(($value) => {
-            expect($value).to.equal(feed.items); // cumulative
+            expect(parseInt($value)).to.equal(feed.items); // cumulative
         });
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(5)').invoke('data', 'value').should(($value) => {
-            expect($value).to.equal(1); // success
+            expect(parseInt($value)).to.equal(1); // success
         });
     })
 
@@ -190,19 +190,19 @@ describe('Test Free - Import Feed', function() {
 
         // check last run status has all the data.
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(1)').invoke('data', 'value').should(($value) => {
-            expect($value).to.equal(feed.items); // found
+            expect(parseInt($value)).to.equal(feed.items); // found
         });
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(2)').invoke('data', 'value').should(($value) => {
-            expect($value).to.equal(feed.items); // duplicate
+            expect(parseInt($value)).to.equal(feed.items); // duplicate
         });
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(3)').invoke('data', 'value').should(($value) => {
-            expect($value).to.equal(0); // imported
+            expect(parseInt($value)).to.equal(0); // imported
         });
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(4)').invoke('data', 'value').should(($value) => {
-            expect($value).to.equal(feed.items); // cumulative
+            expect(parseInt($value)).to.equal(feed.items); // cumulative
         });
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(5)').invoke('data', 'value').should(($value) => {
-            expect($value).to.equal(1); // success
+            expect(parseInt($value)).to.equal(1); // success
         });
 
     })
