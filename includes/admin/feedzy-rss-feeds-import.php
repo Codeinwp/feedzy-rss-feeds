@@ -618,6 +618,7 @@ class Feedzy_Rss_Feeds_Import {
 			$msg .= '<div class="feedzy-errors-found-' . $post_id . ' feedzy-dialog" title="' . __( 'Errors', 'feedzy-rss-feeds' ) . '">' . $errors . '</div>';
 		}
 
+		// remember, cypress will work off the data-value attributes.
 		$msg .= sprintf( 
 			'<script class="feedzy-last-run-data" type="text/template">
 				<tr style="display: none"></tr>
@@ -627,9 +628,9 @@ class Feedzy_Rss_Feeds_Import {
 							<tr>
 								<td class="feedzy-items %s" data-value="%d"><a class="feedzy-popup-details feedzy-dialog-open" title="%s" data-dialog="feedzy-items-found-%d">%s</a></td>
 								<td class="feedzy-duplicates %s" data-value="%d"><a class="feedzy-popup-details feedzy-dialog-open" title="%s" data-dialog="feedzy-duplicates-found-%d">%s</a></td>
-								<td class="feedzy-imported %s" data-value="%d"><a target="_blank" href="%s" class="feedzy-popup-details" title="%s">%s</a></td>
-								<td class="feedzy-cumulative %s" data-value="%d"><a target="_blank" href="%s" class="feedzy-popup-details" title="%s">%s</a></td>
-								<td class="feedzy-error-status %s"><a class="feedzy-popup-details feedzy-dialog-open" data-dialog="feedzy-errors-found-%d" title="%s">%s</a></td>
+								<td class="feedzy-imported %s" data-value="%d"><a target="%s" href="%s" class="feedzy-popup-details" title="%s">%s</a></td>
+								<td class="feedzy-cumulative %s" data-value="%d"><a target="%s" href="%s" class="feedzy-popup-details" title="%s">%s</a></td>
+								<td class="feedzy-error-status %s" data-value="%d"><a class="feedzy-popup-details feedzy-dialog-open" data-dialog="feedzy-errors-found-%d" title="%s">%s</a></td>
 							</tr>
 							<tr>
 								<td>%s</td>
@@ -642,30 +643,39 @@ class Feedzy_Rss_Feeds_Import {
 					</td>
 				</tr>
 			</script>',
+			// first cell
 			is_array( $status['items'] ) ? 'feedzy-has-popup' : '',
 			is_array( $status['items'] ) ? count( $status['items'] ) : $status['items'],
 			__( 'Items that were found in the feed', 'feedzy-rss-feeds' ),
 			$post_id,
 			is_array( $status['items'] ) ? count( $status['items'] ) : $status['items'],
+			// second cells
 			is_array( $status['duplicates'] ) ? 'feedzy-has-popup' : '',
 			is_array( $status['duplicates'] ) ? count( $status['duplicates'] ) : $status['duplicates'],
 			__( 'Items that were discarded as duplicates', 'feedzy-rss-feeds' ),
 			$post_id,
 			is_array( $status['duplicates'] ) ? count( $status['duplicates'] ) : $status['duplicates'],
+			// third cell
 			$status['total'] > 0 && ! empty( $job_run_linked_posts ) ? 'feedzy-has-popup' : '',
 			$status['total'],
+			defined( 'TI_CYPRESS_TESTING' ) ? '' : '_blank',
 			$status['total'] > 0 && ! empty( $job_run_linked_posts ) ? $job_run_linked_posts : '',
 			__( 'Items that were imported', 'feedzy-rss-feeds' ),
 			$status['total'],
+			// fourth cell
 			$status['cumulative'] > 0 ? 'feedzy-has-popup' : '',
 			$status['cumulative'],
+			defined( 'TI_CYPRESS_TESTING' ) ? '' : '_blank',
 			$status['cumulative'] > 0 ? $job_linked_posts : '',
 			__( 'Items that were imported across all runs', 'feedzy-rss-feeds' ),
 			$status['cumulative'],
-			! empty( $errors ) ? 'feedzy-has-popup import-error' : 'import-success',
+			// fifth cell
+			empty( $last ) ? '' : ( ! empty( $errors ) ? 'feedzy-has-popup import-error' : 'import-success' ),
+			empty( $last ) ? '-1' : ( ! empty( $errors ) ? 0 : 1 ),
 			$post_id,
 			__( 'View the errors', 'feedzy-rss-feeds' ),
 			empty( $last ) ? '-' : ( ! empty( $errors ) ? '<i class="dashicons dashicons-warning"></i>' : '<i class="dashicons dashicons-yes-alt"></i>' ),
+			// second row
 			__( 'Found', 'feedzy-rss-feeds' ),
 			__( 'Duplicates', 'feedzy-rss-feeds' ),
 			__( 'Imported', 'feedzy-rss-feeds' ),
@@ -781,6 +791,8 @@ class Feedzy_Rss_Feeds_Import {
 	public function ajax() {
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
 
+		$_POST['feedzy_category_meta_noncename'] = $_POST['security'];
+
 		switch ( $_POST['_action'] ) {
 			case 'import_status':
 				$this->import_status();
@@ -807,7 +819,6 @@ class Feedzy_Rss_Feeds_Import {
 		global $wpdb;
 		$id      = $_POST['id'];
 		$status  = $_POST['status'];
-		$_POST['feedzy_category_meta_noncename'] = $_POST['security'];
 		$publish = 'draft';
 		if ( $status === 'true' ) {
 			$publish = 'publish';
