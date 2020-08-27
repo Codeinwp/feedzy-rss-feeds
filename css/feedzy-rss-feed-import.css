@@ -131,4 +131,8 @@ td.feedzy-has-popup {
 	tr.feedzy-import-status-row table {
 		width: 100%;
 	}
+	
+	tr.feedzy-import-status-row table tr:last-of-type td {
+		font-size: smaller;
+	}
 }
