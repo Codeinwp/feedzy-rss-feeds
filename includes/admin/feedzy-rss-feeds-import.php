@@ -531,7 +531,7 @@ class Feedzy_Rss_Feeds_Import {
 					$then = new DateTime();
 					$then = $then->setTimestamp( $last );
 					$in   = $now->diff( $then );
-					$msg  = sprintf( __( 'Ran %d hours %d minutes ago', 'feedzy-rss-feeds' ), $in->format( '%h' ), $in->format( '%i' ) );
+					$msg  = sprintf( __( 'Ran %1$d hours %2$d minutes ago', 'feedzy-rss-feeds' ), $in->format( '%h' ), $in->format( '%i' ) );
 				}
 
 				$msg .= $this->get_last_run_details( $post_id );
@@ -585,7 +585,7 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		// link to the posts listing for this job.
-		$job_linked_posts	= add_query_arg( array( 'feedzy_job_id' => $post_id, 'post_type' => get_post_meta( $post_id, 'import_post_type', true ) ), admin_url( 'edit.php' ) );
+		$job_linked_posts   = add_query_arg( array( 'feedzy_job_id' => $post_id, 'post_type' => get_post_meta( $post_id, 'import_post_type', true ) ), admin_url( 'edit.php' ) );
 
 		// link to the posts listing for this job run.
 		$job_run_linked_posts    = '';
@@ -619,7 +619,7 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		// remember, cypress will work off the data-value attributes.
-		$msg .= sprintf( 
+		$msg .= sprintf(
 			'<script class="feedzy-last-run-data" type="text/template">
 				<tr style="display: none"></tr>
 				<tr class="feedzy-import-status-row">
@@ -881,7 +881,7 @@ class Feedzy_Rss_Feeds_Import {
 		$count  = $this->run_job( $job, 100 );
 
 		$msg    = $count > 0 ? __( 'Successfully run!', 'feedzy-rss-feeds' ) : __( 'Nothing imported!', 'feedzy-rss-feeds' );
-		$msg	.= ' (' . __( 'Refresh this page for the updated status', 'feedzy-rss-feeds' ) . ')';
+		$msg    .= ' (' . __( 'Refresh this page for the updated status', 'feedzy-rss-feeds' ) . ')';
 
 		wp_send_json_success( array( 'msg' => $msg ) );
 	}
@@ -1778,7 +1778,7 @@ class Feedzy_Rss_Feeds_Import {
 					'value' => $_GET['feedzy_job_time'],
 				);
 			}
-		
+
 			$query->set( 'meta_query', $meta_query );
 		}
 	}
