@@ -38,16 +38,14 @@ describe('Test Free - Import Feed', function() {
         cy.get('[name="feedzy_meta_data[inc_key]"]').should('not.be.visible');
         cy.get('[name="feedzy_meta_data[exc_key]"]').should('not.be.visible');
         cy.get('[name="feedzy_meta_data[import_feed_delete_days]"]').should('not.be.visible');
+        cy.get('[name="feedzy_meta_data[import_link_author_admin]"]').should('not.be.visible');
+        cy.get('[name="feedzy_meta_data[import_link_author_public]"]').should('not.be.visible');
         */
 
         // because we cannot use chosen, we use the HTML element by forcing it to show
         cy.get('#feedzy_item_limit').invoke('show');
         cy.get('#feedzy_item_limit option').should('have.length', 2);
         cy.get('#feedzy_item_limit').select(feed.items);
-
-        // feed item author for admin and user - DO NOT MOVE IT FROM HERE, OTHERWISE IT WILL FAIL.
-        cy.get('[name="feedzy_meta_data[import_link_author_admin]"]').should('not.be.visible');
-        cy.get('[name="feedzy_meta_data[import_link_author_public]"]').should('not.be.visible');
 
         cy.get('#feedzy_post_terms').invoke('show').then( () => {
             cy.get('#feedzy_post_terms').select(feed.taxonomy, {force:true});
