@@ -287,6 +287,14 @@ class Feedzy_Rss_Feeds_Import {
 		$import_content       = get_post_meta( $post->ID, 'import_post_content', true );
 		$import_featured_img  = get_post_meta( $post->ID, 'import_post_featured_img', true );
 
+		// default values so that post is not created empty.
+		if ( empty( $import_title ) ) {
+			$import_title = '[#item_title]';
+		}
+		if ( empty( $import_content ) ) {
+			$import_content = '[#item_content]';
+		}
+
 		$import_link_author_admin         = get_post_meta( $post->ID, 'import_link_author_admin', true );
 		$import_link_author_public        = get_post_meta( $post->ID, 'import_link_author_public', true );
 
