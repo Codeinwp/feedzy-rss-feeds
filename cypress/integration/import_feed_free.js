@@ -27,9 +27,8 @@ describe('Test Free - Import Feed', function() {
         cy.visit('/post-new.php?post_type=feedzy_imports');
 
         // fill up the form
-        cy.get('#title').type( feed.url );
-        cy.get('[name="feedzy_meta_data[source]"]').type( feed.url );
-        cy.get('.f1 fieldset:nth-of-type(1) .f1-buttons button.btn-next').scrollIntoView().click();
+        cy.get('#title').clear().type( feed.url );
+        cy.get('[name="feedzy_meta_data[source]"]').clear().type( feed.url );
 
         // locked for pro?
         cy.get('.only-pro').should('have.length', feed.locked);
@@ -42,8 +41,6 @@ describe('Test Free - Import Feed', function() {
         cy.get('#feedzy_item_limit option').should('have.length', 2);
         cy.get('#feedzy_item_limit').select(feed.items);
 
-        cy.get('.f1 fieldset:nth-of-type(2) .f1-buttons button.btn-next').scrollIntoView().click();
-
         // feed item author for admin and user - DO NOT MOVE IT FROM HERE, OTHERWISE IT WILL FAIL.
         cy.get('[name="feedzy_meta_data[import_link_author_admin]"]').should('not.be.visible');
         cy.get('[name="feedzy_meta_data[import_link_author_public]"]').should('not.be.visible');
@@ -52,11 +49,11 @@ describe('Test Free - Import Feed', function() {
             cy.get('#feedzy_post_terms').select(feed.taxonomy, {force:true});
         });
 
-        cy.get('[name="feedzy_meta_data[import_post_title]"]').scrollIntoView().type( PREFIX + feed.title, {force:true} );
-        cy.get('[name="feedzy_meta_data[import_post_content]"]').scrollIntoView().type( PREFIX + feed.fullcontent.content + feed.content, {force:true} );
+        cy.get('[name="feedzy_meta_data[import_post_title]"]').scrollIntoView().clear().type( PREFIX + feed.title, {force:true} );
+        cy.get('[name="feedzy_meta_data[import_post_content]"]').scrollIntoView().clear().type( PREFIX + feed.fullcontent.content + feed.content, {force:true} );
 
         // image from URL
-        cy.get('[name="feedzy_meta_data[import_post_featured_img]"]').scrollIntoView().type( feed.image.url, {force:true} );
+        cy.get('[name="feedzy_meta_data[import_post_featured_img]"]').scrollIntoView().clear().type( feed.image.url, {force:true} );
 
         // check disallowd magic tags
         const tags = feed.tags.disallowed;
@@ -93,13 +90,10 @@ describe('Test Free - Import Feed', function() {
         cy.get('tr:nth-of-type(1) .row-title').click();
         cy.get('#title').should('have.value', feed.url);
         cy.get('[name="feedzy_meta_data[source]"]').should('have.value', feed.url);
-        cy.get('.f1 fieldset:nth-of-type(1) .f1-buttons button.btn-next').scrollIntoView().click({force:true});
 
         // because we cannot use chosen, we use the HTML element by forcing it to show
         cy.get('#feedzy_item_limit').invoke('show');
         cy.get('#feedzy_item_limit').should('have.value', feed.items);
-
-        cy.get('.f1 fieldset:nth-of-type(2) .f1-buttons button.btn-next').scrollIntoView().click({force:true});
 
         cy.get('#feedzy_post_terms').invoke('show').then( () => {
             cy.get('#feedzy_post_terms option:selected').should('have.length', feed.taxonomy.length);
