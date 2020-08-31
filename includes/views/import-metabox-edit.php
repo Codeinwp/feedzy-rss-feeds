@@ -8,28 +8,8 @@
 ?>
 <div class="f1">
 
-	<h3><?php echo __( 'Import Setup Wizard', 'feedzy-rss-feeds' ); ?></h3>
-	<p><?php echo __( 'Follow the steps to setup an import rule.', 'feedzy-rss-feeds' ); ?></p>
-	<div class="f1-steps">
-		<div class="f1-progress">
-			<div class="f1-progress-line" data-now-value="16.66" data-number-of-steps="3" style="width: 16.66%;"></div>
-		</div>
-		<div class="f1-step active">
-			<div class="f1-step-icon"><span class="dashicons dashicons-rss"></span></div>
-			<p><?php echo __( 'Sources', 'feedzy-rss-feeds' ); ?></p>
-		</div>
-		<div class="f1-step">
-			<div class="f1-step-icon"><span class="dashicons dashicons-filter"></span></div>
-			<p><?php echo __( 'Filters', 'feedzy-rss-feeds' ); ?></p>
-		</div>
-		<div class="f1-step">
-			<div class="f1-step-icon"><span class="dashicons dashicons-randomize"></span></div>
-			<p><?php echo __( 'Assign', 'feedzy-rss-feeds' ); ?></p>
-		</div>
-	</div>
+	<h3><span class="dashicons dashicons-rss"></span> <?php echo __( 'Sources', 'feedzy-rss-feeds' ); ?></h3>
 
-	<fieldset class="feedzy-screen1">
-		<h4><?php echo __( 'Feed sources:', 'feedzy-rss-feeds' ); ?></h4>
 		<div class="form-group">
 			<label class="feedzy-sr-only"><?php echo __( 'Feedzy RSS Feed sources (comma separated URLs or Feed Categories slug)', 'feedzy-rss-feeds' ); ?></label>
 		</div>
@@ -63,13 +43,9 @@
 			?>
 			</div>
 		</div>
-		<div class="f1-buttons">
-			<button type="button" class="btn btn-next"><?php echo __( 'Next', 'feedzy-rss-feeds' ); ?></button>
-		</div>
-	</fieldset>
 
-	<fieldset class="feedzy-screen2">
-		<h4><?php echo __( 'Feed filters:', 'feedzy-rss-feeds' ); ?></h4>
+	<h3><span class="dashicons dashicons-filter"></span> <?php echo __( 'Filters', 'feedzy-rss-feeds' ); ?></h3>
+
 		<div class="form-group <?php echo apply_filters( 'feedzy_upsell_class', '' ); ?>">
 			<?php echo apply_filters( 'feedzy_upsell_content', '' ); ?>
 			<label class="feedzy-sr-only"><?php echo __( 'Only display item if title contains specific keyword(s) (comma-separated list/case sensitive).', 'feedzy-rss-feeds' ); ?></label>
@@ -137,14 +113,9 @@
 				?>
 			</select>
 		</div>
-		<div class="f1-buttons">
-			<button type="button" class="btn btn-previous"><?php echo __( 'Previous', 'feedzy-rss-feeds' ); ?></button>
-			<button type="button" class="btn btn-next"><?php echo __( 'Next', 'feedzy-rss-feeds' ); ?></button>
-		</div>
-	</fieldset>
 
-	<fieldset class="feedzy-screen3">
-		<h4><?php echo __( 'Feed assign:', 'feedzy-rss-feeds' ); ?></h4>
+	<h3><span class="dashicons dashicons-feedback"></span> <?php echo __( 'Assign Elements', 'feedzy-rss-feeds' ); ?></h3>
+
 		<p><?php echo __( 'Map post elements to custom post from feed imports.', 'feedzy-rss-feeds' ); ?></p>
 
 		<div class="feedzy-rows">
@@ -408,7 +379,6 @@
 
 		<div class="f1-buttons">
 			<input type="hidden" id="custom_post_status" name="custom_post_status" value="draft" />
-			<button type="button" class="btn btn-previous"><?php echo __( 'Previous', 'feedzy-rss-feeds' ); ?></button>
 			<?php
 			if ( $post_status === 'publish' ) {
 				?>
@@ -422,7 +392,6 @@
 			}
 			?>
 		</div>
-	</fieldset>
 </div>
 
 <script id="empty_select_tpl" type="text/template">
