@@ -11,16 +11,20 @@
 	<h3><span class="dashicons dashicons-rss"></span> <?php echo __( 'Sources', 'feedzy-rss-feeds' ); ?></h3>
 
 		<div class="form-group">
-			<label class="feedzy-sr-only"><?php echo __( 'Feedzy RSS Feed sources (comma separated URLs or Feed Categories slug)', 'feedzy-rss-feeds' ); ?></label>
+			<label class="feedzy-sr-only"><?php echo __( 'RSS Feed sources (comma separated URLs or Feed Categories slug)', 'feedzy-rss-feeds' ); ?></label>
 		</div>
 		<div class="form-group input-group">
-			<input type="text" name="feedzy_meta_data[source]" placeholder="<?php echo __( 'Source', 'feedzy-rss-feeds' ); ?>" class="form-control  " value="<?php echo $source; ?>"/>
+			<div class="feedzy-button-inside">
+				<input type="text" id="feedzy-import-source" title="<?php _e( 'Make sure you validate the feed', 'feedzy-rss-feeds' ); ?>" name="feedzy_meta_data[source]" placeholder="<?php echo __( 'Source', 'feedzy-rss-feeds' ); ?>" class="form-control" value="<?php echo $source; ?>"/>
+				<a class="feedzy-inside" target="_blank" data-href-base="https://validator.w3.org/feed/check.cgi?url=" href="#" title="<?php _e( 'Validate Feed', 'feedzy-rss-feeds' ); ?>"><i title="<?php _e( 'Validate Feed', 'feedzy-rss-feeds' ); ?>" class="dashicons dashicons-rss"></i></a>
+			</div>
+			<small><i class="dashicons dashicons-warning"></i><?php _e( 'Make sure to use the validate button. Invalid feeds may not import anything.', 'feedzy-rss-feeds' ); ?></small>
 			<div class="input-group-btn">
 			<?php
 			if ( isset( $feed_categories ) && ! empty( $feed_categories ) ) {
 				?>
 				<button type="button" class="btn btn-add-fields dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<?php echo __( 'Add Feed Category', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-arrow-down-alt2"></span>
+					<?php echo __( 'Use Feed Category', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-arrow-down-alt2"></span>
 				</button>
 				<div class="dropdown-menu dropdown-menu-right">
 					<?php
@@ -48,16 +52,18 @@
 
 		<div class="form-group <?php echo apply_filters( 'feedzy_upsell_class', '' ); ?>">
 			<?php echo apply_filters( 'feedzy_upsell_content', '' ); ?>
-			<label class="feedzy-sr-only"><?php echo __( 'Only display item if title contains specific keyword(s) (comma-separated list/case sensitive).', 'feedzy-rss-feeds' ); ?></label>
+			<label class="feedzy-sr-only"><?php echo __( 'Display item only if the title contains specific keyword(s)', 'feedzy-rss-feeds' ); ?></label>
 			<input type="text" name="feedzy_meta_data[inc_key]" placeholder="<?php echo __( '(eg. news, sports etc.)', 'feedzy-rss-feeds' ); ?>" class="form-control" value="<?php echo $inc_key; ?>"/>
+			<small><i class="dashicons dashicons-admin-generic"></i><?php _e( 'You can provide comma-separated words. Remember, these words are case sensitive .e.g. News, news, STOCK', 'feedzy-rss-feeds' ); ?></small>
 		</div>
 		<div class="form-group <?php echo apply_filters( 'feedzy_upsell_class', '' ); ?>">
 			<?php echo apply_filters( 'feedzy_upsell_content', '' ); ?>
-			<label class="feedzy-sr-only"><?php echo __( 'Exclude items if title contains specific keyword(s) (comma-separated list/case sensitive).', 'feedzy-rss-feeds' ); ?></label>
+			<label class="feedzy-sr-only"><?php echo __( 'Exclude item if the title contains specific keyword(s)', 'feedzy-rss-feeds' ); ?></label>
 			<input type="text" name="feedzy_meta_data[exc_key]" placeholder="<?php echo __( '(eg. news, sports etc.)', 'feedzy-rss-feeds' ); ?>" class="form-control" value="<?php echo $exc_key; ?>"/>
+			<small><i class="dashicons dashicons-admin-generic"></i><?php _e( 'You can provide comma-separated words. Remember, these words are case sensitive .e.g. News, news, STOCK', 'feedzy-rss-feeds' ); ?></small>
 		</div>
 		<div class="form-group">
-			<label class="feedzy-sr-only"><?php _e( 'How many feed items to process from the feed?', 'feedzy-rss-feeds' ); ?></label>
+			<label class="feedzy-sr-only"><?php _e( 'How many feed items to import from the source?', 'feedzy-rss-feeds' ); ?></label>
 			<select id="feedzy_item_limit" class="form-control feedzy-chosen" name="feedzy_meta_data[import_feed_limit]" >
 				<?php
 				$limits = apply_filters( 'feedzy_items_limit', range( 10, 100, 10 ), $post );
@@ -89,7 +95,7 @@
 		</div>
 		<div class="form-group <?php echo apply_filters( 'feedzy_upsell_class', '' ); ?>">
 			<?php echo apply_filters( 'feedzy_upsell_content', '' ); ?>
-			<label class="feedzy-sr-only"><?php _e( 'Delete the posts created for this import after how many days?', 'feedzy-rss-feeds' ); ?></label>
+			<label class="feedzy-sr-only"><?php _e( 'Automatically delete the posts created for this import after how many days?', 'feedzy-rss-feeds' ); ?></label>
 			<select id="feedzy_delete_limit" class="form-control feedzy-chosen" name="feedzy_meta_data[import_feed_delete_days]" >
 				<?php
 				// 0 is never delete.
@@ -112,6 +118,7 @@
 				}
 				?>
 			</select>
+			<small><i class="dashicons dashicons-lightbulb"></i><?php _e( 'Helpful if you want to remove stale or old items automatically.', 'feedzy-rss-feeds' ); ?></small>
 		</div>
 
 	<h3><span class="dashicons dashicons-feedback"></span> <?php echo __( 'Assign Elements', 'feedzy-rss-feeds' ); ?></h3>
@@ -334,11 +341,11 @@
 					<?php echo apply_filters( 'feedzy_upsell_content', '' ); ?>
 					<div>
 						<input type="checkbox" name="feedzy_meta_data[import_link_author_admin]" id="import_link_author_admin" value="yes" <?php echo $import_link_author[0]; ?>/>
-						<label class="feedzy-inline" for="import_link_author_admin"><?php echo __( 'In the backend', 'feedzy-rss-feeds' ); ?></label>
+						<label class="feedzy-inline" for="import_link_author_admin"><?php echo __( 'In the backend, on the post listing screen', 'feedzy-rss-feeds' ); ?></label>
 					</div>
 					<div>
 						<input type="checkbox" name="feedzy_meta_data[import_link_author_public]" id="import_link_author_public" value="yes" <?php echo $import_link_author[1]; ?>/>
-						<label class="feedzy-inline" for="import_link_author_public"><?php echo __( 'Link to the original post in the frontend', 'feedzy-rss-feeds' ); ?></label>
+						<label class="feedzy-inline" for="import_link_author_public"><?php echo __( 'In the frontend, link to the original post', 'feedzy-rss-feeds' ); ?></label>
 					</div>
 				</div>
 			</div>

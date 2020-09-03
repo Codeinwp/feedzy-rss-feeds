@@ -142,6 +142,11 @@
 	}
 
 	$( document ).ready(function() {
+        initImportScreen();
+        initSummary();
+	});
+
+    function initImportScreen() {
 		$( 'button.btn-submit' ).on( 'click', function( e ) {
 			$( window ).unbind( 'beforeunload' );
 			$( '#custom_post_status' ).val( $( this ).val() );
@@ -212,9 +217,12 @@
 			});
 		});
 
-        initSummary();
-
-	});
+        $('#feedzy-import-source ~ a').on('click', function(e){
+            let $url = $('#feedzy-import-source').val();
+            let $anchor = $(this);
+            $anchor.attr('href', $anchor.attr('data-href-base') + $url);
+        });
+    }
 
     function initSummary() {
         // pop-ups for informational text

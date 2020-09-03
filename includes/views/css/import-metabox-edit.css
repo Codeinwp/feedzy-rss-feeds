@@ -2141,3 +2141,40 @@ span.feedzy-spinner {
 .feedzy-dialog {
 	display: none;
 }
+
+.feedzy-button-inside {
+	position: relative;
+}
+
+.feedzy-button-inside input {
+	outline: none;
+}
+
+.feedzy-button-inside input ~ a,
+.feedzy-button-inside input ~ a:hover,
+.feedzy-button-inside input ~ a:visited {
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	border: none;
+	height: 43px;
+	width: 43px;
+	outline: none;
+	text-align: center;
+	font-weight: bold;
+	z-index: 999;
+	background-color: #f1f1f1;
+	text-decoration: none;
+	color: #e14c53;
+}
+
+.feedzy-button-inside input ~ a > i {
+	line-height: 44px;
+	outline: none;
+	border: none;
+}
+
+.form-group small i {
+	font-size: 15px;
+    line-height: 1.5;
+}
