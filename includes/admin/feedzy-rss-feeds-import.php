@@ -1718,7 +1718,6 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	public function add_import_actions( $actions, $post ) {
 		if ( $post->post_type === 'feedzy_imports' ) {
-
 			// don't need quick edit.
 			unset( $actions['inline hide-if-no-js'] );
 
@@ -1727,6 +1726,14 @@ class Feedzy_Rss_Feeds_Import {
 				$post->ID,
 				esc_html( __( 'Purge &amp; Reset', 'feedzy-rss-feeds' ) )
 			);
+		} elseif ( 1 === intval( get_post_meta( $post->ID, 'feedzy', true ) ) && apply_filters( 'feedzy_disable_edit_on_imports', true, $post ) ) {
+			// if the post is imported by us, remove edit functionality.
+			unset( $actions['inline hide-if-no-js'] );
+			unset( $actions['edit'] );
+
+			// show an unclickable action that mentions that it is imported by us
+			// so that users are aware
+			$actions['feedzy'] = sprintf( '(%s)', __( 'Imported by Feedzy', 'feedzy-rss-feeds' ) );
 		}
 		return $actions;
 	}
