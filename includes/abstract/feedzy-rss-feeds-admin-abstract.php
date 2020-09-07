@@ -967,14 +967,15 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$feed_url = array();
 			// Remove SSL from HTTP request to prevent fetching errors
 			foreach ( $feeds as $feed ) {
+				$feed = trim( $feed );
+				// scheme-less URLs.
+				if ( strpos( $feed, 'http' ) !== 0 ) {
+					$feed = 'http://' . $feed;
+				}
 				if ( FEEDZY_ALLOW_HTTPS ) {
 					$feed_url[] = $feed;
 				} else {
 					$feed_url[] = preg_replace( '/^https:/i', 'http:', $feed );
-				}
-				// scheme-less URLs.
-				if ( strpos( $feed, 'http' ) !== 0 ) {
-					$feed = 'http://' . $feed;
 				}
 			}
 			if ( count( $feed_url ) === 1 ) {
