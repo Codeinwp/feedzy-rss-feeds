@@ -323,6 +323,20 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	}
 
 	/**
+	 * Add/remove row actions for each category.
+	 *
+	 * @since   ?
+	 * @access  public
+	 */
+	public function add_feedzy_category_actions( $actions, $post ) {
+		if ( $post->post_type === 'feedzy_categories' ) {
+			// don't need quick edit.
+			unset( $actions['inline hide-if-no-js'] );
+		}
+		return $actions;
+	}
+
+	/**
 	 * Method for displaying post type data in custom
 	 * added columns.
 	 *
