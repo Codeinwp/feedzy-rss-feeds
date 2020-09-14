@@ -116,6 +116,32 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			return;
 		}
 
+		if ( $screen->post_type === 'feedzy_categories' ) {
+			wp_enqueue_script(
+				$this->plugin_name . '_categories',
+				FEEDZY_ABSURL . 'js/categories.js',
+				array(
+					'jquery',
+				),
+				$this->version,
+				true
+			);
+			wp_localize_script(
+				$this->plugin_name . '_categories',
+				'feedzy',
+				array(
+					'ajax' => array(
+						'security'  => wp_create_nonce( FEEDZY_NAME ),
+					),
+					'l10n' => array(
+						'validate' => __( 'Validate & Clean', 'feedzy-rss-feeds' ),
+						'validating' => __( 'Validating', 'feedzy-rss-feeds' ) . '...',
+						'validated' => __( 'Removed # URL(s)!', 'feedzy-rss-feeds' ),
+					),
+				)
+			);
+		}
+
 		if ( in_array( $screen->base, array( 'post' ), true ) ) {
 			wp_enqueue_style( $this->plugin_name . '-admin', FEEDZY_ABSURL . 'css/admin.css', array(), $this->version, 'all' );
 		}
@@ -319,6 +345,12 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$columns['slug'] = __( 'Slug', 'feedzy-rss-feeds' );
 		}
 
+		if ( $new_columns = $this->array_insert_before( 'date', $columns, 'actions', __( 'Actions', 'feedzy-rss-feeds' ) ) ) {
+			$columns = $new_columns;
+		} else {
+			$columns['actions'] = __( 'Actions', 'feedzy-rss-feeds' );
+		}
+
 		return $columns;
 	}
 
@@ -358,6 +390,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				} else {
 					echo '<code>' . $slug . '</code>';
 				}
+				break;
+			case 'actions':
+				echo sprintf( '<button class="button button-primary validate-category" title="%s" data-category-id="%d">%s</button>', __( 'Click to remove invalid URLs from this category', 'feedzy-rss-feeds' ), $post_id, __( 'Validate & Clean', 'feedzy-rss-feeds' ) );
 				break;
 			default:
 				break;
@@ -663,6 +698,14 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					break;
 			}
 		}
+
+		if ( is_null( $return_valid ) ) {
+			return array(
+				'valid' => $valid,
+				'invalid' => $invalid,
+			);
+		}
+
 		if ( $return_valid ) {
 			return $valid;
 		}
@@ -705,4 +748,28 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		return $message;
 	}
 
+	/**
+	 * AJAX single-entry method.
+	 *
+	 * @since   3.4.1
+	 * @access  public
+	 */
+	public function ajax() {
+		check_ajax_referer( FEEDZY_NAME, 'security' );
+
+		switch ( $_POST['_action'] ) {
+			case 'validate_clean':
+				// remove invalid URLs from this category.
+				$urls = get_post_meta( $_POST['id'], 'feedzy_category_feed', true );
+				$return = $this->check_source_validity( $urls, $_POST['id'], false, null );
+				$valid = $return['valid'];
+				$invalid = $return['invalid'];
+				if ( ! empty( $valid ) ) {
+					remove_filter( 'update_post_metadata', array( $this, 'validate_category_feeds' ) );
+					update_post_meta( $_POST['id'], 'feedzy_category_feed', implode( ', ', $valid ) );
+				}
+				wp_send_json_success( array( 'invalid' => count( $invalid ) ) );
+				break;
+		}
+	}
 }
