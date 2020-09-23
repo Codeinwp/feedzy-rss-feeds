@@ -42,10 +42,8 @@ describe('Test Free - Import Feed', function() {
         cy.get('[name="feedzy_meta_data[import_link_author_public]"]').should('not.be.visible');
         */
 
-        // because we cannot use chosen, we use the HTML element by forcing it to show
-        cy.get('#feedzy_item_limit').invoke('show');
-        cy.get('#feedzy_item_limit option').should('have.length', 2);
-        cy.get('#feedzy_item_limit').select(feed.items);
+        cy.get('#feedzy_item_limit').invoke('val', '').clear().type(feed.items).blur();
+        cy.get('#import_feed_delete_days').invoke('val', '').clear().type(1).blur();
 
         cy.get('#feedzy_post_terms').invoke('show').then( () => {
             cy.get('#feedzy_post_terms').select(feed.taxonomy, {force:true});
@@ -89,10 +87,8 @@ describe('Test Free - Import Feed', function() {
         cy.get('tr:nth-of-type(1) .row-title').click();
         cy.get('#title').should('have.value', feed.url);
         cy.get('[name="feedzy_meta_data[source]"]').should('have.value', feed.url);
-
-        // because we cannot use chosen, we use the HTML element by forcing it to show
-        cy.get('#feedzy_item_limit').invoke('show');
         cy.get('#feedzy_item_limit').should('have.value', feed.items);
+        cy.get('#import_feed_delete_days').should('have.value', 1);
 
         cy.get('#feedzy_post_terms').invoke('show').then( () => {
             cy.get('#feedzy_post_terms option:selected').should('have.length', feed.taxonomy.length);

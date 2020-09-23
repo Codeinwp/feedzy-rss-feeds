@@ -88,7 +88,7 @@
 				</div>
 				<div class="feedzy-separator"></div>
 				<div class="form-group input-group form_item">
-					<input type="number" min="0" max="9999" name="feedzy_meta_data[import_feed_limit]" class="form-control" value="<?php echo $import_feed_limit; ?>"/>
+					<input type="number" min="0" max="9999" id="import_feed_limit" name="feedzy_meta_data[import_feed_limit]" class="form-control" value="<?php echo $import_feed_limit; ?>"/>
 				</div>
 			</div>
 
@@ -102,7 +102,7 @@
 				</div>
 				<div class="feedzy-separator"></div>
 				<div class="form-group input-group form_item">
-					<input type="number" min="0" max="9999" name="feedzy_meta_data[import_feed_delete_days]" class="form-control" value="<?php echo $import_feed_delete_days; ?>"/>
+					<input type="number" min="0" max="9999" id="import_feed_delete_days" name="feedzy_meta_data[import_feed_delete_days]" class="form-control" value="<?php echo $import_feed_delete_days; ?>"/>
 				</div>
 			</div>
 
