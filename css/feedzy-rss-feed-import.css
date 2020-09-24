@@ -129,10 +129,25 @@ td.feedzy-has-popup {
 
 @media screen and (max-width: 782px) {
 	tr.feedzy-import-status-row table {
+		width: 40%;
+	}
+	tr.feedzy-import-status-row table {
 		width: 100%;
 	}
 	
 	tr.feedzy-import-status-row table tr:last-of-type td {
 		font-size: smaller;
+	}
+}
+
+@media screen and (max-width: 1280px) {
+	tr.feedzy-import-status-row table {
+		width: 40%;
+	}
+}
+
+@media screen and (max-width: 1440px) {
+	tr.feedzy-import-status-row table {
+		width: 40%;
 	}
 }
