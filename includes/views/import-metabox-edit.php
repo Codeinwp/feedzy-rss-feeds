@@ -324,12 +324,12 @@
 				<div class="form-group input-group form_item <?php echo apply_filters( 'feedzy_upsell_class', '' ); ?>">
 					<?php echo apply_filters( 'feedzy_upsell_content', '' ); ?>
 					<div>
-						<input id="feedzy-toggle_author_admin" name="feedzy_meta_data[import_link_author_admin]" class="feedzy-toggle feedzy-toggle-round" type="checkbox" value="yes" ' <?php echo $import_link_author[0]; ?>>
+						<input id="feedzy-toggle_author_admin" name="feedzy_meta_data[import_link_author_admin]" class="feedzy-toggle feedzy-toggle-round" type="checkbox" value="yes" <?php echo $import_link_author[0]; ?>>
 						<label for="feedzy-toggle_author_admin" class="feedzy-inline"></label>
 						<label class="feedzy-inline" style="margin-left: 10px;" for="import_link_author_admin"><?php echo __( 'In the backend, on the post listing screen', 'feedzy-rss-feeds' ); ?></label>
 					</div>
 					<div>
-						<input id="feedzy-toggle_author_public" name="feedzy_meta_data[import_link_author_public]" class="feedzy-toggle feedzy-toggle-round" type="checkbox" value="yes" ' <?php echo $import_link_author[1]; ?>>
+						<input id="feedzy-toggle_author_public" name="feedzy_meta_data[import_link_author_public]" class="feedzy-toggle feedzy-toggle-round" type="checkbox" value="yes" <?php echo $import_link_author[1]; ?>>
 						<label for="feedzy-toggle_author_public" class="feedzy-inline"></label>
 						<label class="feedzy-inline" style="margin-left: 10px;" for="import_link_author_public"><?php echo __( 'In the frontend, link to the original post', 'feedzy-rss-feeds' ); ?></label>
 					</div>
