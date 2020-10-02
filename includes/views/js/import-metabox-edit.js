@@ -5,7 +5,7 @@
  * @since	1.2.0
  * @package feedzy-rss-feeds-pro
  */
-/* global jQuery, ajaxurl, feedzy */
+/* global jQuery, ajaxurl, feedzy, tb_show */
 (function($){
 	function scroll_to_class(element_class, removed_height) {
 		var scroll_to = $( element_class ).offset().top - removed_height;
@@ -142,6 +142,11 @@
 	}
 
 	$( document ).ready(function() {
+        initImportScreen();
+        initSummary();
+	});
+
+    function initImportScreen() {
 		$( 'button.btn-submit' ).on( 'click', function( e ) {
 			$( window ).unbind( 'beforeunload' );
 			$( '#custom_post_status' ).val( $( this ).val() );
@@ -212,9 +217,40 @@
 			});
 		});
 
-        initSummary();
+        $('#feedzy-import-source ~ a').on('click', function(e){
+            let $url = $('#feedzy-import-source').val();
+            let $anchor = $(this);
+            $anchor.attr('href', $anchor.attr('data-href-base') + $url);
+        });
 
-	});
+        $('#preflight').on('click', function(e){
+            e.preventDefault();
+            var $fields = {};
+            // collect all elements.
+            $('#feedzy-import-form').find(':input').each(function(index, element){
+                if ( 'undefined' === typeof $(element).attr('name') ) {
+                    return;
+                }
+                $fields[ $(element).attr('name') ] = $(element).val();
+            });
+            tb_show( feedzy.i10n.dry_run_title, 'TB_inline?' );
+            $('#TB_ajaxContent').html(feedzy.i10n.dry_run_loading);
+            $.ajax({
+                url     : ajaxurl,
+                method  : 'post',
+                data    : {
+                    security    : feedzy.ajax.security,
+                    fields       : $.param($fields),
+                    action      : 'feedzy',
+                    _action      : 'dry_run'
+                },
+                success: function(data){
+                    $('#TB_ajaxContent').addClass('loaded');
+                    $('#TB_ajaxContent div').html(data.data.output);
+                }
+            });
+        });
+    }
 
     function initSummary() {
         // pop-ups for informational text
