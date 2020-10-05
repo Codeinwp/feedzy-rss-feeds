@@ -311,7 +311,8 @@
 					</div>
 				</div>
 			</div>
-			<div class="feedzy-row">
+			<div class="feedzy-row <?php echo apply_filters( 'feedzy_upsell_class', '' ); ?>">
+				<?php echo apply_filters( 'feedzy_upsell_content', '' ); ?>
 				<div class="label_description">
 					<label class="feedzy-sr-only" for="f1-post-content"><?php echo __( 'Post Author', 'feedzy-rss-feeds' ); ?></label><br/>
 					<small>
@@ -321,8 +322,7 @@
 					</small>
 				</div>
 				<div class="feedzy-separator dashicons dashicons-leftright"></div>
-				<div class="form-group input-group form_item <?php echo apply_filters( 'feedzy_upsell_class', '' ); ?>">
-					<?php echo apply_filters( 'feedzy_upsell_content', '' ); ?>
+				<div class="form-group input-group form_item">
 					<div>
 						<input id="feedzy-toggle_author_admin" name="feedzy_meta_data[import_link_author_admin]" class="feedzy-toggle feedzy-toggle-round" type="checkbox" value="yes" <?php echo $import_link_author[0]; ?>>
 						<label for="feedzy-toggle_author_admin" class="feedzy-inline"></label>
