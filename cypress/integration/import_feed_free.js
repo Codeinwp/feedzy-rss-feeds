@@ -23,40 +23,36 @@ describe('Test Free - Import Feed', function() {
         cy.get('.nav-tab').should('have.length', settings.tabs);
     })
 
-    it('Creates a new import', function() {
+    it('Create/Verify/Run import', function() {
+        // 1. CREATE
         cy.visit('/post-new.php?post_type=feedzy_imports');
 
         // fill up the form
-        cy.get('#title').type( feed.url );
-        cy.get('[name="feedzy_meta_data[source]"]').type( feed.url );
-        cy.get('.f1 fieldset:nth-of-type(1) .f1-buttons button.btn-next').scrollIntoView().click();
+        cy.get('#title').clear().type( feed.url );
+        cy.get('[name="feedzy_meta_data[source]"]').clear().type( feed.url );
 
         // locked for pro?
         cy.get('.only-pro').should('have.length', feed.locked);
+
+        /* @TODO: make this work someday
         cy.get('[name="feedzy_meta_data[inc_key]"]').should('not.be.visible');
         cy.get('[name="feedzy_meta_data[exc_key]"]').should('not.be.visible');
         cy.get('[name="feedzy_meta_data[import_feed_delete_days]"]').should('not.be.visible');
-
-        // because we cannot use chosen, we use the HTML element by forcing it to show
-        cy.get('#feedzy_item_limit').invoke('show');
-        cy.get('#feedzy_item_limit option').should('have.length', 2);
-        cy.get('#feedzy_item_limit').select(feed.items);
-
-        cy.get('.f1 fieldset:nth-of-type(2) .f1-buttons button.btn-next').scrollIntoView().click();
-
-        // feed item author for admin and user - DO NOT MOVE IT FROM HERE, OTHERWISE IT WILL FAIL.
         cy.get('[name="feedzy_meta_data[import_link_author_admin]"]').should('not.be.visible');
         cy.get('[name="feedzy_meta_data[import_link_author_public]"]').should('not.be.visible');
+        */
+
+        cy.get('#feedzy_item_limit').invoke('val', '').clear().type(feed.items).blur();
 
         cy.get('#feedzy_post_terms').invoke('show').then( () => {
             cy.get('#feedzy_post_terms').select(feed.taxonomy, {force:true});
         });
 
-        cy.get('[name="feedzy_meta_data[import_post_title]"]').scrollIntoView().type( PREFIX + feed.title, {force:true} );
-        cy.get('[name="feedzy_meta_data[import_post_content]"]').scrollIntoView().type( PREFIX + feed.fullcontent.content + feed.content, {force:true} );
+        cy.get('[name="feedzy_meta_data[import_post_title]"]').scrollIntoView().clear().type( PREFIX + feed.title, {force:true} );
+        cy.get('[name="feedzy_meta_data[import_post_content]"]').scrollIntoView().clear().type( PREFIX + feed.fullcontent.content + feed.content, {force:true} );
 
         // image from URL
-        cy.get('[name="feedzy_meta_data[import_post_featured_img]"]').scrollIntoView().type( feed.image.url, {force:true} );
+        cy.get('[name="feedzy_meta_data[import_post_featured_img]"]').scrollIntoView().clear().type( feed.image.url, {force:true} );
 
         // check disallowd magic tags
         const tags = feed.tags.disallowed;
@@ -85,21 +81,12 @@ describe('Test Free - Import Feed', function() {
         cy.url().should('include', 'edit.php?post_type=feedzy_imports');
         cy.get('tr:nth-of-type(1) .feedzy-toggle').should('not.be.checked');
         cy.get('tr:nth-of-type(1) .feedzy-run-now').should('not.be.visible');
-    })
 
-    it('Verify the new import and activate', function() {
-        cy.visit('/edit.php?post_type=feedzy_imports');
-
+        // 2. VERIFY
         cy.get('tr:nth-of-type(1) .row-title').click();
         cy.get('#title').should('have.value', feed.url);
         cy.get('[name="feedzy_meta_data[source]"]').should('have.value', feed.url);
-        cy.get('.f1 fieldset:nth-of-type(1) .f1-buttons button.btn-next').scrollIntoView().click({force:true});
-
-        // because we cannot use chosen, we use the HTML element by forcing it to show
-        cy.get('#feedzy_item_limit').invoke('show');
         cy.get('#feedzy_item_limit').should('have.value', feed.items);
-
-        cy.get('.f1 fieldset:nth-of-type(2) .f1-buttons button.btn-next').scrollIntoView().click({force:true});
 
         cy.get('#feedzy_post_terms').invoke('show').then( () => {
             cy.get('#feedzy_post_terms option:selected').should('have.length', feed.taxonomy.length);
@@ -116,10 +103,8 @@ describe('Test Free - Import Feed', function() {
         cy.url().should('include', 'edit.php?post_type=feedzy_imports');
         cy.get('tr:nth-of-type(1) .feedzy-toggle').should('be.checked');
         cy.get('tr:nth-of-type(1) .feedzy-run-now').should('be.visible');
-    })
 
-    it('Toggle the new import', function() {
-        cy.visit('/edit.php?post_type=feedzy_imports');
+        // 3. TOGGLE
         cy.get('tr:nth-of-type(1) .feedzy-toggle').uncheck({force:true});
 
         cy.visit('/edit.php?post_type=feedzy_imports');
@@ -128,10 +113,6 @@ describe('Test Free - Import Feed', function() {
         cy.get('tr:nth-of-type(1) .feedzy-toggle').check({force:true});
         cy.visit('/edit.php?post_type=feedzy_imports');
         cy.get('tr:nth-of-type(1) .feedzy-toggle').should('be.checked');
-    })
-
-    it('Run the new import', function() {
-        cy.visit('/edit.php?post_type=feedzy_imports')
 
         // check last run status has all the initial data.
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(1)').invoke('data', 'value').should(($value) => {
@@ -150,10 +131,11 @@ describe('Test Free - Import Feed', function() {
             expect(parseInt($value)).to.equal(-1); // success
         });
 
-        // run import
+        // 4. RUN
         cy.get('table.posts:nth-of-type(1) .feedzy-run-now').should('be.visible');
         cy.get('table.posts:nth-of-type(1) .feedzy-run-now').click();
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(1)').invoke('html').should('include', 'Importing');
+
         cy.wait(10 * parseInt(feed.wait));
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(1)').invoke('html').should('include', 'Successfully run');
 
@@ -175,9 +157,8 @@ describe('Test Free - Import Feed', function() {
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(5)').invoke('data', 'value').should(($value) => {
             expect(parseInt($value)).to.equal(1); // success
         });
-    })
 
-    it('Run the new import again', function() {
+        // 5. RUN AGAIN
         cy.visit('/edit.php?post_type=feedzy_imports')
 
         // run import
@@ -205,12 +186,9 @@ describe('Test Free - Import Feed', function() {
             expect(parseInt($value)).to.equal(1); // success
         });
 
-    })
-
-    it('Verifies the new imported items', function() {
         cy.visit('/edit.php?post_type=feedzy_imports')
 
-        // click cumulative.
+        // 6. VERIFY IMPORTED ITEMS
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(4) a').first().click();
 
         // should have N posts.

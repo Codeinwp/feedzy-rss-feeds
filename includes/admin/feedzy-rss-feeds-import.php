@@ -145,6 +145,10 @@ class Feedzy_Rss_Feeds_Import {
 					'i10n' => array(
 						'importing' => __( 'Importing', 'feedzy-rss-feeds' ) . '...',
 						'run_now' => __( 'Run Now', 'feedzy-rss-feeds' ),
+						'dry_run_loading' => '<p class="hide-when-loaded">' . __( 'Processing the source and loading the items that will be imported when it runs', 'feedzy-rss-feeds' ) . '...</p>'
+										. '<p><b>' . __( 'Please note that if some of these items have already have been imported in previous runs with the same filters, they may be shown here but will not be imported again.', 'feedzy-rss-feeds' ) . '</b></p>'
+										. '<p class="loading-img hide-when-loaded"><img src="' . includes_url( 'images/wpspin-2x.gif' ) . '"></p><div></div>',
+						'dry_run_title' => __( 'Importable Items', 'feedzy-rss-feeds' ),
 					),
 				)
 			);
@@ -291,6 +295,14 @@ class Feedzy_Rss_Feeds_Import {
 		$import_content       = get_post_meta( $post->ID, 'import_post_content', true );
 		$import_featured_img  = get_post_meta( $post->ID, 'import_post_featured_img', true );
 
+		// default values so that post is not created empty.
+		if ( empty( $import_title ) ) {
+			$import_title = '[#item_title]';
+		}
+		if ( empty( $import_content ) ) {
+			$import_content = '[#item_content]';
+		}
+
 		$import_link_author_admin         = get_post_meta( $post->ID, 'import_link_author_admin', true );
 		$import_link_author_public        = get_post_meta( $post->ID, 'import_link_author_public', true );
 
@@ -308,12 +320,20 @@ class Feedzy_Rss_Feeds_Import {
 
 		$import_custom_fields = get_post_meta( $post->ID, 'imports_custom_fields', true );
 		$import_feed_limit    = get_post_meta( $post->ID, 'import_feed_limit', true );
+		if ( empty( $import_feed_limit ) ) {
+			$import_feed_limit = 10;
+		}
 		$import_feed_delete_days    = intval( get_post_meta( $post->ID, 'import_feed_delete_days', true ) );
+		if ( empty( $import_feed_delete_days ) ) {
+			$import_feed_delete_days = 0;
+		}
 		$post_status          = $post->post_status;
 		$nonce                = wp_create_nonce( FEEDZY_BASEFILE );
 		$output               = '
             <input type="hidden" name="feedzy_category_meta_noncename" id="feedzy_category_meta_noncename" value="' . $nonce . '" />
         ';
+
+		add_thickbox();
 		include FEEDZY_ABSPATH . '/includes/views/import-metabox-edit.php';
 		echo $output;
 	}
@@ -806,6 +826,9 @@ class Feedzy_Rss_Feeds_Import {
 			case 'purge':
 				$this->purge_data();
 				break;
+			case 'dry_run':
+				$this->dry_run();
+				break;
 		}
 	}
 
@@ -885,6 +908,60 @@ class Feedzy_Rss_Feeds_Import {
 
 		wp_send_json_success( array( 'msg' => $msg ) );
 	}
+
+	/**
+	 * Dry run a specific job so that the user is aware what would be imported.
+	 *
+	 * @since  ?
+	 * @access  private
+	 */
+	private function dry_run() {
+		$fields = urldecode( $_POST['fields'] );
+		parse_str( $fields, $data );
+
+		$feedzy_meta_data = $data['feedzy_meta_data'];
+
+		add_filter(
+			'feedzy_default_error', function( $errors, $feed, $url ) {
+				$errors .=
+				sprintf( __( 'For %1$ssingle feeds%2$s, this could be because of the following reasons:', 'feedzy-rss-feeds' ), '<b>', '</b>' )
+				. '<ol>'
+				. '<li>' . sprintf( __( '%1$sSource invalid%2$s: Check that your source is valid by clicking the validate button adjacent to the source box.', 'feedzy-rss-feeds' ), '<b>', '</b>' ) . '</li>'
+				. '<li>' . sprintf( __( '%1$sSource unavailable%2$s: Copy the source and paste it on the browser to check that it is available. It could be an intermittent issue.', 'feedzy-rss-feeds' ), '<b>', '</b>' ) . '</li>'
+				. '<li>' . sprintf( __( '%1$sSource inaccessible from server%2$s: Check that your source is accessible from the server (not the browser). It could be an intermittent issue.', 'feedzy-rss-feeds' ), '<b>', '</b>' ) . '</li>'
+				. '</ol>'
+				. sprintf( __( 'For %1$smultiple feeds%2$s (comma-separated or in a Feedzy Category), this could be because of the following reasons:', 'feedzy-rss-feeds' ), '<b>', '</b>' )
+				. '<ol>'
+				. '<li>' . sprintf( __( '%1$sSource invalid%2$s: One or more feeds may be misbehaving. Check each feed individually as mentioned above to weed out the problematic feed.', 'feedzy-rss-feeds' ), '<b>', '</b>' ) . '</li>'
+				. '</ol>';
+
+				return $errors;
+			}, 11, 3
+		);
+
+		// we will add tags corresponding to the most potential problems.
+		$tags = array();
+		if ( $this->feedzy_is_business() && strpos( $feedzy_meta_data['import_post_content'], 'full_content' ) !== false ) {
+			$tags[] = 'item_full_content';
+		}
+		if ( strpos( $feedzy_meta_data['import_post_content'], 'item_image' ) !== false || strpos( $feedzy_meta_data['import_post_featured_img'], 'item_image' ) !== false ) {
+			$tags[] = 'item_image';
+		}
+
+		$shortcode = sprintf(
+			'[feedzy-rss feeds="%s" max="%d" feed_title=no meta=no summary=no thumb=no error_empty="%s" keywords_title="%s" %s="%s" _dry_run_tags_="%s" _dryrun_="yes"]',
+			$feedzy_meta_data['source'],
+			$feedzy_meta_data['import_feed_limit'],
+			'', // should be empty
+			$feedzy_meta_data['inc_key'],
+			feedzy_is_pro() ? 'keywords_ban' : '',
+			feedzy_is_pro() ? $feedzy_meta_data['exc_key'] : '',
+			implode( ',', $tags )
+		);
+
+		wp_send_json_success( array( 'output' => do_shortcode( $shortcode ) ) );
+	}
+
 
 	/**
 	 * The Cron Job.
