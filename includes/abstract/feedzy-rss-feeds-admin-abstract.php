@@ -156,7 +156,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( $show_error ) {
 			$final_msg = '<div id="message" class="error"><p>' . sprintf( __( 'Sorry, some part of this feed is currently unavailable or does not exist anymore. The detailed error is %s', 'feedzy-rss-feeds' ), '<p style="font-weight: bold">' . $error_msg . '</p>' );
 			if ( ! is_admin() ) {
-				$msg .= sprintf( __( '%1$s(Only you are seeing this detailed error because you are the creator of this post. Other users will see the error message as below.)%2$s', 'feedzy-rss-feeds' ), '<small>', '</small>' );
+				$final_msg .= sprintf( __( '%1$s(Only you are seeing this detailed error because you are the creator of this post. Other users will see the error message as below.)%2$s', 'feedzy-rss-feeds' ), '<small>', '</small>' );
 			}
 			$final_msg .= '</p></div>';
 		} else {
