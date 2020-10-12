@@ -329,6 +329,7 @@ class Feedzy_Rss_Feeds_Import {
 		}
 		$post_status          = $post->post_status;
 		$nonce                = wp_create_nonce( FEEDZY_BASEFILE );
+		$invalid_source_msg   = apply_filters( 'feedzy_get_source_validity_error', '', $post );
 		$output               = '
             <input type="hidden" name="feedzy_category_meta_noncename" id="feedzy_category_meta_noncename" value="' . $nonce . '" />
         ';
@@ -385,8 +386,17 @@ class Feedzy_Rss_Feeds_Import {
 			delete_post_meta( $post_id, 'import_link_author_admin' );
 			delete_post_meta( $post_id, 'import_link_author_public' );
 
+			// we will activate this import only if the source has no invalid URL(s)
+			$source_is_valid = false;
+
 			foreach ( $data_meta as $key => $value ) {
 				$value = is_array( $value ) ? implode( ',', $value ) : implode( ',', (array) $value );
+				if ( 'source' === $key ) {
+					// check if the source is valid
+					$invalid_urls = apply_filters( 'feedzy_check_source_validity', $value, $post_id, true, false );
+					$source_is_valid = empty( $invalid_urls );
+				}
+
 				if ( get_post_meta( $post_id, $key, false ) ) {
 					update_post_meta( $post_id, $key, wp_kses( $value, wp_kses_allowed_html( 'post' ) ) );
 				} else {
@@ -397,7 +407,7 @@ class Feedzy_Rss_Feeds_Import {
 				}
 			}
 			// Added this to activate post if publish is clicked and sometimes it does not change status.
-			if ( isset( $_POST['custom_post_status'] ) && $_POST['custom_post_status'] === 'Publish' ) {
+			if ( $source_is_valid && isset( $_POST['custom_post_status'] ) && $_POST['custom_post_status'] === 'Publish' ) {
 				$activate = array(
 					'ID'          => $post_id,
 					'post_status' => 'publish',
@@ -425,7 +435,13 @@ class Feedzy_Rss_Feeds_Import {
 	public function redirect_post_location( $location, $post_id ) {
 		$post = get_post( $post_id );
 		if ( 'feedzy_imports' === $post->post_type ) {
-			return admin_url( 'edit.php?post_type=feedzy_imports' );
+			// if invalid source has been found, redirect back to edit screen
+			// where errors can be shown
+			$invalid = get_post_meta( $post_id, '__transient_feedzy_invalid_source', true );
+			error_log( "redirect_post_location $post_id = " . print_r( $invalid, true ) );
+			if ( empty( $invalid ) ) {
+				return admin_url( 'edit.php?post_type=feedzy_imports' );
+			}
 		}
 		return $location;
 	}
@@ -539,6 +555,7 @@ class Feedzy_Rss_Feeds_Import {
                     <div class="switch">
                         <input id="feedzy-toggle_' . $post->ID . '" class="feedzy-toggle feedzy-toggle-round" type="checkbox" value="' . $post->ID . '" ' . $checked . '>
                         <label for="feedzy-toggle_' . $post->ID . '"></label>
+						<span class="feedzy-spinner spinner"></span>
                     </div>
                     ';
 				}
@@ -843,9 +860,18 @@ class Feedzy_Rss_Feeds_Import {
 		$id      = $_POST['id'];
 		$status  = $_POST['status'];
 		$publish = 'draft';
+
+		// no activation till source is not valid.
 		if ( $status === 'true' ) {
+			$invalid_urls = apply_filters( 'feedzy_check_source_validity', get_post_meta( $id, 'source', true ), $id, true, false );
+			if ( ! empty( $invalid_urls ) ) {
+				$msg = apply_filters( 'feedzy_get_source_validity_error', '', get_post( $id ), '' );
+				wp_send_json_error( array( 'msg' => $msg ) );
+			}
+
 			$publish = 'publish';
 		}
+
 		$new_post_status = array(
 			'ID'          => $id,
 			'post_status' => $publish,
@@ -857,11 +883,9 @@ class Feedzy_Rss_Feeds_Import {
 
 		if ( is_wp_error( $post_id ) ) {
 			$errors = $post_id->get_error_messages();
-			foreach ( $errors as $error ) {
-				echo $error;
-			}
+			wp_send_json_error( array( 'msg' => implode( ', ', $errors ) ) );
 		}
-		wp_die(); // this is required to terminate immediately and return a proper response
+		wp_send_json_success();
 	}
 
 	/**

@@ -13,6 +13,9 @@
 		<div class="form-group">
 			<label class="feedzy-sr-only"><?php echo __( 'RSS Feed sources (comma separated URLs or Feed Categories slug)', 'feedzy-rss-feeds' ); ?></label>
 		</div>
+
+		<?php echo $invalid_source_msg; ?>
+
 		<div class="form-group input-group">
 			<div class="feedzy-button-inside">
 				<input type="text" id="feedzy-import-source" title="<?php _e( 'Make sure you validate the feed by using the validate button on the right', 'feedzy-rss-feeds' ); ?>" name="feedzy_meta_data[source]" placeholder="<?php echo __( 'Source', 'feedzy-rss-feeds' ); ?>" class="form-control" value="<?php echo $source; ?>"/>

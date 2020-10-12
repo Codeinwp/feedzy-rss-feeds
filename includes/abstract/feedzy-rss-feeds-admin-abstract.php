@@ -545,10 +545,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$feed_url = apply_filters( 'feedzy_get_feed_url', $feeds );
 		if ( is_array( $feed_url ) ) {
 			foreach ( $feed_url as $index => $url ) {
-				$feed_url[ $index ] = $this->smart_convert( $url );
+				$feed_url[ $index ] = trim( $this->smart_convert( $url ) );
 			}
 		} else {
-			$feed_url = $this->smart_convert( $feed_url );
+			$feed_url = trim( $this->smart_convert( $feed_url ) );
 		}
 
 		return $feed_url;
@@ -777,28 +777,33 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * Returns only valid URLs for fetching.
 	 *
 	 * @since   3.2.0
-	 * @access  private
+	 * @access  protected
 	 *
 	 * @param   array|string $feed_url The feeds URL/s.
 	 * @param   string       $cache The cache string (eg. 1_hour, 30_min etc.).
+	 * @param   bool         $echo Echo the results.
 	 *
 	 * @return array
 	 */
-	private function get_valid_feed_urls( $feed_url, $cache ) {
+	protected function get_valid_feed_urls( $feed_url, $cache, $echo = true ) {
 		$valid_feed_url = array();
 		if ( is_array( $feed_url ) ) {
 			foreach ( $feed_url as $url ) {
 				if ( $this->check_valid_xml( $url, $cache ) ) {
 					$valid_feed_url[] = $url;
 				} else {
-					echo sprintf( __( 'Feed URL: %s not valid and removed from fetch.', 'feedzy-rss-feeds' ), '<b>' . $url . '</b>' );
+					if ( $echo ) {
+						echo sprintf( __( 'Feed URL: %s not valid and removed from fetch.', 'feedzy-rss-feeds' ), '<b>' . $url . '</b>' );
+					}
 				}
 			}
 		} else {
 			if ( $this->check_valid_xml( $feed_url, $cache ) ) {
 				$valid_feed_url[] = $feed_url;
 			} else {
-				echo sprintf( __( 'Feed URL: %s not valid and removed from fetch.', 'feedzy-rss-feeds' ), '<b>' . $feed_url . '</b>' );
+				if ( $echo ) {
+					echo sprintf( __( 'Feed URL: %s not valid and removed from fetch.', 'feedzy-rss-feeds' ), '<b>' . $feed_url . '</b>' );
+				}
 			}
 		}
 
@@ -809,15 +814,15 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * Checks if a url is a valid feed.
 	 *
 	 * @since   3.2.0
-	 * @access  private
+	 * @access  protected
 	 *
 	 * @param   string $url The URL to validate.
 	 * @param   string $cache The cache string (eg. 1_hour, 30_min etc.).
 	 *
 	 * @return bool
 	 */
-	private function check_valid_xml( $url, $cache ) {
-		$feed = $this->init_feed( $url, $cache );
+	protected function check_valid_xml( $url, $cache ) {
+		$feed = $this->init_feed( $url, $cache, array() );
 		if ( $feed->error() ) {
 			return false;
 		}
@@ -1037,14 +1042,15 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$feed_url = array();
 			// Remove SSL from HTTP request to prevent fetching errors
 			foreach ( $feeds as $feed ) {
+				$feed = trim( $feed );
+				// scheme-less URLs.
+				if ( strpos( $feed, 'http' ) !== 0 ) {
+					$feed = 'http://' . $feed;
+				}
 				if ( FEEDZY_ALLOW_HTTPS ) {
 					$feed_url[] = $feed;
 				} else {
 					$feed_url[] = preg_replace( '/^https:/i', 'http:', $feed );
-				}
-				// scheme-less URLs.
-				if ( strpos( $feed, 'http' ) !== 0 ) {
-					$feed = 'http://' . $feed;
 				}
 			}
 			if ( count( $feed_url ) === 1 ) {
