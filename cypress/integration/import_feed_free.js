@@ -92,9 +92,6 @@ describe('Test Free - Import Feed', function() {
         // fill up the form
         cy.get('#title').clear().type( feed.url );
         cy.get('[name="feedzy_meta_data[source]"]').clear().type( feed.url );
-        cy.get('.f1 fieldset:nth-of-type(1) .f1-buttons button.btn-next').scrollIntoView().click();
-
-        cy.get('.f1 fieldset:nth-of-type(2) .f1-buttons button.btn-next').scrollIntoView().click();
 
         cy.get('button[type="submit"][name="save"]').scrollIntoView().click({force:true});
 
