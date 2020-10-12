@@ -461,6 +461,19 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
  == Changelog ==
+### 3.4.3 - 2020-08-26  ###
+
+* [Fix] HTML tags being trimmed on save of the import job
+* [Fix] Issue with nonce not being checked correctly
+
+
+### 3.4.2 - 2020-08-12  ###
+
+* - [Fix] Compatibility with WP 5.5
+* - [Feat] Link to items imported across runs in Feed2Post
+
+
+
 ### 3.4.1 - 2020-07-23  ###
 
 * - [Feat] Feed2Post - Provide more info on imported content and possible errors
@@ -469,7 +482,6 @@ You have to check first if your feed is valid. Please test it here: https://vali
 * - [Fix] Conflict with Ultimate CSV Importer
 * - [Fix] Sync item image options between classic and block editor
 * - [Fix] Posts keeps "uncategorized" category in non-English sites
-
 
 ### 3.4.0 - 2020-05-28  ###
 
