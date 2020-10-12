@@ -28,8 +28,8 @@ describe('Test Free - Import Feed', function() {
         cy.visit('/post-new.php?post_type=feedzy_imports');
 
         // fill up the form
-        cy.get('#title').clear().type( feed.url );
-        cy.get('[name="feedzy_meta_data[source]"]').clear().type( feed.url );
+        cy.get('#title').clear().type( feed.invalidurl );
+        cy.get('[name="feedzy_meta_data[source]"]').clear().type( feed.invalidurl );
 
         // locked for pro?
         cy.get('.only-pro').should('have.length', feed.locked);
