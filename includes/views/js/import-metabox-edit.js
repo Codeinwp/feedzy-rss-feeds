@@ -253,6 +253,11 @@
     }
 
     function initSummary() {
+        $('tr.type-feedzy_imports').each(function(i, e){
+            var $lastRunData = $(e).find('script.feedzy-last-run-data').html();
+            $($lastRunData).insertAfter(e);
+        });
+
         // pop-ups for informational text
         $( '.feedzy-dialog' ).dialog({
           modal: true,
@@ -276,8 +281,12 @@
         $('.feedzy-run-now').on('click', function(e){
             e.preventDefault();
             var button = $(this);
-            showSpinner(button);
-            button.parent().find('.feedzy-error').remove();
+            button.val(feedzy.i10n.importing);
+
+            var numberRow = button.parents('tr').find('~ tr.feedzy-import-status-row:first').find('td tr:first');
+            numberRow.find('td').hide();
+            numberRow.find('td:first').addClass('feedzy_run_now_msg').attr('colspan', 5).html(feedzy.i10n.importing).show();
+
             $.ajax({
                 url     : ajaxurl,
                 method  : 'post',
@@ -288,8 +297,10 @@
                     _action      : 'run_now'
                 },
                 success: function(data){
-                    hideSpinner(button);
-                    button.after($('<div class="feedzy-error feedzy-error-critical">' + data.data.msg + '</div>'));
+                    numberRow.find('td:first').html(data.data.msg);
+                },
+                complete: function(){
+                    button.val(feedzy.i10n.run_now);
                 }
             });
         });
@@ -319,6 +330,9 @@
                     _action      : 'purge'
                 },
                 success: function(){
+                    location.reload();
+                },
+                complete: function(){
                     hideSpinner(element);
                 }
             });
