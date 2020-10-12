@@ -1,4 +1,9 @@
 
+ ### v3.5.0 - 2020-10-12 
+ **Changes:** 
+ * [Feat] Improved interface for adding new imports and for the imports listing page
+* [Feat] Improved checks for feeds validity
+ 
  ### v3.4.3 - 2020-08-26 
  **Changes:** 
  * [Fix] HTML tags being trimmed on save of the import job

@@ -461,6 +461,12 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
  == Changelog ==
+### 3.5.0 - 2020-10-12  ###
+
+* [Feat] Improved interface for adding new imports and for the imports listing page
+* [Feat] Improved checks for feeds validity
+
+
 ### 3.4.3 - 2020-08-26  ###
 
 * [Fix] HTML tags being trimmed on save of the import job
