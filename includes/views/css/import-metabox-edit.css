@@ -1668,15 +1668,24 @@ a:focus.dropdown-item {
 }
 
 .f1 {
-	padding: 25px;
+	padding: 30px;
+	padding-top: 10px;
 	border-radius: 4px;
 	background: #fff;
 }
 
 .f1 h3 {
 	margin-top: 0;
-	margin-bottom: 5px;
+	margin-bottom: 10px;
 	text-transform: uppercase;
+	background-color: #f1f1f1;
+	padding: 5px;
+    border-radius: 5px;
+    text-indent: 1%;
+}
+
+.f1 h3:nth-of-type(n+2) {
+	margin-top: 30px;
 }
 
 .f1-steps {
@@ -1775,7 +1784,6 @@ a:focus.dropdown-item {
 }
 
 .f1 fieldset {
-	display: none;
 	text-align: left;
 }
 
@@ -1789,6 +1797,7 @@ a:focus.dropdown-item {
 
 input[type="text"],
 input[type="password"],
+input[type="number"],
 textarea,
 textarea.form-control {
 	width: 100%;
@@ -1816,6 +1825,7 @@ textarea.form-control {
 
 input[type="text"]:focus,
 input[type="password"]:focus,
+input[type="number"]:focus,
 textarea:focus,
 textarea.form-control:focus {
 	border: 1px solid #ccc;
@@ -1826,6 +1836,7 @@ textarea.form-control:focus {
 
 input[type="text"]:-moz-placeholder,
 input[type="password"]:-moz-placeholder,
+input[type="number"]:-moz-placeholder,
 textarea:-moz-placeholder,
 textarea.form-control:-moz-placeholder {
 	color: #888;
@@ -1833,6 +1844,7 @@ textarea.form-control:-moz-placeholder {
 
 input[type="text"]:-ms-input-placeholder,
 input[type="password"]:-ms-input-placeholder,
+input[type="number"]:-ms-input-placeholder,
 textarea:-ms-input-placeholder,
 textarea.form-control:-ms-input-placeholder {
 	color: #888;
@@ -1840,6 +1852,7 @@ textarea.form-control:-ms-input-placeholder {
 
 input[type="text"]::-webkit-input-placeholder,
 input[type="password"]::-webkit-input-placeholder,
+input[type="number"]::-webkit-input-placeholder,
 textarea::-webkit-input-placeholder,
 textarea.form-control::-webkit-input-placeholder {
 	color: #888;
@@ -2086,8 +2099,10 @@ span.feedzy-spinner {
 .only-pro:hover textarea,
 .only-pro:hover select,
 .only-pro:hover button,
+.only-pro:hover ~ button,
 .only-pro:hover .chosen-container,
 .only-pro:hover .chosen-single,
+.only-pro:hover .label_description,
 .only-pro:hover select option {
 	opacity: 0.3;
 }
@@ -2126,10 +2141,77 @@ span.feedzy-spinner {
 }
 
 .feedzy-highlight {
-	background-color: #ccff00;
+	background-color: #f1f1f1;
 	padding: 1%;
 }
 
 .feedzy-dialog {
 	display: none;
+}
+
+.feedzy-button-inside {
+	position: relative;
+}
+
+.feedzy-button-inside input {
+	outline: none;
+}
+
+.feedzy-button-inside input ~ a,
+.feedzy-button-inside input ~ a:hover,
+.feedzy-button-inside input ~ a:visited {
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	border: none;
+	height: 43px;
+	width: 43px;
+	outline: none;
+	text-align: center;
+	font-weight: bold;
+	z-index: 999;
+	background-color: #f1f1f1;
+	text-decoration: none;
+	color: #e14c53;
+}
+
+.feedzy-button-inside input ~ a > i {
+	line-height: 44px;
+	outline: none;
+	border: none;
+}
+
+.form-group small i {
+	font-size: 15px;
+    line-height: 1.5;
+}
+
+#TB_ajaxContent ul {
+	list-style: decimal;
+	margin-left: 20px;
+}
+
+#TB_ajaxContent ul li {
+    padding: 5px !important;
+}
+
+
+#TB_ajaxContent p.loading-img {
+	text-align: center;
+}
+
+#TB_ajaxContent.loaded p.hide-when-loaded {
+	display: none;
+}
+
+#TB_ajaxContent div.dry_run span {
+	display: block;
+}
+
+#TB_ajaxContent div.dry_run span i.pass {
+	color: #149714;
+}
+
+#TB_ajaxContent div.dry_run span i.fail {
+	color: #ca4a1f;
 }

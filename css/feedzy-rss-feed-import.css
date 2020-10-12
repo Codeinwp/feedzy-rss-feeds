@@ -61,17 +61,78 @@
 	color: #ff0000;
 }
 
-table.wp-list-table th.column-feedzy-status {
-	width: 100px;
+tr.feedzy-import-status-row > td {
+	margin: 0;
+	padding: 0
 }
 
-table.wp-list-table td.column-feedzy-last_run .feedzy-api-error {
-	max-height: 120px;
-	overflow: hidden;
+tr.feedzy-import-status-row table {
+	width: 32%;
+	table-layout: fixed;
 }
 
-table.wp-list-table td.column-feedzy-last_run .feedzy-api-error.expand {
-	height: auto;
-	max-height: 1400px; /* arbitrary number */
-	overflow: visible;
+tr.feedzy-import-status-row table tr td {
+	width: 25%;
+	background-color: #f1f1f1;
+	text-align: center;
+}
+
+tr.feedzy-import-status-row table tr:first-of-type td {
+	padding: 3px;
+	font-size: 22px;
+}
+
+tr.feedzy-import-status-row table tr:last-of-type td {
+	background-color: #5555559c;
+	color: #ffffff;
+	padding: 0px;
+	text-transform: lowercase;
+}
+
+.feedzy-error-status i {
+	font-size: 28px;
+}
+
+.feedzy-error-status.import-error i {
+	color: #ca4a1f;
+}
+
+.feedzy-error-status.import-success i {
+	color: #149714;
+}
+
+td.feedzy-error-status a {
+    vertical-align: middle;
+}
+
+a.feedzy-popup-details {
+	pointer-events: none;
+	color: inherit;
+}
+
+td.feedzy-has-popup {
+	cursor: pointer;
+}
+
+.feedzy-has-popup a.feedzy-popup-details {
+	cursor: pointer;
+	pointer-events: all;
+	color: #0073aa;
+}
+
+.feedzy_run_now_msg {
+	font-size: 14px !important;
+	color: #ca4a1f !important;
+	background-color: inherit !important;
+}
+
+
+@media screen and (max-width: 782px) {
+	tr.feedzy-import-status-row table {
+		width: 100%;
+	}
+
+	tr.feedzy-import-status-row table tr:last-of-type td {
+		font-size: smaller;
+	}
 }
