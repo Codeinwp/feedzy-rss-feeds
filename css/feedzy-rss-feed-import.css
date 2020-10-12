@@ -85,7 +85,7 @@ tr.feedzy-import-status-row table tr:first-of-type td {
 tr.feedzy-import-status-row table tr:last-of-type td {
 	background-color: #5555559c;
 	color: #ffffff;
-	line-height: 3px;
+	padding: 0px;
 	text-transform: lowercase;
 }
 
@@ -134,7 +134,7 @@ td.feedzy-has-popup {
 	tr.feedzy-import-status-row table {
 		width: 100%;
 	}
-	
+
 	tr.feedzy-import-status-row table tr:last-of-type td {
 		font-size: smaller;
 	}
