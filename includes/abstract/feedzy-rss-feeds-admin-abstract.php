@@ -244,7 +244,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	}
 
 	/**
-	 * Check title for keywords
+	 * Check different criteria to determine whether to include item or discard it.
 	 *
 	 * @since   3.0.0
 	 * @access  public
@@ -256,10 +256,12 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @return  boolean
 	 */
-	public function feedzy_feed_item_keywords_title( $continue, $sc, $item, $feed_url ) {
+	public function feedzy_include_item_or_discard( $continue, $sc, $item, $feed_url ) {
 		if ( feedzy_is_new() && ! feedzy_is_pro() ) {
 			return true;
 		}
+
+		// included words.
 		$keywords_title = $sc['keywords_title'];
 		if ( ! empty( $keywords_title ) ) {
 			$continue = false;
@@ -270,6 +272,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 		}
 
+		// excluded words.
 		if ( array_key_exists( 'keywords_ban', $sc ) ) {
 			$keywords_ban = $sc['keywords_ban'];
 			if ( ! empty( $keywords_ban ) ) {
@@ -279,6 +282,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 					}
 				}
 			}
+		}
+
+		// image only items.
+		if ( array_key_exists( 'exc_noimage', $sc ) && 'yes' === $sc['exc_noimage'] ) {
+			$continue = ! empty( $this->feedzy_retrieve_image( $item, $sc ) );
 		}
 
 		return $continue;
@@ -518,6 +526,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'className'     => '',
 				// lazy loading of feeds?
 				'lazy'          => 'no',
+				// exclude items with no images
+				'exc_noimage'   => 'no',
 				// this are only for internal purposes
 				'_dryrun_'      => 'no',
 				'_dry_run_tags_'      => '',

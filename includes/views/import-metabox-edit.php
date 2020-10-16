@@ -81,6 +81,20 @@
 
 			<div class="feedzy-row">
 				<div class="label_description">
+					<label class="feedzy-sr-only"><?php _e( 'Exclude items without images?', 'feedzy-rss-feeds' ); ?></label>
+					<div>
+						<small><?php echo sprintf( __( 'If you enable this, items without images will not be imported. If you are unsure, please open the feed in the browser to verify that every item contains images.', 'feedzy-rss-feeds' ), '<b>', '</b>' ); ?></small>
+					</div>
+				</div>
+				<div class="feedzy-separator"></div>
+				<div class="form-group input-group form_item">
+					<input id="feedzy-exc-noimage" data-dependent-element="#feedzy_image_fallback" name="feedzy_meta_data[exc_noimage]" class="feedzy-toggle feedzy-toggle-round" type="checkbox" value="yes" <?php echo $exc_noimage; ?>>
+					<label for="feedzy-exc-noimage"></label>
+				</div>
+			</div>
+
+			<div class="feedzy-row">
+				<div class="label_description">
 					<label class="feedzy-sr-only"><?php _e( 'How many feed items to import from the source?', 'feedzy-rss-feeds' ); ?></label>
 					<div>
 						<small><?php echo sprintf( __( 'If you choose a high number, please check that you configuration can support it or your imports may fail.', 'feedzy-rss-feeds' ), '<b>', '</b>' ); ?></small>
@@ -309,8 +323,31 @@
 							<?php echo apply_filters( 'feedzy_render_magic_tags', '', apply_filters( 'feedzy_magic_tags_image', array() ), 'import_post_featured_img' ); ?>
 						</div>
 					</div>
+
+					<br/>
+					<br/>
+
+					<div id="feedzy_image_fallback">
+							<small>
+								<?php
+								 _e( 'What image should be used as the fallback if an item does not have an image?', 'feedzy-rss-feeds' );
+								?>
+							</small>
+
+						<div>
+							<!-- do not add a space after the span closing bracket or before the beginning of span closing tag -->
+							<span id="feedzy_image_fallback_span"><?php if ( ! empty( $fallback_image ) ) { ?>
+									<img src="<?php echo $fallback_image; ?>">
+								<?php } ?></span>
+							<input type="hidden" name="feedzy_meta_data[fallback_img]" id="fallback_img" value="<?php echo $fallback_image; ?>">
+							<button type="button" class="btn btn-small btn-add-fields" id="feedzy-media-upload-add"><?php _e( 'Upload image', 'feedzy-rss-feeds' ); ?></button>
+							<button type="button" class="btn btn-small btn-remove-fields" id="feedzy-media-upload-remove"><?php _e( 'Remove image', 'feedzy-rss-feeds' ); ?></button>
+						</div>
+					</div>
 				</div>
+				
 			</div>
+
 			<div class="feedzy-row">
 				<div class="label_description">
 					<label class="feedzy-sr-only" for="f1-post-content"><?php echo __( 'Post Author', 'feedzy-rss-feeds' ); ?></label><br/>
@@ -324,12 +361,14 @@
 				<div class="form-group input-group form_item <?php echo apply_filters( 'feedzy_upsell_class', '' ); ?>">
 					<?php echo apply_filters( 'feedzy_upsell_content', '' ); ?>
 					<div>
-						<input type="checkbox" name="feedzy_meta_data[import_link_author_admin]" id="import_link_author_admin" value="yes" <?php echo $import_link_author[0]; ?>/>
-						<label class="feedzy-inline" for="import_link_author_admin"><?php echo __( 'In the backend, on the post listing screen', 'feedzy-rss-feeds' ); ?></label>
+						<input id="feedzy-toggle_author_admin" name="feedzy_meta_data[import_link_author_admin]" class="feedzy-toggle feedzy-toggle-round" type="checkbox" value="yes" <?php echo $import_link_author[0]; ?>>
+						<label for="feedzy-toggle_author_admin" class="feedzy-inline"></label>
+						<label class="feedzy-inline" style="margin-left: 10px;" for="import_link_author_admin"><?php echo __( 'In the backend, on the post listing screen', 'feedzy-rss-feeds' ); ?></label>
 					</div>
 					<div>
-						<input type="checkbox" name="feedzy_meta_data[import_link_author_public]" id="import_link_author_public" value="yes" <?php echo $import_link_author[1]; ?>/>
-						<label class="feedzy-inline" for="import_link_author_public"><?php echo __( 'In the frontend, link to the original post', 'feedzy-rss-feeds' ); ?></label>
+						<input id="feedzy-toggle_author_public" name="feedzy_meta_data[import_link_author_public]" class="feedzy-toggle feedzy-toggle-round" type="checkbox" value="yes" <?php echo $import_link_author[1]; ?>>
+						<label for="feedzy-toggle_author_public" class="feedzy-inline"></label>
+						<label class="feedzy-inline" style="margin-left: 10px;" for="import_link_author_public"><?php echo __( 'In the frontend, link to the original post', 'feedzy-rss-feeds' ); ?></label>
 					</div>
 				</div>
 			</div>

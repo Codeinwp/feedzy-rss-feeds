@@ -250,6 +250,41 @@
                 }
             });
         });
+
+        // show/hide fallback image area depending on the toggle.
+        var $el = $('#feedzy-exc-noimage').attr('data-dependent-element');
+        $('#feedzy-exc-noimage').is(':checked') ? $($el).hide() : $($el).show();
+        $('#feedzy-exc-noimage').on('change', function(e){
+            e.preventDefault();
+            if($el !== ''){
+                $(this).is(':checked') ? $($el).hide() : $($el).show();
+            }
+        });
+
+        // media modal in import screen.
+        var feedzyMediaModal;
+
+        $('#feedzy-media-upload-add').on('click', function(e){
+            e.preventDefault();
+            if (feedzyMediaModal) {
+                feedzyMediaModal.open();
+                return;
+            }
+
+            feedzyMediaModal = wp.media.frames.file_frame = wp.media({multiple: false });
+
+            feedzyMediaModal.on('select', function() {
+                  var attachment = feedzyMediaModal.state().get('selection').first().toJSON();
+                  $('#feedzy_image_fallback_span').empty().append($('<img src="' + attachment.url + '">'));
+                  $('#fallback_img').val(attachment.url);
+            });
+            feedzyMediaModal.open();
+        });
+
+        $('#feedzy-media-upload-remove').on('click', function(e){
+            $('#feedzy_image_fallback_span').empty();
+            $('#fallback_img').val('');
+        });
     }
 
     function initSummary() {

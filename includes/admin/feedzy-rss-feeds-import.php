@@ -120,7 +120,11 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	public function enqueue_styles() {
 		wp_enqueue_style( $this->plugin_name, FEEDZY_ABSURL . 'css/feedzy-rss-feed-import.css', array(), $this->version, 'all' );
-		if ( get_current_screen()->post_type === 'feedzy_imports' ) {
+		$screen = get_current_screen();
+		if ( $screen->post_type === 'feedzy_imports' ) {
+			if ( $screen->base === 'post' ) {
+				wp_enqueue_media();
+			}
 			wp_enqueue_style( $this->plugin_name . '_chosen', FEEDZY_ABSURL . 'includes/views/css/chosen.css', array(), $this->version, 'all' );
 			wp_enqueue_style( $this->plugin_name . '_metabox_edit', FEEDZY_ABSURL . 'includes/views/css/import-metabox-edit.css', array( 'wp-jquery-ui-dialog' ), $this->version, 'all' );
 			wp_enqueue_script( $this->plugin_name . '_chosen_scipt', FEEDZY_ABSURL . 'includes/views/js/chosen.js', array( 'jquery' ), $this->version, true );
@@ -288,6 +292,14 @@ class Feedzy_Rss_Feeds_Import {
 		$source               = get_post_meta( $post->ID, 'source', true );
 		$inc_key              = get_post_meta( $post->ID, 'inc_key', true );
 		$exc_key              = get_post_meta( $post->ID, 'exc_key', true );
+		$exc_noimage          = get_post_meta( $post->ID, 'exc_noimage', true );
+		$fallback_image       = '';
+		if ( ! empty( $exc_noimage ) ) {
+			$exc_noimage = 'checked';
+		} else {
+			$fallback_image   = get_post_meta( $post->ID, 'fallback_img', true );
+			$exc_noimage = '';
+		}
 		$import_title         = get_post_meta( $post->ID, 'import_post_title', true );
 		$import_date          = get_post_meta( $post->ID, 'import_post_date', true );
 		$import_content       = get_post_meta( $post->ID, 'import_post_content', true );
@@ -382,6 +394,7 @@ class Feedzy_Rss_Feeds_Import {
 			// delete these checkbox related fields; if checked, they will be added below.
 			delete_post_meta( $post_id, 'import_link_author_admin' );
 			delete_post_meta( $post_id, 'import_link_author_public' );
+			delete_post_meta( $post_id, 'exc_noimage' );
 
 			foreach ( $data_meta as $key => $value ) {
 				$value = is_array( $value ) ? implode( ',', $value ) : implode( ',', (array) $value );
@@ -873,6 +886,8 @@ class Feedzy_Rss_Feeds_Import {
 		$source               = get_post_meta( $job->ID, 'source', true );
 		$inc_key              = get_post_meta( $job->ID, 'inc_key', true );
 		$exc_key              = get_post_meta( $job->ID, 'exc_key', true );
+		$defaultImg           = get_post_meta( $job->ID, 'fallback_img', true );
+		$exc_noimage          = get_post_meta( $job->ID, 'exc_noimage', true );
 		$import_title         = get_post_meta( $job->ID, 'import_post_title', true );
 		$import_date          = get_post_meta( $job->ID, 'import_post_date', true );
 		$import_content       = get_post_meta( $job->ID, 'import_post_content', true );
@@ -931,6 +946,7 @@ class Feedzy_Rss_Feeds_Import {
 				'offset'         => 0,
 				'multiple_meta'  => 'no',
 				'refresh'        => '55_mins',
+				'exc_noimage'    => $exc_noimage,
 			), $job
 		);
 
@@ -997,7 +1013,10 @@ class Feedzy_Rss_Feeds_Import {
 
 			$import_image = strpos( $import_content, '[#item_image]' ) !== false || strpos( $import_featured_img, '[#item_image]' ) !== false;
 			if ( $import_image && empty( $item['item_img_path'] ) ) {
-				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to find an image for item title %s.', $item['item_title'] ), 'warn', __FILE__, __LINE__ );
+				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to find an image for item title %s. Will try to use default image = %s', $item['item_title'], $defaultImg ), 'warn', __FILE__, __LINE__ );
+				if ( ! empty( $defaultImg ) ) {
+					$item['item_img_path'] = $defaultImg;
+				}
 				$import_image_errors++;
 			}
 

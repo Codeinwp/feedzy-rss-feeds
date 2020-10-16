@@ -1616,6 +1616,10 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 	margin-left: -1px;
 }
 
+.input-group-btn ~ div {
+	display: table-row;
+}
+
 
 .label_description,
 .form_item {
@@ -1656,7 +1660,7 @@ a:focus.dropdown-item {
 }
 
 .btn.btn-remove-fields {
-	color: #f35b3f;
+	color: #f35b3f !important;
 }
 
 .btn.btn-remove-fields:hover {
@@ -1884,6 +1888,24 @@ button.btn {
 	font-size: 16px;
 	font-weight: 300;
 	line-height: 40px;
+	vertical-align: middle;
+	-webkit-transition: all 0.3s;
+	transition: all 0.3s;
+}
+
+button.btn.btn-small {
+	height: 30px;
+	margin: 0;
+	padding: 0 20px;
+	border: 0;
+	border-radius: 4px;
+	color: #fff;
+	box-shadow: none;
+	text-shadow: none;
+	font-family: "Roboto", sans-serif;
+	font-size: 13px;
+	font-weight: bold;
+	line-height: 20px;
 	vertical-align: middle;
 	-webkit-transition: all 0.3s;
 	transition: all 0.3s;
@@ -2213,3 +2235,31 @@ span.feedzy-spinner {
 #TB_ajaxContent div.dry_run span i.fail {
 	color: #ca4a1f;
 }
+
+#feedzy_image_fallback_span:not(:empty) ~ #feedzy-media-upload-add {
+	display: none;
+}
+
+#feedzy_image_fallback_span:empty ~ #feedzy-media-upload-remove {
+	display: none;
+}
+
+#feedzy_image_fallback_span > img {
+	width: 150px;
+}
+
+#feedzy_image_fallback div {
+	display: block;
+	width: 150px;
+}
+
+#feedzy_image_fallback * {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+#feedzy_image_fallback div * {
+	width: 150px;
+}
+
+
