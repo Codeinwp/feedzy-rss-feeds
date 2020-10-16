@@ -2250,18 +2250,14 @@ span.feedzy-spinner {
 	width: 150px;
 }
 
-#feedzy_image_fallback div {
-	display: block;
-	width: 150px;
-}
 
 #feedzy_image_fallback * {
-	display: table-cell;
 	vertical-align: middle;
 }
 
-#feedzy_image_fallback div * {
+#feedzy_image_fallback .btn-small {
 	width: 150px;
+	display: block;
 }
 
 
