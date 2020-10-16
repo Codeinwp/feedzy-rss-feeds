@@ -2121,8 +2121,10 @@ span.feedzy-spinner {
 .only-pro:hover textarea,
 .only-pro:hover select,
 .only-pro:hover button,
+.only-pro:hover ~ button,
 .only-pro:hover .chosen-container,
 .only-pro:hover .chosen-single,
+.only-pro:hover .label_description,
 .only-pro:hover select option {
 	opacity: 0.3;
 }

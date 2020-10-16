@@ -147,6 +147,8 @@ class Feedzy_Rss_Feeds_Import {
 						'security'  => wp_create_nonce( FEEDZY_BASEFILE ),
 					),
 					'i10n' => array(
+						'importing' => __( 'Importing', 'feedzy-rss-feeds' ) . '...',
+						'run_now' => __( 'Run Now', 'feedzy-rss-feeds' ),
 						'dry_run_loading' => '<p class="hide-when-loaded">' . __( 'Processing the source and loading the items that will be imported when it runs', 'feedzy-rss-feeds' ) . '...</p>'
 										. '<p><b>' . __( 'Please note that if some of these items have already have been imported in previous runs with the same filters, they may be shown here but will not be imported again.', 'feedzy-rss-feeds' ) . '</b></p>'
 										. '<p class="loading-img hide-when-loaded"><img src="' . includes_url( 'images/wpspin-2x.gif' ) . '"></p><div></div>',
@@ -339,6 +341,7 @@ class Feedzy_Rss_Feeds_Import {
 		}
 		$post_status          = $post->post_status;
 		$nonce                = wp_create_nonce( FEEDZY_BASEFILE );
+		$invalid_source_msg   = apply_filters( 'feedzy_get_source_validity_error', '', $post );
 		$output               = '
             <input type="hidden" name="feedzy_category_meta_noncename" id="feedzy_category_meta_noncename" value="' . $nonce . '" />
         ';
@@ -396,8 +399,17 @@ class Feedzy_Rss_Feeds_Import {
 			delete_post_meta( $post_id, 'import_link_author_public' );
 			delete_post_meta( $post_id, 'exc_noimage' );
 
+			// we will activate this import only if the source has no invalid URL(s)
+			$source_is_valid = false;
+
 			foreach ( $data_meta as $key => $value ) {
 				$value = is_array( $value ) ? implode( ',', $value ) : implode( ',', (array) $value );
+				if ( 'source' === $key ) {
+					// check if the source is valid
+					$invalid_urls = apply_filters( 'feedzy_check_source_validity', $value, $post_id, true, false );
+					$source_is_valid = empty( $invalid_urls );
+				}
+
 				if ( get_post_meta( $post_id, $key, false ) ) {
 					update_post_meta( $post_id, $key, wp_kses( $value, wp_kses_allowed_html( 'post' ) ) );
 				} else {
@@ -408,7 +420,7 @@ class Feedzy_Rss_Feeds_Import {
 				}
 			}
 			// Added this to activate post if publish is clicked and sometimes it does not change status.
-			if ( isset( $_POST['custom_post_status'] ) && $_POST['custom_post_status'] === 'Publish' ) {
+			if ( $source_is_valid && isset( $_POST['custom_post_status'] ) && $_POST['custom_post_status'] === 'Publish' ) {
 				$activate = array(
 					'ID'          => $post_id,
 					'post_status' => 'publish',
@@ -436,7 +448,13 @@ class Feedzy_Rss_Feeds_Import {
 	public function redirect_post_location( $location, $post_id ) {
 		$post = get_post( $post_id );
 		if ( 'feedzy_imports' === $post->post_type ) {
-			return admin_url( 'edit.php?post_type=feedzy_imports' );
+			// if invalid source has been found, redirect back to edit screen
+			// where errors can be shown
+			$invalid = get_post_meta( $post_id, '__transient_feedzy_invalid_source', true );
+			error_log( "redirect_post_location $post_id = " . print_r( $invalid, true ) );
+			if ( empty( $invalid ) ) {
+				return admin_url( 'edit.php?post_type=feedzy_imports' );
+			}
 		}
 		return $location;
 	}
@@ -465,17 +483,19 @@ class Feedzy_Rss_Feeds_Import {
 			$columns['feedzy-status'] = __( 'Current Status', 'feedzy-rss-feeds' );
 		}
 
+		if ( $new_columns = $this->array_insert_before( 'date', $columns, 'feedzy-next_run', __( 'Next Run', 'feedzy-rss-feeds' ) ) ) {
+			$columns = $new_columns;
+		} else {
+			$columns['feedzy-next_run'] = __( 'Next Run', 'feedzy-rss-feeds' );
+		}
+
 		if ( $new_columns = $this->array_insert_before( 'date', $columns, 'feedzy-last_run', __( 'Last Run Status', 'feedzy-rss-feeds' ) ) ) {
 			$columns = $new_columns;
 		} else {
 			$columns['feedzy-last_run'] = __( 'Last Run Status', 'feedzy-rss-feeds' );
 		}
 
-		if ( $new_columns = $this->array_insert_before( 'date', $columns, 'feedzy-next_run', __( 'Next Run', 'feedzy-rss-feeds' ) ) ) {
-			$columns = $new_columns;
-		} else {
-			$columns['feedzy-next_run'] = __( 'Next Run', 'feedzy-rss-feeds' );
-		}
+		unset( $columns['date'] );
 
 		return $columns;
 	}
@@ -548,6 +568,7 @@ class Feedzy_Rss_Feeds_Import {
                     <div class="switch">
                         <input id="feedzy-toggle_' . $post->ID . '" class="feedzy-toggle feedzy-toggle-round" type="checkbox" value="' . $post->ID . '" ' . $checked . '>
                         <label for="feedzy-toggle_' . $post->ID . '"></label>
+						<span class="feedzy-spinner spinner"></span>
                     </div>
                     ';
 				}
@@ -556,24 +577,20 @@ class Feedzy_Rss_Feeds_Import {
 				$last   = get_post_meta( $post_id, 'last_run', true );
 				$msg    = __( 'Never Run', 'feedzy-rss-feeds' );
 				if ( $last ) {
-					$msg = $this->get_import_status( $post_id );
-					$msg .= $this->get_import_info( $post_id );
-					$msg .= $this->get_import_errors( $post_id, false );
-
-					// show the total items imported across all runs.
-					$items      = get_post_meta( $post_id, 'imported_items_hash', true );
-					if ( empty( $items ) ) {
-						$items      = get_post_meta( $post_id, 'imported_items', true );
-					}
-					$count = $items ? count( $items ) : 0;
-					$url    = add_query_arg( array( 'feedzy_job_id' => $post_id, 'post_type' => get_post_meta( $post_id, 'import_post_type', true ) ), admin_url( 'edit.php' ) );
-					if ( ! defined( 'TI_CYPRESS_TESTING' ) && $count > 0 ) {
-						$msg    .= '<hr>' . sprintf( '%s: <b><a href="%s" target="_blank" title="%s">%d</a></b>', __( 'Items imported across runs', 'feedzy-rss-feeds' ), $url, __( 'Click to view', 'feedzy-rss-feeds' ), $count );
-					} else {
-						$msg    .= '<hr>' . sprintf( '%s: <b>%d</b>', __( 'Items imported across runs', 'feedzy-rss-feeds' ), $count );
-					}
+					$now  = new DateTime();
+					$then = new DateTime();
+					$then = $then->setTimestamp( $last );
+					$in   = $now->diff( $then );
+					$msg  = sprintf( __( 'Ran %1$d hours %2$d minutes ago', 'feedzy-rss-feeds' ), $in->format( '%h' ), $in->format( '%i' ) );
 				}
+
+				$msg .= $this->get_last_run_details( $post_id );
 				echo $msg;
+
+				if ( 'publish' === $post->post_status ) {
+					 echo sprintf( '<p><input type="button" class="button button-primary feedzy-run-now" data-id="%d" value="%s"></p>', $post_id, __( 'Run Now', 'feedzy-rss-feeds' ) );
+				}
+
 				break;
 			case 'feedzy-next_run':
 				$next = wp_next_scheduled( 'feedzy_cron' );
@@ -583,9 +600,6 @@ class Feedzy_Rss_Feeds_Import {
 					$then = $then->setTimestamp( $next );
 					$in   = $now->diff( $then );
 					echo sprintf( __( 'In %1$d hours %2$d minutes', 'feedzy-rss-feeds' ), $in->format( '%h' ), $in->format( '%i' ) );
-					if ( 'publish' === $post->post_status ) {
-						 echo sprintf( '<br/><input type="button" class="button button-primary feedzy-run-now" data-id="%d" value="%s"><span class="feedzy-spinner spinner"></span>', $post_id, __( 'Run Now', 'feedzy-rss-feeds' ) );
-					}
 				}
 				break;
 			default:
@@ -594,13 +608,141 @@ class Feedzy_Rss_Feeds_Import {
 	}
 
 	/**
-	 * Creates the basic message to show against each import.
+	 * Generate the markup that displays the status.
+	 *
+	 * @since   ?
+	 * @access  private
+	 *
+	 * @param   integer $post_id The post ID.
+	 */
+	private function get_last_run_details( $post_id ) {
+		$msg    = '';
+		$last   = get_post_meta( $post_id, 'last_run', true );
+		$status = array(
+			'total' => '-',
+			'items' => '-',
+			'duplicates' => '-',
+			'cumulative' => '-',
+		);
+		if ( $last ) {
+			$status = array(
+				'total' => 0,
+				'items' => 0,
+				'duplicates' => 0,
+				'cumulative' => 0,
+			);
+			$status = $this->get_complete_import_status( $post_id );
+		}
+
+		// link to the posts listing for this job.
+		$job_linked_posts   = add_query_arg( array( 'feedzy_job_id' => $post_id, 'post_type' => get_post_meta( $post_id, 'import_post_type', true ) ), admin_url( 'edit.php' ) );
+
+		// link to the posts listing for this job run.
+		$job_run_linked_posts    = '';
+		$job_run_id   = get_post_meta( $post_id, 'last_run_id', true );
+		if ( ! empty( $job_run_id ) ) {
+			$job_run_linked_posts    = add_query_arg( array( 'feedzy_job_id' => $post_id, 'feedzy_job_time' => $job_run_id, 'post_type' => get_post_meta( $post_id, 'import_post_type', true ) ), admin_url( 'edit.php' ) );
+		}
+
+		// popup for items found.
+		if ( is_array( $status['items'] ) ) {
+			$msg .= '<div class="feedzy-items-found-' . $post_id . ' feedzy-dialog" title="' . __( 'Items found', 'feedzy-rss-feeds' ) . '"><ol>';
+			foreach ( $status['items'] as $url => $title ) {
+				$msg .= sprintf( '<li><p><a href="%s" target="_blank">%s</a></p></li>', esc_url( $url ), esc_html( $title ) );
+			}
+			$msg .= '</ol></div>';
+		}
+
+		// popup for duplicates found.
+		if ( is_array( $status['duplicates'] ) ) {
+			$msg .= '<div class="feedzy-duplicates-found-' . $post_id . ' feedzy-dialog" title="' . __( 'Duplicates found', 'feedzy-rss-feeds' ) . '"><ol>';
+			foreach ( $status['duplicates'] as $url => $title ) {
+				$msg .= sprintf( '<li><p><a href="%s" target="_blank">%s</a></p></li>', esc_url( $url ), esc_html( $title ) );
+			}
+			$msg .= '</ol></div>';
+		}
+
+		$errors = $this->get_import_errors( $post_id );
+		// popup for errors found.
+		if ( ! empty( $errors ) ) {
+			$msg .= '<div class="feedzy-errors-found-' . $post_id . ' feedzy-dialog" title="' . __( 'Errors', 'feedzy-rss-feeds' ) . '">' . $errors . '</div>';
+		}
+
+		// remember, cypress will work off the data-value attributes.
+		$msg .= sprintf(
+			'<script class="feedzy-last-run-data" type="text/template">
+				<tr style="display: none"></tr>
+				<tr class="feedzy-import-status-row">
+					<td colspan="6" align="right">
+						<table>
+							<tr>
+								<td class="feedzy-items %s" data-value="%d"><a class="feedzy-popup-details feedzy-dialog-open" title="%s" data-dialog="feedzy-items-found-%d">%s</a></td>
+								<td class="feedzy-duplicates %s" data-value="%d"><a class="feedzy-popup-details feedzy-dialog-open" title="%s" data-dialog="feedzy-duplicates-found-%d">%s</a></td>
+								<td class="feedzy-imported %s" data-value="%d"><a target="%s" href="%s" class="feedzy-popup-details" title="%s">%s</a></td>
+								<td class="feedzy-cumulative %s" data-value="%d"><a target="%s" href="%s" class="feedzy-popup-details" title="%s">%s</a></td>
+								<td class="feedzy-error-status %s" data-value="%d"><a class="feedzy-popup-details feedzy-dialog-open" data-dialog="feedzy-errors-found-%d" title="%s">%s</a></td>
+							</tr>
+							<tr>
+								<td>%s</td>
+								<td>%s</td>
+								<td>%s</td>
+								<td>%s</td>
+								<td>%s</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</script>',
+			// first cell
+			is_array( $status['items'] ) ? 'feedzy-has-popup' : '',
+			is_array( $status['items'] ) ? count( $status['items'] ) : $status['items'],
+			__( 'Items that were found in the feed', 'feedzy-rss-feeds' ),
+			$post_id,
+			is_array( $status['items'] ) ? count( $status['items'] ) : $status['items'],
+			// second cells
+			is_array( $status['duplicates'] ) ? 'feedzy-has-popup' : '',
+			is_array( $status['duplicates'] ) ? count( $status['duplicates'] ) : $status['duplicates'],
+			__( 'Items that were discarded as duplicates', 'feedzy-rss-feeds' ),
+			$post_id,
+			is_array( $status['duplicates'] ) ? count( $status['duplicates'] ) : $status['duplicates'],
+			// third cell
+			$status['total'] > 0 && ! empty( $job_run_linked_posts ) ? 'feedzy-has-popup' : '',
+			$status['total'],
+			defined( 'TI_CYPRESS_TESTING' ) ? '' : '_blank',
+			$status['total'] > 0 && ! empty( $job_run_linked_posts ) ? $job_run_linked_posts : '',
+			__( 'Items that were imported', 'feedzy-rss-feeds' ),
+			$status['total'],
+			// fourth cell
+			$status['cumulative'] > 0 ? 'feedzy-has-popup' : '',
+			$status['cumulative'],
+			defined( 'TI_CYPRESS_TESTING' ) ? '' : '_blank',
+			$status['cumulative'] > 0 ? $job_linked_posts : '',
+			__( 'Items that were imported across all runs', 'feedzy-rss-feeds' ),
+			$status['cumulative'],
+			// fifth cell
+			empty( $last ) ? '' : ( ! empty( $errors ) ? 'feedzy-has-popup import-error' : 'import-success' ),
+			empty( $last ) ? '-1' : ( ! empty( $errors ) ? 0 : 1 ),
+			$post_id,
+			__( 'View the errors', 'feedzy-rss-feeds' ),
+			empty( $last ) ? '-' : ( ! empty( $errors ) ? '<i class="dashicons dashicons-warning"></i>' : '<i class="dashicons dashicons-yes-alt"></i>' ),
+			// second row
+			__( 'Found', 'feedzy-rss-feeds' ),
+			__( 'Duplicates', 'feedzy-rss-feeds' ),
+			__( 'Imported', 'feedzy-rss-feeds' ),
+			__( 'Cumulative', 'feedzy-rss-feeds' ),
+			__( 'Status', 'feedzy-rss-feeds' )
+		);
+
+		return $msg;
+	}
+
+	/**
+	 * Gets every aspect of the import job that would reflect its status.
 	 *
 	 * @since   ?
 	 * @access  private
 	 */
-	private function get_import_status( $post_id ) {
-		$last   = get_post_meta( $post_id, 'last_run', true );
+	private function get_complete_import_status( $post_id ) {
 		$items_count  = get_post_meta( $post_id, 'imported_items_count', true );
 		$items      = get_post_meta( $post_id, 'imported_items_hash', true );
 		if ( empty( $items ) ) {
@@ -611,13 +753,42 @@ class Feedzy_Rss_Feeds_Import {
 			// backward compatibility where imported_items_count post_meta has not been populated yet
 			$count  = count( $items );
 		}
-		$now  = new DateTime();
-		$then = new DateTime();
-		$then = $then->setTimestamp( $last );
-		$in   = $now->diff( $then );
-		$msg  = sprintf( __( 'Imported %1$d item(s)<br>%2$d hours %3$d minutes ago', 'feedzy-rss-feeds' ), $count, $in->format( '%h' ), $in->format( '%i' ) );
 
-		return apply_filters( 'feedzy_run_status_status', $msg, $post_id );
+		$status = array(
+			'total' => $count,
+			'items' => 0,
+			'duplicates' => 0,
+			'cumulative' => 0,
+		);
+
+		$import_info = get_post_meta( $post_id, 'import_info', true );
+		if ( $import_info ) {
+			foreach ( $import_info as $label => $value ) {
+				switch ( $label ) {
+					case 'total':
+						if ( count( $value ) > 0 ) {
+							$status['items'] = $value;
+						}
+						break;
+					case 'duplicates':
+						if ( count( $value ) > 0 ) {
+							$status['duplicates'] = $value;
+						}
+						break;
+				}
+			}
+		}
+
+		$items      = get_post_meta( $post_id, 'imported_items_hash', true );
+		if ( empty( $items ) ) {
+			$items      = get_post_meta( $post_id, 'imported_items', true );
+		}
+		if ( $items ) {
+			$status['cumulative'] = count( $items );
+		}
+
+		return $status;
+
 	}
 
 	/**
@@ -626,69 +797,39 @@ class Feedzy_Rss_Feeds_Import {
 	 * @since   ?
 	 * @access  private
 	 */
-	private function get_import_errors( $post_id, $under_next_run ) {
+	private function get_import_errors( $post_id ) {
 		$msg = '';
 		$import_errors = get_post_meta( $post_id, 'import_errors', true );
 		if ( $import_errors ) {
-			$title = ! $under_next_run ? __( 'Click to expand', 'feedzy-rss-feeds' ) : null;
-			$msg = '<hr><div class="feedzy-error feedzy-api-error" title="' . esc_attr( $title ) . '"><i class="dashicons dashicons-warning"></i>' . implode( '<i class="dashicons dashicons-warning"></i>', $import_errors ) . '</div>';
+			$errors = '';
+			if ( is_array( $import_errors ) ) {
+				foreach ( $import_errors as $err ) {
+					$errors .= '<div><i class="dashicons dashicons-warning"></i>' . $err . '</div>';
+				}
+			} else {
+				$errors = '<div><i class="dashicons dashicons-warning"></i>' . $import_errors . '</div>';
+			}
+			$msg = '<div class="feedzy-error feedzy-api-error">' . $errors . '</div>';
 		}
 
 		$pro_msg = apply_filters( 'feedzy_run_status_errors', '', $post_id );
 
 		// the pro messages may not have the dashicons, so let's add them.
 		if ( $pro_msg && strpos( $pro_msg, 'dashicons-warning' ) === false ) {
-			// we will have to add class="nothing" so that the <br> doesn't get overriden repeatedly.
-			$pro_msg = '<hr>' . str_replace( '<br>', '<br class="nothing"><i class="dashicons dashicons-warning"></i>', $pro_msg );
-			$pro_msg = str_replace( '<div class="feedzy-error feedzy-api-error"><br class="nothing">', '<div class="feedzy-error feedzy-api-error">', $pro_msg );
+			$errors = '';
+			$pro_errors = explode( '<br>', $pro_msg );
+			if ( is_array( $pro_errors ) ) {
+				foreach ( $pro_errors as $err ) {
+					$errors .= '<div><i class="dashicons dashicons-warning"></i>' . $err . '</div>';
+				}
+			} else {
+				$errors = '<div><i class="dashicons dashicons-warning"></i>' . $pro_errors . '</div>';
+			}
+			$pro_msg = '<div class="feedzy-error feedzy-api-error">' . $errors . '</div>';
+
 		}
 
 		return $msg . $pro_msg;
-	}
-
-	/**
-	 * Creates the data by extracting the 'import_info' from each import.
-	 *
-	 * @since   ?
-	 * @access  private
-	 */
-	private function get_import_info( $post_id ) {
-		$msg = '';
-		$import_info = get_post_meta( $post_id, 'import_info', true );
-		if ( $import_info ) {
-			$msg = '';
-			foreach ( $import_info as $label => $value ) {
-				switch ( $label ) {
-					case 'total':
-						if ( count( $value ) > 0 ) {
-							$msg .= '<br>' . sprintf( '%s: %s%d%s', __( 'Total items found', 'feedzy-rss-feeds' ), '<a href="#" title="' . __( 'Click to view details', 'feedzy-rss-feeds' ) . '" class="feedzy-dialog-open" data-dialog="feedzy-items-found-' . $post_id . '">', count( $value ), '</a>' );
-						} else {
-							$msg .= '<br>' . sprintf( '%s: %d', __( 'Total items found', 'feedzy-rss-feeds' ), count( $value ) );
-						}
-						if ( $value ) {
-							$msg .= '<div class="feedzy-items-found-' . $post_id . ' feedzy-dialog" title="' . __( 'Total items found', 'feedzy-rss-feeds' ) . '"><ol>';
-							foreach ( $value as $url => $title ) {
-								$msg .= sprintf( '<li><p><a href="%s" target="_blank">%s</a></p></li>', esc_url( $url ), esc_html( $title ) );
-							}
-							$msg .= '</ol></div>';
-						}
-						break;
-					case 'duplicates':
-						if ( count( $value ) > 0 ) {
-							$msg .= '<br>' . sprintf( '%s: %s%d%s', __( 'Duplicates found', 'feedzy-rss-feeds' ), '<a href="#" title="' . __( 'Click to view details', 'feedzy-rss-feeds' ) . '" class="feedzy-dialog-open" data-dialog="feedzy-dups-found-' . $post_id . '">', count( $value ), '</a>' );
-						}
-						if ( $value ) {
-							$msg .= '<div class="feedzy-dups-found-' . $post_id . ' feedzy-dialog" title="' . __( 'Duplicates found', 'feedzy-rss-feeds' ) . '"><ol>';
-							foreach ( $value as $url => $title ) {
-								$msg .= sprintf( '<li><p><a href="%s" target="_blank">%s</a></p></li>', esc_url( $url ), esc_html( $title ) );
-							}
-							$msg .= '</ol></div>';
-						}
-						break;
-				}
-			}
-		}
-		return apply_filters( 'feedzy_run_status_info', $msg, $post_id );
 	}
 
 	/**
@@ -699,6 +840,8 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	public function ajax() {
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
+
+		$_POST['feedzy_category_meta_noncename'] = $_POST['security'];
 
 		switch ( $_POST['_action'] ) {
 			case 'import_status':
@@ -729,11 +872,19 @@ class Feedzy_Rss_Feeds_Import {
 		global $wpdb;
 		$id      = $_POST['id'];
 		$status  = $_POST['status'];
-		$_POST['feedzy_category_meta_noncename'] = $_POST['security'];
 		$publish = 'draft';
+
+		// no activation till source is not valid.
 		if ( $status === 'true' ) {
+			$invalid_urls = apply_filters( 'feedzy_check_source_validity', get_post_meta( $id, 'source', true ), $id, true, false );
+			if ( ! empty( $invalid_urls ) ) {
+				$msg = apply_filters( 'feedzy_get_source_validity_error', '', get_post( $id ), '' );
+				wp_send_json_error( array( 'msg' => $msg ) );
+			}
+
 			$publish = 'publish';
 		}
+
 		$new_post_status = array(
 			'ID'          => $id,
 			'post_status' => $publish,
@@ -745,11 +896,9 @@ class Feedzy_Rss_Feeds_Import {
 
 		if ( is_wp_error( $post_id ) ) {
 			$errors = $post_id->get_error_messages();
-			foreach ( $errors as $error ) {
-				echo $error;
-			}
+			wp_send_json_error( array( 'msg' => implode( ', ', $errors ) ) );
 		}
-		wp_die(); // this is required to terminate immediately and return a proper response
+		wp_send_json_success();
 	}
 
 	/**
@@ -791,9 +940,8 @@ class Feedzy_Rss_Feeds_Import {
 		$job    = get_post( $_POST['id'] );
 		$count  = $this->run_job( $job, 100 );
 
-		$msg    = $count > 0 ? sprintf( __( 'Successfully run! %d items imported.', 'feedzy-rss-feeds' ), $count ) : __( 'Nothing imported!', 'feedzy-rss-feeds' );
-
-		$msg    .= $this->get_import_errors( $job->ID, true );
+		$msg    = $count > 0 ? __( 'Successfully run!', 'feedzy-rss-feeds' ) : __( 'Nothing imported!', 'feedzy-rss-feeds' );
+		$msg    .= ' (' . __( 'Refresh this page for the updated status', 'feedzy-rss-feeds' ) . ')';
 
 		wp_send_json_success( array( 'msg' => $msg ) );
 	}
@@ -952,7 +1100,10 @@ class Feedzy_Rss_Feeds_Import {
 
 		$options['__jobID'] = $job->ID;
 
-		update_post_meta( $job->ID, 'last_run', time() );
+		$last_run = time();
+		update_post_meta( $job->ID, 'last_run', $last_run );
+		// we will use this last_run_id to associate imports with a specific job run.
+		update_post_meta( $job->ID, 'last_run_id', $last_run );
 		delete_post_meta( $job->ID, 'import_errors' );
 		delete_post_meta( $job->ID, 'import_info' );
 
@@ -1211,6 +1362,9 @@ class Feedzy_Rss_Feeds_Import {
 			update_post_meta( $new_post_id, 'feedzy_item_url', esc_url_raw( $item['item_url'] ) );
 			update_post_meta( $new_post_id, 'feedzy_job', $job->ID );
 			update_post_meta( $new_post_id, 'feedzy_item_author', sanitize_text_field( $author ) );
+
+			// we can use this to associate the items that were imported in a particular run.
+			update_post_meta( $new_post_id, 'feedzy_job_time', $last_run );
 
 			do_action( 'feedzy_after_post_import', $new_post_id, $item, $this->settings );
 		}
@@ -1684,7 +1838,6 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	public function add_import_actions( $actions, $post ) {
 		if ( $post->post_type === 'feedzy_imports' ) {
-
 			// don't need quick edit.
 			unset( $actions['inline hide-if-no-js'] );
 
@@ -1693,6 +1846,10 @@ class Feedzy_Rss_Feeds_Import {
 				$post->ID,
 				esc_html( __( 'Purge &amp; Reset', 'feedzy-rss-feeds' ) )
 			);
+		} elseif ( 1 === intval( get_post_meta( $post->ID, 'feedzy', true ) ) ) {
+			// show an unclickable action that mentions that it is imported by us
+			// so that users are aware
+			$actions['feedzy'] = sprintf( '(%s)', __( 'Imported by Feedzy', 'feedzy-rss-feeds' ) );
 		}
 		return $actions;
 	}
@@ -1727,18 +1884,25 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	public function pre_get_posts( $query ) {
 		if ( is_admin() && $query->is_main_query() && ! empty( $_GET['feedzy_job_id'] ) ) {
-			$query->set(
-				'meta_query', array(
-					array(
-						'key' => 'feedzy',
-						'value' => 1,
-					),
-					array(
-						'key' => 'feedzy_job',
-						'value' => $_GET['feedzy_job_id'],
-					),
-				)
+			$meta_query = array(
+				array(
+					'key' => 'feedzy',
+					'value' => 1,
+				),
+				array(
+					'key' => 'feedzy_job',
+					'value' => $_GET['feedzy_job_id'],
+				),
 			);
+
+			if ( ! empty( $_GET['feedzy_job_time'] ) ) {
+				$meta_query[] = array(
+					'key' => 'feedzy_job_time',
+					'value' => $_GET['feedzy_job_time'],
+				);
+			}
+
+			$query->set( 'meta_query', $meta_query );
 		}
 	}
 }

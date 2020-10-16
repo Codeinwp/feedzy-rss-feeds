@@ -1,4 +1,14 @@
 
+ ### v3.4.3 - 2020-08-26 
+ **Changes:** 
+ * [Fix] HTML tags being trimmed on save of the import job
+* [Fix] Issue with nonce not being checked correctly
+ 
+ ### v3.4.2 - 2020-08-12 
+ **Changes:** 
+ * [Fix] Compatibility with WP 5.5
+* [Feat] Link to items imported across runs in Feed2Post
+ 
  ### v3.4.1 - 2020-07-23 
  **Changes:** 
  * [Feat] Feed2Post - Provide more info on imported content and possible errors

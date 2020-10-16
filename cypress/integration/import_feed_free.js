@@ -28,8 +28,8 @@ describe('Test Free - Import Feed', function() {
         cy.visit('/post-new.php?post_type=feedzy_imports');
 
         // fill up the form
-        cy.get('#title').clear().type( feed.url );
-        cy.get('[name="feedzy_meta_data[source]"]').clear().type( feed.url );
+        cy.get('#title').clear().type( feed.invalidurl );
+        cy.get('[name="feedzy_meta_data[source]"]').clear().type( feed.invalidurl );
 
         // locked for pro?
         cy.get('.only-pro').should('have.length', feed.locked);
@@ -77,6 +77,24 @@ describe('Test Free - Import Feed', function() {
 
         cy.get('button[type="submit"][name="save"]').scrollIntoView().click({force:true});
 
+        // should bring you back to the edit screen, not the listing screen
+        cy.url().should('not.include', 'edit.php?post_type=feedzy_imports');
+
+        // show a notice.
+        cy.get('div.notice.feedzy-error-critical').should('be.visible');
+    })
+
+    it('Update the new import with VALID url', function() {
+        cy.visit('/edit.php?post_type=feedzy_imports');
+
+        cy.get('tr:nth-of-type(1) .row-title').click();
+
+        // fill up the form
+        cy.get('#title').clear().type( feed.url );
+        cy.get('[name="feedzy_meta_data[source]"]').clear().type( feed.url );
+
+        cy.get('button[type="submit"][name="save"]').scrollIntoView().click({force:true});
+
         // check if the import has been setup
         cy.url().should('include', 'edit.php?post_type=feedzy_imports');
         cy.get('tr:nth-of-type(1) .feedzy-toggle').should('not.be.checked');
@@ -110,74 +128,103 @@ describe('Test Free - Import Feed', function() {
         cy.visit('/edit.php?post_type=feedzy_imports');
         cy.get('tr:nth-of-type(1) .feedzy-toggle').should('not.be.checked');
 
+        // activate.
         cy.get('tr:nth-of-type(1) .feedzy-toggle').check({force:true});
         cy.visit('/edit.php?post_type=feedzy_imports');
         cy.get('tr:nth-of-type(1) .feedzy-toggle').should('be.checked');
 
+        // check last run status has all the initial data.
+        cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(1)').invoke('data', 'value').should(($value) => {
+            expect(parseInt($value)).to.equal(0); // found
+        });
+        cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(2)').invoke('data', 'value').should(($value) => {
+            expect(parseInt($value)).to.equal(0); // duplicate
+        });
+        cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(3)').invoke('data', 'value').should(($value) => {
+            expect(parseInt($value)).to.equal(0); // imported
+        });
+        cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(4)').invoke('data', 'value').should(($value) => {
+            expect(parseInt($value)).to.equal(0); // cumulative
+        });
+        cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(5)').invoke('data', 'value').should(($value) => {
+            expect(parseInt($value)).to.equal(-1); // success
+        });
+
         // 4. RUN
-        cy.get('tr:nth-of-type(1) .feedzy-run-now').should('be.visible');
-        cy.get('tr:nth-of-type(1) .feedzy-run-now').click();
+        cy.get('table.posts:nth-of-type(1) .feedzy-run-now').should('be.visible');
+        cy.get('table.posts:nth-of-type(1) .feedzy-run-now').click();
+        cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(1)').invoke('html').should('include', 'Importing');
+
         cy.wait(10 * parseInt(feed.wait));
-        cy.get('tr:nth-of-type(1) .feedzy-error-critical').invoke('html').should('include', 'Successfully run');
-        cy.get('tr:nth-of-type(1) .feedzy-error-critical').invoke('html').should('include', feed.items + ' items imported.');
+        cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(1)').invoke('html').should('include', 'Successfully run');
 
         cy.visit('/edit.php?post_type=feedzy_imports')
 
-        // check last run status column has all the data.
-        cy.get('tr:nth-of-type(1) td.feedzy-last_run').invoke('html').then( ($html) => {
-            cy.wrap($html).should('include', 'Imported ' + feed.items + ' item(s)');
-            cy.wrap($html).should('include', 'hours');
-            cy.wrap($html).should('include', 'minutes ago');
-            cy.wrap($html).should('include', 'Items imported across runs: <b>' + feed.items + '</b>');
-            cy.wrap($html).should('include', 'Total items found:');
-            cy.wrap($html).should('include', feed.items + '</a>');
-
-            // no duplicates.
-            cy.wrap($html).should('not.include', 'Duplicates found:');
+        // check last run status has all the data.
+        cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(1)').invoke('data', 'value').should(($value) => {
+            expect(parseInt($value)).to.equal(parseInt(feed.items)); // found
+        });
+        cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(2)').invoke('data', 'value').should(($value) => {
+            expect(parseInt($value)).to.equal(0); // duplicate
+        });
+        cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(3)').invoke('data', 'value').should(($value) => {
+            expect(parseInt($value)).to.equal(parseInt(feed.items)); // imported
+        });
+        cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(4)').invoke('data', 'value').should(($value) => {
+            expect(parseInt($value)).to.equal(parseInt(feed.items)); // cumulative
+        });
+        cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(5)').invoke('data', 'value').should(($value) => {
+            expect(parseInt($value)).to.equal(1); // success
         });
 
         // 5. RUN AGAIN
         cy.visit('/edit.php?post_type=feedzy_imports')
 
         // run import
-        cy.get('tr:nth-of-type(1) .feedzy-run-now').should('be.visible');
-        cy.get('tr:nth-of-type(1) .feedzy-run-now').click();
+        cy.get('table.posts:nth-of-type(1) .feedzy-run-now').should('be.visible');
+        cy.get('table.posts:nth-of-type(1) .feedzy-run-now').click();
         cy.wait(2 * parseInt(feed.wait));
-        cy.get('tr:nth-of-type(1) .feedzy-error-critical').invoke('html').should('include', 'Nothing imported');
+        cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(1)').invoke('html').should('include', 'Nothing imported');
 
         cy.visit('/edit.php?post_type=feedzy_imports')
 
-        // check last run status column has all the data.
-        cy.get('tr:nth-of-type(1) td.feedzy-last_run').invoke('html').then( ($html) => {
-            cy.wrap($html).should('include', 'Imported 0 item(s)');
-            cy.wrap($html).should('include', 'hours');
-            cy.wrap($html).should('include', 'minutes ago');
-            cy.wrap($html).should('include', 'Items imported across runs: <b>' + feed.items + '</b>');
-            cy.wrap($html).should('include', 'Total items found:');
-            cy.wrap($html).should('include', feed.items + '</a>');
-
-            // duplicates found.
-            cy.wrap($html).should('include', 'Duplicates found:');
+        // check last run status has all the data.
+        cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(1)').invoke('data', 'value').should(($value) => {
+            expect(parseInt($value)).to.equal(parseInt(feed.items)); // found
+        });
+        cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(2)').invoke('data', 'value').should(($value) => {
+            expect(parseInt($value)).to.equal(parseInt(feed.items)); // duplicate
+        });
+        cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(3)').invoke('data', 'value').should(($value) => {
+            expect(parseInt($value)).to.equal(0); // imported
+        });
+        cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(4)').invoke('data', 'value').should(($value) => {
+            expect(parseInt($value)).to.equal(parseInt(feed.items)); // cumulative
+        });
+        cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(5)').invoke('data', 'value').should(($value) => {
+            expect(parseInt($value)).to.equal(1); // success
         });
 
+        cy.visit('/edit.php?post_type=feedzy_imports')
+
         // 6. VERIFY IMPORTED ITEMS
-        cy.visit('/edit.php?post_type=post')
+        cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(4) a').first().click();
 
         // should have N posts.
-        cy.get('tr td a.row-title:contains("' + PREFIX + '")').should('have.length', feed.items);
+        cy.get('table.posts tbody tr').should('have.length', feed.items);
 
         // should have item_custom_ in each post title
-        cy.get('tr td a.row-title:contains("' + PREFIX + '"):contains("item_custom_")').should('have.length', feed.items);
+        cy.get('table.posts tbody tr td a.row-title:contains("item_custom_")').should('have.length', feed.items);
 
         // should have categories and tags
-        cy.get('tr td.categories:contains("' + PREFIX.trim() + '")').should('have.length', feed.items);
-        cy.get('tr td.tags:contains("' + PREFIX.trim() + '")').should('have.length', feed.items);
+        cy.get('table.posts tbody tr td.categories').should('have.length', feed.items);
+        cy.get('table.posts tbody tr td.tags').should('have.length', feed.items);
 
         // all authors should be wordpress
-        cy.get('tr td.author:contains("wordpress")').should('have.length.of.at.least', feed.items);
+        cy.get('table.posts tbody tr td.author:contains("wordpress")').should('have.length', feed.items);
 
         // click to view post
-        cy.get('tr td a.row-title:contains("' + PREFIX + '")').first().parent().parent().find('span.view a').click({ force: true });
+        cy.get('table.posts tbody tr td a.row-title').first().parent().parent().find('span.view a').click({ force: true });
 
         cy.wait(feed.wait);
 
