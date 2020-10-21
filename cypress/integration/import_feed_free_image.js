@@ -1,4 +1,4 @@
-describe('Test Free - Import Feed', function() {
+describe('Test Free - Import Feed Images', function() {
     before(function(){
         // login to WP
         Cypress.config('baseUrl', Cypress.env('host') + 'wp-admin/');
@@ -15,13 +15,6 @@ describe('Test Free - Import Feed', function() {
     it.skip('Temporary test', function() {
         // empty
     });
-
-    it('Check Settings', function() {
-        cy.visit('/admin.php?page=feedzy-settings');
-
-        const settings = Cypress.env('settings');
-        cy.get('.nav-tab').should('have.length', settings.tabs);
-    })
 
     it('Create import WITH fallback image', function() {
         // 1. CREATE
