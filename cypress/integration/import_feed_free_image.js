@@ -121,7 +121,7 @@ describe('Test Free - Import Feed Images', function() {
         cy.get('body:contains("' + PREFIX + '")').should('have.length', 1);
 
         // featured image should exist.
-        cy.get('.post-meta-wrapper').scrollIntoView({force:true});
+        cy.get('.post-meta-single-top').scrollIntoView({force:true});
         cy.get('.featured-media').should('have.length', 1);
         cy.get('.featured-media').scrollIntoView({force:true});
         cy.get('.attachment-post-thumbnail').should('have.length', 1);
