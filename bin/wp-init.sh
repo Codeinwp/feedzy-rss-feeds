@@ -10,7 +10,13 @@ echo "Sleeping for $sleep_time..."
 sleep $sleep_time
 
 # install WP
-docker exec -it feedzy_wordpress wp --quiet core install --url="http://$wp_host:8888/" --admin_user="wordpress" --admin_password="wordpress" --admin_email="test1@xx.com" --title="test" --skip-email
+docker exec $args feedzy_wordpress wp --allow-root core install --url="http://$wp_host:8888/" --admin_user="wordpress" --admin_password="wordpress" --admin_email="test1@xx.com" --title="test" --skip-email
+
+# update core
+docker exec $args feedzy_wordpress chown -R www-data:www-data /var/www/html/
+docker exec $args feedzy_wordpress chmod 0777 -R /var/www/html/wp-content
+docker exec $args feedzy_wordpress wp --allow-root core update --version=5.5
+docker exec $args feedzy_wordpress wp --allow-root core update-db
 
 # install required external plugins
 docker exec -it feedzy_wordpress chown -R www-data:www-data /var/www/html/
