@@ -30,3 +30,7 @@ npm run cypress:run
 export CYPRESS_SPEC_TO_RUN="import_feed_free.js"
 npm run cypress:run
 
+# import feed fallback image
+export CYPRESS_SPEC_TO_RUN="import_feed_free_image.js"
+npm run cypress:run
+

@@ -346,7 +346,7 @@
 							<img src="<?php echo $fallback_image; ?>">
 						<?php } ?></span>
 					<input type="hidden" name="feedzy_meta_data[fallback_img]" id="fallback_img" value="<?php echo $fallback_image; ?>">
-					<button type="button" class="btn btn-small btn-add-fields" id="feedzy-media-upload-add"><?php _e( 'Upload image', 'feedzy-rss-feeds' ); ?></button>
+					<button type="button" class="btn btn-small btn-add-fields" id="feedzy-media-upload-add"><?php _e( 'Select image', 'feedzy-rss-feeds' ); ?></button>
 					<button type="button" class="btn btn-small btn-remove-fields" id="feedzy-media-upload-remove"><?php _e( 'Remove image', 'feedzy-rss-feeds' ); ?></button>
 				</div>
 			</div>

@@ -451,7 +451,6 @@ class Feedzy_Rss_Feeds_Import {
 			// if invalid source has been found, redirect back to edit screen
 			// where errors can be shown
 			$invalid = get_post_meta( $post_id, '__transient_feedzy_invalid_source', true );
-			error_log( "redirect_post_location $post_id = " . print_r( $invalid, true ) );
 			if ( empty( $invalid ) ) {
 				return admin_url( 'edit.php?post_type=feedzy_imports' );
 			}
