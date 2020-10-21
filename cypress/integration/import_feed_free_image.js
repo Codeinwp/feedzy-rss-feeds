@@ -40,9 +40,9 @@ describe('Test Free - Import Feed Images', function() {
         cy.get('span#feedzy_image_fallback_span').should('be.empty');
 
         // fallback image
-        cy.get('#menu-item-browse').click({force:true});
         cy.get('#feedzy-media-upload-add').scrollIntoView({force:true}).click({force:true}).then( () => {
             cy.get('.media-modal-content').then( ($modal) => {
+                cy.wrap($modal).find('#menu-item-browse').click({force:true});
                 cy.wrap($modal).find('ul.attachments li').first().click({force:true});
                 cy.wrap($modal).find('button.media-button-select').click({force:true});
             }).then( () => {
