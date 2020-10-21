@@ -26,7 +26,7 @@ docker exec -it feedzy_wordpress wp plugin install classic-editor --activate
 docker exec -it feedzy_wordpress chmod 777 /var/www/html/wp-content
 
 # so that composer does not fail
-docker exec -it feedzy_wordpress chmod -R 777 /var/www/html/wp-content/plugins/feedzy-rss-feeds-pro
+docker exec -it feedzy_wordpress chmod -R 777 /var/www/html/wp-content/plugins/feedzy-rss-feeds
 
 # activate
 docker exec -it feedzy_wordpress wp --quiet plugin activate feedzy-rss-feeds
