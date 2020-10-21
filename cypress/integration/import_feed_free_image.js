@@ -120,8 +120,9 @@ describe('Test Free - Import Feed Images', function() {
 
         cy.get('body:contains("' + PREFIX + '")').should('have.length', 1);
 
-        // featured image should exist.
         cy.get('.post-meta-single-top').scrollIntoView({force:true});
+
+        // featured image should exist.
         cy.get('.featured-media').should('have.length', 1);
         cy.get('.featured-media').scrollIntoView({force:true});
         cy.get('.attachment-post-thumbnail').should('have.length', 1);
@@ -162,7 +163,7 @@ describe('Test Free - Import Feed Images', function() {
 
         // check if the import has been setup
         cy.url().should('include', 'edit.php?post_type=feedzy_imports');
-        cy.get('table.posts:nth-of-type(1) .feedzy-run-now').should('be.visible');
+        cy.get('table.posts:nth-of-type(1) .feedzy-run-now:nth-of-type(1)').should('be.visible');
 
         // check last run status has all the initial data.
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(1)').invoke('data', 'value').should(($value) => {
@@ -182,7 +183,7 @@ describe('Test Free - Import Feed Images', function() {
         });
 
         // 2. RUN
-        cy.get('table.posts:nth-of-type(1) .feedzy-run-now').click();
+        cy.get('table.posts:nth-of-type(1) .feedzy-run-now:nth-of-type(1)').click();
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(1)').invoke('html').should('include', 'Importing');
 
         cy.wait(3 * parseInt(feed.wait));
