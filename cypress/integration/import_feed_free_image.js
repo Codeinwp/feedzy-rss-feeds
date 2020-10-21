@@ -121,11 +121,14 @@ describe('Test Free - Import Feed Images', function() {
         cy.get('body:contains("' + PREFIX + '")').should('have.length', 1);
 
         // featured image should exist.
-        cy.get('.attachment-post-thumbnail.size-post-thumbnail.wp-post-image').should('have.length', 1);
+        cy.get('.post-meta-wrapper').scrollIntoView({force:true});
+        cy.get('.featured-media').should('have.length', 1);
+        cy.get('.featured-media').scrollIntoView({force:true});
+        cy.get('.attachment-post-thumbnail').should('have.length', 1);
 
         // featured image should be the fallback image
         // the name may not be exact because it will be a larger image than the thumbnail we chose.
-        cy.get('.attachment-post-thumbnail.size-post-thumbnail.wp-post-image').invoke('attr', 'src').should('contain', Cypress.env("temp_fallback_img"));
+        cy.get('.attachment-post-thumbnail').invoke('attr', 'src').should('contain', Cypress.env("temp_fallback_img"));
     })
 
     it('Create import EXCLUDING imageless items', function() {
