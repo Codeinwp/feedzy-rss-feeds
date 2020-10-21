@@ -43,8 +43,5 @@ docker exec -it feedzy_wordpress wp --quiet config set WP_DEBUG true --raw
 docker exec -it feedzy_wordpress wp --quiet config set WP_DEBUG_LOG true --raw
 docker exec -it feedzy_wordpress wp --quiet config set WP_DEBUG_DISPLAY false --raw
 
-# download an image for the media upload box
-docker exec -it feedzy_wordpress wp --quiet media import https://s.w.org/style/images/wp-header-logo.png --title='The WordPress logo' --alt="Semantic personal publishing"
-
 
 
