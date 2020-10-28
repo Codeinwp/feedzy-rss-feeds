@@ -438,7 +438,6 @@ class Feedzy_Rss_Feeds_Import {
 			// if invalid source has been found, redirect back to edit screen
 			// where errors can be shown
 			$invalid = get_post_meta( $post_id, '__transient_feedzy_invalid_source', true );
-			error_log( "redirect_post_location $post_id = " . print_r( $invalid, true ) );
 			if ( empty( $invalid ) ) {
 				return admin_url( 'edit.php?post_type=feedzy_imports' );
 			}
@@ -1146,12 +1145,6 @@ class Feedzy_Rss_Feeds_Import {
 				continue;
 			}
 
-			$import_image = strpos( $import_content, '[#item_image]' ) !== false || strpos( $import_featured_img, '[#item_image]' ) !== false;
-			if ( $import_image && empty( $item['item_img_path'] ) ) {
-				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to find an image for item title %s.', $item['item_title'] ), 'warn', __FILE__, __LINE__ );
-				$import_image_errors++;
-			}
-
 			$author     = '';
 			if ( $item['item_author'] ) {
 				if ( is_string( $item['item_author'] ) ) {
@@ -1197,7 +1190,10 @@ class Feedzy_Rss_Feeds_Import {
 			$post_title = apply_filters( 'feedzy_invoke_services', $post_title, 'title', $item['item_title'], $job );
 
 			$item_link = '<a href="' . $item['item_url'] . '" target="_blank">' . __( 'Read More', 'feedzy-rss-feeds' ) . '</a>';
-			$image_html   = '<img src="' . $item['item_img_path'] . '" title="' . $item['item_title'] . '" />';
+			$image_html   = '';
+			if ( ! empty( $item['item_img_path'] ) ) {
+				$image_html   = '<img src="' . $item['item_img_path'] . '" title="' . $item['item_title'] . '" />';
+			}
 			$post_content = str_replace(
 				array(
 					'[#item_description]',
@@ -1325,14 +1321,27 @@ class Feedzy_Rss_Feeds_Import {
 
 			$index++;
 
-			if ( trim( $import_featured_img ) !== '' && ! empty( $item['item_img_path'] ) ) {
-				$image_url = str_replace( '[#item_image]', $item['item_img_path'], $import_featured_img );
+			if ( ! empty( $import_featured_img ) ) {
+				$image_url = '';
 				$img_success = true;
-				if ( $image_url !== '' && isset( $item['item_img_path'] ) && $item['item_img_path'] !== '' ) {
-					$img_success = $this->generate_featured_image( $image_url, $new_post_id, $item['item_title'], $import_errors, $import_info );
+
+				// image tag
+				if ( strpos( $import_featured_img, '[#item_image]' ) !== false ) {
+					// image exists in item
+					if ( ! empty( $item['item_img_path'] ) ) {
+						$image_url = str_replace( '[#item_image]', $item['item_img_path'], $import_featured_img );
+					} else {
+						$img_success = false;
+					}
 				} else {
-					$img_success = $this->generate_featured_image( $import_featured_img, $new_post_id, $item['item_title'], $import_errors, $import_info );
+					$image_url = $import_featured_img;
 				}
+
+				if ( ! empty( $image_url ) ) {
+					// if import_featured_img is a tag
+					$img_success = $this->generate_featured_image( $image_url, $new_post_id, $item['item_title'], $import_errors, $import_info );
+				}
+
 				if ( ! $img_success ) {
 					$import_image_errors++;
 				}
