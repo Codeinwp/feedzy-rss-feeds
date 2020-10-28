@@ -438,7 +438,6 @@ class Feedzy_Rss_Feeds_Import {
 			// if invalid source has been found, redirect back to edit screen
 			// where errors can be shown
 			$invalid = get_post_meta( $post_id, '__transient_feedzy_invalid_source', true );
-			error_log( "redirect_post_location $post_id = " . print_r( $invalid, true ) );
 			if ( empty( $invalid ) ) {
 				return admin_url( 'edit.php?post_type=feedzy_imports' );
 			}
@@ -1146,12 +1145,6 @@ class Feedzy_Rss_Feeds_Import {
 				continue;
 			}
 
-			$import_image = strpos( $import_content, '[#item_image]' ) !== false || strpos( $import_featured_img, '[#item_image]' ) !== false;
-			if ( $import_image && empty( $item['item_img_path'] ) ) {
-				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to find an image for item title %s.', $item['item_title'] ), 'warn', __FILE__, __LINE__ );
-				$import_image_errors++;
-			}
-
 			$author     = '';
 			if ( $item['item_author'] ) {
 				if ( is_string( $item['item_author'] ) ) {
@@ -1334,7 +1327,7 @@ class Feedzy_Rss_Feeds_Import {
 				if ( ! empty( $image_url ) && isset( $item['item_img_path'] ) && empty( $item['item_img_path'] ) ) {
 					$img_success = $this->generate_featured_image( $image_url, $new_post_id, $item['item_title'], $import_errors, $import_info );
 				} else {
-					$img_success = $this->generate_featured_image( $import_featured_img, $new_post_id, $item['item_title'], $import_errors, $import_info );
+					$img_success = $this->generate_featured_image( $image_url, $new_post_id, $item['item_title'], $import_errors, $import_info );
 				}
 				if ( ! $img_success ) {
 					$import_image_errors++;
