@@ -1324,10 +1324,12 @@ class Feedzy_Rss_Feeds_Import {
 				if ( ! empty( $item['item_img_path'] ) ) {
 					$image_url = str_replace( '[#item_image]', $item['item_img_path'], $import_featured_img );
 				}
-				if ( ! empty( $image_url ) && isset( $item['item_img_path'] ) && empty( $item['item_img_path'] ) ) {
+				if ( ! empty( $image_url ) ) {
+					// if import_featured_img is a tag
 					$img_success = $this->generate_featured_image( $image_url, $new_post_id, $item['item_title'], $import_errors, $import_info );
 				} else {
-					$img_success = $this->generate_featured_image( $image_url, $new_post_id, $item['item_title'], $import_errors, $import_info );
+					// if import_featured_img is (probably) a URL
+					$img_success = $this->generate_featured_image( $import_featured_img, $new_post_id, $item['item_title'], $import_errors, $import_info );
 				}
 				if ( ! $img_success ) {
 					$import_image_errors++;
