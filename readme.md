@@ -3,7 +3,7 @@
 **Tags:** rss aggregator, news aggregator, autoblogging, feed to post, rss import  
 **Requires at least:** 3.7  
 **Requires PHP:** 5.3  
-**Tested up to:** 5.4  
+**Tested up to:** 5.5  
 **Stable tag:** trunk  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
@@ -146,6 +146,7 @@ This plugin is maintained and supported by Themeisle, check out some of the othe
 2. Insert shortcode ! ;-)
 
 ## Frequently Asked Questions ##
+
 
 
 
@@ -427,26 +428,29 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = How to get videos from YouTube with Feedzy =
  [https://docs.themeisle.com/article/1113-how-to-get-videos-from-youtube-with-feedzy](https://docs.themeisle.com/article/1113-how-to-get-videos-from-youtube-with-feedzy)
 
- = Feedzy RSS Feeds Documentation = 
- [https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation](https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation) 
+ = Feedzy RSS Feeds Documentation =
+ [https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation](https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation)
 
- = How to use Feed to Post feature in Feedzy = 
- [https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy](https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy) 
+ = How to use Feed to Post feature in Feedzy =
+ [https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy](https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy)
 
- = Feedzy Troubleshooting Guide = 
- [https://docs.themeisle.com/article/1155-feedzy-troubleshooting-guide](https://docs.themeisle.com/article/1155-feedzy-troubleshooting-guide) 
+ = Feedzy Troubleshooting Guide =
+ [https://docs.themeisle.com/article/1155-feedzy-troubleshooting-guide](https://docs.themeisle.com/article/1155-feedzy-troubleshooting-guide)
 
- = How to use Feedzy with a shortcode = 
- [https://docs.themeisle.com/article/1130-how-to-use-feedzy-with-a-shortcode](https://docs.themeisle.com/article/1130-how-to-use-feedzy-with-a-shortcode) 
+ = How to use Feedzy with a shortcode =
+ [https://docs.themeisle.com/article/1130-how-to-use-feedzy-with-a-shortcode](https://docs.themeisle.com/article/1130-how-to-use-feedzy-with-a-shortcode)
 
- = Feedzy custom templates = 
- [https://docs.themeisle.com/article/1162-feedzy-custom-templates](https://docs.themeisle.com/article/1162-feedzy-custom-templates) 
+ = Feedzy custom templates =
+ [https://docs.themeisle.com/article/1162-feedzy-custom-templates](https://docs.themeisle.com/article/1162-feedzy-custom-templates)
 
- = How to change the date format RSS items in Feedzy = 
- [https://docs.themeisle.com/article/1200-how-to-change-the-date-format-for-rss-items-in-feedzy](https://docs.themeisle.com/article/1200-how-to-change-the-date-format-for-rss-items-in-feedzy) 
+ = How to change the date format RSS items in Feedzy =
+ [https://docs.themeisle.com/article/1200-how-to-change-the-date-format-for-rss-items-in-feedzy](https://docs.themeisle.com/article/1200-how-to-change-the-date-format-for-rss-items-in-feedzy)
 
- = Lazy loading feed items with Feedzy = 
- [https://docs.themeisle.com/article/1220-lazy-loading-feed-items-with-feedzy](https://docs.themeisle.com/article/1220-lazy-loading-feed-items-with-feedzy) 
+ = Lazy loading feed items with Feedzy =
+ [https://docs.themeisle.com/article/1220-lazy-loading-feed-items-with-feedzy](https://docs.themeisle.com/article/1220-lazy-loading-feed-items-with-feedzy)
+
+ = How to install and activate Feedzy Pro =
+ [https://docs.themeisle.com/article/1247-how-to-install-and-activate-feedzy-pro](https://docs.themeisle.com/article/1247-how-to-install-and-activate-feedzy-pro)
 
  == Screenshots ==
 
@@ -457,6 +461,28 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
  == Changelog ==
+### 3.4.3 - 2020-08-26  ###
+
+* [Fix] HTML tags being trimmed on save of the import job
+* [Fix] Issue with nonce not being checked correctly
+
+
+### 3.4.2 - 2020-08-12  ###
+
+* - [Fix] Compatibility with WP 5.5
+* - [Feat] Link to items imported across runs in Feed2Post
+
+
+
+### 3.4.1 - 2020-07-23  ###
+
+* - [Feat] Feed2Post - Provide more info on imported content and possible errors
+* - [Feat] Feed2Post - New Purge & Reset button which allows to clear data of already imported items to reimport those again
+* - [Fix] Feed2Post - Change cache time to 55 minutes that new items can be imported in the next run
+* - [Fix] Conflict with Ultimate CSV Importer
+* - [Fix] Sync item image options between classic and block editor
+* - [Fix] Posts keeps "uncategorized" category in non-English sites
+
 ### 3.4.0 - 2020-05-28  ###
 
 * - [Feat] Options to import feeds to posts
