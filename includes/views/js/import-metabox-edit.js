@@ -5,7 +5,7 @@
  * @since	1.2.0
  * @package feedzy-rss-feeds-pro
  */
-/* global jQuery, ajaxurl, feedzy */
+/* global jQuery, ajaxurl, feedzy, tb_show */
 (function($){
 	function scroll_to_class(element_class, removed_height) {
 		var scroll_to = $( element_class ).offset().top - removed_height;
@@ -62,6 +62,7 @@
 	}
 
 	function update_status() {
+        var toggle = $( this );
 	    var post_id = $( this ).val();
 	    var status = $( this ).is( ':checked' );
 
@@ -73,8 +74,22 @@
 			'status': status
 		};
 
-		// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
-		$.post( ajaxurl, data, function() {} );
+        showSpinner(toggle);
+        $.ajax({
+            url: ajaxurl,
+            data: data,
+            method: 'POST',
+            success: function(data){
+                if( ! data.success && status ) {
+                    toggle.parents('tr').find('td.feedzy-source').find('.feedzy-error-critical').remove();
+                    toggle.parents('tr').find('td.feedzy-source').append($(data.data.msg));
+                    toggle.prop( 'checked', false );
+                }
+            },
+            complete: function(){
+                hideSpinner(toggle);
+            }
+        });
 		return true;
 	}
 
@@ -142,6 +157,11 @@
 	}
 
 	$( document ).ready(function() {
+        initImportScreen();
+        initSummary();
+	});
+
+    function initImportScreen() {
 		$( 'button.btn-submit' ).on( 'click', function( e ) {
 			$( window ).unbind( 'beforeunload' );
 			$( '#custom_post_status' ).val( $( this ).val() );
@@ -212,11 +232,47 @@
 			});
 		});
 
-        initSummary();
+        $('#feedzy-import-source ~ a').on('click', function(e){
+            let $url = $('#feedzy-import-source').val();
+            let $anchor = $(this);
+            $anchor.attr('href', $anchor.attr('data-href-base') + $url);
+        });
 
-	});
+        $('#preflight').on('click', function(e){
+            e.preventDefault();
+            var $fields = {};
+            // collect all elements.
+            $('#feedzy-import-form').find(':input').each(function(index, element){
+                if ( 'undefined' === typeof $(element).attr('name') ) {
+                    return;
+                }
+                $fields[ $(element).attr('name') ] = $(element).val();
+            });
+            tb_show( feedzy.i10n.dry_run_title, 'TB_inline?' );
+            $('#TB_ajaxContent').html(feedzy.i10n.dry_run_loading);
+            $.ajax({
+                url     : ajaxurl,
+                method  : 'post',
+                data    : {
+                    security    : feedzy.ajax.security,
+                    fields       : $.param($fields),
+                    action      : 'feedzy',
+                    _action      : 'dry_run'
+                },
+                success: function(data){
+                    $('#TB_ajaxContent').addClass('loaded');
+                    $('#TB_ajaxContent div').html(data.data.output);
+                }
+            });
+        });
+    }
 
     function initSummary() {
+        $('tr.type-feedzy_imports').each(function(i, e){
+            var $lastRunData = $(e).find('script.feedzy-last-run-data').html();
+            $($lastRunData).insertAfter(e);
+        });
+
         // pop-ups for informational text
         $( '.feedzy-dialog' ).dialog({
           modal: true,
@@ -240,8 +296,12 @@
         $('.feedzy-run-now').on('click', function(e){
             e.preventDefault();
             var button = $(this);
-            showSpinner(button);
-            button.parent().find('.feedzy-error').remove();
+            button.val(feedzy.i10n.importing);
+
+            var numberRow = button.parents('tr').find('~ tr.feedzy-import-status-row:first').find('td tr:first');
+            numberRow.find('td').hide();
+            numberRow.find('td:first').addClass('feedzy_run_now_msg').attr('colspan', 5).html(feedzy.i10n.importing).show();
+
             $.ajax({
                 url     : ajaxurl,
                 method  : 'post',
@@ -252,8 +312,10 @@
                     _action      : 'run_now'
                 },
                 success: function(data){
-                    hideSpinner(button);
-                    button.after($('<div class="feedzy-error feedzy-error-critical">' + data.data.msg + '</div>'));
+                    numberRow.find('td:first').html(data.data.msg);
+                },
+                complete: function(){
+                    button.val(feedzy.i10n.run_now);
                 }
             });
         });
@@ -283,6 +345,9 @@
                     _action      : 'purge'
                 },
                 success: function(){
+                    location.reload();
+                },
+                complete: function(){
                     hideSpinner(element);
                 }
             });
