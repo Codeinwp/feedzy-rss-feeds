@@ -1,4 +1,10 @@
 
+ ### v3.5.1 - 2020-10-30 
+ **Changes:** 
+ * [Fix] Importing random images with https://source.unsplash.com/random generator link in Feed to Post
+* [Fix] Importing fixed featured image in Feed to Post
+* [Fix] Enclosures that do no specify image extension are not imported even if the type is image/jpeg
+ 
  ### v3.5.0 - 2020-10-12 
  **Changes:** 
  * [Feat] Improved interface for adding new imports and for the imports listing page
