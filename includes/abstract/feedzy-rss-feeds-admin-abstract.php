@@ -1312,6 +1312,15 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  string
 	 */
 	public function feedzy_retrieve_image( $item, $sc = null ) {
+		$image_mime_types = array();
+		foreach ( wp_get_mime_types() as $extn => $mime ) {
+			if ( strpos( $mime, 'image/' ) !== false ) {
+				$image_mime_types[] = $mime;
+			}
+		}
+
+		$image_mime_types = apply_filters( 'feedzy_image_mime_types', $image_mime_types );
+
 		$the_thumbnail = '';
 		if ( $enclosures = $item->get_enclosures() ) {
 			foreach ( (array) $enclosures as $enclosure ) {
@@ -1334,6 +1343,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 					$pattern = '/https?:\/\/.*\.(?:jpg|JPG|jpeg|JPEG|jpe|JPE|gif|GIF|png|PNG)/i';
 					$imgsrc  = $thumbnail;
 					if ( preg_match( $pattern, $imgsrc, $matches ) ) {
+						$the_thumbnail = $thumbnail;
+						break;
+					} elseif ( in_array( $enclosure->type, $image_mime_types, true ) ) {
 						$the_thumbnail = $thumbnail;
 						break;
 					}
