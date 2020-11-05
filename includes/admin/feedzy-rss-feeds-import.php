@@ -1333,6 +1333,14 @@ class Feedzy_Rss_Feeds_Import {
 					} else {
 						$img_success = false;
 					}
+				} elseif ( strpos( $import_featured_img, '[#item_custom' ) !== false ) {
+					// custom image tag
+					$value = apply_filters( 'feedzy_parse_custom_tags', $import_featured_img, $results['feed'], $index );
+					if ( ! empty( $value ) && strpos( $value, '[#item_custom' ) === false ) {
+						$image_url = $value;
+					} else {
+						$img_success = false;
+					}
 				} else {
 					$image_url = $import_featured_img;
 				}
