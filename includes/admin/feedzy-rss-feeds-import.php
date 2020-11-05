@@ -1319,8 +1319,6 @@ class Feedzy_Rss_Feeds_Import {
 
 			do_action( 'feedzy_import_extra', $job, $results, $new_post_id, $index, $import_errors, $import_info );
 
-			$index++;
-
 			if ( ! empty( $import_featured_img ) ) {
 				$image_url = '';
 				$img_success = true;
@@ -1354,6 +1352,8 @@ class Feedzy_Rss_Feeds_Import {
 					$import_image_errors++;
 				}
 			}
+
+			$index++;
 
 			// indicate that this post was imported by feedzy.
 			update_post_meta( $new_post_id, 'feedzy', 1 );
