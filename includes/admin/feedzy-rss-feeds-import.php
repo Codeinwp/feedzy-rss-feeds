@@ -1319,8 +1319,6 @@ class Feedzy_Rss_Feeds_Import {
 
 			do_action( 'feedzy_import_extra', $job, $results, $new_post_id, $index, $import_errors, $import_info );
 
-			$index++;
-
 			if ( ! empty( $import_featured_img ) ) {
 				$image_url = '';
 				$img_success = true;
@@ -1330,6 +1328,14 @@ class Feedzy_Rss_Feeds_Import {
 					// image exists in item
 					if ( ! empty( $item['item_img_path'] ) ) {
 						$image_url = str_replace( '[#item_image]', $item['item_img_path'], $import_featured_img );
+					} else {
+						$img_success = false;
+					}
+				} elseif ( strpos( $import_featured_img, '[#item_custom' ) !== false ) {
+					// custom image tag
+					$value = apply_filters( 'feedzy_parse_custom_tags', $import_featured_img, $results['feed'], $index );
+					if ( ! empty( $value ) && strpos( $value, '[#item_custom' ) === false ) {
+						$image_url = $value;
 					} else {
 						$img_success = false;
 					}
@@ -1346,6 +1352,8 @@ class Feedzy_Rss_Feeds_Import {
 					$import_image_errors++;
 				}
 			}
+
+			$index++;
 
 			// indicate that this post was imported by feedzy.
 			update_post_meta( $new_post_id, 'feedzy', 1 );
