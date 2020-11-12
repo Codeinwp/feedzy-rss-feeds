@@ -164,11 +164,12 @@ class Feedzy_Rss_Feeds_Import {
 	 * @param   array  $itemArray The item attributes array.
 	 * @param   object $item The feed item.
 	 * @param   array  $sc The shorcode attributes array.
-	 * @param   int    $index The item number.
+	 * @param   int    $index The item number (may not be the same as the item_index).
+	 * @param   int    $item_index The real index of this items in the feed (maybe be different from $index if filters are used).
 	 *
 	 * @return mixed
 	 */
-	public function add_data_to_item( $itemArray, $item, $sc = null, $index = null ) {
+	public function add_data_to_item( $itemArray, $item, $sc = null, $index = null, $item_index = null ) {
 		$itemArray['item_categories'] = $this->retrieve_categories( null, $item );
 
 		// If set to true, SimplePie will return a unique MD5 hash for the item.
@@ -176,6 +177,7 @@ class Feedzy_Rss_Feeds_Import {
 		$itemArray['item_id']   = $item->get_id( false );
 
 		$itemArray['item']      = $item;
+		$itemArray['item_index']      = $item_index;
 		return $itemArray;
 	}
 
@@ -1184,7 +1186,7 @@ class Feedzy_Rss_Feeds_Import {
 			);
 
 			if ( $this->feedzy_is_business() ) {
-				$post_title = apply_filters( 'feedzy_parse_custom_tags', $post_title, $results['feed'], $index );
+				$post_title = apply_filters( 'feedzy_parse_custom_tags', $post_title, $results['feed'], $item['item_index'] );
 			}
 
 			$post_title = apply_filters( 'feedzy_invoke_services', $post_title, 'title', $item['item_title'], $job );
@@ -1241,7 +1243,7 @@ class Feedzy_Rss_Feeds_Import {
 			}
 
 			if ( $this->feedzy_is_business() ) {
-				$post_content = apply_filters( 'feedzy_parse_custom_tags', $post_content, $results['feed'], $index );
+				$post_content = apply_filters( 'feedzy_parse_custom_tags', $post_content, $results['feed'], $item['item_index'] );
 			}
 
 			$post_content   = apply_filters( 'feedzy_invoke_services', $post_content, 'content', $item['item_description'], $job );
@@ -1317,7 +1319,7 @@ class Feedzy_Rss_Feeds_Import {
 				}
 			}
 
-			do_action( 'feedzy_import_extra', $job, $results, $new_post_id, $index, $import_errors, $import_info );
+			do_action( 'feedzy_import_extra', $job, $results, $new_post_id, $index, $item['item_index'], $import_errors, $import_info );
 
 			$index++;
 
