@@ -57,28 +57,28 @@
 			<div class="feedzy-row <?php echo apply_filters( 'feedzy_upsell_class', '' ); ?>">
 				<?php echo apply_filters( 'feedzy_upsell_content', '' ); ?>
 				<div class="label_description">
-					<label class="feedzy-sr-only"><?php echo __( 'Display item only if the title contains specific keyword(s)', 'feedzy-rss-feeds' ); ?></label>
+					<label class="feedzy-sr-only"><?php echo __( 'Display item only if the title or content contains specific keyword(s)', 'feedzy-rss-feeds' ); ?></label>
 					<div>
 						<small><?php echo sprintf( __( 'You can provide comma-separated words. Remember, these words are %1$scase sensitive%2$s .e.g. News, news, STOCK', 'feedzy-rss-feeds' ), '<b>', '</b>' ); ?></small>
 					</div>
 				</div>
 				<div class="feedzy-separator"></div>
 				<div class="form-group input-group form_item">
-					<input type="text" name="feedzy_meta_data[inc_key]" placeholder="<?php echo __( '(eg. news, sports etc.)', 'feedzy-rss-feeds' ); ?>" class="form-control" value="<?php echo $inc_key; ?>"/>
+					<input type="text" name="feedzy_meta_data[inc_key]" placeholder="<?php echo __( '(eg. news, Sports, STOCK etc.)', 'feedzy-rss-feeds' ); ?>" class="form-control" value="<?php echo $inc_key; ?>"/>
 				</div>
 			</div>
 
 			<div class="feedzy-row <?php echo apply_filters( 'feedzy_upsell_class', '' ); ?>">
 				<?php echo apply_filters( 'feedzy_upsell_content', '' ); ?>
 				<div class="label_description">
-					<label class="feedzy-sr-only"><?php echo __( 'Exclude item if the title contains specific keyword(s)', 'feedzy-rss-feeds' ); ?></label>
+					<label class="feedzy-sr-only"><?php echo __( 'Exclude item if the title or content contains specific keyword(s)', 'feedzy-rss-feeds' ); ?></label>
 					<div>
 						<small><?php echo sprintf( __( 'You can provide comma-separated words. Remember, these words are %1$scase sensitive%2$s .e.g. News, news, STOCK', 'feedzy-rss-feeds' ), '<b>', '</b>' ); ?></small>
 					</div>
 				</div>
 				<div class="feedzy-separator"></div>
 				<div class="form-group input-group form_item">
-					<input type="text" name="feedzy_meta_data[exc_key]" placeholder="<?php echo __( '(eg. news, sports etc.)', 'feedzy-rss-feeds' ); ?>" class="form-control" value="<?php echo $exc_key; ?>"/>
+					<input type="text" name="feedzy_meta_data[exc_key]" placeholder="<?php echo __( '(eg. news, Sports, STOCK etc.)', 'feedzy-rss-feeds' ); ?>" class="form-control" value="<?php echo $exc_key; ?>"/>
 				</div>
 			</div>
 
@@ -86,7 +86,7 @@
 				<div class="label_description">
 					<label class="feedzy-sr-only"><?php _e( 'How many feed items to import from the source?', 'feedzy-rss-feeds' ); ?></label>
 					<div>
-						<small><?php echo sprintf( __( 'If you choose a high number, please check that you configuration can support it or your imports may fail.', 'feedzy-rss-feeds' ), '<b>', '</b>' ); ?></small>
+						<small><?php echo sprintf( __( 'If you choose a high number, please check that your configuration can support it or your imports may fail.', 'feedzy-rss-feeds' ), '<b>', '</b>' ); ?></small>
 					</div>
 				</div>
 				<div class="feedzy-separator"></div>
@@ -100,7 +100,7 @@
 				<div class="label_description">
 					<label class="feedzy-sr-only"><?php _e( 'Automatically delete the posts created for this import after how many days?', 'feedzy-rss-feeds' ); ?></label>
 					<div>
-						<small><?php _e( 'Helpful if you want to remove stale or old items automatically. If you choose 0, the imported items will never be deleted.', 'feedzy-rss-feeds' ); ?></small>
+						<small><?php _e( 'Helpful if you want to remove stale or old items automatically. If you choose 0, the imported items will not be automatically deleted.', 'feedzy-rss-feeds' ); ?></small>
 					</div>
 				</div>
 				<div class="feedzy-separator"></div>
