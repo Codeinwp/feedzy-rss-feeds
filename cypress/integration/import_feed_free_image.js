@@ -16,7 +16,7 @@ describe('Test Free - Import Feed Images', function() {
         // empty
     });
 
-    it('Create import WITH fallback image', function() {
+    it.skip('Create import WITH fallback image', function() {
         // 1. CREATE
         cy.visit('/post-new.php?post_type=feedzy_imports');
 
@@ -132,7 +132,7 @@ describe('Test Free - Import Feed Images', function() {
         cy.get('.attachment-post-thumbnail').invoke('attr', 'src').should('contain', Cypress.env("temp_fallback_img"));
     })
 
-    it('Create import EXCLUDING imageless items', function() {
+    it.skip('Create import EXCLUDING imageless items', function() {
         // 1. CREATE
         cy.visit('/post-new.php?post_type=feedzy_imports');
 
