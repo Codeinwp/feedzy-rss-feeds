@@ -261,7 +261,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		// image only items.
 		if ( array_key_exists( 'exc_noimage', $sc ) && 'yes' === $sc['exc_noimage'] ) {
-			$continue = ! empty( $this->feedzy_retrieve_image( $item, $sc ) );
+			$image = $this->feedzy_retrieve_image( $item, $sc );
+			$continue = ! empty( $image );
 		}
 
 		if ( feedzy_is_new() && ! feedzy_is_pro() ) {
