@@ -1091,18 +1091,20 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	public function get_feed_array( $feed_items, $sc, $feed, $feed_url, $sizes ) {
 		$count = 0;
 		$items = apply_filters( 'feedzy_feed_items', $feed->get_items( $sc['offset'] ), $feed_url );
+		$index = 0;
 		foreach ( (array) $items as $item ) {
-				$continue = apply_filters( 'feedzy_item_keyword', true, $sc, $item, $feed_url );
+			$continue = apply_filters( 'feedzy_item_keyword', true, $sc, $item, $feed_url, $index );
 			if ( $continue === true ) {
 				// Count items. This should be > and not >= because max, when not defined and empty, becomes 0.
 				if ( $count >= $sc['max'] ) {
 					break;
 				}
-				$item_attr                         = apply_filters( 'feedzy_item_attributes', $item_attr = '', $sizes, $item, $feed_url, $sc );
-				$feed_items[ $count ]             = $this->get_feed_item_filter( $sc, $sizes, $item, $feed_url, $count );
+				$item_attr                         = apply_filters( 'feedzy_item_attributes', $item_attr = '', $sizes, $item, $feed_url, $sc, $index );
+				$feed_items[ $count ]             = $this->get_feed_item_filter( $sc, $sizes, $item, $feed_url, $count, $index );
 				$feed_items[ $count ]['itemAttr'] = $item_attr;
-				$count ++;
+				$count++;
 			}
+			$index++;
 		}
 
 		return $feed_items;
@@ -1118,11 +1120,12 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @param   array  $sizes The sizes array.
 	 * @param   object $item The feed item object.
 	 * @param   string $feed_url The feed url.
-	 * @param   int    $index The item number.
+	 * @param   int    $index The item number (may not be the same as the item_index).
+	 * @param   int    $item_index The real index of this items in the feed (maybe be different from $index if filters are used).
 	 *
 	 * @return array
 	 */
-	private function get_feed_item_filter( $sc, $sizes, $item, $feed_url, $index ) {
+	private function get_feed_item_filter( $sc, $sizes, $item, $feed_url, $index, $item_index ) {
 		$item_link = $item->get_permalink();
 		// if the item has no link (possible in some cases), use the feed link
 		if ( empty( $item_link ) ) {
@@ -1307,7 +1310,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'item_content'       => apply_filters( 'feedzy_content', $item->get_content( false ), $item ),
 			'item_source'       => $feed_source,
 		);
-		$item_array = apply_filters( 'feedzy_item_filter', $item_array, $item, $sc, $index );
+		$item_array = apply_filters( 'feedzy_item_filter', $item_array, $item, $sc, $index, $item_index );
 
 		return $item_array;
 	}
@@ -1324,6 +1327,15 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  string
 	 */
 	public function feedzy_retrieve_image( $item, $sc = null ) {
+		$image_mime_types = array();
+		foreach ( wp_get_mime_types() as $extn => $mime ) {
+			if ( strpos( $mime, 'image/' ) !== false ) {
+				$image_mime_types[] = $mime;
+			}
+		}
+
+		$image_mime_types = apply_filters( 'feedzy_image_mime_types', $image_mime_types );
+
 		$the_thumbnail = '';
 		if ( $enclosures = $item->get_enclosures() ) {
 			foreach ( (array) $enclosures as $enclosure ) {
@@ -1346,6 +1358,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 					$pattern = '/https?:\/\/.*\.(?:jpg|JPG|jpeg|JPEG|jpe|JPE|gif|GIF|png|PNG)/i';
 					$imgsrc  = $thumbnail;
 					if ( preg_match( $pattern, $imgsrc, $matches ) ) {
+						$the_thumbnail = $thumbnail;
+						break;
+					} elseif ( in_array( $enclosure->type, $image_mime_types, true ) ) {
 						$the_thumbnail = $thumbnail;
 						break;
 					}

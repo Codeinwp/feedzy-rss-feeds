@@ -168,11 +168,12 @@ class Feedzy_Rss_Feeds_Import {
 	 * @param   array  $itemArray The item attributes array.
 	 * @param   object $item The feed item.
 	 * @param   array  $sc The shorcode attributes array.
-	 * @param   int    $index The item number.
+	 * @param   int    $index The item number (may not be the same as the item_index).
+	 * @param   int    $item_index The real index of this items in the feed (maybe be different from $index if filters are used).
 	 *
 	 * @return mixed
 	 */
-	public function add_data_to_item( $itemArray, $item, $sc = null, $index = null ) {
+	public function add_data_to_item( $itemArray, $item, $sc = null, $index = null, $item_index = null ) {
 		$itemArray['item_categories'] = $this->retrieve_categories( null, $item );
 
 		// If set to true, SimplePie will return a unique MD5 hash for the item.
@@ -180,6 +181,7 @@ class Feedzy_Rss_Feeds_Import {
 		$itemArray['item_id']   = $item->get_id( false );
 
 		$itemArray['item']      = $item;
+		$itemArray['item_index']      = $item_index;
 		return $itemArray;
 	}
 
@@ -1209,13 +1211,16 @@ class Feedzy_Rss_Feeds_Import {
 			);
 
 			if ( $this->feedzy_is_business() ) {
-				$post_title = apply_filters( 'feedzy_parse_custom_tags', $post_title, $results['feed'], $index );
+				$post_title = apply_filters( 'feedzy_parse_custom_tags', $post_title, $results['feed'], $item['item_index'] );
 			}
 
 			$post_title = apply_filters( 'feedzy_invoke_services', $post_title, 'title', $item['item_title'], $job );
 
 			$item_link = '<a href="' . $item['item_url'] . '" target="_blank">' . __( 'Read More', 'feedzy-rss-feeds' ) . '</a>';
-			$image_html   = '<img src="' . $item['item_img_path'] . '" title="' . $item['item_title'] . '" />';
+			$image_html   = '';
+			if ( ! empty( $item['item_img_path'] ) ) {
+				$image_html   = '<img src="' . $item['item_img_path'] . '" title="' . $item['item_title'] . '" />';
+			}
 			$post_content = str_replace(
 				array(
 					'[#item_description]',
@@ -1263,7 +1268,7 @@ class Feedzy_Rss_Feeds_Import {
 			}
 
 			if ( $this->feedzy_is_business() ) {
-				$post_content = apply_filters( 'feedzy_parse_custom_tags', $post_content, $results['feed'], $index );
+				$post_content = apply_filters( 'feedzy_parse_custom_tags', $post_content, $results['feed'], $item['item_index'] );
 			}
 
 			$post_content   = apply_filters( 'feedzy_invoke_services', $post_content, 'content', $item['item_description'], $job );
@@ -1339,22 +1344,43 @@ class Feedzy_Rss_Feeds_Import {
 				}
 			}
 
-			do_action( 'feedzy_import_extra', $job, $results, $new_post_id, $index, $import_errors, $import_info );
+			do_action( 'feedzy_import_extra', $job, $results, $new_post_id, $index, $item['item_index'], $import_errors, $import_info );
 
-			$index++;
-
-			if ( trim( $import_featured_img ) !== '' && ! empty( $item['item_img_path'] ) ) {
-				$image_url = str_replace( '[#item_image]', $item['item_img_path'], $import_featured_img );
+			if ( ! empty( $import_featured_img ) ) {
+				$image_url = '';
 				$img_success = true;
-				if ( $image_url !== '' && isset( $item['item_img_path'] ) && $item['item_img_path'] !== '' ) {
-					$img_success = $this->generate_featured_image( $image_url, $new_post_id, $item['item_title'], $import_errors, $import_info );
+
+				// image tag
+				if ( strpos( $import_featured_img, '[#item_image]' ) !== false ) {
+					// image exists in item
+					if ( ! empty( $item['item_img_path'] ) ) {
+						$image_url = str_replace( '[#item_image]', $item['item_img_path'], $import_featured_img );
+					} else {
+						$img_success = false;
+					}
+				} elseif ( strpos( $import_featured_img, '[#item_custom' ) !== false ) {
+					// custom image tag
+					$value = apply_filters( 'feedzy_parse_custom_tags', $import_featured_img, $results['feed'], $index );
+					if ( ! empty( $value ) && strpos( $value, '[#item_custom' ) === false ) {
+						$image_url = $value;
+					} else {
+						$img_success = false;
+					}
 				} else {
-					$img_success = $this->generate_featured_image( $import_featured_img, $new_post_id, $item['item_title'], $import_errors, $import_info );
+					$image_url = $import_featured_img;
 				}
+
+				if ( ! empty( $image_url ) ) {
+					// if import_featured_img is a tag
+					$img_success = $this->generate_featured_image( $image_url, $new_post_id, $item['item_title'], $import_errors, $import_info );
+				}
+
 				if ( ! $img_success ) {
 					$import_image_errors++;
 				}
 			}
+
+			$index++;
 
 			// indicate that this post was imported by feedzy.
 			update_post_meta( $new_post_id, 'feedzy', 1 );
