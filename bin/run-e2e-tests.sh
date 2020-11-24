@@ -18,6 +18,17 @@ set -e
 
 export CYPRESS_HOST=$wp_host
 
+# test ONLY free
+export CYPRESS_SPEC_TO_RUN="shortcode_free.js"
+npm run cypress:run
+
+# test ONLY free lazy loading
+export CYPRESS_SPEC_TO_RUN="shortcode_lazy_free.js"
+npm run cypress:run
+
+# import feed
+export CYPRESS_SPEC_TO_RUN="import_feed_free.js"
+npm run cypress:run
 
 # import feed fallback image
 export CYPRESS_SPEC_TO_RUN="import_feed_free_image.js"
