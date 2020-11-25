@@ -974,11 +974,13 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		$shortcode = sprintf(
-			'[feedzy-rss feeds="%s" max="%d" feed_title=no meta=no summary=no thumb=no error_empty="%s" keywords_title="%s" %s="%s" _dry_run_tags_="%s" _dryrun_="yes"]',
+			'[feedzy-rss feeds="%s" max="%d" feed_title=no meta=no summary=no thumb=no error_empty="%s" keywords_inc="%s" %s="%s" %s="%s" _dry_run_tags_="%s" _dryrun_="yes"]',
 			$feedzy_meta_data['source'],
 			$feedzy_meta_data['import_feed_limit'],
 			'', // should be empty
 			$feedzy_meta_data['inc_key'],
+			feedzy_is_pro() ? 'keywords_exc' : '',
+			feedzy_is_pro() ? $feedzy_meta_data['exc_key'] : '',
 			feedzy_is_pro() ? 'keywords_ban' : '',
 			feedzy_is_pro() ? $feedzy_meta_data['exc_key'] : '',
 			implode( ',', $tags )
@@ -1074,14 +1076,18 @@ class Feedzy_Rss_Feeds_Import {
 				'thumb'          => 'auto',
 				'default'        => '',
 				'size'           => '250',
-				'keywords_title' => $inc_key,
-				'keywords_ban'   => $exc_key,
+				'keywords_inc'   => $inc_key, // this is not keywords_title
+				'keywords_ban'   => $exc_key, // to support old pro that does not support keywords_exc
+				'keywords_exc'   => $exc_key, // this is not keywords_ban
 				'columns'        => 1,
 				'offset'         => 0,
 				'multiple_meta'  => 'no',
 				'refresh'        => '55_mins',
 			), $job
 		);
+
+		$admin = Feedzy_Rss_Feeds::instance()->get_admin();
+		$options = $admin->sanitize_attr( $options, $source );
 
 		$options['__jobID'] = $job->ID;
 
