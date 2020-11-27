@@ -269,22 +269,41 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			return $continue;
 		}
 
-		// included words.
-		$keywords_title = $sc['keywords_title'];
-		if ( ! empty( $keywords_title ) ) {
-			$continue = false;
-			foreach ( $keywords_title as $keyword ) {
-				if ( strpos( $item->get_title(), $keyword ) !== false ) {
-					$continue = true;
+		if ( isset( $sc['keywords_inc'] ) && ! empty( $sc['keywords_inc'] ) ) {
+			$keywords = $sc['keywords_inc'];
+			if ( ! empty( $keywords ) ) {
+				$continue = false;
+				foreach ( $keywords as $keyword ) {
+					if ( strpos( $item->get_title(), $keyword ) !== false || strpos( $item->get_description(), $keyword ) !== false ) {
+						$continue = true;
+					}
+				}
+			}
+		} elseif ( isset( $sc['keywords_title'] ) && ! empty( $sc['keywords_title'] ) ) {
+			$keywords = $sc['keywords_title'];
+			if ( ! empty( $keywords ) ) {
+				$continue = false;
+				foreach ( $keywords as $keyword ) {
+					if ( strpos( $item->get_title(), $keyword ) !== false ) {
+						$continue = true;
+					}
 				}
 			}
 		}
 
-		// excluded words.
-		if ( array_key_exists( 'keywords_ban', $sc ) ) {
-			$keywords_ban = $sc['keywords_ban'];
-			if ( ! empty( $keywords_ban ) ) {
-				foreach ( $keywords_ban as $keyword ) {
+		if ( isset( $sc['keywords_exc'] ) && ! empty( $sc['keywords_exc'] ) ) {
+			$keywords = $sc['keywords_exc'];
+			if ( ! empty( $keywords ) ) {
+				foreach ( $keywords as $keyword ) {
+					if ( strpos( $item->get_title(), $keyword ) !== false || strpos( $item->get_description(), $keyword ) !== false ) {
+						return false;
+					}
+				}
+			}
+		} elseif ( isset( $sc['keywords_ban'] ) && ! empty( $sc['keywords_ban'] ) ) {
+			$keywords = $sc['keywords_ban'];
+			if ( ! empty( $keywords ) ) {
+				foreach ( $keywords as $keyword ) {
 					if ( strpos( $item->get_title(), $keyword ) !== false ) {
 						return false;
 					}
@@ -511,6 +530,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'size'           => '',
 				// only display item if title contains specific keywords (comma-separated list/case sensitive)
 				'keywords_title' => '',
+				// only display item if title OR content contains specific keywords (comma-separated list/case sensitive)
+				'keywords_inc' => '',
 				// cache refresh
 				'refresh'        => '12_hours',
 				// sorting.
@@ -873,9 +894,17 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$sc['keywords_title'] = rtrim( $sc['keywords_title'], ',' );
 			$sc['keywords_title'] = array_map( 'trim', explode( ',', $sc['keywords_title'] ) );
 		}
+		if ( ! empty( $sc['keywords_inc'] ) ) {
+			$sc['keywords_inc'] = rtrim( $sc['keywords_inc'], ',' );
+			$sc['keywords_inc'] = array_map( 'trim', explode( ',', $sc['keywords_inc'] ) );
+		}
 		if ( ! empty( $sc['keywords_ban'] ) ) {
 			$sc['keywords_ban'] = rtrim( $sc['keywords_ban'], ',' );
 			$sc['keywords_ban'] = array_map( 'trim', explode( ',', $sc['keywords_ban'] ) );
+		}
+		if ( ! empty( $sc['keywords_exc'] ) ) {
+			$sc['keywords_exc'] = rtrim( $sc['keywords_exc'], ',' );
+			$sc['keywords_exc'] = array_map( 'trim', explode( ',', $sc['keywords_exc'] ) );
 		}
 		if ( empty( $sc['summarylength'] ) || ! is_numeric( $sc['summarylength'] ) ) {
 			$sc['summarylength'] = '';
