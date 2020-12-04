@@ -116,32 +116,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			return;
 		}
 
-		if ( $screen->post_type === 'feedzy_categories' ) {
-			wp_enqueue_script(
-				$this->plugin_name . '_categories',
-				FEEDZY_ABSURL . 'js/categories.js',
-				array(
-					'jquery',
-				),
-				$this->version,
-				true
-			);
-			wp_localize_script(
-				$this->plugin_name . '_categories',
-				'feedzy',
-				array(
-					'ajax' => array(
-						'security'  => wp_create_nonce( FEEDZY_NAME ),
-					),
-					'l10n' => array(
-						'validate' => __( 'Validate & Clean', 'feedzy-rss-feeds' ),
-						'validating' => __( 'Validating', 'feedzy-rss-feeds' ) . '...',
-						'validated' => __( 'Removed # URL(s)!', 'feedzy-rss-feeds' ),
-					),
-				)
-			);
-		}
-
 		if ( in_array( $screen->base, array( 'post' ), true ) ) {
 			wp_enqueue_style( $this->plugin_name . '-admin', FEEDZY_ABSURL . 'css/admin.css', array(), $this->version, 'all' );
 		}
@@ -151,8 +125,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! in_array( $screen->base, $upsell_screens, true ) && strpos( $screen->id, 'feedzy' ) === false ) {
 			return;
 		}
-		wp_enqueue_style( $this->plugin_name . '-settings', FEEDZY_ABSURL . 'css/settings.css' );
-		wp_enqueue_style( $this->plugin_name . '-metabox', FEEDZY_ABSURL . 'css/metabox-settings.css', array( $this->plugin_name . '-settings' ) );
+		wp_enqueue_style( $this->plugin_name . '-upsell', FEEDZY_ABSURL . 'includes/layouts/css/upsell.css' );
+		wp_enqueue_style( $this->plugin_name . '-settings', FEEDZY_ABSURL . 'css/metabox-settings.css', array( $this->plugin_name . '-upsell' ) );
 	}
 
 	/**
@@ -271,13 +245,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		global $post;
 		$nonce  = wp_create_nonce( FEEDZY_BASEFILE );
 		$feed   = get_post_meta( $post->ID, 'feedzy_category_feed', true );
-		$invalid = $this->get_source_validity_error( '', $post );
-
 		$output = '
             <input type="hidden" name="feedzy_category_meta_noncename" id="feedzy_category_meta_noncename" value="' . $nonce . '" />
-			<strong>' . sprintf( __( 'Please be aware that multiple feeds, when mashed together, may sometimes not work as expected as explained %1$shere%2$s.', 'feedzy-rss-feeds' ), '<a href="http://simplepie.org/wiki/faq/typical_multifeed_gotchas" target="_blank">', '</a>' ) . '</strong><br/><br/>'
-			. $invalid
-			. '<textarea name="feedzy_category_feed" rows="15" class="widefat" placeholder="' . __( 'Place your URL\'s here followed by a comma.', 'feedzy-rss-feeds' ) . '" >' . $feed . '</textarea>
+            <textarea name="feedzy_category_feed" rows="15" class="widefat" placeholder="' . __( 'Place your URL\'s here followed by a comma.', 'feedzy-rss-feeds' ) . '" >' . $feed . '</textarea>
         ';
 		echo $output;
 	}
@@ -297,7 +267,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	public function save_feedzy_post_type_meta( $post_id, $post ) {
 		if (
 			empty( $_POST ) ||
-			! wp_verify_nonce( $_POST['feedzy_category_meta_noncename'], FEEDZY_BASEFILE ) ||
+			( isset( $_POST['feedzy_category_meta_noncename'] ) && ! wp_verify_nonce( $_POST['feedzy_category_meta_noncename'], FEEDZY_BASEFILE ) ) ||
 			! current_user_can( 'edit_post', $post_id )
 		) {
 			return $post_id;
@@ -312,9 +282,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			foreach ( $category_meta as $key => $value ) {
 				$value = implode( ',', (array) $value );
 				if ( get_post_meta( $post_id, $key, false ) ) {
-					update_post_meta( $post_id, $key, sanitize_text_field( $value ) );
+					update_post_meta( $post_id, $key, $value );
 				} else {
-					add_post_meta( $post_id, $key, sanitize_text_field( $value ) );
+					add_post_meta( $post_id, $key, $value );
 				}
 				if ( ! $value ) {
 					delete_post_meta( $post_id, $key );
@@ -345,27 +315,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$columns['slug'] = __( 'Slug', 'feedzy-rss-feeds' );
 		}
 
-		if ( $new_columns = $this->array_insert_before( 'date', $columns, 'actions', __( 'Actions', 'feedzy-rss-feeds' ) ) ) {
-			$columns = $new_columns;
-		} else {
-			$columns['actions'] = __( 'Actions', 'feedzy-rss-feeds' );
-		}
-
 		return $columns;
-	}
-
-	/**
-	 * Add/remove row actions for each category.
-	 *
-	 * @since   ?
-	 * @access  public
-	 */
-	public function add_feedzy_category_actions( $actions, $post ) {
-		if ( $post->post_type === 'feedzy_categories' ) {
-			// don't need quick edit.
-			unset( $actions['inline hide-if-no-js'] );
-		}
-		return $actions;
 	}
 
 	/**
@@ -391,9 +341,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					echo '<code>' . $slug . '</code>';
 				}
 				break;
-			case 'actions':
-				echo sprintf( '<button class="button button-primary validate-category" title="%s" data-category-id="%d">%s</button>', __( 'Click to remove invalid URLs from this category', 'feedzy-rss-feeds' ), $post_id, __( 'Validate & Clean', 'feedzy-rss-feeds' ) );
-				break;
 			default:
 				break;
 		}
@@ -413,14 +360,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function feedzy_filter_plugin_row_meta( $links, $file ) {
 		if ( strpos( $file, 'feedzy-rss-feed.php' ) !== false ) {
-			$new_links = array();
-			$new_links['doc'] = '<a href="https://docs.themeisle.com/article/658-feedzy-rss-feeds" target="_blank" title="' . __( 'Documentation and examples', 'feedzy-rss-feeds' ) . '">' . __( 'Documentation and examples', 'feedzy-rss-feeds' ) . '</a>';
-
-			if ( ! feedzy_is_pro() ) {
-				$new_links['more_features'] = '<a href="' . FEEDZY_UPSELL_LINK . '" target="_blank" title="' . __( 'More Features', 'feedzy-rss-feeds' ) . '">' . __( 'Upgrade to Pro', 'feedzy-rss-feeds' ) . '<i style="width: 17px; height: 17px; margin-left: 4px; color: #ffca54; font-size: 17px; vertical-align: -3px;" class="dashicons dashicons-unlock more-features-icon"></i></a>';
-			} elseif ( false === apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) {
-				$new_links['more_features'] = '<a href="' . FEEDZY_UPSELL_LINK . '" target="_blank" title="' . __( 'More Features', 'feedzy-rss-feeds' ) . '">' . __( 'Upgrade your license', 'feedzy-rss-feeds' ) . '<i style="width: 17px; height: 17px; margin-left: 4px; color: #ffca54; font-size: 17px; vertical-align: -3px;" class="dashicons dashicons-unlock more-features-icon"></i></a>';
-			}
+			$new_links = array(
+				'doc'           => '<a href="https://docs.themeisle.com/article/658-feedzy-rss-feeds" target="_blank" title="' . __( 'Documentation and examples', 'feedzy-rss-feeds' ) . '">' . __( 'Documentation and examples', 'feedzy-rss-feeds' ) . '</a>',
+				'more_features' => '<a href="' . FEEDZY_UPSELL_LINK . '" target="_blank" title="' . __( 'More Plugins', 'feedzy-rss-feeds' ) . '">' . __( 'More Features', 'feedzy-rss-feeds' ) . '<i style="width: 17px; height: 17px; margin-left: 4px; color: #ffca54; font-size: 17px; vertical-align: -3px;" class="dashicons dashicons-unlock more-features-icon"></i></a>',
+			);
 			$links     = array_merge( $links, $new_links );
 		}
 
@@ -623,153 +566,99 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	}
 
 	/**
-	 * Check if plugin has been activated and then redirect to the correct page.
+	 * On activation of the plugin
 	 *
 	 * @access  public
 	 */
-	public function admin_init() {
+	public function on_activation( $plugin ) {
+		do_action( 'feedzy_add_event', array( 'name' => 'activate' ) );
+
 		if ( defined( 'TI_UNIT_TESTING' ) ) {
 			return;
 		}
 
-		if ( get_option( 'feedzy-activated' ) ) {
-			delete_option( 'feedzy-activated' );
-			if ( ! headers_sent() ) {
-				wp_redirect( add_query_arg( array( 'page' => 'feedzy-support', 'tab' => 'help#shortcode' ), admin_url( 'admin.php' ) ) );
-				exit();
-			}
+		if ( $plugin === FEEDZY_BASENAME ) {
+			wp_redirect( admin_url( 'admin.php?page=feedzy-support&tab=help#shortcode' ) );
+			exit();
 		}
 	}
 
 	/**
-	 * Validates the URLs and removes the ones that were found to be invalid.
+	 * Does the logger need to create multiple rows?
 	 *
 	 * @access  public
 	 */
-	public function validate_category_feeds( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
-		if ( 'feedzy_category_feed' === $meta_key && 'feedzy_categories' === get_post_type( $object_id ) ) {
-			remove_filter( current_filter(), array( $this, 'validate_category_feeds' ) );
-			$valid = $this->check_source_validity( $meta_value, $object_id, true, true );
-			update_post_meta( $object_id, $meta_key, empty( $valid ) ? '' : implode( ', ', $valid ) );
-			return true;
-		}
-
-		return $check;
+	public function get_logger_data_is_multiple( $dummy = false ) {
+		return true;
 	}
 
 	/**
-	 * Validates the source (category or URL(s)) and returns only the ones that were found to be valid.
+	 * Get the logger data.
 	 *
 	 * @access  public
 	 */
-	public function check_source_validity( $src, $post_id, $add_pseudo_transient, $return_valid ) {
-		$urls_in = $src;
-		$post_type = get_post_type( $post_id );
-		if ( 'feedzy_imports' === $post_type && strpos( $src, 'http' ) === false && strpos( $src, 'https' ) === false ) {
-			// category
-			$category = get_page_by_path( $src, OBJECT, 'feedzy_categories' );
-			if ( $category ) {
-				$urls_in = get_post_meta( $category->ID, 'feedzy_category_feed', true );
-			}
-		}
-
-		// this method is fired through ajax when the category title is updated
-		// even without clicking the publish button
-		// thereby sending empty urls
-		if ( empty( $urls_in ) ) {
-			return array();
-		}
-
-		$urls = $this->normalize_urls( $urls_in );
-		if ( ! is_array( $urls ) ) {
-			$urls = array( $urls );
-		}
-		$valid = $this->get_valid_feed_urls( $urls, '1_mins', false );
-		$invalid = array_diff( $urls, $valid );
-
-		if ( $add_pseudo_transient && ( empty( $valid ) || ! empty( $invalid ) ) ) {
-			// let's save the invalid urls in a pseudo-transient so that we can show it in the import edit screen.
-			switch ( $post_type ) {
-				case 'feedzy_categories':
-					update_post_meta( $post_id, '__transient_feedzy_category_feed', $invalid );
-					break;
-				case 'feedzy_imports':
-					update_post_meta( $post_id, '__transient_feedzy_invalid_source', $invalid );
-					break;
-			}
-		}
-
-		if ( is_null( $return_valid ) ) {
-			return array(
-				'valid' => $valid,
-				'invalid' => $invalid,
-			);
-		}
-
-		if ( $return_valid ) {
-			return $valid;
-		}
-
-		return $invalid;
+	public function get_logger_data( $data ) {
+		$data = get_transient( 'feedzy_data' );
+		delete_transient( 'feedzy_data' );
+		return $data;
 	}
 
 	/**
-	 * Returns the error message to display if invalid URLs are found in the source (category or URL(s)).
+	 * Add the events that the logger can later act upon.
 	 *
 	 * @access  public
 	 */
-	public function get_source_validity_error( $message = '', $post, $class = '' ) {
-		$invalid = $text = null;
+	public function add_event( $event ) {
+		$data = get_transient( 'feedzy_data' );
+		if ( empty( $data ) ) {
+			$data = array();
+		}
+		$datum  = array(
+			'event' => $event['name'],
+			'time'  => current_time( 'timestamp' ),
+			'data'  => array_key_exists( 'data', $event ) ? $event['data'] : null,
+			'id'    => site_url() . '-' . get_current_user_id(),
+			'site'  => site_url(),
+			'type'  => feedzy_is_pro() ? 1 : 0,
+			'license' => apply_filters( 'feedzy_rss_feeds_pro_license_status', '' ),
+		);
+		error_log( 'adding event ' . print_r( $datum, true ) );
+		$data[] = $datum;
+		set_transient( 'feedzy_data', $data );
+	}
+
+	/**
+	 * Monitor events for post transitions for adding to the logger.
+	 *
+	 * @access  public
+	 */
+	public function transition_post_status( $new_status, $old_status, $post ) {
 		switch ( $post->post_type ) {
 			case 'feedzy_categories':
-				$text = __( 'We found the following invalid URLs that we have removed from the list', 'feedzy-rss-feeds' );
-				$invalid = get_post_meta( $post->ID, '__transient_feedzy_category_feed', true );
-				delete_post_meta( $post->ID, '__transient_feedzy_category_feed' );
+				do_action( 'feedzy_add_event', array( 'name' => 'category_' . $new_status, 'data' => array( 'slug' => sanitize_title( $post->post_title ), 'feeds' => get_post_meta( $post->ID, 'feedzy_category_feed', true ) ) ) );
 				break;
 			case 'feedzy_imports':
-				$text = __( 'This source has invalid URLs. Please correct/remove the following', 'feedzy-rss-feeds' );
-				$invalid = get_post_meta( $post->ID, '__transient_feedzy_invalid_source', true );
-				delete_post_meta( $post->ID, '__transient_feedzy_invalid_source' );
-				break;
-			default:
-				return $message;
-		}
-
-		if ( $invalid ) {
-			if ( empty( $class ) ) {
-				$class = 'notice notice-error notice-alt feedzy-error-critical';
-			}
-			$message .= '<div class="' . $class . '"><p style="color: inherit"><i class="dashicons dashicons-warning"></i>' . $text . ': <ol style="color: inherit">';
-			foreach ( $invalid as $url ) {
-				$message .= '<li>' . ( empty( $url ) ? __( 'Empty URL', 'feedzy-rss-feeds' ) : esc_html( $url ) ) . '</li>';
-			}
-			$message .= '</ol></p></div>';
-		}
-		return $message;
-	}
-
-	/**
-	 * AJAX single-entry method.
-	 *
-	 * @since   3.4.1
-	 * @access  public
-	 */
-	public function ajax() {
-		check_ajax_referer( FEEDZY_NAME, 'security' );
-
-		switch ( $_POST['_action'] ) {
-			case 'validate_clean':
-				// remove invalid URLs from this category.
-				$urls = get_post_meta( $_POST['id'], 'feedzy_category_feed', true );
-				$return = $this->check_source_validity( $urls, $_POST['id'], false, null );
-				$valid = $return['valid'];
-				$invalid = $return['invalid'];
-				if ( ! empty( $valid ) ) {
-					remove_filter( 'update_post_metadata', array( $this, 'validate_category_feeds' ) );
-					update_post_meta( $_POST['id'], 'feedzy_category_feed', implode( ', ', $valid ) );
+				$src    = get_post_meta( $post->ID, 'source', true );
+				$type   = 2;
+				if ( strpos( $src, 'http' ) !== false ) {
+					$type   = 1;
 				}
-				wp_send_json_success( array( 'invalid' => count( $invalid ) ) );
+				$include = get_post_meta( $post->ID, 'inc_key', true );
+				$exclude = get_post_meta( $post->ID, 'exc_key', true );
+				$data   = array(
+					'source' => $type,
+					'meta' => $src,
+					'filters' => array(
+						'include' => empty( $include ) ? 0 : 1,
+						'exclude' => empty( $exclude ) ? 0 : 1,
+						'count' => get_post_meta( $post->ID, 'import_feed_limit', true ),
+					),
+					'delete' => get_post_meta( $post->ID, 'import_feed_delete_days', true ),
+					'active' => $post->post_status === 'publish' ? 1 : 0,
+				);
+				do_action( 'feedzy_add_event', array( 'name' => 'import_' . $new_status, 'data' => $data ) );
 				break;
 		}
 	}
+
 }

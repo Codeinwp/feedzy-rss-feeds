@@ -35,14 +35,11 @@
 		<div class="error"><p><?php echo $this->error; ?></p></div>
 	<?php } ?>
 
-
 	<div class="fz-features-content">
-		<div id="feedzy_import_feeds" class="fz-feature-features">
-			<div class="fz-feature">
-				<div class="fz-feature-inner">
-					<div class="fz-feature-features">
+		<div class="fz-feature">
+			<div id="feedzy_import_feeds" class="fz-feature-features">
 
-					<form method="post" action="">
+				<form method="post" action="">
 					<?php
 					$disble_featured_image = '';
 					if ( isset( $settings['general']['rss-feeds'] ) && 1 === intval( $settings['general']['rss-feeds'] ) ) {
@@ -135,10 +132,9 @@
 						<?php
 					}
 					?>
-					</form>
-					</div>
-				</div>
+				</form>
 			</div>
 		</div>
 	</div>
+
 </div>

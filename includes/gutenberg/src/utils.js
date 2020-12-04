@@ -9,7 +9,7 @@ export const unescapeHTML = value => {
 	return htmlNode.textContent;
 };
 
-export const filterData = ( arr, sortType, allowedKeywords, bannedKeywords, maxSize, offset ) => {
+export const filterData = ( arr, sortType, allowedKeywords, bannedKeywords, maxSize ) => {
 	arr = Array.from( arr ).sort( (a, b) => {
 		let firstElement, secondElement;
 		if ( sortType === 'date_desc' || sortType === 'date_asc' ) {
@@ -51,7 +51,7 @@ export const filterData = ( arr, sortType, allowedKeywords, bannedKeywords, maxS
 				.every( el =>  item['title'].includes( el.trim() ) === false );
 		}
 		return true;
-	}).slice( offset, maxSize + offset );
+	}).slice( 0, maxSize );
 	return arr;
 };
 
@@ -66,21 +66,4 @@ export const inArray = ( value, arr ) => {
 		}
 	}
 	return exists;
-};
-
-export const arrangeMeta = ( values, fields ) => {
-    let meta = '';
-
-    if(fields === ''){
-        fields = 'author, date, time';
-    }
-
-    let arr = fields.replace(/\s/g,'').split( ',' );
-
-    for(let i = 0; i < arr.length; i++){
-        if(typeof values[ arr[i] ] !== 'undefined'){
-            meta = meta + ' ' + values[ arr[i] ];
-        }
-    }
-    return meta;
 };

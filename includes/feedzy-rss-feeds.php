@@ -104,7 +104,7 @@ class Feedzy_Rss_Feeds {
 	 */
 	public function init() {
 		self::$plugin_name = 'feedzy-rss-feeds';
-		self::$version = '3.5.1';
+		self::$version = '3.3.9';
 		self::$instance->load_dependencies();
 		self::$instance->set_locale();
 		self::$instance->define_admin_hooks();
@@ -187,21 +187,18 @@ class Feedzy_Rss_Feeds {
 	 */
 	private function define_admin_hooks() {
 		$plugin_ui = new Feedzy_Rss_Feeds_Ui( self::$instance->get_plugin_name(), self::$instance->get_version(), self::$instance->loader );
-		self::$instance->loader->add_action( 'admin_init', $plugin_ui, 'register_init' );
-
+		self::$instance->loader->add_action( 'admin_enqueue_scripts', $plugin_ui, 'register_init' );
 		self::$instance->loader->add_action( 'init', self::$instance->admin, 'register_post_type' );
 		self::$instance->loader->add_action( 'save_post', self::$instance->admin, 'save_feedzy_post_type_meta', 1, 2 );
 		self::$instance->loader->add_action( 'feedzy_pre_http_setup', self::$instance->admin, 'pre_http_setup', 10, 1 );
 		self::$instance->loader->add_action( 'feedzy_post_http_teardown', self::$instance->admin, 'post_http_teardown', 10, 1 );
-		self::$instance->loader->add_action( 'admin_init', self::$instance->admin, 'admin_init', 10, 1 );
-		self::$instance->loader->add_action( 'manage_feedzy_categories_posts_custom_column', self::$instance->admin, 'manage_feedzy_category_columns', 10, 2 );
-		self::$instance->loader->add_action( 'admin_menu', self::$instance->admin, 'feedzy_menu_pages' );
-		self::$instance->loader->add_action( 'wp_ajax_get_tinymce_form', self::$instance->admin, 'get_tinymce_form' );
-		self::$instance->loader->add_action( 'wp_enqueue_scripts', self::$instance->admin, 'enqueue_styles' );
-		self::$instance->loader->add_action( 'admin_enqueue_scripts', self::$instance->admin, 'enqueue_styles_admin' );
-		self::$instance->loader->add_action( 'wp_ajax_feedzy_categories', self::$instance->admin, 'ajax' );
+		self::$instance->loader->add_action( 'activated_plugin', self::$instance->admin, 'on_activation', 10, 1 );
 
+		self::$instance->loader->add_action( 'manage_feedzy_categories_posts_custom_column', self::$instance->admin, 'manage_feedzy_category_columns', 10, 2 );
 		self::$instance->loader->add_filter( 'manage_feedzy_categories_posts_columns', self::$instance->admin, 'feedzy_category_columns' );
+
+		self::$instance->loader->add_action( 'admin_menu', self::$instance->admin, 'feedzy_menu_pages' );
+		self::$instance->loader->add_filter( 'mce_external_languages', $plugin_ui, 'feedzy_add_tinymce_lang', 10, 1 );
 		self::$instance->loader->add_filter( 'plugin_row_meta', self::$instance->admin, 'feedzy_filter_plugin_row_meta', 10, 2 );
 		self::$instance->loader->add_filter( 'feedzy_default_image', self::$instance->admin, 'feedzy_define_default_image' );
 		self::$instance->loader->add_filter( 'feedzy_default_error', self::$instance->admin, 'feedzy_default_error_notice', 9, 3 );
@@ -214,53 +211,14 @@ class Feedzy_Rss_Feeds {
 		self::$instance->loader->add_filter( 'feedzy_process_feed_source', self::$instance->admin, 'process_feed_source', 10, 1 );
 		self::$instance->loader->add_filter( 'feedzy_get_feed_url', self::$instance->admin, 'get_feed_url', 10, 1 );
 		self::$instance->loader->add_filter( 'feedzy_get_settings', self::$instance->admin, 'get_settings', 10, 1 );
-		self::$instance->loader->add_filter( 'feedzy_rss_feeds_logger_data', self::$instance->admin, 'get_usage_data', 10 );
-		self::$instance->loader->add_filter( 'feedzy_check_source_validity', self::$instance->admin, 'check_source_validity', 10, 4 );
-		self::$instance->loader->add_filter( 'feedzy_get_source_validity_error', self::$instance->admin, 'get_source_validity_error', 10, 3 );
-		self::$instance->loader->add_filter( 'post_row_actions', self::$instance->admin, 'add_feedzy_category_actions', 10, 2 );
-
-		// do not load this with the loader as this will need a corresponding remove_filter also.
-		add_filter( 'update_post_metadata', array( self::$instance->admin, 'validate_category_feeds' ), 10, 5 );
-		add_filter( 'add_post_metadata', array( self::$instance->admin, 'validate_category_feeds' ), 10, 5 );
-
 		add_shortcode( 'feedzy-rss', array( self::$instance->admin, 'feedzy_rss' ) );
-
+		self::$instance->loader->add_action( 'wp_ajax_get_tinymce_form', self::$instance->admin, 'get_tinymce_form' );
+		self::$instance->loader->add_action( 'wp_enqueue_scripts', self::$instance->admin, 'enqueue_styles' );
+		self::$instance->loader->add_action( 'admin_enqueue_scripts', self::$instance->admin, 'enqueue_styles_admin' );
 		$plugin_widget = new feedzy_wp_widget();
 		self::$instance->loader->add_action( 'widgets_init', $plugin_widget, 'registerWidget', 10 );
-		self::$instance->loader->add_action( 'rest_api_init', self::$instance->admin, 'rest_route', 10 );
 
-		// do not include import feature if this is a pro version that does not know of this new support.
-		if ( ! feedzy_is_pro() || has_filter( 'feedzy_free_has_import' ) ) {
-			$plugin_import = new Feedzy_Rss_Feeds_Import( self::$instance->get_plugin_name(), self::$instance->get_version() );
-			self::$instance->loader->add_action( 'feedzy_upsell_class', $plugin_import, 'upsell_class', 10, 1 );
-			self::$instance->loader->add_action( 'feedzy_upsell_content', $plugin_import, 'upsell_content', 10, 1 );
-			self::$instance->loader->add_action( 'admin_enqueue_scripts', $plugin_import, 'enqueue_styles' );
-			self::$instance->loader->add_action( 'init', $plugin_import, 'register_import_post_type', 9, 1 );
-			self::$instance->loader->add_action( 'feedzy_cron', $plugin_import, 'run_cron' );
-			self::$instance->loader->add_action( 'save_post_feedzy_imports', $plugin_import, 'save_feedzy_import_feed_meta', 1, 2 );
-			self::$instance->loader->add_action( 'wp_ajax_feedzy', $plugin_import, 'ajax' );
-			self::$instance->loader->add_action( 'manage_feedzy_imports_posts_custom_column', $plugin_import, 'manage_feedzy_import_columns', 10, 2 );
-			self::$instance->loader->add_action( 'wp', $plugin_import, 'wp' );
-			self::$instance->loader->add_filter( 'pre_get_posts', $plugin_import, 'pre_get_posts', 10, 1 );
-
-			self::$instance->loader->add_filter( 'feedzy_items_limit', $plugin_import, 'items_limit', 10, 2 );
-			self::$instance->loader->add_filter( 'feedzy_settings_tabs', $plugin_import, 'settings_tabs', 10, 1 );
-			self::$instance->loader->add_filter( 'redirect_post_location', $plugin_import, 'redirect_post_location', 10, 2 );
-			self::$instance->loader->add_filter( 'manage_feedzy_imports_posts_columns', $plugin_import, 'feedzy_import_columns' );
-			self::$instance->loader->add_action( 'admin_notices', $plugin_import, 'admin_notices' );
-			self::$instance->loader->add_action( 'plugins_loaded', $plugin_import, 'add_cron' );
-			self::$instance->loader->add_filter( 'feedzy_item_filter', $plugin_import, 'add_data_to_item', 10, 5 );
-			self::$instance->loader->add_filter( 'feedzy_display_tab_settings', $plugin_import, 'display_tab_settings', 10, 2 );
-			self::$instance->loader->add_filter( 'feedzy_save_tab_settings', $plugin_import, 'save_tab_settings', 10, 2 );
-			self::$instance->loader->add_filter( 'feedzy_render_magic_tags', $plugin_import, 'render_magic_tags', 10, 3 );
-			self::$instance->loader->add_filter( 'feedzy_magic_tags_title', $plugin_import, 'magic_tags_title' );
-			self::$instance->loader->add_filter( 'feedzy_magic_tags_date', $plugin_import, 'magic_tags_date' );
-			self::$instance->loader->add_filter( 'feedzy_magic_tags_content', $plugin_import, 'magic_tags_content' );
-			self::$instance->loader->add_filter( 'feedzy_magic_tags_image', $plugin_import, 'magic_tags_image' );
-			self::$instance->loader->add_filter( 'feedzy_retrieve_categories', $plugin_import, 'retrieve_categories', 10, 2 );
-			self::$instance->loader->add_filter( 'feedzy_is_license_of_type', $plugin_import, 'feedzy_is_license_of_type', 10, 2 );
-			self::$instance->loader->add_filter( 'post_row_actions', $plugin_import, 'add_import_actions', 10, 2 );
-		}
+		$this->init_events();
 
 		if ( ! defined( 'TI_UNIT_TESTING' ) ) {
 			add_action(
@@ -270,6 +228,19 @@ class Feedzy_Rss_Feeds {
 					}}
 			);
 		}
+	}
+
+	/**
+	 * Add the hooks for all event related information.
+	 *
+	 * @since    ?
+	 * @access   public
+	 */
+	public function init_events() {
+		self::$instance->loader->add_action( 'transition_post_status', self::$instance->admin, 'transition_post_status', 10, 3 );
+		self::$instance->loader->add_action( 'feedzy_add_event', self::$instance->admin, 'add_event', 10, 1 );
+		self::$instance->loader->add_filter( 'feedzy_rss_feeds_logger_data', self::$instance->admin, 'get_logger_data', 10, 1 );
+		self::$instance->loader->add_filter( 'feedzy_rss_feeds_logger_data_is_multiple', self::$instance->admin, 'get_logger_data_is_multiple', 10, 1 );
 	}
 
 	/**

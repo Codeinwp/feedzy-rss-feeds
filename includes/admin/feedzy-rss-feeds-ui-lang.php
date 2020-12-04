@@ -88,13 +88,6 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 	 * @return array|mixed|void
 	 */
 	public static function get_form_elements() {
-		$meta       = sprintf( __( 'Should we display additional meta fields out of %1$sauthor%2$s, %3$sdate%4$s and %5$stime%6$s? (comma-separated list, in order of display). View documentation %7$shere%8$s.', 'feedzy-rss-feeds' ), '<code>', '</code>', '<code>', '</code>', '<code>', '</code>', '<a href="https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed" target="_new">', '</a>' );
-		if ( has_filter( 'feedzy_retrieve_categories' ) ) {
-			$meta       = sprintf( __( 'Should we display additional meta fields out of %1$sauthor%2$s, %3$sdate%4$s, %5$stime%6$s and %7$scategories%8$s? (comma-separated list). View documentation %9$shere%10$s.', 'feedzy-rss-feeds' ), '<code>', '</code>', '<code>', '</code>', '<code>', '</code>', '<code>', '</code>', '<a href="https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed" target="_new">', '</a>' );
-		}
-
-		$multiple       = sprintf( __( 'When using multiple sources, should we display additional meta fields? %1$ssource%2$s (feed title).', 'feedzy-rss-feeds' ), '<code>', '</code>', '<a href="https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed" target="_new">', '</a>' );
-
 		$elements = array(
 			'section_feed'  => array(
 				'title'    => __( 'Feed Source', 'feedzy-rss-feeds' ),
@@ -110,12 +103,6 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'placeholder' => __( '(eg: 5)', 'feedzy-rss-feeds' ),
 						'type'        => 'text',
 						'value'       => '',
-					),
-					'offset'        => array(
-						'label'       => __( 'Ignore the first N items of the feed.', 'feedzy-rss-feeds' ),
-						'placeholder' => __( '(eg: 5, if you want to start from the 6th item.)', 'feedzy-rss-feeds' ),
-						'type'        => 'text',
-						'value'       => '0',
 					),
 					'feed_title' => array(
 						'label' => __( 'Should we display the RSS title?', 'feedzy-rss-feeds' ),
@@ -197,21 +184,6 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'type'        => 'text',
 						'value'       => '',
 					),
-					'lazy'       => array(
-						'label' => __( 'Lazy load the feed (without slowing down the page)', 'feedzy-rss-feeds' ),
-						'type'  => 'select',
-						'value' => 'no',
-						'opts'  => array(
-							'yes' => array(
-								'label' => __( 'Yes', 'feedzy-rss-feeds' ),
-								'value' => 'yes',
-							),
-							'no'  => array(
-								'label' => __( 'No', 'feedzy-rss-feeds' ),
-								'value' => 'no',
-							),
-						),
-					),
 				),
 			),
 			'section_item'  => array(
@@ -270,14 +242,8 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'value'       => '',
 					),
 					'meta'           => array(
-						'label' => $meta,
+						'label' => sprintf( __( 'Should we display additional meta fields out of %1$sauthor%2$s, %3$sdate%4$s and %5$stime%6$s? (comma-separated list). View documentation %7$shere%8$s.', 'feedzy-rss-feeds' ), '<code>', '</code>', '<code>', '</code>', '<code>', '</code>', '<a href="https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed" target="_new">', '</a>' ),
 						'placeholder' => __( '(eg: author, date, time, tz=local)', 'feedzy-rss-feeds' ),
-						'type'  => 'text',
-						'value' => '',
-					),
-					'multiple_meta'           => array(
-						'label' => $multiple,
-						'placeholder' => __( '(eg: source)', 'feedzy-rss-feeds' ),
 						'type'  => 'text',
 						'value' => '',
 					),
@@ -327,11 +293,11 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'value' => '',
 						'opts'  => array(
 							'auto' => array(
-								'label' => __( 'Yes (without a fallback image)', 'feedzy-rss-feeds' ),
+								'label' => __( 'Auto', 'feedzy-rss-feeds' ),
 								'value' => '',
 							),
 							'yes'  => array(
-								'label' => __( 'Yes (with a fallback image)', 'feedzy-rss-feeds' ),
+								'label' => __( 'Yes', 'feedzy-rss-feeds' ),
 								'value' => 'yes',
 							),
 							'no'   => array(
@@ -341,7 +307,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						),
 					),
 					'default' => array(
-						'label'       => __( 'Fallback image if no image is found.', 'feedzy-rss-feeds' ),
+						'label'       => __( 'Default thumbnail URL if no image is found.', 'feedzy-rss-feeds' ),
 						'placeholder' => __( 'Image URL', 'feedzy-rss-feeds' ),
 						'type'        => 'file',
 						'value'       => '',
@@ -366,7 +332,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 							),
 							'yes'  => array(
 								'label' => __( 'Force HTTPS (please verify that the images exist on HTTPS)', 'feedzy-rss-feeds' ),
-								'value' => 'https',
+								'value' => 'force',
 							),
 							'no'   => array(
 								'label' => __( 'Ignore and show the default image instead', 'feedzy-rss-feeds' ),
@@ -378,10 +344,10 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 			),
 			'section_pro'   => array(
 				'title'       => __( 'PRO Options', 'feedzy-rss-feeds' ),
-				'description' => __( 'Get access to more options and customizations with full version of Feedzy RSS Feeds . Use existing templates or extend them and make them your own.', 'feedzy-rss-feeds' ) . '<br/>' . '<a href="' . FEEDZY_UPSELL_LINK . '" target="_blank"><small>' . __( 'See more features of Feedzy RSS Feeds PRO', 'feedzy-rss-feeds' ) . '</small></a>',
+				'description' => __( 'Get access to more options and customizations with full version of Feedzy RSS Feeds . Use existing templates or extend them and make them your own.', 'feedzy-rss-feeds' ) . '<br/>' . '<a href="' . FEEDZY_UPSELL_LINK . '" target="_blank"><small>' . __( 'See more features of Feedzy RSS Feeds ', 'feedzy-rss-feeds' ) . '</small></a>',
 				'elements'    => array(
 					'price'        => array(
-						'label'    => sprintf( __( 'Should we display the price from the feed if it is available? <br/> You can read about how to extract price from a custom tag %1$shere%2$s', 'feedzy-rss-feeds' ), '<a href="https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy" target="_blank">', '</a>' ),
+						'label'    => __( 'Should we display the price from the feed if it is available? <br/> You can read about how to extract price from a custom tag %1$shere%2$s', 'feedzy-rss-feeds' ),
 						'type'     => 'select',
 						'disabled' => true,
 						'value'    => '',
@@ -460,18 +426,6 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 		$translated = 'tinyMCE.addI18n("' . $locale . '.feedzy_tinymce_plugin", ' . json_encode( $this->strings ) . ");\n";
 
 		return $translated;
-	}
-
-	/**
-	 *
-	 * The method that returns the strings array
-	 *
-	 * @since    ?
-	 * @access   public
-	 * @return array
-	 */
-	public function get_strings() {
-		return $this->strings;
 	}
 
 }
