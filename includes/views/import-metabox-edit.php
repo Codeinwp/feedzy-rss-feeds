@@ -84,6 +84,20 @@
 
 			<div class="feedzy-row">
 				<div class="label_description">
+					<label class="feedzy-sr-only"><?php _e( 'Exclude items without images?', 'feedzy-rss-feeds' ); ?></label>
+					<div>
+						<small><?php echo sprintf( __( 'If you enable this, items without images will not be imported. If you are unsure, please open the feed in the browser to verify that every item contains images.', 'feedzy-rss-feeds' ), '<b>', '</b>' ); ?></small>
+					</div>
+				</div>
+				<div class="feedzy-separator"></div>
+				<div class="form-group input-group form_item">
+					<input id="feedzy-exc-noimage" data-dependent-element="#feedzy_image_fallback" name="feedzy_meta_data[exc_noimage]" class="feedzy-toggle feedzy-toggle-round" type="checkbox" value="yes" <?php echo $exc_noimage; ?>>
+					<label for="feedzy-exc-noimage"></label>
+				</div>
+			</div>
+
+			<div class="feedzy-row">
+				<div class="label_description">
 					<label class="feedzy-sr-only"><?php _e( 'How many feed items to import from the source?', 'feedzy-rss-feeds' ); ?></label>
 					<div>
 						<small><?php echo sprintf( __( 'If you choose a high number, please check that your configuration can support it or your imports may fail.', 'feedzy-rss-feeds' ), '<b>', '</b>' ); ?></small>
@@ -313,7 +327,30 @@
 						</div>
 					</div>
 				</div>
+				
 			</div>
+
+			<div class="feedzy-row" id="feedzy_image_fallback">
+				<div class="label_description">
+					<label class="feedzy-sr-only" for="f1-post-content"><?php _e( 'Featured Image Fallback', 'feedzy-rss-feeds' ); ?></label><br/>
+					<small>
+						<?php
+						_e( 'What image should be used as the fallback if an item does not have an image?', 'feedzy-rss-feeds' )
+						?>
+					</small>
+				</div>
+				<div class="feedzy-separator dashicons dashicons-leftright"></div>
+				<div class="form-group input-group form_item">
+					<!-- do not add a space after the span closing bracket or before the beginning of span closing tag -->
+					<span id="feedzy_image_fallback_span"><?php if ( ! empty( $fallback_image ) ) { ?>
+							<img src="<?php echo $fallback_image; ?>">
+						<?php } ?></span>
+					<input type="hidden" name="feedzy_meta_data[fallback_img]" id="fallback_img" value="<?php echo $fallback_image; ?>">
+					<button type="button" class="btn btn-small btn-add-fields" id="feedzy-media-upload-add"><?php _e( 'Select image', 'feedzy-rss-feeds' ); ?></button>
+					<button type="button" class="btn btn-small btn-remove-fields" id="feedzy-media-upload-remove"><?php _e( 'Remove image', 'feedzy-rss-feeds' ); ?></button>
+				</div>
+			</div>
+
 			<div class="feedzy-row <?php echo apply_filters( 'feedzy_upsell_class', '' ); ?>">
 				<?php echo apply_filters( 'feedzy_upsell_content', '' ); ?>
 				<div class="label_description">

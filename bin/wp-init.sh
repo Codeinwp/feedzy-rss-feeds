@@ -20,7 +20,7 @@ docker exec -it feedzy_wordpress wp plugin install classic-editor --activate
 docker exec -it feedzy_wordpress chmod 777 /var/www/html/wp-content
 
 # so that composer does not fail
-docker exec -it feedzy_wordpress chmod -R 777 /var/www/html/wp-content/plugins/feedzy-rss-feeds-pro
+docker exec -it feedzy_wordpress chmod -R 777 /var/www/html/wp-content/plugins/feedzy-rss-feeds
 
 # activate
 docker exec -it feedzy_wordpress wp --quiet plugin activate feedzy-rss-feeds
@@ -36,6 +36,9 @@ docker exec -it feedzy_wordpress wp --quiet term create post_tag t_feedzy-1
 docker exec -it feedzy_wordpress wp --quiet config set WP_DEBUG true --raw
 docker exec -it feedzy_wordpress wp --quiet config set WP_DEBUG_LOG true --raw
 docker exec -it feedzy_wordpress wp --quiet config set WP_DEBUG_DISPLAY false --raw
+
+# download an image for the media upload box
+docker exec -it feedzy_wordpress wp media import "https://s.w.org/style/images/wp-header-logo.png"
 
 
 
