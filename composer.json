@@ -20,9 +20,13 @@
     "issues": "https://github.com/Codeinwp/feedzy-rss-feeds/issues",
     "source": "https://github.com/Codeinwp/feedzy-rss-feeds"
   },
+  "config": {
+    "platform": {
+      "php": "5.6"
+    }
+  },
   "require": {
-    "codeinwp/themeisle-sdk": "master",
-    "xrstf/composer-php52": "^1.0.20"
+    "codeinwp/themeisle-sdk": "master"
   },
   "autoload": {
     "files": [
@@ -30,16 +34,5 @@
     ]
   },
   "minimum-stability": "dev",
-  "prefer-stable": true,
-  "scripts": {
-    "post-install-cmd": [
-      "xrstf\\Composer52\\Generator::onPostInstallCmd"
-    ],
-    "post-update-cmd": [
-      "xrstf\\Composer52\\Generator::onPostInstallCmd"
-    ],
-    "post-autoload-dump": [
-      "xrstf\\Composer52\\Generator::onPostInstallCmd"
-    ]
-  }
+  "prefer-stable": true
 }
