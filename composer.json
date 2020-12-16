@@ -21,8 +21,7 @@
     "source": "https://github.com/Codeinwp/feedzy-rss-feeds"
   },
   "require": {
-    "codeinwp/themeisle-sdk": "master",
-    "xrstf/composer-php52": "^1.0.20"
+    "codeinwp/themeisle-sdk": "master"
   },
   "autoload": {
     "files": [

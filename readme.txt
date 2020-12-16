@@ -461,6 +461,19 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
  == Changelog ==
+= 3.5.1 - 2020-10-30  = 
+
+* [Fix] Importing random images with https://source.unsplash.com/random generator link in Feed to Post
+* [Fix] Importing fixed featured image in Feed to Post
+* [Fix] Enclosures that do no specify image extension are not imported even if the type is image/jpeg
+
+
+= 3.5.0 - 2020-10-12  = 
+
+* [Feat] Improved interface for adding new imports and for the imports listing page
+* [Feat] Improved checks for feeds validity
+
+
 = 3.4.3 - 2020-08-26  = 
 
 * [Fix] HTML tags being trimmed on save of the import job
