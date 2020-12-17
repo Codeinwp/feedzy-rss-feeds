@@ -439,7 +439,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$default_agent = $this->get_default_user_agent( $feedURL );
 		$feed->set_useragent( apply_filters( 'http_headers_useragent', $default_agent ) );
 		if ( ! FEEDZY_DISABLE_CACHE_FOR_TESTING ) {
-			$feed->set_cache_class( 'WP_Feed_Cache' );
+			if ( class_exists( 'WP_Feed_Cache_Transient', false ) ) {
+				$feed->set_cache_class( 'WP_Feed_Cache_Transient' );
+			} else {
+				$feed->set_cache_class( 'WP_Feed_Cache' );
+			}
 			$feed->set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', $cache_time, $feedURL ) );
 		}
 		$feed->set_feed_url( $feedURL );
