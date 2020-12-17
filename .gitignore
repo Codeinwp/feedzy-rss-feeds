@@ -6,3 +6,9 @@ vendor
 bin
 package-lock.json
 composer.lock
+/dist
+cypress/integration/examples
+cypress/integration/localhost*
+cypress/plugins
+cypress/fixtures
+cypress.env.json

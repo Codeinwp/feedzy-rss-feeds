@@ -1,3 +1,9 @@
+.wp-block-feedzy-rss-feeds-feedzy-block {
+	.feedzy-source {
+		margin-right: 10px;
+	}
+}
+
 .loadFeed {
 	margin-bottom: 10px;
 }
@@ -20,5 +26,18 @@
 
 	select {
 		width: auto;
+	}
+}
+
+.feedzy-rss {
+	.rss_image {
+		span.fetched {
+			display: inline-block;
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			background-position: 50%;
+			background-size: cover;
+		}
 	}
 }

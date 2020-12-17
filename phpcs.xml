@@ -32,6 +32,13 @@
         <exclude name="WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned" />
         <exclude name="Generic.Formatting.MultipleStatementAlignment.IncorrectWarning" />
         <exclude name="Generic.Formatting.MultipleStatementAlignment.NotSameWarning" />
+        <exclude name="PEAR.Functions.FunctionCallSignature.MultipleArguments" />
+        <exclude name="Generic.Files.LineEndings.InvalidEOLChar" />
+        <exclude name="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase" />
+        <exclude name="WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase" />
+        <exclude name="WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase" />
+        <exclude name="WordPress.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition" />
+        <exclude name="WordPress.CodeAnalysis.AssignmentInCondition.Found" />
     </rule>
     <rule ref="WordPress-Docs">
 

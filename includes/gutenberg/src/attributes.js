@@ -8,6 +8,10 @@ const attributes = {
 		type: 'number',
 		default: 5,
 	},
+	offset: {
+		type: 'number',
+		default: 0,
+	},
 	feed_title: {
 		type: 'boolean',
 		default: true,
@@ -18,7 +22,7 @@ const attributes = {
 	},
 	sort: {
 		type: 'string',
-		default: 'date_desc',
+		default: 'default',
 	},
 	target: {
 		type: 'string',
@@ -30,6 +34,18 @@ const attributes = {
 	meta: {
 		type: 'boolean',
 		default: true,
+	},
+	lazy: {
+		type: 'boolean',
+		default: false,
+	},
+	metafields: {
+		type: 'string',
+		default: '',
+	},
+	multiple_meta: {
+		type: 'string',
+		default: '',
 	},
 	summary: {
 		type: 'boolean',
@@ -55,6 +71,9 @@ const attributes = {
 		type: 'number',
 		default: 150,
 	},
+	http: {
+		type: 'string',
+	},
 	referral_url: {
 		type: 'string',
 	},
@@ -70,13 +89,9 @@ const attributes = {
 		type: 'boolean',
 		default: true,
 	},
-	status: {
-		// 0 - Initial State
-		// 1 - Feed Loading
-		// 2 - Feed Loaded
-		// 3 - Feed Invalid
-		type: 'number',
-		default: 0,
+	route: {
+		type: 'string',
+		default: 'home',
 	},
 	feedData: {
 		type: 'object',

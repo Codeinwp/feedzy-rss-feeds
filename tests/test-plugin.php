@@ -33,9 +33,9 @@ class Test_Feedzy extends WP_UnitTestCase {
 			)
 		);
 
-		$urls = $this->get_rand_feeds( 2 );
+		$urls = $this->get_rand_feeds();
 
-		$_POST[ 'feedzy_categories' . '_noncename' ] = wp_create_nonce( FEEDZY_BASEFILE );
+		$_POST['feedzy_category_meta_noncename']    = wp_create_nonce( FEEDZY_BASEFILE );
 		$_POST['post_type']                          = 'feedzy_categories';
 		$_POST['feedzy_category_feed']               = $urls;
 
@@ -49,7 +49,7 @@ class Test_Feedzy extends WP_UnitTestCase {
 		$this->assertEquals( $urls, $post_meta_urls );
 
 		// Test Update Feedzy Category
-		$urls_changed                  = $this->get_rand_feeds( 2 );
+		$urls_changed                  = $this->get_rand_feeds();
 		$_POST['feedzy_category_feed'] = $urls_changed;
 		do_action( 'save_post', $p->ID, $p );
 		$post_meta_urls = get_post_meta( $p->ID, 'feedzy_category_feed', true );
@@ -70,13 +70,18 @@ class Test_Feedzy extends WP_UnitTestCase {
 	 * @access  public
 	 */
 	public function test_shortcode_order_param() {
-		$feed = $this->get_rand_feeds( 1 );
+		$feed = $this->get_rand_feeds();
 
 		// let's extact the titles from the default shortcode. These titles are the ones we will compare with subsequent "sorted" shortcodes.
 		$content = wp_remote_retrieve_body( wp_remote_get( $feed ) );
 		$items  = $this->parse_xml( $content, 'title', 'pubDate' );
 		$titles     = wp_list_pluck( $items, 'title' );
-		sort( $titles );
+		$new        = $titles;
+		sort( $new );
+		$titles     = array();
+		foreach ( $new as $title ) {
+			$titles[] = iconv( 'UTF-8', 'ASCII//IGNORE', trim( $title ) );
+		}
 
 		// sort by title ascending.
 		$content_asc    = do_shortcode( '[feedzy-rss feeds="' . $feed . '" max="' . count( $items ) . '" target="_blank" summary="no" sort="title_asc"]' );
@@ -86,9 +91,111 @@ class Test_Feedzy extends WP_UnitTestCase {
 		// sort by title descending.
 		$content_desc   = do_shortcode( '[feedzy-rss feeds="' . $feed . '" max="' . count( $items ) . '" target="_blank" summary="no" sort="title_desc"]' );
 		$title_desc = $this->get_titles( $content_desc );
-		rsort( $titles );
+		rsort( $new );
+		$titles     = array();
+		foreach ( $new as $title ) {
+			$titles[] = iconv( 'UTF-8', 'ASCII//IGNORE', trim( $title ) );
+		}
 		$this->assertEquals( $titles, $title_desc );
 
+	}
+
+	/**
+	 * Test feeds for different combinations of parameters that affect truncation.
+	 *
+	 * @test
+	 * @requires PHP 5.5
+	 * @access  public
+	 */
+	public function test_shortcode_truncation() {
+		$feed = $this->get_rand_feeds();
+
+		// let's extact the descriptions from the feed.
+		$content = wp_remote_retrieve_body( wp_remote_get( $feed ) );
+		$items  = $this->parse_xml( $content, 'title', 'description' );
+		$desc     = wp_list_pluck( $items, 'description' );
+
+		$summaries      = $desc;
+		$summaries      = array();
+		foreach ( $desc as $d ) {
+			$summaries[] = iconv( 'UTF-8', 'ASCII//IGNORE', trim( $d ) );
+		}
+
+		sort( $summaries );
+
+		// no truncation.
+		$content    = do_shortcode( '[feedzy-rss feeds="' . $feed . '" max="' . count( $items ) . '" target="_blank" summary="yes"]' );
+		$html_contents      = $this->get_contents( $content );
+		sort( $html_contents );
+		$this->assertEquals( $summaries, $html_contents );
+
+		$index = 0;
+		foreach ( $html_contents as $desc ) {
+			// html contains the same length as that in the feed.
+			$this->assertEquals( strlen( $desc ), strlen( $summaries[ $index++ ] ), $desc );
+			$this->assertNotEquals( ']', substr( $desc, -1, 1 ), $desc );
+		}
+
+		$length = 25;
+		// truncation.
+		$content    = do_shortcode( '[feedzy-rss feeds="' . $feed . '" max="' . count( $items ) . '" target="_blank" summary="yes" summarylength="' . $length . '"]' );
+		$html_contents      = $this->get_contents( $content );
+		sort( $html_contents );
+		$this->assertNotEquals( $summaries, $html_contents );
+
+		$index = 0;
+		foreach ( $html_contents as $desc ) {
+			$this->assertNotEquals( strlen( $desc ), strlen( $summaries[ $index++ ] ), $desc );
+			// the last character should be a ] as we cannot directly check for '[&hellip;]'
+			$this->assertEquals( ']', substr( $desc, -1, 1 ), $desc );
+		}
+
+		global $_replace;
+		$_replace = 'read much much more';
+		// change '[&hellip;]' to something else.
+		add_filter(
+			'feedzy_summary_output', function( $content ) {
+				global $_replace;
+				return str_replace( '[&hellip;]', $_replace, $content );
+			}, 9, 3
+		);
+
+		// truncation but with filter.
+		$content    = do_shortcode( '[feedzy-rss feeds="' . $feed . '" max="' . count( $items ) . '" target="_blank" summary="yes" summarylength="' . $length . '"]' );
+		$html_contents      = $this->get_contents( $content );
+		sort( $html_contents );
+		$this->assertNotEquals( $summaries, $html_contents );
+
+		$index = 0;
+		foreach ( $html_contents as $desc ) {
+			$this->assertNotEquals( strlen( $desc ), strlen( $summaries[ $index++ ] ), $desc );
+			// the last character should be a ] as we cannot directly check for '[&hellip;]'
+			$this->assertNotEquals( ']', substr( $desc, -1, 1 ), $desc );
+			$this->assertContains( $_replace, $desc, $desc );
+		}
+
+	}
+
+	/**
+	 * Extracts the description of the feed posts from the content.
+	 */
+	private function get_contents( $content ) {
+		$lists = $this->parse_content( $content, array( 'li' ) );
+		$this->assertGreaterThan( 0, count( $lists ) );
+
+		// let's be sure to only extract those LIs that have rss_item as the class.
+		$contents = array();
+		foreach ( $lists as $list ) {
+			if ( isset( $list['class'] ) && 'rss_item' === $list['class'] ) {
+				$divs = $list['div'][1]['p'];
+				$text   = $divs;
+				if ( is_array( $divs ) ) {
+					$text = $divs[0]['#text'];
+				}
+				$contents[] = iconv( 'UTF-8', 'ASCII//IGNORE', trim( $text ) );
+			}
+		}
+		return $contents;
 	}
 
 	/**
@@ -120,7 +227,12 @@ class Test_Feedzy extends WP_UnitTestCase {
 		$titles = array();
 		foreach ( $lists as $list ) {
 			if ( isset( $list['class'] ) && 'rss_item' === $list['class'] ) {
-				$titles[] = iconv( 'UTF-8', 'ASCII//IGNORE', trim( $list['span'][0]['a'][0]['#text'] ) );
+				$anchors = $list['span'][0]['a'];
+				$text   = $anchors;
+				if ( is_array( $anchors ) ) {
+					$text = $anchors[0]['#text'];
+				}
+				$titles[] = iconv( 'UTF-8', 'ASCII//IGNORE', trim( $text ) );
 			}
 		}
 		return $titles;
@@ -133,15 +245,8 @@ class Test_Feedzy extends WP_UnitTestCase {
 	 * @access  private
 	 * @return string
 	 */
-	private function get_rand_feeds( $how_many = 1 ) {
-		$urls       = array( 'https://themeisle.com/blog/feed/', 'https://www.codeinwp.com/feed/' );
-
-		$feeds      = array();
-		for ( $x = 0; $x < $how_many; $x++ ) {
-			$feeds[]    = $urls[ mt_rand( 0, count( $urls ) - 1 ) ];
-		}
-
-		return implode( ',', $feeds );
+	private function get_rand_feeds() {
+		return 'http://s3.amazonaws.com/downloads.themeisle.com/sample-feed-import.xml';
 	}
 
 	/**
@@ -154,8 +259,8 @@ class Test_Feedzy extends WP_UnitTestCase {
 		$array = array();
 		foreach ( $xml->channel->item as $item ) {
 			$array[] = array(
-				$key   => iconv( 'UTF-8', 'ASCII//IGNORE', trim( (string) $item->$key ) ),
-				$value => iconv( 'UTF-8', 'ASCII//IGNORE', trim( (string) $item->$value ) ),
+				$key   => trim( (string) $item->$key ),
+				$value => trim( (string) $item->$value ),
 			);
 		}
 		return $array;

@@ -80,7 +80,7 @@ class feedzy_wp_widget extends WP_Widget {
 	public function form( $instance ) {
 		$screen = get_current_screen();
 		// to prevent conflicts with plugins such as siteorigin page builder that call this function from outside of the 'widgets' screen.
-		if ( ! empty( $screen ) && 'widgets' !== $screen->id ) {
+		if ( ! empty( $screen ) && ! in_array( $screen->id, apply_filters( 'feedzy_allow_widgets_in_screen', array( 'widgets', 'customize' ) ), true ) ) {
 			return;
 		}
 		$instance    = wp_parse_args( $instance, $this->get_widget_defaults() );
@@ -101,21 +101,21 @@ class feedzy_wp_widget extends WP_Widget {
 				if ( isset( $element['disabled'] ) && $element['disabled'] ) {
 					continue;
 				}
-				if ( $id == 'feed_title' ) {
+				if ( $id === 'feed_title' ) {
 					continue;
 				}
-				if ( $id == 'title' ) {
+				if ( $id === 'title' ) {
 					$id = 'titlelength';
 				}
 				$widget_form .= '<p>';
 				$widget_form .= '<label for="' . $this->get_field_id( $id ) . '">' . $element['label'] . '</label>';
-				if ( $element['type'] == 'text' || $element['type'] == 'file' ) {
+				if ( $element['type'] === 'text' || $element['type'] === 'file' ) {
 					$widget_form .= '<input class="widefat" id="' . $this->get_field_id( $id ) . '" name="' . $this->get_field_name( $id ) . '" type="text" value="' . esc_attr( $instance[ $id ] ) . '" />';
 				}
-				if ( $element['type'] == 'number' ) {
+				if ( $element['type'] === 'number' ) {
 					$widget_form .= '<input class="widefat" id="' . $this->get_field_id( $id ) . '" name="' . $this->get_field_name( $id ) . '" type="number" value="' . esc_attr( $instance[ $id ] ) . '" />';
 				}
-				if ( $element['type'] == 'select' || $element['type'] == 'radio' ) {
+				if ( $element['type'] === 'select' || $element['type'] === 'radio' ) {
 					$widget_form .= '<select class="widefat" id="' . $this->get_field_id( $id ) . '" name="' . $this->get_field_name( $id ) . '" >';
 					foreach ( $element['opts'] as $select_option ) {
 						$widget_form .= '<option ' . selected( esc_attr( $select_option['value'] ), self::bool_to_enum( $instance[ $id ] ), false ) . 'value="' . esc_attr( $select_option['value'] ) . '">' . esc_html( $select_option['label'] ) . '</option>';
@@ -155,17 +155,19 @@ class feedzy_wp_widget extends WP_Widget {
 	 * @return bool
 	 */
 	public static function bool_to_enum( $value ) {
-		if ( in_array( $value, array( 'yes', 'no' ) ) ) {
+		if ( in_array( $value, array( 'yes', 'no' ), true ) ) {
 			return $value;
 		}
 		$value = strval( $value );
+		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
 		if ( $value == '1' || $value == 'true' ) {
 			return 'yes';
 		}
+		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
 		if ( $value == '0' || $value == 'false' ) {
 			return 'no';
 		}
-		if ( $value == '' ) {
+		if ( $value === '' ) {
 			return 'auto';
 		}
 		return $value;
@@ -237,8 +239,16 @@ class feedzy_wp_widget extends WP_Widget {
 			'thumb'          => self::bool_to_enum( $instance['thumb'] ),
 			'default'        => $instance['default'],
 			'size'           => $instance['size'],
-			'keywords_title' => $instance['keywords_title'],
-			'keywords_ban' => $instance['keywords_ban'],
+			'keywords_title' => ! empty( $instance['keywords_title'] ) ? $instance['keywords_title'] : '',
+			'keywords_ban' => ! empty( $instance['keywords_ban'] ) ? $instance['keywords_ban'] : '',
+			'error_empty' => $instance['error_empty'],
+			'sort' => $instance['sort'],
+			'refresh' => $instance['refresh'],
+			'follow' => $instance['follow'],
+			'http' => $instance['http'],
+			'lazy' => ! empty( $instance['lazy'] ) ? self::bool_to_enum( $instance['lazy'] ) : false,
+			'offset' => ! empty( $instance['offset'] ) ? $instance['offset'] : '',
+			'multiple_meta' => ! empty( $instance['multiple_meta'] ) ? $instance['multiple_meta'] : '',
 		);
 		$feedzy_widget_shortcode_attributes = apply_filters( 'feedzy_widget_shortcode_attributes_filter', $feedzy_widget_shortcode_attributes, $args, $instance );
 

@@ -11,15 +11,4 @@
 	<p class="logo">Feedzy RSS Feeds</p>
 	<span class="slogan">by <a
 				href="https://themeisle.com/">ThemeIsle</a></span>
-	<div class="header-btns">
-		<?php
-		if ( ! defined( 'FEEDZY_PRO_ABSURL' ) ) :
-			?>
-
-			<a target="_blank" href="<?php echo FEEDZY_UPSELL_LINK; ?>" class="buy-now"><span
-						class="dashicons dashicons-cart"></span> Upgrade</a>
-			<?php
-		endif;
-		?>
-	</div>
 </div><!-- .fz-features-header -->

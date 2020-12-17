@@ -18,4 +18,11 @@ composer.json
 composer.lock
 package-lock.json
 key.enc
-includes/gutenberg/src/
+includes/gutenberg/src
+webpack.config.js
+dist
+cypress
+cypress.json
+cypress.env.json.template
+docker-compose.travis.yml
+.github

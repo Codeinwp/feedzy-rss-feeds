@@ -15,7 +15,7 @@
  * Plugin Name:       Feedzy RSS Feeds Lite
  * Plugin URI:        https://themeisle.com/plugins/feedzy-rss-feeds-lite/
  * Description:       A small and lightweight RSS aggregator plugin. Fast and very easy to use, it allows you to aggregate multiple RSS feeds into your WordPress site through fully customizable shortcodes & widgets.
- * Version:           3.2.11
+ * Version:           3.5.2
  * Author:            Themeisle
  * Author URI:        http://themeisle.com
  * License:           GPL-2.0+
@@ -58,7 +58,7 @@ register_deactivation_hook( __FILE__, 'deactivate_feedzy_rss_feeds' );
 function feedzy_rss_feeds_autoload( $class ) {
 	$namespaces = array( 'Feedzy_Rss_Feeds' );
 	foreach ( $namespaces as $namespace ) {
-		if ( substr( $class, 0, strlen( $namespace ) ) == $namespace ) {
+		if ( substr( $class, 0, strlen( $namespace ) ) === $namespace ) {
 			$filename = plugin_dir_path( __FILE__ ) . 'includes/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
 			if ( is_readable( $filename ) ) {
 				require_once $filename;
@@ -112,14 +112,20 @@ function feedzy_rss_feeds_autoload( $class ) {
 function run_feedzy_rss_feeds() {
 	define( 'FEEDZY_BASEFILE', __FILE__ );
 	define( 'FEEDZY_ABSURL', plugins_url( '/', __FILE__ ) );
+	define( 'FEEDZY_BASENAME', plugin_basename( __FILE__ ) );
 	define( 'FEEDZY_ABSPATH', dirname( __FILE__ ) );
-	define( 'FEEDZY_UPSELL_LINK', 'https://themeisle.com/plugins/feedzy-rss-feeds/' );
+	define( 'FEEDZY_UPSELL_LINK', 'https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/' );
 	define( 'FEEDZY_NAME', 'Feedzy RSS Feeds' );
 	define( 'FEEDZY_USER_AGENT', 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36' );
 	define( 'FEEDZY_ALLOW_HTTPS', true );
+	define( 'FEEDZY_REST_VERSION', '1' );
+	// to redirect all themeisle_log_event to error log.
+	define( 'FEEDZY_LOCAL_DEBUG', false );
 
 	// always make this true before testing
+	// also used in gutenberg.
 	define( 'FEEDZY_DISABLE_CACHE_FOR_TESTING', false );
+
 	$feedzy = Feedzy_Rss_Feeds::instance();
 	$feedzy->run();
 	$vendor_file = FEEDZY_ABSPATH . '/vendor/autoload.php';
@@ -129,6 +135,8 @@ function run_feedzy_rss_feeds() {
 
 	add_filter( 'themeisle_sdk_products', 'feedzy_register_sdk', 10, 1 );
 	add_filter( 'pirate_parrot_log', 'feedzy_register_parrot', 10, 1 );
+
+	define( 'FEEDZY_SURVEY', feedzy_is_pro() ? 'https://forms.gle/FZXhL3D48KJUhb7q9' : 'https://forms.gle/yQUGSrKEa7XJTGLx8' );
 
 }
 
@@ -154,3 +162,17 @@ function feedzy_register_parrot( $plugins ) {
 
 spl_autoload_register( 'feedzy_rss_feeds_autoload' );
 run_feedzy_rss_feeds();
+
+
+if ( FEEDZY_LOCAL_DEBUG ) {
+	add_action( 'themeisle_log_event', 'feedzy_themeisle_log_event', 10, 5 );
+
+	/**
+	 * Redirect themeisle_log_event to error log.
+	 */
+	function feedzy_themeisle_log_event( $name, $msg, $type, $file, $line ) {
+		if ( $name === FEEDZY_NAME ) {
+			error_log( sprintf( '%s (%s:%d): %s', $type, $file, $line, $msg ) );
+		}
+	}
+}

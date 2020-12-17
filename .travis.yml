@@ -1,23 +1,44 @@
 language: php
-php:
-    - "7.1"
-    - "7.0"
-    - "5.6"
-    - "5.5"
-    - "5.4"
 sudo: false
+dist: trusty
+addons:
+  apt:
+    packages:
+      # Ubuntu 16+ does not install this dependency by default, so we need to install it ourselves
+      - libgconf-2-4
+services:
+    - docker
 matrix:
   fast_finish: true
   include:
-  - php: "5.6"
-    install: true
-    before_script: chmod +x bin/wraith.sh
-    env: TEST_SUITE=Wraith_Visual_Regression_Testing WRAITH_FAIL=5
-    script:  ./bin/wraith.sh
-  - php: '5.3'
-    dist: precise
-  allow_failures:
-    - env: TEST_SUITE=Wraith_Visual_Regression_Testing WRAITH_FAIL=5
+    - php: 7.3
+    - php: 7.2
+    - php: 7.1
+    - php: 7.0
+    - php: 5.6
+    - php: 5.5
+      env: WP_VERSION=5.1
+    - php: 5.4
+      env: WP_VERSION=5.1
+    - php: 5.3
+      env: WP_VERSION=5.1
+      dist: precise
+    - name: Cypress
+      if: type IN (pull_request)
+      language: node_js
+      node_js:
+        - 10.8
+      script:
+        - docker-compose -f docker-compose.travis.yml up -d
+        - bash ./bin/wp-init.sh && bash ./bin/run-e2e-tests.sh
+    - name: Cypress Gutenberg
+      if: type IN (pull_request)
+      language: node_js
+      node_js:
+        - 10.8
+      script:
+        - docker-compose -f docker-compose.travis.yml up -d
+        - bash ./bin/wp-init.sh && bash ./bin/run-e2e-tests-gutenberg.sh
 branches:
   except:
   - "/^*-v[0-9]/"

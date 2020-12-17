@@ -29,7 +29,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 	 * Returns an instance of this class.
 	 */
 	public static function get_instance() {
-		if ( null == self::$instance ) {
+		if ( null === self::$instance ) {
 			self::$instance = new Feedzy_Rss_Feeds_Gutenberg_Block();
 		}
 		return self::$instance;
@@ -51,13 +51,13 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 	 */
 	public function feedzy_gutenberg_scripts() {
 		if ( FEEDZY_DISABLE_CACHE_FOR_TESTING ) {
-			$version = filemtime( FEEDZY_ABSPATH . '/includes/gutenberg/dist/block.js' );
+			$version = filemtime( FEEDZY_ABSPATH . '/includes/gutenberg/build/block.js' );
 		} else {
 			$version = $this->version;
 		}
 
 		// Enqueue the bundled block JS file
-		wp_enqueue_script( 'feedzy-gutenberg-block-js', FEEDZY_ABSURL . 'includes/gutenberg/dist/block.js', array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-compose', 'wp-api', 'lodash' ), $version );
+		wp_enqueue_script( 'feedzy-gutenberg-block-js', FEEDZY_ABSURL . 'includes/gutenberg/build/block.js', array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-compose', 'wp-editor', 'wp-api', 'lodash' ), $version );
 
 		// Pass in REST URL
 		wp_localize_script(
@@ -69,7 +69,8 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		);
 
 		// Enqueue editor block styles
-		wp_enqueue_style( 'feedzy-gutenberg-block-css', FEEDZY_ABSURL . 'includes/gutenberg/dist/block.css', '', $version );
+		wp_enqueue_style( 'feedzy-block-css', FEEDZY_ABSURL . 'css/feedzy-rss-feeds.css', '', $version );
+		wp_enqueue_style( 'feedzy-gutenberg-block-css', FEEDZY_ABSURL . 'includes/gutenberg/build/block.css', '', $version );
 	}
 
 	/**
@@ -84,8 +85,12 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 						'type' => 'string',
 					),
 					'max'            => array(
-						'type'    => 'string',
+						'type'    => 'number',
 						'default' => '5',
+					),
+					'offset'            => array(
+						'type'    => 'number',
+						'default' => '0',
 					),
 					'feed_title'     => array(
 						'type'    => 'boolean',
@@ -97,7 +102,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 					),
 					'sort'           => array(
 						'type'    => 'string',
-						'default' => 'date_desc',
+						'default' => 'default',
 					),
 					'target'         => array(
 						'type'    => 'string',
@@ -108,7 +113,16 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 					),
 					'meta'           => array(
 						'type'    => 'boolean',
-						'default' => true,
+					),
+					'lazy'           => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
+					'metafields'      => array(
+						'type'    => 'string',
+					),
+					'multiple_meta'      => array(
+						'type'    => 'string',
 					),
 					'summary'        => array(
 						'type'    => 'boolean',
@@ -158,9 +172,33 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 	 * Feedzy Gutenberg Block Callback Function
 	 */
 	public function feedzy_gutenberg_block_callback( $attr ) {
+		if ( is_admin() ) {
+			$attr['gutenberg'] = true;
+		}
 		$attr['default'] = ( ! empty( $attr['default'] ) ? $attr['default']['url'] : '' );
-		$paramss = wp_parse_args( $attr );
-		return feedzy_rss( $paramss );
+		if ( ! empty( $attr['feed_title'] ) ) {
+			$attr['feed_title'] = 'yes';
+		}
+		if ( ! empty( $attr['meta'] ) ) {
+			$attr['meta'] = 'yes';
+		}
+		if ( ! empty( $attr['metafields'] ) ) {
+			$attr['meta'] = $attr['metafields'];
+		}
+		if ( ! empty( $attr['multiple_meta'] ) ) {
+			$attr['multiple_meta'] = $attr['multiple_meta'];
+		}
+		if ( ! empty( $attr['summary'] ) ) {
+			$attr['summary'] = 'yes';
+		}
+		if ( ! empty( $attr['price'] ) ) {
+			$attr['price'] = 'yes';
+		}
+		if ( ! empty( $attr['sort'] ) && 'default' === $attr['sort'] ) {
+			unset( $attr['sort'] );
+		}
+		$params = wp_parse_args( $attr );
+		return feedzy_rss( $params );
 	}
 
 	/**
@@ -169,8 +207,11 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 	public function feedzy_register_rest_route() {
 		register_rest_route(
 			'feedzy/v1', '/feed/', array(
-				'methods'  => 'GET',
+				'methods'  => 'POST',
 				'callback' => array( $this, 'feedzy_rest_route' ),
+				'permission_callback' => function () {
+					return is_user_logged_in();
+				},
 				'args'     => array(
 					'url'      => array(
 						'sanitize_callback' => array( $this, 'feedzy_sanitize_feeds' ),
@@ -195,7 +236,9 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 			$feed = $data['category'];
 		}
 
-		$metaArgs = array(
+		$url = $feed;
+
+		$meta_args = array(
 			'date_format' => get_option( 'date_format' ),
 			'time_format' => get_option( 'time_format' ),
 		);
@@ -203,7 +246,6 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		$instance = Feedzy_Rss_Feeds::instance();
 		$admin = $instance->get_admin();
 		$feed = $admin->fetch_feed( $feed, '12_hours', array( '' ) );
-
 		$feedy = array();
 
 		if ( ! $feed->init() ) {
@@ -222,30 +264,33 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 			);
 		}
 
-		if ( feedzy_is_pro() ) {
-			$pro = new Feedzy_Rss_Feeds_Pro_Admin( $instance->get_plugin_name(), $instance->get_version() );
-		}
-
 		$feedy['items'] = array();
 		$items = $feed->get_items();
+		$is_multiple = ! empty( $feed->multifeed_url ) && is_array( $feed->multifeed_url );
 		foreach ( $items as $item ) {
-			if ( feedzy_is_pro() ) {
-				$item_attrs = $pro->feedzy_pro_add_data_to_item( array(), $item );
-			}
+			$item_attrs = apply_filters( 'feedzy_item_filter', array(), $item );
+
 			array_push(
 				$feedy['items'], array(
 					'title'       => ( ( $item->get_title() ) ? $item->get_title() : null ),
 					'link'        => ( ( $item->get_permalink() ) ? $item->get_permalink() : null ),
 					'creator'     => ( ( $item->get_author() ) ? $item->get_author()->get_name() : null ),
+					'source'     => $is_multiple && $item->get_feed()->get_title() ? $item->get_feed()->get_title() : '',
 					'pubDate'     => ( ( $item->get_date() ) ? $item->get_date( 'U' ) : null ),
-					'date'        => ( ( $item->get_date() ) ? date_i18n( $metaArgs['date_format'], $item->get_date( 'U' ) ) : null ),
-					'time'        => ( ( $item->get_date() ) ? date_i18n( $metaArgs['time_format'], $item->get_date( 'U' ) ) : null ),
-					'description' => ( ( $item->get_description() ) ? $item->get_description() : null ),
+					'date'        => ( ( $item->get_date() ) ? date_i18n( $meta_args['date_format'], $item->get_date( 'U' ) ) : null ),
+					'time'        => ( ( $item->get_date() ) ? date_i18n( $meta_args['time_format'], $item->get_date( 'U' ) ) : null ),
+					'description' => isset( $item_attrs['item_description'] ) ? $item_attrs['item_description'] : ( $item->get_description() ? $item->get_description() : null ),
 					'thumbnail'   => $admin->feedzy_retrieve_image( $item ),
-					'price'       => ( ( feedzy_is_pro() && $item_attrs['item_price'] ) ? $item_attrs['item_price'] : null ),
-					'media'       => ( ( feedzy_is_pro() && $item_attrs['item_media'] ) ? $item_attrs['item_media'] : null ),
+					'price'       => isset( $item_attrs['item_price'] ) ? $item_attrs['item_price'] : null,
+					'media'       => isset( $item_attrs['item_media'] ) ? $item_attrs['item_media'] : null,
+					'categories'  => isset( $item_attrs['item_categories'] ) ? $item_attrs['item_categories'] : null,
 				)
 			);
+		}
+
+		// manually delete the transient so that correct cache time can be used.
+		if ( ! defined( 'TI_CYPRESS_TESTING' ) ) {
+			delete_transient( 'feed_' . md5( $url ) );
 		}
 
 		header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );

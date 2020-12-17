@@ -20,11 +20,6 @@
     "issues": "https://github.com/Codeinwp/feedzy-rss-feeds/issues",
     "source": "https://github.com/Codeinwp/feedzy-rss-feeds"
   },
-  "config": {
-    "platform": {
-      "php": "5.6"
-    }
-  },
   "require": {
     "codeinwp/themeisle-sdk": "master"
   },
@@ -34,5 +29,11 @@
     ]
   },
   "minimum-stability": "dev",
-  "prefer-stable": true
+  "prefer-stable": true,
+  "config": {
+    "optimize-autoloader": true,
+    "platform": {
+      "php": "5.6"
+    }
+  }
 }
