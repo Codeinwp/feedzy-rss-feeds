@@ -128,7 +128,7 @@ function run_feedzy_rss_feeds() {
 
 	$feedzy = Feedzy_Rss_Feeds::instance();
 	$feedzy->run();
-	$vendor_file = FEEDZY_ABSPATH . '/vendor/autoload_52.php';
+	$vendor_file = FEEDZY_ABSPATH . '/vendor/autoload.php';
 	if ( is_readable( $vendor_file ) ) {
 		require_once $vendor_file;
 	}
