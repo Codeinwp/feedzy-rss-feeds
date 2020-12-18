@@ -694,7 +694,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$default_agent = $this->get_default_user_agent( $feed_url );
 		$feed->set_useragent( apply_filters( 'http_headers_useragent', $default_agent ) );
 		if ( false === apply_filters( 'feedzy_disable_db_cache', false, $feed_url ) ) {
-			$feed->set_cache_class( 'WP_Feed_Cache_Transient' );
+			SimplePie_Cache::register( 'wp_transient', 'WP_Feed_Cache_Transient' );
+			$feed->set_cache_location( 'wp_transient' );
 			add_filter(
 				'wp_feed_cache_transient_lifetime', function( $time ) use ( $cache_time ) {
 					return $cache_time;
