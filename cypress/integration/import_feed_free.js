@@ -155,7 +155,7 @@ describe('Test Free - Import Feed', function() {
         cy.get('table.posts:nth-of-type(1) .feedzy-run-now').click();
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(1)').invoke('html').should('include', 'Importing');
 
-        cy.wait(10 * parseInt(feed.wait));
+        cy.wait(20 * parseInt(feed.wait));
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(1)').invoke('html').should('include', 'Successfully run');
 
         cy.visit('/edit.php?post_type=feedzy_imports')
