@@ -164,11 +164,12 @@ class Feedzy_Rss_Feeds_Import {
 	 * @param   array  $itemArray The item attributes array.
 	 * @param   object $item The feed item.
 	 * @param   array  $sc The shorcode attributes array.
-	 * @param   int    $index The item number.
+	 * @param   int    $index The item number (may not be the same as the item_index).
+	 * @param   int    $item_index The real index of this items in the feed (maybe be different from $index if filters are used).
 	 *
 	 * @return mixed
 	 */
-	public function add_data_to_item( $itemArray, $item, $sc = null, $index = null ) {
+	public function add_data_to_item( $itemArray, $item, $sc = null, $index = null, $item_index = null ) {
 		$itemArray['item_categories'] = $this->retrieve_categories( null, $item );
 
 		// If set to true, SimplePie will return a unique MD5 hash for the item.
@@ -176,6 +177,7 @@ class Feedzy_Rss_Feeds_Import {
 		$itemArray['item_id']   = $item->get_id( false );
 
 		$itemArray['item']      = $item;
+		$itemArray['item_index']      = $item_index;
 		return $itemArray;
 	}
 
@@ -972,11 +974,13 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		$shortcode = sprintf(
-			'[feedzy-rss feeds="%s" max="%d" feed_title=no meta=no summary=no thumb=no error_empty="%s" keywords_title="%s" %s="%s" _dry_run_tags_="%s" _dryrun_="yes"]',
+			'[feedzy-rss feeds="%s" max="%d" feed_title=no meta=no summary=no thumb=no error_empty="%s" keywords_inc="%s" %s="%s" %s="%s" _dry_run_tags_="%s" _dryrun_="yes"]',
 			$feedzy_meta_data['source'],
 			$feedzy_meta_data['import_feed_limit'],
 			'', // should be empty
 			$feedzy_meta_data['inc_key'],
+			feedzy_is_pro() ? 'keywords_exc' : '',
+			feedzy_is_pro() ? $feedzy_meta_data['exc_key'] : '',
 			feedzy_is_pro() ? 'keywords_ban' : '',
 			feedzy_is_pro() ? $feedzy_meta_data['exc_key'] : '',
 			implode( ',', $tags )
@@ -1072,14 +1076,18 @@ class Feedzy_Rss_Feeds_Import {
 				'thumb'          => 'auto',
 				'default'        => '',
 				'size'           => '250',
-				'keywords_title' => $inc_key,
-				'keywords_ban'   => $exc_key,
+				'keywords_inc'   => $inc_key, // this is not keywords_title
+				'keywords_ban'   => $exc_key, // to support old pro that does not support keywords_exc
+				'keywords_exc'   => $exc_key, // this is not keywords_ban
 				'columns'        => 1,
 				'offset'         => 0,
 				'multiple_meta'  => 'no',
 				'refresh'        => '55_mins',
 			), $job
 		);
+
+		$admin = Feedzy_Rss_Feeds::instance()->get_admin();
+		$options = $admin->sanitize_attr( $options, $source );
 
 		$options['__jobID'] = $job->ID;
 
@@ -1184,7 +1192,7 @@ class Feedzy_Rss_Feeds_Import {
 			);
 
 			if ( $this->feedzy_is_business() ) {
-				$post_title = apply_filters( 'feedzy_parse_custom_tags', $post_title, $results['feed'], $index );
+				$post_title = apply_filters( 'feedzy_parse_custom_tags', $post_title, $results['feed'], $item['item_index'] );
 			}
 
 			$post_title = apply_filters( 'feedzy_invoke_services', $post_title, 'title', $item['item_title'], $job );
@@ -1241,7 +1249,7 @@ class Feedzy_Rss_Feeds_Import {
 			}
 
 			if ( $this->feedzy_is_business() ) {
-				$post_content = apply_filters( 'feedzy_parse_custom_tags', $post_content, $results['feed'], $index );
+				$post_content = apply_filters( 'feedzy_parse_custom_tags', $post_content, $results['feed'], $item['item_index'] );
 			}
 
 			$post_content   = apply_filters( 'feedzy_invoke_services', $post_content, 'content', $item['item_description'], $job );
@@ -1317,9 +1325,7 @@ class Feedzy_Rss_Feeds_Import {
 				}
 			}
 
-			do_action( 'feedzy_import_extra', $job, $results, $new_post_id, $index, $import_errors, $import_info );
-
-			$index++;
+			do_action( 'feedzy_import_extra', $job, $results, $new_post_id, $index, $item['item_index'], $import_errors, $import_info );
 
 			if ( ! empty( $import_featured_img ) ) {
 				$image_url = '';
@@ -1330,6 +1336,14 @@ class Feedzy_Rss_Feeds_Import {
 					// image exists in item
 					if ( ! empty( $item['item_img_path'] ) ) {
 						$image_url = str_replace( '[#item_image]', $item['item_img_path'], $import_featured_img );
+					} else {
+						$img_success = false;
+					}
+				} elseif ( strpos( $import_featured_img, '[#item_custom' ) !== false ) {
+					// custom image tag
+					$value = apply_filters( 'feedzy_parse_custom_tags', $import_featured_img, $results['feed'], $index );
+					if ( ! empty( $value ) && strpos( $value, '[#item_custom' ) === false ) {
+						$image_url = $value;
 					} else {
 						$img_success = false;
 					}
@@ -1346,6 +1360,8 @@ class Feedzy_Rss_Feeds_Import {
 					$import_image_errors++;
 				}
 			}
+
+			$index++;
 
 			// indicate that this post was imported by feedzy.
 			update_post_meta( $new_post_id, 'feedzy', 1 );

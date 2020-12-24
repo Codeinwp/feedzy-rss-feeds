@@ -3,7 +3,7 @@ Contributors: themeisle,codeinwp,hardeepasrani,rozroz
 Tags: rss aggregator, news aggregator, autoblogging, feed to post, rss import
 Requires at least: 3.7
 Requires PHP: 5.3
-Tested up to: 5.5
+Tested up to: 5.6
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -461,33 +461,33 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
  == Changelog ==
-= 3.5.1 - 2020-10-30  = 
+= 3.5.1 - 2020-10-30  =
 
 * [Fix] Importing random images with https://source.unsplash.com/random generator link in Feed to Post
 * [Fix] Importing fixed featured image in Feed to Post
 * [Fix] Enclosures that do no specify image extension are not imported even if the type is image/jpeg
 
 
-= 3.5.0 - 2020-10-12  = 
+= 3.5.0 - 2020-10-12  =
 
 * [Feat] Improved interface for adding new imports and for the imports listing page
 * [Feat] Improved checks for feeds validity
 
 
-= 3.4.3 - 2020-08-26  = 
+= 3.4.3 - 2020-08-26  =
 
 * [Fix] HTML tags being trimmed on save of the import job
 * [Fix] Issue with nonce not being checked correctly
 
 
-= 3.4.2 - 2020-08-12  = 
+= 3.4.2 - 2020-08-12  =
 
 * - [Fix] Compatibility with WP 5.5
 * - [Feat] Link to items imported across runs in Feed2Post
 
 
 
-= 3.4.1 - 2020-07-23  = 
+= 3.4.1 - 2020-07-23  =
 
 * - [Feat] Feed2Post - Provide more info on imported content and possible errors
 * - [Feat] Feed2Post - New Purge & Reset button which allows to clear data of already imported items to reimport those again

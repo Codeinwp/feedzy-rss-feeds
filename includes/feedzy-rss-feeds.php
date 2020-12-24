@@ -104,7 +104,7 @@ class Feedzy_Rss_Feeds {
 	 */
 	public function init() {
 		self::$plugin_name = 'feedzy-rss-feeds';
-		self::$version = '3.5.1';
+		self::$version = '3.5.2';
 		self::$instance->load_dependencies();
 		self::$instance->set_locale();
 		self::$instance->define_admin_hooks();
@@ -249,7 +249,7 @@ class Feedzy_Rss_Feeds {
 			self::$instance->loader->add_filter( 'manage_feedzy_imports_posts_columns', $plugin_import, 'feedzy_import_columns' );
 			self::$instance->loader->add_action( 'admin_notices', $plugin_import, 'admin_notices' );
 			self::$instance->loader->add_action( 'plugins_loaded', $plugin_import, 'add_cron' );
-			self::$instance->loader->add_filter( 'feedzy_item_filter', $plugin_import, 'add_data_to_item', 10, 4 );
+			self::$instance->loader->add_filter( 'feedzy_item_filter', $plugin_import, 'add_data_to_item', 10, 5 );
 			self::$instance->loader->add_filter( 'feedzy_display_tab_settings', $plugin_import, 'display_tab_settings', 10, 2 );
 			self::$instance->loader->add_filter( 'feedzy_save_tab_settings', $plugin_import, 'save_tab_settings', 10, 2 );
 			self::$instance->loader->add_filter( 'feedzy_render_magic_tags', $plugin_import, 'render_magic_tags', 10, 3 );

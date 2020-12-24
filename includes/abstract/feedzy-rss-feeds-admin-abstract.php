@@ -260,20 +260,42 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( feedzy_is_new() && ! feedzy_is_pro() ) {
 			return true;
 		}
-		$keywords_title = $sc['keywords_title'];
-		if ( ! empty( $keywords_title ) ) {
-			$continue = false;
-			foreach ( $keywords_title as $keyword ) {
-				if ( strpos( $item->get_title(), $keyword ) !== false ) {
-					$continue = true;
+
+		if ( isset( $sc['keywords_inc'] ) && ! empty( $sc['keywords_inc'] ) ) {
+			$keywords = $sc['keywords_inc'];
+			if ( ! empty( $keywords ) ) {
+				$continue = false;
+				foreach ( $keywords as $keyword ) {
+					if ( strpos( $item->get_title(), $keyword ) !== false || strpos( $item->get_description(), $keyword ) !== false ) {
+						$continue = true;
+					}
+				}
+			}
+		} elseif ( isset( $sc['keywords_title'] ) && ! empty( $sc['keywords_title'] ) ) {
+			$keywords = $sc['keywords_title'];
+			if ( ! empty( $keywords ) ) {
+				$continue = false;
+				foreach ( $keywords as $keyword ) {
+					if ( strpos( $item->get_title(), $keyword ) !== false ) {
+						$continue = true;
+					}
 				}
 			}
 		}
 
-		if ( array_key_exists( 'keywords_ban', $sc ) ) {
-			$keywords_ban = $sc['keywords_ban'];
-			if ( ! empty( $keywords_ban ) ) {
-				foreach ( $keywords_ban as $keyword ) {
+		if ( isset( $sc['keywords_exc'] ) && ! empty( $sc['keywords_exc'] ) ) {
+			$keywords = $sc['keywords_exc'];
+			if ( ! empty( $keywords ) ) {
+				foreach ( $keywords as $keyword ) {
+					if ( strpos( $item->get_title(), $keyword ) !== false || strpos( $item->get_description(), $keyword ) !== false ) {
+						return false;
+					}
+				}
+			}
+		} elseif ( isset( $sc['keywords_ban'] ) && ! empty( $sc['keywords_ban'] ) ) {
+			$keywords = $sc['keywords_ban'];
+			if ( ! empty( $keywords ) ) {
+				foreach ( $keywords as $keyword ) {
 					if ( strpos( $item->get_title(), $keyword ) !== false ) {
 						return false;
 					}
@@ -500,6 +522,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'size'           => '',
 				// only display item if title contains specific keywords (comma-separated list/case sensitive)
 				'keywords_title' => '',
+				// only display item if title OR content contains specific keywords (comma-separated list/case sensitive)
+				'keywords_inc' => '',
 				// cache refresh
 				'refresh'        => '12_hours',
 				// sorting.
@@ -663,8 +687,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				)
 			);
 		}
-
-		require_once( ABSPATH . WPINC . '/class-wp-feed-cache.php' );
 		require_once( ABSPATH . WPINC . '/class-wp-feed-cache-transient.php' );
 		require_once( ABSPATH . WPINC . '/class-wp-simplepie-file.php' );
 
@@ -672,7 +694,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$default_agent = $this->get_default_user_agent( $feed_url );
 		$feed->set_useragent( apply_filters( 'http_headers_useragent', $default_agent ) );
 		if ( false === apply_filters( 'feedzy_disable_db_cache', false, $feed_url ) ) {
-			$feed->set_cache_class( 'WP_Feed_Cache' );
+			SimplePie_Cache::register( 'wp_transient', 'WP_Feed_Cache_Transient' );
+			$feed->set_cache_location( 'wp_transient' );
 			add_filter(
 				'wp_feed_cache_transient_lifetime', function( $time ) use ( $cache_time ) {
 					return $cache_time;
@@ -860,9 +883,17 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$sc['keywords_title'] = rtrim( $sc['keywords_title'], ',' );
 			$sc['keywords_title'] = array_map( 'trim', explode( ',', $sc['keywords_title'] ) );
 		}
+		if ( ! empty( $sc['keywords_inc'] ) ) {
+			$sc['keywords_inc'] = rtrim( $sc['keywords_inc'], ',' );
+			$sc['keywords_inc'] = array_map( 'trim', explode( ',', $sc['keywords_inc'] ) );
+		}
 		if ( ! empty( $sc['keywords_ban'] ) ) {
 			$sc['keywords_ban'] = rtrim( $sc['keywords_ban'], ',' );
 			$sc['keywords_ban'] = array_map( 'trim', explode( ',', $sc['keywords_ban'] ) );
+		}
+		if ( ! empty( $sc['keywords_exc'] ) ) {
+			$sc['keywords_exc'] = rtrim( $sc['keywords_exc'], ',' );
+			$sc['keywords_exc'] = array_map( 'trim', explode( ',', $sc['keywords_exc'] ) );
 		}
 		if ( empty( $sc['summarylength'] ) || ! is_numeric( $sc['summarylength'] ) ) {
 			$sc['summarylength'] = '';
@@ -1079,18 +1110,20 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	public function get_feed_array( $feed_items, $sc, $feed, $feed_url, $sizes ) {
 		$count = 0;
 		$items = apply_filters( 'feedzy_feed_items', $feed->get_items( $sc['offset'] ), $feed_url );
+		$index = 0;
 		foreach ( (array) $items as $item ) {
-				$continue = apply_filters( 'feedzy_item_keyword', true, $sc, $item, $feed_url );
+			$continue = apply_filters( 'feedzy_item_keyword', true, $sc, $item, $feed_url, $index );
 			if ( $continue === true ) {
 				// Count items. This should be > and not >= because max, when not defined and empty, becomes 0.
 				if ( $count >= $sc['max'] ) {
 					break;
 				}
-				$item_attr                         = apply_filters( 'feedzy_item_attributes', $item_attr = '', $sizes, $item, $feed_url, $sc );
-				$feed_items[ $count ]             = $this->get_feed_item_filter( $sc, $sizes, $item, $feed_url, $count );
+				$item_attr                         = apply_filters( 'feedzy_item_attributes', $item_attr = '', $sizes, $item, $feed_url, $sc, $index );
+				$feed_items[ $count ]             = $this->get_feed_item_filter( $sc, $sizes, $item, $feed_url, $count, $index );
 				$feed_items[ $count ]['itemAttr'] = $item_attr;
-				$count ++;
+				$count++;
 			}
+			$index++;
 		}
 
 		return $feed_items;
@@ -1106,11 +1139,12 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @param   array  $sizes The sizes array.
 	 * @param   object $item The feed item object.
 	 * @param   string $feed_url The feed url.
-	 * @param   int    $index The item number.
+	 * @param   int    $index The item number (may not be the same as the item_index).
+	 * @param   int    $item_index The real index of this items in the feed (maybe be different from $index if filters are used).
 	 *
 	 * @return array
 	 */
-	private function get_feed_item_filter( $sc, $sizes, $item, $feed_url, $index ) {
+	private function get_feed_item_filter( $sc, $sizes, $item, $feed_url, $index, $item_index ) {
 		$item_link = $item->get_permalink();
 		// if the item has no link (possible in some cases), use the feed link
 		if ( empty( $item_link ) ) {
@@ -1295,7 +1329,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'item_content'       => apply_filters( 'feedzy_content', $item->get_content( false ), $item ),
 			'item_source'       => $feed_source,
 		);
-		$item_array = apply_filters( 'feedzy_item_filter', $item_array, $item, $sc, $index );
+		$item_array = apply_filters( 'feedzy_item_filter', $item_array, $item, $sc, $index, $item_index );
 
 		return $item_array;
 	}

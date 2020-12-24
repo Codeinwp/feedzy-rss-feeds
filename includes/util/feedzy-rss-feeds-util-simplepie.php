@@ -10,7 +10,6 @@
 
 if ( ! class_exists( 'SimplePie' ) ) {
 	require_once( ABSPATH . WPINC . '/class-simplepie.php' );
-	require_once( ABSPATH . WPINC . '/class-wp-feed-cache.php' );
 	require_once( ABSPATH . WPINC . '/class-wp-feed-cache-transient.php' );
 	require_once( ABSPATH . WPINC . '/class-wp-simplepie-file.php' );
 }
