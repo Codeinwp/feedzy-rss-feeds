@@ -12,3 +12,4 @@ cypress/integration/localhost*
 cypress/plugins
 cypress/fixtures
 cypress.env.json
+wp-content
