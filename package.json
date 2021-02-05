@@ -39,7 +39,7 @@
     "browser-sync-webpack-plugin": "^1.2.0",
     "cross-env": "^5.1.1",
     "css-loader": "^0.28.7",
-    "cypress": "^3.2.0",
+    "cypress": "^6.4.0",
     "eslint": "^7.19.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-config-wordpress": "^2.0.0",
