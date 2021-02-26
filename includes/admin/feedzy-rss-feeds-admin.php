@@ -266,6 +266,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return mixed|integer
 	 */
 	public function save_feedzy_post_type_meta( $post_id, $post ) {
+		if ( doing_action( 'wp_ajax_feedzy' ) ) {
+			return $post_id;
+		}
 		if (
 			empty( $_POST ) ||
 			! wp_verify_nonce( $_POST['feedzy_category_meta_noncename'], FEEDZY_BASEFILE ) ||
