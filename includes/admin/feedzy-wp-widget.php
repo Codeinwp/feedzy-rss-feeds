@@ -241,7 +241,7 @@ class feedzy_wp_widget extends WP_Widget {
 			'size'           => $instance['size'],
 			'keywords_title' => ! empty( $instance['keywords_title'] ) ? $instance['keywords_title'] : '',
 			'keywords_ban' => ! empty( $instance['keywords_ban'] ) ? $instance['keywords_ban'] : '',
-			'error_empty' => $instance['error_empty'],
+			'error_empty' => isset( $instance['error_empty'] ) ? $instance['error_empty'] : '',
 			'sort' => $instance['sort'],
 			'refresh' => $instance['refresh'],
 			'follow' => $instance['follow'],
