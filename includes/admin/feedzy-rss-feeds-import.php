@@ -295,6 +295,8 @@ class Feedzy_Rss_Feeds_Import {
 		$import_title         = get_post_meta( $post->ID, 'import_post_title', true );
 		$import_date          = get_post_meta( $post->ID, 'import_post_date', true );
 		$import_content       = get_post_meta( $post->ID, 'import_post_content', true );
+		$import_item_img_url  = get_post_meta( $post->ID, 'import_use_external_image', true );
+		$import_item_img_url  = 'yes' === $import_item_img_url ? 'checked' : '';
 		$import_featured_img  = get_post_meta( $post->ID, 'import_post_featured_img', true );
 
 		// default values so that post is not created empty.
@@ -390,7 +392,8 @@ class Feedzy_Rss_Feeds_Import {
 
 			// we will activate this import only if the source has no invalid URL(s)
 			$source_is_valid = false;
-
+			// Check feeds external image URL checkbox checked OR not.
+			$data_meta['import_use_external_image'] = isset( $data_meta['import_use_external_image'] ) ? $data_meta['import_use_external_image'] : 'no';
 			foreach ( $data_meta as $key => $value ) {
 				$value = is_array( $value ) ? implode( ',', $value ) : implode( ',', (array) $value );
 				if ( 'source' === $key ) {
@@ -1033,6 +1036,7 @@ class Feedzy_Rss_Feeds_Import {
 		$import_post_type     = get_post_meta( $job->ID, 'import_post_type', true );
 		$import_post_term     = get_post_meta( $job->ID, 'import_post_term', true );
 		$import_feed_limit    = get_post_meta( $job->ID, 'import_feed_limit', true );
+		$import_item_img_url  = get_post_meta( $job->ID, 'import_use_external_image', true );
 		$max                  = $import_feed_limit;
 		if ( metadata_exists( $import_post_type, $job->ID, 'import_post_status' ) ) {
 			$import_post_status  = get_post_meta( $job->ID, 'import_post_status', true );
@@ -1354,8 +1358,13 @@ class Feedzy_Rss_Feeds_Import {
 				}
 
 				if ( ! empty( $image_url ) ) {
-					// if import_featured_img is a tag
-					$img_success = $this->generate_featured_image( $image_url, $new_post_id, $item['item_title'], $import_errors, $import_info );
+					if ( 'yes' === $import_item_img_url ) {
+						// Set external image URL.
+						update_post_meta( $new_post_id, 'feedzy_item_external_url', $image_url );
+					} else {
+						// if import_featured_img is a tag.
+						$img_success = $this->generate_featured_image( $image_url, $new_post_id, $item['item_title'], $import_errors, $import_info );
+					}
 				}
 
 				if ( ! $img_success ) {
