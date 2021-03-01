@@ -398,7 +398,9 @@ class Feedzy_Rss_Feeds_Import {
 					$invalid_urls = apply_filters( 'feedzy_check_source_validity', $value, $post_id, true, false );
 					$source_is_valid = empty( $invalid_urls );
 				}
-
+				if ( 'import_post_content' === $key ) {
+					add_filter( 'wp_kses_allowed_html', array( $this, 'allow_iframe_tag_item_content' ), 10, 2 );
+				}
 				if ( get_post_meta( $post_id, $key, false ) ) {
 					update_post_meta( $post_id, $key, wp_kses( $value, wp_kses_allowed_html( 'post' ) ) );
 				} else {
@@ -1910,5 +1912,26 @@ class Feedzy_Rss_Feeds_Import {
 
 			$query->set( 'meta_query', $meta_query );
 		}
+	}
+
+	/**
+	 * Add iframe to allowed wp_kses_post tags.
+	 *
+	 * @param array  $tags Allowed tags, attributes, and/or entities.
+	 * @param string $context Context.
+	 *
+	 * @return array
+	 */
+	public function allow_iframe_tag_item_content( $tags, $context ) {
+		if ( ! isset( $tags['iframe'] ) ) {
+			$tags['iframe'] = array(
+				'src'             => true,
+				'height'          => true,
+				'width'           => true,
+				'frameborder'     => true,
+				'allowfullscreen' => true,
+			);
+		}
+		return $tags;
 	}
 }
