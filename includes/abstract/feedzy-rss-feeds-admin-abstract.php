@@ -845,11 +845,18 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return bool
 	 */
 	protected function check_valid_xml( $url, $cache ) {
+		global $post;
 		$feed = $this->init_feed( $url, $cache, array() );
 		if ( $feed->error() ) {
 			return false;
 		}
 
+		$feed_child = array_keys( $feed->get_item()->data['child'] );
+		$feed_child = array_filter( $feed_child );
+		if ( ! in_array( SIMPLEPIE_NAMESPACE_DC_10, $feed_child ) && ! in_array( SIMPLEPIE_NAMESPACE_DC_11, $feed_child ) ) {
+			update_post_meta( $post->ID, '__transient_feedzy_invalid_dc_namespace', [ $url ] );
+			return false;
+		}
 		return true;
 	}
 

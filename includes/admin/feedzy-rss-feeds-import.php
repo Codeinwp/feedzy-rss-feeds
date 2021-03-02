@@ -445,7 +445,8 @@ class Feedzy_Rss_Feeds_Import {
 			// if invalid source has been found, redirect back to edit screen
 			// where errors can be shown
 			$invalid = get_post_meta( $post_id, '__transient_feedzy_invalid_source', true );
-			if ( empty( $invalid ) ) {
+			$invalid_dc_namespace = get_post_meta( $post_id, '__transient_feedzy_invalid_dc_namespace', true );
+			if ( empty( $invalid ) && empty( $invalid_dc_namespace ) ) {
 				return admin_url( 'edit.php?post_type=feedzy_imports' );
 			}
 		}
