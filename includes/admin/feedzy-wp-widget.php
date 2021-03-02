@@ -50,7 +50,7 @@ class feedzy_wp_widget extends WP_Widget {
 	 * @return feedzy_wp_widget
 	 */
 	public static function get_instance() {
-		if ( self::$instance === null ) {
+		if ( null === self::$instance ) {
 			self::$instance = new self();
 		}
 
@@ -101,21 +101,21 @@ class feedzy_wp_widget extends WP_Widget {
 				if ( isset( $element['disabled'] ) && $element['disabled'] ) {
 					continue;
 				}
-				if ( $id === 'feed_title' ) {
+				if ( 'feed_title' === $id ) {
 					continue;
 				}
-				if ( $id === 'title' ) {
+				if ( 'title' === $id ) {
 					$id = 'titlelength';
 				}
 				$widget_form .= '<p>';
 				$widget_form .= '<label for="' . $this->get_field_id( $id ) . '">' . $element['label'] . '</label>';
-				if ( $element['type'] === 'text' || $element['type'] === 'file' ) {
+				if ( 'text' === $element['type'] || 'file' === $element['type'] ) {
 					$widget_form .= '<input class="widefat" id="' . $this->get_field_id( $id ) . '" name="' . $this->get_field_name( $id ) . '" type="text" value="' . esc_attr( $instance[ $id ] ) . '" />';
 				}
-				if ( $element['type'] === 'number' ) {
+				if ( 'number' === $element['type'] ) {
 					$widget_form .= '<input class="widefat" id="' . $this->get_field_id( $id ) . '" name="' . $this->get_field_name( $id ) . '" type="number" value="' . esc_attr( $instance[ $id ] ) . '" />';
 				}
-				if ( $element['type'] === 'select' || $element['type'] === 'radio' ) {
+				if ( 'select' === $element['type'] || 'radio' === $element['type'] ) {
 					$widget_form .= '<select class="widefat" id="' . $this->get_field_id( $id ) . '" name="' . $this->get_field_name( $id ) . '" >';
 					foreach ( $element['opts'] as $select_option ) {
 						$widget_form .= '<option ' . selected( esc_attr( $select_option['value'] ), self::bool_to_enum( $instance[ $id ] ), false ) . 'value="' . esc_attr( $select_option['value'] ) . '">' . esc_html( $select_option['label'] ) . '</option>';
@@ -127,7 +127,8 @@ class feedzy_wp_widget extends WP_Widget {
 			}
 		}
 		$widget_form .= '<hr/>';
-		$widget_form = apply_filters( 'feedzy_widget_form_filter', $widget_form, $instance, $this->get_widget_defaults() );
+		$widget_form  = apply_filters( 'feedzy_widget_form_filter', $widget_form, $instance, $this->get_widget_defaults() );
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $widget_form;
 
 	}
@@ -139,7 +140,7 @@ class feedzy_wp_widget extends WP_Widget {
 	 */
 	public function get_widget_defaults() {
 		$defaults = Feedzy_Rss_Feeds_Ui_Lang::get_form_defaults();
-		// rename title to title length as widget instance already have one
+		// rename title to title length as widget instance already have one.
 		$defaults['titlelength'] = $defaults['title'];
 		$defaults['title']       = '';
 		$defaults['textarea']    = '';
@@ -160,14 +161,14 @@ class feedzy_wp_widget extends WP_Widget {
 		}
 		$value = strval( $value );
 		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
-		if ( $value == '1' || $value == 'true' ) {
+		if ( '1' == $value || 'true' == $value ) {
 			return 'yes';
 		}
 		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
-		if ( $value == '0' || $value == 'false' ) {
+		if ( '0' == $value || 'false' == $value ) {
 			return 'no';
 		}
-		if ( $value === '' ) {
+		if ( '' === $value ) {
 			return 'auto';
 		}
 		return $value;
@@ -188,7 +189,7 @@ class feedzy_wp_widget extends WP_Widget {
 	 */
 	public function update( $new_instance, $old_instance ) {
 		$instance          = $old_instance;
-		$instance['title'] = strip_tags( $new_instance['title'] );
+		$instance['title'] = wp_strip_all_tags( $new_instance['title'] );
 		if ( current_user_can( 'unfiltered_html' ) ) {
 			$instance['textarea'] = $new_instance['textarea'];
 		} else {
@@ -196,7 +197,7 @@ class feedzy_wp_widget extends WP_Widget {
 		}
 		$forms_ids = array_keys( $this->get_widget_defaults() );
 		foreach ( $forms_ids as $key ) {
-			$instance[ $key ] = strip_tags( isset( $new_instance[ $key ] ) ? $new_instance[ $key ] : '' );
+			$instance[ $key ] = wp_strip_all_tags( isset( $new_instance[ $key ] ) ? $new_instance[ $key ] : '' );
 		}
 		$instance = apply_filters( 'feedzy_widget_update_filter', $instance, $new_instance );
 
@@ -217,15 +218,18 @@ class feedzy_wp_widget extends WP_Widget {
 	public function widget( $args, $instance ) {
 		$title    = apply_filters( 'widget_title', $instance['title'] );
 		$textarea = apply_filters( 'widget_textarea', empty( $instance['textarea'] ) ? '' : $instance['textarea'], $instance );
-		// Display the widget body
+		// Display the widget body.
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $args['before_widget'];
-		// Check if title is set
+		// Check if title is set.
 		if ( $title ) {
-			echo $args['before_title'] . $title . $args['after_title'];
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $args['before_title'] . wp_kses_post( $title ) . $args['after_title'];
 		}
-		// Check if text intro is set
+		// Check if text intro is set.
 		if ( isset( $instance['textarea'] ) && ! empty( $instance['textarea'] ) ) {
-			echo '<p class="feedzy-widget-intro">' . wpautop( $textarea ) . '</p>';
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo '<p class="feedzy-widget-intro">' . wp_kses_post( wpautop( $textarea ) ) . '</p>';
 		}
 		$feedzy_widget_shortcode_attributes = array(
 			'feeds'          => $instance['feeds'],
@@ -240,19 +244,21 @@ class feedzy_wp_widget extends WP_Widget {
 			'default'        => $instance['default'],
 			'size'           => $instance['size'],
 			'keywords_title' => ! empty( $instance['keywords_title'] ) ? $instance['keywords_title'] : '',
-			'keywords_ban' => ! empty( $instance['keywords_ban'] ) ? $instance['keywords_ban'] : '',
-			'error_empty' => $instance['error_empty'],
-			'sort' => $instance['sort'],
-			'refresh' => $instance['refresh'],
-			'follow' => $instance['follow'],
-			'http' => $instance['http'],
-			'lazy' => ! empty( $instance['lazy'] ) ? self::bool_to_enum( $instance['lazy'] ) : false,
-			'offset' => ! empty( $instance['offset'] ) ? $instance['offset'] : '',
-			'multiple_meta' => ! empty( $instance['multiple_meta'] ) ? $instance['multiple_meta'] : '',
+			'keywords_ban'   => ! empty( $instance['keywords_ban'] ) ? $instance['keywords_ban'] : '',
+			'error_empty'    => $instance['error_empty'],
+			'sort'           => $instance['sort'],
+			'refresh'        => $instance['refresh'],
+			'follow'         => $instance['follow'],
+			'http'           => $instance['http'],
+			'lazy'           => ! empty( $instance['lazy'] ) ? self::bool_to_enum( $instance['lazy'] ) : false,
+			'offset'         => ! empty( $instance['offset'] ) ? $instance['offset'] : '',
+			'multiple_meta'  => ! empty( $instance['multiple_meta'] ) ? $instance['multiple_meta'] : '',
 		);
 		$feedzy_widget_shortcode_attributes = apply_filters( 'feedzy_widget_shortcode_attributes_filter', $feedzy_widget_shortcode_attributes, $args, $instance );
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo feedzy_rss( $feedzy_widget_shortcode_attributes );
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $args['after_widget'];
 
 	}

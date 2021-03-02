@@ -61,7 +61,8 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 
 		// Pass in REST URL
 		wp_localize_script(
-			'feedzy-gutenberg-block-js', 'feedzyjs',
+			'feedzy-gutenberg-block-js',
+			'feedzyjs',
 			array(
 				'imagepath' => esc_url( FEEDZY_ABSURL . 'img/' ),
 				'isPro'     => feedzy_is_pro(),
@@ -78,7 +79,8 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 	 */
 	public function feedzy_register_block_type() {
 		register_block_type(
-			'feedzy-rss-feeds/feedzy-block', array(
+			'feedzy-rss-feeds/feedzy-block',
+			array(
 				'render_callback' => array( $this, 'feedzy_gutenberg_block_callback' ),
 				'attributes'      => array(
 					'feeds'          => array(
@@ -88,7 +90,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 						'type'    => 'number',
 						'default' => '5',
 					),
-					'offset'            => array(
+					'offset'         => array(
 						'type'    => 'number',
 						'default' => '0',
 					),
@@ -112,17 +114,17 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 						'type' => 'number',
 					),
 					'meta'           => array(
-						'type'    => 'boolean',
+						'type' => 'boolean',
 					),
 					'lazy'           => array(
 						'type'    => 'boolean',
 						'default' => false,
 					),
-					'metafields'      => array(
-						'type'    => 'string',
+					'metafields'     => array(
+						'type' => 'string',
 					),
-					'multiple_meta'      => array(
-						'type'    => 'string',
+					'multiple_meta'  => array(
+						'type' => 'string',
 					),
 					'summary'        => array(
 						'type'    => 'boolean',
@@ -206,13 +208,15 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 	 */
 	public function feedzy_register_rest_route() {
 		register_rest_route(
-			'feedzy/v1', '/feed/', array(
-				'methods'  => 'POST',
-				'callback' => array( $this, 'feedzy_rest_route' ),
+			'feedzy/v1',
+			'/feed/',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( $this, 'feedzy_rest_route' ),
 				'permission_callback' => function () {
 					return is_user_logged_in();
 				},
-				'args'     => array(
+				'args'                => array(
 					'url'      => array(
 						'sanitize_callback' => array( $this, 'feedzy_sanitize_feeds' ),
 					),
@@ -244,9 +248,9 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		);
 
 		$instance = Feedzy_Rss_Feeds::instance();
-		$admin = $instance->get_admin();
-		$feed = $admin->fetch_feed( $feed, '12_hours', array( '' ) );
-		$feedy = array();
+		$admin    = $instance->get_admin();
+		$feed     = $admin->fetch_feed( $feed, '12_hours', array( '' ) );
+		$feedy    = array();
 
 		if ( ! $feed->init() ) {
 			$feedy['error'] = __( 'Invalid Feed URL', 'feedzy-rss-feeds' );
@@ -265,17 +269,18 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		}
 
 		$feedy['items'] = array();
-		$items = $feed->get_items();
-		$is_multiple = ! empty( $feed->multifeed_url ) && is_array( $feed->multifeed_url );
+		$items          = $feed->get_items();
+		$is_multiple    = ! empty( $feed->multifeed_url ) && is_array( $feed->multifeed_url );
 		foreach ( $items as $item ) {
 			$item_attrs = apply_filters( 'feedzy_item_filter', array(), $item );
 
 			array_push(
-				$feedy['items'], array(
+				$feedy['items'],
+				array(
 					'title'       => ( ( $item->get_title() ) ? $item->get_title() : null ),
 					'link'        => ( ( $item->get_permalink() ) ? $item->get_permalink() : null ),
 					'creator'     => ( ( $item->get_author() ) ? $item->get_author()->get_name() : null ),
-					'source'     => $is_multiple && $item->get_feed()->get_title() ? $item->get_feed()->get_title() : '',
+					'source'      => $is_multiple && $item->get_feed()->get_title() ? $item->get_feed()->get_title() : '',
 					'pubDate'     => ( ( $item->get_date() ) ? $item->get_date( 'U' ) : null ),
 					'date'        => ( ( $item->get_date() ) ? date_i18n( $meta_args['date_format'], $item->get_date( 'U' ) ) : null ),
 					'time'        => ( ( $item->get_date() ) ? date_i18n( $meta_args['time_format'], $item->get_date( 'U' ) ) : null ),
@@ -320,7 +325,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 	 */
 	public function feedzy_sanitize_categories( $input ) {
 		if ( $post = get_page_by_path( $input, OBJECT, 'feedzy_categories' ) ) {
-			$id = $post->ID;
+			$id    = $post->ID;
 			$value = get_post_meta( $id, 'feedzy_category_feed', true );
 			$value = trim( $value );
 			$value = explode( ',', $value );

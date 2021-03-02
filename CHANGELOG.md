@@ -1,4 +1,9 @@
 
+ ### v3.5.2 - 2020-12-24 
+ **Changes:** 
+ * [Fix] Compatibility with WP 5.6
+* [Fix] Composer requiring PHP greater than 7.1.0
+ 
  ### v3.5.1 - 2020-10-30 
  **Changes:** 
  * [Fix] Importing random images with https://source.unsplash.com/random generator link in Feed to Post
