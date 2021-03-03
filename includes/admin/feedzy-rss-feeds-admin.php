@@ -736,7 +736,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					$text = __( 'This source has invalid URLs. Please correct/remove the following', 'feedzy-rss-feeds' );
 					$invalid = $invalid_source;
 					delete_post_meta( $post->ID, '__transient_feedzy_invalid_source' );
-				} else if ( $invalid_dc_namespace ) {
+				} elseif ( $invalid_dc_namespace ) {
 					$text = __( 'This source URL is valid  but the XML namespace DC (xmlns:dc) is not valid. Please correct/remove the following', 'feedzy-rss-feeds' );
 					$invalid = $invalid_dc_namespace;
 					delete_post_meta( $post->ID, '__transient_feedzy_invalid_dc_namespace' );
