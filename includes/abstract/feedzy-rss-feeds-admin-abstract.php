@@ -932,9 +932,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'height' => $sc['size'],
 		);
 		$sizes                   = apply_filters( 'feedzy_thumb_sizes', $sizes, $feed_url );
+		$feed_title              = $this->get_feed_title_filter( $feed, $sc, $feed_url );
 		$feed_title['use_title'] = false;
 		if ( $sc['feed_title'] === 'yes' ) {
-			$feed_title              = $this->get_feed_title_filter( $feed, $sc, $feed_url );
 			$feed_title['use_title'] = true;
 		}
 		// Display the error message and quit (before showing the template for pro).
