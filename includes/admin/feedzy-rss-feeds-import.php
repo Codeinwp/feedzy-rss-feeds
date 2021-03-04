@@ -1267,8 +1267,8 @@ class Feedzy_Rss_Feeds_Import {
 			$new_post    = apply_filters(
 				'feedzy_insert_post_args', array(
 					'post_type'    => $import_post_type,
-					'post_title'   => $post_title,
-					'post_content' => $post_content,
+					'post_title'   => wp_slash( $post_title ),
+					'post_content' => wp_slash( $post_content ),
 					'post_date'    => $post_date,
 					'post_status'  => $import_post_status,
 				),
