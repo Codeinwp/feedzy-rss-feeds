@@ -364,8 +364,13 @@ class Feedzy_Rss_Feeds_Import {
 	 * @return bool
 	 */
 	public function save_feedzy_import_feed_meta( $post_id, $post ) {
+		if ( empty( $_POST ) ) {
+			return $post_id;
+		}
+		if ( ! isset( $_POST['feedzy_category_meta_noncename'] ) ) {
+			return $post_id;
+		}
 		if (
-			empty( $_POST ) ||
 			get_post_type( $post_id ) !== 'feedzy_imports' ||
 			( ! defined( 'TI_UNIT_TESTING' ) && ! wp_verify_nonce( $_POST['feedzy_category_meta_noncename'], FEEDZY_BASEFILE ) ) ||
 			! current_user_can( 'edit_post', $post_id )
