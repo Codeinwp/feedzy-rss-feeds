@@ -1427,6 +1427,9 @@ class Feedzy_Rss_Feeds_Import {
 
 		$feed    = $admin->fetch_feed( $feedURL, isset( $options['refresh'] ) ? $options['refresh'] : '12_hours', $options );
 
+		$feed->force_feed( true );
+		$feed->enable_order_by_date( false );
+
 		if ( is_string( $feed ) ) {
 			return array();
 		}
