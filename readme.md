@@ -461,6 +461,12 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
  == Changelog ==
+### 3.5.2 - 2020-12-24  ###
+
+* [Fix] Compatibility with WP 5.6
+* [Fix] Composer requiring PHP greater than 7.1.0
+
+
 ### 3.5.1 - 2020-10-30  ###
 
 * [Fix] Importing random images with https://source.unsplash.com/random generator link in Feed to Post
