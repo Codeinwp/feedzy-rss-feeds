@@ -370,7 +370,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  mixed
 	 */
 	public function feedzy_rss( $atts, $content = '' ) {
-		wp_enqueue_style( $this->plugin_name );
+		wp_print_styles( $this->plugin_name );
 		$sc      = $this->get_short_code_attributes( $atts );
 		$feed_url = $this->normalize_urls( $sc['feeds'] );
 		if ( empty( $feed_url ) ) {
