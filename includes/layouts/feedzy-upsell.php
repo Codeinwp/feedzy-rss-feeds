@@ -20,7 +20,7 @@ Layout For Upsell Page of Feedzy RSS Feeds
 		</div>
 		<div class="fz-feature-image">
 			<div class="header-btns">
-				<a target="_blank" href="<?php echo FEEDZY_UPSELL_LINK; ?>" class="buy-now"><span class="dashicons dashicons-cart"></span> Upgrade to Feedzy Pro now</a>
+				<a target="_blank" href="<?php echo esc_url( FEEDZY_UPSELL_LINK ); ?>" class="buy-now"><span class="dashicons dashicons-cart"></span> Upgrade to Feedzy Pro now</a>
 			</div>
 		</div>
 		<div class="clear"></div>
@@ -37,7 +37,7 @@ Layout For Upsell Page of Feedzy RSS Feeds
 			<p>Feedzy will automatically filter each feed item and place it wherever you want in your site. Easy to install and ready to go.</p>
 		</div>
 		<div class="fz-feature-image">
-			<img src="<?php echo FEEDZY_ABSURL; ?>/img/features-feed-to-post.jpg" alt="Feed to post">
+			<img src="<?php echo esc_url( FEEDZY_ABSURL ); ?>/img/features-feed-to-post.jpg" alt="Feed to post">
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -52,7 +52,7 @@ Layout For Upsell Page of Feedzy RSS Feeds
 			<p>If you like to roll your own templates, <a href="https://docs.themeisle.com/article/1162-feedzy-custom-templates" target="_blank">template tags</a> are available to help you do just that!</p>
 		</div>
 		<div class="fz-feature-image">
-			<img src="<?php echo FEEDZY_ABSURL; ?>/img/features-templates.jpg" alt="Feed templates">
+			<img src="<?php echo esc_url( FEEDZY_ABSURL ); ?>/img/features-templates.jpg" alt="Feed templates">
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -67,7 +67,7 @@ Layout For Upsell Page of Feedzy RSS Feeds
 			<p>Feature affiliate links on your site with Feedzy. Pro automatically includes your referral/affiliate ID on feed links. You can even import prices from product sources to create extra value for your readers.</p>
 		</div>
 		<div class="fz-feature-image">
-			<img src="<?php echo FEEDZY_ABSURL; ?>/img/features-affiliate-ready.jpg" alt="Protect your Brand">
+			<img src="<?php echo esc_url( FEEDZY_ABSURL ); ?>/img/features-affiliate-ready.jpg" alt="Protect your Brand">
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -81,7 +81,7 @@ Layout For Upsell Page of Feedzy RSS Feeds
 			<p>Take control of your content: blacklist specific keywords to show only the content you want to display on your site.</p>
 		</div>
 		<div class="fz-feature-image">
-			<img src="<?php echo FEEDZY_ABSURL; ?>/img/Protect-your-Brand.jpg" alt="Affiliate ready">
+			<img src="<?php echo esc_url( FEEDZY_ABSURL ); ?>/img/Protect-your-Brand.jpg" alt="Affiliate ready">
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -101,7 +101,7 @@ Layout For Upsell Page of Feedzy RSS Feeds
 			<p>Feedzy will automatically filter each feed item and place it wherever you want in your site. Easy to install and ready to go.</p>
 		</div>
 		<div class="fz-feature-image">
-			<img src="<?php echo FEEDZY_ABSURL; ?>/img/features-feed-to-post.jpg" alt="Feed to post">
+			<img src="<?php echo esc_url( FEEDZY_ABSURL ); ?>/img/features-feed-to-post.jpg" alt="Feed to post">
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -119,7 +119,7 @@ Layout For Upsell Page of Feedzy RSS Feeds
 			<p>Through WordAI integration, Feedzy will give you unlimited new content. Your SpinnerChief or WordAI subscriptions (not included) integrate seamlessly with Feedzy, so you won't ever have to worry about duplicate content - or Google penalties - again. <a href="https://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy" target="_blank">Check this out here.</a></p>
 		</div>
 		<div class="fz-feature-image">
-			<img src="<?php echo FEEDZY_ABSURL; ?>/img/feedzy-rss-feeds-wordai.jpg" alt="WordAi integration">
+			<img src="<?php echo esc_url( FEEDZY_ABSURL ); ?>/img/feedzy-rss-feeds-wordai.jpg" alt="WordAi integration">
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -137,7 +137,7 @@ Layout For Upsell Page of Feedzy RSS Feeds
 			<p>We're proud to serve over 10,000 happy customers and provide unlimited support/updates for the duration of your subscription. If you need help, our customer service and developer teams are on-hand to offer personalized, priority assistance to Pro customers.</p>
 		</div>
 		<div class="fz-feature-image">
-			<img src="<?php echo FEEDZY_ABSURL; ?>/img/World-class-support.jpg" alt="World Class Support">
+			<img src="<?php echo esc_url( FEEDZY_ABSURL ); ?>/img/World-class-support.jpg" alt="World Class Support">
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -154,7 +154,7 @@ Layout For Upsell Page of Feedzy RSS Feeds
 			if ( $is_pro || false === apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) {
 				?>
 			<div class="header-btns">
-				<a href="<?php echo FEEDZY_UPSELL_LINK; ?>" class="buy-now">
+				<a href="<?php echo esc_url( FEEDZY_UPSELL_LINK ); ?>" class="buy-now">
 				<span class="dashicons dashicons-cart"></span> Upgrade <?php echo $is_pro ? 'your license to a higher plan' : 'to Feedzy Pro'; ?></a>
 			</div>
 				<?php

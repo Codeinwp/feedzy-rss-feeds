@@ -80,3 +80,81 @@ function feedzy_is_pro() {
 function feedzy_is_pro_older_than( $version ) {
 	return version_compare( FEEDZY_PRO_VERSION, $version, '<' );
 }
+
+add_filter(
+	'feedzy_wp_kses_allowed_html',
+	function( $allowed_html = array() ) {
+		return array(
+			'select' => array(
+				'type'     => array(),
+				'id'       => array(),
+				'name'     => array(),
+				'value'    => array(),
+				'class'    => array(),
+				'selected' => array(),
+			),
+			'option' => array(
+				'type'     => array(),
+				'id'       => array(),
+				'name'     => array(),
+				'value'    => array(),
+				'class'    => array(),
+				'selected' => array(),
+			),
+			'input'  => array(
+				'type'    => array(),
+				'id'      => array(),
+				'name'    => array(),
+				'value'   => array(),
+				'class'   => array(),
+				'checked' => array(),
+			),
+			'textarea'  => array(
+				'id'      => array(),
+				'name'    => array(),
+				'value'   => array(),
+				'class'   => array(),
+			),
+			'button' => array(
+				'class' => array(),
+				'id'    => array(),
+			),
+			'p'      => array(
+				'class' => array(),
+			),
+			'div'    => array(
+				'class' => array(),
+			),
+			'h1'     => array(
+				'class' => array(),
+			),
+			'h2'     => array(
+				'class' => array(),
+			),
+			'h3'     => array(
+				'class' => array(),
+			),
+			'h4'     => array(
+				'class' => array(),
+			),
+			'h5'     => array(
+				'class' => array(),
+			),
+			'h6'     => array(
+				'class' => array(),
+			),
+			'label'  => array(
+				'id'  => array(),
+				'for' => array(),
+			),
+			'a'      => array(
+				'href'  => array(),
+				'title' => array(),
+				'class' => array(),
+			),
+			'br'     => array(),
+			'em'     => array(),
+			'strong' => array(),
+		);
+	}
+);

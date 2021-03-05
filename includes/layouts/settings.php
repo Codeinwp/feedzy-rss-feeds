@@ -3,24 +3,25 @@
 	<?php load_template( FEEDZY_ABSPATH . '/includes/layouts/header.php' ); ?>
 
 	<?php
-	$active_tab  = isset( $_REQUEST['tab'] ) ? sanitize_text_field( $_REQUEST['tab'] ) : 'general';
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$active_tab  = isset( $_REQUEST['tab'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['tab'] ) ) : 'general';
 	$show_button = true;
 	?>
 
 	<h2 class="nav-tab-wrapper">
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=general' ) ); ?>"
-		   class="nav-tab <?php echo $active_tab === 'general' ? 'nav-tab-active' : ''; ?>"><?php _e( 'General', 'feedzy-rss-feeds' ); ?></a>
+			class="nav-tab <?php echo 'general' === $active_tab ? esc_attr( 'nav-tab-active' ) : ''; ?>"><?php esc_html_e( 'General', 'feedzy-rss-feeds' ); ?></a>
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=headers' ) ); ?>"
-		   class="nav-tab <?php echo $active_tab === 'headers' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Headers', 'feedzy-rss-feeds' ); ?></a>
+			class="nav-tab <?php echo 'headers' === $active_tab ? esc_attr( 'nav-tab-active' ) : ''; ?>"><?php esc_html_e( 'Headers', 'feedzy-rss-feeds' ); ?></a>
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=proxy' ) ); ?>"
-		   class="nav-tab <?php echo $active_tab === 'proxy' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Proxy', 'feedzy-rss-feeds' ); ?></a>
+			class="nav-tab <?php echo 'proxy' === $active_tab ? esc_attr( 'nav-tab-active' ) : ''; ?>"><?php esc_html_e( 'Proxy', 'feedzy-rss-feeds' ); ?></a>
 		<?php
-		$tabs = apply_filters( 'feedzy_settings_tabs', array() );
-		if ( $tabs ) {
-			foreach ( $tabs as $tab => $label ) {
+		$_tabs = apply_filters( 'feedzy_settings_tabs', array() );
+		if ( $_tabs ) {
+			foreach ( $_tabs as $_tab => $label ) {
 				?>
-				<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=' . $tab ) ); ?>"
-				   class="nav-tab <?php echo $active_tab === $tab ? 'nav-tab-active' : ''; ?>"><?php echo $label; ?></a>
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=' . $_tab ) ); ?>"
+					class="nav-tab <?php echo $_tab === $active_tab ? esc_attr( 'nav-tab-active' ) : ''; ?>"><?php echo wp_kses_post( $label ); ?></a>
 				<?php
 			}
 		}
@@ -28,11 +29,11 @@
 	</h2>
 
 	<?php if ( $this->notice ) { ?>
-		<div class="updated"><p><?php echo $this->notice; ?></p></div>
+		<div class="updated"><p><?php echo wp_kses_post( $this->notice ); ?></p></div>
 	<?php } ?>
 
 	<?php if ( $this->error ) { ?>
-		<div class="error"><p><?php echo $this->error; ?></p></div>
+		<div class="error"><p><?php echo wp_kses_post( $this->error ); ?></p></div>
 	<?php } ?>
 
 
@@ -52,69 +53,70 @@
 					switch ( $active_tab ) {
 						case 'general':
 							?>
-							<h2><?php _e( 'General', 'feedzy-rss-feeds' ); ?></h2>
+							<h2><?php esc_html_e( 'General', 'feedzy-rss-feeds' ); ?></h2>
 							<div class="fz-form-group">
 								<input type="checkbox" id="rss-feeds" class="fz-form-control" name="rss-feeds"
-									   value="1" <?php echo $disble_featured_image; ?> />
-								<label for="rss-feeds"><?php echo __( 'Do NOT add the featured image to the website\'s RSS feed.', 'feedzy-rss-feeds' ); ?></label>
+									value="1" <?php echo esc_html( $disble_featured_image ); ?> />
+								<label for="rss-feeds"><?php echo esc_html_e( 'Do NOT add the featured image to the website\'s RSS feed.', 'feedzy-rss-feeds' ); ?></label>
 
 							</div>
 							<?php
 							break;
 						case 'headers':
 							?>
-							<h2><?php _e( 'Headers', 'feedzy-rss-feeds' ); ?></h2>
+							<h2><?php esc_html_e( 'Headers', 'feedzy-rss-feeds' ); ?></h2>
 							<div class="fz-form-group">
-								<label><?php echo __( 'User Agent to use when accessing the feed', 'feedzy-rss-feeds' ); ?>
+								<label><?php esc_html_e( 'User Agent to use when accessing the feed', 'feedzy-rss-feeds' ); ?>
 									:</label>
 							</div>
 							<div class="fz-form-group">
 								<input type="text" class="fz-form-control" name="user-agent"
-									   value="<?php echo isset( $settings['header']['user-agent'] ) ? $settings['header']['user-agent'] : ''; ?>">
+									value="<?php echo isset( $settings['header']['user-agent'] ) ? esc_attr( $settings['header']['user-agent'] ) : ''; ?>">
 							</div>
 							<?php
 							break;
 						case 'proxy':
 							?>
-							<h2><?php _e( 'Proxy Settings', 'feedzy-rss-feeds' ); ?></h2>
+							<h2><?php esc_html_e( 'Proxy Settings', 'feedzy-rss-feeds' ); ?></h2>
 							<div class="fz-form-group">
-								<label><?php echo __( 'Host', 'feedzy-rss-feeds' ); ?>:</label>
+								<label><?php esc_html_e( 'Host', 'feedzy-rss-feeds' ); ?>:</label>
 							</div>
 							<div class="fz-form-group">
 								<input type="text" class="fz-form-control" name="proxy-host"
-									   value="<?php echo isset( $settings['proxy']['host'] ) ? $settings['proxy']['host'] : ''; ?>">
+									value="<?php echo isset( $settings['proxy']['host'] ) ? esc_attr( $settings['proxy']['host'] ) : ''; ?>">
 							</div>
 
 							<div class="fz-form-group">
-								<label><?php echo __( 'Port', 'feedzy-rss-feeds' ); ?>:</label>
+								<label><?php esc_html_e( 'Port', 'feedzy-rss-feeds' ); ?>:</label>
 							</div>
 							<div class="fz-form-group">
 								<input type="number" min="0" max="65535" class="fz-form-control" name="proxy-port"
-									   value="<?php echo isset( $settings['proxy']['port'] ) ? $settings['proxy']['port'] : ''; ?>">
+									value="<?php echo isset( $settings['proxy']['port'] ) ? esc_attr( (int) $settings['proxy']['port'] ) : ''; ?>">
 							</div>
 
 							<div class="fz-form-group">
-								<label><?php echo __( 'Username', 'feedzy-rss-feeds' ); ?>:</label>
+								<label><?php esc_html_e( 'Username', 'feedzy-rss-feeds' ); ?>:</label>
 							</div>
 							<div class="fz-form-group">
 								<input type="text" class="fz-form-control" name="proxy-user"
-									   value="<?php echo isset( $settings['proxy']['user'] ) ? $settings['proxy']['user'] : ''; ?>">
+									value="<?php echo isset( $settings['proxy']['user'] ) ? esc_attr( $settings['proxy']['user'] ) : ''; ?>">
 							</div>
 
 							<div class="fz-form-group">
-								<label><?php echo __( 'Password', 'feedzy-rss-feeds' ); ?>:</label>
+								<label><?php esc_html_e( 'Password', 'feedzy-rss-feeds' ); ?>:</label>
 							</div>
 							<div class="fz-form-group">
 								<input type="password" class="fz-form-control" name="proxy-pass"
-									   value="<?php echo isset( $settings['proxy']['pass'] ) ? $settings['proxy']['pass'] : ''; ?>">
+									value="<?php echo isset( $settings['proxy']['pass'] ) ? esc_attr( $settings['proxy']['pass'] ) : ''; ?>">
 							</div>
 							<?php
 							break;
 						default:
 							$fields = apply_filters( 'feedzy_display_tab_settings', array(), $active_tab );
 							if ( $fields ) {
+
 								foreach ( $fields as $field ) {
-									echo $field['content'];
+									echo wp_kses( $field['content'], apply_filters( 'feedzy_wp_kses_allowed_html', array() ) );
 									if ( isset( $field['ajax'] ) && $field['ajax'] ) {
 										$show_button = false;
 									}
@@ -124,14 +126,14 @@
 					}
 					?>
 
-					<input type="hidden" name="tab" value="<?php echo $active_tab; ?>">
+					<input type="hidden" name="tab" value="<?php echo esc_attr( $active_tab ); ?>">
 
 					<?php
 					wp_nonce_field( $active_tab, 'nonce' );
 					if ( $show_button ) {
 						?>
 						<button type="submit" class="fz-btn fz-btn-submit fz-btn-activate" id="feedzy-settings-submit"
-								name="feedzy-settings-submit"><?php _e( 'Save', 'feedzy-rss-feeds' ); ?></button>
+								name="feedzy-settings-submit"><?php esc_html_e( 'Save', 'feedzy-rss-feeds' ); ?></button>
 						<?php
 					}
 					?>

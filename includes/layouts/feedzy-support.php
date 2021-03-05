@@ -3,25 +3,26 @@
 	<?php load_template( FEEDZY_ABSPATH . '/includes/layouts/header.php' ); ?>
 
 	<?php
-	$active_tab  = isset( $_REQUEST['tab'] ) ? sanitize_text_field( $_REQUEST['tab'] ) : 'help';
-	$show_more = ! feedzy_is_pro() || false === apply_filters( 'feedzy_is_license_of_type', false, 'agency' );
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$active_tab = isset( $_REQUEST['tab'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['tab'] ) ) : 'help';
+	$show_more  = ! feedzy_is_pro() || false === apply_filters( 'feedzy_is_license_of_type', false, 'agency' );
 	?>
 
 	<h2 class="nav-tab-wrapper">
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-support&tab=help' ) ); ?>"
-		   class="nav-tab <?php echo $active_tab === 'help' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Support', 'feedzy-rss-feeds' ); ?></a>
+			class="nav-tab <?php echo 'help' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Support', 'feedzy-rss-feeds' ); ?></a>
 		<?php
 		if ( $show_more ) {
 			?>
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-support&tab=more' ) ); ?>"
-	   class="nav-tab <?php echo $active_tab === 'more' ? 'nav-tab-active' : ''; ?>"><?php _e( 'More Features', 'feedzy-rss-feeds' ); ?></a>
+			class="nav-tab <?php echo 'more' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'More Features', 'feedzy-rss-feeds' ); ?></a>
 			<?php
 		}
 		?>
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-support&tab=improve' ) ); ?>"
-		   class="nav-tab <?php echo $active_tab === 'improve' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Help us improve!', 'feedzy-rss-feeds' ); ?></a>
+			class="nav-tab <?php echo 'improve' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Help us improve!', 'feedzy-rss-feeds' ); ?></a>
 
-		<?php echo apply_filters( 'feedzy_support_tab_heading', '', $active_tab ); ?>
+		<?php echo wp_kses_post( apply_filters( 'feedzy_support_tab_heading', '', $active_tab ) ); ?>
 	</h2>
 
 	<div class="fz-features-content">
