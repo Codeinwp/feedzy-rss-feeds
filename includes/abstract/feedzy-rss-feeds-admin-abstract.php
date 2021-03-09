@@ -854,7 +854,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$feed_child = array_keys( $feed->get_item()->data['child'] );
 		$feed_child = array_filter( $feed_child );
 		if ( ! in_array( SIMPLEPIE_NAMESPACE_DC_10, $feed_child, true ) && ! in_array( SIMPLEPIE_NAMESPACE_DC_11, $feed_child, true ) ) {
-			update_post_meta( $post->ID, '__transient_feedzy_invalid_dc_namespace', [ $url ] );
+			update_post_meta( $post->ID, '__transient_feedzy_invalid_dc_namespace', array( $url ) );
 			return false;
 		}
 		return true;
