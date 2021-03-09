@@ -265,6 +265,12 @@
                 }
             });
         });
+        // Click on pro/upgrade button.
+        $( document ).on( 'click', '.only-pro-inner a', function( e ) {
+            if ( $( this ).parents( '.only-pro-content' ).css( 'opacity' ) == 0 ) {
+                e.preventDefault();
+            }
+        } );
     }
 
     function initSummary() {
