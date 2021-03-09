@@ -370,7 +370,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  mixed
 	 */
 	public function feedzy_rss( $atts, $content = '' ) {
-		wp_enqueue_style( $this->plugin_name );
+		wp_print_styles( $this->plugin_name );
 		$sc      = $this->get_short_code_attributes( $atts );
 		$feed_url = $this->normalize_urls( $sc['feeds'] );
 		if ( empty( $feed_url ) ) {
@@ -845,11 +845,18 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return bool
 	 */
 	protected function check_valid_xml( $url, $cache ) {
+		global $post;
 		$feed = $this->init_feed( $url, $cache, array() );
 		if ( $feed->error() ) {
 			return false;
 		}
 
+		$feed_child = array_keys( $feed->get_item()->data['child'] );
+		$feed_child = array_filter( $feed_child );
+		if ( ! in_array( SIMPLEPIE_NAMESPACE_DC_10, $feed_child, true ) && ! in_array( SIMPLEPIE_NAMESPACE_DC_11, $feed_child, true ) ) {
+			update_post_meta( $post->ID, '__transient_feedzy_invalid_dc_namespace', [ $url ] );
+			return false;
+		}
 		return true;
 	}
 
@@ -925,9 +932,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'height' => $sc['size'],
 		);
 		$sizes                   = apply_filters( 'feedzy_thumb_sizes', $sizes, $feed_url );
+		$feed_title              = $this->get_feed_title_filter( $feed, $sc, $feed_url );
 		$feed_title['use_title'] = false;
 		if ( $sc['feed_title'] === 'yes' ) {
-			$feed_title              = $this->get_feed_title_filter( $feed, $sc, $feed_url );
 			$feed_title['use_title'] = true;
 		}
 		// Display the error message and quit (before showing the template for pro).
