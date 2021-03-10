@@ -699,7 +699,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					break;
 				case 'feedzy_imports':
 					$invalid_dc_namespace = get_post_meta( $post_id, '__transient_feedzy_invalid_dc_namespace', true );
-					if ( empty( $invalid_dc_namespace ) ) {
+					$required_extension   = get_post_meta( $post_id, '__transient_feedzy_required_extension', true );
+					if ( empty( $invalid_dc_namespace ) && empty( $required_extension ) ) {
 						update_post_meta( $post_id, '__transient_feedzy_invalid_source', $invalid );
 					}
 					break;
@@ -736,6 +737,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			case 'feedzy_imports':
 				$invalid_source = get_post_meta( $post->ID, '__transient_feedzy_invalid_source', true );
 				$invalid_dc_namespace = get_post_meta( $post->ID, '__transient_feedzy_invalid_dc_namespace', true );
+				$required_extension = get_post_meta( $post->ID, '__transient_feedzy_required_extension', true );
 				if ( $invalid_source ) {
 					$text = __( 'This source has invalid URLs. Please correct/remove the following', 'feedzy-rss-feeds' );
 					$invalid = $invalid_source;
@@ -744,6 +746,11 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					$text = __( 'This source URL is valid  but the XML namespace DC (xmlns:dc) is not valid. Please correct/remove the following', 'feedzy-rss-feeds' );
 					$invalid = $invalid_dc_namespace;
 					delete_post_meta( $post->ID, '__transient_feedzy_invalid_dc_namespace' );
+				} elseif ( $required_extension ) {
+					$text = __( 'Seems like your are missing the <a href="%1$s" target="_blank">iconv</a> OR <a href="%2$s" target="_blank">mbstring</a> php extensions. In order to use this feed, please enable this on your server or get in touch with your hosting to do this', 'feedzy-rss-feeds' );
+					$text = wp_sprintf( $text, esc_url( 'https://www.php.net/manual/en/book.iconv.php' ), esc_url( 'https://www.php.net/manual/en/book.mbstring.php' ) );
+					$invalid = $required_extension;
+					delete_post_meta( $post->ID, '__transient_feedzy_required_extension' );
 				}
 				break;
 			default:

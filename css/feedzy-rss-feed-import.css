@@ -57,7 +57,8 @@
 }
 
 .feedzy-api-error,
-.feedzy-error-critical {
+.feedzy-error-critical,
+.feedzy-error-critical a {
 	color: #ff0000;
 }
 

@@ -857,6 +857,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			update_post_meta( $post->ID, '__transient_feedzy_invalid_dc_namespace', array( $url ) );
 			return false;
 		}
+		$required_extension = ! extension_loaded( 'iconv' ) || ! extension_loaded( 'mbstring' ) ? true : false;
+		if ( $required_extension ) {
+			update_post_meta( $post->ID, '__transient_feedzy_required_extension', array( $url ) );
+			return false;
+		}
 		return true;
 	}
 
