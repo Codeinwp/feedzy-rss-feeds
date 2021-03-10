@@ -379,10 +379,10 @@ class Feedzy_Rss_Feeds_Import {
 			foreach ( wp_unslash( $_POST['feedzy_meta_data'] ) as $key => $val ) {
 				if ( is_array( $val ) ) {
 					foreach ( $val as $sub_key => $sub_val ) {
-						$data_meta[ wp_strip_all_tags( $key ) ][ wp_strip_all_tags( $sub_key ) ] = wp_strip_all_tags( $sub_val );
+						$data_meta[ sanitize_text_field( $key ) ][ sanitize_text_field( $sub_key ) ] = sanitize_text_field( $sub_val );
 					}
 				} else {
-					$data_meta[ wp_strip_all_tags( $key ) ] = wp_strip_all_tags( $val );
+					$data_meta[ sanitize_text_field( $key ) ] = sanitize_text_field( $val );
 				}
 			}
 		}
@@ -390,14 +390,14 @@ class Feedzy_Rss_Feeds_Import {
 		if ( isset( $_POST['custom_vars_key'] ) && is_array( $_POST['custom_vars_key'] ) ) {
 			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			foreach ( wp_unslash( $_POST['custom_vars_key'] ) as $key => $val ) {
-				$custom_fields_keys[ wp_strip_all_tags( $key ) ] = wp_strip_all_tags( $val );
+				$custom_fields_keys[ sanitize_text_field( $key ) ] = sanitize_text_field( $val );
 			}
 		}
 		$custom_fields_values = array();
 		if ( isset( $_POST['custom_vars_value'] ) && is_array( $_POST['custom_vars_value'] ) ) {
 			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			foreach ( wp_unslash( $_POST['custom_vars_value'] ) as $key => $val ) {
-				$custom_fields_values[ wp_strip_all_tags( $key ) ] = wp_strip_all_tags( $val );
+				$custom_fields_values[ sanitize_text_field( $key ) ] = sanitize_text_field( $val );
 			}
 		}
 		$custom_fields        = array();
