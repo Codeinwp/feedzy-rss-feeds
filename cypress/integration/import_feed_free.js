@@ -29,7 +29,7 @@ describe('Test Free - Import Feed', function() {
 
         // fill up the form
         cy.get('#title').clear().type( feed.invalidurl );
-        cy.get('[name="feedzy_meta_data[source]"]').clear().type( feed.invalidurl );
+        cy.get('[name="feedzy_meta_data[source]"]').clear().type( feed.url );
 
         // locked for pro?
         cy.get('.only-pro').should('have.length', feed.locked);
