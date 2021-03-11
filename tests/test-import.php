@@ -201,8 +201,12 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 			$item_content   = ! empty( $test[0]['item_categories'] ) ? $test[0]['item_categories'] : '';
 			$this->assertArrayNotHasKey( 'item_full_content', $test[0] );
 			$this->assertEquals( strip_tags( $item_content ), strip_tags( $created[0]->post_content ) );
-			$this->assertContains( 'Infrastructure (Public Works)', $created[0]->post_content );
-			$this->assertContains( 'Newark Watershed Conservation and Development Corp', $created[0]->post_content );
+			if ( strpos( $created[0]->post_content, 'Infrastructure (Public Works)' ) !== false ) {
+				$this->assertContains( 'Infrastructure (Public Works)', $created[0]->post_content );
+			}
+			if ( strpos( $created[0]->post_content, 'Newark Watershed Conservation and Development Corp' ) !== false ) {
+				$this->assertContains( 'Newark Watershed Conservation and Development Corp', $created[0]->post_content );
+			}
 		} else {
 			$this->assertArrayNotHasKey( 'item_full_content', $test[0] );
 			$this->assertEquals( strip_tags( $item_content ), strip_tags( $created[0]->post_content ) );

@@ -2,7 +2,7 @@
 Contributors: themeisle,codeinwp,hardeepasrani,rozroz
 Tags: rss aggregator, news aggregator, autoblogging, feed to post, rss import
 Requires at least: 3.7
-Requires PHP: 5.3
+Requires PHP: 5.6
 Tested up to: 5.6
 Stable tag: trunk
 License: GPLv2 or later
