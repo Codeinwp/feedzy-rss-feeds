@@ -244,8 +244,8 @@ describe('Test Free - Import Feed', function() {
         cy.get('.attachment-post-thumbnail.size-post-thumbnail.wp-post-image').should('have.length', 1);
 
         // author should be wordpress
-        cy.get('li.post-author').should('have.length', 1);
-        cy.get('li.post-author span.meta-text a:contains("wordpress")').should('have.length', 1);
+        cy.get('span.byline').should('have.length', 1);
+        cy.get('span.byline a[rel="author"]:contains("wordpress")').should('have.length', 1);
 
     })
 
