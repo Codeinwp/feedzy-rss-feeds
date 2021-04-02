@@ -1,6 +1,6 @@
 {
   "boss": true,
-  "curly": true,
+  "curly": false,
   "eqeqeq": true,
   "eqnull": true,
   "expr": true,
@@ -8,7 +8,6 @@
   "noarg": true,
   "nonbsp": true,
   "onevar": true,
-  "quotmark": "single",
   "trailing": true,
   "undef": true,
   "unused": false,

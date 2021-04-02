@@ -295,8 +295,12 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return mixed|integer
 	 */
 	public function save_feedzy_post_type_meta( $post_id, $post ) {
+		if ( empty( $_POST ) ) {
+			return $post_id;
+		}
 		if (
 			empty( $_POST ) ||
+			! isset( $_POST['feedzy_category_meta_noncename'] ) ||
 			! wp_verify_nonce( $_POST['feedzy_category_meta_noncename'], FEEDZY_BASEFILE ) ||
 			! current_user_can( 'edit_post', $post_id )
 		) {
@@ -694,7 +698,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					update_post_meta( $post_id, '__transient_feedzy_category_feed', $invalid );
 					break;
 				case 'feedzy_imports':
-					update_post_meta( $post_id, '__transient_feedzy_invalid_source', $invalid );
+					$invalid_dc_namespace = get_post_meta( $post_id, '__transient_feedzy_invalid_dc_namespace', true );
+					if ( empty( $invalid_dc_namespace ) ) {
+						update_post_meta( $post_id, '__transient_feedzy_invalid_source', $invalid );
+					}
 					break;
 			}
 		}
@@ -727,9 +734,17 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				delete_post_meta( $post->ID, '__transient_feedzy_category_feed' );
 				break;
 			case 'feedzy_imports':
-				$text = __( 'This source has invalid URLs. Please correct/remove the following', 'feedzy-rss-feeds' );
-				$invalid = get_post_meta( $post->ID, '__transient_feedzy_invalid_source', true );
-				delete_post_meta( $post->ID, '__transient_feedzy_invalid_source' );
+				$invalid_source = get_post_meta( $post->ID, '__transient_feedzy_invalid_source', true );
+				$invalid_dc_namespace = get_post_meta( $post->ID, '__transient_feedzy_invalid_dc_namespace', true );
+				if ( $invalid_source ) {
+					$text = __( 'This source has invalid URLs. Please correct/remove the following', 'feedzy-rss-feeds' );
+					$invalid = $invalid_source;
+					delete_post_meta( $post->ID, '__transient_feedzy_invalid_source' );
+				} elseif ( $invalid_dc_namespace ) {
+					$text = __( 'This source URL is valid  but the XML namespace DC (xmlns:dc) is not valid. Please correct/remove the following', 'feedzy-rss-feeds' );
+					$invalid = $invalid_dc_namespace;
+					delete_post_meta( $post->ID, '__transient_feedzy_invalid_dc_namespace' );
+				}
 				break;
 			default:
 				return $message;
