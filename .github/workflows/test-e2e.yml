@@ -9,8 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - env: ["default","gutenberg"]
+          env: ["default","gutenberg"]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
