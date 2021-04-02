@@ -25,7 +25,7 @@ jobs:
       - name: Install environment
         run: |
           docker-compose -f docker-compose.travis.yml up -d
-          bash ./bin/wp-init.sh && bash ./bin/run-e2e-tests-${{matrix-env}}.sh
+          bash ./bin/wp-init.sh && bash ./bin/run-e2e-tests-${{matrix.env}}.sh
       - name: Run ${{ matrix.env }} Cypress tests
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
