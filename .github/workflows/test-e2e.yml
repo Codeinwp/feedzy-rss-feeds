@@ -1,0 +1,38 @@
+name: Test e2e
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+jobs:
+e2e:
+  name: E2E for ${{ matrix.env }}
+  strategy:
+    fail-fast: false
+    matrix:
+      include:
+        - env: "default"
+        - env: "gutenberg"
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v2
+    - name: Install npm deps
+      run: npm ci
+    - name: Install composer deps
+      run: composer install --no-dev
+    - name: Install composer deps
+      run: composer install --no-dev
+    - name: Install environment
+      run: docker-compose -f docker-compose.travis.yml up -d
+    - name: Install environment
+      run: |
+        docker-compose -f docker-compose.travis.yml up -d
+        bash ./bin/wp-init.sh && bash ./bin/run-e2e-tests-${{matrix-env}}.sh
+    - name: Run ${{ matrix.env }} Cypress tests
+      env:
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+      uses: cypress-io/github-action@v2
+      with:
+        env: host=localhost,port=8080
+        browser: chrome
+        headless: true
+        spec: cypress/integration/${{ matrix.env }}/**/*,

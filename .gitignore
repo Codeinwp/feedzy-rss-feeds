@@ -3,8 +3,6 @@ node_modules
 logs
 artifact
 vendor
-package-lock.json
-composer.lock
 /dist
 cypress/integration/examples
 cypress/integration/localhost*
