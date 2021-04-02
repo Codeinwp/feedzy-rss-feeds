@@ -10,8 +10,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - env: "default"
-          - env: "gutenberg"
+          - env: ["default","gutenberg"]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
