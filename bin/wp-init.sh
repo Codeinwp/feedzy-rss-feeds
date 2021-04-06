@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-# if on windows, find out the IP using `docker-machine ip` and provide the IP as the host.
-wp_host='localhost'
-#wp_host='192.168.99.100'
-
-# sleep for sometime till WP initializes successfully
 sleep_time=15
 echo "Sleeping for $sleep_time..."
 sleep $sleep_time

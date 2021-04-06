@@ -13,18 +13,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        id: npm-and-build-cache
+        with:
+          path: |
+            ~/.cache/Cypress
+            node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - name: Install npm deps
         run: npm ci
       - name: Install composer deps
         run: composer install --no-dev
       - name: Install composer deps
         run: composer install --no-dev
-      - name: Install environment
+      - name: Bootstrap environment
         run: docker-compose -f docker-compose.travis.yml up -d
       - name: Install environment
         run: |
-          docker-compose -f docker-compose.travis.yml up -d
-          bash ./bin/wp-init.sh && bash ./bin/run-e2e-tests-${{matrix.env}}.sh
+          bash ./bin/wp-init.sh
+          bash ./bin/run-e2e-tests-${{matrix.env}}.sh
       - name: Run ${{ matrix.env }} Cypress tests
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
@@ -32,5 +41,6 @@ jobs:
         with:
           env: host=localhost,port=8080
           browser: chrome
+          install: ${{ ! steps.yarn-and-build-cache.outputs.cache-hit }}
           headless: true
           spec: cypress/integration/${{ matrix.env }}/**/*
