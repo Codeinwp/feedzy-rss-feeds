@@ -1,9 +1,8 @@
 describe('Test Free - Import Feed', function() {
     before(function(){
         // login to WP
-        Cypress.config('baseUrl', Cypress.env('host') + 'wp-admin/');
 
-        cy.visit(Cypress.env('host') + 'wp-login.php');
+        cy.visit('wp-login.php');
         cy.get('#user_login').clear().type( Cypress.env('login') );
         cy.get('#user_pass').clear().type( Cypress.env('pass') );
         cy.get('#wp-submit').click();
@@ -17,7 +16,7 @@ describe('Test Free - Import Feed', function() {
     });
 
     it('Check Settings', function() {
-        cy.visit('/admin.php?page=feedzy-settings');
+        cy.visit('/wp-admin/admin.php?page=feedzy-settings');
 
         const settings = Cypress.env('settings');
         cy.get('.nav-tab').should('have.length', settings.tabs);
@@ -25,7 +24,7 @@ describe('Test Free - Import Feed', function() {
 
     it('Create/Verify/Run import', function() {
         // 1. CREATE
-        cy.visit('/post-new.php?post_type=feedzy_imports');
+        cy.visit('/wp-admin/post-new.php?post_type=feedzy_imports');
 
         // fill up the form
         cy.get('#title').clear().type( feed.invalidurl );
@@ -85,7 +84,7 @@ describe('Test Free - Import Feed', function() {
     })
 
     it('Update the new import with VALID url', function() {
-        cy.visit('/edit.php?post_type=feedzy_imports');
+        cy.visit('/wp-admin/edit.php?post_type=feedzy_imports');
 
         cy.get('tr:nth-of-type(1) .row-title').click();
 
@@ -123,14 +122,14 @@ describe('Test Free - Import Feed', function() {
         cy.get('tr:nth-of-type(1) .feedzy-run-now').should('be.visible');
 
         // 3. TOGGLE
-        cy.visit('/edit.php?post_type=feedzy_imports');
+        cy.visit('/wp-admin/edit.php?post_type=feedzy_imports');
         cy.get('tr:nth-of-type(1) .feedzy-toggle').uncheck({force:true});
 
         cy.get('tr:nth-of-type(1) .feedzy-toggle').should('not.be.checked');
 
         // activate.
         cy.get('tr:nth-of-type(1) .feedzy-toggle').check({force:true});
-        cy.visit('/edit.php?post_type=feedzy_imports');
+        cy.visit('/wp-admin/edit.php?post_type=feedzy_imports');
         cy.get('tr:nth-of-type(1) .feedzy-toggle').should('be.checked');
 
         // check last run status has all the initial data.
@@ -158,7 +157,7 @@ describe('Test Free - Import Feed', function() {
         cy.wait(20 * parseInt(feed.wait));
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(1)').invoke('html').should('include', 'Successfully run');
 
-        cy.visit('/edit.php?post_type=feedzy_imports')
+        cy.visit('/wp-admin/edit.php?post_type=feedzy_imports')
 
         // check last run status has all the data.
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(1)').invoke('data', 'value').should(($value) => {
@@ -178,7 +177,7 @@ describe('Test Free - Import Feed', function() {
         });
 
         // 5. RUN AGAIN
-        cy.visit('/edit.php?post_type=feedzy_imports')
+        cy.visit('/wp-admin/edit.php?post_type=feedzy_imports')
 
         // run import
         cy.get('table.posts:nth-of-type(1) tbody tr:nth-of-type(1) .feedzy-run-now').should('be.visible');
@@ -186,7 +185,7 @@ describe('Test Free - Import Feed', function() {
         cy.wait(2 * parseInt(feed.wait));
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(1)').invoke('html').should('include', 'Nothing imported');
 
-        cy.visit('/edit.php?post_type=feedzy_imports')
+        cy.visit('/wp-admin/edit.php?post_type=feedzy_imports')
 
         // check last run status has all the data.
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(1)').invoke('data', 'value').should(($value) => {
@@ -205,7 +204,7 @@ describe('Test Free - Import Feed', function() {
             expect(parseInt($value)).to.equal(1); // success
         });
 
-        cy.visit('/edit.php?post_type=feedzy_imports')
+        cy.visit('/wp-admin/edit.php?post_type=feedzy_imports')
 
         // 6. VERIFY IMPORTED ITEMS
         cy.get('table.posts:nth-of-type(1) tr.feedzy-import-status-row td:nth-of-type(1) table tr:nth-of-type(1) td:nth-of-type(4) a').first().click();
