@@ -6,6 +6,7 @@ vendor
 /dist
 cypress/integration/examples
 cypress/videos/*
+cypress/screenshots/*
 cypress/integration/localhost*
 cypress/plugins
 cypress/fixtures

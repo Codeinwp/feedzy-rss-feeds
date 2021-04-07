@@ -19,5 +19,5 @@ require('./commands')
 
 // allow WP session to remain open during multiple cy.visit() invocations.
 Cypress.Cookies.defaults({
-    whitelist: /wordpress_.*/
+    preserve: /wordpress_.*/
 })
