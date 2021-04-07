@@ -142,7 +142,6 @@ describe('Test Free - gutenberg', function() {
     });
 
     it('Modify inserted block and make it LAZY', function() {
-        Cypress.config('baseUrl',  'wp-admin/');
 
         cy.visit('/wp-admin/edit.php?post_type=post');
 

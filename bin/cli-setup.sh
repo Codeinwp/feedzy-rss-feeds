@@ -2,7 +2,7 @@
 # install WP
 wp  --allow-root  --quiet core install --url="http://localhost:8888/" --admin_user="wordpress" --admin_password="wordpress" --admin_email="test1@xx.com" --title="test" --skip-email
 
-wp  --allow-root wp plugin install classic-editor --activate
+wp  --allow-root  plugin install classic-editor --activate
 
 # activate
 wp  --allow-root  --quiet plugin activate feedzy-rss-feeds
