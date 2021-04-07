@@ -6,11 +6,12 @@ on:
 jobs:
   e2e:
     name: E2E for ${{ matrix.env }}
+    env:
+      DOCKER_FILE: docker-compose.ci.yml
     strategy:
       fail-fast: false
       matrix:
           env: ["default","gutenberg"]
-
     runs-on: ubuntu-16.04
     steps:
       - uses: actions/checkout@v2
@@ -31,7 +32,7 @@ jobs:
       - name: Install composer deps
         run: composer install --no-dev
       - name: Bootstrap environment
-        run: docker-compose -f docker-compose.ci.yml up -d
+        run: docker-compose -f $DOCKER_FILE up -d
       - name: Install environment
         run: |
           bash ./bin/wp-init.sh
