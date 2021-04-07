@@ -242,7 +242,7 @@ describe('Test Free - Import Feed', function() {
         // featured image should exist.
         cy.get('.attachment-post-thumbnail.size-post-thumbnail.wp-post-image').should('have.length', 1);
 
-        cy.get('span.byline a[rel="author"]:contains("wordpress")').should('exist');
+        cy.get('span.byline .author a:contains("wordpress")').should('exist');
 
     })
 
