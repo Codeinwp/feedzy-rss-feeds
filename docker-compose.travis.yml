@@ -14,6 +14,7 @@ services:
 
   wordpress:
     container_name: feedzy_wordpress
+    privileged: true
     depends_on:
       - mysql
     image: hardeepasrani/pirate-brewery
