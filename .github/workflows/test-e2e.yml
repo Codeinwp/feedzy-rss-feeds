@@ -31,7 +31,7 @@ jobs:
       - name: Install composer deps
         run: composer install --no-dev
       - name: Bootstrap environment
-        run: docker-compose -f docker-compose.travis.yml up -d
+        run: docker-compose -f docker-compose.ci.yml up -d
       - name: Install environment
         run: |
           bash ./bin/wp-init.sh
