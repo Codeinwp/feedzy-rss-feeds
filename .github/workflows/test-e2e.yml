@@ -27,7 +27,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - name: Install npm deps
-        run: npm ci
+        run: npm ci --unsafe-perm=true
       - name: Install composer deps
         run: composer install --no-dev
       - name: Bootstrap environment
