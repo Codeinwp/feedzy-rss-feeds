@@ -5,6 +5,7 @@ artifact
 vendor
 /dist
 cypress/integration/examples
+cypress/videos/*
 cypress/integration/localhost*
 cypress/plugins
 cypress/fixtures
