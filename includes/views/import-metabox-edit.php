@@ -297,7 +297,7 @@
 					<label class="feedzy-sr-only" for="f1-post-content"><?php echo __( 'External Image URL?', 'feedzy-rss-feeds' ); ?></label><br/>
 					<small>
 						<?php
-						_e( 'The image url will be 3rd party url, We will not download image in our system.', 'feedzy-rss-feeds' );
+						_e( 'The image url will be 3rd party url, We will not download image to your site.', 'feedzy-rss-feeds' );
 						?>
 					</small>
 				</div>

@@ -44,6 +44,7 @@ jobs:
         with:
           env: host=localhost,port=8080
           browser: chrome
+          record: true
           install: ${{ ! steps.npm-and-build-cache.outputs.cache-hit }}
           headless: true
           spec: cypress/integration/${{ matrix.env }}/**/*

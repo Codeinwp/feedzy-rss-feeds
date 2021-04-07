@@ -19,7 +19,6 @@ services:
     volumes:
       - ./bin:/var/www/html/bin
       - ~/wpcore:/var/www/html/
-      - ./wp-content:/var/www/html/wp-content/
       - .:/var/www/html/wp-content/plugins/feedzy-rss-feeds/
     depends_on:
       - mysql
@@ -40,7 +39,6 @@ services:
     volumes:
       - ./bin:/var/www/html/bin
       - ~/wpcore:/var/www/html/
-      - ./wp-content:/var/www/html/wp-content/
       - .:/var/www/html/wp-content/plugins/feedzy-rss-feeds/
     restart: always
     environment:
