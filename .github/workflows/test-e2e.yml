@@ -30,12 +30,12 @@ jobs:
         run: npm ci
       - name: Install composer deps
         run: composer install --no-dev
-#      - name: Bootstrap environment
-#        run: docker-compose -f docker-compose.travis.yml up -d
-#      - name: Install environment
-#        run: |
-#          bash ./bin/wp-init.sh
-#          bash ./bin/run-e2e-tests-${{matrix.env}}.sh
+      - name: Bootstrap environment
+        run: docker-compose -f docker-compose.travis.yml up -d
+      - name: Install environment
+        run: |
+          bash ./bin/wp-init.sh
+          bash ./bin/run-e2e-tests-${{matrix.env}}.sh
       - name: Run ${{ matrix.env }} Cypress tests
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
