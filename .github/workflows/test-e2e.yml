@@ -31,11 +31,9 @@ jobs:
         run: npm ci
       - name: Install composer deps
         run: composer install --no-dev
-      - name: Bootstrap environment
-        run: docker-compose -f $DOCKER_FILE up -d
       - name: Install environment
         run: |
-          bash ./bin/wp-init.sh
+          npm run up:ci
           bash ./bin/run-e2e-tests-${{matrix.env}}.sh
       - name: Run ${{ matrix.env }} Cypress tests
         env:

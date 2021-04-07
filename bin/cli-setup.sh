@@ -6,6 +6,7 @@ wp  --allow-root  plugin install classic-editor --activate
 
 # activate
 wp  --allow-root plugin activate feedzy-rss-feeds
+wp  --allow-root theme activate twentynineteen
 
 # set this constant so that the specific hooks are loaded
 wp  --allow-root config set TI_CYPRESS_TESTING true --raw

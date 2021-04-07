@@ -97,7 +97,7 @@ describe('Test Free - Import Feed', function() {
         // check if the import has been setup
         cy.url().should('include', 'edit.php?post_type=feedzy_imports');
         cy.get('tr:nth-of-type(1) .feedzy-toggle').should('not.be.checked');
-        cy.get('tr:nth-of-type(1) .feedzy-run-now').should('not.be.visible');
+        cy.get('tr:nth-of-type(1) .feedzy-run-now').should('not.exist');
 
         // 2. VERIFY
         cy.get('tr:nth-of-type(1) .row-title').click();
