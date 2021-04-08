@@ -1,9 +1,8 @@
 describe('Test Free - gutenberg', function() {
     before(function(){
-        Cypress.config('baseUrl', Cypress.env('host') + 'wp-admin/');
 
         // login to WP
-        cy.visit(Cypress.env('host') + 'wp-login.php');
+        cy.visit( 'wp-login.php');
         cy.get('#user_login').clear().type( Cypress.env('login') );
         cy.get('#user_pass').clear().type( Cypress.env('pass') );
         cy.get('#wp-submit').click();
@@ -12,44 +11,47 @@ describe('Test Free - gutenberg', function() {
     const PREFIX = "feedzy-scg-0-" + Cypress.moment().unix();
 
     it('Insert a block', function() {
-        Cypress.config('baseUrl', Cypress.env('host') + 'wp-admin/');
 
-        cy.visit('/post-new.php');
+        cy.visit('/wp-admin/post-new.php');
 
         // get rid of that irritating popup
-        cy.get('.nux-dot-tip__disable').click();
+        cy.get('.edit-post-welcome-guide .components-modal__header button').click();
 
         cy.get('textarea.editor-post-title__input').type(PREFIX);
 
         // insert a feedzy block
-        cy.get('div.edit-post-header-toolbar .block-editor-inserter button').click();
-        cy.get('.components-popover__content').then(function ($popup) {
-            cy.wrap($popup).find('.block-editor-inserter__search').type('feedzy');
-            cy.wrap($popup).find('.block-editor-inserter__results ul.block-editor-block-types-list li').should('have.length', 1);
-            cy.wrap($popup).find('.block-editor-inserter__results ul.block-editor-block-types-list li button').click();
+        cy.get('div.edit-post-header__toolbar button.edit-post-header-toolbar__inserter-toggle').click();
+        cy.get('.edit-post-layout__inserter-panel-content').then(function ($popup) {
+            cy.wrap($popup).find('.block-editor-inserter__search-input').type('feedzy');
+            cy.wrap($popup).find('.block-editor-block-types-list .editor-block-list-item-feedzy-rss-feeds-feedzy-block').should('have.length', 1);
+            cy.wrap($popup).find('.block-editor-block-types-list .editor-block-list-item-feedzy-rss-feeds-feedzy-block').click();
         });
 
         // see the block has the correct elements.
         cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"]').should('have.length', 1);
         cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] input[type="url"]').should('have.length', 1);
-        cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] button.is-primary.is-large').should('have.length', 1);
+        cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] button.components-button.is-primary').should('have.length', 1);
 
         var gutenberg = Cypress.env("gutenberg");
         // insert a feed
         cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] input[type="url"]').type( gutenberg.url );
-        cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] button.is-primary.is-large').click().then( () => {
+        cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] button.components-button.is-primary').click().then( () => {
             cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] div.feedzy-rss').should('have.length', 1);
             cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] div.feedzy-rss div.rss_header').should('have.length', 1);
             cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] div.feedzy-rss ul.feedzy-default').should('have.length', 1);
             cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] div.feedzy-rss ul.feedzy-default li').should('have.length', 5);
 
+            cy.get( '.interface-pinned-items button.components-button.has-icon' ).click()
+
+            cy.get( 'div[data-type="feedzy-rss-feeds/feedzy-block"]' ).focus();
+
             // change settings
             // clear does not work on number fields. Targetting slider and triggering 'change' doesn't work either. So we have to mix n match.
 
-            cy.get('div.edit-post-sidebar div.components-base-control.feedzy-max input.components-range-control__number').invoke('val', '').clear({force:true}).type(gutenberg.max, {force:true}).blur({force:true});
+            cy.get('div.edit-post-sidebar div.components-base-control.feedzy-max input.components-input-control__input').invoke('val', '').clear({force:true}).type(gutenberg.max, {force:true}).blur({force:true});
             cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] div.feedzy-rss ul.feedzy-default li').should('have.length', gutenberg.max);
 
-            cy.get('div.edit-post-sidebar div.components-base-control.feedzy-offset input.components-range-control__number').invoke('val', '').clear({force:true}).type(gutenberg.offset, {force:true}).blur({force:true});
+            cy.get('div.edit-post-sidebar div.components-base-control.feedzy-offset input.components-input-control__input').invoke('val', '').clear({force:true}).type(gutenberg.offset, {force:true}).blur({force:true});
             cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] div.feedzy-rss ul.feedzy-default li').should('have.length', parseInt(gutenberg.max) - parseInt(gutenberg.offset));
 
             // item options
@@ -64,8 +66,8 @@ describe('Test Free - gutenberg', function() {
             });
 
             // image options
-            cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-image-options button.components-panel__body-toggle').click().then( () => {
-                cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-image-options div.components-base-control.feedzy-thumb select.components-select-control__input').select(gutenberg.thumb);
+            cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-image-options button.components-button.components-panel__body-toggle').click().then( () => {
+                cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-image-options .feedzy-thumb .components-select-control__input').select(gutenberg.thumb);
             });
 
             cy.get('button.editor-post-publish-panel__toggle').click().then( () => {
@@ -78,9 +80,8 @@ describe('Test Free - gutenberg', function() {
     });
 
     it('Verify inserted block', function() {
-        Cypress.config('baseUrl', Cypress.env('host') + 'wp-admin/');
 
-        cy.visit('/edit.php?post_type=post');
+        cy.visit('/wp-admin/edit.php?post_type=post');
 
         // should have 1 post.
         cy.get('tr td a.row-title:contains("' + PREFIX + '")').should('have.length', 1);
@@ -103,8 +104,8 @@ describe('Test Free - gutenberg', function() {
         cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] div.feedzy-rss ul.feedzy-default').should('have.length', 1);
         cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] div.feedzy-rss ul.feedzy-default li').should('have.length', gutenberg.results.toString());
 
-        cy.get('div.edit-post-sidebar div.components-base-control.feedzy-max input.components-range-control__number').should('have.value', gutenberg.max.toString());
-        cy.get('div.edit-post-sidebar div.components-base-control.feedzy-offset input.components-range-control__number').should('have.value', gutenberg.offset.toString());
+        cy.get('div.edit-post-sidebar div.components-base-control.feedzy-max input.components-input-control__input').should('have.value', gutenberg.max.toString());
+        cy.get('div.edit-post-sidebar div.components-base-control.feedzy-offset input.components-input-control__input').should('have.value', gutenberg.offset.toString());
         // item options
         cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-item-options button.components-panel__body-toggle').click().then( () => {
             cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-item-options div.components-base-control.feedzy-meta input.components-text-control__input').should('have.value', gutenberg.meta);
@@ -117,7 +118,7 @@ describe('Test Free - gutenberg', function() {
 
         // image options
         cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-image-options button.components-panel__body-toggle').click().then( () => {
-            cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-image-options div.components-base-control.feedzy-thumb select.components-select-control__input').invoke('prop', 'selectedIndex').should('equal', 1);
+            cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-image-options .feedzy-thumb .components-select-control__input').invoke('prop', 'selectedIndex').should('equal', 1);
         });
 
         // we want to do this so that the next test succeeds - otherwise it will throw up an alert box and stop the page
@@ -126,7 +127,7 @@ describe('Test Free - gutenberg', function() {
     });
 
     it('View the post', function() {
-        cy.visit('/edit.php?post_type=post')
+        cy.visit('/wp-admin/edit.php?post_type=post')
 
         var gutenberg = Cypress.env("gutenberg");
 
@@ -141,9 +142,8 @@ describe('Test Free - gutenberg', function() {
     });
 
     it('Modify inserted block and make it LAZY', function() {
-        Cypress.config('baseUrl', Cypress.env('host') + 'wp-admin/');
 
-        cy.visit('/edit.php?post_type=post');
+        cy.visit('/wp-admin/edit.php?post_type=post');
 
         // should have 1 post.
         cy.get('tr td a.row-title:contains("' + PREFIX + '")').should('have.length', 1);
@@ -161,12 +161,12 @@ describe('Test Free - gutenberg', function() {
         // we want to do this so that the next test succeeds - otherwise it will throw up an alert box and stop the page
         cy.get('button.editor-post-publish-button').click();
 
-        cy.visit('/edit.php?post_type=post')
+        cy.visit('/wp-admin/edit.php?post_type=post')
 
     });
 
     it('View the LAZY post', function() {
-        cy.visit('/edit.php?post_type=post')
+        cy.visit('/wp-admin/edit.php?post_type=post')
 
         var gutenberg = Cypress.env("gutenberg");
 
