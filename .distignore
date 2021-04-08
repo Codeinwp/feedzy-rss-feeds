@@ -33,3 +33,7 @@ docker-compose.travis.yml
 .eslintignore
 .eslintrc
 .jshintignore
+.wordpress-org
+.nvmrc
+.releaserc.yml
+docker-compose.ci.yml

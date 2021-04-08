@@ -3,19 +3,39 @@
  *
  * @package feedzy-rss-feeds
  */
-/* jshint node:true */
-/* global require */
 module.exports = function (grunt) {
-	'use strict';
+    grunt.initConfig({
+        wp_readme_to_markdown: {
+            files: {
+                'readme.md': 'readme.txt'
+            },
+        },
+        version: {
 
-	var loader = require('load-project-config'),
-		config = require('grunt-plugin-fleet');
-	config = config();
-	// jshint ignore: start
-	config.taskMap['faq_builder'] = 'grunt-helpscout-faq';
-	config.files.js.push( '!includes/gutenberg/build/*.js' );
-	config.files.js.push( '!includes/gutenberg/src/Editor.js' );
-	config.files.js.push( '!cypress/**/*.js' );
-	// jshint ignore: end
-	loader(grunt, config).init();
+            project: {
+                src: [
+                    'package.json'
+                ]
+            },
+            style: {
+                options: {
+                    prefix: 'Version\\:\.*\\s'
+                },
+                src: [
+                    'feedzy-rss-feed.php',
+                    'css/feedzy-rss-feeds.css',
+                ]
+            },
+            class: {
+                options: {
+                    prefix: '\\.*version\.*\\s=\.*\\s\''
+                },
+                src: [
+                    'includes/feedzy-rss-feeds.php',
+                ]
+            }
+        }
+    });
+    grunt.loadNpmTasks('grunt-version');
+    grunt.loadNpmTasks('grunt-wp-readme-to-markdown');
 };
