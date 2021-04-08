@@ -57,7 +57,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		}
 
 		// Enqueue the bundled block JS file
-		wp_enqueue_script( 'feedzy-gutenberg-block-js', FEEDZY_ABSURL . 'includes/gutenberg/build/block.js', array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-compose', 'wp-editor', 'wp-api', 'lodash' ), $version );
+		wp_enqueue_script( 'feedzy-gutenberg-block-js', FEEDZY_ABSURL . 'includes/gutenberg/build/block.js', array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-compose', 'wp-editor', 'wp-api', 'lodash' ), $version, true );
 
 		// Pass in REST URL
 		wp_localize_script(
@@ -308,7 +308,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 	 * Sanitize Rest API Return
 	 */
 	public function feedzy_sanitize_feeds( $input ) {
-		if ( sizeof( $input ) === 1 ) {
+		if ( count( $input ) === 1 ) {
 			$feed = esc_url( $input[0] );
 			return $feed;
 		} else {
@@ -329,7 +329,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 			$value = get_post_meta( $id, 'feedzy_category_feed', true );
 			$value = trim( $value );
 			$value = explode( ',', $value );
-			if ( sizeof( $value ) === 1 ) {
+			if ( count( $value ) === 1 ) {
 				$value = esc_url( $value[0] );
 				return $value;
 			} else {

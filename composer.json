@@ -30,7 +30,8 @@
   },
   "scripts": {
     "format": "phpcbf --standard=phpcs.xml --report-summary --report-source",
-    "lint": "phpcs --standard=phpcs.xml"
+    "lint": "phpcs --standard=phpcs.xml",
+    "phpcs-v": "phpcs --version"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,

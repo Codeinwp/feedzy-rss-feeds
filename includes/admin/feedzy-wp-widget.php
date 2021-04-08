@@ -218,7 +218,7 @@ class feedzy_wp_widget extends WP_Widget {
 	public function widget( $args, $instance ) {
 		$title    = apply_filters( 'widget_title', isset( $instance['title'] ) ? $instance['title'] : '' );
 		$textarea = apply_filters( 'widget_textarea', isset( $instance['textarea'] ) && ! empty( $instance['textarea'] ) ? $instance['textarea'] : '', $instance );
-		// Display the widget body
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $args['before_widget'];
 		// Check if title is set.
 		if ( $title ) {
@@ -242,16 +242,16 @@ class feedzy_wp_widget extends WP_Widget {
 			'thumb'          => self::bool_to_enum( isset( $instance['thumb'] ) ? $instance['thumb'] : '' ),
 			'default'        => isset( $instance['default'] ) ? $instance['default'] : '',
 			'size'           => isset( $instance['size'] ) ? $instance['size'] : '',
-			'keywords_title' => isset( $instance['keywords_title'] ) && !empty($instance['keywords_title']) ? $instance['keywords_title'] : '',
-			'keywords_ban' => isset( $instance['keywords_ban'] ) && !empty($instance['keywords_ban'])? $instance['keywords_ban'] : '',
+			'keywords_title' => isset( $instance['keywords_title'] ) && ! empty( $instance['keywords_title'] ) ? $instance['keywords_title'] : '',
+			'keywords_ban' => isset( $instance['keywords_ban'] ) && ! empty( $instance['keywords_ban'] ) ? $instance['keywords_ban'] : '',
 			'error_empty' => isset( $instance['error_empty'] ) ? $instance['error_empty'] : '',
 			'sort' => isset( $instance['sort'] ) ? $instance['sort'] : '',
 			'refresh' => isset( $instance['refresh'] ) ? $instance['refresh'] : '',
 			'follow' => isset( $instance['follow'] ) ? $instance['follow'] : '',
 			'http' => isset( $instance['http'] ) ? $instance['http'] : '',
-			'lazy' => isset( $instance['lazy'] )  && !empty( $instance['lazy']) ? self::bool_to_enum( $instance['lazy'] ) : false,
-			'offset' => isset( $instance['offset'] )&& !empty($instance['offset'] ) ? $instance['offset'] : '',
-			'multiple_meta' => isset( $instance['multiple_meta'] )&& !empty($instance['multiple_meta'] ) ? $instance['multiple_meta'] : '',
+			'lazy' => isset( $instance['lazy'] ) && ! empty( $instance['lazy'] ) ? self::bool_to_enum( $instance['lazy'] ) : false,
+			'offset' => isset( $instance['offset'] ) && ! empty( $instance['offset'] ) ? $instance['offset'] : '',
+			'multiple_meta' => isset( $instance['multiple_meta'] ) && ! empty( $instance['multiple_meta'] ) ? $instance['multiple_meta'] : '',
 		);
 		$feedzy_widget_shortcode_attributes = apply_filters( 'feedzy_widget_shortcode_attributes_filter', $feedzy_widget_shortcode_attributes, $args, $instance );
 

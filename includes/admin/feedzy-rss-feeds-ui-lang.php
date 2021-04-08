@@ -139,27 +139,27 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'value'       => '12_hours',
 						'opts'        => array(
 							'1_hours'  => array(
-								'label' => '1' . ' ' . __( 'Hour', 'feedzy-rss-feeds' ),
+								'label' => '1 ' . __( 'Hour', 'feedzy-rss-feeds' ),
 								'value' => '1_hours',
 							),
 							'3_hours'  => array(
-								'label' => '3' . ' ' . __( 'Hours', 'feedzy-rss-feeds' ),
+								'label' => '3 ' . __( 'Hours', 'feedzy-rss-feeds' ),
 								'value' => '3_hours',
 							),
 							'12_hours' => array(
-								'label' => '12' . ' ' . __( 'Hours', 'feedzy-rss-feeds' ),
+								'label' => '12 ' . __( 'Hours', 'feedzy-rss-feeds' ),
 								'value' => '12_hours',
 							),
 							'1_days'   => array(
-								'label' => '1' . ' ' . __( 'Day', 'feedzy-rss-feeds' ),
+								'label' => '1 ' . __( 'Day', 'feedzy-rss-feeds' ),
 								'value' => '1_days',
 							),
 							'3_days'   => array(
-								'label' => '3' . ' ' . __( 'Days', 'feedzy-rss-feeds' ),
+								'label' => '3 ' . __( 'Days', 'feedzy-rss-feeds' ),
 								'value' => '3_days',
 							),
 							'15_days'  => array(
-								'label' => '15' . ' ' . __( 'Days', 'feedzy-rss-feeds' ),
+								'label' => '15 ' . __( 'Days', 'feedzy-rss-feeds' ),
 								'value' => '15_days',
 							),
 						),
@@ -378,7 +378,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 			),
 			'section_pro'   => array(
 				'title'       => __( 'PRO Options', 'feedzy-rss-feeds' ),
-				'description' => __( 'Get access to more options and customizations with full version of Feedzy RSS Feeds . Use existing templates or extend them and make them your own.', 'feedzy-rss-feeds' ) . '<br/>' . '<a href="' . FEEDZY_UPSELL_LINK . '" target="_blank"><small>' . __( 'See more features of Feedzy RSS Feeds PRO', 'feedzy-rss-feeds' ) . '</small></a>',
+				'description' => __( 'Get access to more options and customizations with full version of Feedzy RSS Feeds . Use existing templates or extend them and make them your own.', 'feedzy-rss-feeds' ) . '<br/><a href="' . FEEDZY_UPSELL_LINK . '" target="_blank"><small>' . __( 'See more features of Feedzy RSS Feeds PRO', 'feedzy-rss-feeds' ) . '</small></a>',
 				'elements'    => array(
 					'price'        => array(
 						'label'    => sprintf( __( 'Should we display the price from the feed if it is available? <br/> You can read about how to extract price from a custom tag %1$shere%2$s', 'feedzy-rss-feeds' ), '<a href="https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy" target="_blank">', '</a>' ),

@@ -1071,7 +1071,7 @@ class Feedzy_Rss_Feeds_Import {
 		$args           = array(
 			'post_type'   => 'feedzy_imports',
 			'post_status' => 'publish',
-			'numberposts' => 300,
+			'numberposts' => 300, //phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_numberposts
 		);
 		$feedzy_imports = get_posts( $args );
 		foreach ( $feedzy_imports as $job ) {
@@ -1168,7 +1168,7 @@ class Feedzy_Rss_Feeds_Import {
 		delete_post_meta( $job->ID, 'import_info' );
 
 		// let's increase this time in case spinnerchief/wordai is being used.
-		ini_set( 'max_execution_time', apply_filters( 'feedzy_max_execution_time', 500 ) );
+		ini_set( 'max_execution_time', apply_filters( 'feedzy_max_execution_time', 500 ) );//phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_ini_set
 
 		$count = $index = $import_image_errors = $duplicates = 0;
 
@@ -1366,7 +1366,7 @@ class Feedzy_Rss_Feeds_Import {
 						$import_errors[] = $error_reason;
 					}
 				}
-				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to create a new post with params %s. Error: %s', print_r( $new_post, true ), $error_reason ), 'error', __FILE__, __LINE__ );
+				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to create a new post with params %s. Error: %s', print_r( $new_post, true ), $error_reason ), 'error', __FILE__, __LINE__ );//phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 				$index++;
 				continue;
 			}
@@ -1391,7 +1391,7 @@ class Feedzy_Rss_Feeds_Import {
 					wp_remove_object_terms( $new_post_id, apply_filters( 'feedzy_uncategorized', array( 1, 'uncategorized', $uncategorized->slug ), $job->ID ), 'category' );
 
 					$result = wp_set_object_terms( $new_post_id, intval( $term_id ), $taxonomy, true );
-					do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'After creating post in %s/%d, result = %s', $taxonomy, $term_id, print_r( $result, true ) ), 'debug', __FILE__, __LINE__ );
+					do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'After creating post in %s/%d, result = %s', $taxonomy, $term_id, print_r( $result, true ) ), 'debug', __FILE__, __LINE__ );//phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 				}
 			}
 
@@ -1536,14 +1536,14 @@ class Feedzy_Rss_Feeds_Import {
 	private function generate_featured_image( $file, $post_id, $desc, &$import_errors, &$import_info ) {
 		do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Trying to generate featured image for %s and postID %d', $file, $post_id ), 'debug', __FILE__, __LINE__ );
 
-		require_once ABSPATH . 'wp-admin' . '/includes/image.php';
-		require_once ABSPATH . 'wp-admin' . '/includes/file.php';
-		require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/media.php';
 
 		$file_array = array();
 		$local_file = download_url( $file );
 		if ( is_wp_error( $local_file ) ) {
-			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to download file = %s and postID %d', print_r( $local_file, true ), $post_id ), 'error', __FILE__, __LINE__ );
+			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to download file = %s and postID %d', print_r( $local_file, true ), $post_id ), 'error', __FILE__, __LINE__ );//phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 			return false;
 		}
 
@@ -1568,7 +1568,7 @@ class Feedzy_Rss_Feeds_Import {
 
 		$id = media_handle_sideload( $file_array, $post_id, $desc );
 		if ( is_wp_error( $id ) ) {
-			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to attach file for postID %d = %s', $post_id, print_r( $id, true ) ), 'error', __FILE__, __LINE__ );
+			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to attach file for postID %d = %s', $post_id, print_r( $id, true ) ), 'error', __FILE__, __LINE__ );//phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 			unlink( $file_array['tmp_name'] );
 			return false;
 		}

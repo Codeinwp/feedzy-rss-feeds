@@ -172,7 +172,7 @@ if ( FEEDZY_LOCAL_DEBUG ) {
 	 */
 	function feedzy_themeisle_log_event( $name, $msg, $type, $file, $line ) {
 		if ( $name === FEEDZY_NAME ) {
-			error_log( sprintf( '%s (%s:%d): %s', $type, $file, $line, $msg ) );
+			error_log( sprintf( '%s (%s:%d): %s', $type, $file, $line, $msg ) ); //phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 		}
 	}
 }

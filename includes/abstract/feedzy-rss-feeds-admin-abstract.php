@@ -92,7 +92,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 							array(
 								'post_type'   => 'feedzy_imports',
 								'post_status' => 'publish',
-								'numberposts' => 299,
+								'numberposts' => 299, //phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_numberposts
 								'fields'      => 'ids',
 							)
 						)
@@ -103,7 +103,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 							array(
 								'post_type'   => 'feedzy_imports',
 								'post_status' => 'draft',
-								'numberposts' => 299,
+								'numberposts' => 299, //phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_numberposts
 								'fields'      => 'ids',
 							)
 						)
@@ -114,10 +114,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 							array(
 								'post_type'   => 'post',
 								'post_status' => array( 'publish', 'private', 'draft', 'trash' ),
-								'numberposts' => 2999,
+								'numberposts' => 2999, //phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_numberposts
 								'fields'      => 'ids',
-								'meta_key'    => 'feedzy',
-								'meta_value'  => 1,
+								'meta_key'    => 'feedzy', //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+								'meta_value'  => 1, //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 							)
 						)
 					),
@@ -138,7 +138,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		// how many posts contain the shortcode
 		global $wpdb;
-		$shortcodes = $wpdb->get_var( "SELECT count(*) FROM {$wpdb->prefix}posts WHERE post_status IN ('publish', 'private') AND post_content LIKE '%[feedzy-rss %'" );
+		$shortcodes = $wpdb->get_var( "SELECT count(*) FROM {$wpdb->prefix}posts WHERE post_status IN ('publish', 'private') AND post_content LIKE '%[feedzy-rss %'" ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 		$data       = array(
 			'categories' => $categories,
 			'imports'    => $imports,
@@ -190,7 +190,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 			$final_msg .= '</p></div>';
 		} else {
-			error_log( 'Feedzy RSS Feeds - related feed: ' . print_r( $feed_url, true ) . ' - Error message: ' . $error_msg );
+			do_action( 'themeisle_log_event', FEEDZY_NAME, ( 'Feedzy RSS Feeds - related feed: ' . print_r( $feed_url, true ) . ' - Error message: ' . $error_msg ), 'error', __FILE__, __LINE__ ); //phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 		}
 		return $final_msg;
 	}
@@ -207,7 +207,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function feedzy_array_obj_string( $error ) {
 		if ( is_array( $error ) || is_object( $error ) ) {
-			return print_r( $error, true );
+			return print_r( $error, true ); //phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 		} else {
 			return $error;
 		}
@@ -770,17 +770,17 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$feed->set_feed_url( $feed_url );
 
 		global $feedzy_current_error_reporting;
-		$feedzy_current_error_reporting = error_reporting();
+		$feedzy_current_error_reporting = error_reporting(); //phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_error_reporting,WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting
 
 		// to avoid the Warning! Non-numeric value encountered. This can be removed once SimplePie in core is fixed.
 		if ( version_compare( phpversion(), '7.1', '>=' ) ) {
-			error_reporting( E_ALL ^ E_WARNING );
+			error_reporting( E_ALL ^ E_WARNING );//phpcs:ignore WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting,WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_error_reporting
 			// reset the error_reporting back to its original value.
 			add_action(
 				'shutdown',
 				function() {
 					global $feedzy_current_error_reporting;
-					error_reporting( $feedzy_current_error_reporting );
+					error_reporting( $feedzy_current_error_reporting );//phpcs:ignore WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting,WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_error_reporting
 				}
 			);
 		}

@@ -3,8 +3,8 @@
 	<?php load_template( FEEDZY_ABSPATH . '/includes/layouts/header.php' ); ?>
 
 	<?php
-	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-	$active_tab = isset( $_REQUEST['tab'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['tab'] ) ) : 'help';
+
+	$active_tab = isset( $_REQUEST['tab'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['tab'] ) ) : 'help';// phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
 	$show_more  = ! feedzy_is_pro() || false === apply_filters( 'feedzy_is_license_of_type', false, 'agency' );
 	?>
 
