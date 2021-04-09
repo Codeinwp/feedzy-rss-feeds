@@ -610,10 +610,10 @@ class Feedzy_Rss_Feeds_Import {
 				}
 
 				$msg .= $this->get_last_run_details( $post_id );
-				echo wp_kses_post( $msg );
+				echo $msg;
 
 				if ( 'publish' === $post->post_status ) {
-					echo wp_kses_post( sprintf( '<p><input type="button" class="button button-primary feedzy-run-now" data-id="%d" value="%s"></p>', $post_id, __( 'Run Now', 'feedzy-rss-feeds' ) ) );
+					 echo sprintf( '<p><input type="button" class="button button-primary feedzy-run-now" data-id="%d" value="%s"></p>', $post_id, __( 'Run Now', 'feedzy-rss-feeds' ) );
 				}
 
 				break;
