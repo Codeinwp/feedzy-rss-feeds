@@ -109,6 +109,23 @@
 				</div>
 			</div>
 
+			<div class="feedzy-row">
+				<div class="label_description">
+					<label class="feedzy-sr-only"><?php _e( 'Remove Duplicates?', 'feedzy-rss-feeds' ); ?></label>
+					<div>
+						<?php /* translators: %s: Documentation link */ ?>
+						<small><?php echo wp_sprintf( __( 'To understand how duplicates will be removed, check out our <a href="%s" target="_blank">[documentation]</a>', 'feedzy-rss-feeds' ), esc_url( 'https://docs.themeisle.com/article/638-how-to-eliminate-duplicate-feed-item' ) ); ?></small>
+					</div>
+				</div>
+				<div class="feedzy-separator"></div>
+				<div class="form-group input-group form_item">
+					<div>
+						<input id="remove-duplicates" name="feedzy_meta_data[import_remove_duplicates]" class="feedzy-toggle feedzy-toggle-round" type="checkbox" value="yes" <?php echo $import_remove_duplicates; ?>>
+						<label for="remove-duplicates" class="feedzy-inline"></label>
+						<label class="feedzy-inline" style="margin-left: 10px;" for="import_remove_duplicates"></label>
+					</div>
+				</div>
+			</div>
 		</div>
 
 

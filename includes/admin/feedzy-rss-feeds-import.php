@@ -272,7 +272,7 @@ class Feedzy_Rss_Feeds_Import {
 	 * @return mixed
 	 */
 	public function feedzy_import_feed_options() {
-		global $post;
+		global $post, $pagenow;
 		$args                 = array(
 			'post_type'      => 'feedzy_categories',
 			'posts_per_page' => 100,
@@ -298,7 +298,8 @@ class Feedzy_Rss_Feeds_Import {
 		$import_item_img_url  = get_post_meta( $post->ID, 'import_use_external_image', true );
 		$import_item_img_url  = 'yes' === $import_item_img_url ? 'checked' : '';
 		$import_featured_img  = get_post_meta( $post->ID, 'import_post_featured_img', true );
-
+		$import_remove_duplicates  = get_post_meta( $post->ID, 'import_remove_duplicates', true );
+		$import_remove_duplicates  = 'yes' === $import_remove_duplicates || 'post-new.php' === $pagenow ? 'checked' : '';
 		// default values so that post is not created empty.
 		if ( empty( $import_title ) ) {
 			$import_title = '[#item_title]';
@@ -397,6 +398,8 @@ class Feedzy_Rss_Feeds_Import {
 
 			// we will activate this import only if the source has no invalid URL(s)
 			$source_is_valid = false;
+			// Check feeds remove duplicates checkbox checked OR not.
+			$data_meta['import_remove_duplicates'] = isset( $data_meta['import_remove_duplicates'] ) ? $data_meta['import_remove_duplicates'] : 'no';
 			// Check feeds external image URL checkbox checked OR not.
 			$data_meta['import_use_external_image'] = isset( $data_meta['import_use_external_image'] ) ? $data_meta['import_use_external_image'] : 'no';
 			foreach ( $data_meta as $key => $value ) {
@@ -1043,6 +1046,7 @@ class Feedzy_Rss_Feeds_Import {
 		$import_post_term     = get_post_meta( $job->ID, 'import_post_term', true );
 		$import_feed_limit    = get_post_meta( $job->ID, 'import_feed_limit', true );
 		$import_item_img_url  = get_post_meta( $job->ID, 'import_use_external_image', true );
+		$import_remove_duplicates  = get_post_meta( $job->ID, 'import_remove_duplicates', true );
 		$max                  = $import_feed_limit;
 		if ( metadata_exists( $import_post_type, $job->ID, 'import_post_status' ) ) {
 			$import_post_status  = get_post_meta( $job->ID, 'import_post_status', true );
@@ -1158,6 +1162,15 @@ class Feedzy_Rss_Feeds_Import {
 			$is_duplicate = $use_new_hash ? in_array( $item_hash, $imported_items_new, true ) : in_array( $item_hash, $imported_items_old, true );
 			$items_found[ $item['item_url'] ] = $item['item_title'];
 
+			if ( 'yes' === $import_remove_duplicates && ! $is_duplicate ) {
+				$is_duplicate_post = $this->is_duplicate_post( $import_post_type, 'feedzy_item_url', esc_url_raw( $item['item_url'] ) );
+				if ( ! empty( $is_duplicate_post ) ) {
+					$duplicates[ $item['item_url'] ] = $item['item_title'];
+					foreach ( $is_duplicate_post as $p ) {
+						wp_delete_post( $p, true );
+					}
+				}
+			}
 			if ( $is_duplicate ) {
 				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Ignoring %s as it is a duplicate (%s hash).', $item_hash, $use_new_hash ? 'new' : 'old' ), 'warn', __FILE__, __LINE__ );
 				$index++;
@@ -1951,5 +1964,32 @@ class Feedzy_Rss_Feeds_Import {
 			);
 		}
 		return $tags;
+	}
+
+	/**
+	 * Get post data using meta key and value.
+	 *
+	 * @param string $post_type Post type Default post.
+	 * @param string $key Meta Key.
+	 * @param string $value Meta value.
+	 * @param string $compare Compare operator.
+	 * @return mixed
+	 */
+	public function is_duplicate_post( $post_type = 'post', $key = '', $value = '', $compare = '=' ) {
+		if ( empty( $key ) || empty( $value ) ) {
+			return false;
+		}
+		// Check post exists OR Not.
+		$data = get_posts(
+			array(
+				'post_type' => $post_type,
+				'meta_key' => $key,
+				'meta_value' => $value,
+				'meta_compare' => $compare,
+				'fields' => 'ids',
+			)
+		);
+
+		return $data;
 	}
 }
