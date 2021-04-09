@@ -180,6 +180,9 @@ add_filter(
 			'p'      => array(
 				'class' => array(),
 			),
+			'span'   => array(
+				'class' => array(),
+			),
 			'div'    => array(
 				'class' => array(),
 			),

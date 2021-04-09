@@ -1344,8 +1344,8 @@ class Feedzy_Rss_Feeds_Import {
 				'feedzy_insert_post_args',
 				array(
 					'post_type'    => $import_post_type,
-					'post_title'   => wp_kses_post( $post_title ),
-					'post_content' => wp_kses_post( $post_content ),
+					'post_title'   => wp_kses( $post_title, apply_filters( 'feedzy_wp_kses_allowed_html', array() ) ),
+					'post_content' => wp_kses( $post_content, apply_filters( 'feedzy_wp_kses_allowed_html', array() ) ),
 					'post_date'    => $post_date,
 					'post_status'  => $import_post_status,
 				),
