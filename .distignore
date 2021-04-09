@@ -26,3 +26,14 @@ cypress.json
 cypress.env.json.template
 docker-compose.travis.yml
 .github
+.idea
+.babelrc
+.codeclimate.yml
+.csslintrc
+.eslintignore
+.eslintrc
+.jshintignore
+.wordpress-org
+.nvmrc
+.releaserc.yml
+docker-compose.ci.yml
