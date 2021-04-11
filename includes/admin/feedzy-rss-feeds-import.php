@@ -374,7 +374,7 @@ class Feedzy_Rss_Feeds_Import {
 		}
 		if (
 			get_post_type( $post_id ) !== 'feedzy_imports' ||
-			( ! defined( 'TI_UNIT_TESTING' ) && ! wp_verify_nonce( filter_input( INPUT_POST, 'feedzy_post_nonce', FILTER_SANITIZE_STRING ), 'feedzy_post_nonce' ) ) ||
+			( ! defined( 'TI_UNIT_TESTING' ) && ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['feedzy_post_nonce'] ) ), 'feedzy_post_nonce' ) ) ||
 			! current_user_can( 'edit_post', $post_id )
 		) {
 			return $post_id;
