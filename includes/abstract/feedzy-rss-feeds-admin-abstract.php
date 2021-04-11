@@ -410,7 +410,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$cache = $sc['refresh'];
 
 		// Disregard the pseudo-shortcode coming from Gutenberg as a lazy one.
-		if ( 'yes' === $sc['lazy'] && ! isset( $sc['gutenberg'] ) ) {
+		if ( ( true === $sc['lazy'] || 'yes' === $sc['lazy'] ) && ! isset( $sc['gutenberg'] ) ) {
 			$attributes = '';
 			foreach ( $sc as $key => $val ) {
 				// ignore the feedData, its not required.
