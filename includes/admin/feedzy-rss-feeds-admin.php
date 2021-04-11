@@ -279,7 +279,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			. $invalid
 			. '<textarea name="feedzy_category_feed" rows="15" class="widefat" placeholder="' . __( 'Place your URL\'s here followed by a comma.', 'feedzy-rss-feeds' ) . '" >' . $feed . '</textarea>
         ';
-		echo wp_kses_post( $output );
+		echo wp_kses( $output, apply_filters( 'feedzy_wp_kses_allowed_html', array() ) );
 	}
 
 	/**
@@ -301,11 +301,12 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if (
 			empty( $_POST ) ||
 			! isset( $_POST['feedzy_category_meta_noncename'] ) ||
-			! wp_verify_nonce( filter_input( INPUT_POST, 'feedzy_category_meta_noncename', FILTER_SANITIZE_STRING ), FEEDZY_BASEFILE ) ||
+			! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['feedzy_category_meta_noncename'] ) ), FEEDZY_BASEFILE ) ||
 			! current_user_can( 'edit_post', $post_id )
 		) {
 			return $post_id;
 		}
+
 		$category_meta['feedzy_category_feed'] = array();
 		if ( isset( $_POST['feedzy_category_feed'] ) ) {
 			$category_meta['feedzy_category_feed'] = wp_strip_all_tags( wp_unslash( $_POST['feedzy_category_feed'] ) );
