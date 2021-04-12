@@ -1982,6 +1982,7 @@ class Feedzy_Rss_Feeds_Import {
 		// Check post exists OR Not.
 		$data = get_posts(
 			array(
+				'posts_per_page' => 80,
 				'post_type' => $post_type,
 				'meta_key' => $key,
 				'meta_value' => $value,
