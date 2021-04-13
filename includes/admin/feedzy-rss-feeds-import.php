@@ -300,6 +300,7 @@ class Feedzy_Rss_Feeds_Import {
 		$import_featured_img  = get_post_meta( $post->ID, 'import_post_featured_img', true );
 		$import_remove_duplicates  = get_post_meta( $post->ID, 'import_remove_duplicates', true );
 		$import_remove_duplicates  = 'yes' === $import_remove_duplicates || 'post-new.php' === $pagenow ? 'checked' : '';
+		$import_selected_language  = get_post_meta( $post->ID, 'language', true );
 		// default values so that post is not created empty.
 		if ( empty( $import_title ) ) {
 			$import_title = '[#item_title]';
@@ -1047,6 +1048,7 @@ class Feedzy_Rss_Feeds_Import {
 		$import_feed_limit    = get_post_meta( $job->ID, 'import_feed_limit', true );
 		$import_item_img_url  = get_post_meta( $job->ID, 'import_use_external_image', true );
 		$import_remove_duplicates  = get_post_meta( $job->ID, 'import_remove_duplicates', true );
+		$import_selected_language  = get_post_meta( $job->ID, 'language', true );
 		$max                  = $import_feed_limit;
 		if ( metadata_exists( $import_post_type, $job->ID, 'import_post_status' ) ) {
 			$import_post_status  = get_post_meta( $job->ID, 'import_post_status', true );
@@ -1313,6 +1315,11 @@ class Feedzy_Rss_Feeds_Import {
 			}
 
 			$new_post_id = wp_insert_post( $new_post, true );
+
+			if ( function_exists( 'icl_get_languages' ) && ! empty( $import_selected_language ) ) {
+				$this->set_wpml_element_language_details( $import_post_type, $new_post_id, $import_selected_language );
+			}
+
 			if ( $new_post_id === 0 || is_wp_error( $new_post_id ) ) {
 				$error_reason = 'N/A';
 				if ( is_wp_error( $new_post_id ) ) {
@@ -1992,5 +1999,31 @@ class Feedzy_Rss_Feeds_Import {
 		);
 
 		return $data;
+	}
+
+	/**
+	 * Get post data using meta key and value.
+	 *
+	 * @param string $post_type Post type Default post.
+	 * @param int    $post_id Post ID.
+	 * @param string $language_code Selected language code.
+	 */
+	public function set_wpml_element_language_details( $post_type = 'post', $post_id = 0, $language_code = '' ) {
+		global $sitepress;
+		if ( $post_id && ! empty( $language_code ) ) {
+			// Get the translation id.
+			$trid = $sitepress->get_element_trid( $post_id, 'post_' . $post_type );
+
+			// Update the post language info.
+			$language_args = array(
+				'element_id' => $post_id,
+				'element_type' => 'post_' . $post_type,
+				'trid' => $trid,
+				'language_code' => $language_code,
+				'source_language_code' => null,
+			);
+
+			do_action( 'wpml_set_element_language_details', $language_args );
+		}
 	}
 }
