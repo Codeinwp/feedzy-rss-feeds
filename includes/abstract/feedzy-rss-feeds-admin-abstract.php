@@ -92,7 +92,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 							array(
 								'post_type'   => 'feedzy_imports',
 								'post_status' => 'publish',
-								'numberposts' => 299,
+								'numberposts' => 99,
 								'fields'      => 'ids',
 							)
 						)
@@ -103,7 +103,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 							array(
 								'post_type'   => 'feedzy_imports',
 								'post_status' => 'draft',
-								'numberposts' => 299,
+								'numberposts' => 99,
 								'fields'      => 'ids',
 							)
 						)
@@ -114,10 +114,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 							array(
 								'post_type'   => 'post',
 								'post_status' => array( 'publish', 'private', 'draft', 'trash' ),
-								'numberposts' => 2999,
+								'numberposts' => 2999, //phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_numberposts
 								'fields'      => 'ids',
-								'meta_key'    => 'feedzy',
-								'meta_value'  => 1,
+								'meta_key'    => 'feedzy', //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+								'meta_value'  => 1, //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 							)
 						)
 					),
@@ -138,7 +138,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		// how many posts contain the shortcode
 		global $wpdb;
-		$shortcodes = $wpdb->get_var( "SELECT count(*) FROM {$wpdb->prefix}posts WHERE post_status IN ('publish', 'private') AND post_content LIKE '%[feedzy-rss %'" );
+		$shortcodes = $wpdb->get_var( "SELECT count(*) FROM {$wpdb->prefix}posts WHERE post_status IN ('publish', 'private') AND post_content LIKE '%[feedzy-rss %'" ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 		$data       = array(
 			'categories' => $categories,
 			'imports'    => $imports,

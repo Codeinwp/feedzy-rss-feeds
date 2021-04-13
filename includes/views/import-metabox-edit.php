@@ -291,14 +291,14 @@
 					<label class="feedzy-sr-only" for="f1-post-content"><?php esc_html_e( 'External Image URL?', 'feedzy-rss-feeds' ); ?></label><br/>
 					<small>
 						<?php
-						_e( 'The image url will be 3rd party url, We will not download image to your site.', 'feedzy-rss-feeds' );
+						esc_attr_e( 'The image url will be 3rd party url, We will not download image to your site.', 'feedzy-rss-feeds' );
 						?>
 					</small>
 				</div>
 				<div class="feedzy-separator dashicons dashicons-leftright"></div>
 				<div class="form-group input-group form_item">
 					<div>
-						<input id="use-external-image" name="feedzy_meta_data[import_use_external_image]" class="feedzy-toggle feedzy-toggle-round" type="checkbox" value="yes" <?php echo $import_item_img_url; ?>>
+						<input id="use-external-image" name="feedzy_meta_data[import_use_external_image]" class="feedzy-toggle feedzy-toggle-round" type="checkbox" value="yes" <?php echo esc_attr( $import_item_img_url ); ?>>
 						<label for="use-external-image" class="feedzy-inline"></label>
 						<label class="feedzy-inline" style="margin-left: 10px;" for="import_use_external_image"><?php esc_html_e( 'User external image URL, Ignore feature post thumbnail', 'feedzy-rss-feeds' ); ?></label>
 					</div>

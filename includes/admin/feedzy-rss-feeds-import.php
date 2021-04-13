@@ -610,10 +610,10 @@ class Feedzy_Rss_Feeds_Import {
 				}
 
 				$msg .= $this->get_last_run_details( $post_id );
-				echo $msg;
+				echo esc_html( $msg );
 
 				if ( 'publish' === $post->post_status ) {
-					 echo sprintf( '<p><input type="button" class="button button-primary feedzy-run-now" data-id="%d" value="%s"></p>', $post_id, __( 'Run Now', 'feedzy-rss-feeds' ) );
+					 echo sprintf( '<p><input type="button" class="button button-primary feedzy-run-now" data-id="%d" value="%s"></p>', esc_attr( $post_id ), esc_attr__( 'Run Now', 'feedzy-rss-feeds' ) );
 				}
 
 				break;
@@ -1077,7 +1077,7 @@ class Feedzy_Rss_Feeds_Import {
 		$args           = array(
 			'post_type'   => 'feedzy_imports',
 			'post_status' => 'publish',
-			'numberposts' => 300,
+			'numberposts' => 99,
 		);
 		$feedzy_imports = get_posts( $args );
 		foreach ( $feedzy_imports as $job ) {

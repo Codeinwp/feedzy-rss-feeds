@@ -71,7 +71,7 @@ class Feedzy_Rss_Feeds_Ui {
 	private function is_block_editor() {
 		require_once ABSPATH . 'wp-admin/includes/screen.php';
 		global $current_screen;
-		$current_screen = get_current_screen();
+		$current_screen = get_current_screen(); //phpcs:ignore
 		return method_exists( $current_screen, 'is_block_editor' ) && $current_screen->is_block_editor();
 	}
 
@@ -100,7 +100,7 @@ class Feedzy_Rss_Feeds_Ui {
 	 * @since   ?
 	 * @access  friendly
 	 */
-	function get_strings_for_block( $settings ) {
+	public function get_strings_for_block( $settings ) {
 		$feedzy_lang_class = new Feedzy_Rss_Feeds_Ui_Lang();
 		$strings           = $feedzy_lang_class->get_strings();
 		$array             = array( 'feedzy_tinymce_plugin' => wp_json_encode( $strings ) );

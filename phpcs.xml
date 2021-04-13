@@ -7,6 +7,7 @@
     <exclude-pattern>node_modules/*</exclude-pattern>
     <exclude-pattern>vendor/*</exclude-pattern>
     <exclude-pattern>lib/*</exclude-pattern>
+    <exclude-pattern>tests/*</exclude-pattern>
 
     <rule ref="WordPress-Core">
         <exclude name="Squiz.Commenting.FileComment.SpacingAfterComment" />
@@ -42,6 +43,14 @@
     </rule>
     <rule ref="WordPress-Docs">
 
+    </rule>
+    <rule ref="WordPress">
+        <exclude name="Generic.Strings.UnnecessaryStringConcat.Found"/>
+        <exclude name="WordPress.PHP.DevelopmentFunctions.error_log_print_r"/>
+        <exclude name="WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_ini_set"/>
+        <exclude name="WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_error_reporting"/>
+        <exclude name="WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting"/>
+        <exclude name="WordPress.PHP.DevelopmentFunctions.error_log_error_log"/>
     </rule>
 
     <rule ref="Squiz.Commenting.FunctionComment.ScalarTypeHintMissing">

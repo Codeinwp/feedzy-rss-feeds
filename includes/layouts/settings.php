@@ -3,7 +3,7 @@
 	<?php load_template( FEEDZY_ABSPATH . '/includes/layouts/header.php' ); ?>
 
 	<?php
-	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	// phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
 	$active_tab  = isset( $_REQUEST['tab'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['tab'] ) ) : 'general';
 	$show_button = true;
 	?>
