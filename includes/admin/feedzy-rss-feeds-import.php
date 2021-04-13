@@ -2068,8 +2068,8 @@ class Feedzy_Rss_Feeds_Import {
 			array(
 				'posts_per_page' => 80,
 				'post_type' => $post_type,
-				'meta_key' => $key,
-				'meta_value' => $value,
+				'meta_key' => $key, //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+				'meta_value' => $value, //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 				'meta_compare' => $compare,
 				'fields' => 'ids',
 			)

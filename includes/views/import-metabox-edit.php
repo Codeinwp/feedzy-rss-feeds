@@ -116,7 +116,7 @@
 					<label class="feedzy-sr-only"><?php esc_html_e( 'Remove Duplicates?', 'feedzy-rss-feeds' ); ?></label>
 					<div>
 						<?php /* translators: %s: Documentation link */ ?>
-						<small><?php echo wp_sprintf( esc_html__( 'To understand how duplicates will be removed, check out our <a href="%s" target="_blank">[documentation]</a>', 'feedzy-rss-feeds' ), esc_url( 'https://docs.themeisle.com/article/638-how-to-eliminate-duplicate-feed-item' ) ); ?></small>
+						<small><?php echo wp_sprintf( esc_html__( 'To understand how duplicates will be removed, check out our', 'feedzy-rss-feeds' ) ); ?> <a href="<?php echo esc_url( 'https://docs.themeisle.com/article/638-how-to-eliminate-duplicate-feed-item' ); ?>" target="_blank"><?php esc_html_e( '[documentation]', 'feedzy-rss-feeds' ); ?></a></small>
 					</div>
 				</div>
 				<div class="feedzy-separator"></div>
