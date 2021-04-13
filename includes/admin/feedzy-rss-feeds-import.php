@@ -610,7 +610,7 @@ class Feedzy_Rss_Feeds_Import {
 				}
 
 				$msg .= $this->get_last_run_details( $post_id );
-				echo esc_html( $msg );
+				echo ( $msg ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 				if ( 'publish' === $post->post_status ) {
 					 echo sprintf( '<p><input type="button" class="button button-primary feedzy-run-now" data-id="%d" value="%s"></p>', esc_attr( $post_id ), esc_attr__( 'Run Now', 'feedzy-rss-feeds' ) );
