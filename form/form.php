@@ -105,7 +105,7 @@ $html_parts = Feedzy_Rss_Feeds_Ui_Lang::get_form_elements();
 			$output .= '</div>';
 		} // End foreach().
 	} // End if().
-	echo wp_kses_post( $output );
+	echo wp_kses( $output, apply_filters( 'feedzy_wp_kses_allowed_html', array() ) );
 	?>
 </div>
 <script type="text/javascript">
