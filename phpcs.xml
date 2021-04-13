@@ -52,7 +52,9 @@
         <exclude name="WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting"/>
         <exclude name="WordPress.PHP.DevelopmentFunctions.error_log_error_log"/>
     </rule>
-
+    <config name="testVersion" value="5.6-"/>
+    <rule ref="PHPCompatibilityWP">
+    </rule>
     <rule ref="Squiz.Commenting.FunctionComment.ScalarTypeHintMissing">
         <severity>0</severity>
     </rule>
