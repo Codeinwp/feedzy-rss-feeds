@@ -57,8 +57,8 @@ class Feedzy_Rss_Feeds_Ui {
 	public function __construct( $plugin_name, $version, Feedzy_Rss_Feeds_Loader $loader ) {
 
 		$this->plugin_name = $plugin_name;
-		$this->version = $version;
-		$this->loader = $loader;
+		$this->version     = $version;
+		$this->loader      = $loader;
 
 	}
 
@@ -69,9 +69,9 @@ class Feedzy_Rss_Feeds_Ui {
 	 * @access  private
 	 */
 	private function is_block_editor() {
-		require_once( ABSPATH . 'wp-admin/includes/screen.php' );
+		require_once ABSPATH . 'wp-admin/includes/screen.php';
 		global $current_screen;
-		$current_screen = get_current_screen();
+		$current_screen = get_current_screen(); //phpcs:ignore
 		return method_exists( $current_screen, 'is_block_editor' ) && $current_screen->is_block_editor();
 	}
 
@@ -100,10 +100,10 @@ class Feedzy_Rss_Feeds_Ui {
 	 * @since   ?
 	 * @access  friendly
 	 */
-	function get_strings_for_block( $settings ) {
+	public function get_strings_for_block( $settings ) {
 		$feedzy_lang_class = new Feedzy_Rss_Feeds_Ui_Lang();
-		$strings         = $feedzy_lang_class->get_strings();
-		$array = array( 'feedzy_tinymce_plugin' => json_encode( $strings ) );
+		$strings           = $feedzy_lang_class->get_strings();
+		$array             = array( 'feedzy_tinymce_plugin' => wp_json_encode( $strings ) );
 		return array_merge( $settings, $array );
 	}
 
@@ -139,7 +139,7 @@ class Feedzy_Rss_Feeds_Ui {
 	public function feedzy_add_tinymce_lang( $arr ) {
 		$feedzy_rss_feeds_ui_lang = FEEDZY_ABSPATH . '/includes/admin/feedzy-rss-feeds-ui-lang.php';
 		$feedzy_rss_feeds_ui_lang = apply_filters( 'feedzy_rss_feeds_ui_lang_filter', $feedzy_rss_feeds_ui_lang );
-		$arr[] = $feedzy_rss_feeds_ui_lang;
+		$arr[]                    = $feedzy_rss_feeds_ui_lang;
 		return $arr;
 	}
 

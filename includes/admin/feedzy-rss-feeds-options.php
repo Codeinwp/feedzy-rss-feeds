@@ -37,7 +37,7 @@ if ( ! class_exists( 'Feedy_Rss_Feeds_Options' ) ) {
 		 */
 		public static function instance() {
 			if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Feedzy_Rss_Feeds_Options ) ) {
-				self::$instance = new Feedzy_Rss_Feeds_Options;
+				self::$instance = new Feedzy_Rss_Feeds_Options();
 				self::$instance->init();
 			}
 

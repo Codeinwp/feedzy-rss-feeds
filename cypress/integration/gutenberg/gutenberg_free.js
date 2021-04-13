@@ -1,9 +1,8 @@
 describe('Test Free - gutenberg', function() {
     before(function(){
-        Cypress.config('baseUrl', Cypress.env('host') + 'wp-admin/');
 
         // login to WP
-        cy.visit(Cypress.env('host') + 'wp-login.php');
+        cy.visit( 'wp-login.php');
         cy.get('#user_login').clear().type( Cypress.env('login') );
         cy.get('#user_pass').clear().type( Cypress.env('pass') );
         cy.get('#wp-submit').click();
@@ -12,9 +11,8 @@ describe('Test Free - gutenberg', function() {
     const PREFIX = "feedzy-scg-0-" + Cypress.moment().unix();
 
     it('Insert a block', function() {
-        Cypress.config('baseUrl', Cypress.env('host') + 'wp-admin/');
 
-        cy.visit('/post-new.php');
+        cy.visit('/wp-admin/post-new.php');
 
         // get rid of that irritating popup
         cy.get('.edit-post-welcome-guide .components-modal__header button').click();
@@ -82,9 +80,8 @@ describe('Test Free - gutenberg', function() {
     });
 
     it('Verify inserted block', function() {
-        Cypress.config('baseUrl', Cypress.env('host') + 'wp-admin/');
 
-        cy.visit('/edit.php?post_type=post');
+        cy.visit('/wp-admin/edit.php?post_type=post');
 
         // should have 1 post.
         cy.get('tr td a.row-title:contains("' + PREFIX + '")').should('have.length', 1);
@@ -130,7 +127,7 @@ describe('Test Free - gutenberg', function() {
     });
 
     it('View the post', function() {
-        cy.visit('/edit.php?post_type=post')
+        cy.visit('/wp-admin/edit.php?post_type=post')
 
         var gutenberg = Cypress.env("gutenberg");
 
@@ -145,9 +142,8 @@ describe('Test Free - gutenberg', function() {
     });
 
     it('Modify inserted block and make it LAZY', function() {
-        Cypress.config('baseUrl', Cypress.env('host') + 'wp-admin/');
 
-        cy.visit('/edit.php?post_type=post');
+        cy.visit('/wp-admin/edit.php?post_type=post');
 
         // should have 1 post.
         cy.get('tr td a.row-title:contains("' + PREFIX + '")').should('have.length', 1);
@@ -165,12 +161,12 @@ describe('Test Free - gutenberg', function() {
         // we want to do this so that the next test succeeds - otherwise it will throw up an alert box and stop the page
         cy.get('button.editor-post-publish-button').click();
 
-        cy.visit('/edit.php?post_type=post')
+        cy.visit('/wp-admin/edit.php?post_type=post')
 
     });
 
     it('View the LAZY post', function() {
-        cy.visit('/edit.php?post_type=post')
+        cy.visit('/wp-admin/edit.php?post_type=post')
 
         var gutenberg = Cypress.env("gutenberg");
 

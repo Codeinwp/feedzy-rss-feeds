@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 
 if ( ! class_exists( '_WP_Editors' ) ) {
-	require( ABSPATH . WPINC . '/class-wp-editor.php' );
+	require ABSPATH . WPINC . '/class-wp-editor.php';
 }
 
 /**
@@ -88,36 +88,36 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 	 * @return array|mixed|void
 	 */
 	public static function get_form_elements() {
-		$meta       = sprintf( __( 'Should we display additional meta fields out of %1$sauthor%2$s, %3$sdate%4$s and %5$stime%6$s? (comma-separated list, in order of display). View documentation %7$shere%8$s.', 'feedzy-rss-feeds' ), '<code>', '</code>', '<code>', '</code>', '<code>', '</code>', '<a href="https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed" target="_new">', '</a>' );
+		$meta = sprintf( __( 'Should we display additional meta fields out of %1$sauthor%2$s, %3$sdate%4$s and %5$stime%6$s? (comma-separated list, in order of display). View documentation %7$shere%8$s.', 'feedzy-rss-feeds' ), '<code>', '</code>', '<code>', '</code>', '<code>', '</code>', '<a href="https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed" target="_new">', '</a>' );
 		if ( has_filter( 'feedzy_retrieve_categories' ) ) {
-			$meta       = sprintf( __( 'Should we display additional meta fields out of %1$sauthor%2$s, %3$sdate%4$s, %5$stime%6$s and %7$scategories%8$s? (comma-separated list). View documentation %9$shere%10$s.', 'feedzy-rss-feeds' ), '<code>', '</code>', '<code>', '</code>', '<code>', '</code>', '<code>', '</code>', '<a href="https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed" target="_new">', '</a>' );
+			$meta = sprintf( __( 'Should we display additional meta fields out of %1$sauthor%2$s, %3$sdate%4$s, %5$stime%6$s and %7$scategories%8$s? (comma-separated list). View documentation %9$shere%10$s.', 'feedzy-rss-feeds' ), '<code>', '</code>', '<code>', '</code>', '<code>', '</code>', '<code>', '</code>', '<a href="https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed" target="_new">', '</a>' );
 		}
 
-		$multiple       = sprintf( __( 'When using multiple sources, should we display additional meta fields? %1$ssource%2$s (feed title).', 'feedzy-rss-feeds' ), '<code>', '</code>', '<a href="https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed" target="_new">', '</a>' );
+		$multiple = sprintf( __( 'When using multiple sources, should we display additional meta fields? %1$ssource%2$s (feed title).', 'feedzy-rss-feeds' ), '<code>', '</code>', '<a href="https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed" target="_new">', '</a>' );
 
 		$elements = array(
 			'section_feed'  => array(
 				'title'    => __( 'Feed Source', 'feedzy-rss-feeds' ),
 				'elements' => array(
-					'feeds'      => array(
+					'feeds'       => array(
 						'label'       => __( 'The feed(s) URL (comma-separated list).', 'feedzy-rss-feeds' ) . ' ' . sprintf( __( 'Click %1$shere%2$s to check if feed is valid.', 'feedzy-rss-feeds' ), '<a href="https://validator.w3.org/feed/" target="_new">', '</a>' ) . '<br><b>' . __( 'Invalid feeds will NOT display items.', 'feedzy-rss-feeds' ) . '</b>',
 						'placeholder' => __( 'Feed URL', 'feedzy-rss-feeds' ),
 						'type'        => 'text',
 						'value'       => '',
 					),
-					'max'        => array(
+					'max'         => array(
 						'label'       => __( 'Number of items to display.', 'feedzy-rss-feeds' ),
 						'placeholder' => __( '(eg: 5)', 'feedzy-rss-feeds' ),
 						'type'        => 'text',
 						'value'       => '',
 					),
-					'offset'        => array(
+					'offset'      => array(
 						'label'       => __( 'Ignore the first N items of the feed.', 'feedzy-rss-feeds' ),
 						'placeholder' => __( '(eg: 5, if you want to start from the 6th item.)', 'feedzy-rss-feeds' ),
 						'type'        => 'text',
 						'value'       => '0',
 					),
-					'feed_title' => array(
+					'feed_title'  => array(
 						'label' => __( 'Should we display the RSS title?', 'feedzy-rss-feeds' ),
 						'type'  => 'select',
 						'value' => '',
@@ -132,7 +132,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 							),
 						),
 					),
-					'refresh'    => array(
+					'refresh'     => array(
 						'label'       => __( 'For how long we will cache the feed results.', 'feedzy-rss-feeds' ),
 						'placeholder' => __( '(eg: 1_days, defaults: 12_hours)', 'feedzy-rss-feeds' ),
 						'type'        => 'select',
@@ -164,12 +164,12 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 							),
 						),
 					),
-					'sort'       => array(
+					'sort'        => array(
 						'label' => __( 'Sorting order.', 'feedzy-rss-feeds' ),
 						'type'  => 'select',
 						'value' => '',
 						'opts'  => array(
-							''  => array(
+							''           => array(
 								'label' => __( 'Default', 'feedzy-rss-feeds' ),
 								'value' => '',
 							),
@@ -191,13 +191,13 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 							),
 						),
 					),
-					'error_empty'       => array(
-						'label' => __( 'Message to show when feed is empty', 'feedzy-rss-feeds' ),
+					'error_empty' => array(
+						'label'       => __( 'Message to show when feed is empty', 'feedzy-rss-feeds' ),
 						'placeholder' => __( 'Feed has no items.', 'feedzy-rss-feeds' ),
 						'type'        => 'text',
 						'value'       => '',
 					),
-					'lazy'       => array(
+					'lazy'        => array(
 						'label' => __( 'Lazy load the feed (without slowing down the page)', 'feedzy-rss-feeds' ),
 						'type'  => 'select',
 						'value' => 'no',
@@ -253,11 +253,11 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'type'  => 'select',
 						'value' => '',
 						'opts'  => array(
-							'auto'      => array(
+							'auto'   => array(
 								'label' => __( 'No', 'feedzy-rss-feeds' ),
 								'value' => '',
 							),
-							'_blank'    => array(
+							'_blank' => array(
 								'label' => __( 'Yes', 'feedzy-rss-feeds' ),
 								'value' => 'no',
 							),
@@ -270,16 +270,16 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'value'       => '',
 					),
 					'meta'           => array(
-						'label' => $meta,
+						'label'       => $meta,
 						'placeholder' => __( '(eg: author, date, time, tz=local)', 'feedzy-rss-feeds' ),
-						'type'  => 'text',
-						'value' => '',
+						'type'        => 'text',
+						'value'       => '',
 					),
-					'multiple_meta'           => array(
-						'label' => $multiple,
+					'multiple_meta'  => array(
+						'label'       => $multiple,
 						'placeholder' => __( '(eg: source)', 'feedzy-rss-feeds' ),
-						'type'  => 'text',
-						'value' => '',
+						'type'        => 'text',
+						'value'       => '',
 					),
 					'summary'        => array(
 						'label' => __( 'Should we display a description (abstract) of the retrieved item?', 'feedzy-rss-feeds' ),
@@ -355,7 +355,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'type'        => 'text',
 						'value'       => '',
 					),
-					'http'   => array(
+					'http'    => array(
 						'label' => __( 'How should we treat HTTP images?', 'feedzy-rss-feeds' ),
 						'type'  => 'select',
 						'value' => '',
@@ -410,12 +410,12 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'disabled'    => true,
 						'value'       => '1',
 					),
-					'mapping'        => array(
-						'label'    => sprintf( __( 'Provide mapping for custom feed elements as per %1$sthis document here%2$s. This will only work for single feeds, not comma-separated feeds.', 'feedzy-rss-feeds' ), '<a href="https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy" target="_blank">', '</a>' ),
-						'type'     => 'text',
-						'disabled' => true,
-						'value'    => '',
-						'placeholder'    => '',
+					'mapping'      => array(
+						'label'       => sprintf( __( 'Provide mapping for custom feed elements as per %1$sthis document here%2$s. This will only work for single feeds, not comma-separated feeds.', 'feedzy-rss-feeds' ), '<a href="https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy" target="_blank">', '</a>' ),
+						'type'        => 'text',
+						'disabled'    => true,
+						'value'       => '',
+						'placeholder' => '',
 					),
 					'template'     => array(
 						'label'    => __( 'Template to use when displaying the feed.', 'feedzy-rss-feeds' ),
@@ -457,7 +457,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 	public function feedzy_tinymce_translation() {
 
 		$locale     = _WP_Editors::$mce_locale;
-		$translated = 'tinyMCE.addI18n("' . $locale . '.feedzy_tinymce_plugin", ' . json_encode( $this->strings ) . ");\n";
+		$translated = 'tinyMCE.addI18n("' . $locale . '.feedzy_tinymce_plugin", ' . wp_json_encode( $this->strings ) . ");\n";
 
 		return $translated;
 	}
@@ -477,4 +477,4 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 }
 
 $feedzy_lang_class = new Feedzy_Rss_Feeds_Ui_Lang();
-$strings         = $feedzy_lang_class->feedzy_tinymce_translation();
+$strings           = $feedzy_lang_class->feedzy_tinymce_translation();

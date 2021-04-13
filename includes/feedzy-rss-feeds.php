@@ -85,7 +85,7 @@ class Feedzy_Rss_Feeds {
 	 */
 	public static function instance() {
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Feedzy_Rss_Feeds ) ) {
-			self::$instance = new Feedzy_Rss_Feeds;
+			self::$instance = new Feedzy_Rss_Feeds();
 			self::$instance->init();
 		}
 
@@ -104,7 +104,7 @@ class Feedzy_Rss_Feeds {
 	 */
 	public function init() {
 		self::$plugin_name = 'feedzy-rss-feeds';
-		self::$version = '3.5.2';
+		self::$version     = '3.5.2';
 		self::$instance->load_dependencies();
 		self::$instance->set_locale();
 		self::$instance->define_admin_hooks();
@@ -264,7 +264,8 @@ class Feedzy_Rss_Feeds {
 
 		if ( ! defined( 'TI_UNIT_TESTING' ) ) {
 			add_action(
-				'plugins_loaded', function () {
+				'plugins_loaded',
+				function () {
 					if ( function_exists( 'register_block_type' ) ) {
 						Feedzy_Rss_Feeds_Gutenberg_Block::get_instance();
 					}}

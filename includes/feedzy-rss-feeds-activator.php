@@ -38,7 +38,8 @@ class Feedzy_Rss_Feeds_Activator {
 		}
 		if ( ! isset( $options['is_new'] ) ) {
 			update_option(
-				Feedzy_Rss_Feeds::get_plugin_name(), array(
+				Feedzy_Rss_Feeds::get_plugin_name(),
+				array(
 					'is_new' => 'yes',
 				)
 			);
