@@ -145,11 +145,13 @@
 						$languages = icl_get_languages();
 						foreach ( $languages as $language ) {
 							$selected = '';
-							if ( $language['code'] === $import_selected_language ) {
+							$code = isset( $language['language_code'] ) ? $language['language_code'] : $language['code'];
+							$name = isset( $language['translated_name'] ) && ! empty( $language['translated_name'] ) ? $language['translated_name'] : $language['native_name'];
+							if ( $code === $import_selected_language ) {
 								$selected = 'selected';
 							}
 							?>
-							<option value="<?php echo esc_attr( $language['code'] ); ?>" <?php echo esc_attr( $selected ); ?>><?php echo esc_html( $language['translated_name'] ); ?></option>
+							<option value="<?php echo esc_attr( $code ); ?>" <?php echo esc_attr( $selected ); ?>><?php echo esc_html( $name ); ?></option>
 							<?php
 						}
 						?>

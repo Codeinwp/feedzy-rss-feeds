@@ -1381,7 +1381,10 @@ class Feedzy_Rss_Feeds_Import {
 
 			$new_post_id = wp_insert_post( $new_post, true );
 
-			if ( function_exists( 'icl_get_languages' ) && ! empty( $import_selected_language ) ) {
+			// Set post language.
+			if ( function_exists( 'pll_set_post_language' ) && ! empty( $import_selected_language ) ) {
+				pll_set_post_language( $new_post_id, $import_selected_language );
+			} elseif ( function_exists( 'icl_get_languages' ) && ! empty( $import_selected_language ) ) {
 				$this->set_wpml_element_language_details( $import_post_type, $new_post_id, $import_selected_language );
 			}
 
