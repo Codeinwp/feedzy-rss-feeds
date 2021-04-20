@@ -31,10 +31,10 @@ Layout For Tutorial Page of Feedzy RSS Feeds
 					</ul>
 
 				<?php if ( ! $is_pro ) { ?>
-					<p>We have many more features and offer email & chat support if you purchase our <a href="<?php echo FEEDZY_UPSELL_LINK; ?>" target="_blank">Pro Version</a>.</p>
+					<p>We have many more features and offer email & chat support if you purchase our <a href="<?php echo esc_url( FEEDZY_UPSELL_LINK ); ?>" target="_blank">Pro Version</a>.</p>
 				<?php } ?>
 
-				<p>Ready to begin? Let's <a href="<?php echo add_query_arg( 'post_type', 'feedzy_imports', admin_url( 'post-new.php' ) ); ?>">import a post</a> or <a href="<?php echo add_query_arg( 'post_type', 'feedzy_categories', admin_url( 'post-new.php' ) ); ?>" target="_blank">create a category</a>!
+				<p>Ready to begin? Let's <a href="<?php echo esc_url( add_query_arg( 'post_type', 'feedzy_imports', admin_url( 'post-new.php' ) ) ); ?>">import a post</a> or <a href="<?php echo esc_url( add_query_arg( 'post_type', 'feedzy_categories', admin_url( 'post-new.php' ) ) ); ?>" target="_blank">create a category</a>!
 
 				</div>
 				<div class="clear"></div>
@@ -117,7 +117,7 @@ Layout For Tutorial Page of Feedzy RSS Feeds
 					<p>Through WordAI integration, Feedzy will give you unlimited new content. Your SpinnerChief or WordAI subscriptions (not included) integrate seamlessly with Feedzy, so you won't ever have to worry about duplicate content - or Google penalties - again. <a href="https://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy" target="_blank">Check this out here.</a></p>
 				</div>
 				<div class="fz-feature-image">
-					<img src="<?php echo FEEDZY_ABSURL; ?>/img/feedzy-rss-feeds-wordai.jpg" alt="WordAi integration">
+					<img src="<?php echo esc_url( FEEDZY_ABSURL ); ?>/img/feedzy-rss-feeds-wordai.jpg" alt="WordAi integration">
 				</div>
 				<div class="clear"></div>
 			</div>

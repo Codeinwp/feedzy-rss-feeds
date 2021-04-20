@@ -13,13 +13,11 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-// Import commands.js using ES2015 syntax:
-import './commands'
 
 // Alternatively you can use CommonJS syntax:
-// require('./commands')
+require('./commands')
 
 // allow WP session to remain open during multiple cy.visit() invocations.
 Cypress.Cookies.defaults({
-    whitelist: /wordpress_.*/
+    preserve: /wordpress_.*/
 })

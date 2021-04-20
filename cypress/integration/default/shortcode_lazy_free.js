@@ -1,9 +1,8 @@
 describe('Test Lazy Shortcode for free', function() {
     before(function(){
-        Cypress.config('baseUrl', Cypress.env('host') + 'wp-admin/');
 
         // login to WP
-        cy.visit(Cypress.env('host') + 'wp-login.php');
+        cy.visit('wp-login.php');
         cy.get('#user_login').clear().type( Cypress.env('login') );
         cy.get('#user_pass').clear().type( Cypress.env('pass') );
         cy.get('#wp-submit').click();
@@ -12,7 +11,7 @@ describe('Test Lazy Shortcode for free', function() {
     const PREFIX = "feedzy-scl-0-" + Cypress.moment().unix() + " ";
 
     it('Create the shortcode', function() {
-        cy.visit('/post-new.php');
+        cy.visit('/wp-admin/post-new.php');
 
         // fill up the form
         cy.get('#title').type( PREFIX + 'shortcode-lazy');
@@ -23,7 +22,7 @@ describe('Test Lazy Shortcode for free', function() {
     });
 
     it('View the shortcode', function() {
-        cy.visit('/edit.php?post_type=post')
+        cy.visit('/wp-admin/edit.php?post_type=post')
 
         // should have 1 post.
         cy.get('tr td a.row-title:contains("' + PREFIX + 'shortcode-lazy")').should('have.length', 1);

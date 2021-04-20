@@ -116,7 +116,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			return;
 		}
 
-		if ( $screen->post_type === 'feedzy_categories' ) {
+		if ( 'feedzy_categories' === $screen->post_type ) {
 			wp_enqueue_script(
 				$this->plugin_name . '_categories',
 				FEEDZY_ABSURL . 'js/categories.js',
@@ -131,12 +131,12 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				'feedzy',
 				array(
 					'ajax' => array(
-						'security'  => wp_create_nonce( FEEDZY_NAME ),
+						'security' => wp_create_nonce( FEEDZY_NAME ),
 					),
 					'l10n' => array(
-						'validate' => __( 'Validate & Clean', 'feedzy-rss-feeds' ),
+						'validate'   => __( 'Validate & Clean', 'feedzy-rss-feeds' ),
 						'validating' => __( 'Validating', 'feedzy-rss-feeds' ) . '...',
-						'validated' => __( 'Removed # URL(s)!', 'feedzy-rss-feeds' ),
+						'validated'  => __( 'Removed # URL(s)!', 'feedzy-rss-feeds' ),
 					),
 				)
 			);
@@ -151,8 +151,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! in_array( $screen->base, $upsell_screens, true ) && strpos( $screen->id, 'feedzy' ) === false ) {
 			return;
 		}
-		wp_enqueue_style( $this->plugin_name . '-settings', FEEDZY_ABSURL . 'css/settings.css' );
-		wp_enqueue_style( $this->plugin_name . '-metabox', FEEDZY_ABSURL . 'css/metabox-settings.css', array( $this->plugin_name . '-settings' ) );
+		wp_enqueue_style( $this->plugin_name . '-settings', FEEDZY_ABSURL . 'css/settings.css', [], $this->version );
+		wp_enqueue_style( $this->plugin_name . '-metabox', FEEDZY_ABSURL . 'css/metabox-settings.css', array( $this->plugin_name . '-settings' ), $this->version );
 	}
 
 	/**
@@ -269,8 +269,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function feedzy_category_feed() {
 		global $post;
-		$nonce  = wp_create_nonce( FEEDZY_BASEFILE );
-		$feed   = get_post_meta( $post->ID, 'feedzy_category_feed', true );
+		$nonce   = wp_create_nonce( FEEDZY_BASEFILE );
+		$feed    = get_post_meta( $post->ID, 'feedzy_category_feed', true );
 		$invalid = $this->get_source_validity_error( '', $post );
 
 		$output = '
@@ -279,7 +279,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			. $invalid
 			. '<textarea name="feedzy_category_feed" rows="15" class="widefat" placeholder="' . __( 'Place your URL\'s here followed by a comma.', 'feedzy-rss-feeds' ) . '" >' . $feed . '</textarea>
         ';
-		echo $output;
+		echo wp_kses( $output, apply_filters( 'feedzy_wp_kses_allowed_html', array() ) );
 	}
 
 	/**
@@ -295,16 +295,21 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return mixed|integer
 	 */
 	public function save_feedzy_post_type_meta( $post_id, $post ) {
+		if ( empty( $_POST ) ) {
+			return $post_id;
+		}
 		if (
 			empty( $_POST ) ||
-			! wp_verify_nonce( $_POST['feedzy_category_meta_noncename'], FEEDZY_BASEFILE ) ||
+			! isset( $_POST['feedzy_category_meta_noncename'] ) ||
+			! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['feedzy_category_meta_noncename'] ) ), FEEDZY_BASEFILE ) ||
 			! current_user_can( 'edit_post', $post_id )
 		) {
 			return $post_id;
 		}
+
 		$category_meta['feedzy_category_feed'] = array();
 		if ( isset( $_POST['feedzy_category_feed'] ) ) {
-			$category_meta['feedzy_category_feed'] = $_POST['feedzy_category_feed'];
+			$category_meta['feedzy_category_feed'] = wp_strip_all_tags( wp_unslash( $_POST['feedzy_category_feed'] ) );
 		}
 		if ( $post->post_type === 'revision' ) {
 			return true;
@@ -386,13 +391,13 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			case 'slug':
 				$slug = $post->post_name;
 				if ( empty( $slug ) ) {
-					echo __( 'Undefined', 'feedzy-rss-feeds' );
+					echo esc_html__( 'Undefined', 'feedzy-rss-feeds' );
 				} else {
-					echo '<code>' . $slug . '</code>';
+					echo wp_kses_post( '<code>' . $slug . '</code>' );
 				}
 				break;
 			case 'actions':
-				echo sprintf( '<button class="button button-primary validate-category" title="%s" data-category-id="%d">%s</button>', __( 'Click to remove invalid URLs from this category', 'feedzy-rss-feeds' ), $post_id, __( 'Validate & Clean', 'feedzy-rss-feeds' ) );
+				echo wp_kses_post( sprintf( '<button class="button button-primary validate-category" title="%s" data-category-id="%d">%s</button>', __( 'Click to remove invalid URLs from this category', 'feedzy-rss-feeds' ), $post_id, __( 'Validate & Clean', 'feedzy-rss-feeds' ) ) );
 				break;
 			default:
 				break;
@@ -413,7 +418,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function feedzy_filter_plugin_row_meta( $links, $file ) {
 		if ( strpos( $file, 'feedzy-rss-feed.php' ) !== false ) {
-			$new_links = array();
+			$new_links        = array();
 			$new_links['doc'] = '<a href="https://docs.themeisle.com/article/658-feedzy-rss-feeds" target="_blank" title="' . __( 'Documentation and examples', 'feedzy-rss-feeds' ) . '">' . __( 'Documentation and examples', 'feedzy-rss-feeds' ) . '</a>';
 
 			if ( ! feedzy_is_pro() ) {
@@ -421,7 +426,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			} elseif ( false === apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) {
 				$new_links['more_features'] = '<a href="' . FEEDZY_UPSELL_LINK . '" target="_blank" title="' . __( 'More Features', 'feedzy-rss-feeds' ) . '">' . __( 'Upgrade your license', 'feedzy-rss-feeds' ) . '<i style="width: 17px; height: 17px; margin-left: 4px; color: #ffca54; font-size: 17px; vertical-align: -3px;" class="dashicons dashicons-unlock more-features-icon"></i></a>';
 			}
-			$links     = array_merge( $links, $new_links );
+			$links = array_merge( $links, $new_links );
 		}
 
 		return $links;
@@ -467,13 +472,13 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @access  public
 	 */
 	public function feedzy_settings_page() {
-		if ( isset( $_POST['feedzy-settings-submit'] ) && isset( $_POST['tab'] ) && wp_verify_nonce( $_POST['nonce'], $_POST['tab'] ) ) {
+		if ( isset( $_POST['feedzy-settings-submit'] ) && isset( $_POST['tab'] ) && wp_verify_nonce( filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING ), filter_input( INPUT_POST, 'tab', FILTER_SANITIZE_STRING ) ) ) {
 			$this->save_settings();
 			$this->notice = __( 'Your settings were saved.', 'feedzy-rss-feeds' );
 		}
 
 		$settings = apply_filters( 'feedzy_get_settings', array() );
-		include( FEEDZY_ABSPATH . '/includes/layouts/settings.php' );
+		include FEEDZY_ABSPATH . '/includes/layouts/settings.php';
 	}
 
 	/**
@@ -482,24 +487,32 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @access  private
 	 */
 	private function save_settings() {
+		if ( ! isset( $_POST['tab'] ) ) {
+			return;
+		}
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING ), filter_input( INPUT_POST, 'tab', FILTER_SANITIZE_STRING ) ) ) {
+			return;
+		}
+		$post_tab = isset( $_POST['tab'] ) ? filter_input( INPUT_POST, 'tab', FILTER_SANITIZE_STRING ) : '';
+
 		$settings = apply_filters( 'feedzy_get_settings', array() );
-		switch ( $_POST['tab'] ) {
+		switch ( $post_tab ) {
 			case 'general':
-				$settings['general']['rss-feeds'] = isset( $_POST['rss-feeds'] ) ? $_POST['rss-feeds'] : '';
+				$settings['general']['rss-feeds'] = isset( $_POST['rss-feeds'] ) ? (int) filter_input( INPUT_POST, 'rss-feeds', FILTER_SANITIZE_NUMBER_INT ) : '';
 				break;
 			case 'headers':
-				$settings['header']['user-agent'] = $_POST['user-agent'];
+				$settings['header']['user-agent'] = isset( $_POST['user-agent'] ) ? filter_input( INPUT_POST, 'user-agent', FILTER_SANITIZE_STRING ) : '';
 				break;
 			case 'proxy':
 				$settings['proxy'] = array(
-					'host' => $_POST['proxy-host'],
-					'port' => $_POST['proxy-port'],
-					'user' => $_POST['proxy-user'],
-					'pass' => $_POST['proxy-pass'],
+					'host' => isset( $_POST['proxy-host'] ) ? filter_input( INPUT_POST, 'proxy-host', FILTER_SANITIZE_STRING ) : '',
+					'port' => isset( $_POST['proxy-port'] ) ? filter_input( INPUT_POST, 'proxy-port', FILTER_SANITIZE_NUMBER_INT ) : '',
+					'user' => isset( $_POST['proxy-user'] ) ? filter_input( INPUT_POST, 'proxy-user', FILTER_SANITIZE_STRING ) : '',
+					'pass' => isset( $_POST['proxy-pass'] ) ? filter_input( INPUT_POST, 'proxy-pass', FILTER_SANITIZE_STRING ) : '',
 				);
 				break;
 			default:
-				$settings = apply_filters( 'feedzy_save_tab_settings', $settings, $_POST['tab'] );
+				$settings = apply_filters( 'feedzy_save_tab_settings', $settings, $post_tab );
 		}
 
 		update_option( 'feedzy-settings', $settings );
@@ -635,7 +648,15 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( get_option( 'feedzy-activated' ) ) {
 			delete_option( 'feedzy-activated' );
 			if ( ! headers_sent() ) {
-				wp_redirect( add_query_arg( array( 'page' => 'feedzy-support', 'tab' => 'help#shortcode' ), admin_url( 'admin.php' ) ) );
+				wp_safe_redirect(
+					add_query_arg(
+						array(
+							'page' => 'feedzy-support',
+							'tab'  => 'help#shortcode',
+						),
+						admin_url( 'admin.php' )
+					)
+				);
 				exit();
 			}
 		}
@@ -663,7 +684,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @access  public
 	 */
 	public function check_source_validity( $src, $post_id, $add_pseudo_transient, $return_valid ) {
-		$urls_in = $src;
+		$urls_in   = $src;
 		$post_type = get_post_type( $post_id );
 		if ( 'feedzy_imports' === $post_type && strpos( $src, 'http' ) === false && strpos( $src, 'https' ) === false ) {
 			// category
@@ -684,7 +705,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! is_array( $urls ) ) {
 			$urls = array( $urls );
 		}
-		$valid = $this->get_valid_feed_urls( $urls, '1_mins', false );
+		$valid   = $this->get_valid_feed_urls( $urls, '1_mins', false );
 		$invalid = array_diff( $urls, $valid );
 
 		if ( $add_pseudo_transient && ( empty( $valid ) || ! empty( $invalid ) ) ) {
@@ -694,14 +715,17 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					update_post_meta( $post_id, '__transient_feedzy_category_feed', $invalid );
 					break;
 				case 'feedzy_imports':
-					update_post_meta( $post_id, '__transient_feedzy_invalid_source', $invalid );
+					$invalid_dc_namespace = get_post_meta( $post_id, '__transient_feedzy_invalid_dc_namespace', true );
+					if ( empty( $invalid_dc_namespace ) ) {
+						update_post_meta( $post_id, '__transient_feedzy_invalid_source', $invalid );
+					}
 					break;
 			}
 		}
 
 		if ( is_null( $return_valid ) ) {
 			return array(
-				'valid' => $valid,
+				'valid'   => $valid,
 				'invalid' => $invalid,
 			);
 		}
@@ -722,14 +746,22 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$invalid = $text = null;
 		switch ( $post->post_type ) {
 			case 'feedzy_categories':
-				$text = __( 'We found the following invalid URLs that we have removed from the list', 'feedzy-rss-feeds' );
+				$text    = __( 'We found the following invalid URLs that we have removed from the list', 'feedzy-rss-feeds' );
 				$invalid = get_post_meta( $post->ID, '__transient_feedzy_category_feed', true );
 				delete_post_meta( $post->ID, '__transient_feedzy_category_feed' );
 				break;
 			case 'feedzy_imports':
-				$text = __( 'This source has invalid URLs. Please correct/remove the following', 'feedzy-rss-feeds' );
-				$invalid = get_post_meta( $post->ID, '__transient_feedzy_invalid_source', true );
-				delete_post_meta( $post->ID, '__transient_feedzy_invalid_source' );
+				$invalid_source = get_post_meta( $post->ID, '__transient_feedzy_invalid_source', true );
+				$invalid_dc_namespace = get_post_meta( $post->ID, '__transient_feedzy_invalid_dc_namespace', true );
+				if ( $invalid_source ) {
+					$text = __( 'This source has invalid URLs. Please correct/remove the following', 'feedzy-rss-feeds' );
+					$invalid = $invalid_source;
+					delete_post_meta( $post->ID, '__transient_feedzy_invalid_source' );
+				} elseif ( $invalid_dc_namespace ) {
+					$text = __( 'This source URL is valid  but the XML namespace DC (xmlns:dc) is not valid. Please correct/remove the following', 'feedzy-rss-feeds' );
+					$invalid = $invalid_dc_namespace;
+					delete_post_meta( $post->ID, '__transient_feedzy_invalid_dc_namespace' );
+				}
 				break;
 			default:
 				return $message;
@@ -757,16 +789,19 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	public function ajax() {
 		check_ajax_referer( FEEDZY_NAME, 'security' );
 
-		switch ( $_POST['_action'] ) {
+		$post_action = isset( $_POST['_action'] ) ? filter_input( INPUT_POST, '_action', FILTER_SANITIZE_STRING ) : '';
+		$post_id     = isset( $_POST['id'] ) ? filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT ) : '';
+
+		switch ( $post_action ) {
 			case 'validate_clean':
 				// remove invalid URLs from this category.
-				$urls = get_post_meta( $_POST['id'], 'feedzy_category_feed', true );
-				$return = $this->check_source_validity( $urls, $_POST['id'], false, null );
-				$valid = $return['valid'];
+				$urls    = get_post_meta( $post_id, 'feedzy_category_feed', true );
+				$return  = $this->check_source_validity( $urls, $post_id, false, null );
+				$valid   = $return['valid'];
 				$invalid = $return['invalid'];
 				if ( ! empty( $valid ) ) {
 					remove_filter( 'update_post_metadata', array( $this, 'validate_category_feeds' ) );
-					update_post_meta( $_POST['id'], 'feedzy_category_feed', implode( ', ', $valid ) );
+					update_post_meta( $post_id, 'feedzy_category_feed', implode( ', ', $valid ) );
 				}
 				wp_send_json_success( array( 'invalid' => count( $invalid ) ) );
 				break;
