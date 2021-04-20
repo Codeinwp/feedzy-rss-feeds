@@ -770,7 +770,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$feed->set_feed_url( $feed_url );
 
 		if ( isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
-			$feed->set_useragent( sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) . SIMPLEPIE_USERAGENT );
+			$set_server_agent = sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) );
+			$feed->set_useragent( apply_filters( 'http_headers_useragent', $set_server_agent ) );
 		}
 
 		global $feedzy_current_error_reporting;
