@@ -1,3 +1,7 @@
+##### [Version 3.6.1](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.6.0...v3.6.1) (2021-04-21)
+
+* fix possible conflict with early use of wp_verify_nonce
+
 #### [Version 3.6.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.5.2...v3.6.0) (2021-04-20)
 
 #### Fixes
