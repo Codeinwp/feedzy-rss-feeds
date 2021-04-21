@@ -1979,7 +1979,8 @@ class Feedzy_Rss_Feeds_Import {
 	 * @access  public
 	 */
 	public function pre_get_posts( $query ) {
-		if ( ! wp_verify_nonce( filter_input( INPUT_GET, '_nonce', FILTER_SANITIZE_STRING ), 'job_run_linked_posts' ) ) {
+
+		if ( ! function_exists( 'wp_verify_nonce' ) || ( ! wp_verify_nonce( filter_input( INPUT_GET, '_nonce', FILTER_SANITIZE_STRING ), 'job_run_linked_posts' ) ) ) {
 			return;
 		}
 
