@@ -1,5 +1,15 @@
+#### [Version 3.6.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.5.2...v3.6.0) (2021-04-20)
 
- ### v3.5.2 - 2020-12-24 
+#### Fixes
+* Fix PHP notices reported on import when debug mode is on
+* Fix inconsistent behavior with certain valid feed URLs
+* Improve compatibilities with the latest PHP and WordPress versions
+* Improve compatibilities with non-Latin charsets
+
+#### Feature 
+* Add ability to use external images on import for featured images.
+
+### v3.5.2 - 2020-12-24 
  **Changes:** 
  * [Fix] Compatibility with WP 5.6
 * [Fix] Composer requiring PHP greater than 7.1.0
