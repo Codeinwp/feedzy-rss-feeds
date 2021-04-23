@@ -1,3 +1,8 @@
+##### [Version 3.6.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.6.1...v3.6.2) (2021-04-23)
+
+* Fix feed validation when DC is missing.
+* Fix custom fields import broken markup.
+
 ##### [Version 3.6.1](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.6.0...v3.6.1) (2021-04-21)
 
 * fix possible conflict with early use of wp_verify_nonce
