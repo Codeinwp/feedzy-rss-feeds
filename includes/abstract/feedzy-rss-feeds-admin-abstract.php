@@ -769,6 +769,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		// so that we can fall back to raw data in case of an error.
 		$feed->set_feed_url( $feed_url );
 
+		// Allow unsafe html.
+		if ( defined( 'FEEDZY_ALLOW_UNSAFE_HTML' ) && FEEDZY_ALLOW_UNSAFE_HTML ) {
+			$feed->strip_htmltags( false );
+		}
+
 		if ( isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
 			$set_server_agent = sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) );
 			$feed->set_useragent( apply_filters( 'http_headers_useragent', $set_server_agent ) );
