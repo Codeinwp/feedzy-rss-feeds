@@ -900,11 +900,18 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			return false;
 		}
 
-		$feed_child = array_keys( $feed->get_item()->data['child'] );
-		$feed_child = array_filter( $feed_child );
-		if ( ! in_array( SIMPLEPIE_NAMESPACE_DC_10, $feed_child, true ) && ! in_array( SIMPLEPIE_NAMESPACE_DC_11, $feed_child, true ) ) {
-			update_post_meta( $post->ID, '__transient_feedzy_invalid_dc_namespace', array( $url ) );
-			return false;
+		$feed_content = wp_remote_retrieve_body( wp_remote_get( $url ) );
+		if ( ! is_wp_error( $feed_content ) ) {
+			$xmlelement = new SimpleXMLElement( $feed_content );
+			$namespaces = $xmlelement->getNamespaces( true );
+			if ( array_key_exists( 'dc', $namespaces ) ) {
+				$feed_child = array_keys( $feed->get_item()->data['child'] );
+				$feed_child = array_filter( $feed_child );
+				if ( ! in_array( SIMPLEPIE_NAMESPACE_DC_10, $feed_child, true ) && ! in_array( SIMPLEPIE_NAMESPACE_DC_11, $feed_child, true ) ) {
+					update_post_meta( $post->ID, '__transient_feedzy_invalid_dc_namespace', array( $url ) );
+					return false;
+				}
+			}
 		}
 		return true;
 	}
