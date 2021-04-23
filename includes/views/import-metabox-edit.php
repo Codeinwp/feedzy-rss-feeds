@@ -412,6 +412,6 @@
 </script>
 
 <script id="new_field_tpl" type="text/template">
-	<?php echo wp_kses_post( apply_filters( 'feedzy_custom_field_template', '' ) ); ?>
+	<?php echo wp_kses( apply_filters( 'feedzy_custom_field_template', '' ), apply_filters( 'feedzy_wp_kses_allowed_html', array() ) ); ?>
 </script>
 
