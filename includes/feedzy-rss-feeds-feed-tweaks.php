@@ -220,6 +220,13 @@ add_filter(
 			'br'     => array(),
 			'em'     => array(),
 			'strong' => array(),
+			'iframe' => array(
+				'src'             => array(),
+				'height'          => array(),
+				'width'           => array(),
+				'frameborder'     => array(),
+				'allowfullscreen' => array(),
+			),
 		);
 	}
 );

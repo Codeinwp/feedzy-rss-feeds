@@ -19,7 +19,7 @@ plugins:
         - readme.txt
         - includes/feedzy-rss-feeds.php
         - css/feedzy-rss-feeds.css
-        - feedzy-rss-feeds.php
+        - feedzy-rss-feed.php
         - package-lock.json
         - package.json
       message: "chore(release): ${nextRelease.version} \n\n${nextRelease.notes}"
