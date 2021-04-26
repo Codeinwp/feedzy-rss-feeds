@@ -340,7 +340,7 @@ class Feedzy_Rss_Feeds_Import {
 
 		add_thickbox();
 		include FEEDZY_ABSPATH . '/includes/views/import-metabox-edit.php';
-		echo wp_kses_post( $output );
+		echo wp_kses( $output, apply_filters( 'feedzy_wp_kses_allowed_html', array() ) );
 	}
 
 	/**
