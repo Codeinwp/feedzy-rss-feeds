@@ -1,3 +1,7 @@
+##### [Version 3.6.3](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.6.2...v3.6.3) (2021-04-26)
+
+* Fix save of custom field name and value on import
+
 ##### [Version 3.6.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.6.1...v3.6.2) (2021-04-23)
 
 * Fix feed validation when DC is missing.
