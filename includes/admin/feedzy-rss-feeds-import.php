@@ -1222,7 +1222,7 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		$duplicates = $items_found = array();
-
+		$found_duplicates = array();
 		foreach ( $result as $item ) {
 			$item_hash                        = $use_new_hash ? $item['item_id'] : hash( 'sha256', $item['item_url'] . '_' . $item['item_date'] );
 			$is_duplicate                     = $use_new_hash ? in_array( $item_hash, $imported_items_new, true ) : in_array( $item_hash, $imported_items_old, true );
@@ -1231,8 +1231,8 @@ class Feedzy_Rss_Feeds_Import {
 			if ( 'yes' === $import_remove_duplicates && ! $is_duplicate ) {
 				$is_duplicate_post = $this->is_duplicate_post( $import_post_type, 'feedzy_item_url', esc_url_raw( $item['item_url'] ) );
 				if ( ! empty( $is_duplicate_post ) ) {
-					$duplicates[ $item['item_url'] ] = $item['item_title'];
 					foreach ( $is_duplicate_post as $p ) {
+						$found_duplicates[] = get_post_meta( $p, 'feedzy_item_url', true );
 						wp_delete_post( $p, true );
 					}
 				}
@@ -1401,9 +1401,10 @@ class Feedzy_Rss_Feeds_Import {
 				continue;
 			}
 			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'created new post with ID %d with post_content %s', $new_post_id, $post_content ), 'debug', __FILE__, __LINE__ );
-
-			$imported_items[] = $item_hash;
-			$count++;
+			if ( ! in_array( $item_hash, $found_duplicates, true ) ) {
+				$imported_items[] = $item_hash;
+				$count++;
+			}
 
 			if ( $import_post_term !== 'none' && strpos( $import_post_term, '_' ) > 0 ) {
 				// let's get the slug of the uncategorized category, even if it renamed.
