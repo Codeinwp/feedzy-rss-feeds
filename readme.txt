@@ -462,6 +462,13 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
+##### [Version 3.6.4](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.6.3...v3.6.4) (2021-04-28)
+
+* Fix PHP notice in miscellaneous settings
+
+
+
+
 ##### [Version 3.6.3](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.6.2...v3.6.3) (2021-04-26)
 
 * Fix save of custom field name and value on import
