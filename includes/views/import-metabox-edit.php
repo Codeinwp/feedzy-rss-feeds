@@ -111,6 +111,54 @@
 				</div>
 			</div>
 
+			<div class="feedzy-row">
+				<div class="label_description">
+					<label class="feedzy-sr-only"><?php esc_html_e( 'Remove Duplicates?', 'feedzy-rss-feeds' ); ?></label>
+					<div>
+						<?php /* translators: %s: Documentation link */ ?>
+						<small><?php echo wp_sprintf( esc_html__( 'To understand how duplicates will be removed, check out our', 'feedzy-rss-feeds' ) ); ?> <a href="<?php echo esc_url( 'https://docs.themeisle.com/article/638-how-to-eliminate-duplicate-feed-item' ); ?>" target="_blank"><?php esc_html_e( '[documentation]', 'feedzy-rss-feeds' ); ?></a></small>
+					</div>
+				</div>
+				<div class="feedzy-separator"></div>
+				<div class="form-group input-group form_item">
+					<div>
+						<input id="remove-duplicates" name="feedzy_meta_data[import_remove_duplicates]" class="feedzy-toggle feedzy-toggle-round" type="checkbox" value="yes" <?php echo esc_attr( $import_remove_duplicates ); ?>>
+						<label for="remove-duplicates" class="feedzy-inline"></label>
+						<label class="feedzy-inline" style="margin-left: 10px;" for="import_remove_duplicates"></label>
+					</div>
+				</div>
+			</div>
+			<?php if ( function_exists( 'icl_get_languages' ) ) : ?>
+			<div class="feedzy-row">
+				<div class="label_description">
+					<label class="feedzy-sr-only"><?php esc_html_e( 'Assign language', 'feedzy-rss-feeds' ); ?></label>
+					<div>
+						<small><?php esc_html_e( 'Select the language the content will have when it will be imported', 'feedzy-rss-feeds' ); ?></small>
+					</div>
+				</div>
+				<div class="feedzy-separator dashicons dashicons-leftright"></div>
+				<div class="form-group input-group form_item">
+					<select id="feedzy_site_language" class="form-control feedzy-chosen" name="feedzy_meta_data[language]">
+						<?php
+						$current_language = defined( 'ICL_LANGUAGE_CODE' ) ? ICL_LANGUAGE_CODE : '';
+						$import_selected_language = ! empty( $import_selected_language ) ? $import_selected_language : $current_language;
+						$languages = icl_get_languages();
+						foreach ( $languages as $language ) {
+							$selected = '';
+							$code = isset( $language['language_code'] ) ? $language['language_code'] : $language['code'];
+							$name = isset( $language['translated_name'] ) && ! empty( $language['translated_name'] ) ? $language['translated_name'] : $language['native_name'];
+							if ( $code === $import_selected_language ) {
+								$selected = 'selected';
+							}
+							?>
+							<option value="<?php echo esc_attr( $code ); ?>" <?php echo esc_attr( $selected ); ?>><?php echo esc_html( $name ); ?></option>
+							<?php
+						}
+						?>
+					</select>
+				</div>
+			</div>
+		<?php endif; ?>
 		</div>
 
 

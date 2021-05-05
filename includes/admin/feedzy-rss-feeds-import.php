@@ -272,8 +272,8 @@ class Feedzy_Rss_Feeds_Import {
 	 * @return mixed
 	 */
 	public function feedzy_import_feed_options() {
-		global $post;
-		$args             = array(
+		global $post, $pagenow;
+		$args                 = array(
 			'post_type'      => 'feedzy_categories',
 			'posts_per_page' => 100,
 		);
@@ -298,7 +298,9 @@ class Feedzy_Rss_Feeds_Import {
 		$import_item_img_url  = get_post_meta( $post->ID, 'import_use_external_image', true );
 		$import_item_img_url  = 'yes' === $import_item_img_url ? 'checked' : '';
 		$import_featured_img  = get_post_meta( $post->ID, 'import_post_featured_img', true );
-
+		$import_remove_duplicates  = get_post_meta( $post->ID, 'import_remove_duplicates', true );
+		$import_remove_duplicates  = 'yes' === $import_remove_duplicates || 'post-new.php' === $pagenow ? 'checked' : '';
+		$import_selected_language  = get_post_meta( $post->ID, 'language', true );
 		// default values so that post is not created empty.
 		if ( empty( $import_title ) ) {
 			$import_title = '[#item_title]';
@@ -422,6 +424,8 @@ class Feedzy_Rss_Feeds_Import {
 
 			// we will activate this import only if the source has no invalid URL(s)
 			$source_is_valid = false;
+			// Check feeds remove duplicates checkbox checked OR not.
+			$data_meta['import_remove_duplicates'] = isset( $data_meta['import_remove_duplicates'] ) ? $data_meta['import_remove_duplicates'] : 'no';
 			// Check feeds external image URL checkbox checked OR not.
 			$data_meta['import_use_external_image'] = isset( $data_meta['import_use_external_image'] ) ? $data_meta['import_use_external_image'] : 'no';
 			foreach ( $data_meta as $key => $value ) {
@@ -1105,6 +1109,8 @@ class Feedzy_Rss_Feeds_Import {
 		$import_post_term     = get_post_meta( $job->ID, 'import_post_term', true );
 		$import_feed_limit    = get_post_meta( $job->ID, 'import_feed_limit', true );
 		$import_item_img_url  = get_post_meta( $job->ID, 'import_use_external_image', true );
+		$import_remove_duplicates  = get_post_meta( $job->ID, 'import_remove_duplicates', true );
+		$import_selected_language  = get_post_meta( $job->ID, 'language', true );
 		$max                  = $import_feed_limit;
 		if ( metadata_exists( $import_post_type, $job->ID, 'import_post_status' ) ) {
 			$import_post_status = get_post_meta( $job->ID, 'import_post_status', true );
@@ -1216,12 +1222,21 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		$duplicates = $items_found = array();
-
+		$found_duplicates = array();
 		foreach ( $result as $item ) {
 			$item_hash                        = $use_new_hash ? $item['item_id'] : hash( 'sha256', $item['item_url'] . '_' . $item['item_date'] );
 			$is_duplicate                     = $use_new_hash ? in_array( $item_hash, $imported_items_new, true ) : in_array( $item_hash, $imported_items_old, true );
 			$items_found[ $item['item_url'] ] = $item['item_title'];
 
+			if ( 'yes' === $import_remove_duplicates && ! $is_duplicate ) {
+				$is_duplicate_post = $this->is_duplicate_post( $import_post_type, 'feedzy_item_url', esc_url_raw( $item['item_url'] ) );
+				if ( ! empty( $is_duplicate_post ) ) {
+					foreach ( $is_duplicate_post as $p ) {
+						$found_duplicates[] = get_post_meta( $p, 'feedzy_item_url', true );
+						wp_delete_post( $p, true );
+					}
+				}
+			}
 			if ( $is_duplicate ) {
 				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Ignoring %s as it is a duplicate (%s hash).', $item_hash, $use_new_hash ? 'new' : 'old' ), 'warn', __FILE__, __LINE__ );
 				$index++;
@@ -1368,6 +1383,14 @@ class Feedzy_Rss_Feeds_Import {
 			}
 
 			$new_post_id = wp_insert_post( $new_post, true );
+
+			// Set post language.
+			if ( function_exists( 'pll_set_post_language' ) && ! empty( $import_selected_language ) ) {
+				pll_set_post_language( $new_post_id, $import_selected_language );
+			} elseif ( function_exists( 'icl_get_languages' ) && ! empty( $import_selected_language ) ) {
+				$this->set_wpml_element_language_details( $import_post_type, $new_post_id, $import_selected_language );
+			}
+
 			if ( $new_post_id === 0 || is_wp_error( $new_post_id ) ) {
 				$error_reason = 'N/A';
 				if ( is_wp_error( $new_post_id ) ) {
@@ -1381,9 +1404,10 @@ class Feedzy_Rss_Feeds_Import {
 				continue;
 			}
 			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'created new post with ID %d with post_content %s', $new_post_id, $post_content ), 'debug', __FILE__, __LINE__ );
-
-			$imported_items[] = $item_hash;
-			$count++;
+			if ( ! in_array( $item_hash, $found_duplicates, true ) ) {
+				$imported_items[] = $item_hash;
+				$count++;
+			}
 
 			if ( $import_post_term !== 'none' && strpos( $import_post_term, '_' ) > 0 ) {
 				// let's get the slug of the uncategorized category, even if it renamed.
@@ -2032,5 +2056,59 @@ class Feedzy_Rss_Feeds_Import {
 			);
 		}
 		return $tags;
+	}
+
+	/**
+	 * Get post data using meta key and value.
+	 *
+	 * @param string $post_type Post type Default post.
+	 * @param string $key Meta Key.
+	 * @param string $value Meta value.
+	 * @param string $compare Compare operator.
+	 * @return mixed
+	 */
+	public function is_duplicate_post( $post_type = 'post', $key = '', $value = '', $compare = '=' ) {
+		if ( empty( $key ) || empty( $value ) ) {
+			return false;
+		}
+		// Check post exists OR Not.
+		$data = get_posts(
+			array(
+				'posts_per_page' => 80,
+				'post_type' => $post_type,
+				'meta_key' => $key, //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+				'meta_value' => $value, //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+				'meta_compare' => $compare,
+				'fields' => 'ids',
+			)
+		);
+
+		return $data;
+	}
+
+	/**
+	 * Get post data using meta key and value.
+	 *
+	 * @param string $post_type Post type Default post.
+	 * @param int    $post_id Post ID.
+	 * @param string $language_code Selected language code.
+	 */
+	public function set_wpml_element_language_details( $post_type = 'post', $post_id = 0, $language_code = '' ) {
+		global $sitepress;
+		if ( $post_id && ! empty( $language_code ) ) {
+			// Get the translation id.
+			$trid = $sitepress->get_element_trid( $post_id, 'post_' . $post_type );
+
+			// Update the post language info.
+			$language_args = array(
+				'element_id' => $post_id,
+				'element_type' => 'post_' . $post_type,
+				'trid' => $trid,
+				'language_code' => $language_code,
+				'source_language_code' => null,
+			);
+
+			do_action( 'wpml_set_element_language_details', $language_args );
+		}
 	}
 }
