@@ -23,13 +23,9 @@ jobs:
           SVN_USERNAME: ${{ secrets.SVN_THEMEISLE_USERNAME }}
       - name: Send update to the store
         env:
-          THEMEISLE_ID: ${{ secrets.THEMEISLE_ID }}
-          THEMEISLE_AUTH: ${{ secrets.THEMEISLE_STORE_AUTH }}
+          PRODUCT_ID: ${{ secrets.THEMEISLE_ID }}
+          AUTH_TOKEN: ${{ secrets.THEMEISLE_STORE_AUTH }}
           STORE_URL: ${{ secrets.THEMEISLE_STORE_URL }}
+          GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
           BUILD_VERSION: ${{ steps.get_version.outputs.VERSION }}
-        run: |
-          if [ ! -z "$THEMEISLE_ID" ]; then
-              STORE_JSON='{"version": "'$BUILD_VERSION'","id": "'$THEMEISLE_ID'","body": ""}';
-              echo "$STORE_JSON";
-              curl -X POST -H 'Cache-Control: no-cache' -H "Content-Type: application/json" -H "x-themeisle-auth: $THEMEISLE_AUTH"  --data "$STORE_JSON" "$STORE_URL/wp-json/edd-so/v1/update_changelog/" > /dev/null
-          fi
+        uses: Codeinwp/action-store-release@main
