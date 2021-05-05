@@ -342,7 +342,7 @@ class Feedzy_Rss_Feeds_Import {
 
 		add_thickbox();
 		include FEEDZY_ABSPATH . '/includes/views/import-metabox-edit.php';
-		echo wp_kses_post( $output );
+		echo wp_kses( $output, apply_filters( 'feedzy_wp_kses_allowed_html', array() ) );
 	}
 
 	/**
@@ -1355,12 +1355,15 @@ class Feedzy_Rss_Feeds_Import {
 			$post_date = str_replace( '[#item_date]', $item_date, $import_date );
 			$post_date = str_replace( '[#post_date]', $now, $post_date );
 
+			if ( ! defined( 'FEEDZY_ALLOW_UNSAFE_HTML' ) || ! FEEDZY_ALLOW_UNSAFE_HTML ) {
+				$post_content = wp_kses( $post_content, apply_filters( 'feedzy_wp_kses_allowed_html', array() ) );
+			}
 			$new_post = apply_filters(
 				'feedzy_insert_post_args',
 				array(
 					'post_type'    => $import_post_type,
 					'post_title'   => wp_kses( $post_title, apply_filters( 'feedzy_wp_kses_allowed_html', array() ) ),
-					'post_content' => wp_kses( $post_content, apply_filters( 'feedzy_wp_kses_allowed_html', array() ) ),
+					'post_content' => $post_content,
 					'post_date'    => $post_date,
 					'post_status'  => $import_post_status,
 				),
