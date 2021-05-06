@@ -944,7 +944,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$sc['offset'] = '0';
 		}
 
-		if ( empty( $sc['size'] ) || ! ctype_digit( $sc['size'] ) ) {
+		if ( empty( $sc['size'] ) || ! ctype_digit( (string) $sc['size'] ) ) {
 			$sc['size'] = '150';
 		}
 		if ( ! empty( $sc['keywords_title'] ) ) {
