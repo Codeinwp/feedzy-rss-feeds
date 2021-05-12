@@ -1,3 +1,4 @@
+const dayjs = require('dayjs')
 describe('Test Lazy Shortcode for free', function() {
     before(function(){
 
@@ -8,7 +9,7 @@ describe('Test Lazy Shortcode for free', function() {
         cy.get('#wp-submit').click();
     });
 
-    const PREFIX = "feedzy-scl-0-" + Cypress.moment().unix() + " ";
+    const PREFIX = "feedzy-scl-0-" + Cypress.dayjs().unix() + " ";
 
     it('Create the shortcode', function() {
         cy.visit('/wp-admin/post-new.php');

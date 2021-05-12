@@ -8,7 +8,7 @@ describe('Test Free - gutenberg', function() {
         cy.get('#wp-submit').click();
     });
 
-    const PREFIX = "feedzy-scg-0-" + Cypress.moment().unix();
+    const PREFIX = "feedzy-scg-0-" + Cypress.dayjs().unix();
 
     it('Insert a block', function() {
 

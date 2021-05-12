@@ -16,7 +16,9 @@
 
 // Alternatively you can use CommonJS syntax:
 require('./commands')
+const dayjs = require('dayjs')
 
+Cypress.dayjs = dayjs
 // allow WP session to remain open during multiple cy.visit() invocations.
 Cypress.Cookies.defaults({
     preserve: /wordpress_.*/
