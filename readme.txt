@@ -462,6 +462,19 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
+#### [Version 3.7.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.6.4...v3.7.0) (2021-05-12)
+
+### Features
+- Add a new feed setting option to remove duplicates post
+- Add WPML and Polylang support to import content.
+- Add constant support to allow unsafe HTML as FEEDZY_ALLOW_UNSAFE_HTML
+### Fixes
+- Improve feed validation
+- Fix thumbnails dimension issue in front-end
+
+
+
+
 ##### [Version 3.6.4](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.6.3...v3.6.4) (2021-04-28)
 
 * Fix PHP notice in miscellaneous settings
