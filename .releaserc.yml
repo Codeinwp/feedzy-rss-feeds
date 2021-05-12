@@ -23,4 +23,12 @@ plugins:
         - package-lock.json
         - package.json
       message: "chore(release): ${nextRelease.version} \n\n${nextRelease.notes}"
+  - - "semantic-release-slack-bot"
+    - notifyOnSuccess: false
+      notifyOnFail: false
+      markdownReleaseNotes: true
+      branchesConfig:
+        - pattern: master
+          notifyOnSuccess: true
+          notifyOnFail: false
   - - "@semantic-release/github"
