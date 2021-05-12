@@ -1336,6 +1336,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$author_url                    = apply_filters( 'feedzy_author_url', $author_url, $author_name, $feed_url, $item );
 				$content_meta_values['author'] = apply_filters( 'feedzy_meta_author', __( 'by', 'feedzy-rss-feeds' ) . ' <a href="' . $author_url . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $author_name . '</a> ', $author_name, $author_url, $feed_source, $feed_url, $item );
 			}
+		} elseif ( $is_multiple && $meta_args['source'] && ! empty( $feed_source ) ) {
+			$domain                        = wp_parse_url( $new_link );
+			$author_url                    = '//' . $domain['host'];
+			$author_url                    = apply_filters( 'feedzy_author_url', $author_url, $feed_source, $feed_url, $item );
+			$content_meta_values['author'] = apply_filters( 'feedzy_meta_author', __( 'by', 'feedzy-rss-feeds' ) . ' <a href="' . $author_url . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $feed_source . '</a> ', $feed_source, $author_url, $feed_source, $feed_url, $item );
 		}
 
 		// date/time.
