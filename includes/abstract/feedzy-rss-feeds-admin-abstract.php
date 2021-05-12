@@ -769,6 +769,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		// so that we can fall back to raw data in case of an error.
 		$feed->set_feed_url( $feed_url );
 
+		// Allow unsafe html.
+		if ( defined( 'FEEDZY_ALLOW_UNSAFE_HTML' ) && FEEDZY_ALLOW_UNSAFE_HTML ) {
+			$feed->strip_htmltags( false );
+		}
+
 		if ( isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
 			$set_server_agent = sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) );
 			$feed->set_useragent( apply_filters( 'http_headers_useragent', $set_server_agent ) );
@@ -899,15 +904,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( $feed->error() ) {
 			return false;
 		}
-
-		$feed_content = wp_remote_retrieve_body( wp_remote_get( $url ) );
-		if ( ! is_wp_error( $feed_content ) ) {
-			$xmlelement = new SimpleXMLElement( $feed_content );
-			$namespaces = $xmlelement->getNamespaces( true );
-			if ( array_key_exists( 'dc', $namespaces ) ) {
-				$feed_child = array_keys( $feed->get_item()->data['child'] );
-				$feed_child = array_filter( $feed_child );
-				if ( ! in_array( SIMPLEPIE_NAMESPACE_DC_10, $feed_child, true ) && ! in_array( SIMPLEPIE_NAMESPACE_DC_11, $feed_child, true ) ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
+		if ( isset( $_POST['feedzy_meta_data']['import_link_author_admin'] ) && 'yes' === $_POST['feedzy_meta_data']['import_link_author_admin'] ) {
+			if ( $feed->get_items() ) {
+				$author = $feed->get_items()[0]->get_author();
+				if ( empty( $author ) ) {
 					update_post_meta( $post->ID, '__transient_feedzy_invalid_dc_namespace', array( $url ) );
 					return false;
 				}
@@ -939,7 +940,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$sc['offset'] = '0';
 		}
 
-		if ( empty( $sc['size'] ) || ! ctype_digit( $sc['size'] ) ) {
+		if ( empty( $sc['size'] ) || ! ctype_digit( (string) $sc['size'] ) ) {
 			$sc['size'] = '150';
 		}
 		if ( ! empty( $sc['keywords_title'] ) ) {

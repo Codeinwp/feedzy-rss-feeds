@@ -1,0 +1,28 @@
+name: NPM Tests
+
+on:
+  push:
+    branches-ignore:
+      - 'master'
+
+jobs:
+  npm:
+    runs-on: ubuntu-latest
+    env:
+      CYPRESS_INSTALL_BINARY: 0
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install Dependencies
+        run: npm install
+      - name: Run JS check
+        run: npm run lint:js
+      - name: Build source
+        run: npm run build
