@@ -1274,6 +1274,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$content_title = '';
 			}
 		}
+		if ( empty( $content_title ) ) {
+			$content_title = esc_html__( 'Post Title', 'feedzy-rss-feeds' );
+		}
 		$content_title = apply_filters( 'feedzy_title_output', $content_title, $feed_url, $item );
 
 		// meta=yes is for backward compatibility, otherwise its always better to provide the fields with granularity.
@@ -1394,6 +1397,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 			$content_summary = apply_filters( 'feedzy_summary_output', $content_summary, $new_link, $feed_url, $item );
 		}
+		$item_content = $item->get_content( false );
+		if ( empty( $item_content ) ) {
+			$item_content = esc_html__( 'Post Content', 'feedzy-rss-feeds' );
+		}
 		$item_array = array(
 			'item_img_class'      => 'rss_image',
 			'item_img_style'      => 'width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px;',
@@ -1411,7 +1418,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'item_date_formatted' => $content_meta_date,
 			'item_author'         => $item->get_author(),
 			'item_description'    => $content_summary,
-			'item_content'        => apply_filters( 'feedzy_content', $item->get_content( false ), $item ),
+			'item_content'        => apply_filters( 'feedzy_content', $item_content, $item ),
 			'item_source'         => $feed_source,
 		);
 		$item_array = apply_filters( 'feedzy_item_filter', $item_array, $item, $sc, $index, $item_index );
