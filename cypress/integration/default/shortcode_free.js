@@ -8,7 +8,7 @@ describe('Test Shortcode for free', function() {
         cy.get('#wp-submit').click();
     });
 
-    const PREFIX = "feedzy-sc-0-" + Cypress.moment().unix() + " ";
+    const PREFIX = "feedzy-sc-0-" + Cypress.dayjs().unix() + " ";
 
     it('Create the shortcode', function() {
         cy.visit('/wp-admin/post-new.php');
