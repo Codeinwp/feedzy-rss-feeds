@@ -1382,7 +1382,42 @@ class Feedzy_Rss_Feeds_Import {
 				continue;
 			}
 
-			$new_post_id = wp_insert_post( $new_post, true );
+			if ( 'attachment' === $import_post_type ) {
+				$image_url   = '';
+				$img_success = true;
+				$new_post_id = 0;
+
+				// image tag
+				if ( strpos( $import_featured_img, '[#item_image]' ) !== false ) {
+					// image exists in item
+					if ( ! empty( $item['item_img_path'] ) ) {
+						$image_url = str_replace( '[#item_image]', $item['item_img_path'], $import_featured_img );
+					} else {
+						$img_success = false;
+					}
+				} elseif ( strpos( $import_featured_img, '[#item_custom' ) !== false ) {
+					// custom image tag
+					$value = apply_filters( 'feedzy_parse_custom_tags', $import_featured_img, $results['feed'], $index );
+					if ( ! empty( $value ) && strpos( $value, '[#item_custom' ) === false ) {
+						$image_url = $value;
+					} else {
+						$img_success = false;
+					}
+				} else {
+					$image_url = $import_featured_img;
+				}
+
+				if ( ! empty( $image_url ) ) {
+					$img_success = $this->generate_featured_image( $image_url, 0, $item['item_title'], $import_errors, $import_info, $new_post );
+					$new_post_id = $img_success;
+				}
+
+				if ( ! $img_success ) {
+					$import_image_errors++;
+				}
+			} else {
+				$new_post_id = wp_insert_post( $new_post, true );
+			}
 
 			// Set post language.
 			if ( function_exists( 'pll_set_post_language' ) && ! empty( $import_selected_language ) ) {
@@ -1431,7 +1466,7 @@ class Feedzy_Rss_Feeds_Import {
 
 			do_action( 'feedzy_import_extra', $job, $results, $new_post_id, $index, $item['item_index'], $import_errors, $import_info );
 
-			if ( ! empty( $import_featured_img ) ) {
+			if ( ! empty( $import_featured_img ) && 'attachment' !== $import_post_type ) {
 				$image_url   = '';
 				$img_success = true;
 
@@ -1567,7 +1602,7 @@ class Feedzy_Rss_Feeds_Import {
 	 *
 	 * @return bool
 	 */
-	private function generate_featured_image( $file, $post_id, $desc, &$import_errors, &$import_info ) {
+	private function generate_featured_image( $file, $post_id, $desc, &$import_errors, &$import_info, $post_data = array() ) {
 		do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Trying to generate featured image for %s and postID %d', $file, $post_id ), 'debug', __FILE__, __LINE__ );
 
 		require_once ABSPATH . 'wp-admin' . '/includes/image.php';
@@ -1600,11 +1635,15 @@ class Feedzy_Rss_Feeds_Import {
 		$file_array['tmp_name'] = $local_file;
 		$file_array['name']     = basename( $local_file );
 
-		$id = media_handle_sideload( $file_array, $post_id, $desc );
+		$id = media_handle_sideload( $file_array, $post_id, $desc, $post_data );
 		if ( is_wp_error( $id ) ) {
 			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to attach file for postID %d = %s', $post_id, print_r( $id, true ) ), 'error', __FILE__, __LINE__ );
 			unlink( $file_array['tmp_name'] );
 			return false;
+		}
+
+		if ( ! empty( $post_data ) ) {
+			return $id;
 		}
 
 		$success = set_post_thumbnail( $post_id, $id );
