@@ -1795,11 +1795,11 @@ a:focus.dropdown-item {
 	border-color: #f35b3f;
 }
 
-input[type="text"],
-input[type="password"],
-input[type="number"],
-textarea,
-textarea.form-control {
+#poststuff input[type="text"],
+#poststuff input[type="password"],
+#poststuff input[type="number"],
+#poststuff textarea,
+#poststuff textarea.form-control {
 	width: 100%;
 	height: 44px;
 	margin: 0;
@@ -1818,43 +1818,43 @@ textarea.form-control {
 	transition: all 0.3s;
 }
 
-textarea,
-textarea.form-control {
+#poststuff textarea,
+#poststuff textarea.form-control {
 	height: 90px;
 }
 
-input[type="text"]:focus,
-input[type="password"]:focus,
-input[type="number"]:focus,
-textarea:focus,
-textarea.form-control:focus {
+#poststuff input[type="text"]:focus,
+#poststuff input[type="password"]:focus,
+#poststuff input[type="number"]:focus,
+#poststuff textarea:focus,
+#poststuff textarea.form-control:focus {
 	border: 1px solid #ccc;
 	outline: 0;
 	background: #fff;
 	box-shadow: none;
 }
 
-input[type="text"]:-moz-placeholder,
-input[type="password"]:-moz-placeholder,
-input[type="number"]:-moz-placeholder,
-textarea:-moz-placeholder,
-textarea.form-control:-moz-placeholder {
+#poststuff input[type="text"]:-moz-placeholder,
+#poststuff input[type="password"]:-moz-placeholder,
+#poststuff input[type="number"]:-moz-placeholder,
+#poststuff textarea:-moz-placeholder,
+#poststuff textarea.form-control:-moz-placeholder {
 	color: #888;
 }
 
-input[type="text"]:-ms-input-placeholder,
-input[type="password"]:-ms-input-placeholder,
-input[type="number"]:-ms-input-placeholder,
-textarea:-ms-input-placeholder,
-textarea.form-control:-ms-input-placeholder {
+#poststuff input[type="text"]:-ms-input-placeholder,
+#poststuff input[type="password"]:-ms-input-placeholder,
+#poststuff input[type="number"]:-ms-input-placeholder,
+#poststuff textarea:-ms-input-placeholder,
+#poststuff textarea.form-control:-ms-input-placeholder {
 	color: #888;
 }
 
-input[type="text"]::-webkit-input-placeholder,
-input[type="password"]::-webkit-input-placeholder,
-input[type="number"]::-webkit-input-placeholder,
-textarea::-webkit-input-placeholder,
-textarea.form-control::-webkit-input-placeholder {
+#poststuff input[type="text"]::-webkit-input-placeholder,
+#poststuff input[type="password"]::-webkit-input-placeholder,
+#poststuff input[type="number"]::-webkit-input-placeholder,
+#poststuff textarea::-webkit-input-placeholder,
+#poststuff textarea.form-control::-webkit-input-placeholder {
 	color: #888;
 }
 
