@@ -450,3 +450,6 @@ input:checked + .feedzy-track:before {
 .wp-block-feedzy-rss-feeds-feedzy-block .wp-block-embed.is-loading {
 	margin: auto !important;
 }
+.components-select-control {
+	height:auto;
+}
