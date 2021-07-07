@@ -67,7 +67,10 @@
 .feedzy-rss ul {
 	margin: 0 -2%;
 }
-
+.editor-styles-wrapper .feedzy-rss ul {
+	margin: 0 -2%;
+	box-sizing:  inherit;
+}
 .feedzy-rss ul:before,
 .feedzy-rss ul:after {
 	display: table;
@@ -446,4 +449,7 @@ input:checked + .feedzy-track:before {
 
 .wp-block-feedzy-rss-feeds-feedzy-block .wp-block-embed.is-loading {
 	margin: auto !important;
+}
+.components-select-control {
+	height:auto;
 }
