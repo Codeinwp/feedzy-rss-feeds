@@ -1,3 +1,14 @@
+##### [Version 3.7.1](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.7.0...v3.7.1) (2021-07-07)
+
+### Fixes 
+- Particular RSS XML Feed showed as invalid if you select Post author to be shown in the backend
+- Add default feed values if they are empty
+- Fix source name when author unavailable in Gutenberg block
+- Change 2nd-time validation message when author empty
+- Fix broken style issue in feedzy list page
+- Fix fewer columns issue in Gutenberg block
+- Fix broken dropdown style issue in admin
+
 #### [Version 3.7.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.6.4...v3.7.0) (2021-05-12)
 
 ### Features
