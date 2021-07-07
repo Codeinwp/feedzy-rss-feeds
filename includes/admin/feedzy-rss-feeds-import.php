@@ -123,14 +123,14 @@ class Feedzy_Rss_Feeds_Import {
 		if ( get_current_screen()->post_type === 'feedzy_imports' ) {
 			wp_enqueue_style( $this->plugin_name . '_chosen', FEEDZY_ABSURL . 'includes/views/css/chosen.css', array(), $this->version, 'all' );
 			wp_enqueue_style( $this->plugin_name . '_metabox_edit', FEEDZY_ABSURL . 'includes/views/css/import-metabox-edit.css', array( 'wp-jquery-ui-dialog' ), $this->version, 'all' );
-			wp_enqueue_script( $this->plugin_name . '_chosen_scipt', FEEDZY_ABSURL . 'includes/views/js/chosen.js', array( 'jquery' ), $this->version, true );
+			wp_enqueue_script( $this->plugin_name . '_chosen_script', FEEDZY_ABSURL . 'includes/views/js/chosen.js', array( 'jquery' ), $this->version, true );
 			wp_enqueue_script(
 				$this->plugin_name . '_metabox_edit_script',
 				FEEDZY_ABSURL . 'includes/views/js/import-metabox-edit.js',
 				array(
 					'jquery',
 					'jquery-ui-dialog',
-					$this->plugin_name . '_chosen_scipt',
+					$this->plugin_name . '_chosen_script',
 				),
 				$this->version,
 				true
