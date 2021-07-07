@@ -55,6 +55,7 @@
     "query-string": "^7.0.0",
     "raw-loader": "^4.0.2",
     "replace-in-file": "^6.2.0",
-    "semantic-release": "^17.4.2"
+    "semantic-release": "^17.4.2",
+    "semantic-release-slack-bot": "^2.1.0"
   }
 }

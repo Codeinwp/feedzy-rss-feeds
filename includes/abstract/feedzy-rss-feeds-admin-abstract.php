@@ -1270,6 +1270,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$content_title = '';
 			}
 		}
+		if ( empty( $content_title ) ) {
+			$content_title = esc_html__( 'Post Title', 'feedzy-rss-feeds' );
+		}
 		$content_title = apply_filters( 'feedzy_title_output', $content_title, $feed_url, $item );
 
 		// meta=yes is for backward compatibility, otherwise its always better to provide the fields with granularity.
@@ -1332,6 +1335,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$author_url                    = apply_filters( 'feedzy_author_url', $author_url, $author_name, $feed_url, $item );
 				$content_meta_values['author'] = apply_filters( 'feedzy_meta_author', __( 'by', 'feedzy-rss-feeds' ) . ' <a href="' . $author_url . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $author_name . '</a> ', $author_name, $author_url, $feed_source, $feed_url, $item );
 			}
+		} elseif ( $is_multiple && $meta_args['source'] && ! empty( $feed_source ) ) {
+			$domain                        = wp_parse_url( $new_link );
+			$author_url                    = '//' . $domain['host'];
+			$author_url                    = apply_filters( 'feedzy_author_url', $author_url, $feed_source, $feed_url, $item );
+			$content_meta_values['author'] = apply_filters( 'feedzy_meta_author', __( 'by', 'feedzy-rss-feeds' ) . ' <a href="' . $author_url . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $feed_source . '</a> ', $feed_source, $author_url, $feed_source, $feed_url, $item );
 		}
 
 		// date/time.
@@ -1390,6 +1398,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 			$content_summary = apply_filters( 'feedzy_summary_output', $content_summary, $new_link, $feed_url, $item );
 		}
+		$item_content = $item->get_content( false );
+		if ( empty( $item_content ) ) {
+			$item_content = esc_html__( 'Post Content', 'feedzy-rss-feeds' );
+		}
 		$item_array = array(
 			'item_img_class'      => 'rss_image',
 			'item_img_style'      => 'width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px;',
@@ -1407,7 +1419,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'item_date_formatted' => $content_meta_date,
 			'item_author'         => $item->get_author(),
 			'item_description'    => $content_summary,
-			'item_content'        => apply_filters( 'feedzy_content', $item->get_content( false ), $item ),
+			'item_content'        => apply_filters( 'feedzy_content', $item_content, $item ),
 			'item_source'         => $feed_source,
 		);
 		$item_array = apply_filters( 'feedzy_item_filter', $item_array, $item, $sc, $index, $item_index );
