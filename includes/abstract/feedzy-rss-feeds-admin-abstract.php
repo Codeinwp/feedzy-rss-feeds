@@ -1130,7 +1130,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'rss_title'             => html_entity_decode( $feed->get_title() ),
 			'rss_description_class' => 'rss_description',
 			'rss_description'       => $feed->get_description(),
-			'rss_classes'           => array( $sc['className'], 'feedzy-' . md5( $feed_url ) ),
+			'rss_classes'           => array( $sc['className'], 'feedzy-' . md5( is_array( $feed_url ) ? implode( ', ', $feed_url ) : $feed_url ) ),
 		);
 	}
 
