@@ -366,6 +366,8 @@ class Editor extends Component {
                             if ( this.props.attributes.multiple_meta !== '' && this.props.attributes.multiple_meta !== 'no') {
                                 if ( ( this.multipleMetaExists( 'source' ) || this.multipleMetaExists( 'yes' ) ) && author !== '' && item['source'] !== '' ) {
                                     author = author + ' (' + item['source'] + ')';
+                                } else if( ( this.multipleMetaExists( 'source' ) || this.multipleMetaExists( 'yes' ) ) && item['source'] !== '' ) {
+                                    author = item['source'];
                                 }
                             }
 
