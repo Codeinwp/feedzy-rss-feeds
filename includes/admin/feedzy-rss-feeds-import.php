@@ -1357,6 +1357,7 @@ class Feedzy_Rss_Feeds_Import {
 
 			if ( ! defined( 'FEEDZY_ALLOW_UNSAFE_HTML' ) || ! FEEDZY_ALLOW_UNSAFE_HTML ) {
 				$post_content = wp_kses( $post_content, apply_filters( 'feedzy_wp_kses_allowed_html', array() ) );
+				$post_content = ! empty( $post_content ) ? '<!-- wp:html -->' . $post_content . '<!-- /wp:html -->' : $post_content;
 			}
 			$new_post = apply_filters(
 				'feedzy_insert_post_args',
