@@ -1807,7 +1807,7 @@ a:focus.dropdown-item {
 	border: 1px solid #ddd;
 	border-radius: 4px;
 	color: #888;
-	background: #fff;
+	background: #fff !important;
 	box-shadow: none;
 	font-family: "Roboto", sans-serif;
 	font-size: 16px;
