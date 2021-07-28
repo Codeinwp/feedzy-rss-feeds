@@ -56,8 +56,19 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 			$version = $this->version;
 		}
 
+		// Dependent WordPress core libraries.
+		$depends = array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-compose', 'wp-editor', 'wp-api', 'lodash' );
+
+		// Remove "wp-editor" script for widget block.
+		if ( wp_use_widgets_block_editor() && wp_script_is( 'wp-edit-widgets' ) ) {
+			$index = array_search( 'wp-editor', $depends, true );
+			if ( false !== $index ) {
+				unset( $depends[ $index ] );
+			}
+		}
+
 		// Enqueue the bundled block JS file
-		wp_enqueue_script( 'feedzy-gutenberg-block-js', FEEDZY_ABSURL . 'includes/gutenberg/build/block.js', array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-compose', 'wp-editor', 'wp-api', 'lodash' ), $version, true );
+		wp_enqueue_script( 'feedzy-gutenberg-block-js', FEEDZY_ABSURL . 'includes/gutenberg/build/block.js', $depends, $version, true );
 
 		// Pass in REST URL
 		wp_localize_script(
