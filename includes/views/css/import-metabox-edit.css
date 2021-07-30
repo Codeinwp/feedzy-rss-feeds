@@ -2215,3 +2215,20 @@ span.feedzy-spinner {
 #TB_ajaxContent div.dry_run span i.fail {
 	color: #ca4a1f;
 }
+
+.custom_fields .ui-autocomplete-loading {
+	background: url('../../../img/spin_light.gif') right center no-repeat !important;
+	-webkit-transition: none !important;
+	transition: none !important;
+}
+.ui-autocomplete {
+	max-height: 150px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	border-radius: 0 0 4px 4px;
+	background-clip: padding-box;
+	border: 1px solid #ddd;
+	border-top: 0;
+	background: #fff;
+	box-shadow: 0 4px 5px rgb(0 0 0 / 15%);
+}

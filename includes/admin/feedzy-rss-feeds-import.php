@@ -912,6 +912,9 @@ class Feedzy_Rss_Feeds_Import {
 			case 'dry_run':
 				$this->dry_run();
 				break;
+			case 'fetch_custom_fields':
+				$this->fetch_custom_fields();
+				break;
 		}
 	}
 
@@ -2149,5 +2152,60 @@ class Feedzy_Rss_Feeds_Import {
 
 			do_action( 'wpml_set_element_language_details', $language_args );
 		}
+	}
+
+	/**
+	 * Fetch custom field by selected post type.
+	 */
+	public function fetch_custom_fields() {
+		global $wpdb;
+
+		// @codingStandardsIgnoreStart
+		$post_type = isset( $_POST['post_type'] ) ? filter_input( INPUT_POST, 'post_type', FILTER_SANITIZE_STRING ) : '';
+		$search_key = isset( $_POST['search_key'] ) ? filter_input( INPUT_POST, 'search_key', FILTER_SANITIZE_STRING ) : '';
+		// @codingStandardsIgnoreEnd
+
+		$like = '';
+		if ( ! empty( $search_key ) ) {
+			$like  = " AND $wpdb->postmeta.meta_key LIKE '%$search_key%'";
+		}
+
+		// phpcs:ignore
+		$query_result = $wpdb->get_results( $wpdb->prepare( "SELECT DISTINCT($wpdb->postmeta.meta_key) FROM $wpdb->posts LEFT JOIN $wpdb->postmeta ON $wpdb->posts.ID = $wpdb->postmeta.post_id WHERE $wpdb->posts.post_type = '%s' AND $wpdb->postmeta.meta_key != '' AND $wpdb->postmeta.meta_key NOT RegExp '(^[_0-9].+$)' AND $wpdb->postmeta.meta_key NOT RegExp '(^[_feedzy].+$)' AND $wpdb->postmeta.meta_key NOT RegExp '(^[0-9]+$)'$like LIMIT 0, 9999", $post_type ), ARRAY_A );
+
+		$acf_fields = array();
+		if ( function_exists( 'acf_get_field_groups' ) ) {
+			$groups = acf_get_field_groups( array( 'post_type' => $post_type ) );
+			if ( ! empty( $groups ) ) {
+				foreach ( $groups as $group ) {
+					$fields = acf_get_fields( $group['key'] );
+					if ( ! empty( $fields ) ) {
+						foreach ( $fields as $field ) {
+							if ( ! empty( $search_key ) ) {
+								if ( stripos( $field['name'], $search_key ) !== false ) {
+									$acf_fields[] = $field['name'];
+								}
+							} else {
+								$acf_fields[] = $field['name'];
+							}
+						}
+					}
+				}
+			}
+		}
+		$query_result = is_array( $query_result ) ? $query_result : array();
+		$query_result = array_column( $query_result, 'meta_key' );
+		$query_result = array_merge( $acf_fields, $query_result );
+
+		if ( ! empty( $query_result ) ) {
+			wp_send_json_success( $query_result );
+		} else {
+			wp_send_json_error(
+				array(
+					'not_found_msg' => __( 'No matches found', 'feedzy-rss-feeds' ),
+				)
+			);
+		}
+		wp_die();
 	}
 }
