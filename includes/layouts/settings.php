@@ -50,6 +50,8 @@
 						$disble_featured_image = 'checked';
 					}
 
+					$feedzy_delete_days = isset( $settings['general']['feedzy-delete-days'] ) ? $settings['general']['feedzy-delete-days'] : 0;
+
 					switch ( $active_tab ) {
 						case 'general':
 							?>
@@ -59,6 +61,15 @@
 									value="1" <?php echo esc_html( $disble_featured_image ); ?> />
 								<label for="rss-feeds"><?php echo esc_html_e( 'Do NOT add the featured image to the website\'s RSS feed.', 'feedzy-rss-feeds' ); ?></label>
 
+							</div>
+							<div class="fz-form-group">
+								<label><?php esc_html_e( 'Automatically delete the posts created for all imports after how many days?', 'feedzy-rss-feeds' ); ?></label>
+							</div>
+							<div class="fz-form-group">
+								<input type="number" min="0" max="9999" id="feedzy_delete_days" name="feedzy-delete-days" class="fz-form-control" value="<?php echo esc_attr( $feedzy_delete_days ); ?>"/>
+								<div>
+									<small><?php esc_html_e( 'Helpful if you want to remove stale or old items automatically. If you choose 0, it will be considered the individual import setting.', 'feedzy-rss-feeds' ); ?></small>
+								</div>
 							</div>
 							<?php
 							break;
