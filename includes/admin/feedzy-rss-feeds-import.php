@@ -2196,6 +2196,7 @@ class Feedzy_Rss_Feeds_Import {
 		$query_result = is_array( $query_result ) ? $query_result : array();
 		$query_result = array_column( $query_result, 'meta_key' );
 		$query_result = array_merge( $acf_fields, $query_result );
+		$query_result = array_unique( $query_result );
 
 		if ( ! empty( $query_result ) ) {
 			wp_send_json_success( $query_result );
