@@ -306,6 +306,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 
 		// manually delete the transient so that correct cache time can be used.
 		if ( ! defined( 'TI_CYPRESS_TESTING' ) ) {
+			$url = md5( is_array( $url ) ? implode( ', ', $url ) : $url );
 			delete_transient( 'feed_' . md5( $url ) );
 		}
 
