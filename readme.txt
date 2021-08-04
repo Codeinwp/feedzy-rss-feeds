@@ -462,6 +462,21 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
+##### [Version 3.7.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.7.1...v3.7.2) (2021-08-04)
+
+#### Features
+- Add auto-populate dropdown for available meta fields for import wizzard
+
+#### Fixes
+
+- Fix broken icon issue in chosen dropdown
+- Fix PHP notices on widget block area
+- Add image dimensions support 
+- Fix PHP8 fatal error when use multiple feed in visual editor
+
+
+
+
 ##### [Version 3.7.1](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.7.0...v3.7.1) (2021-07-07)
 
 ### Fixes 
