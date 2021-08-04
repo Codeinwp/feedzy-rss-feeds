@@ -199,6 +199,7 @@ class Inspector extends Component {
                             value={ this.props.attributes.title }
                             onChange={ this.props.edit.onTitle }
                             className="feedzy-title-length"
+                            min={0}
                         />
 
                         <BaseControl>
@@ -238,6 +239,7 @@ class Inspector extends Component {
                                 value={ this.props.attributes.summarylength }
                                 onChange={ this.props.edit.onSummaryLength }
                                 className="feedzy-summary-length"
+                                min={0}
                             />
                         ) }
 

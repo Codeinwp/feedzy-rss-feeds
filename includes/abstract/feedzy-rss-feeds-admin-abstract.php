@@ -1266,8 +1266,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$length = intval( $sc['title'] );
 			if ( $length > 0 && strlen( $content_title ) > $length ) {
 				$content_title = preg_replace( '/\s+?(\S+)?$/', '', substr( $content_title, 0, $length ) ) . '...';
-			} elseif ( 0 === $length ) {
-				$content_title = '';
 			}
 		}
 		if ( empty( $content_title ) ) {
