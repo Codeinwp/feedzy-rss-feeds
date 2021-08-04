@@ -48,12 +48,32 @@ add_filter( 'the_content_feed', 'feedzy_insert_thumbnail' );
  * @return string post thumbnail HTML.
  */
 function display_external_post_image( $html, $post_id, $post_thumbnail_id, $size, $attr ) {
+	// If check post thumbnail exists OR not.
+	if ( $post_thumbnail_id ) {
+		return $html;
+	}
+
+	// Post thumbnail size.
+	$size = ! empty( $size ) ? $size : 'thumbnail';
+
+	// Attributes.
+	$attr = (array) $attr;
+	$attr['style'] = isset( $attr['style'] ) ? $attr['style'] : '';
+
+	// Get image dimensions.
+	if ( function_exists( 'wp_get_registered_image_subsizes' ) ) {
+		$_wp_additional_image_sizes = wp_get_registered_image_subsizes();
+		if ( isset( $_wp_additional_image_sizes[ $size ] ) ) {
+			$sizes = $_wp_additional_image_sizes[ $size ];
+			$dimensions = wp_sprintf( 'width:%dpx; height:%dpx;', $sizes['width'], $sizes['height'] );
+			$attr['style'] .= $dimensions;
+		}
+	}
+
 	$url = get_post_meta( $post_id, 'feedzy_item_external_url', true );
 	if ( ! empty( $url ) ) {
 		$alt  = get_the_title( $post_id );
-		$attr = array(
-			'alt' => $alt,
-		);
+		$attr['alt'] = $alt;
 		$attr = apply_filters( 'wp_get_attachment_image_attributes', $attr, '', '' );
 		$attr = array_map( 'esc_attr', $attr );
 		$html = sprintf( '<img src="%s"', esc_url( $url ) );
