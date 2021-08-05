@@ -944,18 +944,30 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$sc['size'] = '150';
 		}
 		if ( ! empty( $sc['keywords_title'] ) ) {
+			if ( is_array( $sc['keywords_title'] ) ) {
+				$sc['keywords_title'] = implode( ',', $sc['keywords_title'] );
+			}
 			$sc['keywords_title'] = rtrim( $sc['keywords_title'], ',' );
 			$sc['keywords_title'] = array_map( 'trim', explode( ',', $sc['keywords_title'] ) );
 		}
 		if ( ! empty( $sc['keywords_inc'] ) ) {
+			if ( is_array( $sc['keywords_inc'] ) ) {
+				$sc['keywords_inc'] = implode( ',', $sc['keywords_inc'] );
+			}
 			$sc['keywords_inc'] = rtrim( $sc['keywords_inc'], ',' );
 			$sc['keywords_inc'] = array_map( 'trim', explode( ',', $sc['keywords_inc'] ) );
 		}
 		if ( ! empty( $sc['keywords_ban'] ) ) {
+			if ( is_array( $sc['keywords_ban'] ) ) {
+				$sc['keywords_ban'] = implode( ',', $sc['keywords_ban'] );
+			}
 			$sc['keywords_ban'] = rtrim( $sc['keywords_ban'], ',' );
 			$sc['keywords_ban'] = array_map( 'trim', explode( ',', $sc['keywords_ban'] ) );
 		}
 		if ( ! empty( $sc['keywords_exc'] ) ) {
+			if ( is_array( $sc['keywords_exc'] ) ) {
+				$sc['keywords_exc'] = implode( ',', $sc['keywords_exc'] );
+			}
 			$sc['keywords_exc'] = rtrim( $sc['keywords_exc'], ',' );
 			$sc['keywords_exc'] = array_map( 'trim', explode( ',', $sc['keywords_exc'] ) );
 		}
