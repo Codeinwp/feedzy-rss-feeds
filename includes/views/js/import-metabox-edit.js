@@ -58,6 +58,7 @@
 	    html_row = $( '#new_field_tpl' ).html();
 	    $( '.custom_fields' ).append( html_row );
 		$( '.btn.btn-remove-fields' ).on( 'click', remove_row );
+		initCustomFieldAutoComplete();
 	    return false;
 	}
 
@@ -159,6 +160,7 @@
 	$( document ).ready(function() {
         initImportScreen();
         initSummary();
+        initCustomFieldAutoComplete();
 	});
 
     function initImportScreen() {
@@ -360,6 +362,49 @@
             });
         });
     }
+
+    function initCustomFieldAutoComplete() {
+		$('input[name="custom_vars_key[]"]').autocomplete( {
+			minLength: 0,
+			source: function (request, response) {
+				jQuery.post(ajaxurl, {
+					security: feedzy.ajax.security,
+					'action': 'feedzy',
+					'_action': 'fetch_custom_fields',
+					post_type: $('#feedzy_post_type').val(),
+					search_key: request.term
+				}, function (res) {
+					if (res.success) {
+						response(res.data);
+					} else {
+						response(
+							[
+								{
+									label: res.data.not_found_msg,
+									value: 'not_found_msg'
+								}
+							]
+						);
+					}
+				});
+			},
+			select: function (event, ui) {
+				if ( 'not_found_msg' === ui.item.value ) {
+					setTimeout( function() {
+						$(event.target).val('')
+					} );
+				}
+			},
+			focus: function() {
+				if ($(this).autocomplete('widget').is(':visible')) {
+	                return;
+	            }
+				$(this).autocomplete('search', $(this).val());
+			}
+		} ).on( 'click', function() {
+			$( this ).keydown();
+		} );
+	}
 
     function showSpinner(el){
         el.parent().find('.feedzy-spinner').addClass('is-active');
