@@ -64,6 +64,9 @@ class feedzy_wp_widget extends WP_Widget {
 	 * @access   public
 	 */
 	public function registerWidget() {
+		if ( get_theme_support( 'widgets-block-editor' ) ) {
+			return;
+		}
 		register_widget( 'feedzy_wp_widget' );
 	}
 
