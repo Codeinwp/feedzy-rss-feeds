@@ -173,3 +173,23 @@
 .fz-feature-centered {
 	text-align: center;
 }
+
+.button.feedzy-open-media {
+	font-weight: 700;
+}
+
+.button.feedzy-remove-media {
+	visibility: hidden;
+}
+
+.button.feedzy-remove-media,
+.button.feedzy-remove-media:hover {
+	color: #f1f1f1;
+	border-color: #F00;
+	background: #F00;
+	font-weight: 700;
+}
+
+.button.is-show {
+	visibility: visible;
+}

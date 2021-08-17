@@ -1503,6 +1503,12 @@ class Feedzy_Rss_Feeds_Import {
 					}
 				}
 
+				// Set default thumbnail image.
+				if ( ! $img_success && isset( $this->free_settings['general']['default-thumbnail-id'] ) ) {
+					$default_thumbnail = $this->free_settings['general']['default-thumbnail-id'];
+					$img_success = set_post_thumbnail( $new_post_id, $default_thumbnail );
+				}
+
 				if ( ! $img_success ) {
 					$import_image_errors++;
 				}
