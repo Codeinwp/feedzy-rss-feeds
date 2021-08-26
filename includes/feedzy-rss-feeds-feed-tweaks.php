@@ -61,7 +61,10 @@ function display_external_post_image( $html, $post_id, $post_thumbnail_id, $size
 	$attr['style'] = isset( $attr['style'] ) ? $attr['style'] : '';
 
 	// Get image dimensions.
-	if ( function_exists( 'wp_get_registered_image_subsizes' ) ) {
+	if (is_array($size)) {
+		$dimensions = wp_sprintf( 'width:%dpx; height:%dpx;', $size[0], $size[1] );
+		$attr['style'] .= $dimensions;	
+	} elseif ( function_exists( 'wp_get_registered_image_subsizes' ) ) {
 		$_wp_additional_image_sizes = wp_get_registered_image_subsizes();
 		if ( isset( $_wp_additional_image_sizes[ $size ] ) ) {
 			$sizes = $_wp_additional_image_sizes[ $size ];
