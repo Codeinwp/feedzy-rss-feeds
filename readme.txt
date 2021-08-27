@@ -472,7 +472,7 @@ You have to check first if your feed is valid. Please test it here: https://vali
 #### Fixes
 * Title Character Limit and the Description Character Limit parameter in the Feedzy Block
 * Displaying Default Thumbnail Image does not show in Block or Shortcode approach
-* Custom tag is trimmed on save of the import if used inside <iframe> 
+* Custom tag is trimmed on save of the import if used inside iframe 
 * Keyword filters break the import with PHP 8.0
 
 
