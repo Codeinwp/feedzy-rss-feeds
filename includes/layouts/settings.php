@@ -50,6 +50,8 @@
 						$disble_featured_image = 'checked';
 					}
 
+					$default_thumbnail_id = isset( $settings['general']['default-thumbnail-id'] ) ? $settings['general']['default-thumbnail-id'] : 0;
+
 					switch ( $active_tab ) {
 						case 'general':
 							?>
@@ -58,7 +60,19 @@
 								<input type="checkbox" id="rss-feeds" class="fz-form-control" name="rss-feeds"
 									value="1" <?php echo esc_html( $disble_featured_image ); ?> />
 								<label for="rss-feeds"><?php echo esc_html_e( 'Do NOT add the featured image to the website\'s RSS feed.', 'feedzy-rss-feeds' ); ?></label>
-
+							</div>
+							<div class="fz-form-group">
+								<label><?php esc_html_e( 'Choose default thumbnail image(Feed2Post):', 'feedzy-rss-feeds' ); ?></label>
+							</div>
+							<?php if ( $default_thumbnail_id ) : ?>
+								<div class="fz-form-group feedzy-media-preview">
+									<?php echo wp_get_attachment_image( $default_thumbnail_id, 'thumbnail' ); ?>
+								</div>
+							<?php endif; ?>
+							<div class="fz-form-group">
+								<a href="javascript:;" class="feedzy-open-media button action"><?php esc_html_e( 'Choose image', 'feedzy-rss-feeds' ); ?></a>
+								<a href="javascript:;" class="feedzy-remove-media button action <?php echo $default_thumbnail_id ? esc_attr( 'is-show' ) : ''; ?>"><?php esc_html_e( 'Remove image', 'feedzy-rss-feeds' ); ?></a>
+								<input type="hidden" name="default-thumbnail-id" id="feed-post-default-thumbnail" value="<?php echo esc_attr( $default_thumbnail_id ); ?>">
 							</div>
 							<?php
 							break;

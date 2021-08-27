@@ -297,6 +297,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 					'time'        => ( ( $item->get_date() ) ? date_i18n( $meta_args['time_format'], $item->get_date( 'U' ) ) : null ),
 					'description' => isset( $item_attrs['item_description'] ) ? $item_attrs['item_description'] : ( $item->get_description() ? $item->get_description() : null ),
 					'thumbnail'   => $admin->feedzy_retrieve_image( $item ),
+					'default_img' => apply_filters( 'feedzy_default_image', '', $url ),
 					'price'       => isset( $item_attrs['item_price'] ) ? $item_attrs['item_price'] : null,
 					'media'       => isset( $item_attrs['item_media'] ) ? $item_attrs['item_media'] : null,
 					'categories'  => isset( $item_attrs['item_categories'] ) ? $item_attrs['item_categories'] : null,

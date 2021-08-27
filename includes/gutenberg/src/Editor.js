@@ -371,6 +371,9 @@ class Editor extends Component {
                                 }
                             }
 
+                            if ( item['thumbnail'] === '' && this.props.attributes.thumb === 'auto' ) {
+                                item['thumbnail'] = item['default_img'];
+                            }
                             let meta_values = new Object();
                             meta_values['author'] = __( 'by' ) + ' ' + author;
                             meta_values['date'] = __( 'on' ) + ' ' + unescapeHTML( itemDate );

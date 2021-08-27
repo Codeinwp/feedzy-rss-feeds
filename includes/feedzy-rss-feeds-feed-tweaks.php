@@ -61,9 +61,9 @@ function display_external_post_image( $html, $post_id, $post_thumbnail_id, $size
 	$attr['style'] = isset( $attr['style'] ) ? $attr['style'] : '';
 
 	// Get image dimensions.
-	if (is_array($size)) {
+	if ( is_array( $size ) ) {
 		$dimensions = wp_sprintf( 'width:%dpx; height:%dpx;', $size[0], $size[1] );
-		$attr['style'] .= $dimensions;	
+		$attr['style'] .= $dimensions;
 	} elseif ( function_exists( 'wp_get_registered_image_subsizes' ) ) {
 		$_wp_additional_image_sizes = wp_get_registered_image_subsizes();
 		if ( isset( $_wp_additional_image_sizes[ $size ] ) ) {
@@ -162,6 +162,35 @@ function feedzy_is_pro_older_than( $version ) {
 	return version_compare( FEEDZY_PRO_VERSION, $version, '<' );
 }
 
+/**
+ * Feedzy escape custom tag in html attributes.
+ *
+ * @param string $content Content.
+ * @return string
+ */
+function feedzy_custom_tag_escape( $content = '' ) {
+	if ( $content ) {
+		// Match feedzy custom tags in the src attribute.
+		preg_match_all( '/(\w+)="([^"]*)"/i', $content, $matches, PREG_SET_ORDER );
+
+		// If preg match found custom tags in src attribute.
+		if ( ! empty( $matches ) ) {
+			foreach ( $matches as $key => $match ) {
+				if ( isset( $match[2] ) && false !== stripos( $match[2], '[#item_custom_media:' ) ) {
+					$replace_with = $match[1];
+					$replace_to   = wp_sprintf( 'data-feedzy_%d_%s', $key, $replace_with );
+					$content      = str_replace( $replace_with, $replace_to, $content );
+				}
+			}
+			$content = wp_kses( $content, wp_kses_allowed_html( 'post' ) );
+			$content = preg_replace( '/data-feedzy_([0-9_]+)/', '', $content );
+		} else {
+			$content = wp_kses( $content, wp_kses_allowed_html( 'post' ) );
+		}
+	}
+	return $content;
+}
+
 add_filter(
 	'feedzy_wp_kses_allowed_html',
 	function( $allowed_html = array() ) {
@@ -249,6 +278,7 @@ add_filter(
 				'width'           => array(),
 				'frameborder'     => array(),
 				'allowfullscreen' => array(),
+				'data-*'          => true,
 			),
 		);
 	}
