@@ -35,12 +35,14 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @since   3.0.0
 	 * @access  public
 	 *
-	 * @param   string $image_src The image source, currently not used.
+	 * @param   string $default_img The image source, currently not used.
 	 *
 	 * @return  string
 	 */
-	public function feedzy_define_default_image( $image_src ) {
-		$default_img = FEEDZY_ABSURL . '/img/feedzy.svg';
+	public function feedzy_define_default_image( $default_img ) {
+		if ( empty( $default_img ) ) {
+			$default_img = FEEDZY_ABSURL . 'img/feedzy.svg';
+		}
 
 		return apply_filters( 'feedzy_define_default_image_filter', $default_img );
 	}
@@ -708,6 +710,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'days'  => DAY_IN_SECONDS,
 		);
 		$cache_time    = 12 * HOUR_IN_SECONDS;
+		$cache = trim( $cache );
 		if ( isset( $cache ) && '' !== $cache ) {
 			list( $value, $unit ) = explode( '_', $cache );
 			if ( isset( $value ) && is_numeric( $value ) && $value >= 1 && $value <= 100 ) {
@@ -944,18 +947,30 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$sc['size'] = '150';
 		}
 		if ( ! empty( $sc['keywords_title'] ) ) {
+			if ( is_array( $sc['keywords_title'] ) ) {
+				$sc['keywords_title'] = implode( ',', $sc['keywords_title'] );
+			}
 			$sc['keywords_title'] = rtrim( $sc['keywords_title'], ',' );
 			$sc['keywords_title'] = array_map( 'trim', explode( ',', $sc['keywords_title'] ) );
 		}
 		if ( ! empty( $sc['keywords_inc'] ) ) {
+			if ( is_array( $sc['keywords_inc'] ) ) {
+				$sc['keywords_inc'] = implode( ',', $sc['keywords_inc'] );
+			}
 			$sc['keywords_inc'] = rtrim( $sc['keywords_inc'], ',' );
 			$sc['keywords_inc'] = array_map( 'trim', explode( ',', $sc['keywords_inc'] ) );
 		}
 		if ( ! empty( $sc['keywords_ban'] ) ) {
+			if ( is_array( $sc['keywords_ban'] ) ) {
+				$sc['keywords_ban'] = implode( ',', $sc['keywords_ban'] );
+			}
 			$sc['keywords_ban'] = rtrim( $sc['keywords_ban'], ',' );
 			$sc['keywords_ban'] = array_map( 'trim', explode( ',', $sc['keywords_ban'] ) );
 		}
 		if ( ! empty( $sc['keywords_exc'] ) ) {
+			if ( is_array( $sc['keywords_exc'] ) ) {
+				$sc['keywords_exc'] = implode( ',', $sc['keywords_exc'] );
+			}
 			$sc['keywords_exc'] = rtrim( $sc['keywords_exc'], ',' );
 			$sc['keywords_exc'] = array_map( 'trim', explode( ',', $sc['keywords_exc'] ) );
 		}
@@ -1130,7 +1145,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'rss_title'             => html_entity_decode( $feed->get_title() ),
 			'rss_description_class' => 'rss_description',
 			'rss_description'       => $feed->get_description(),
-			'rss_classes'           => array( $sc['className'], 'feedzy-' . md5( $feed_url ) ),
+			'rss_classes'           => array( $sc['className'], 'feedzy-' . md5( is_array( $feed_url ) ? implode( ', ', $feed_url ) : $feed_url ) ),
 		);
 	}
 
@@ -1517,8 +1532,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		$the_thumbnail = html_entity_decode( $the_thumbnail, ENT_QUOTES, 'UTF-8' );
+		if ( ! defined( 'REST_REQUEST' ) || ! REST_REQUEST ) {
+			$feed_url      = $this->normalize_urls( $sc['feeds'] );
+			$the_thumbnail = ! empty( $the_thumbnail ) ? $the_thumbnail : apply_filters( 'feedzy_default_image', $sc['default'], $feed_url );
+		}
 		$the_thumbnail = apply_filters( 'feedzy_retrieve_image', $the_thumbnail, $item );
-
 		return $the_thumbnail;
 	}
 
@@ -1571,7 +1589,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  string
 	 */
 	public function feedzy_scrape_image( $string, $link = '' ) {
-		$pattern = '/src=[\'"]?([^\'" >]+)[\'" >]/';
+		$pattern = '/src=[\'"](.*?:\/\/.*\.(?:jpg|JPG|jpeg|JPEG|jpe|JPE|gif|GIF|png|PNG)+)[\'" >]/';
 		$match   = $link;
 		preg_match( $pattern, $string, $link );
 		if ( ! empty( $link ) && isset( $link[1] ) ) {

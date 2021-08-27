@@ -21,7 +21,7 @@ describe('Test Free - gutenberg', function() {
 
         // insert a feedzy block
         cy.get('div.edit-post-header__toolbar button.edit-post-header-toolbar__inserter-toggle').click();
-        cy.get('.edit-post-layout__inserter-panel-content').then(function ($popup) {
+        cy.get('.edit-post-editor__inserter-panel-content').then(function ($popup) {
             cy.wrap($popup).find('.block-editor-inserter__search-input').type('feedzy');
             cy.wrap($popup).find('.block-editor-block-types-list .editor-block-list-item-feedzy-rss-feeds-feedzy-block').should('have.length', 1);
             cy.wrap($popup).find('.block-editor-block-types-list .editor-block-list-item-feedzy-rss-feeds-feedzy-block').click();

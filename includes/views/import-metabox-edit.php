@@ -320,7 +320,7 @@
 				</div>
 				<div class="feedzy-separator dashicons dashicons-leftright"></div>
 				<div class="form-group input-group form_item">
-					<textarea name="feedzy_meta_data[import_post_content]" placeholder="<?php esc_html_e( 'Post Content', 'feedzy-rss-feeds' ); ?>" class="form-control"><?php echo wp_kses_post( $import_content ); ?></textarea>
+					<textarea name="feedzy_meta_data[import_post_content]" placeholder="<?php esc_html_e( 'Post Content', 'feedzy-rss-feeds' ); ?>" class="form-control"><?php echo esc_html( feedzy_custom_tag_escape( $import_content ) ); ?></textarea>
 					<div class="input-group-btn">
 						<button type="button" class="btn btn-add-fields dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							<?php esc_html_e( 'Insert Tag', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-arrow-down-alt2"></span>
