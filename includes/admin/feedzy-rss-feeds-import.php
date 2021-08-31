@@ -1373,7 +1373,7 @@ class Feedzy_Rss_Feeds_Import {
 					require_once ABSPATH . 'wp-admin/includes/post.php';
 				}
 
-				if ( use_block_editor_for_post_type( $import_post_type ) ) {
+				if ( function_exists( 'use_block_editor_for_post_type' ) && use_block_editor_for_post_type( $import_post_type ) ) {
 					$post_content = ! empty( $post_content ) ? '<!-- wp:html -->' . trim( force_balance_tags( wpautop( $post_content, 'br' ) ) ) . '<!-- /wp:html -->' : $post_content;
 					$post_content = trim( $post_content );
 				}
