@@ -825,20 +825,4 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				break;
 		}
 	}
-
-	/**
-	 * Filter for use widget block editor.
-	 *
-	 * @param bool $enabled Enabled/Disabled.
-	 *
-	 * @return bool
-	 */
-	public function feedzy_use_widgets_block_editor( $enabled ) {
-		global $pagenow;
-		if ( $enabled ) {
-			// phpcs:ignore WordPress.Security.NonceVerification
-			return isset( $_REQUEST['action'] ) && 'elementor' === $_REQUEST['action'] ? false : $enabled;
-		}
-		return $enabled;
-	}
 }
