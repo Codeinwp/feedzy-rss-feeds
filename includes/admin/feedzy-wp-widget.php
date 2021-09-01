@@ -64,9 +64,6 @@ class feedzy_wp_widget extends WP_Widget {
 	 * @access   public
 	 */
 	public function registerWidget() {
-		if ( function_exists( 'wp_use_widgets_block_editor' ) && wp_use_widgets_block_editor() ) {
-			return;
-		}
 		register_widget( 'feedzy_wp_widget' );
 	}
 
@@ -81,7 +78,7 @@ class feedzy_wp_widget extends WP_Widget {
 	 * @return mixed
 	 */
 	public function form( $instance ) {
-		$screen = get_current_screen();
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : array();
 		// to prevent conflicts with plugins such as siteorigin page builder that call this function from outside of the 'widgets' screen.
 		if ( ! empty( $screen ) && ! in_array( $screen->id, apply_filters( 'feedzy_allow_widgets_in_screen', array( 'widgets', 'customize' ) ), true ) ) {
 			return;
@@ -219,7 +216,7 @@ class feedzy_wp_widget extends WP_Widget {
 	 * @param   array $instance The widget instance.
 	 */
 	public function widget( $args, $instance ) {
-		$title    = apply_filters( 'widget_title', $instance['title'] );
+		$title    = apply_filters( 'widget_title', isset( $instance['title'] ) ? $instance['title'] : '' );
 		$textarea = apply_filters( 'widget_textarea', empty( $instance['textarea'] ) ? '' : $instance['textarea'], $instance );
 		// Display the widget body.
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
