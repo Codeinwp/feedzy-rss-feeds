@@ -1,3 +1,8 @@
+##### [Version 3.7.4](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.7.3...v3.7.4) (2021-09-01)
+
+* Fix regression issue with Elementor widget not showing with lower WP versions.
+* Fix regression with cron import not working with lower WP versions.
+
 ##### [Version 3.7.3](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.7.2...v3.7.3) (2021-08-27)
 
 #### Features
