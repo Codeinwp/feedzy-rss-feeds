@@ -1589,7 +1589,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  string
 	 */
 	public function feedzy_scrape_image( $string, $link = '' ) {
-		$pattern = '/src=[\'"](.*?:\/\/.*\.(?:jpg|JPG|jpeg|JPEG|jpe|JPE|gif|GIF|png|PNG)+)[\'" >]/';
+		$pattern = '/src=[\'"](.*?:\/\/.*\.(?:jpg|JPG|jpeg|JPEG|jpe|JPE|gif|GIF|png|PNG)+)[\'"]/';
 		$match   = $link;
 		preg_match( $pattern, $string, $link );
 		if ( ! empty( $link ) && isset( $link[1] ) ) {
