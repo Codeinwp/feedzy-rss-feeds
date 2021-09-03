@@ -97,7 +97,6 @@ class Editor extends Component {
 
     loadFeed() {
         let url = this.props.attributes.feeds;
-
         if ( url === undefined ) {
             return;
         }
@@ -165,11 +164,12 @@ class Editor extends Component {
                         categories[i] = item.slug;
                         i = i + 1;
                     } );
-                    this.props.setAttributes( { categories: categories } );
+                    let _this = this;
+                    _this.props.setAttributes( { categories: categories } );
                     jQuery( '.feedzy-source input' ).autocomplete({
                         source: categories,
                         select: function( event, ui ) {
-                            this.props.setAttributes( { feeds: ui.item.label } );
+                            _this.props.setAttributes( { feeds: ui.item.label } );
                         }
                     });
                 },
@@ -356,8 +356,10 @@ class Editor extends Component {
 							let itemTime = unescapeHTML( item['time'] ) || '';
 							let categories = unescapeHTML( item['categories'] ) || '';
 							if ( this.metaExists( 'tz=local' ) ) {
-								itemDate = date( 'F jS, \o', itemDateTime );
-								itemTime = date( 'h:i A', itemDateTime );
+                                let itemDateTimeObj = new Date( itemDateTime );
+                                itemDateTimeObj = itemDateTimeObj.toUTCString();
+                                itemDate = moment.utc( itemDateTimeObj ).format( 'MMMM D, YYYY' );
+                                itemTime = moment.utc( itemDateTimeObj ).format( 'h:mm A' );
 							}
 
                             let author = item['creator'] && this.metaExists( 'author' ) ? item['creator'] : '';
@@ -369,6 +371,9 @@ class Editor extends Component {
                                 }
                             }
 
+                            if ( item['thumbnail'] === '' && this.props.attributes.thumb === 'auto' ) {
+                                item['thumbnail'] = item['default_img'];
+                            }
                             let meta_values = new Object();
                             meta_values['author'] = __( 'by' ) + ' ' + author;
                             meta_values['date'] = __( 'on' ) + ' ' + unescapeHTML( itemDate );

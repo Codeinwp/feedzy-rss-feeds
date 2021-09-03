@@ -56,8 +56,19 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 			$version = $this->version;
 		}
 
+		// Dependent WordPress core libraries.
+		$depends = array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-compose', 'wp-editor', 'wp-api', 'lodash' );
+
+		// Remove "wp-editor" script for widget block.
+		if ( wp_use_widgets_block_editor() && wp_script_is( 'wp-edit-widgets' ) ) {
+			$index = array_search( 'wp-editor', $depends, true );
+			if ( false !== $index ) {
+				unset( $depends[ $index ] );
+			}
+		}
+
 		// Enqueue the bundled block JS file
-		wp_enqueue_script( 'feedzy-gutenberg-block-js', FEEDZY_ABSURL . 'includes/gutenberg/build/block.js', array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-compose', 'wp-editor', 'wp-api', 'lodash' ), $version, true );
+		wp_enqueue_script( 'feedzy-gutenberg-block-js', FEEDZY_ABSURL . 'includes/gutenberg/build/block.js', $depends, $version, true );
 
 		// Pass in REST URL
 		wp_localize_script(
@@ -286,6 +297,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 					'time'        => ( ( $item->get_date() ) ? date_i18n( $meta_args['time_format'], $item->get_date( 'U' ) ) : null ),
 					'description' => isset( $item_attrs['item_description'] ) ? $item_attrs['item_description'] : ( $item->get_description() ? $item->get_description() : null ),
 					'thumbnail'   => $admin->feedzy_retrieve_image( $item ),
+					'default_img' => apply_filters( 'feedzy_default_image', '', $url ),
 					'price'       => isset( $item_attrs['item_price'] ) ? $item_attrs['item_price'] : null,
 					'media'       => isset( $item_attrs['item_media'] ) ? $item_attrs['item_media'] : null,
 					'categories'  => isset( $item_attrs['item_categories'] ) ? $item_attrs['item_categories'] : null,
@@ -295,6 +307,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 
 		// manually delete the transient so that correct cache time can be used.
 		if ( ! defined( 'TI_CYPRESS_TESTING' ) ) {
+			$url = md5( is_array( $url ) ? implode( ', ', $url ) : $url );
 			delete_transient( 'feed_' . md5( $url ) );
 		}
 
