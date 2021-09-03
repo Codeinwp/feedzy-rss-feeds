@@ -1123,6 +1123,10 @@ class Feedzy_Rss_Feeds_Import {
 		$import_remove_duplicates  = get_post_meta( $job->ID, 'import_remove_duplicates', true );
 		$import_selected_language  = get_post_meta( $job->ID, 'language', true );
 		$max                  = $import_feed_limit;
+		// Used as a new line character in import content.
+		$import_content = str_replace( PHP_EOL, "\r\n", $import_content );
+		$import_content = trim( $import_content );
+
 		if ( metadata_exists( $import_post_type, $job->ID, 'import_post_status' ) ) {
 			$import_post_status = get_post_meta( $job->ID, 'import_post_status', true );
 		} else {
