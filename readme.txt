@@ -462,6 +462,16 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
+##### [Version 3.7.5](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.7.4...v3.7.5) (2021-09-06)
+
+#### Fixes
+- Fix broken image issues with certain feeds
+- Adds new line character support for import content
+- Fix import on custom values when full content is used
+
+
+
+
 ##### [Version 3.7.4](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.7.3...v3.7.4) (2021-09-01)
 
 * Fix regression issue with Elementor widget not showing with lower WP versions.
