@@ -1205,8 +1205,13 @@ class Feedzy_Rss_Feeds_Import {
 
 		// the array that captures additional information about the import.
 		$import_info = array();
-
 		$results = $this->get_job_feed( $options, $import_content, true );
+
+		$xml_results = '';
+		if ( '[#item_full_content]' === $import_content ) {
+			$xml_results = $this->get_job_feed( $options, '[#item_content]', true );
+		}
+
 		if ( is_wp_error( $results ) ) {
 			$import_errors[] = $results->get_error_message();
 			update_post_meta( $job->ID, 'import_errors', $import_errors );
@@ -1298,7 +1303,7 @@ class Feedzy_Rss_Feeds_Import {
 			);
 
 			if ( $this->feedzy_is_business() ) {
-				$post_title = apply_filters( 'feedzy_parse_custom_tags', $post_title, $results['feed'], $item['item_index'] );
+				$post_title = apply_filters( 'feedzy_parse_custom_tags', $post_title, ! empty( $xml_results ) ? $xml_results['feed'] : $results['feed'], $item['item_index'] );
 			}
 
 			$post_title = apply_filters( 'feedzy_invoke_services', $post_title, 'title', $item['item_title'], $job );
@@ -1355,7 +1360,7 @@ class Feedzy_Rss_Feeds_Import {
 			}
 
 			if ( $this->feedzy_is_business() ) {
-				$post_content = apply_filters( 'feedzy_parse_custom_tags', $post_content, $results['feed'], $item['item_index'] );
+				$post_content = apply_filters( 'feedzy_parse_custom_tags', $post_content, ! empty( $xml_results ) ? $xml_results['feed'] : $results['feed'], $item['item_index'] );
 			}
 
 			$post_content = apply_filters( 'feedzy_invoke_services', $post_content, 'content', $item['item_description'], $job );
@@ -1488,7 +1493,7 @@ class Feedzy_Rss_Feeds_Import {
 				}
 			}
 
-			do_action( 'feedzy_import_extra', $job, $results, $new_post_id, $index, $item['item_index'], $import_errors, $import_info );
+			do_action( 'feedzy_import_extra', $job, ! empty( $xml_results ) ? $xml_results : $results, $new_post_id, $index, $item['item_index'], $import_errors, $import_info );
 
 			if ( ! empty( $import_featured_img ) && 'attachment' !== $import_post_type ) {
 				$image_url   = '';
@@ -1504,7 +1509,7 @@ class Feedzy_Rss_Feeds_Import {
 					}
 				} elseif ( strpos( $import_featured_img, '[#item_custom' ) !== false ) {
 					// custom image tag
-					$value = apply_filters( 'feedzy_parse_custom_tags', $import_featured_img, $results['feed'], $index );
+					$value = apply_filters( 'feedzy_parse_custom_tags', $import_featured_img, ! empty( $xml_results ) ? $xml_results['feed'] : $results['feed'], $index );
 					if ( ! empty( $value ) && strpos( $value, '[#item_custom' ) === false ) {
 						$image_url = $value;
 					} else {
