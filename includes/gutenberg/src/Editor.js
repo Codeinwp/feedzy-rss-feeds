@@ -63,6 +63,7 @@ class Editor extends Component {
         this.onColumns              = this.onColumns.bind( this );
         this.onTemplate             = this.onTemplate.bind( this );
         this.onTogglePrice          = this.onTogglePrice.bind( this );
+        this.feedzyCategoriesList          = this.feedzyCategoriesList.bind( this );
 
 		this.state = {
             // home: when the block is just added
@@ -168,6 +169,7 @@ class Editor extends Component {
                     _this.props.setAttributes( { categories: categories } );
                     jQuery( '.feedzy-source input' ).autocomplete({
                         source: categories,
+                        minLength: 0,
                         select: function( event, ui ) {
                             _this.props.setAttributes( { feeds: ui.item.label } );
                         }
@@ -282,6 +284,9 @@ class Editor extends Component {
     onTogglePrice(value) {
         this.props.setAttributes( { price: ! this.props.attributes.price } );
     }
+    feedzyCategoriesList(value) {
+        jQuery( '.feedzy-source input' ).autocomplete( 'search', '' );
+    }
     getValidateURL() {
         let url = 'https://validator.w3.org/feed/';
         if ( this.props.attributes.feeds ) {
@@ -321,6 +326,7 @@ class Editor extends Component {
 							onChange={ this.onChangeFeed }
 							value={ this.props.attributes.feeds }
 						/>,
+                        <span className="dashicons dashicons-arrow-down-alt2" onClick={this.feedzyCategoriesList}></span>,
 						<Button
 							isLarge
 							isPrimary
@@ -330,7 +336,8 @@ class Editor extends Component {
 							{ __( 'Load Feed' ) }
 						</Button>,
                         <ExternalLink href={ this.getValidateURL() } title={ __( 'Validate Feed ' ) }>{ __( 'Validate ' ) }</ExternalLink>,
-                        ( this.state.error ) && <div>{ __( 'Feed URL is invalid. Invalid feeds will NOT display items.') }</div>
+                        ( this.state.error ) && <div>{ __( 'Feed URL is invalid. Invalid feeds will NOT display items.') }</div>,
+                        <p>{ __( 'Enter the full URL of the feed source you wish to display here, or the name of a category you\'ve created. Also you can add multiple URLs just separate them with a comma. You can manage your categories feed from') } <a href="edit.php?post_type=feedzy_categories" title={ __( 'feedzy categories ' ) } target="_blank">{ __( 'here ' ) }</a></p>
 					] }
 					</Placeholder>
 				</div>

@@ -2,6 +2,13 @@
 	.feedzy-source {
 		margin-right: 10px;
 	}
+	.feedzy-source + .dashicons-arrow-down-alt2 {
+		position: absolute;
+		right: 21%;
+		margin-top: 5px;
+		color: #757575;
+		cursor: pointer;
+	}
 }
 
 .loadFeed {
