@@ -25,7 +25,7 @@ const { date } = wp.date;
 
 import queryString from 'query-string';
 import Inspector from './inspector';
-import { unescapeHTML, filterData, inArray, arrangeMeta } from './utils';
+import { unescapeHTML, filterData, inArray, arrangeMeta, filterCustomPattern } from './utils';
 
 class Editor extends Component {
      /*eslint max-statements: ["error", 40]*/
@@ -350,7 +350,7 @@ class Editor extends Component {
 						</div>
 					) }
 					<ul className={ `feedzy-${ this.props.attributes.template }` }>
-						{ filterData( this.props.attributes.feedData['items'], this.props.attributes.sort, this.props.attributes.keywords_title, this.props.attributes.keywords_ban, this.props.attributes.max, this.props.attributes.offset ).map( ( item, i ) => {
+						{ filterData( this.props.attributes.feedData['items'], this.props.attributes.sort, filterCustomPattern( this.props.attributes.keywords_title ), filterCustomPattern( this.props.attributes.keywords_ban ), this.props.attributes.max, this.props.attributes.offset ).map( ( item, i ) => {
 							const itemDateTime = ( item['date'] || '' ) + ' ' + ( item['time'] || '' ) + ' UTC +0000';
 							let itemDate = unescapeHTML( item['date'] ) || '';
 							let itemTime = unescapeHTML( item['time'] ) || '';

@@ -297,20 +297,16 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$keywords = $sc['keywords_inc'];
 			if ( ! empty( $keywords ) ) {
 				$continue = false;
-				foreach ( $keywords as $keyword ) {
-					if ( strpos( $item->get_title(), $keyword ) !== false || strpos( $item->get_description(), $keyword ) !== false ) {
-						$continue = true;
-					}
+				if ( preg_match( "/^$keywords.*$/i", $item->get_title() ) || preg_match( "/^$keywords.*$/i", $item->get_description() ) ) {
+					$continue = true;
 				}
 			}
 		} elseif ( isset( $sc['keywords_title'] ) && ! empty( $sc['keywords_title'] ) ) {
 			$keywords = $sc['keywords_title'];
 			if ( ! empty( $keywords ) ) {
 				$continue = false;
-				foreach ( $keywords as $keyword ) {
-					if ( strpos( $item->get_title(), $keyword ) !== false ) {
-						$continue = true;
-					}
+				if ( preg_match( "/^$keywords.*$/i", $item->get_title() ) ) {
+					$continue = true;
 				}
 			}
 		}
@@ -318,19 +314,15 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( isset( $sc['keywords_exc'] ) && ! empty( $sc['keywords_exc'] ) ) {
 			$keywords = $sc['keywords_exc'];
 			if ( ! empty( $keywords ) ) {
-				foreach ( $keywords as $keyword ) {
-					if ( strpos( $item->get_title(), $keyword ) !== false || strpos( $item->get_description(), $keyword ) !== false ) {
-						return false;
-					}
+				if ( ! preg_match( "/^$keywords.*$/i", $item->get_title() ) || ! preg_match( "/^$keywords.*$/i", $item->get_description() ) ) {
+					$continue = false;
 				}
 			}
 		} elseif ( isset( $sc['keywords_ban'] ) && ! empty( $sc['keywords_ban'] ) ) {
 			$keywords = $sc['keywords_ban'];
 			if ( ! empty( $keywords ) ) {
-				foreach ( $keywords as $keyword ) {
-					if ( strpos( $item->get_title(), $keyword ) !== false ) {
-						return false;
-					}
+				if ( preg_match( "/^$keywords.*$/i", $item->get_title() ) ) {
+					$continue = false;
 				}
 			}
 		}
@@ -562,9 +554,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'default'        => '',
 				// thumbs pixel size.
 				'size'           => '',
-				// only display item if title contains specific keywords (comma-separated list/case sensitive).
+				// only display item if title contains specific keywords (Use comma(,) and plus(+) keyword).
 				'keywords_title' => '',
-				// only display item if title OR content contains specific keywords (comma-separated list/case sensitive).
+				// only display item if title OR content contains specific keywords (Use comma(,) and plus(+) keyword).
 				'keywords_inc'   => '',
 				// cache refresh.
 				'refresh'        => '12_hours',
@@ -950,29 +942,25 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			if ( is_array( $sc['keywords_title'] ) ) {
 				$sc['keywords_title'] = implode( ',', $sc['keywords_title'] );
 			}
-			$sc['keywords_title'] = rtrim( $sc['keywords_title'], ',' );
-			$sc['keywords_title'] = array_map( 'trim', explode( ',', $sc['keywords_title'] ) );
+			$sc['keywords_title'] = feedzy_filter_custom_pattern( $sc['keywords_title'] );
 		}
 		if ( ! empty( $sc['keywords_inc'] ) ) {
 			if ( is_array( $sc['keywords_inc'] ) ) {
 				$sc['keywords_inc'] = implode( ',', $sc['keywords_inc'] );
 			}
-			$sc['keywords_inc'] = rtrim( $sc['keywords_inc'], ',' );
-			$sc['keywords_inc'] = array_map( 'trim', explode( ',', $sc['keywords_inc'] ) );
+			$sc['keywords_inc'] = feedzy_filter_custom_pattern( $sc['keywords_inc'] );
 		}
 		if ( ! empty( $sc['keywords_ban'] ) ) {
 			if ( is_array( $sc['keywords_ban'] ) ) {
 				$sc['keywords_ban'] = implode( ',', $sc['keywords_ban'] );
 			}
-			$sc['keywords_ban'] = rtrim( $sc['keywords_ban'], ',' );
-			$sc['keywords_ban'] = array_map( 'trim', explode( ',', $sc['keywords_ban'] ) );
+			$sc['keywords_ban'] = feedzy_filter_custom_pattern( $sc['keywords_ban'] );
 		}
 		if ( ! empty( $sc['keywords_exc'] ) ) {
 			if ( is_array( $sc['keywords_exc'] ) ) {
 				$sc['keywords_exc'] = implode( ',', $sc['keywords_exc'] );
 			}
-			$sc['keywords_exc'] = rtrim( $sc['keywords_exc'], ',' );
-			$sc['keywords_exc'] = array_map( 'trim', explode( ',', $sc['keywords_exc'] ) );
+			$sc['keywords_exc'] = feedzy_filter_custom_pattern( $sc['keywords_exc'] );
 		}
 		if ( empty( $sc['summarylength'] ) || ! is_numeric( $sc['summarylength'] ) ) {
 			$sc['summarylength'] = '';

@@ -246,14 +246,14 @@ class Inspector extends Component {
                         { ( ( feedzyjs.isPro ) && [
                             <TextControl
                                 label={ __( 'Only display if title contains:' ) }
-                                help={ __( 'Comma-separated list/case sensitive.' ) }
+                                help={ __( 'Use comma(,) and plus(+) keyword' ) }
                                 value={ this.props.attributes.keywords_title }
                                 onChange={ this.props.edit.onKeywordsTitle }
                                 className="feedzy-include"
                             />,
                             <TextControl
                                 label={ __( 'Exclude if title contains:' ) }
-                                help={ __( 'Comma-separated list/case sensitive.' ) }
+                                help={ __( 'Use comma(,) and plus(+) keyword' ) }
                                 value={ this.props.attributes.keywords_ban }
                                 onChange={ this.props.edit.onKeywordsBan }
                                 className="feedzy-ban"

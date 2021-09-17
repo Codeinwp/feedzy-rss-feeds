@@ -61,12 +61,12 @@
 				<div class="label_description">
 					<label class="feedzy-sr-only"><?php esc_html_e( 'Display item only if the title or content contains specific keyword(s)', 'feedzy-rss-feeds' ); ?></label>
 					<div>
-						<small><?php echo wp_kses_post( sprintf( __( 'You can provide comma-separated words. Remember, these words are %1$scase sensitive%2$s .e.g. News, news, STOCK', 'feedzy-rss-feeds' ), '<b>', '</b>' ) ); ?></small>
+						<small><?php echo wp_kses_post( sprintf( __( 'You can provide separate multiple titles with %1$s,%2$s keyword for the optional titles and %1$s+%2$s keyword for the required titles.%1$s e.g. news, stock + market%2$s', 'feedzy-rss-feeds' ), '<code>', '</code>' ) ); ?></small>
 					</div>
 				</div>
 				<div class="feedzy-separator"></div>
 				<div class="form-group input-group form_item">
-					<input type="text" name="feedzy_meta_data[inc_key]" placeholder="<?php esc_html_e( '(eg. news, Sports, STOCK etc.)', 'feedzy-rss-feeds' ); ?>" class="form-control" value="<?php echo esc_attr( $inc_key ); ?>"/>
+					<input type="text" name="feedzy_meta_data[inc_key]" placeholder="<?php esc_html_e( '(eg. news, stock + market etc.)', 'feedzy-rss-feeds' ); ?>" class="form-control" value="<?php echo esc_attr( $inc_key ); ?>"/>
 				</div>
 			</div>
 
@@ -75,12 +75,12 @@
 				<div class="label_description">
 					<label class="feedzy-sr-only"><?php esc_html_e( 'Exclude item if the title or content contains specific keyword(s)', 'feedzy-rss-feeds' ); ?></label>
 					<div>
-						<small><?php echo wp_kses_post( sprintf( __( 'You can provide comma-separated words. Remember, these words are %1$scase sensitive%2$s .e.g. News, news, STOCK', 'feedzy-rss-feeds' ), '<b>', '</b>' ) ); ?></small>
+						<small><?php echo wp_kses_post( sprintf( __( 'You can provide separate multiple titles with %1$s,%2$s keyword for the optional titles and %1$s+%2$s keyword for the required titles.%1$s e.g. news, stock + market%2$s', 'feedzy-rss-feeds' ), '<code>', '</code>' ) ); ?></small>
 					</div>
 				</div>
 				<div class="feedzy-separator"></div>
 				<div class="form-group input-group form_item">
-					<input type="text" name="feedzy_meta_data[exc_key]" placeholder="<?php esc_html_e( '(eg. news, Sports, STOCK etc.)', 'feedzy-rss-feeds' ); ?>" class="form-control" value="<?php echo esc_attr( $exc_key ); ?>"/>
+					<input type="text" name="feedzy_meta_data[exc_key]" placeholder="<?php esc_html_e( '(eg. news, stock + market etc.)', 'feedzy-rss-feeds' ); ?>" class="form-control" value="<?php echo esc_attr( $exc_key ); ?>"/>
 				</div>
 			</div>
 

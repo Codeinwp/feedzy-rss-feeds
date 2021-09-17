@@ -37,18 +37,12 @@ export const filterData = ( arr, sortType, allowedKeywords, bannedKeywords, maxS
 		return 0;
 	}).filter( item => {
 		if ( allowedKeywords ) {
-			return allowedKeywords
-				.split( ',' )
-				.filter( item => item.replace( /\s/g, '' ) !== '' )
-				.some( el =>  item['title'].includes( el.trim() ) );
+			return allowedKeywords.test( item['title'] );
 		}
 		return true;
 	}).filter( item => {
 		if ( bannedKeywords ) {
-			return bannedKeywords
-				.split( ',' )
-				.filter( item => item.replace( /\s/g, '' ) !== '' )
-				.every( el =>  item['title'].includes( el.trim() ) === false );
+			return ! bannedKeywords.test( item['title'] );
 		}
 		return true;
 	}).slice( offset, maxSize + offset );
@@ -83,4 +77,28 @@ export const arrangeMeta = ( values, fields ) => {
         }
     }
     return meta;
+};
+
+export const filterCustomPattern = ( keyword = '' ) => {
+	let pattern = '';
+	let regex = [];
+	if ( '' !== keyword && keyword.replace( /[^a-zA-Z]/g, '' ).length <= 500 ) {
+		keyword
+		.split( ',' )
+		.forEach( item => {
+			item = item.trim();
+			if ( '' !== item ) {
+				item = item.split( '+' )
+				.map( k => {
+					k = k.trim();
+					return '(?=.*' + k + ')';
+				} );
+				regex.push( item.join( '' ) );
+			}
+		} );
+		pattern = regex.join( '|' );
+		pattern = '^' + pattern + '.*$';
+		pattern = new RegExp( pattern, 'i' );
+	}
+	return pattern;
 };
