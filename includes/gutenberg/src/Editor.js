@@ -319,14 +319,15 @@ class Editor extends Component {
 						</div>
 					):
 					[
-						<TextControl
+						<div className="feedzy-source-wrap">
+                        <TextControl
 							type="url"
 							className="feedzy-source"
 							placeholder={ __( 'Enter URL or category of your feed here...' ) }
 							onChange={ this.onChangeFeed }
 							value={ this.props.attributes.feeds }
-						/>,
-                        <span className="dashicons dashicons-arrow-down-alt2" onClick={this.feedzyCategoriesList}></span>,
+						/>
+                        <span className="dashicons dashicons-arrow-down-alt2" onClick={this.feedzyCategoriesList}></span></div>,
 						<Button
 							isLarge
 							isPrimary

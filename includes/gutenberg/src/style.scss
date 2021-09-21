@@ -1,11 +1,15 @@
 .wp-block-feedzy-rss-feeds-feedzy-block {
+	.feedzy-source-wrap {
+		position: relative;
+	}
 	.feedzy-source {
 		margin-right: 10px;
 	}
 	.feedzy-source + .dashicons-arrow-down-alt2 {
 		position: absolute;
-		right: 21%;
-		margin-top: 5px;
+		right: 12px;
+		top: 5px;
+		z-index: 5;
 		color: #757575;
 		cursor: pointer;
 	}
