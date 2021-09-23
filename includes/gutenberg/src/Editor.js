@@ -63,7 +63,8 @@ class Editor extends Component {
         this.onColumns              = this.onColumns.bind( this );
         this.onTemplate             = this.onTemplate.bind( this );
         this.onTogglePrice          = this.onTogglePrice.bind( this );
-
+        this.onKeywordsIncludeOn        = this.onKeywordsIncludeOn.bind( this );
+        this.onKeywordsExcludeOn        = this.onKeywordsExcludeOn.bind( this );
 		this.state = {
             // home: when the block is just added
             // fetched: when the feed is fetched
@@ -282,6 +283,12 @@ class Editor extends Component {
     onTogglePrice(value) {
         this.props.setAttributes( { price: ! this.props.attributes.price } );
     }
+    onKeywordsIncludeOn(value) {
+        this.props.setAttributes( { keywords_inc_on: value } );
+    }
+    onKeywordsExcludeOn(value) {
+        this.props.setAttributes( { keywords_exc_on: value } );
+    }
     getValidateURL() {
         let url = 'https://validator.w3.org/feed/';
         if ( this.props.attributes.feeds ) {
@@ -350,7 +357,7 @@ class Editor extends Component {
 						</div>
 					) }
 					<ul className={ `feedzy-${ this.props.attributes.template }` }>
-						{ filterData( this.props.attributes.feedData['items'], this.props.attributes.sort, filterCustomPattern( this.props.attributes.keywords_title ), filterCustomPattern( this.props.attributes.keywords_ban ), this.props.attributes.max, this.props.attributes.offset ).map( ( item, i ) => {
+						{ filterData( this.props.attributes.feedData['items'], this.props.attributes.sort, filterCustomPattern( this.props.attributes.keywords_title ), filterCustomPattern( this.props.attributes.keywords_ban ), this.props.attributes.max, this.props.attributes.offset, this.props.attributes.keywords_inc_on, this.props.attributes.keywords_exc_on ).map( ( item, i ) => {
 							const itemDateTime = ( item['date'] || '' ) + ' ' + ( item['time'] || '' ) + ' UTC +0000';
 							let itemDate = unescapeHTML( item['date'] ) || '';
 							let itemTime = unescapeHTML( item['time'] ) || '';

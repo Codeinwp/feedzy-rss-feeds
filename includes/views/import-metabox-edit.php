@@ -59,28 +59,48 @@
 			<div class="feedzy-row <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
 				<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '' ) ); ?>
 				<div class="label_description">
-					<label class="feedzy-sr-only"><?php esc_html_e( 'Display item only if the title or content contains specific keyword(s)', 'feedzy-rss-feeds' ); ?></label>
+					<label class="feedzy-sr-only"><?php esc_html_e( 'Display item only if the selected field contains specific keyword(s)', 'feedzy-rss-feeds' ); ?></label>
 					<div>
 						<small><?php echo wp_kses_post( sprintf( __( 'You can provide separate multiple titles with %1$s,%2$s keyword for the optional titles and %1$s+%2$s keyword for the required titles.%1$s e.g. news, stock + market%2$s', 'feedzy-rss-feeds' ), '<code>', '</code>' ) ); ?></small>
 					</div>
 				</div>
 				<div class="feedzy-separator"></div>
 				<div class="form-group input-group form_item">
-					<input type="text" name="feedzy_meta_data[inc_key]" placeholder="<?php esc_html_e( '(eg. news, stock + market etc.)', 'feedzy-rss-feeds' ); ?>" class="form-control" value="<?php echo esc_attr( $inc_key ); ?>"/>
+					<input type="text" name="feedzy_meta_data[inc_key]" placeholder="<?php esc_html_e( '(eg. news, stock + market etc.)', 'feedzy-rss-feeds' ); ?>" class="form-control feedzy-keyword-filter" value="<?php echo esc_attr( $inc_key ); ?>"/>
+					<div class="input-group-btn">
+						<select class="form-control feedzy-chosen" name="feedzy_meta_data[inc_on]">
+							<?php
+							foreach ( $keyword_filter_fields as $field ) :
+								$field_val = sanitize_key( $field );
+								?>
+								<option value="<?php echo esc_attr( $field_val ); ?>"<?php selected( $inc_on, $field_val ); ?>><?php echo esc_html( $field ); ?></option>
+							<?php endforeach; ?>
+						</select>
+					</div>
 				</div>
 			</div>
 
 			<div class="feedzy-row <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
 				<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '' ) ); ?>
 				<div class="label_description">
-					<label class="feedzy-sr-only"><?php esc_html_e( 'Exclude item if the title or content contains specific keyword(s)', 'feedzy-rss-feeds' ); ?></label>
+					<label class="feedzy-sr-only"><?php esc_html_e( 'Exclude item if the selected field contains specific keyword(s)', 'feedzy-rss-feeds' ); ?></label>
 					<div>
 						<small><?php echo wp_kses_post( sprintf( __( 'You can provide separate multiple titles with %1$s,%2$s keyword for the optional titles and %1$s+%2$s keyword for the required titles.%1$s e.g. news, stock + market%2$s', 'feedzy-rss-feeds' ), '<code>', '</code>' ) ); ?></small>
 					</div>
 				</div>
 				<div class="feedzy-separator"></div>
 				<div class="form-group input-group form_item">
-					<input type="text" name="feedzy_meta_data[exc_key]" placeholder="<?php esc_html_e( '(eg. news, stock + market etc.)', 'feedzy-rss-feeds' ); ?>" class="form-control" value="<?php echo esc_attr( $exc_key ); ?>"/>
+					<input type="text" name="feedzy_meta_data[exc_key]" placeholder="<?php esc_html_e( '(eg. news, stock + market etc.)', 'feedzy-rss-feeds' ); ?>" class="form-control feedzy-keyword-filter" value="<?php echo esc_attr( $exc_key ); ?>"/>
+					<div class="input-group-btn">
+						<select class="form-control feedzy-chosen" name="feedzy_meta_data[exc_on]">
+							<?php
+							foreach ( $keyword_filter_fields as $field ) :
+								$field_val = sanitize_key( $field );
+								?>
+								<option value="<?php echo esc_attr( $field_val ); ?>"<?php selected( $exc_on, $field_val ); ?>><?php echo esc_html( $field ); ?></option>
+							<?php endforeach; ?>
+						</select>
+					</div>
 				</div>
 			</div>
 

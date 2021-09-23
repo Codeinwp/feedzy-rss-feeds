@@ -303,18 +303,56 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'value'       => '',
 					),
 					'keywords_title' => array(
-						'label'       => __( 'Only display item if title contains specific keyword(s) (Use comma(,) and plus(+) keyword).', 'feedzy-rss-feeds' ),
+						'label'       => __( 'Only display item if selected field contains specific keyword(s) (Use comma(,) and plus(+) keyword).', 'feedzy-rss-feeds' ),
 						'placeholder' => __( '(eg: news, stock + market etc.)', 'feedzy-rss-feeds' ),
 						'type'        => 'text',
 						'value'       => '',
 						'disabled'    => feedzy_is_new(),
 					),
+					'keywords_inc_on' => array(
+						'label' => __( 'Select a specific item if you want to include a keyword filter.', 'feedzy-rss-feeds' ),
+						'type'  => 'select',
+						'value' => '',
+						'opts'  => array(
+							'title' => array(
+								'label' => __( 'Title', 'feedzy-rss-feeds' ),
+								'value' => 'title',
+							),
+							'author' => array(
+								'label' => __( 'Author', 'feedzy-rss-feeds' ),
+								'value' => 'author',
+							),
+							'description'  => array(
+								'label' => __( 'Description', 'feedzy-rss-feeds' ),
+								'value' => 'description',
+							),
+						),
+					),
 					'keywords_ban'   => array(
-						'label'       => __( 'Exclude items if title contains specific keyword(s) (Use comma(,) and plus(+) keyword). ', 'feedzy-rss-feeds' ),
+						'label'       => __( 'Exclude items if selected field contains specific keyword(s) (Use comma(,) and plus(+) keyword). ', 'feedzy-rss-feeds' ),
 						'placeholder' => __( '(eg: politics, gossip + stock etc.)', 'feedzy-rss-feeds' ),
 						'type'        => 'text',
 						'value'       => '',
 						'disabled'    => true,
+					),
+					'keywords_exc_on' => array(
+						'label' => __( 'Select a specific item if you want to exclude a keyword filter.', 'feedzy-rss-feeds' ),
+						'type'  => 'select',
+						'value' => '',
+						'opts'  => array(
+							'title' => array(
+								'label' => __( 'Title', 'feedzy-rss-feeds' ),
+								'value' => 'title',
+							),
+							'author' => array(
+								'label' => __( 'Author', 'feedzy-rss-feeds' ),
+								'value' => 'author',
+							),
+							'description'  => array(
+								'label' => __( 'Description', 'feedzy-rss-feeds' ),
+								'value' => 'description',
+							),
+						),
 					),
 				),
 			),

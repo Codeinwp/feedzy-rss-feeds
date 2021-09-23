@@ -2232,3 +2232,6 @@ span.feedzy-spinner {
 	background: #fff;
 	box-shadow: 0 4px 5px rgb(0 0 0 / 15%);
 }
+#poststuff input[type="text"].feedzy-keyword-filter {
+	width: 98%;
+}

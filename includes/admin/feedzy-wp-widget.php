@@ -253,6 +253,8 @@ class feedzy_wp_widget extends WP_Widget {
 			'lazy'           => isset( $instance['lazy'] ) ? self::bool_to_enum( $instance['lazy'] ) : false,
 			'offset'         => isset( $instance['offset'] ) ? $instance['offset'] : '',
 			'multiple_meta'  => isset( $instance['multiple_meta'] ) ? $instance['multiple_meta'] : '',
+			'keywords_inc_on'  => isset( $instance['keywords_inc_on'] ) ? $instance['keywords_inc_on'] : '',
+			'keywords_exc_on'  => isset( $instance['keywords_exc_on'] ) ? $instance['keywords_exc_on'] : '',
 		);
 		$feedzy_widget_shortcode_attributes = apply_filters( 'feedzy_widget_shortcode_attributes_filter', $feedzy_widget_shortcode_attributes, $args, $instance );
 

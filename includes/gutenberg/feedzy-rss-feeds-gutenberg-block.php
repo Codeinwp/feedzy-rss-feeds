@@ -147,7 +147,13 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 					'keywords_title' => array(
 						'type' => 'string',
 					),
+					'keywords_inc_on' => array(
+						'type' => 'string',
+					),
 					'keywords_ban'   => array(
+						'type' => 'string',
+					),
+					'keywords_exc_on'   => array(
 						'type' => 'string',
 					),
 					'thumb'          => array(
