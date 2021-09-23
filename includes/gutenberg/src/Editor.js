@@ -85,7 +85,7 @@ class Editor extends Component {
 					metafields: 'no'
 				} );
 			}
-			this.loadCategories();
+            setTimeout( () => { this.loadCategories() } );
 		}
 
     }
@@ -153,7 +153,7 @@ class Editor extends Component {
     }
 
     loadCategories() {
-        apiRequest( { path: '/wp/v2/feedzy_categories' } )
+        apiRequest( { path: '/wp/v2/feedzy_categories?per_page=100' } )
             .then(
                 ( data ) => {
                     if ( this.unmounting ) {
@@ -168,6 +168,9 @@ class Editor extends Component {
                     let _this = this;
                     _this.props.setAttributes( { categories: categories } );
                     jQuery( '.feedzy-source input' ).autocomplete({
+                        classes: {
+                            'ui-autocomplete': 'feedzy-ui-autocomplete',
+                        },
                         source: categories,
                         minLength: 0,
                         select: function( event, ui ) {
