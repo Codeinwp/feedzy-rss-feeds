@@ -238,6 +238,7 @@ add_filter(
 			),
 			'span'   => array(
 				'class' => array(),
+				'disabled' => array(),
 			),
 			'div'    => array(
 				'class' => array(),

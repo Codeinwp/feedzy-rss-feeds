@@ -2119,7 +2119,7 @@ class Feedzy_Rss_Feeds_Import {
 	 *
 	 * @return array
 	 */
-	public function allow_iframe_tag_item_content( $tags, $context ) {
+	public function feedzy_wp_kses_allowed_html( $tags, $context ) {
 		if ( ! isset( $tags['iframe'] ) ) {
 			$tags['iframe'] = array(
 				'src'             => true,
@@ -2129,6 +2129,9 @@ class Feedzy_Rss_Feeds_Import {
 				'allowfullscreen' => true,
 				'data-*'          => true,
 			);
+		}
+		if ( isset( $tags['span'] ) ) {
+			$tags['span']['disabled'] = true;
 		}
 		return $tags;
 	}
