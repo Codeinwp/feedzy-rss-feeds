@@ -441,7 +441,7 @@ class Feedzy_Rss_Feeds_Import {
 					$source_is_valid = empty( $invalid_urls );
 				}
 				if ( 'import_post_content' === $key ) {
-					add_filter( 'wp_kses_allowed_html', array( $this, 'allow_iframe_tag_item_content' ), 10, 2 );
+					add_filter( 'wp_kses_allowed_html', array( $this, 'feedzy_wp_kses_allowed_html' ), 10, 2 );
 					$value = feedzy_custom_tag_escape( $value );
 				} else {
 					$value = wp_kses( $value, wp_kses_allowed_html( 'post' ) );
