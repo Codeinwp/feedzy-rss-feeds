@@ -115,6 +115,9 @@ class feedzy_wp_widget extends WP_Widget {
 				if ( 'number' === $element['type'] ) {
 					$widget_form .= '<input class="widefat" id="' . $this->get_field_id( $id ) . '" name="' . $this->get_field_name( $id ) . '" type="number" value="' . esc_attr( $instance[ $id ] ) . '" />';
 				}
+				if ( 'datetime-local' === $element['type'] ) {
+					$widget_form .= '<input class="widefat" id="' . $this->get_field_id( $id ) . '" name="' . $this->get_field_name( $id ) . '" type="datetime-local" value="' . esc_attr( $instance[ $id ] ) . '" />';
+				}
 				if ( 'select' === $element['type'] || 'radio' === $element['type'] ) {
 					$widget_form .= '<select class="widefat" id="' . $this->get_field_id( $id ) . '" name="' . $this->get_field_name( $id ) . '" >';
 					foreach ( $element['opts'] as $select_option ) {
@@ -255,6 +258,8 @@ class feedzy_wp_widget extends WP_Widget {
 			'multiple_meta'  => isset( $instance['multiple_meta'] ) ? $instance['multiple_meta'] : '',
 			'keywords_inc_on'  => isset( $instance['keywords_inc_on'] ) ? $instance['keywords_inc_on'] : '',
 			'keywords_exc_on'  => isset( $instance['keywords_exc_on'] ) ? $instance['keywords_exc_on'] : '',
+			'from_datetime'  => isset( $instance['from_datetime'] ) ? $instance['from_datetime'] : '',
+			'to_datetime'  => isset( $instance['to_datetime'] ) ? $instance['to_datetime'] : '',
 		);
 		$feedzy_widget_shortcode_attributes = apply_filters( 'feedzy_widget_shortcode_attributes_filter', $feedzy_widget_shortcode_attributes, $args, $instance );
 

@@ -9,9 +9,11 @@ export const unescapeHTML = value => {
 	return htmlNode.textContent;
 };
 
-export const filterData = ( arr, sortType, allowedKeywords, bannedKeywords, maxSize, offset, includeOn, excludeOn ) => {
+export const filterData = ( arr, sortType, allowedKeywords, bannedKeywords, maxSize, offset, includeOn, excludeOn, fromDateTime, toDateTime ) => {
 	includeOn = 'author' === includeOn ? 'creator' : includeOn;
 	excludeOn = 'author' === excludeOn ? 'creator' : excludeOn;
+	fromDateTime = moment( fromDateTime ).format( 'X' );
+	toDateTime = moment( toDateTime ).format( 'X' );
 
 	arr = Array.from( arr ).sort( (a, b) => {
 		let firstElement, secondElement;
@@ -46,6 +48,13 @@ export const filterData = ( arr, sortType, allowedKeywords, bannedKeywords, maxS
 	}).filter( item => {
 		if ( bannedKeywords ) {
 			return ! bannedKeywords.test( item[ excludeOn ] );
+		}
+		return true;
+	}).filter( item => {
+		let itemDateTime = item.date + ' ' + item.time;
+		itemDateTime = moment( new Date( itemDateTime ) ).format( 'X' );
+		if ( fromDateTime && toDateTime ) {
+			return ( ( fromDateTime <= itemDateTime ) && ( itemDateTime <= toDateTime ) );
 		}
 		return true;
 	}).slice( offset, maxSize + offset );

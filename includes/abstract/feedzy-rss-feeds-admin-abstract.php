@@ -608,6 +608,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				// these are only for internal purposes.
 				'_dryrun_'        => 'no',
 				'_dry_run_tags_'  => '',
+				// From datetime.
+				'from_datetime'   => '',
+				// To datetime.
+				'to_datetime'     => '',
 			),
 			$atts,
 			'feedzy_default'

@@ -182,6 +182,12 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 						'type'    => 'string',
 						'default' => 'default',
 					),
+					'from_datetime'   => array(
+						'type' => 'string',
+					),
+					'to_datetime'   => array(
+						'type' => 'string',
+					),
 				),
 			)
 		);

@@ -307,6 +307,8 @@ class Feedzy_Rss_Feeds_Import {
 		$import_remove_duplicates  = get_post_meta( $post->ID, 'import_remove_duplicates', true );
 		$import_remove_duplicates  = 'yes' === $import_remove_duplicates || 'post-new.php' === $pagenow ? 'checked' : '';
 		$import_selected_language  = get_post_meta( $post->ID, 'language', true );
+		$from_datetime  = get_post_meta( $post->ID, 'from_datetime', true );
+		$to_datetime  = get_post_meta( $post->ID, 'to_datetime', true );
 		// default values so that post is not created empty.
 		if ( empty( $import_title ) ) {
 			$import_title = '[#item_title]';
@@ -1130,6 +1132,8 @@ class Feedzy_Rss_Feeds_Import {
 		$import_item_img_url  = get_post_meta( $job->ID, 'import_use_external_image', true );
 		$import_remove_duplicates  = get_post_meta( $job->ID, 'import_remove_duplicates', true );
 		$import_selected_language  = get_post_meta( $job->ID, 'language', true );
+		$from_datetime  = get_post_meta( $job->ID, 'from_datetime', true );
+		$to_datetime  = get_post_meta( $job->ID, 'to_datetime', true );
 		$max                  = $import_feed_limit;
 		// Used as a new line character in import content.
 		$import_content = str_replace( PHP_EOL, "\r\n", $import_content );
@@ -1183,12 +1187,14 @@ class Feedzy_Rss_Feeds_Import {
 				'keywords_inc'  => $inc_key, // this is not keywords_title
 				'keywords_ban'  => $exc_key, // to support old pro that does not support keywords_exc
 				'keywords_exc'  => $exc_key, // this is not keywords_ban
-				'keywords_inc_on'  => $inc_on, // this is not keywords_ban
-				'keywords_exc_on'  => $exc_on, // this is not keywords_ban
+				'keywords_inc_on'  => $inc_on,
+				'keywords_exc_on'  => $exc_on,
 				'columns'       => 1,
 				'offset'        => 0,
 				'multiple_meta' => 'no',
 				'refresh'       => '55_mins',
+				'from_datetime'     => $from_datetime,
+				'to_datetime'       => $to_datetime,
 			),
 			$job
 		);

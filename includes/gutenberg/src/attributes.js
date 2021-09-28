@@ -105,6 +105,12 @@ const attributes = {
 	categories: {
 		type: 'object',
 	},
+	from_datetime: {
+		type: 'string',
+	},
+	to_datetime: {
+		type: 'string',
+	},
 };
 
 export default attributes;

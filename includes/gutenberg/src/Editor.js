@@ -65,6 +65,8 @@ class Editor extends Component {
         this.onTogglePrice          = this.onTogglePrice.bind( this );
         this.onKeywordsIncludeOn        = this.onKeywordsIncludeOn.bind( this );
         this.onKeywordsExcludeOn        = this.onKeywordsExcludeOn.bind( this );
+        this.onFromDateTime        = this.onFromDateTime.bind( this );
+        this.onToDateTime        = this.onToDateTime.bind( this );
 		this.state = {
             // home: when the block is just added
             // fetched: when the feed is fetched
@@ -289,6 +291,12 @@ class Editor extends Component {
     onKeywordsExcludeOn(value) {
         this.props.setAttributes( { keywords_exc_on: value } );
     }
+    onFromDateTime(value) {
+        this.props.setAttributes( { from_datetime: value } );
+    }
+    onToDateTime(value) {
+        this.props.setAttributes( { to_datetime: value } );
+    }
     getValidateURL() {
         let url = 'https://validator.w3.org/feed/';
         if ( this.props.attributes.feeds ) {
@@ -357,7 +365,7 @@ class Editor extends Component {
 						</div>
 					) }
 					<ul className={ `feedzy-${ this.props.attributes.template }` }>
-						{ filterData( this.props.attributes.feedData['items'], this.props.attributes.sort, filterCustomPattern( this.props.attributes.keywords_title ), filterCustomPattern( this.props.attributes.keywords_ban ), this.props.attributes.max, this.props.attributes.offset, this.props.attributes.keywords_inc_on, this.props.attributes.keywords_exc_on ).map( ( item, i ) => {
+						{ filterData( this.props.attributes.feedData['items'], this.props.attributes.sort, filterCustomPattern( this.props.attributes.keywords_title ), filterCustomPattern( this.props.attributes.keywords_ban ), this.props.attributes.max, this.props.attributes.offset, this.props.attributes.keywords_inc_on, this.props.attributes.keywords_exc_on, this.props.attributes.from_datetime, this.props.attributes.to_datetime ).map( ( item, i ) => {
 							const itemDateTime = ( item['date'] || '' ) + ' ' + ( item['time'] || '' ) + ' UTC +0000';
 							let itemDate = unescapeHTML( item['date'] ) || '';
 							let itemTime = unescapeHTML( item['time'] ) || '';

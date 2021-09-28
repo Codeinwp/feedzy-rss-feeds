@@ -313,6 +313,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'label' => __( 'Select a specific item if you want to include a keyword filter.', 'feedzy-rss-feeds' ),
 						'type'  => 'select',
 						'value' => '',
+						'disabled'    => feedzy_is_new(),
 						'opts'  => array(
 							'title' => array(
 								'label' => __( 'Title', 'feedzy-rss-feeds' ),
@@ -339,6 +340,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'label' => __( 'Select a specific item if you want to exclude a keyword filter.', 'feedzy-rss-feeds' ),
 						'type'  => 'select',
 						'value' => '',
+						'disabled'    => feedzy_is_new(),
 						'opts'  => array(
 							'title' => array(
 								'label' => __( 'Title', 'feedzy-rss-feeds' ),

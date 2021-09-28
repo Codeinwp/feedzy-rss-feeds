@@ -295,6 +295,19 @@ class Inspector extends Component {
                                     },
                                     ] }
                                 onChange={ this.props.edit.onKeywordsExcludeOn }
+                            />,
+                            <p>{ __( 'Filter feed item by date range.' ) }</p>,
+                            <TextControl
+                                type='datetime-local'
+                                label={ __( 'From:' ) }
+                                value={ this.props.attributes.from_datetime }
+                                onChange={ this.props.edit.onFromDateTime }
+                            />,
+                            <TextControl
+                                type='datetime-local'
+                                label={ __( 'To:' ) }
+                                value={ this.props.attributes.to_datetime }
+                                onChange={ this.props.edit.onToDateTime }
                             />
                          ] ) }
                     </PanelBody>,
