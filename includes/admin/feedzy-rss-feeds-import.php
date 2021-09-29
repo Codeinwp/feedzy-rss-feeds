@@ -1208,7 +1208,7 @@ class Feedzy_Rss_Feeds_Import {
 		$results = $this->get_job_feed( $options, $import_content, true );
 
 		$xml_results = '';
-		if ( '[#item_full_content]' === $import_content ) {
+		if ( false !== strpos( $import_content, '[#item_full_content]' ) ) {
 			$xml_results = $this->get_job_feed( $options, '[#item_content]', true );
 		}
 
