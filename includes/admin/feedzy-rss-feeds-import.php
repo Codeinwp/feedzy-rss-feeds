@@ -441,7 +441,7 @@ class Feedzy_Rss_Feeds_Import {
 					$source_is_valid = empty( $invalid_urls );
 				}
 				if ( 'import_post_content' === $key ) {
-					add_filter( 'wp_kses_allowed_html', array( $this, 'allow_iframe_tag_item_content' ), 10, 2 );
+					add_filter( 'wp_kses_allowed_html', array( $this, 'feedzy_wp_kses_allowed_html' ), 10, 2 );
 					$value = feedzy_custom_tag_escape( $value );
 				} else {
 					$value = wp_kses( $value, wp_kses_allowed_html( 'post' ) );
@@ -2119,7 +2119,7 @@ class Feedzy_Rss_Feeds_Import {
 	 *
 	 * @return array
 	 */
-	public function allow_iframe_tag_item_content( $tags, $context ) {
+	public function feedzy_wp_kses_allowed_html( $tags, $context ) {
 		if ( ! isset( $tags['iframe'] ) ) {
 			$tags['iframe'] = array(
 				'src'             => true,
@@ -2129,6 +2129,9 @@ class Feedzy_Rss_Feeds_Import {
 				'allowfullscreen' => true,
 				'data-*'          => true,
 			);
+		}
+		if ( isset( $tags['span'] ) ) {
+			$tags['span']['disabled'] = true;
 		}
 		return $tags;
 	}
