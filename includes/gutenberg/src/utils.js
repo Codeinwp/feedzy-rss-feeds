@@ -12,8 +12,8 @@ export const unescapeHTML = value => {
 export const filterData = ( arr, sortType, allowedKeywords, bannedKeywords, maxSize, offset, includeOn, excludeOn, fromDateTime, toDateTime ) => {
 	includeOn = 'author' === includeOn ? 'creator' : includeOn;
 	excludeOn = 'author' === excludeOn ? 'creator' : excludeOn;
-	fromDateTime = moment( fromDateTime ).format( 'X' );
-	toDateTime = moment( toDateTime ).format( 'X' );
+	fromDateTime = '' !== fromDateTime && 'undefined' !== typeof fromDateTime ? moment( fromDateTime ).format( 'X' ) : false ;
+	toDateTime = '' !== toDateTime && 'undefined' !== typeof toDateTime ? moment( toDateTime ).format( 'X' ) : false;
 
 	arr = Array.from( arr ).sort( (a, b) => {
 		let firstElement, secondElement;

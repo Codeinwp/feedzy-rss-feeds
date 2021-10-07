@@ -293,14 +293,14 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			return true;
 		}
 
-		$inc_on = ! empty( $sc['keywords_inc_on'] ) ? $sc['keywords_inc_on'] : 'title';
-		$exc_on = ! empty( $sc['keywords_exc_on'] ) ? $sc['keywords_exc_on'] : 'title';
+		$inc_on = ! empty( $sc['keywords_inc_on'] ) ? $sc['keywords_inc_on'] : '';
+		$exc_on = ! empty( $sc['keywords_exc_on'] ) ? $sc['keywords_exc_on'] : '';
 
 		if ( isset( $sc['keywords_inc'] ) && ! empty( $sc['keywords_inc'] ) ) {
 			$keywords = $sc['keywords_inc'];
 			if ( ! empty( $keywords ) ) {
 				$continue = false;
-				if ( 'title' !== $inc_on ) {
+				if ( ! empty( $inc_on ) ) {
 					$continue = $this->feedzy_feed_item_keywords_by( $inc_on, $keywords, $item );
 				} else {
 					if ( preg_match( "/^$keywords.*$/i", $item->get_title() ) || preg_match( "/^$keywords.*$/i", $item->get_description() ) ) {
@@ -312,7 +312,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$keywords = $sc['keywords_title'];
 			if ( ! empty( $keywords ) ) {
 				$continue = false;
-				if ( 'title' !== $inc_on ) {
+				if ( ! empty( $inc_on ) ) {
 					$continue = $this->feedzy_feed_item_keywords_by( $inc_on, $keywords, $item );
 				} else {
 					if ( preg_match( "/^$keywords.*$/i", $item->get_title() ) ) {
@@ -325,7 +325,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( isset( $sc['keywords_exc'] ) && ! empty( $sc['keywords_exc'] ) ) {
 			$keywords = $sc['keywords_exc'];
 			if ( ! empty( $keywords ) ) {
-				if ( 'title' !== $exc_on ) {
+				if ( ! empty( $exc_on ) ) {
 					$exc_item = $this->feedzy_feed_item_keywords_by( $exc_on, $keywords, $item );
 					if ( $exc_item ) {
 						$continue = false;
@@ -339,7 +339,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		} elseif ( isset( $sc['keywords_ban'] ) && ! empty( $sc['keywords_ban'] ) ) {
 			$keywords = $sc['keywords_ban'];
 			if ( ! empty( $keywords ) ) {
-				if ( 'title' !== $exc_on ) {
+				if ( ! empty( $exc_on ) ) {
 					$keywords_ban = $this->feedzy_feed_item_keywords_by( $exc_on, $keywords, $item );
 					if ( $keywords_ban ) {
 						$continue = false;
@@ -1766,7 +1766,12 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			return false;
 		}
 
-		if ( 'description' === $filter_by ) {
+		if ( 'title' === $filter_by ) {
+			$item_title = wp_strip_all_tags( $item->get_title(), true );
+			if ( ! empty( $item_title ) && preg_match( "/^$keywords.*$/i", $item_title ) ) {
+				return true;
+			}
+		} elseif ( 'description' === $filter_by ) {
 			$description = wp_strip_all_tags( $item->get_description(), true );
 			if ( ! empty( $description ) && preg_match( "/^$keywords.*$/i", $description ) ) {
 				return true;
