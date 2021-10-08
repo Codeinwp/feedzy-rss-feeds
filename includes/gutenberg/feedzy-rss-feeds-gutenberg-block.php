@@ -149,12 +149,14 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 					),
 					'keywords_inc_on' => array(
 						'type' => 'string',
+						'default' => 'title',
 					),
 					'keywords_ban'   => array(
 						'type' => 'string',
 					),
 					'keywords_exc_on'   => array(
 						'type' => 'string',
+						'default' => 'title',
 					),
 					'thumb'          => array(
 						'type'    => 'string',

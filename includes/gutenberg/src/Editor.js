@@ -67,6 +67,7 @@ class Editor extends Component {
         this.onKeywordsExcludeOn        = this.onKeywordsExcludeOn.bind( this );
         this.onFromDateTime        = this.onFromDateTime.bind( this );
         this.onToDateTime        = this.onToDateTime.bind( this );
+        this.feedzyCategoriesList          = this.feedzyCategoriesList.bind( this );
 		this.state = {
             // home: when the block is just added
             // fetched: when the feed is fetched
@@ -87,7 +88,7 @@ class Editor extends Component {
 					metafields: 'no'
 				} );
 			}
-			this.loadCategories();
+            setTimeout( () => { this.loadCategories() } );
 		}
 
     }
@@ -155,7 +156,7 @@ class Editor extends Component {
     }
 
     loadCategories() {
-        apiRequest( { path: '/wp/v2/feedzy_categories' } )
+        apiRequest( { path: '/wp/v2/feedzy_categories?per_page=100' } )
             .then(
                 ( data ) => {
                     if ( this.unmounting ) {
@@ -170,7 +171,11 @@ class Editor extends Component {
                     let _this = this;
                     _this.props.setAttributes( { categories: categories } );
                     jQuery( '.feedzy-source input' ).autocomplete({
+                        classes: {
+                            'ui-autocomplete': 'feedzy-ui-autocomplete',
+                        },
                         source: categories,
+                        minLength: 0,
                         select: function( event, ui ) {
                             _this.props.setAttributes( { feeds: ui.item.label } );
                         }
@@ -297,6 +302,9 @@ class Editor extends Component {
     onToDateTime(value) {
         this.props.setAttributes( { to_datetime: value } );
     }
+    feedzyCategoriesList(value) {
+        jQuery( '.feedzy-source input' ).autocomplete( 'search', '' );
+    }
     getValidateURL() {
         let url = 'https://validator.w3.org/feed/';
         if ( this.props.attributes.feeds ) {
@@ -329,13 +337,15 @@ class Editor extends Component {
 						</div>
 					):
 					[
-						<TextControl
+						<div className="feedzy-source-wrap">
+                        <TextControl
 							type="url"
 							className="feedzy-source"
 							placeholder={ __( 'Enter URL or category of your feed here...' ) }
 							onChange={ this.onChangeFeed }
 							value={ this.props.attributes.feeds }
-						/>,
+						/>
+                        <span className="dashicons dashicons-arrow-down-alt2" onClick={this.feedzyCategoriesList}></span></div>,
 						<Button
 							isLarge
 							isPrimary
@@ -345,7 +355,8 @@ class Editor extends Component {
 							{ __( 'Load Feed' ) }
 						</Button>,
                         <ExternalLink href={ this.getValidateURL() } title={ __( 'Validate Feed ' ) }>{ __( 'Validate ' ) }</ExternalLink>,
-                        ( this.state.error ) && <div>{ __( 'Feed URL is invalid. Invalid feeds will NOT display items.') }</div>
+                        ( this.state.error ) && <div>{ __( 'Feed URL is invalid. Invalid feeds will NOT display items.') }</div>,
+                        <p>{ __( 'Enter the full URL of the feed source you wish to display here, or the name of a category you\'ve created. Also you can add multiple URLs just separate them with a comma. You can manage your categories feed from') } <a href="edit.php?post_type=feedzy_categories" title={ __( 'feedzy categories ' ) } target="_blank">{ __( 'here ' ) }</a></p>
 					] }
 					</Placeholder>
 				</div>

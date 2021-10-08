@@ -59,12 +59,14 @@ const attributes = {
 	},
 	keywords_inc_on: {
 		type: 'string',
+		default: 'title',
 	},
 	keywords_ban: {
 		type: 'string',
 	},
 	keywords_exc_on: {
 		type: 'string',
+		default: 'title',
 	},
 	thumb: {
 		type: 'string',
