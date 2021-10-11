@@ -441,7 +441,7 @@ class Feedzy_Rss_Feeds_Import {
 					$source_is_valid = empty( $invalid_urls );
 				}
 				if ( 'import_post_content' === $key ) {
-					add_filter( 'wp_kses_allowed_html', array( $this, 'allow_iframe_tag_item_content' ), 10, 2 );
+					add_filter( 'wp_kses_allowed_html', array( $this, 'feedzy_wp_kses_allowed_html' ), 10, 2 );
 					$value = feedzy_custom_tag_escape( $value );
 				} else {
 					$value = wp_kses( $value, wp_kses_allowed_html( 'post' ) );
@@ -1123,6 +1123,10 @@ class Feedzy_Rss_Feeds_Import {
 		$import_remove_duplicates  = get_post_meta( $job->ID, 'import_remove_duplicates', true );
 		$import_selected_language  = get_post_meta( $job->ID, 'language', true );
 		$max                  = $import_feed_limit;
+		// Used as a new line character in import content.
+		$import_content = str_replace( PHP_EOL, "\r\n", $import_content );
+		$import_content = trim( $import_content );
+
 		if ( metadata_exists( $import_post_type, $job->ID, 'import_post_status' ) ) {
 			$import_post_status = get_post_meta( $job->ID, 'import_post_status', true );
 		} else {
@@ -1201,8 +1205,13 @@ class Feedzy_Rss_Feeds_Import {
 
 		// the array that captures additional information about the import.
 		$import_info = array();
-
 		$results = $this->get_job_feed( $options, $import_content, true );
+
+		$xml_results = '';
+		if ( false !== strpos( $import_content, '[#item_full_content]' ) ) {
+			$xml_results = $this->get_job_feed( $options, '[#item_content]', true );
+		}
+
 		if ( is_wp_error( $results ) ) {
 			$import_errors[] = $results->get_error_message();
 			update_post_meta( $job->ID, 'import_errors', $import_errors );
@@ -1294,7 +1303,7 @@ class Feedzy_Rss_Feeds_Import {
 			);
 
 			if ( $this->feedzy_is_business() ) {
-				$post_title = apply_filters( 'feedzy_parse_custom_tags', $post_title, $results['feed'], $item['item_index'] );
+				$post_title = apply_filters( 'feedzy_parse_custom_tags', $post_title, ! empty( $xml_results ) ? $xml_results['feed'] : $results['feed'], $item['item_index'] );
 			}
 
 			$post_title = apply_filters( 'feedzy_invoke_services', $post_title, 'title', $item['item_title'], $job );
@@ -1351,7 +1360,7 @@ class Feedzy_Rss_Feeds_Import {
 			}
 
 			if ( $this->feedzy_is_business() ) {
-				$post_content = apply_filters( 'feedzy_parse_custom_tags', $post_content, $results['feed'], $item['item_index'] );
+				$post_content = apply_filters( 'feedzy_parse_custom_tags', $post_content, ! empty( $xml_results ) ? $xml_results['feed'] : $results['feed'], $item['item_index'] );
 			}
 
 			$post_content = apply_filters( 'feedzy_invoke_services', $post_content, 'content', $item['item_description'], $job );
@@ -1484,7 +1493,7 @@ class Feedzy_Rss_Feeds_Import {
 				}
 			}
 
-			do_action( 'feedzy_import_extra', $job, $results, $new_post_id, $index, $item['item_index'], $import_errors, $import_info );
+			do_action( 'feedzy_import_extra', $job, ! empty( $xml_results ) ? $xml_results : $results, $new_post_id, $index, $item['item_index'], $import_errors, $import_info );
 
 			if ( ! empty( $import_featured_img ) && 'attachment' !== $import_post_type ) {
 				$image_url   = '';
@@ -1500,7 +1509,7 @@ class Feedzy_Rss_Feeds_Import {
 					}
 				} elseif ( strpos( $import_featured_img, '[#item_custom' ) !== false ) {
 					// custom image tag
-					$value = apply_filters( 'feedzy_parse_custom_tags', $import_featured_img, $results['feed'], $index );
+					$value = apply_filters( 'feedzy_parse_custom_tags', $import_featured_img, ! empty( $xml_results ) ? $xml_results['feed'] : $results['feed'], $index );
 					if ( ! empty( $value ) && strpos( $value, '[#item_custom' ) === false ) {
 						$image_url = $value;
 					} else {
@@ -2110,7 +2119,7 @@ class Feedzy_Rss_Feeds_Import {
 	 *
 	 * @return array
 	 */
-	public function allow_iframe_tag_item_content( $tags, $context ) {
+	public function feedzy_wp_kses_allowed_html( $tags, $context ) {
 		if ( ! isset( $tags['iframe'] ) ) {
 			$tags['iframe'] = array(
 				'src'             => true,
@@ -2120,6 +2129,9 @@ class Feedzy_Rss_Feeds_Import {
 				'allowfullscreen' => true,
 				'data-*'          => true,
 			);
+		}
+		if ( isset( $tags['span'] ) ) {
+			$tags['span']['disabled'] = true;
 		}
 		return $tags;
 	}
