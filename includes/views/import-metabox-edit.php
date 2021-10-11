@@ -68,7 +68,7 @@
 				<div class="form-group input-group form_item">
 					<input type="text" name="feedzy_meta_data[inc_key]" placeholder="<?php esc_html_e( '(eg. news, stock + market etc.)', 'feedzy-rss-feeds' ); ?>" class="form-control feedzy-keyword-filter" value="<?php echo esc_attr( $inc_key ); ?>"/>
 					<div class="input-group-btn">
-						<select class="form-control feedzy-chosen" name="feedzy_meta_data[inc_on]">
+						<select class="form-control feedzy-chosen feedzy-chosen-nosearch" name="feedzy_meta_data[inc_on]">
 							<?php
 							foreach ( $keyword_filter_fields as $field ) :
 								$field_val = sanitize_key( $field );
@@ -92,7 +92,7 @@
 				<div class="form-group input-group form_item">
 					<input type="text" name="feedzy_meta_data[exc_key]" placeholder="<?php esc_html_e( '(eg. news, stock + market etc.)', 'feedzy-rss-feeds' ); ?>" class="form-control feedzy-keyword-filter" value="<?php echo esc_attr( $exc_key ); ?>"/>
 					<div class="input-group-btn">
-						<select class="form-control feedzy-chosen" name="feedzy_meta_data[exc_on]">
+						<select class="form-control feedzy-chosen feedzy-chosen-nosearch" name="feedzy_meta_data[exc_on]">
 							<?php
 							foreach ( $keyword_filter_fields as $field ) :
 								$field_val = sanitize_key( $field );

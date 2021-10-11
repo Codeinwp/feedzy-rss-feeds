@@ -2250,3 +2250,7 @@ span.feedzy-spinner {
 .form-group.item-date-filter input {
 	padding: 0 10px !important;
 }
+.feedzy-chosen-nosearch + .chosen-container .chosen-search {
+	clip: rect(0, 0, 0, 0);
+	position: absolute;
+}
