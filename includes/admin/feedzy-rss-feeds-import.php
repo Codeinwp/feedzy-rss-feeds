@@ -281,6 +281,10 @@ class Feedzy_Rss_Feeds_Import {
 		$post_types       = get_post_types( '', 'names' );
 		$post_types       = array_diff( $post_types, array( 'feedzy_imports', 'feedzy_categories' ) );
 		$published_status = array( 'publish', 'draft' );
+		$keyword_filter_fields = array( __( 'Title', 'feedzy-rss-feeds' ) );
+		if ( feedzy_is_pro() ) {
+			$keyword_filter_fields = array_merge( $keyword_filter_fields, array( __( 'Description', 'feedzy-rss-feeds' ), __( 'Author', 'feedzy-rss-feeds' ), __( 'Full Content', 'feedzy-rss-feeds' ) ) );
+		}
 		$import_post_type = get_post_meta( $post->ID, 'import_post_type', true );
 		$import_post_term = get_post_meta( $post->ID, 'import_post_term', true );
 		if ( metadata_exists( $import_post_type, $post->ID, 'import_post_status' ) ) {
@@ -292,6 +296,8 @@ class Feedzy_Rss_Feeds_Import {
 		$source               = get_post_meta( $post->ID, 'source', true );
 		$inc_key              = get_post_meta( $post->ID, 'inc_key', true );
 		$exc_key              = get_post_meta( $post->ID, 'exc_key', true );
+		$inc_on               = get_post_meta( $post->ID, 'inc_on', true );
+		$exc_on               = get_post_meta( $post->ID, 'exc_on', true );
 		$import_title         = get_post_meta( $post->ID, 'import_post_title', true );
 		$import_date          = get_post_meta( $post->ID, 'import_post_date', true );
 		$import_content       = get_post_meta( $post->ID, 'import_post_content', true );
@@ -301,6 +307,8 @@ class Feedzy_Rss_Feeds_Import {
 		$import_remove_duplicates  = get_post_meta( $post->ID, 'import_remove_duplicates', true );
 		$import_remove_duplicates  = 'yes' === $import_remove_duplicates || 'post-new.php' === $pagenow ? 'checked' : '';
 		$import_selected_language  = get_post_meta( $post->ID, 'language', true );
+		$from_datetime  = get_post_meta( $post->ID, 'from_datetime', true );
+		$to_datetime  = get_post_meta( $post->ID, 'to_datetime', true );
 		// default values so that post is not created empty.
 		if ( empty( $import_title ) ) {
 			$import_title = '[#item_title]';
@@ -1112,6 +1120,8 @@ class Feedzy_Rss_Feeds_Import {
 		$source               = get_post_meta( $job->ID, 'source', true );
 		$inc_key              = get_post_meta( $job->ID, 'inc_key', true );
 		$exc_key              = get_post_meta( $job->ID, 'exc_key', true );
+		$inc_on               = get_post_meta( $job->ID, 'inc_on', true );
+		$exc_on               = get_post_meta( $job->ID, 'exc_on', true );
 		$import_title         = get_post_meta( $job->ID, 'import_post_title', true );
 		$import_date          = get_post_meta( $job->ID, 'import_post_date', true );
 		$import_content       = get_post_meta( $job->ID, 'import_post_content', true );
@@ -1122,6 +1132,8 @@ class Feedzy_Rss_Feeds_Import {
 		$import_item_img_url  = get_post_meta( $job->ID, 'import_use_external_image', true );
 		$import_remove_duplicates  = get_post_meta( $job->ID, 'import_remove_duplicates', true );
 		$import_selected_language  = get_post_meta( $job->ID, 'language', true );
+		$from_datetime  = get_post_meta( $job->ID, 'from_datetime', true );
+		$to_datetime  = get_post_meta( $job->ID, 'to_datetime', true );
 		$max                  = $import_feed_limit;
 		// Used as a new line character in import content.
 		$import_content = str_replace( PHP_EOL, "\r\n", $import_content );
@@ -1175,10 +1187,14 @@ class Feedzy_Rss_Feeds_Import {
 				'keywords_inc'  => $inc_key, // this is not keywords_title
 				'keywords_ban'  => $exc_key, // to support old pro that does not support keywords_exc
 				'keywords_exc'  => $exc_key, // this is not keywords_ban
+				'keywords_inc_on'  => $inc_on,
+				'keywords_exc_on'  => $exc_on,
 				'columns'       => 1,
 				'offset'        => 0,
 				'multiple_meta' => 'no',
 				'refresh'       => '55_mins',
+				'from_datetime'     => $from_datetime,
+				'to_datetime'       => $to_datetime,
 			),
 			$job
 		);

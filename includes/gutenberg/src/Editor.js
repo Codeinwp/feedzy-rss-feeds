@@ -25,7 +25,7 @@ const { date } = wp.date;
 
 import queryString from 'query-string';
 import Inspector from './inspector';
-import { unescapeHTML, filterData, inArray, arrangeMeta } from './utils';
+import { unescapeHTML, filterData, inArray, arrangeMeta, filterCustomPattern } from './utils';
 
 class Editor extends Component {
      /*eslint max-statements: ["error", 40]*/
@@ -63,8 +63,11 @@ class Editor extends Component {
         this.onColumns              = this.onColumns.bind( this );
         this.onTemplate             = this.onTemplate.bind( this );
         this.onTogglePrice          = this.onTogglePrice.bind( this );
+        this.onKeywordsIncludeOn        = this.onKeywordsIncludeOn.bind( this );
+        this.onKeywordsExcludeOn        = this.onKeywordsExcludeOn.bind( this );
+        this.onFromDateTime        = this.onFromDateTime.bind( this );
+        this.onToDateTime        = this.onToDateTime.bind( this );
         this.feedzyCategoriesList          = this.feedzyCategoriesList.bind( this );
-
 		this.state = {
             // home: when the block is just added
             // fetched: when the feed is fetched
@@ -287,6 +290,18 @@ class Editor extends Component {
     onTogglePrice(value) {
         this.props.setAttributes( { price: ! this.props.attributes.price } );
     }
+    onKeywordsIncludeOn(value) {
+        this.props.setAttributes( { keywords_inc_on: value } );
+    }
+    onKeywordsExcludeOn(value) {
+        this.props.setAttributes( { keywords_exc_on: value } );
+    }
+    onFromDateTime(value) {
+        this.props.setAttributes( { from_datetime: value } );
+    }
+    onToDateTime(value) {
+        this.props.setAttributes( { to_datetime: value } );
+    }
     feedzyCategoriesList(value) {
         jQuery( '.feedzy-source input' ).autocomplete( 'search', '' );
     }
@@ -361,7 +376,7 @@ class Editor extends Component {
 						</div>
 					) }
 					<ul className={ `feedzy-${ this.props.attributes.template }` }>
-						{ filterData( this.props.attributes.feedData['items'], this.props.attributes.sort, this.props.attributes.keywords_title, this.props.attributes.keywords_ban, this.props.attributes.max, this.props.attributes.offset ).map( ( item, i ) => {
+						{ filterData( this.props.attributes.feedData['items'], this.props.attributes.sort, filterCustomPattern( this.props.attributes.keywords_title ), filterCustomPattern( this.props.attributes.keywords_ban ), this.props.attributes.max, this.props.attributes.offset, this.props.attributes.keywords_inc_on, this.props.attributes.keywords_exc_on, this.props.attributes.from_datetime, this.props.attributes.to_datetime ).map( ( item, i ) => {
 							const itemDateTime = ( item['date'] || '' ) + ' ' + ( item['time'] || '' ) + ' UTC +0000';
 							let itemDate = unescapeHTML( item['date'] ) || '';
 							let itemTime = unescapeHTML( item['time'] ) || '';

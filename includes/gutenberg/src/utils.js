@@ -9,7 +9,12 @@ export const unescapeHTML = value => {
 	return htmlNode.textContent;
 };
 
-export const filterData = ( arr, sortType, allowedKeywords, bannedKeywords, maxSize, offset ) => {
+export const filterData = ( arr, sortType, allowedKeywords, bannedKeywords, maxSize, offset, includeOn, excludeOn, fromDateTime, toDateTime ) => {
+	includeOn = 'author' === includeOn ? 'creator' : includeOn;
+	excludeOn = 'author' === excludeOn ? 'creator' : excludeOn;
+	fromDateTime = '' !== fromDateTime && 'undefined' !== typeof fromDateTime ? moment( fromDateTime ).format( 'X' ) : false ;
+	toDateTime = '' !== toDateTime && 'undefined' !== typeof toDateTime ? moment( toDateTime ).format( 'X' ) : false;
+
 	arr = Array.from( arr ).sort( (a, b) => {
 		let firstElement, secondElement;
 		if ( sortType === 'date_desc' || sortType === 'date_asc' ) {
@@ -37,18 +42,19 @@ export const filterData = ( arr, sortType, allowedKeywords, bannedKeywords, maxS
 		return 0;
 	}).filter( item => {
 		if ( allowedKeywords ) {
-			return allowedKeywords
-				.split( ',' )
-				.filter( item => item.replace( /\s/g, '' ) !== '' )
-				.some( el =>  item['title'].includes( el.trim() ) );
+			return allowedKeywords.test( item[ includeOn ] );
 		}
 		return true;
 	}).filter( item => {
 		if ( bannedKeywords ) {
-			return bannedKeywords
-				.split( ',' )
-				.filter( item => item.replace( /\s/g, '' ) !== '' )
-				.every( el =>  item['title'].includes( el.trim() ) === false );
+			return ! bannedKeywords.test( item[ excludeOn ] );
+		}
+		return true;
+	}).filter( item => {
+		let itemDateTime = item.date + ' ' + item.time;
+		itemDateTime = moment( new Date( itemDateTime ) ).format( 'X' );
+		if ( fromDateTime && toDateTime ) {
+			return ( ( fromDateTime <= itemDateTime ) && ( itemDateTime <= toDateTime ) );
 		}
 		return true;
 	}).slice( offset, maxSize + offset );
@@ -83,4 +89,28 @@ export const arrangeMeta = ( values, fields ) => {
         }
     }
     return meta;
+};
+
+export const filterCustomPattern = ( keyword = '' ) => {
+	let pattern = '';
+	let regex = [];
+	if ( '' !== keyword && keyword.replace( /[^a-zA-Z]/g, '' ).length <= 500 ) {
+		keyword
+		.split( ',' )
+		.forEach( item => {
+			item = item.trim();
+			if ( '' !== item ) {
+				item = item.split( '+' )
+				.map( k => {
+					k = k.trim();
+					return '(?=.*' + k + ')';
+				} );
+				regex.push( item.join( '' ) );
+			}
+		} );
+		pattern = regex.join( '|' );
+		pattern = '^' + pattern + '.*$';
+		pattern = new RegExp( pattern, 'i' );
+	}
+	return pattern;
 };

@@ -293,12 +293,17 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			return true;
 		}
 
+		$inc_on = ! empty( $sc['keywords_inc_on'] ) ? $sc['keywords_inc_on'] : '';
+		$exc_on = ! empty( $sc['keywords_exc_on'] ) ? $sc['keywords_exc_on'] : '';
+
 		if ( isset( $sc['keywords_inc'] ) && ! empty( $sc['keywords_inc'] ) ) {
 			$keywords = $sc['keywords_inc'];
 			if ( ! empty( $keywords ) ) {
 				$continue = false;
-				foreach ( $keywords as $keyword ) {
-					if ( strpos( $item->get_title(), $keyword ) !== false || strpos( $item->get_description(), $keyword ) !== false ) {
+				if ( ! empty( $inc_on ) ) {
+					$continue = $this->feedzy_feed_item_keywords_by( $inc_on, $keywords, $item );
+				} else {
+					if ( preg_match( "/^$keywords.*$/i", $item->get_title() ) || preg_match( "/^$keywords.*$/i", $item->get_description() ) ) {
 						$continue = true;
 					}
 				}
@@ -307,8 +312,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$keywords = $sc['keywords_title'];
 			if ( ! empty( $keywords ) ) {
 				$continue = false;
-				foreach ( $keywords as $keyword ) {
-					if ( strpos( $item->get_title(), $keyword ) !== false ) {
+				if ( ! empty( $inc_on ) ) {
+					$continue = $this->feedzy_feed_item_keywords_by( $inc_on, $keywords, $item );
+				} else {
+					if ( preg_match( "/^$keywords.*$/i", $item->get_title() ) ) {
 						$continue = true;
 					}
 				}
@@ -318,18 +325,28 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( isset( $sc['keywords_exc'] ) && ! empty( $sc['keywords_exc'] ) ) {
 			$keywords = $sc['keywords_exc'];
 			if ( ! empty( $keywords ) ) {
-				foreach ( $keywords as $keyword ) {
-					if ( strpos( $item->get_title(), $keyword ) !== false || strpos( $item->get_description(), $keyword ) !== false ) {
-						return false;
+				if ( ! empty( $exc_on ) ) {
+					$exc_item = $this->feedzy_feed_item_keywords_by( $exc_on, $keywords, $item );
+					if ( $exc_item ) {
+						$continue = false;
+					}
+				} else {
+					if ( ! preg_match( "/^$keywords.*$/i", $item->get_title() ) || ! preg_match( "/^$keywords.*$/i", $item->get_description() ) ) {
+						$continue = false;
 					}
 				}
 			}
 		} elseif ( isset( $sc['keywords_ban'] ) && ! empty( $sc['keywords_ban'] ) ) {
 			$keywords = $sc['keywords_ban'];
 			if ( ! empty( $keywords ) ) {
-				foreach ( $keywords as $keyword ) {
-					if ( strpos( $item->get_title(), $keyword ) !== false ) {
-						return false;
+				if ( ! empty( $exc_on ) ) {
+					$keywords_ban = $this->feedzy_feed_item_keywords_by( $exc_on, $keywords, $item );
+					if ( $keywords_ban ) {
+						$continue = false;
+					}
+				} else {
+					if ( preg_match( "/^$keywords.*$/i", $item->get_title() ) ) {
+						$continue = false;
 					}
 				}
 			}
@@ -533,60 +550,68 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$sc = shortcode_atts(
 			array(
 				// comma separated feeds url.
-				'feeds'          => '',
+				'feeds'           => '',
 				// number of feeds items (0 for unlimited).
-				'max'            => '5',
+				'max'             => '5',
 				// display feed title yes/no.
-				'feed_title'     => 'yes',
+				'feed_title'      => 'yes',
 				// _blank, _self
-				'target'         => '_blank',
+				'target'          => '_blank',
 				// empty or no for nofollow.
-				'follow'         => '',
+				'follow'          => '',
 				// strip title after X char. X can be 0 too, which will remove the title.
-				'title'          => '',
+				'title'           => '',
 				// yes (author, date, time), no (NEITHER), author, date, time, categories
 				// tz=local (for date/time in blog time)
 				// tz=gmt (for date/time in UTC time, this is the default)
 				// tz=no (for date/time in the feed, without conversion).
-				'meta'           => 'yes',
+				'meta'            => 'yes',
 				// yes (all), no (NEITHER)
 				// source: show feed title.
-				'multiple_meta'  => 'no',
+				'multiple_meta'   => 'no',
 				// strip title.
-				'summary'        => 'yes',
+				'summary'         => 'yes',
 				// strip summary after X char.
-				'summarylength'  => '',
+				'summarylength'   => '',
 				// yes, no, auto.
-				'thumb'          => 'auto',
+				'thumb'           => 'auto',
 				// default thumb URL if no image found (only if thumb is set to yes or auto).
-				'default'        => '',
+				'default'         => '',
 				// thumbs pixel size.
-				'size'           => '',
-				// only display item if title contains specific keywords (comma-separated list/case sensitive).
-				'keywords_title' => '',
-				// only display item if title OR content contains specific keywords (comma-separated list/case sensitive).
-				'keywords_inc'   => '',
+				'size'            => '',
+				// only display item if title contains specific keywords (Use comma(,) and plus(+) keyword).
+				'keywords_title'  => '',
+				// only display item if title OR content contains specific keywords (Use comma(,) and plus(+) keyword).
+				'keywords_inc'    => '',
+				// Keyword filter include in specific field( title, description, author ).
+				'keywords_inc_on' => '',
+				// Keyword filter exclude in specific field( title, description, author ).
+				'keywords_exc_on' => '',
 				// cache refresh.
-				'refresh'        => '12_hours',
+				'refresh'         => '12_hours',
 				// sorting.
-				'sort'           => '',
+				'sort'            => '',
 				// https = force https
 				// default = fall back to default image
 				// auto = continue as it is.
-				'http'           => 'auto',
+				'http'            => 'auto',
 				// message to show when feed is empty.
-				'error_empty'    => 'Feed has no items.',
+				'error_empty'     => 'Feed has no items.',
 				// to disable amp support, use 'no'. This is currently not available as part of the shortcode tinymce form.
-				'amp'            => 'yes',
+				'amp'             => 'yes',
 				// paginate.
-				'offset'         => 0,
+				'offset'          => 0,
 				// class name of this block.
-				'className'      => '',
+				'className'       => '',
 				// lazy loading of feeds?
-				'lazy'           => 'no',
+				'lazy'            => 'no',
 				// these are only for internal purposes.
-				'_dryrun_'       => 'no',
-				'_dry_run_tags_' => '',
+				'_dryrun_'        => 'no',
+				'_dry_run_tags_'  => '',
+				// From datetime.
+				'from_datetime'   => '',
+				// To datetime.
+				'to_datetime'     => '',
 			),
 			$atts,
 			'feedzy_default'
@@ -950,29 +975,25 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			if ( is_array( $sc['keywords_title'] ) ) {
 				$sc['keywords_title'] = implode( ',', $sc['keywords_title'] );
 			}
-			$sc['keywords_title'] = rtrim( $sc['keywords_title'], ',' );
-			$sc['keywords_title'] = array_map( 'trim', explode( ',', $sc['keywords_title'] ) );
+			$sc['keywords_title'] = feedzy_filter_custom_pattern( $sc['keywords_title'] );
 		}
 		if ( ! empty( $sc['keywords_inc'] ) ) {
 			if ( is_array( $sc['keywords_inc'] ) ) {
 				$sc['keywords_inc'] = implode( ',', $sc['keywords_inc'] );
 			}
-			$sc['keywords_inc'] = rtrim( $sc['keywords_inc'], ',' );
-			$sc['keywords_inc'] = array_map( 'trim', explode( ',', $sc['keywords_inc'] ) );
+			$sc['keywords_inc'] = feedzy_filter_custom_pattern( $sc['keywords_inc'] );
 		}
 		if ( ! empty( $sc['keywords_ban'] ) ) {
 			if ( is_array( $sc['keywords_ban'] ) ) {
 				$sc['keywords_ban'] = implode( ',', $sc['keywords_ban'] );
 			}
-			$sc['keywords_ban'] = rtrim( $sc['keywords_ban'], ',' );
-			$sc['keywords_ban'] = array_map( 'trim', explode( ',', $sc['keywords_ban'] ) );
+			$sc['keywords_ban'] = feedzy_filter_custom_pattern( $sc['keywords_ban'] );
 		}
 		if ( ! empty( $sc['keywords_exc'] ) ) {
 			if ( is_array( $sc['keywords_exc'] ) ) {
 				$sc['keywords_exc'] = implode( ',', $sc['keywords_exc'] );
 			}
-			$sc['keywords_exc'] = rtrim( $sc['keywords_exc'], ',' );
-			$sc['keywords_exc'] = array_map( 'trim', explode( ',', $sc['keywords_exc'] ) );
+			$sc['keywords_exc'] = feedzy_filter_custom_pattern( $sc['keywords_exc'] );
 		}
 		if ( empty( $sc['summarylength'] ) || ! is_numeric( $sc['summarylength'] ) ) {
 			$sc['summarylength'] = '';
@@ -1728,6 +1749,49 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			return $new;
 		}
 
+		return false;
+	}
+
+	/**
+	 * Keyword filter in multiple fields.
+	 *
+	 * @param string $filter_by Filter by.
+	 * @param string $keywords Keywords.
+	 * @param object $item The feed item.
+	 *
+	 * @return bool
+	 */
+	public function feedzy_feed_item_keywords_by( $filter_by = '', $keywords = '', $item ) {
+		if ( empty( $filter_by ) ) {
+			return false;
+		}
+
+		if ( 'title' === $filter_by ) {
+			$item_title = wp_strip_all_tags( $item->get_title(), true );
+			if ( ! empty( $item_title ) && preg_match( "/^$keywords.*$/i", $item_title ) ) {
+				return true;
+			}
+		} elseif ( 'description' === $filter_by ) {
+			$description = wp_strip_all_tags( $item->get_description(), true );
+			if ( ! empty( $description ) && preg_match( "/^$keywords.*$/i", $description ) ) {
+				return true;
+			}
+		} elseif ( 'author' === $filter_by ) {
+			$author = $item->get_author();
+			$author_name = '';
+			if ( $author ) {
+				$author_name = $author->get_name();
+			}
+			if ( ! empty( $author_name ) && preg_match( "/^$keywords.*$/i", $author_name ) ) {
+				return true;
+			}
+		} elseif ( 'fullcontent' === $filter_by ) {
+			$content = $item->get_item_tags( SIMPLEPIE_NAMESPACE_ATOM_10, 'full-content' );
+			$content = wp_strip_all_tags( $content[0]['data'], true );
+			if ( ! empty( $content ) && preg_match( "/^$keywords.*$/i", $content ) ) {
+				return true;
+			}
+		}
 		return false;
 	}
 }

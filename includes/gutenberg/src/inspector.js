@@ -245,18 +245,69 @@ class Inspector extends Component {
 
                         { ( ( feedzyjs.isPro ) && [
                             <TextControl
-                                label={ __( 'Only display if title contains:' ) }
-                                help={ __( 'Comma-separated list/case sensitive.' ) }
+                                label={ __( 'Only display if selected field contains:' ) }
+                                help={ __( 'Use comma(,) and plus(+) keyword' ) }
                                 value={ this.props.attributes.keywords_title }
                                 onChange={ this.props.edit.onKeywordsTitle }
                                 className="feedzy-include"
                             />,
+                            <SelectControl
+                                label={ __( 'Select a field if you want to inc keyword.' ) }
+                                value={ this.props.attributes.keywords_inc_on }
+                                options={ [
+                                    {
+                                        label: __( 'Title' ),
+                                        value: 'title',
+                                    },
+                                    {
+                                        label: __( 'Author' ),
+                                        value: 'author',
+                                    },
+                                    {
+                                        label: __( 'Description' ),
+                                        value: 'description',
+                                    },
+                                    ] }
+                                onChange={ this.props.edit.onKeywordsIncludeOn }
+                            />,
                             <TextControl
-                                label={ __( 'Exclude if title contains:' ) }
-                                help={ __( 'Comma-separated list/case sensitive.' ) }
+                                label={ __( 'Exclude if selected field contains:' ) }
+                                help={ __( 'Use comma(,) and plus(+) keyword' ) }
                                 value={ this.props.attributes.keywords_ban }
                                 onChange={ this.props.edit.onKeywordsBan }
                                 className="feedzy-ban"
+                            />,
+                            <SelectControl
+                                label={ __( 'Select a field if you want to exc keyword.' ) }
+                                value={ this.props.attributes.keywords_exc_on }
+                                options={ [
+                                    {
+                                        label: __( 'Title' ),
+                                        value: 'title',
+                                    },
+                                    {
+                                        label: __( 'Author' ),
+                                        value: 'author',
+                                    },
+                                    {
+                                        label: __( 'Description' ),
+                                        value: 'description',
+                                    },
+                                    ] }
+                                onChange={ this.props.edit.onKeywordsExcludeOn }
+                            />,
+                            <p>{ __( 'Filter feed item by date range.' ) }</p>,
+                            <TextControl
+                                type='datetime-local'
+                                label={ __( 'From:' ) }
+                                value={ this.props.attributes.from_datetime }
+                                onChange={ this.props.edit.onFromDateTime }
+                            />,
+                            <TextControl
+                                type='datetime-local'
+                                label={ __( 'To:' ) }
+                                value={ this.props.attributes.to_datetime }
+                                onChange={ this.props.edit.onToDateTime }
                             />
                          ] ) }
                     </PanelBody>,
