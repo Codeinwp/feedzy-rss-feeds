@@ -331,7 +331,7 @@ class Feedzy_Rss_Feeds_Import {
 		}
 		$import_feed_delete_days = intval( get_post_meta( $post->ID, 'import_feed_delete_days', true ) );
 		if ( empty( $import_feed_delete_days ) ) {
-			$import_feed_delete_days = 0;
+			$import_feed_delete_days = ! empty( $this->free_settings['general']['feedzy-delete-days'] ) ? (int) $this->free_settings['general']['feedzy-delete-days'] : 0;
 		}
 		$post_status        = $post->post_status;
 		$nonce              = wp_create_nonce( FEEDZY_BASEFILE );
