@@ -462,6 +462,20 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
+#### [Version 3.8.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.7.5...v3.8.0) (2021-10-19)
+
+#### Features: 
+ - Adds compatibility with pro features for [Elementor Template Builder](https://docs.themeisle.com/article/1396-elementor-compatibility-in-feedzy) and Dynamic Tags support.
+ - Adds compatibility for pro [Enhanced keyword](https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#filters) filtering support.
+
+#### Fixes
+- Fix category dropdown in Gutenberg Block
+- Magic tags that are unavailable with the free version listed in one line.
+- Fix typo in the import setup
+
+
+
+
 ##### [Version 3.7.5](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.7.4...v3.7.5) (2021-09-06)
 
 #### Fixes
