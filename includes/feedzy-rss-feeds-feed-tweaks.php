@@ -191,6 +191,37 @@ function feedzy_custom_tag_escape( $content = '' ) {
 	return $content;
 }
 
+/**
+ * Create pattern for feedzy keyword filter.
+ *
+ * @param string $keyword Keyword.
+ * @return string
+ */
+function feedzy_filter_custom_pattern( $keyword = '' ) {
+	$pattern = '';
+	$regex   = array();
+	if ( ! empty( $keyword ) && strlen( preg_replace( '/[^a-zA-Z]/', '', $keyword ) ) <= 500 ) {
+		$keywords = explode( ',', $keyword );
+		$keywords = array_filter( $keywords );
+		$keywords = array_map( 'trim', $keywords );
+		if ( ! empty( $keywords ) ) {
+			foreach ( $keywords as $keyword ) {
+				$keyword = explode( '+', $keyword );
+				$keyword = array_map(
+					function( $k ) {
+						$k = trim( $k );
+						return "(?=.*$k)";
+					},
+					$keyword
+				);
+				$regex[] = implode( '', $keyword );
+			}
+			$pattern .= implode( '|', $regex );
+		}
+	}
+	return $pattern;
+}
+
 add_filter(
 	'feedzy_wp_kses_allowed_html',
 	function( $allowed_html = array() ) {
@@ -238,6 +269,7 @@ add_filter(
 			),
 			'span'   => array(
 				'class' => array(),
+				'disabled' => array(),
 			),
 			'div'    => array(
 				'class' => array(),

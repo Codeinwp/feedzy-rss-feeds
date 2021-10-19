@@ -57,8 +57,16 @@ const attributes = {
 	keywords_title: {
 		type: 'string',
 	},
+	keywords_inc_on: {
+		type: 'string',
+		default: 'title',
+	},
 	keywords_ban: {
 		type: 'string',
+	},
+	keywords_exc_on: {
+		type: 'string',
+		default: 'title',
 	},
 	thumb: {
 		type: 'string',
@@ -98,6 +106,12 @@ const attributes = {
 	},
 	categories: {
 		type: 'object',
+	},
+	from_datetime: {
+		type: 'string',
+	},
+	to_datetime: {
+		type: 'string',
 	},
 };
 

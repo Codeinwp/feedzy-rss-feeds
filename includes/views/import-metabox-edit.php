@@ -59,28 +59,69 @@
 			<div class="feedzy-row <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
 				<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '' ) ); ?>
 				<div class="label_description">
-					<label class="feedzy-sr-only"><?php esc_html_e( 'Display item only if the title or content contains specific keyword(s)', 'feedzy-rss-feeds' ); ?></label>
+					<label class="feedzy-sr-only"><?php esc_html_e( 'Display item only if the selected field contains specific keyword(s)', 'feedzy-rss-feeds' ); ?></label>
 					<div>
-						<small><?php echo wp_kses_post( sprintf( __( 'You can provide comma-separated words. Remember, these words are %1$scase sensitive%2$s .e.g. News, news, STOCK', 'feedzy-rss-feeds' ), '<b>', '</b>' ) ); ?></small>
+						<small><?php echo wp_kses_post( sprintf( __( 'You can provide separate multiple titles with %1$s,%2$s keyword for the optional titles and %1$s+%2$s keyword for the required titles.%1$s e.g. news, stock + market%2$s', 'feedzy-rss-feeds' ), '<code>', '</code>' ) ); ?></small>
 					</div>
 				</div>
 				<div class="feedzy-separator"></div>
 				<div class="form-group input-group form_item">
-					<input type="text" name="feedzy_meta_data[inc_key]" placeholder="<?php esc_html_e( '(eg. news, Sports, STOCK etc.)', 'feedzy-rss-feeds' ); ?>" class="form-control" value="<?php echo esc_attr( $inc_key ); ?>"/>
+					<input type="text" name="feedzy_meta_data[inc_key]" placeholder="<?php esc_html_e( '(eg. news, stock + market etc.)', 'feedzy-rss-feeds' ); ?>" class="form-control feedzy-keyword-filter" value="<?php echo esc_attr( $inc_key ); ?>"/>
+					<div class="input-group-btn">
+						<select class="form-control feedzy-chosen feedzy-chosen-nosearch" name="feedzy_meta_data[inc_on]">
+							<?php
+							foreach ( $keyword_filter_fields as $field ) :
+								$field_val = sanitize_key( $field );
+								?>
+								<option value="<?php echo esc_attr( $field_val ); ?>"<?php selected( $inc_on, $field_val ); ?>><?php echo esc_html( $field ); ?></option>
+							<?php endforeach; ?>
+						</select>
+					</div>
 				</div>
 			</div>
 
 			<div class="feedzy-row <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
 				<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '' ) ); ?>
 				<div class="label_description">
-					<label class="feedzy-sr-only"><?php esc_html_e( 'Exclude item if the title or content contains specific keyword(s)', 'feedzy-rss-feeds' ); ?></label>
+					<label class="feedzy-sr-only"><?php esc_html_e( 'Exclude item if the selected field contains specific keyword(s)', 'feedzy-rss-feeds' ); ?></label>
 					<div>
-						<small><?php echo wp_kses_post( sprintf( __( 'You can provide comma-separated words. Remember, these words are %1$scase sensitive%2$s .e.g. News, news, STOCK', 'feedzy-rss-feeds' ), '<b>', '</b>' ) ); ?></small>
+						<small><?php echo wp_kses_post( sprintf( __( 'You can provide separate multiple titles with %1$s,%2$s keyword for the optional titles and %1$s+%2$s keyword for the required titles.%1$s e.g. news, stock + market%2$s', 'feedzy-rss-feeds' ), '<code>', '</code>' ) ); ?></small>
 					</div>
 				</div>
 				<div class="feedzy-separator"></div>
 				<div class="form-group input-group form_item">
-					<input type="text" name="feedzy_meta_data[exc_key]" placeholder="<?php esc_html_e( '(eg. news, Sports, STOCK etc.)', 'feedzy-rss-feeds' ); ?>" class="form-control" value="<?php echo esc_attr( $exc_key ); ?>"/>
+					<input type="text" name="feedzy_meta_data[exc_key]" placeholder="<?php esc_html_e( '(eg. news, stock + market etc.)', 'feedzy-rss-feeds' ); ?>" class="form-control feedzy-keyword-filter" value="<?php echo esc_attr( $exc_key ); ?>"/>
+					<div class="input-group-btn">
+						<select class="form-control feedzy-chosen feedzy-chosen-nosearch" name="feedzy_meta_data[exc_on]">
+							<?php
+							foreach ( $keyword_filter_fields as $field ) :
+								$field_val = sanitize_key( $field );
+								?>
+								<option value="<?php echo esc_attr( $field_val ); ?>"<?php selected( $exc_on, $field_val ); ?>><?php echo esc_html( $field ); ?></option>
+							<?php endforeach; ?>
+						</select>
+					</div>
+				</div>
+			</div>
+
+			<div class="feedzy-row <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
+				<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '' ) ); ?>
+				<div class="label_description">
+					<label class="feedzy-sr-only"><?php esc_html_e( 'Filter item based on date range.', 'feedzy-rss-feeds' ); ?></label>
+					<div>
+						<small><?php echo wp_kses_post( __( 'You can select a date range to import items within the selected date.', 'feedzy-rss-feeds' ) ); ?></small>
+					</div>
+				</div>
+				<div class="feedzy-separator"></div>
+				<div class="form-group input-group item-date-filter form_item">
+					<div class="feedzy_from_date">
+						<label class="feedzy-inline" for="import_link_author_admin"><?php esc_html_e( 'From', 'feedzy-rss-feeds' ); ?></label>
+						<input type="datetime-local" name="feedzy_meta_data[from_datetime]" placeholder="<?php esc_html_e( 'From', 'feedzy-rss-feeds' ); ?>" class="form-control" value="<?php echo esc_attr( $from_datetime ); ?>"/>
+					</div>
+					<div class="feedzy_to_date">
+						<label class="feedzy-inline" for="import_link_author_admin"><?php esc_html_e( 'To', 'feedzy-rss-feeds' ); ?></label>
+						<input type="datetime-local" name="feedzy_meta_data[to_datetime]" placeholder="<?php esc_html_e( 'From', 'feedzy-rss-feeds' ); ?>" class="form-control" value="<?php echo esc_attr( $to_datetime ); ?>"/>
+					</div>
 				</div>
 			</div>
 
@@ -102,7 +143,7 @@
 				<div class="label_description">
 					<label class="feedzy-sr-only"><?php esc_html_e( 'Automatically delete the posts created for this import after how many days?', 'feedzy-rss-feeds' ); ?></label>
 					<div>
-						<small><?php esc_html_e( 'Helpful if you want to remove stale or old items automatically. If you choose 0, the imported items will not be automatically deleted.', 'feedzy-rss-feeds' ); ?></small>
+						<small><?php esc_html_e( 'Helpful if you want to remove stale or old items automatically. Using 0 will revert to the default global value.', 'feedzy-rss-feeds' ); ?></small>
 					</div>
 				</div>
 				<div class="feedzy-separator"></div>
@@ -348,7 +389,7 @@
 					<div>
 						<input id="use-external-image" name="feedzy_meta_data[import_use_external_image]" class="feedzy-toggle feedzy-toggle-round" type="checkbox" value="yes" <?php echo esc_attr( $import_item_img_url ); ?>>
 						<label for="use-external-image" class="feedzy-inline"></label>
-						<label class="feedzy-inline" style="margin-left: 10px;" for="import_use_external_image"><?php esc_html_e( 'User external image URL, Ignore feature post thumbnail', 'feedzy-rss-feeds' ); ?></label>
+						<label class="feedzy-inline" style="margin-left: 10px;" for="import_use_external_image"><?php esc_html_e( 'Use external image URL, Ignore feature post thumbnail', 'feedzy-rss-feeds' ); ?></label>
 					</div>
 				</div>
 			</div>

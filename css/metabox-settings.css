@@ -2023,3 +2023,7 @@ input.feedzy-toggle-round:checked + label:after {
 .fz-feature-features button.fz-btn.fz-btn-submit.fz-btn-activate.active:focus {
 	background-color: #62c370;
 }
+
+.fz-settings #feedzy_delete_days {
+	width: 50%;
+} 

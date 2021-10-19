@@ -260,7 +260,7 @@ class Feedzy_Rss_Feeds {
 			self::$instance->loader->add_filter( 'feedzy_retrieve_categories', $plugin_import, 'retrieve_categories', 10, 2 );
 			self::$instance->loader->add_filter( 'feedzy_is_license_of_type', $plugin_import, 'feedzy_is_license_of_type', 10, 2 );
 			self::$instance->loader->add_filter( 'post_row_actions', $plugin_import, 'add_import_actions', 10, 2 );
-			self::$instance->loader->add_filter( 'wp_kses_allowed_html', $plugin_import, 'allow_iframe_tag_item_content', 10, 2 );
+			self::$instance->loader->add_filter( 'wp_kses_allowed_html', $plugin_import, 'feedzy_wp_kses_allowed_html', 10, 2 );
 		}
 
 		if ( ! defined( 'TI_UNIT_TESTING' ) ) {

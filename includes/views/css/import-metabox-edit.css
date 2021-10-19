@@ -1798,6 +1798,7 @@ a:focus.dropdown-item {
 #poststuff input[type="text"],
 #poststuff input[type="password"],
 #poststuff input[type="number"],
+#poststuff input[type="datetime-local"],
 #poststuff textarea,
 #poststuff textarea.form-control {
 	width: 100%;
@@ -2231,4 +2232,25 @@ span.feedzy-spinner {
 	border-top: 0;
 	background: #fff;
 	box-shadow: 0 4px 5px rgb(0 0 0 / 15%);
+}
+#poststuff input[type="text"].feedzy-keyword-filter {
+	width: 98%;
+}
+.form-group .feedzy_from_date {
+	width: 49%;
+	float: left;
+}
+.form-group .feedzy_to_date {
+	width: 49%;
+	float: right;
+}
+.form-group.item-date-filter {
+	padding-top: 0 !important;
+}
+.form-group.item-date-filter input {
+	padding: 0 10px !important;
+}
+.feedzy-chosen-nosearch + .chosen-container .chosen-search {
+	clip: rect(0, 0, 0, 0);
+	position: absolute;
 }
