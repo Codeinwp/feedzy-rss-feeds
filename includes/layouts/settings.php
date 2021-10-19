@@ -50,8 +50,8 @@
 						$disble_featured_image = 'checked';
 					}
 
+					$feedzy_delete_days = isset( $settings['general']['feedzy-delete-days'] ) ? $settings['general']['feedzy-delete-days'] : 0;
 					$default_thumbnail_id = isset( $settings['general']['default-thumbnail-id'] ) ? $settings['general']['default-thumbnail-id'] : 0;
-
 					switch ( $active_tab ) {
 						case 'general':
 							?>
@@ -74,6 +74,17 @@
 								<a href="javascript:;" class="feedzy-remove-media button action <?php echo $default_thumbnail_id ? esc_attr( 'is-show' ) : ''; ?>"><?php esc_html_e( 'Remove image', 'feedzy-rss-feeds' ); ?></a>
 								<input type="hidden" name="default-thumbnail-id" id="feed-post-default-thumbnail" value="<?php echo esc_attr( $default_thumbnail_id ); ?>">
 							</div>
+							<?php if ( feedzy_is_pro() ) : ?>
+								<div class="fz-form-group">
+									<label><?php esc_html_e( 'Automatically delete the posts created for all imports after how many days?', 'feedzy-rss-feeds' ); ?></label>
+								</div>
+								<div class="fz-form-group">
+									<input type="number" min="0" max="9999" id="feedzy_delete_days" name="feedzy-delete-days" class="fz-form-control" value="<?php echo esc_attr( $feedzy_delete_days ); ?>"/>
+									<div>
+										<small><?php esc_html_e( 'Helpful if you want to remove stale or old items automatically. If you choose 0, it will be considered the individual import setting.', 'feedzy-rss-feeds' ); ?></small>
+									</div>
+								</div>
+							<?php endif; ?>
 							<?php
 							break;
 						case 'headers':
