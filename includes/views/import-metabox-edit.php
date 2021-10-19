@@ -102,7 +102,7 @@
 				<div class="label_description">
 					<label class="feedzy-sr-only"><?php esc_html_e( 'Automatically delete the posts created for this import after how many days?', 'feedzy-rss-feeds' ); ?></label>
 					<div>
-						<small><?php esc_html_e( 'Helpful if you want to remove stale or old items automatically. If the value is 0, the imported items will not be automatically deleted. The global setting value will be overridden with it.', 'feedzy-rss-feeds' ); ?></small>
+						<small><?php esc_html_e( 'Helpful if you want to remove stale or old items automatically. Using 0 will revert to the default global value.', 'feedzy-rss-feeds' ); ?></small>
 					</div>
 				</div>
 				<div class="feedzy-separator"></div>
