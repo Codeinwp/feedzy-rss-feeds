@@ -700,7 +700,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$feed_url = html_entity_decode( $feed_url );
 			}
 
-			$feed_url = $this->get_valid_feed_urls( $feed_url, $cache );
+			$feed_url = $this->get_valid_source_urls( $feed_url, $cache );
 
 			$feed = $this->init_feed( $feed_url, $cache, $sc ); // Not used as log as #41304 is Opened.
 
@@ -890,11 +890,18 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @return array
 	 */
-	protected function get_valid_feed_urls( $feed_url, $cache, $echo = true ) {
+	protected function get_valid_source_urls( $feed_url, $cache, $echo = true ) {
 		$valid_feed_url = array();
 		if ( is_array( $feed_url ) ) {
 			foreach ( $feed_url as $url ) {
-				if ( $this->check_valid_xml( $url, $cache ) ) {
+				$source_type = 'xml';
+				if ( function_exists( 'feedzy_amazon_get_locale_hosts' ) ) {
+					$amazon_hosts  = feedzy_amazon_get_locale_hosts();
+					$url_host      = 'webservices.' . wp_parse_url( $url, PHP_URL_HOST );
+					$is_amazon_url = ! empty( $amazon_hosts ) && in_array( $url_host, $amazon_hosts, true ) ? true : false;
+					$source_type   = $is_amazon_url ? 'amazon' : $source_type;
+				}
+				if ( $this->check_valid_source( $url, $cache, $source_type ) ) {
 					$valid_feed_url[] = $url;
 				} else {
 					if ( $echo ) {
@@ -903,7 +910,14 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				}
 			}
 		} else {
-			if ( $this->check_valid_xml( $feed_url, $cache ) ) {
+			$source_type = 'xml';
+			if ( function_exists( 'feedzy_amazon_get_locale_hosts' ) ) {
+				$url_host      = 'webservices.' . wp_parse_url( $feed_url, PHP_URL_HOST );
+				$amazon_hosts  = feedzy_amazon_get_locale_hosts();
+				$is_amazon_url = ! empty( $amazon_hosts ) && in_array( $url_host, $amazon_hosts, true ) ? true : false;
+				$source_type   = $is_amazon_url ? 'amazon' : $source_type;
+			}
+			if ( $this->check_valid_source( $feed_url, $cache, $source_type ) ) {
 				$valid_feed_url[] = $feed_url;
 			} else {
 				if ( $echo ) {
@@ -923,26 +937,56 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @param   string $url The URL to validate.
 	 * @param   string $cache The cache string (eg. 1_hour, 30_min etc.).
+	 * @param   string $source_type Source Type.
 	 *
 	 * @return bool
 	 */
-	protected function check_valid_xml( $url, $cache ) {
+	protected function check_valid_source( $url, $cache, $source_type = 'xml' ) {
 		global $post;
-		$feed = $this->init_feed( $url, $cache, array() );
-		if ( $feed->error() ) {
-			return false;
+		// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
+		if ( null === $post && ! empty( $_POST['id'] ) ) {
+			$post_id = (int) $_POST['id'];
+		} else {
+			$post_id = $post->ID;
 		}
-		// phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
-		if ( isset( $_POST['feedzy_meta_data']['import_link_author_admin'] ) && 'yes' === $_POST['feedzy_meta_data']['import_link_author_admin'] ) {
-			if ( $feed->get_items() ) {
-				$author = $feed->get_items()[0]->get_author();
-				if ( empty( $author ) ) {
-					update_post_meta( $post->ID, '__transient_feedzy_invalid_dc_namespace', array( $url ) );
-					return false;
+		$is_valid = true;
+		if ( 'amazon' === $source_type ) {
+			$amazon_api_errors = array();
+			$amazon_products = $this->init_amazon_api(
+				$url,
+				$cache,
+				array(
+					'number_of_item' => 1,
+					'no-cache'       => true,
+				)
+			);
+			if ( ! empty( $amazon_products->get_errors() ) ) {
+				$amazon_api_errors['source_type'] = __( '[Amazon Product Advertising API] ', 'feedzy-rss-feeds' );
+				$amazon_api_errors['source']      = array( $url );
+				$amazon_api_errors['errors']      = $amazon_products->get_errors();
+				update_post_meta( $post_id, '__transient_feedzy_invalid_source_errors', $amazon_api_errors );
+				$is_valid = false;
+			}
+		} else {
+			$feed = $this->init_feed( $url, $cache, array() );
+			if ( $feed->error() ) {
+				$is_valid = false;
+			}
+			// phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
+			if ( isset( $_POST['feedzy_meta_data']['import_link_author_admin'] ) && 'yes' === $_POST['feedzy_meta_data']['import_link_author_admin'] ) {
+				if ( $feed->get_items() ) {
+					$author = $feed->get_items()[0]->get_author();
+					if ( empty( $author ) ) {
+						update_post_meta( $post_id, '__transient_feedzy_invalid_dc_namespace', array( $url ) );
+						$is_valid = false;
+					}
 				}
 			}
 		}
-		return true;
+		if ( $is_valid ) {
+			update_post_meta( $post_id, '__feedzy_source_type', $source_type );
+		}
+		return $is_valid;
 	}
 
 	/**
@@ -1793,5 +1837,23 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Init amazon API.
+	 *
+	 * @param string $url Source URL.
+	 * @param string $cache Cache time.
+	 * @param array  $additional Additional settings.
+	 *
+	 * @return mixed
+	 */
+	public function init_amazon_api( $url, $cache, $additional = array() ) {
+		$additional['refresh'] = $cache;
+		$amazon_product = new Feedzy_Rss_Feeds_Pro_Amazon_Product_Advertising();
+		$settings = get_option( 'feedzy-rss-feeds-settings', array() );
+		$url = str_replace( array( 'http://', 'https://' ), '', $url );
+		$amazon_product->set_config_option( $url, $settings );
+		return $amazon_product->call_api( $amazon_product->get_api_option( 'access_key' ), $amazon_product->get_api_option( 'secret_key' ), $amazon_product->get_api_option( 'partner_tag' ), $additional );
 	}
 }

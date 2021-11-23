@@ -495,8 +495,9 @@ class Feedzy_Rss_Feeds_Import {
 			// if invalid source has been found, redirect back to edit screen
 			// where errors can be shown
 			$invalid = get_post_meta( $post_id, '__transient_feedzy_invalid_source', true );
-			$invalid_dc_namespace = get_post_meta( $post_id, '__transient_feedzy_invalid_dc_namespace', true );
-			if ( empty( $invalid ) && empty( $invalid_dc_namespace ) ) {
+			$invalid_dc_namespace  = get_post_meta( $post_id, '__transient_feedzy_invalid_dc_namespace', true );
+			$invalid_source_errors = get_post_meta( $post_id, '__transient_feedzy_invalid_source_errors', true );
+			if ( empty( $invalid ) && empty( $invalid_dc_namespace ) && empty( $invalid_source_errors ) ) {
 				return admin_url( 'edit.php?post_type=feedzy_imports' );
 			}
 		}
@@ -590,7 +591,17 @@ class Feedzy_Rss_Feeds_Import {
 				$src = get_post_meta( $post_id, 'source', true );
 				// if the source is a category, link it.
 				if ( strpos( $src, 'http' ) === false && strpos( $src, 'https' ) === false ) {
-					$src = sprintf( '%s: %s%s%s', __( 'Feed Category', 'feedzy-rss-feeds' ), '<a href="' . admin_url( 'edit.php?post_type=feedzy_categories' ) . '" target="_blank">', $src, '</a>' );
+					if ( function_exists( 'feedzy_amazon_get_locale_hosts' ) ) {
+						$amazon_hosts = feedzy_amazon_get_locale_hosts();
+						$src_path     = 'webservices.' . wp_parse_url( $src, PHP_URL_PATH );
+						if ( in_array( $src_path, $amazon_hosts, true ) ) {
+							$src = sprintf( '%s: %s%s%s', __( 'Amazon Product Advertising API', 'feedzy-rss-feeds' ), '<a>', $src, '</a>' );
+						} else {
+							$src = sprintf( '%s: %s%s%s', __( 'Feed Category', 'feedzy-rss-feeds' ), '<a href="' . admin_url( 'edit.php?post_type=feedzy_categories' ) . '" target="_blank">', $src, '</a>' );
+						}
+					} else {
+						$src = sprintf( '%s: %s%s%s', __( 'Feed Category', 'feedzy-rss-feeds' ), '<a href="' . admin_url( 'edit.php?post_type=feedzy_categories' ) . '" target="_blank">', $src, '</a>' );
+					}
 				} else {
 					// else link it to the feed but shorten it if it is too long.
 					$too_long = 65;
@@ -1615,13 +1626,28 @@ class Feedzy_Rss_Feeds_Import {
 			return $feedURL;
 		}
 
-		$feed = $admin->fetch_feed( $feedURL, isset( $options['refresh'] ) ? $options['refresh'] : '12_hours', $options );
+		$source_type = get_post_meta( $options['__jobID'], '__feedzy_source_type', true );
+		if ( 'amazon' === $source_type ) {
+			$feed = $admin->init_amazon_api(
+				$feedURL,
+				isset( $options['refresh'] ) ? $options['refresh'] : '12_hours',
+				array(
+					'number_of_item' => $options['max'],
+					'no-cache'       => false,
+				)
+			);
+			if ( ! empty( $feed->get_errors() ) ) {
+				return array();
+			}
+		} else {
+			$feed = $admin->fetch_feed( $feedURL, isset( $options['refresh'] ) ? $options['refresh'] : '12_hours', $options );
 
-		$feed->force_feed( true );
-		$feed->enable_order_by_date( false );
+			$feed->force_feed( true );
+			$feed->enable_order_by_date( false );
 
-		if ( is_string( $feed ) ) {
-			return array();
+			if ( is_string( $feed ) ) {
+				return array();
+			}
 		}
 		$sizes      = array(
 			'width'  => $options['size'],
@@ -1629,7 +1655,6 @@ class Feedzy_Rss_Feeds_Import {
 		);
 		$sizes      = apply_filters( 'feedzy_thumb_sizes', $sizes, $feedURL );
 		$feed_items = apply_filters( 'feedzy_get_feed_array', array(), $options, $feed, $feedURL, $sizes );
-
 		if ( $raw_feed_also ) {
 			return array(
 				'items' => $feed_items,
