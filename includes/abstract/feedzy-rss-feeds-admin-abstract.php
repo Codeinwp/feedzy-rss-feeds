@@ -687,7 +687,21 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	public function fetch_feed( $feed_url, $cache = '12_hours', $sc ) {
 		// Load SimplePie if not already.
 		do_action( 'feedzy_pre_http_setup', $feed_url );
-
+		if ( function_exists( 'feedzy_amazon_get_locale_hosts' ) ) {
+			$amazon_hosts  = feedzy_amazon_get_locale_hosts();
+			$url_host      = 'webservices.' . wp_parse_url( $feed_url, PHP_URL_HOST );
+			if ( ! empty( $amazon_hosts ) && in_array( $url_host, $amazon_hosts, true ) ) {
+				$feed = $this->init_amazon_api(
+					$feed_url,
+					isset( $sc['refresh'] ) ? $sc['refresh'] : '12_hours',
+					array(
+						'number_of_item' => $sc['max'],
+						'no-cache'       => false,
+					)
+				);
+				return $feed;
+			}
+		}
 		// Load SimplePie Instance.
 		$feed = $this->init_feed( $feed_url, $cache, $sc ); // Not used as log as #41304 is Opened.
 
