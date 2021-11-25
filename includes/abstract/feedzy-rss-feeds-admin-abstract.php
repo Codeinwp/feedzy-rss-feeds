@@ -695,7 +695,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 					$feed_url,
 					isset( $sc['refresh'] ) ? $sc['refresh'] : '12_hours',
 					array(
-						'number_of_item' => $sc['max'],
+						'number_of_item' => isset( $sc['max'] ) ? $sc['max'] : 5,
 						'no-cache'       => false,
 					)
 				);
