@@ -1535,6 +1535,52 @@ class Feedzy_Rss_Feeds_Import {
 					$image_url = $import_featured_img;
 				}
 
+				// Fetch image from graby.
+				if ( empty( $image_url ) && defined( 'FEEDZY_PRO_FETCH_ITEM_IMG_URL' ) ) {
+					// if license does not exist, use the site url
+					// this should obviously never happen unless on dev instances.
+					$license      = sprintf( 'n/a - %s', get_site_url() );
+					$license_data = get_option( 'feedzy_rss_feeds_pro_license_data', '' );
+					if ( ! empty( $license_data ) && isset( $license_data->key ) ) {
+						$license = $license_data->key;
+					}
+					$response = wp_remote_post(
+						FEEDZY_PRO_FETCH_ITEM_IMG_URL,
+						apply_filters(
+							'feedzy_fetch_item_image',
+							array(
+								'timeout' => 100,
+								'body'    => array_merge(
+									array(
+										'item_url' => $item['item_url'],
+										'license'  => $license,
+									)
+								),
+							)
+						)
+					);
+
+					if ( ! is_wp_error( $response ) ) {
+						if ( array_key_exists( 'response', $response ) && array_key_exists( 'code', $response['response'] ) && intval( $response['response']['code'] ) !== 200 ) {
+							// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
+							do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'error in response = %s', print_r( $response, true ) ), 'error', __FILE__, __LINE__ );
+						}
+						$body = wp_remote_retrieve_body( $response );
+						if ( ! is_wp_error( $body ) ) {
+							$response_data = json_decode( $body, true );
+							if ( isset( $response_data['url'] ) ) {
+								$image_url = $response_data['url'];
+							}
+						} else {
+							// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
+							do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'error in body = %s', print_r( $body, true ) ), 'error', __FILE__, __LINE__ );
+						}
+					} else {
+						// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
+						do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'error in request = %s', print_r( $response, true ) ), 'error', __FILE__, __LINE__ );
+					}
+				}
+
 				if ( ! empty( $image_url ) ) {
 					if ( 'yes' === $import_item_img_url ) {
 						// Set external image URL.
