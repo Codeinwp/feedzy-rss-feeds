@@ -2060,7 +2060,8 @@ class Feedzy_Rss_Feeds_Import {
 		} elseif ( 1 === intval( get_post_meta( $post->ID, 'feedzy', true ) ) ) {
 			// show an unclickable action that mentions that it is imported by us
 			// so that users are aware
-			$actions['feedzy'] = sprintf( '(%s)', __( 'Imported by Feedzy', 'feedzy-rss-feeds' ) );
+			$feedzy_job_id     = get_post_meta( $post->ID, 'feedzy_job', true );
+			$actions['feedzy'] = sprintf( '(%s %s)', __( 'Imported by Feedzy from', 'feedzy-rss-feeds' ), get_the_title( $feedzy_job_id ) );
 		}
 		return $actions;
 	}
