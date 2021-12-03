@@ -453,7 +453,3 @@ input:checked + .feedzy-track:before {
 .components-select-control {
 	height:auto;
 }
-.feedzy-rss-link-icon:after {
-	content: url( '../img/external-link.png' );
-	margin-left: 3px;
-}

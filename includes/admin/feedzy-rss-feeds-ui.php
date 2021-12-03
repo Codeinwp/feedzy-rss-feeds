@@ -168,4 +168,17 @@ class Feedzy_Rss_Feeds_Ui {
 		array_push( $buttons, 'feedzy_mce_button' );
 		return $buttons;
 	}
+
+	/**
+	 * Add global style.
+	 */
+	public function add_feedzy_global_style() { ?>
+		<style type="text/css">
+		.feedzy-rss-link-icon:after {
+			content: url( "<?php echo esc_url( FEEDZY_ABSURL . 'img/external-link.png' ); ?>" );
+			margin-left: 3px;
+		}
+	</style>
+		<?php
+	}
 }
