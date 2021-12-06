@@ -1324,7 +1324,7 @@ class Feedzy_Rss_Feeds_Import {
 
 			$post_title = apply_filters( 'feedzy_invoke_services', $post_title, 'title', $item['item_title'], $job );
 
-			$item_link  = '<a href="' . $item['item_url'] . '" target="_blank">' . __( 'Read More', 'feedzy-rss-feeds' ) . '</a>';
+			$item_link  = '<a href="' . $item['item_url'] . '" target="_blank" class="feedzy-rss-link-icon">' . __( 'Read More', 'feedzy-rss-feeds' ) . '</a>';
 			$image_html = '';
 			if ( ! empty( $item['item_img_path'] ) ) {
 				$image_html = '<img src="' . $item['item_img_path'] . '" title="' . $item['item_title'] . '" />';
