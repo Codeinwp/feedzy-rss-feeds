@@ -1777,7 +1777,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				return true;
 			}
 		} elseif ( 'description' === $filter_by ) {
-			$description = wp_strip_all_tags( $item->get_description(), true );
+			$description = wp_strip_all_tags( $item->get_content(), true );
 			if ( ! empty( $description ) && preg_match( "/^$keywords.*$/i", $description ) ) {
 				return true;
 			}
