@@ -1,3 +1,10 @@
+##### [Version 3.8.1](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.8.0...v3.8.1) (2021-12-20)
+
+- Show the import job title in post row action
+- Add default thumbnail image support in the external image
+- [#item_url] magic tag allows opening in a new tab
+- Style for the input fields of setting form
+
 #### [Version 3.8.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.7.5...v3.8.0) (2021-10-19)
 
 #### Features: 
