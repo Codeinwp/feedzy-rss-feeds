@@ -300,6 +300,7 @@ add_filter(
 				'href'  => array(),
 				'title' => array(),
 				'class' => array(),
+				'target' => array(),
 			),
 			'br'     => array(),
 			'em'     => array(),

@@ -1324,7 +1324,7 @@ class Feedzy_Rss_Feeds_Import {
 
 			$post_title = apply_filters( 'feedzy_invoke_services', $post_title, 'title', $item['item_title'], $job );
 
-			$item_link  = '<a href="' . $item['item_url'] . '" target="_blank">' . __( 'Read More', 'feedzy-rss-feeds' ) . '</a>';
+			$item_link  = '<a href="' . $item['item_url'] . '" target="_blank" class="feedzy-rss-link-icon">' . __( 'Read More', 'feedzy-rss-feeds' ) . '</a>';
 			$image_html = '';
 			if ( ! empty( $item['item_img_path'] ) ) {
 				$image_html = '<img src="' . $item['item_img_path'] . '" title="' . $item['item_title'] . '" />';
@@ -1533,6 +1533,52 @@ class Feedzy_Rss_Feeds_Import {
 					}
 				} else {
 					$image_url = $import_featured_img;
+				}
+
+				// Fetch image from graby.
+				if ( empty( $image_url ) && defined( 'FEEDZY_PRO_FETCH_ITEM_IMG_URL' ) ) {
+					// if license does not exist, use the site url
+					// this should obviously never happen unless on dev instances.
+					$license      = sprintf( 'n/a - %s', get_site_url() );
+					$license_data = get_option( 'feedzy_rss_feeds_pro_license_data', '' );
+					if ( ! empty( $license_data ) && isset( $license_data->key ) ) {
+						$license = $license_data->key;
+					}
+					$response = wp_remote_post(
+						FEEDZY_PRO_FETCH_ITEM_IMG_URL,
+						apply_filters(
+							'feedzy_fetch_item_image',
+							array(
+								'timeout' => 100,
+								'body'    => array_merge(
+									array(
+										'item_url' => $item['item_url'],
+										'license'  => $license,
+									)
+								),
+							)
+						)
+					);
+
+					if ( ! is_wp_error( $response ) ) {
+						if ( array_key_exists( 'response', $response ) && array_key_exists( 'code', $response['response'] ) && intval( $response['response']['code'] ) !== 200 ) {
+							// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
+							do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'error in response = %s', print_r( $response, true ) ), 'error', __FILE__, __LINE__ );
+						}
+						$body = wp_remote_retrieve_body( $response );
+						if ( ! is_wp_error( $body ) ) {
+							$response_data = json_decode( $body, true );
+							if ( isset( $response_data['url'] ) ) {
+								$image_url = $response_data['url'];
+							}
+						} else {
+							// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
+							do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'error in body = %s', print_r( $body, true ) ), 'error', __FILE__, __LINE__ );
+						}
+					} else {
+						// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
+						do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'error in request = %s', print_r( $response, true ) ), 'error', __FILE__, __LINE__ );
+					}
 				}
 
 				if ( ! empty( $image_url ) ) {
@@ -2060,7 +2106,8 @@ class Feedzy_Rss_Feeds_Import {
 		} elseif ( 1 === intval( get_post_meta( $post->ID, 'feedzy', true ) ) ) {
 			// show an unclickable action that mentions that it is imported by us
 			// so that users are aware
-			$actions['feedzy'] = sprintf( '(%s)', __( 'Imported by Feedzy', 'feedzy-rss-feeds' ) );
+			$feedzy_job_id     = get_post_meta( $post->ID, 'feedzy_job', true );
+			$actions['feedzy'] = sprintf( '(%s %s)', __( 'Imported by Feedzy from', 'feedzy-rss-feeds' ), get_the_title( $feedzy_job_id ) );
 		}
 		return $actions;
 	}
