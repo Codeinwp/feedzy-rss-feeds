@@ -311,7 +311,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			if ( ! empty( $keywords ) ) {
 				$continue = false;
 				if ( ! empty( $inc_on ) ) {
-					$continue = $this->feedzy_feed_item_keywords_by( $inc_on, $keywords, $item );
+					$continue = $this->feedzy_feed_item_keywords_by( $inc_on, $keywords, $item, $sc );
 				} else {
 					if ( preg_match( "/^$keywords.*$/i", $item->get_title() ) || preg_match( "/^$keywords.*$/i", $item->get_description() ) ) {
 						$continue = true;
@@ -323,7 +323,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			if ( ! empty( $keywords ) ) {
 				$continue = false;
 				if ( ! empty( $inc_on ) ) {
-					$continue = $this->feedzy_feed_item_keywords_by( $inc_on, $keywords, $item );
+					$continue = $this->feedzy_feed_item_keywords_by( $inc_on, $keywords, $item, $sc );
 				} else {
 					if ( preg_match( "/^$keywords.*$/i", $item->get_title() ) ) {
 						$continue = true;
@@ -336,7 +336,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$keywords = $sc['keywords_exc'];
 			if ( ! empty( $keywords ) ) {
 				if ( ! empty( $exc_on ) ) {
-					$exc_item = $this->feedzy_feed_item_keywords_by( $exc_on, $keywords, $item );
+					$exc_item = $this->feedzy_feed_item_keywords_by( $exc_on, $keywords, $item, $sc );
 					if ( $exc_item ) {
 						$continue = false;
 					}
@@ -350,7 +350,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$keywords = $sc['keywords_ban'];
 			if ( ! empty( $keywords ) ) {
 				if ( ! empty( $exc_on ) ) {
-					$keywords_ban = $this->feedzy_feed_item_keywords_by( $exc_on, $keywords, $item );
+					$keywords_ban = $this->feedzy_feed_item_keywords_by( $exc_on, $keywords, $item, $sc );
 					if ( $keywords_ban ) {
 						$continue = false;
 					}
@@ -1771,20 +1771,22 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @return bool
 	 */
-	public function feedzy_feed_item_keywords_by( $filter_by = '', $keywords = '', $item ) {
+	public function feedzy_feed_item_keywords_by( $filter_by = '', $keywords = '', $item, $sc = array() ) {
+		$is_valid = false;
+
 		if ( empty( $filter_by ) ) {
-			return false;
+			return $is_valid;
 		}
 
 		if ( 'title' === $filter_by ) {
 			$item_title = wp_strip_all_tags( $item->get_title(), true );
 			if ( ! empty( $item_title ) && preg_match( "/^$keywords.*$/i", $item_title ) ) {
-				return true;
+				$is_valid = true;
 			}
 		} elseif ( 'description' === $filter_by ) {
 			$description = wp_strip_all_tags( $item->get_content(), true );
 			if ( ! empty( $description ) && preg_match( "/^$keywords.*$/i", $description ) ) {
-				return true;
+				$is_valid = true;
 			}
 		} elseif ( 'author' === $filter_by ) {
 			$author = $item->get_author();
@@ -1793,15 +1795,23 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$author_name = $author->get_name();
 			}
 			if ( ! empty( $author_name ) && preg_match( "/^$keywords.*$/i", $author_name ) ) {
-				return true;
+				$is_valid = true;
 			}
 		} elseif ( 'fullcontent' === $filter_by ) {
 			$content = $item->get_item_tags( SIMPLEPIE_NAMESPACE_ATOM_10, 'full-content' );
 			$content = wp_strip_all_tags( $content[0]['data'], true );
 			if ( ! empty( $content ) && preg_match( "/^$keywords.*$/i", $content ) ) {
-				return true;
+				$is_valid = true;
 			}
 		}
-		return false;
+
+		// Date filter.
+		if ( $is_valid && ( ! empty( $sc['from_datetime'] ) && ! empty( $sc['to_datetime'] ) ) ) {
+			$from_datetime = strtotime( $sc['from_datetime'] );
+			$to_datetime = strtotime( $sc['to_datetime'] );
+			$item_date = strtotime( $item->get_date() );
+			$is_valid = ( ( $from_datetime <= $item_date ) && ( $item_date <= $to_datetime ) );
+		}
+		return $is_valid;
 	}
 }
