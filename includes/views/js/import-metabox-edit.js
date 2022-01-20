@@ -274,6 +274,10 @@
                 e.preventDefault();
             }
         } );
+        // Enable/Disable auto translation.
+        $( document ).on( 'change', '#feedzy-auto-translation', function() {
+            $( '#feedzy_auto_translation_lang' ).attr( 'disabled', ! $( this ).is( ':checked' ) ).trigger( 'chosen:updated' );
+        } );
     }
 
     function initSummary() {

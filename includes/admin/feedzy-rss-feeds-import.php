@@ -309,6 +309,9 @@ class Feedzy_Rss_Feeds_Import {
 		$import_selected_language  = get_post_meta( $post->ID, 'language', true );
 		$from_datetime  = get_post_meta( $post->ID, 'from_datetime', true );
 		$to_datetime  = get_post_meta( $post->ID, 'to_datetime', true );
+		$import_auto_translation  = get_post_meta( $post->ID, 'import_auto_translation', true );
+		$import_auto_translation  = 'yes' === $import_auto_translation ? 'checked' : '';
+		$import_translation_lang  = get_post_meta( $post->ID, 'import_auto_translation_lang', true );
 		// default values so that post is not created empty.
 		if ( empty( $import_title ) ) {
 			$import_title = '[#item_title]';
@@ -439,6 +442,8 @@ class Feedzy_Rss_Feeds_Import {
 			$source_is_valid = false;
 			// Check feeds remove duplicates checkbox checked OR not.
 			$data_meta['import_remove_duplicates'] = isset( $data_meta['import_remove_duplicates'] ) ? $data_meta['import_remove_duplicates'] : 'no';
+			// Check feeds automatically translation checkbox checked OR not.
+			$data_meta['import_auto_translation'] = isset( $data_meta['import_auto_translation'] ) ? $data_meta['import_auto_translation'] : 'no';
 			// Check feeds external image URL checkbox checked OR not.
 			$data_meta['import_use_external_image'] = isset( $data_meta['import_use_external_image'] ) ? $data_meta['import_use_external_image'] : 'no';
 			foreach ( $data_meta as $key => $value ) {
@@ -1134,6 +1139,9 @@ class Feedzy_Rss_Feeds_Import {
 		$import_selected_language  = get_post_meta( $job->ID, 'language', true );
 		$from_datetime  = get_post_meta( $job->ID, 'from_datetime', true );
 		$to_datetime  = get_post_meta( $job->ID, 'to_datetime', true );
+		$import_auto_translation  = get_post_meta( $job->ID, 'import_auto_translation', true );
+		$import_auto_translation  = 'yes' === $import_auto_translation ? true : false;
+		$import_translation_lang  = get_post_meta( $job->ID, 'import_auto_translation_lang', true );
 		$max                  = $import_feed_limit;
 		// Used as a new line character in import content.
 		$import_content = str_replace( PHP_EOL, "\r\n", $import_content );
@@ -1324,6 +1332,12 @@ class Feedzy_Rss_Feeds_Import {
 
 			$post_title = apply_filters( 'feedzy_invoke_services', $post_title, 'title', $item['item_title'], $job );
 
+			// Get translated item title.
+			if ( $import_auto_translation && false !== strpos( $post_title, '[#translated_title]' ) ) {
+				$translated_title = apply_filters( 'feedzy_invoke_auto_translate_services', $item['item_title'], '[#translated_title]', $import_translation_lang, $job );
+				$post_title = str_replace( '[#translated_title]', $translated_title, $post_title );
+			}
+
 			$item_link  = '<a href="' . $item['item_url'] . '" target="_blank" class="feedzy-rss-link-icon">' . __( 'Read More', 'feedzy-rss-feeds' ) . '</a>';
 			$image_html = '';
 			if ( ! empty( $item['item_img_path'] ) ) {
@@ -1380,6 +1394,18 @@ class Feedzy_Rss_Feeds_Import {
 			}
 
 			$post_content = apply_filters( 'feedzy_invoke_services', $post_content, 'content', $item['item_description'], $job );
+
+			// Item content translate.
+			if ( $import_auto_translation && false !== strpos( $post_content, '[#translated_content]' ) ) {
+				$translated_content = apply_filters( 'feedzy_invoke_auto_translate_services', $item['item_description'], '[#translated_content]', $import_translation_lang, $job );
+				$post_content = str_replace( '[#translated_content]', $translated_content, $post_content );
+			}
+
+			// Translate full-content.
+			if ( $import_auto_translation && false !== strpos( $post_content, '[#translated_full_content]' ) ) {
+				$translated_full_content = apply_filters( 'feedzy_invoke_auto_translate_services', $item['item_url'], '[#translated_full_content]', $import_translation_lang, $job );
+				$post_content = str_replace( '[#translated_full_content]', $translated_full_content, $post_content );
+			}
 
 			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 			$item_date = date( 'Y-m-d H:i:s', $item['item_date'] );
@@ -1979,6 +2005,7 @@ class Feedzy_Rss_Feeds_Import {
 		if ( ! feedzy_is_pro() ) {
 			$default['title_spinnerchief:disabled'] = __( 'Title from SpinnerChief', 'feedzy-rss-feeds' );
 			$default['title_wordai:disabled']       = __( 'Title from WordAI', 'feedzy-rss-feeds' );
+			$default['translated_title:disabled']   = __( 'Translated Title', 'feedzy-rss-feeds' );
 		}
 		return $default;
 	}
@@ -2020,6 +2047,8 @@ class Feedzy_Rss_Feeds_Import {
 			$default['full_content_spinnerchief:disabled'] = __( 'Full content from SpinnerChief', 'feedzy-rss-feeds' );
 			$default['content_wordai:disabled']            = __( 'Content from WordAI', 'feedzy-rss-feeds' );
 			$default['full_content_wordai:disabled']       = __( 'Full content from WordAI', 'feedzy-rss-feeds' );
+			$default['translated_content:disabled']        = __( 'Translated Content', 'feedzy-rss-feeds' );
+			$default['translated_full_content:disabled']        = __( 'Translated Full Content', 'feedzy-rss-feeds' );
 		}
 		return $default;
 	}

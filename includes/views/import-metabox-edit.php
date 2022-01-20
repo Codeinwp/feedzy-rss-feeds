@@ -169,6 +169,66 @@
 					</div>
 				</div>
 			</div>
+
+			<?php
+			if ( apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) :
+				$target_lang = array(
+					'EN'    => __( 'English', 'feedzy-rss-feeds' ),
+					'BG'    => __( 'Bulgarian', 'feedzy-rss-feeds' ),
+					'CS'    => __( 'Czech', 'feedzy-rss-feeds' ),
+					'DA'    => __( 'Danish', 'feedzy-rss-feeds' ),
+					'DE'    => __( 'German', 'feedzy-rss-feeds' ),
+					'EL'    => __( 'Greek', 'feedzy-rss-feeds' ),
+					'EN-GB' => __( 'English (British)', 'feedzy-rss-feeds' ),
+					'EN-US' => __( 'English (American)', 'feedzy-rss-feeds' ),
+					'ES'    => __( 'Spanish', 'feedzy-rss-feeds' ),
+					'ET'    => __( 'Estonian', 'feedzy-rss-feeds' ),
+					'FI'    => __( 'Finnish', 'feedzy-rss-feeds' ),
+					'FR'    => __( 'French', 'feedzy-rss-feeds' ),
+					'HU'    => __( 'Hungarian', 'feedzy-rss-feeds' ),
+					'IT'    => __( 'Italian', 'feedzy-rss-feeds' ),
+					'JA'    => __( 'Japanese', 'feedzy-rss-feeds' ),
+					'LT'    => __( 'Lithuanian', 'feedzy-rss-feeds' ),
+					'LV'    => __( 'Latvian', 'feedzy-rss-feeds' ),
+					'NL'    => __( 'Dutch', 'feedzy-rss-feeds' ),
+					'PL'    => __( 'Polish', 'feedzy-rss-feeds' ),
+					'PT-PT' => __( 'Portuguese (PT-PT)', 'feedzy-rss-feeds' ),
+					'PT-BR' => __( 'Portuguese (Brazilian)', 'feedzy-rss-feeds' ),
+					'PT'    => __( 'Portuguese', 'feedzy-rss-feeds' ),
+					'RO'    => __( 'Romanian', 'feedzy-rss-feeds' ),
+					'RU'    => __( 'Russian', 'feedzy-rss-feeds' ),
+					'SK'    => __( 'Slovak', 'feedzy-rss-feeds' ),
+					'SL'    => __( 'Slovenian', 'feedzy-rss-feeds' ),
+					'SV'    => __( 'Swedish', 'feedzy-rss-feeds' ),
+					'ZH'    => __( 'Chinese', 'feedzy-rss-feeds' ),
+				);
+				$target_lang = apply_filters( 'feedzy_available_automatically_translation_language', $target_lang );
+				?>
+			<div class="feedzy-row">
+				<div class="label_description">
+					<label class="feedzy-sr-only"><?php esc_html_e( 'Enable Automatically Translation?', 'feedzy-rss-feeds' ); ?></label>
+					<div>
+						<small><?php esc_html_e( 'Enable and select the language to translate the text automatically. The default is English', 'feedzy-rss-feeds' ); ?></small>
+					</div>
+				</div>
+				<div class="feedzy-separator"></div>
+				<div class="form-group input-group form_item">
+					<div>
+						<input id="feedzy-auto-translation" name="feedzy_meta_data[import_auto_translation]" class="feedzy-toggle feedzy-toggle-round" type="checkbox" value="yes" <?php echo esc_attr( $import_auto_translation ); ?>>
+						<label for="feedzy-auto-translation" class="feedzy-inline"></label>
+						<label class="feedzy-inline" style="margin-left: 10px;" for="import_auto_translation"></label>
+					</div>
+					<div>
+						<select id="feedzy_auto_translation_lang" class="form-control feedzy-chosen" name="feedzy_meta_data[import_auto_translation_lang]"<?php echo empty( $import_auto_translation ) ? ' disabled' : ''; ?>>
+							<?php foreach ( $target_lang as $code => $lang ) : ?>
+								<option value="<?php echo esc_attr( $code ); ?>"<?php echo $import_translation_lang === $code ? ' selected' : ''; ?>><?php echo esc_html( $lang ); ?></option>
+							<?php endforeach; ?>
+						</select>
+					</div>
+				</div>
+			</div>
+			<?php endif; ?>
+
 			<?php if ( function_exists( 'icl_get_languages' ) ) : ?>
 			<div class="feedzy-row">
 				<div class="label_description">
