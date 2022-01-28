@@ -462,6 +462,18 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
+##### [Version 3.8.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.8.1...v3.8.2) (2022-01-28)
+
+- Add a new filter to add the custom refresh time
+- Remove elementor hidden WP widget feature so feedzy widget can be used
+- Fix keyword filter issue with date filter
+- Fix cURL timeout error
+- Add new import job setting field and manipulate custom tag data
+- Fix trimming title issue for Elementor & Gutenberg
+
+
+
+
 ##### [Version 3.8.1](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.8.0...v3.8.1) (2021-12-20)
 
 - Show the import job title in post row action
