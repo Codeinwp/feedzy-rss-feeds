@@ -440,6 +440,37 @@
 				</div>
 			</div>
 
+			<div class="feedzy-row">
+				<div class="label_description">
+					<label class="feedzy-sr-only" for="f1-post-title"><?php esc_html_e( 'Post Excerpt', 'feedzy-rss-feeds' ); ?></label><br/>
+					<small>
+						<?php
+							esc_html_e( 'The post excerpt for the generated post. Leave blank, if unsure.', 'feedzy-rss-feeds' );
+						?>
+					</small>
+					<p class="feedzy-highlight"><i class="dashicons dashicons-megaphone"></i>
+					<?php
+					if ( apply_filters( 'feedzy_is_license_of_type', false, 'business' ) ) {
+						echo wp_kses_post( sprintf( __( 'You can add custom magic tags to extract custom elements from your feed as explained %1$shere%2$s. This will work only for single-feeds (i.e. not if you have specified a feed category that contains multiple feeds or using comma-separated feeds in the source).', 'feedzy-rss-feeds' ), '<a href="https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy" target="_blank">', '</a>' ) );
+					} else {
+						echo wp_kses_post( sprintf( __( 'Want to extract custom elements from your feed as explained %1$shere%2$s? Upgrade your %3$slicense%4$s today!', 'feedzy-rss-feeds' ), '<a href="https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy" target="_blank">', '</a>', '<a href="' . FEEDZY_UPSELL_LINK . '" target="_blank">', '</a>' ) );
+					}
+					?>
+					</p>
+				</div>
+				<div class="feedzy-separator dashicons dashicons-leftright"></div>
+				<div class="form-group input-group form_item">
+					<input type="text" name="feedzy_meta_data[import_post_excerpt]" placeholder="<?php esc_html_e( 'Post Excerpt', 'feedzy-rss-feeds' ); ?>" class="form-control" value="<?php echo esc_attr( $post_excerpt ); ?>"/>
+					<div class="input-group-btn">
+						<button type="button" class="btn btn-add-fields dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<?php esc_html_e( 'Insert Tag', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-arrow-down-alt2"></span>
+						</button>
+						<div class="dropdown-menu dropdown-menu-right">
+							<?php echo wp_kses_post( apply_filters( 'feedzy_render_magic_tags', '', apply_filters( 'feedzy_magic_tags_post_excerpt', array() ), 'import_post_excerpt' ) ); ?>
+						</div>
+					</div>
+				</div>
+			</div>
 
 			<div class="custom_fields <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
 				<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '' ) ); ?>

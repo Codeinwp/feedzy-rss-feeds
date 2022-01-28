@@ -57,7 +57,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		}
 
 		// Dependent WordPress core libraries.
-		$depends = array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-compose', 'wp-editor', 'wp-api', 'lodash' );
+		$depends = array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-compose', 'wp-editor', 'wp-api', 'lodash', 'wp-hooks' );
 
 		// Remove "wp-editor" script for widget block.
 		if ( wp_use_widgets_block_editor() && wp_script_is( 'wp-edit-widgets' ) ) {

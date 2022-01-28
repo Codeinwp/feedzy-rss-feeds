@@ -610,6 +610,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$args['reject_unsafe_urls'] = false;
 		// allow SSLs to go through without certificate verification.
 		$args['sslverify'] = false;
+		// Set timeout.
+		$args['timeout'] = 300;
 
 		return $args;
 	}
@@ -825,5 +827,15 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				wp_send_json_success( array( 'invalid' => count( $invalid ) ) );
 				break;
 		}
+	}
+
+	/**
+	 * Remove elementor register feature.
+	 *
+	 * @param object $manager_object Manager class object.
+	 * @param array  $experimental_data Experimental data.
+	 */
+	public function feedzy_remove_elementor_feature( $manager_object, $experimental_data ) {
+		$manager_object->remove_feature( 'e_hidden_wordpress_widgets' );
 	}
 }

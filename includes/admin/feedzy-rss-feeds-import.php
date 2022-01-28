@@ -300,6 +300,7 @@ class Feedzy_Rss_Feeds_Import {
 		$exc_on               = get_post_meta( $post->ID, 'exc_on', true );
 		$import_title         = get_post_meta( $post->ID, 'import_post_title', true );
 		$import_date          = get_post_meta( $post->ID, 'import_post_date', true );
+		$post_excerpt         = get_post_meta( $post->ID, 'import_post_excerpt', true );
 		$import_content       = get_post_meta( $post->ID, 'import_post_content', true );
 		$import_item_img_url  = get_post_meta( $post->ID, 'import_use_external_image', true );
 		$import_item_img_url  = 'yes' === $import_item_img_url ? 'checked' : '';
@@ -1124,6 +1125,7 @@ class Feedzy_Rss_Feeds_Import {
 		$exc_on               = get_post_meta( $job->ID, 'exc_on', true );
 		$import_title         = get_post_meta( $job->ID, 'import_post_title', true );
 		$import_date          = get_post_meta( $job->ID, 'import_post_date', true );
+		$post_excerpt         = get_post_meta( $job->ID, 'import_post_excerpt', true );
 		$import_content       = get_post_meta( $job->ID, 'import_post_content', true );
 		$import_featured_img  = get_post_meta( $job->ID, 'import_post_featured_img', true );
 		$import_post_type     = get_post_meta( $job->ID, 'import_post_type', true );
@@ -1403,6 +1405,25 @@ class Feedzy_Rss_Feeds_Import {
 					$post_content = trim( $post_content );
 				}
 			}
+
+			$item_post_excerpt = str_replace(
+				array(
+					'[#item_title]',
+					'[#item_content]',
+					'[#item_description]',
+				),
+				array(
+					$post_title,
+					$post_content,
+					$item['item_description'],
+				),
+				$post_excerpt
+			);
+
+			if ( $this->feedzy_is_business() ) {
+				$item_post_excerpt = apply_filters( 'feedzy_parse_custom_tags', $item_post_excerpt, ! empty( $xml_results ) ? $xml_results['feed'] : $results['feed'], $item['item_index'] );
+			}
+
 			$new_post = apply_filters(
 				'feedzy_insert_post_args',
 				array(
@@ -1411,10 +1432,12 @@ class Feedzy_Rss_Feeds_Import {
 					'post_content' => $post_content,
 					'post_date'    => $post_date,
 					'post_status'  => $import_post_status,
+					'post_excerpt' => $item_post_excerpt,
 				),
 				$item,
 				$post_title,
 				$post_content,
+				$item_post_excerpt,
 				$index,
 				$job
 			);
@@ -2307,5 +2330,19 @@ class Feedzy_Rss_Feeds_Import {
 			);
 		}
 		wp_die();
+	}
+
+	/**
+	 * Renders the tags for the post excerpt.
+	 *
+	 * @access  public
+	 *
+	 * @param   array $default The default tags, empty.
+	 */
+	public function magic_tags_post_excerpt( $default ) {
+		$default['item_title']      = __( 'Item Title', 'feedzy-rss-feeds' );
+		$default['item_content']     = __( 'Item Content', 'feedzy-rss-feeds' );
+		$default['item_description']       = __( 'Item Description', 'feedzy-rss-feeds' );
+		return $default;
 	}
 }
