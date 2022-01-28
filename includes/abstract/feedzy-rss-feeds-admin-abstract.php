@@ -1310,11 +1310,14 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$content_title = html_entity_decode( $item->get_title(), ENT_QUOTES, 'UTF-8' );
 		if ( is_numeric( $sc['title'] ) ) {
 			$length = intval( $sc['title'] );
+			if ( 0 === $length ) {
+				$content_title = '';
+			}
 			if ( $length > 0 && strlen( $content_title ) > $length ) {
 				$content_title = preg_replace( '/\s+?(\S+)?$/', '', substr( $content_title, 0, $length ) ) . '...';
 			}
 		}
-		if ( empty( $content_title ) ) {
+		if ( ! is_numeric( $sc['title'] ) && empty( $content_title ) ) {
 			$content_title = esc_html__( 'Post Title', 'feedzy-rss-feeds' );
 		}
 		$content_title = apply_filters( 'feedzy_title_output', $content_title, $feed_url, $item );

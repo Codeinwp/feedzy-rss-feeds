@@ -172,12 +172,11 @@ class Inspector extends Component {
 
                         <TextControl
                             label={ __( 'Title Character Limit' ) }
-                            help={ __( 'Leave empty to show full title.' ) }
+                            help={ __( 'Leave empty to show full title. A value of 0 will remove the title.' ) }
                             type="number"
                             value={ this.props.attributes.title }
                             onChange={ this.props.edit.onTitle }
                             className="feedzy-title-length"
-                            min={0}
                         />
 
                         <BaseControl>
