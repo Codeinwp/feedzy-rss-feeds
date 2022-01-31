@@ -1514,6 +1514,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 					$pattern = '/https?:\/\/.*\.(?:jpg|JPG|jpeg|JPEG|jpe|JPE|gif|GIF|png|PNG)/i';
 					if ( preg_match( $pattern, $thumbnail, $matches ) ) {
 						$the_thumbnail = $matches[0];
+					} elseif ( in_array( $enclosure->type, $image_mime_types, true ) ) {
+						$the_thumbnail = $thumbnail;
+						break;
 					}
 				}
 				foreach ( (array) $enclosure->get_link() as $thumbnail ) {
