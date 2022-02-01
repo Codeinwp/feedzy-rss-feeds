@@ -431,6 +431,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function feedzy_rss( $atts, $content = '' ) {
 		wp_print_styles( $this->plugin_name );
+		// Enqueue style using `wp_enqueue_style` in case `wp_print_styles` not working.
+		if ( ! wp_style_is( $this->plugin_name, 'done' ) ) {
+			wp_enqueue_style( $this->plugin_name );
+		}
 		$sc      = $this->get_short_code_attributes( $atts );
 		$feed_url = $this->normalize_urls( $sc['feeds'] );
 		if ( empty( $feed_url ) ) {
