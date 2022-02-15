@@ -50,6 +50,11 @@
 						$disble_featured_image = 'checked';
 					}
 
+					$inbuilt_text_rewriter = '';
+					if ( isset( $settings['general']['in-built-text-rewriter'] ) && 1 === intval( $settings['general']['in-built-text-rewriter'] ) ) {
+						$inbuilt_text_rewriter = 'checked';
+					}
+
 					$feedzy_delete_days = isset( $settings['general']['feedzy-delete-days'] ) ? $settings['general']['feedzy-delete-days'] : 0;
 					$default_thumbnail_id = isset( $settings['general']['default-thumbnail-id'] ) ? $settings['general']['default-thumbnail-id'] : 0;
 					switch ( $active_tab ) {
@@ -61,6 +66,13 @@
 									value="1" <?php echo esc_html( $disble_featured_image ); ?> />
 								<label for="rss-feeds"><?php echo esc_html_e( 'Do NOT add the featured image to the website\'s RSS feed.', 'feedzy-rss-feeds' ); ?></label>
 							</div>
+							<?php if ( feedzy_is_pro() && ( apply_filters( 'feedzy_is_license_of_type', false, 'business' ) || apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) ) : ?>
+								<div class="fz-form-group">
+									<input type="checkbox" id="in-built-text-rewriter" class="fz-form-control" name="in-built-text-rewriter"
+									value="1" <?php echo esc_html( $inbuilt_text_rewriter ); ?> />
+									<label for="in-built-text-rewriter"><?php echo esc_html_e( 'Enable feedzy in-built rephrashing/paraphrasing tool(Feed2Post)?', 'feedzy-rss-feeds' ); ?></label>
+								</div>
+							<?php endif; ?>
 							<div class="fz-form-group">
 								<label><?php esc_html_e( 'Choose default thumbnail image(Feed2Post):', 'feedzy-rss-feeds' ); ?></label>
 							</div>

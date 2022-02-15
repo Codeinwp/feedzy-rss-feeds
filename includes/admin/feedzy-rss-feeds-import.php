@@ -1259,6 +1259,8 @@ class Feedzy_Rss_Feeds_Import {
 			return 0;
 		}
 
+		$rewrite_service_endabled = $this->rewrite_content_service_endabled( $job->ID );
+
 		$duplicates = $items_found = array();
 		$found_duplicates = array();
 		foreach ( $result as $item ) {
@@ -1326,6 +1328,12 @@ class Feedzy_Rss_Feeds_Import {
 
 			$post_title = apply_filters( 'feedzy_invoke_services', $post_title, 'title', $item['item_title'], $job );
 
+			// Rewriter item title from feedzy API.
+			if ( $rewrite_service_endabled && false !== strpos( $post_title, '[#title_feedzy_rewrite]' ) ) {
+				$title_feedzy_rewrite = apply_filters( 'feedzy_invoke_content_rewrite_services', $item['item_title'], '[#title_feedzy_rewrite]', $job );
+				$post_title = str_replace( '[#title_feedzy_rewrite]', $title_feedzy_rewrite, $post_title );
+			}
+
 			$item_link  = '<a href="' . $item['item_url'] . '" target="_blank" class="feedzy-rss-link-icon">' . __( 'Read More', 'feedzy-rss-feeds' ) . '</a>';
 			$image_html = '';
 			if ( ! empty( $item['item_img_path'] ) ) {
@@ -1382,6 +1390,18 @@ class Feedzy_Rss_Feeds_Import {
 			}
 
 			$post_content = apply_filters( 'feedzy_invoke_services', $post_content, 'content', $item['item_description'], $job );
+
+			// Rewriter item content from feedzy API.
+			if ( $rewrite_service_endabled && false !== strpos( $post_content, '[#content_feedzy_wordai]' ) ) {
+				$content_feedzy_wordai = apply_filters( 'feedzy_invoke_content_rewrite_services', $item['item_description'], '[#content_feedzy_wordai]', $job );
+				$post_content = str_replace( '[#content_feedzy_wordai]', $content_feedzy_wordai, $post_content );
+			}
+
+			// Rewriter item full content from feedzy API.
+			if ( $rewrite_service_endabled && false !== strpos( $post_content, '[#full_content_feedzy_wordai]' ) ) {
+				$full_content_feedzy_wordai = apply_filters( 'feedzy_invoke_content_rewrite_services', $item['item_url'], '[#full_content_feedzy_wordai]', $job );
+				$post_content = str_replace( '[#full_content_feedzy_wordai]', $full_content_feedzy_wordai, $post_content );
+			}
 
 			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 			$item_date = date( 'Y-m-d H:i:s', $item['item_date'] );
@@ -2002,6 +2022,7 @@ class Feedzy_Rss_Feeds_Import {
 		if ( ! feedzy_is_pro() ) {
 			$default['title_spinnerchief:disabled'] = __( 'Title from SpinnerChief', 'feedzy-rss-feeds' );
 			$default['title_wordai:disabled']       = __( 'Title from WordAI', 'feedzy-rss-feeds' );
+			$default['title_feedzy_rewrite:disabled'] = __( 'Title from Feedzy rewrite', 'feedzy-rss-feeds' );
 		}
 		return $default;
 	}
@@ -2043,6 +2064,8 @@ class Feedzy_Rss_Feeds_Import {
 			$default['full_content_spinnerchief:disabled'] = __( 'Full content from SpinnerChief', 'feedzy-rss-feeds' );
 			$default['content_wordai:disabled']            = __( 'Content from WordAI', 'feedzy-rss-feeds' );
 			$default['full_content_wordai:disabled']       = __( 'Full content from WordAI', 'feedzy-rss-feeds' );
+			$default['content_feedzy_wordai:disabled']      = __( 'Content from Feedzy rewrite', 'feedzy-rss-feeds' );
+			$default['full_content_feedzy_wordai:disabled']  = __( 'Full content from Feedzy rewrite', 'feedzy-rss-feeds' );
 		}
 		return $default;
 	}
@@ -2344,5 +2367,25 @@ class Feedzy_Rss_Feeds_Import {
 		$default['item_content']     = __( 'Item Content', 'feedzy-rss-feeds' );
 		$default['item_description']       = __( 'Item Description', 'feedzy-rss-feeds' );
 		return $default;
+	}
+
+	/**
+	 * Check feedzy rewrite content tool enabled or not.
+	 *
+	 * @return bool
+	 */
+	private function rewrite_content_service_endabled( $job_id = 0 ) {
+		$enabled = false;
+
+		// Check enabled in-build feedzy rewrite tool or not.
+		if ( ! empty( $this->free_settings['general']['in-built-text-rewriter'] && 1 === $this->free_settings['general']['in-built-text-rewriter'] ) ) {
+			$enabled = apply_filters( 'feedzy_rewrite_content_service_enabled', true, $job_id );
+		}
+		// Check license type.
+		if ( $enabled && ( $this->feedzy_is_business() || $this->feedzy_is_agency() ) ) {
+			$enabled = true;
+		}
+
+		return $enabled;
 	}
 }
