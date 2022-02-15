@@ -1259,7 +1259,7 @@ class Feedzy_Rss_Feeds_Import {
 			return 0;
 		}
 
-		$rewrite_service_endabled = $this->rewrite_content_service_endabled( $job->ID );
+		$rewrite_service_endabled = $this->rewrite_content_service_endabled();
 
 		$duplicates = $items_found = array();
 		$found_duplicates = array();
@@ -2374,18 +2374,12 @@ class Feedzy_Rss_Feeds_Import {
 	 *
 	 * @return bool
 	 */
-	private function rewrite_content_service_endabled( $job_id = 0 ) {
-		$enabled = false;
-
-		// Check enabled in-build feedzy rewrite tool or not.
-		if ( isset( $this->free_settings['general'] ) && ( ! empty( $this->free_settings['general']['in-built-text-rewriter'] && 1 === $this->free_settings['general']['in-built-text-rewriter'] ) ) ) {
-			$enabled = apply_filters( 'feedzy_rewrite_content_service_enabled', true, $job_id );
-		}
+	private function rewrite_content_service_endabled() {
 		// Check license type.
-		if ( $enabled && ( $this->feedzy_is_business() || $this->feedzy_is_agency() ) ) {
-			$enabled = true;
+		if ( $this->feedzy_is_business() || $this->feedzy_is_agency() ) {
+			return true;
 		}
 
-		return $enabled;
+		return false;
 	}
 }
