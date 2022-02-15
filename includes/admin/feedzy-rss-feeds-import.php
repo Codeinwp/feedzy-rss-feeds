@@ -2378,7 +2378,7 @@ class Feedzy_Rss_Feeds_Import {
 		$enabled = false;
 
 		// Check enabled in-build feedzy rewrite tool or not.
-		if ( ! empty( $this->free_settings['general']['in-built-text-rewriter'] && 1 === $this->free_settings['general']['in-built-text-rewriter'] ) ) {
+		if ( isset( $this->free_settings['general'] ) && ( ! empty( $this->free_settings['general']['in-built-text-rewriter'] && 1 === $this->free_settings['general']['in-built-text-rewriter'] ) ) ) {
 			$enabled = apply_filters( 'feedzy_rewrite_content_service_enabled', true, $job_id );
 		}
 		// Check license type.
