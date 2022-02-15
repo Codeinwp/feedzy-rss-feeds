@@ -1392,15 +1392,15 @@ class Feedzy_Rss_Feeds_Import {
 			$post_content = apply_filters( 'feedzy_invoke_services', $post_content, 'content', $item['item_description'], $job );
 
 			// Rewriter item content from feedzy API.
-			if ( $rewrite_service_endabled && false !== strpos( $post_content, '[#content_feedzy_wordai]' ) ) {
-				$content_feedzy_wordai = apply_filters( 'feedzy_invoke_content_rewrite_services', $item['item_description'], '[#content_feedzy_wordai]', $job );
-				$post_content = str_replace( '[#content_feedzy_wordai]', $content_feedzy_wordai, $post_content );
+			if ( $rewrite_service_endabled && false !== strpos( $post_content, '[#content_feedzy_rewrite]' ) ) {
+				$content_feedzy_rewrite = apply_filters( 'feedzy_invoke_content_rewrite_services', $item['item_description'], '[#content_feedzy_rewrite]', $job );
+				$post_content = str_replace( '[#content_feedzy_rewrite]', $content_feedzy_rewrite, $post_content );
 			}
 
 			// Rewriter item full content from feedzy API.
-			if ( $rewrite_service_endabled && false !== strpos( $post_content, '[#full_content_feedzy_wordai]' ) ) {
-				$full_content_feedzy_wordai = apply_filters( 'feedzy_invoke_content_rewrite_services', $item['item_url'], '[#full_content_feedzy_wordai]', $job );
-				$post_content = str_replace( '[#full_content_feedzy_wordai]', $full_content_feedzy_wordai, $post_content );
+			if ( $rewrite_service_endabled && false !== strpos( $post_content, '[#full_content_feedzy_rewrite]' ) ) {
+				$full_content_feedzy_rewrite = apply_filters( 'feedzy_invoke_content_rewrite_services', $item['item_url'], '[#full_content_feedzy_rewrite]', $job );
+				$post_content = str_replace( '[#full_content_feedzy_rewrite]', $full_content_feedzy_rewrite, $post_content );
 			}
 
 			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
@@ -2064,8 +2064,8 @@ class Feedzy_Rss_Feeds_Import {
 			$default['full_content_spinnerchief:disabled'] = __( 'Full content from SpinnerChief', 'feedzy-rss-feeds' );
 			$default['content_wordai:disabled']            = __( 'Content from WordAI', 'feedzy-rss-feeds' );
 			$default['full_content_wordai:disabled']       = __( 'Full content from WordAI', 'feedzy-rss-feeds' );
-			$default['content_feedzy_wordai:disabled']      = __( 'Content from Feedzy rewrite', 'feedzy-rss-feeds' );
-			$default['full_content_feedzy_wordai:disabled']  = __( 'Full content from Feedzy rewrite', 'feedzy-rss-feeds' );
+			$default['content_feedzy_rewrite:disabled']      = __( 'Content from Feedzy rewrite', 'feedzy-rss-feeds' );
+			$default['full_content_feedzy_rewrite:disabled']  = __( 'Full content from Feedzy rewrite', 'feedzy-rss-feeds' );
 		}
 		return $default;
 	}
