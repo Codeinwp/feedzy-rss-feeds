@@ -1393,7 +1393,8 @@ class Feedzy_Rss_Feeds_Import {
 
 			// Rewriter item content from feedzy API.
 			if ( $rewrite_service_endabled && false !== strpos( $post_content, '[#content_feedzy_rewrite]' ) ) {
-				$content_feedzy_rewrite = apply_filters( 'feedzy_invoke_content_rewrite_services', $item['item_description'], '[#content_feedzy_rewrite]', $job );
+				$item_content = ! empty( $item['item_content'] ) ? $item['item_content'] : $item['item_description'];
+				$content_feedzy_rewrite = apply_filters( 'feedzy_invoke_content_rewrite_services', $item_content, '[#content_feedzy_rewrite]', $job );
 				$post_content = str_replace( '[#content_feedzy_rewrite]', $content_feedzy_rewrite, $post_content );
 			}
 
