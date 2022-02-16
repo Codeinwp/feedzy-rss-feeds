@@ -237,7 +237,13 @@ class Editor extends Component {
         this.props.setAttributes( { target: value } );
     }
     onTitle(value) {
-        this.props.setAttributes( { title: Number( value ) } );
+        if ( '' !== value ) {
+            value = Number( value );
+            if ( value < 0 ) {
+                value = 0;
+            }
+        }
+        this.props.setAttributes( { title: value } );
     }
     onChangeMeta(value) {
         this.props.setAttributes( { metafields: value } );
@@ -416,7 +422,7 @@ class Editor extends Component {
 										</div>
 									) }
 									<div className="rss_content_wrap">
-										<span className="title">
+										{ ( ( this.props.attributes.title !== 0 ) ? <span className="title">
 											<a>
 												{ ( this.props.attributes.title && unescapeHTML( item['title'] ).length > this.props.attributes.title ) ? (
 													unescapeHTML( item['title'] ).substring( 0, this.props.attributes.title ) + '...'
@@ -424,7 +430,7 @@ class Editor extends Component {
 													unescapeHTML( item['title'] )
 												}
 											</a>
-										</span>
+										</span> : '' ) }
 										<div className="rss_content">
 											{ ( this.props.attributes.metafields !== 'no' ) && (
 												<small className="meta">

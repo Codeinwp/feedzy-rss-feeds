@@ -17,12 +17,12 @@ describe('Test Free - gutenberg', function() {
         // get rid of that irritating popup
         cy.get('.edit-post-welcome-guide .components-modal__header button').click();
 
-        cy.get('textarea.editor-post-title__input').type(PREFIX);
+        cy.get('.edit-post-visual-editor__post-title-wrapper .editor-post-title__input').type(PREFIX);
 
         // insert a feedzy block
         cy.get('div.edit-post-header__toolbar button.edit-post-header-toolbar__inserter-toggle').click();
         cy.get('.edit-post-editor__inserter-panel-content').then(function ($popup) {
-            cy.wrap($popup).find('.block-editor-inserter__search-input').type('feedzy');
+            cy.wrap($popup).find('.components-search-control__input').type('feedzy');
             cy.wrap($popup).find('.block-editor-block-types-list .editor-block-list-item-feedzy-rss-feeds-feedzy-block').should('have.length', 1);
             cy.wrap($popup).find('.block-editor-block-types-list .editor-block-list-item-feedzy-rss-feeds-feedzy-block').click();
         });
@@ -94,7 +94,7 @@ describe('Test Free - gutenberg', function() {
         cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] input[type="url"]').should('have.length', 0);
         cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] button.is-primary.is-large').should('have.length', 0);
 
-        cy.get('textarea.editor-post-title__input').should('contain', PREFIX);
+        cy.get('.edit-post-visual-editor__post-title-wrapper .editor-post-title__input').should('contain', PREFIX);
 
         var gutenberg = Cypress.env("gutenberg");
         // check inserted feed

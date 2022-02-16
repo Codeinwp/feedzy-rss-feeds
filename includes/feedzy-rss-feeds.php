@@ -262,6 +262,9 @@ class Feedzy_Rss_Feeds {
 			self::$instance->loader->add_filter( 'feedzy_is_license_of_type', $plugin_import, 'feedzy_is_license_of_type', 10, 2 );
 			self::$instance->loader->add_filter( 'post_row_actions', $plugin_import, 'add_import_actions', 10, 2 );
 			self::$instance->loader->add_filter( 'wp_kses_allowed_html', $plugin_import, 'feedzy_wp_kses_allowed_html', 10, 2 );
+			self::$instance->loader->add_filter( 'feedzy_magic_tags_post_excerpt', $plugin_import, 'magic_tags_post_excerpt', 11 );
+			// Remove elementor feature.
+			self::$instance->loader->add_action( 'elementor/experiments/feature-registered', self::$instance->admin, 'feedzy_remove_elementor_feature', 10, 2 );
 		}
 
 		if ( ! defined( 'TI_UNIT_TESTING' ) ) {
