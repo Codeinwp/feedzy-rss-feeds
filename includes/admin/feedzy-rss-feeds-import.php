@@ -1142,7 +1142,7 @@ class Feedzy_Rss_Feeds_Import {
 		$from_datetime  = get_post_meta( $job->ID, 'from_datetime', true );
 		$to_datetime  = get_post_meta( $job->ID, 'to_datetime', true );
 		$import_auto_translation  = get_post_meta( $job->ID, 'import_auto_translation', true );
-		$import_auto_translation  = 'yes' === $import_auto_translation ? true : false;
+		$import_auto_translation  = $this->feedzy_is_agency() && 'yes' === $import_auto_translation ? true : false;
 		$import_translation_lang  = get_post_meta( $job->ID, 'import_auto_translation_lang', true );
 		$max                  = $import_feed_limit;
 		// Used as a new line character in import content.
@@ -1308,6 +1308,12 @@ class Feedzy_Rss_Feeds_Import {
 			$item_date = date( get_option( 'date_format' ) . ' at ' . get_option( 'time_format' ), $item['item_date'] );
 			$item_date = $item['item_date_formatted'];
 
+			// Get translated item title.
+			$translated_title = '';
+			if ( $import_auto_translation && ( false !== strpos( $import_title, '[#translated_title]' ) || false !== strpos( $post_excerpt, '[#translated_title]' ) ) ) {
+				$translated_title = apply_filters( 'feedzy_invoke_auto_translate_services', $item['item_title'], '[#translated_title]', $import_translation_lang, $job );
+			}
+
 			$post_title = str_replace(
 				array(
 					'[#item_title]',
@@ -1316,6 +1322,7 @@ class Feedzy_Rss_Feeds_Import {
 					'[#item_date_local]',
 					'[#item_date_feed]',
 					'[#item_source]',
+					'[#translated_title]',
 				),
 				array(
 					$item['item_title'],
@@ -1324,6 +1331,7 @@ class Feedzy_Rss_Feeds_Import {
 					$item_date,
 					$item_date,
 					$item['item_source'],
+					$translated_title,
 				),
 				$import_title
 			);
@@ -1334,17 +1342,37 @@ class Feedzy_Rss_Feeds_Import {
 
 			$post_title = apply_filters( 'feedzy_invoke_services', $post_title, 'title', $item['item_title'], $job );
 
-			// Get translated item title.
-			if ( $import_auto_translation && false !== strpos( $post_title, '[#translated_title]' ) ) {
-				$translated_title = apply_filters( 'feedzy_invoke_auto_translate_services', $item['item_title'], '[#translated_title]', $import_translation_lang, $job );
-				$post_title = str_replace( '[#translated_title]', $translated_title, $post_title );
+			// Get translated item link text.
+			$item_link_txt = __( 'Read More', 'feedzy-rss-feeds' );
+			if ( $import_auto_translation && false !== strpos( $import_content, '[#item_url]' ) ) {
+				$item_link_txt = apply_filters( 'feedzy_invoke_auto_translate_services', $item_link_txt, '[#item_url]', $import_translation_lang, $job );
 			}
 
-			$item_link  = '<a href="' . $item['item_url'] . '" target="_blank" class="feedzy-rss-link-icon">' . __( 'Read More', 'feedzy-rss-feeds' ) . '</a>';
+			$item_link  = '<a href="' . $item['item_url'] . '" target="_blank" class="feedzy-rss-link-icon">' . $item_link_txt . '</a>';
 			$image_html = '';
 			if ( ! empty( $item['item_img_path'] ) ) {
 				$image_html = '<img src="' . $item['item_img_path'] . '" title="' . $item['item_title'] . '" />';
 			}
+
+			// Get translated item description.
+			$translated_description = '';
+			if ( $import_auto_translation && ( false !== strpos( $import_content, '[#translated_description]' ) || false !== strpos( $post_excerpt, '[#translated_description]' ) ) ) {
+				$translated_description = apply_filters( 'feedzy_invoke_auto_translate_services', $item['item_description'], '[#translated_description]', $import_translation_lang, $job );
+			}
+
+			// Get translated item content.
+			$translated_content = '';
+			if ( $import_auto_translation && ( false !== strpos( $import_content, '[#translated_content]' ) || false !== strpos( $post_excerpt, '[#translated_content]' ) ) ) {
+				$translated_content = ! empty( $item['item_content'] ) ? $item['item_content'] : $item['item_description'];
+				$translated_content = apply_filters( 'feedzy_invoke_auto_translate_services', $translated_content, '[#translated_content]', $import_translation_lang, $job );
+				if ( false !== strpos( $translated_content, 'View Entire Post' ) ) {
+					$view_post_link_txt = apply_filters( 'feedzy_invoke_auto_translate_services', 'View Entire Post', '[#translated_content]', $import_translation_lang, $job );
+					$view_post_link_txt = wp_sprintf( '%s &rsaquo;', $view_post_link_txt );
+					$translated_content = str_replace( "View Entire Post '", $view_post_link_txt, $translated_content );
+				}
+			}
+
+			// exit;
 			$post_content = str_replace(
 				array(
 					'[#item_description]',
@@ -1353,6 +1381,8 @@ class Feedzy_Rss_Feeds_Import {
 					'[#item_url]',
 					'[#item_categories]',
 					'[#item_source]',
+					'[#translated_description]',
+					'[#translated_content]',
 				),
 				array(
 					$item['item_description'],
@@ -1361,6 +1391,8 @@ class Feedzy_Rss_Feeds_Import {
 					$item_link,
 					$item['item_categories'],
 					$item['item_source'],
+					$translated_description,
+					$translated_content,
 				),
 				$import_content
 			);
@@ -1397,17 +1429,10 @@ class Feedzy_Rss_Feeds_Import {
 
 			$post_content = apply_filters( 'feedzy_invoke_services', $post_content, 'content', $item['item_description'], $job );
 
-			// Item content translate.
-			if ( $import_auto_translation && false !== strpos( $post_content, '[#translated_content]' ) ) {
-				$item_content = ! empty( $item['item_content'] ) ? $item['item_content'] : $item['item_description'];
-				$translated_content = apply_filters( 'feedzy_invoke_auto_translate_services', $item_content, '[#translated_content]', $import_translation_lang, $job );
-				$post_content = str_replace( '[#translated_content]', $translated_content, $post_content );
-			}
-
 			// Translate full-content.
 			if ( $import_auto_translation && false !== strpos( $post_content, '[#translated_full_content]' ) ) {
 				$translated_full_content = apply_filters( 'feedzy_invoke_auto_translate_services', $item['item_url'], '[#translated_full_content]', $import_translation_lang, $job );
-				$post_content = str_replace( '[#translated_full_content]', $translated_full_content, $post_content );
+				$post_content = str_replace( '[#translated_full_content]', rtrim( $translated_full_content, '.' ), $post_content );
 			}
 
 			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
@@ -1438,11 +1463,17 @@ class Feedzy_Rss_Feeds_Import {
 					'[#item_title]',
 					'[#item_content]',
 					'[#item_description]',
+					'[#translated_title]',
+					'[#translated_content]',
+					'[#translated_description]',
 				),
 				array(
 					$post_title,
 					$post_content,
 					$item['item_description'],
+					$translated_title,
+					$translated_content,
+					$translated_description,
 				),
 				$post_excerpt
 			);
@@ -2072,7 +2103,8 @@ class Feedzy_Rss_Feeds_Import {
 			$default['content_wordai:disabled']            = __( 'Content from WordAI', 'feedzy-rss-feeds' );
 			$default['full_content_wordai:disabled']       = __( 'Full content from WordAI', 'feedzy-rss-feeds' );
 			$default['translated_content:disabled']        = __( 'Translated Content', 'feedzy-rss-feeds' );
-			$default['translated_full_content:disabled']        = __( 'Translated Full Content', 'feedzy-rss-feeds' );
+			$default['translated_description:disabled']    = __( 'Translated Description', 'feedzy-rss-feeds' );
+			$default['translated_full_content:disabled']   = __( 'Translated Full Content', 'feedzy-rss-feeds' );
 		}
 		return $default;
 	}
@@ -2373,6 +2405,12 @@ class Feedzy_Rss_Feeds_Import {
 		$default['item_title']      = __( 'Item Title', 'feedzy-rss-feeds' );
 		$default['item_content']     = __( 'Item Content', 'feedzy-rss-feeds' );
 		$default['item_description']       = __( 'Item Description', 'feedzy-rss-feeds' );
+		// disabled tags.
+		if ( ! feedzy_is_pro() ) {
+			$default['translated_title:disabled']        = __( 'Translated Title', 'feedzy-rss-feeds' );
+			$default['translated_content:disabled']      = __( 'Translated Content', 'feedzy-rss-feeds' );
+			$default['translated_description:disabled']  = __( 'Translated Description', 'feedzy-rss-feeds' );
+		}
 		return $default;
 	}
 }

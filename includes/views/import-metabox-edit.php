@@ -171,7 +171,7 @@
 			</div>
 
 			<?php
-			if ( apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) :
+			if ( $this->feedzy_is_agency() ) :
 				$target_lang = array(
 					'EN'    => __( 'English', 'feedzy-rss-feeds' ),
 					'BG'    => __( 'Bulgarian', 'feedzy-rss-feeds' ),
