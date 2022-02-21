@@ -10,6 +10,8 @@ import RadioImageControl from './radio-image-control/';
  */
 const { __ } = wp.i18n;
 
+const { applyFilters } = wp.hooks;
+
 const {
 	InspectorControls,
 	MediaUpload,
@@ -43,6 +45,7 @@ class Inspector extends Component {
 
     render() {
         let http_help = '';
+        let refreshFeed = applyFilters( 'feedzy_widget_refresh_feed', [ { label: __( '1 Hour' ), value: '1_hours', }, { label: __( '2 Hours' ), value: '3_hours', }, { label: __( '12 Hours' ), value: '12_hours', }, { label: __( '1 Day' ), value: '1_days', }, { label: __( '3 Days' ), value: '3_days', }, { label: __( '15 Days' ), value: '15_days', } ] );
         if ( this.props.attributes.http === 'https' ) {
             http_help += __( 'Please verify that the images exist on HTTPS.' );
         }
@@ -116,32 +119,7 @@ class Inspector extends Component {
                         <SelectControl
                             label={ __( 'Feed Caching Time' ) }
                             value={ this.props.attributes.refresh }
-                            options={ [
-                                {
-                                    label: __( '1 Hour' ),
-                                    value: '1_hours',
-                                },
-                                {
-                                    label: __( '2 Hours' ),
-                                    value: '3_hours',
-                                },
-                                {
-                                    label: __( '12 Hours' ),
-                                    value: '12_hours',
-                                },
-                                {
-                                    label: __( '1 Day' ),
-                                    value: '1_days',
-                                },
-                                {
-                                    label: __( '3 Days' ),
-                                    value: '3_days',
-                                },
-                                {
-                                    label: __( '15 Days' ),
-                                    value: '15_days',
-                                },
-                            ] }
+                            options={ refreshFeed }
                             onChange={ this.props.edit.onRefresh }
                             className="feedzy-refresh"
                         />
@@ -194,12 +172,11 @@ class Inspector extends Component {
 
                         <TextControl
                             label={ __( 'Title Character Limit' ) }
-                            help={ __( 'Leave empty to show full title.' ) }
+                            help={ __( 'Leave empty to show full title. A value of 0 will remove the title.' ) }
                             type="number"
                             value={ this.props.attributes.title }
                             onChange={ this.props.edit.onTitle }
                             className="feedzy-title-length"
-                            min={0}
                         />
 
                         <BaseControl>

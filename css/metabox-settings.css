@@ -1825,6 +1825,8 @@ a:focus.dropdown-item {
 }
 
 input[type="password"].fz-form-control,
+input[type="text"].fz-form-control,
+input[type="number"].fz-form-control,
 textarea.fz-form-control {
 	width: 100%;
 	height: 44px;

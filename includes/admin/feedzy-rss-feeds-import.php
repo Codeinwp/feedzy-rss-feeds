@@ -300,6 +300,7 @@ class Feedzy_Rss_Feeds_Import {
 		$exc_on               = get_post_meta( $post->ID, 'exc_on', true );
 		$import_title         = get_post_meta( $post->ID, 'import_post_title', true );
 		$import_date          = get_post_meta( $post->ID, 'import_post_date', true );
+		$post_excerpt         = get_post_meta( $post->ID, 'import_post_excerpt', true );
 		$import_content       = get_post_meta( $post->ID, 'import_post_content', true );
 		$import_item_img_url  = get_post_meta( $post->ID, 'import_use_external_image', true );
 		$import_item_img_url  = 'yes' === $import_item_img_url ? 'checked' : '';
@@ -1135,6 +1136,7 @@ class Feedzy_Rss_Feeds_Import {
 		$exc_on               = get_post_meta( $job->ID, 'exc_on', true );
 		$import_title         = get_post_meta( $job->ID, 'import_post_title', true );
 		$import_date          = get_post_meta( $job->ID, 'import_post_date', true );
+		$post_excerpt         = get_post_meta( $job->ID, 'import_post_excerpt', true );
 		$import_content       = get_post_meta( $job->ID, 'import_post_content', true );
 		$import_featured_img  = get_post_meta( $job->ID, 'import_post_featured_img', true );
 		$import_post_type     = get_post_meta( $job->ID, 'import_post_type', true );
@@ -1335,7 +1337,7 @@ class Feedzy_Rss_Feeds_Import {
 
 			$post_title = apply_filters( 'feedzy_invoke_services', $post_title, 'title', $item['item_title'], $job );
 
-			$item_link  = '<a href="' . $item['item_url'] . '" target="_blank">' . __( 'Read More', 'feedzy-rss-feeds' ) . '</a>';
+			$item_link  = '<a href="' . $item['item_url'] . '" target="_blank" class="feedzy-rss-link-icon">' . __( 'Read More', 'feedzy-rss-feeds' ) . '</a>';
 			$image_html = '';
 			if ( ! empty( $item['item_img_path'] ) ) {
 				$image_html = '<img src="' . $item['item_img_path'] . '" title="' . $item['item_title'] . '" />';
@@ -1414,6 +1416,25 @@ class Feedzy_Rss_Feeds_Import {
 					$post_content = trim( $post_content );
 				}
 			}
+
+			$item_post_excerpt = str_replace(
+				array(
+					'[#item_title]',
+					'[#item_content]',
+					'[#item_description]',
+				),
+				array(
+					$post_title,
+					$post_content,
+					$item['item_description'],
+				),
+				$post_excerpt
+			);
+
+			if ( $this->feedzy_is_business() ) {
+				$item_post_excerpt = apply_filters( 'feedzy_parse_custom_tags', $item_post_excerpt, ! empty( $xml_results ) ? $xml_results['feed'] : $results['feed'], $item['item_index'] );
+			}
+
 			$new_post = apply_filters(
 				'feedzy_insert_post_args',
 				array(
@@ -1422,10 +1443,12 @@ class Feedzy_Rss_Feeds_Import {
 					'post_content' => $post_content,
 					'post_date'    => $post_date,
 					'post_status'  => $import_post_status,
+					'post_excerpt' => $item_post_excerpt,
 				),
 				$item,
 				$post_title,
 				$post_content,
+				$item_post_excerpt,
 				$index,
 				$job
 			);
@@ -1544,6 +1567,52 @@ class Feedzy_Rss_Feeds_Import {
 					}
 				} else {
 					$image_url = $import_featured_img;
+				}
+
+				// Fetch image from graby.
+				if ( empty( $image_url ) && defined( 'FEEDZY_PRO_FETCH_ITEM_IMG_URL' ) ) {
+					// if license does not exist, use the site url
+					// this should obviously never happen unless on dev instances.
+					$license      = sprintf( 'n/a - %s', get_site_url() );
+					$license_data = get_option( 'feedzy_rss_feeds_pro_license_data', '' );
+					if ( ! empty( $license_data ) && isset( $license_data->key ) ) {
+						$license = $license_data->key;
+					}
+					$response = wp_remote_post(
+						FEEDZY_PRO_FETCH_ITEM_IMG_URL,
+						apply_filters(
+							'feedzy_fetch_item_image',
+							array(
+								'timeout' => 100,
+								'body'    => array_merge(
+									array(
+										'item_url' => $item['item_url'],
+										'license'  => $license,
+									)
+								),
+							)
+						)
+					);
+
+					if ( ! is_wp_error( $response ) ) {
+						if ( array_key_exists( 'response', $response ) && array_key_exists( 'code', $response['response'] ) && intval( $response['response']['code'] ) !== 200 ) {
+							// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
+							do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'error in response = %s', print_r( $response, true ) ), 'error', __FILE__, __LINE__ );
+						}
+						$body = wp_remote_retrieve_body( $response );
+						if ( ! is_wp_error( $body ) ) {
+							$response_data = json_decode( $body, true );
+							if ( isset( $response_data['url'] ) ) {
+								$image_url = $response_data['url'];
+							}
+						} else {
+							// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
+							do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'error in body = %s', print_r( $body, true ) ), 'error', __FILE__, __LINE__ );
+						}
+					} else {
+						// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
+						do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'error in request = %s', print_r( $response, true ) ), 'error', __FILE__, __LINE__ );
+					}
 				}
 
 				if ( ! empty( $image_url ) ) {
@@ -2085,7 +2154,8 @@ class Feedzy_Rss_Feeds_Import {
 		} elseif ( 1 === intval( get_post_meta( $post->ID, 'feedzy', true ) ) ) {
 			// show an unclickable action that mentions that it is imported by us
 			// so that users are aware
-			$actions['feedzy'] = sprintf( '(%s)', __( 'Imported by Feedzy', 'feedzy-rss-feeds' ) );
+			$feedzy_job_id     = get_post_meta( $post->ID, 'feedzy_job', true );
+			$actions['feedzy'] = sprintf( '(%s %s)', __( 'Imported by Feedzy from', 'feedzy-rss-feeds' ), get_the_title( $feedzy_job_id ) );
 		}
 		return $actions;
 	}
@@ -2285,5 +2355,19 @@ class Feedzy_Rss_Feeds_Import {
 			);
 		}
 		wp_die();
+	}
+
+	/**
+	 * Renders the tags for the post excerpt.
+	 *
+	 * @access  public
+	 *
+	 * @param   array $default The default tags, empty.
+	 */
+	public function magic_tags_post_excerpt( $default ) {
+		$default['item_title']      = __( 'Item Title', 'feedzy-rss-feeds' );
+		$default['item_content']     = __( 'Item Content', 'feedzy-rss-feeds' );
+		$default['item_description']       = __( 'Item Description', 'feedzy-rss-feeds' );
+		return $default;
 	}
 }
