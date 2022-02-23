@@ -1357,7 +1357,7 @@ class Feedzy_Rss_Feeds_Import {
 			// Get translated item description.
 			$translated_description = '';
 			if ( $import_auto_translation && ( false !== strpos( $import_content, '[#translated_description]' ) || false !== strpos( $post_excerpt, '[#translated_description]' ) ) ) {
-				$translated_description = apply_filters( 'feedzy_invoke_auto_translate_services', $item['item_description'], '[#translated_description]', $import_translation_lang, $job );
+				$translated_description = apply_filters( 'feedzy_invoke_auto_translate_services', $item['item_full_description'], '[#translated_description]', $import_translation_lang, $job );
 			}
 
 			// Get translated item content.
@@ -1365,11 +1365,6 @@ class Feedzy_Rss_Feeds_Import {
 			if ( $import_auto_translation && ( false !== strpos( $import_content, '[#translated_content]' ) || false !== strpos( $post_excerpt, '[#translated_content]' ) ) ) {
 				$translated_content = ! empty( $item['item_content'] ) ? $item['item_content'] : $item['item_description'];
 				$translated_content = apply_filters( 'feedzy_invoke_auto_translate_services', $translated_content, '[#translated_content]', $import_translation_lang, $job );
-				if ( false !== strpos( $translated_content, 'View Entire Post' ) ) {
-					$view_post_link_txt = apply_filters( 'feedzy_invoke_auto_translate_services', 'View Entire Post', '[#translated_content]', $import_translation_lang, $job );
-					$view_post_link_txt = wp_sprintf( '%s &rsaquo;', $view_post_link_txt );
-					$translated_content = str_replace( "View Entire Post '", $view_post_link_txt, $translated_content );
-				}
 			}
 
 			// exit;
