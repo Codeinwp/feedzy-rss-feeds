@@ -79,6 +79,7 @@ class Editor extends Component {
 	}
 
 	async componentDidMount() {
+        this.loadFeed();
 
 		if ( this.props.attributes.categories === undefined ) {
 			if ( ! this.props.attributes.meta ) {
@@ -179,7 +180,7 @@ class Editor extends Component {
                             _this.props.setAttributes( { feeds: ui.item.label } );
                         }
                     });
-                    this.loadFeed();
+
                 },
             ).fail(
                 err => {
