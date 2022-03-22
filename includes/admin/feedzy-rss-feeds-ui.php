@@ -229,7 +229,7 @@ class Feedzy_Rss_Feeds_Ui {
 				<div class="fz-form-wrap">
 					<div class="fz-form-group pb-30">
 						<label class="form-label"><?php esc_html_e( 'Import Name', 'feedzy-rss-feeds' ); ?></label>
-						<input type="text" class="form-control" id="post_title" value="<?php echo $post ? $post->post_title : ''; ?>" placeholder="<?php esc_attr_e( 'Add a name for your import', 'feedzy-rss-feeds' ); ?>">
+						<input type="text" class="form-control" id="post_title" value="<?php echo $post ? esc_attr( $post->post_title ) : ''; ?>" placeholder="<?php esc_attr_e( 'Add a name for your import', 'feedzy-rss-feeds' ); ?>">
 					</div>
 				</div>
 			</div>

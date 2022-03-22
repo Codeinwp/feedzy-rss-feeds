@@ -2362,17 +2362,17 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	public function feedzy_clone_import_job() {
 		// Check if import job ID has been provided and action.
-		if ( empty( $_GET[ 'feedzy_job_id' ] ) ) {
-			wp_die( __( 'No post to duplicate has been provided!', 'feedzy-rss-feeds' ) );
+		if ( empty( $_GET['feedzy_job_id'] ) ) {
+			wp_die( esc_html__( 'No post to duplicate has been provided!', 'feedzy-rss-feeds' ) );
 		}
 
 		// Nonce verification.
-		if ( ! isset( $_GET[ 'clone_import' ] ) || ! wp_verify_nonce( $_GET[ 'clone_import' ], FEEDZY_BASENAME ) ) {
+		if ( ! isset( $_GET['clone_import'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['clone_import'] ) ), FEEDZY_BASENAME ) ) {
 			return;
 		}
 
 		// Get the original import job ID.
-		$feedzy_job_id = absint( $_GET[ 'feedzy_job_id' ] );
+		$feedzy_job_id = absint( $_GET['feedzy_job_id'] );
 		// Get the original import job.
 		$feedzy_job = get_post( $feedzy_job_id );
 
@@ -2405,7 +2405,7 @@ class Feedzy_Rss_Feeds_Import {
 
 			if ( $post_meta ) {
 				foreach ( $post_meta as $meta_key => $meta_values ) {
-					if( in_array( $meta_key, $blacklist_metakey, true ) ) {
+					if ( in_array( $meta_key, $blacklist_metakey, true ) ) {
 						continue;
 					}
 					foreach ( $meta_values as $meta_value ) {
@@ -2425,7 +2425,7 @@ class Feedzy_Rss_Feeds_Import {
 			);
 			exit;
 		} else {
-			wp_die( __( 'Post creation failed, could not find original post.', 'feedzy-rss-feeds' ) );
+			wp_die( esc_html__( 'Post creation failed, could not find original post.', 'feedzy-rss-feeds' ) );
 		}
 	}
 
@@ -2435,14 +2435,16 @@ class Feedzy_Rss_Feeds_Import {
 	public function feedzy_import_clone_success_notice() {
 		// Get the current screen.
 		$screen = get_current_screen();
-		
+
 		if ( 'edit' !== $screen->base ) {
 			return;
 		}
 
 		// Display success notice if clone succeed.
-		if ( isset( $_GET[ 'saved' ] ) && 'fz_duplicate_import_job_created' == $_GET[ 'saved' ] ) {
-			echo '<div class="notice notice-success is-dismissible"><p>' . __( 'Duplicate import job created', 'feedzy-rss-feeds' ) . '</p></div>';
+		if ( isset( $_GET['saved'] ) && 'fz_duplicate_import_job_created' === $_GET['saved'] ) { // phpcs:ignore WordPress.Security.NonceVerification
+			?>
+			<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Duplicate import job created', 'feedzy-rss-feeds' ); ?></p></div>
+			<?php
 		}
 	}
 }
