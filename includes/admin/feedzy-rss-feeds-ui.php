@@ -89,7 +89,7 @@ class Feedzy_Rss_Feeds_Ui {
 			$this->loader->add_filter( 'mce_external_languages', $this, 'feedzy_add_tinymce_lang', 10, 1 );
 			$this->loader->add_action( 'admin_enqueue_scripts', $this, 'enqueue_scripts', 10 );
 			$this->loader->add_filter( 'tiny_mce_before_init', $this, 'get_strings_for_block', 10, 1 );
-
+			$this->loader->add_action( 'in_admin_header', $this, 'feedzy_post_import_admin_header', 10 );
 			$this->loader->run();
 		}
 	}
@@ -173,12 +173,67 @@ class Feedzy_Rss_Feeds_Ui {
 	 * Add global style.
 	 */
 	public function add_feedzy_global_style() { ?>
-		<style type="text/css">
-		.feedzy-rss-link-icon:after {
-			content: url( "<?php echo esc_url( FEEDZY_ABSURL . 'img/external-link.png' ); ?>" );
-			margin-left: 3px;
+<style type="text/css">
+.feedzy-rss-link-icon:after {
+	content: url("<?php echo esc_url( FEEDZY_ABSURL . 'img/external-link.png' ); ?>");
+	margin-left: 3px;
+}
+</style>
+		<?php
+	}
+
+	/**
+	 * Feedzy import post screen header.
+	 */
+	public function feedzy_post_import_admin_header() {
+		global $pagenow;
+		if ( 'edit.php' === $pagenow ) {
+			return;
 		}
-	</style>
+		$current_screen = function_exists( 'get_current_screen' ) ? get_current_screen() : false;
+		if ( $current_screen && 'feedzy_imports' === $current_screen->post_type ) {
+			?>
+			<div class="feedzy-header">
+				<div class="feedzy-container">
+					<div class="page-title h1"><?php esc_html_e( 'New Import', 'feedzy-rss-feeds' ); ?></div>
+					<div class="feedzy-logo">
+						<div class="feedzy-version"><?php echo esc_html( Feedzy_Rss_Feeds::get_version() ); ?></div>
+						<div class="feedzy-logo-icon"><img src="<?php echo esc_url( FEEDZY_ABSURL . 'img/feedzy.svg' ); ?>" width="60" height="60" alt=""></div>
+					</div>
+				</div>
+			</div>
+			<?php
+			add_filter( 'screen_options_show_screen', '__return_false' );
+			remove_all_actions( 'admin_notices' );
+			remove_all_actions( 'all_admin_notices' );
+			add_action( 'admin_notices', array( $this, 'feedzy_import_post_title_section' ) );
+		}
+	}
+
+	/**
+	 * Load feedzy import post screen.
+	 */
+	public function feedzy_import_post_title_section() {
+		global $post;
+		?>
+		<div class="feedzy-wrap">
+			<div class="feedzy-container fz-import-field-item">
+				<?php if ( ! feedzy_is_pro() ) : ?>
+					<div class="upgrade-alert mb-24">
+						<?php
+							echo wp_kses_post( wp_sprintf( __( 'You\'re using Feedzy Lite.  Unlock more powerful features, by <a href="%s" target="_blank">upgrading to Feedzy Pro</a>', 'feedzy-rss-feeds' ), FEEDZY_UPSELL_LINK ) );
+						?>
+						<button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>
+					</div>
+				<?php endif; ?>
+				<div class="fz-form-wrap">
+					<div class="fz-form-group pb-30">
+						<label class="form-label"><?php esc_html_e( 'Import Name', 'feedzy-rss-feeds' ); ?></label>
+						<input type="text" class="form-control" id="post_title" value="<?php echo $post ? $post->post_title : ''; ?>" placeholder="<?php esc_attr_e( 'Add a name for your import', 'feedzy-rss-feeds' ); ?>">
+					</div>
+				</div>
+			</div>
+		</div>
 		<?php
 	}
 }
