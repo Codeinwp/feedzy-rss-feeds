@@ -98,3 +98,31 @@ input.feedzy-toggle-round + label:after {
 span.feedzy-spinner {
     float: none !important;
 }
+#TB_ajaxContent ul {
+	list-style: decimal;
+	margin-left: 20px;
+}
+
+#TB_ajaxContent ul li {
+    padding: 5px !important;
+}
+
+#TB_ajaxContent p.loading-img {
+	text-align: center;
+}
+
+#TB_ajaxContent.loaded p.hide-when-loaded {
+	display: none;
+}
+
+#TB_ajaxContent div.dry_run span {
+	display: block;
+}
+
+#TB_ajaxContent div.dry_run span i.pass {
+	color: #149714;
+}
+
+#TB_ajaxContent div.dry_run span i.fail {
+	color: #ca4a1f;
+}
