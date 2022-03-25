@@ -304,6 +304,7 @@ div#side-sortables{
 .fz-form-wrap .form-control.fz-input-tagify, .fz-form-wrap .form-control.fz-textarea-tagify{
 	height: auto;
 	min-height: 48px;
+	padding-top: 2px;
 }
 
 .fz-form-wrap .form-control:focus {
@@ -932,59 +933,59 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 .tag-list{
 	padding-top: 20px;
 }
-.tag-list ul{
-	display: flex;
-	flex-wrap: wrap;
+.tag-list .tagify{
+	border: 0;
 }
-.tag-list ul li{
-	margin-right: 16px;
-	margin-bottom: 16px;
-}
-.tag-item{
+.fz-form-wrap .tagify__tag{
 	position: relative;
+	margin-left: 0;
+	margin-right: 16px;
 }
-.tag-item a,
-.tag-item .tag{
-	padding: 8px 36px 8px 8px;
-	background: #F0F2F5;
+.fz-form-wrap .tagify__tag>div{
+	padding: 7px 8px 6px 8px;
+	border-radius: 0;
+}
+.fz-form-wrap .tagify__tag>div>*{
 	font-weight: 500;
 	font-size: 14px;
 	line-height: 17px;
 	color: #050505;
 	border: 0;
-	display: block;
 	text-decoration: none;
-	-webkit-transition: all 0.3s ease-in-out;
-	-moz-transition: all 0.3s ease-in-out;
-	-o-transition: all 0.3s ease-in-out;
-	transition: all 0.3s ease-in-out;
 }
-.tag-item:hover a{
-	background: #E4E6E8;
-	color: #050505;
+.fz-form-wrap .tagify__tag>div::before{
+	box-shadow: 0 0 0 1.7em #F0F2F5 inset;
 }
-.tag-item .remove-tag{
+.fz-form-wrap .tagify__tag:focus div::before,
+.fz-form-wrap .tagify__tag:hover:not([readonly]) div::before{
+	box-shadow: 0 0 0 1.7em #E4E6E8 inset;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+}
+.fz-form-wrap .tagify__tag__removeBtn:hover+div::before{
+	box-shadow: 0 0 0 1.7em #E4E6E8 inset!important;
+}
+.fz-form-wrap .tagify__tag__removeBtn:hover+div>span{
+	opacity: 1;
+}
+.fz-form-wrap .tagify__tag__removeBtn{
+	font-size: 20px;
+	line-height: 1;
 	width: 20px;
 	height: 20px;
-	font-size: 20px;
 	color: #757575;
-	position: absolute;
-	top: 6px;
-	right: 8px;
-	border: 0;
-	cursor: pointer;
-	background: transparent;
-	overflow: hidden;
-	-webkit-border-radius: 100%;
-	-moz-border-radius: 100%;
-	border-radius: 100%;
-	-webkit-transition: all 0.3s ease-in-out;
-	-moz-transition: all 0.3s ease-in-out;
-	-o-transition: all 0.3s ease-in-out;
-	transition: all 0.3s ease-in-out;
 }
-.tag-item .remove-tag:hover{
+.fz-form-wrap .tagify__tag__removeBtn:hover{
 	background: #D0D4D7;
+	color: #757575;
+}
+.fz-form-wrap .tagify__tag__removeBtn::after{
+	content: "\f335";
+	font-family: 'dashicons';
+	font-size: 20px;
+	line-height: 1;
 }
 
 .no-data .help-text{

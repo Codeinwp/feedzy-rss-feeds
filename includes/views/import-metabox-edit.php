@@ -35,18 +35,16 @@ global $post;
 								<div class="fz-group">
 									<div class="fz-input-icon">
 										<input type="text" id="feedzy-import-source" title="<?php esc_attr_e( 'Make sure you validate the feed by using the validate button on the right', 'feedzy-rss-feeds' ); ?>"
-											name="feedzy_meta_data[source]"
 											placeholder="<?php esc_attr_e( 'Paste your feed URL and click the plus icon to add it in the list', 'feedzy-rss-feeds' ); ?>"
-											class="form-control fz-tagify"
-											value="<?php echo esc_attr( $source ); ?>" />
+											class="form-control" />
 										<div class="fz-input-group-append">
-											<button class="fz-plus-btn" disabled>
+											<button class="fz-plus-btn add-outside-tags" disabled>
 												<span class="dashicons dashicons-plus-alt2"></span>
 											</button>
 										</div>
 									</div>
 									<div class="cta">
-										<a class="btn btn-flate btn-icon" target="_blank" data-href-base="https://validator.w3.org/feed/check.cgi?url="
+										<a class="btn btn-flate btn-icon" id="feedzy-validate-feed" target="_blank" data-href-base="https://validator.w3.org/feed/check.cgi?url="
 											href="#" title="<?php esc_attr_e( 'Validate Feed', 'feedzy-rss-feeds' ); ?>"><i
 												title="<?php esc_attr_e( 'Validate Feed', 'feedzy-rss-feeds' ); ?>"
 												class="dashicons dashicons-external"></i></a>
@@ -84,15 +82,8 @@ global $post;
 									</div>
 							</div>
 						</div>
-						<div class="tag-list">
-							<ul>
-								<li>
-									<div class="tag-item">
-										<a href="#">https//feed.com/sport/feed</a>
-										<button type="button" class="remove-tag"><span class="dashicons dashicons-no-alt"></span></button>
-									</div>
-								</li>
-							</ul>
+						<div class="tag-list<?php echo empty( $source ) ? esc_attr( ' hidden' ) : ''; ?>">
+							<input type="text" id="feedzy-source-tags" name="feedzy_meta_data[source]" class="fz-tagify--outside" value="<?php echo esc_attr( $source ); ?>" />
 						</div>
 						<div class="cta-text pt-8">
 							<a href="<?php echo esc_url( 'https://docs.themeisle.com/article/799-how-to-find-feed-url-for-feedzy-rss-feeds' ); ?>" target="_blank"><?php esc_html_e( 'How do I find an RSS feed URL? ', 'feedzy-rss-feeds' ); ?></a>
@@ -129,9 +120,9 @@ global $post;
 									<div class="fz-input-group-left">
 										<div class="fz-group">
 											<div class="fz-input-icon">
-												<input type="text" name="feedzy_meta_data[inc_key]" placeholder="<?php esc_html_e( '(eg. news, stock + market etc.)', 'feedzy-rss-feeds' ); ?>" class="form-control feedzy-keyword-filter" value="<?php echo esc_attr( $inc_key ); ?>" />
+												<input type="text" placeholder="<?php esc_html_e( '(eg. news, stock + market etc.)', 'feedzy-rss-feeds' ); ?>" class="form-control feedzy-keyword-filter"/>
 												<div class="fz-input-group-append">
-													<button class="fz-plus-btn">
+													<button class="fz-plus-btn add-outside-tags">
 														<span class="dashicons dashicons-plus-alt2"></span>
 													</button>
 												</div>
@@ -153,15 +144,8 @@ global $post;
 										</select>
 									</div>
 								</div>
-								<div class="tag-list">
-									<ul>
-										<li>
-											<div class="tag-item">
-												<a href="#">bananas</a>
-												<button type="button" class="remove-tag"><span class="dashicons dashicons-no-alt"></span></button>
-											</div>
-										</li>
-									</ul>
+								<div class="tag-list<?php echo empty( $inc_key ) ? esc_attr( ' hidden' ) : ''; ?>">
+									<input type="text" name="feedzy_meta_data[inc_key]" class="fz-tagify-outside" value="<?php echo esc_attr( $inc_key ); ?>" />
 								</div>
 							</div>
 						</div>
@@ -179,9 +163,9 @@ global $post;
 									<div class="fz-input-group-left">
 										<div class="fz-group">
 											<div class="fz-input-icon">
-												<input type="text" name="feedzy_meta_data[exc_key]" placeholder="<?php esc_html_e( '(eg. news, stock + market etc.)', 'feedzy-rss-feeds' ); ?>" class="form-control feedzy-keyword-filter" value="<?php echo esc_attr( $exc_key ); ?>" />
+												<input type="text" placeholder="<?php esc_html_e( '(eg. news, stock + market etc.)', 'feedzy-rss-feeds' ); ?>" class="form-control feedzy-keyword-filter" />
 												<div class="fz-input-group-append">
-													<button class="fz-plus-btn">
+													<button class="fz-plus-btn add-outside-tags">
 														<span class="dashicons dashicons-plus-alt2"></span>
 													</button>
 												</div>
@@ -202,6 +186,9 @@ global $post;
 											<?php endforeach; ?>
 										</select>
 									</div>
+								</div>
+								<div class="tag-list<?php echo empty( $exc_key ) ? esc_attr( ' hidden' ) : ''; ?>">
+									<input type="text" name="feedzy_meta_data[exc_key]" class="fz-tagify-outside" value="<?php echo esc_attr( $exc_key ); ?>" />
 								</div>
 							</div>
 						</div>
@@ -519,49 +506,6 @@ global $post;
 					</div>
 					<div class="fz-tab-content" id="fz-advanced-options">
 						<div class="fz-form-wrap">
-							<?php if ( function_exists( 'icl_get_languages' ) ) : ?>
-								<div class="form-block form-block-two-column">
-									<div class="left">
-										<h4 class="h4"><?php esc_html_e( 'Source Language', 'feedzy-rss-feeds' ); ?><?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
-										<?php if ( ! feedzy_is_pro() ) : ?>
-											<div class="form-block-pro-text">
-											<?php esc_html_e( 'This feature is only for Pro users.', 'feedzy-rss-feeds' ); ?><br>
-												<a href="https://docs.themeisle.com/category/712-feedzy" target="_blank"><?php esc_html_e( 'Learn More', 'feedzy-rss-feeds' ); ?></a>
-											</div>
-										<?php endif; ?>
-									</div>
-									<div class="right">
-										<div class="fz-form-group">
-											<label class="form-label"><?php esc_html_e( 'Item Full Content Language', 'feedzy-rss-feeds' ); ?></label>
-											<div class="mx-320">
-												<select id="feedzy_site_language" class="form-control feedzy-chosen" name="feedzy_meta_data[language]">
-													<?php
-														$current_language         = defined( 'ICL_LANGUAGE_CODE' ) ? ICL_LANGUAGE_CODE : '';
-														$import_selected_language = ! empty( $import_selected_language ) ? $import_selected_language : $current_language;
-														$languages                = icl_get_languages();
-													foreach ( $languages as $language ) {
-														$selected = '';
-														$code     = isset( $language['language_code'] ) ? $language['language_code'] : $language['code'];
-														$name     = isset( $language['translated_name'] ) && ! empty( $language['translated_name'] ) ? $language['translated_name'] : $language['native_name'];
-														if ( $code === $import_selected_language ) {
-															$selected = 'selected';
-														}
-														?>
-													<option value="<?php echo esc_attr( $code ); ?>" <?php echo esc_attr( $selected ); ?>>
-														<?php echo esc_html( $name ); ?></option>
-														<?php
-													}
-													?>
-												</select>
-											</div>
-											<div class="help-text">
-												<?php esc_html_e( 'If you choose to display the full content, you may want to specify the language of the website that will provide the full content. The default is English.', 'feedzy-rss-feeds' ); ?>
-											</div>
-										</div>
-									</div>
-								</div>
-							<?php endif; ?>
-
 							<div class="form-block form-block-two-column">
 								<div class="left">
 									<h4 class="h4"><?php esc_html_e( 'External image', 'feedzy-rss-feeds' ); ?></h4>
@@ -778,7 +722,49 @@ global $post;
 							</div>
 						</div>
 					</div>
-
+					
+					<?php if ( function_exists( 'icl_get_languages' ) ) : ?>
+						<div class="form-block form-block-two-column">
+							<div class="left">
+								<h4 class="h4"><?php esc_html_e( 'Assign Language', 'feedzy-rss-feeds' ); ?><?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
+								<?php if ( ! feedzy_is_pro() ) : ?>
+									<div class="form-block-pro-text">
+									<?php esc_html_e( 'This feature is only for Pro users.', 'feedzy-rss-feeds' ); ?><br>
+										<a href="https://docs.themeisle.com/category/712-feedzy" target="_blank"><?php esc_html_e( 'Learn More', 'feedzy-rss-feeds' ); ?></a>
+									</div>
+								<?php endif; ?>
+							</div>
+							<div class="right">
+								<div class="fz-form-group">
+									<label class="form-label"><?php esc_html_e( 'Content Language after import', 'feedzy-rss-feeds' ); ?></label>
+									<div class="mx-320">
+										<select id="feedzy_site_language" class="form-control feedzy-chosen" name="feedzy_meta_data[language]">
+											<?php
+											$current_language         = defined( 'ICL_LANGUAGE_CODE' ) ? ICL_LANGUAGE_CODE : '';
+											$import_selected_language = ! empty( $import_selected_language ) ? $import_selected_language : $current_language;
+											$languages                = icl_get_languages();
+											foreach ( $languages as $language ) {
+												$selected = '';
+												$code     = isset( $language['language_code'] ) ? $language['language_code'] : $language['code'];
+												$name     = isset( $language['translated_name'] ) && ! empty( $language['translated_name'] ) ? $language['translated_name'] : $language['native_name'];
+												if ( $code === $import_selected_language ) {
+													$selected = 'selected';
+												}
+												?>
+											<option value="<?php echo esc_attr( $code ); ?>" <?php echo esc_attr( $selected ); ?>>
+												<?php echo esc_html( $name ); ?></option>
+												<?php
+											}
+											?>
+										</select>
+									</div>
+									<div class="help-text">
+										<?php esc_html_e( 'Select the language the content will have when it will be imported.', 'feedzy-rss-feeds' ); ?>
+									</div>
+								</div>
+							</div>
+						</div>
+					<?php endif; ?>
 				</div>
 			</div>
 		</div>

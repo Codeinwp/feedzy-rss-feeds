@@ -1123,9 +1123,12 @@ class Feedzy_Rss_Feeds_Import {
 		$inc_on               = get_post_meta( $job->ID, 'inc_on', true );
 		$exc_on               = get_post_meta( $job->ID, 'exc_on', true );
 		$import_title         = get_post_meta( $job->ID, 'import_post_title', true );
+		$import_title         = $this->feedzy_import_trim_tags( $import_title  );
 		$import_date          = get_post_meta( $job->ID, 'import_post_date', true );
 		$post_excerpt         = get_post_meta( $job->ID, 'import_post_excerpt', true );
+		$post_excerpt         = $this->feedzy_import_trim_tags( $post_excerpt  );
 		$import_content       = get_post_meta( $job->ID, 'import_post_content', true );
+		$import_content       = str_replace( array( '[[{"value":"', '"}]]' ), '', $import_content );
 		$import_featured_img  = get_post_meta( $job->ID, 'import_post_featured_img', true );
 		$import_post_type     = get_post_meta( $job->ID, 'import_post_type', true );
 		$import_post_term     = get_post_meta( $job->ID, 'import_post_term', true );
@@ -2446,5 +2449,20 @@ class Feedzy_Rss_Feeds_Import {
 			<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Duplicate import job created', 'feedzy-rss-feeds' ); ?></p></div>
 			<?php
 		}
+	}
+
+	/**
+	 * Trim tags.
+	 *
+	 * @param string $content Field value.
+	 * @return string
+	 */
+	public function feedzy_import_trim_tags( $content = '' ) {
+		if ( ! empty( $content ) && is_string( $content ) ) {
+			$content = explode( ',', $content );
+			$content = array_map( 'trim', $content );
+			$content = implode( ' ', $content );
+		}
+		return $content;
 	}
 }
