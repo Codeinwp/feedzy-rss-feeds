@@ -195,7 +195,7 @@ class Feedzy_Rss_Feeds_Ui {
 			?>
 			<div class="feedzy-header">
 				<div class="feedzy-container">
-					<div class="page-title h1"><?php echo isset( $_GET['action'] ) && 'edit' === $_GET['action'] ? esc_html__( 'Edit Import', 'feedzy-rss-feeds' ) : esc_html__( 'New Import', 'feedzy-rss-feeds' ); ?></div>
+					<div class="page-title h1"><?php echo isset( $_GET['action'] ) && 'edit' === $_GET['action'] ? esc_html__( 'Edit Import', 'feedzy-rss-feeds' ) : esc_html__( 'New Import', 'feedzy-rss-feeds' ); // phpcs:ignore WordPress.Security.NonceVerification ?></div>
 					<div class="feedzy-logo">
 						<div class="feedzy-version"><?php echo esc_html( Feedzy_Rss_Feeds::get_version() ); ?></div>
 						<div class="feedzy-logo-icon"><img src="<?php echo esc_url( FEEDZY_ABSURL . 'img/feedzy.svg' ); ?>" width="60" height="60" alt=""></div>
