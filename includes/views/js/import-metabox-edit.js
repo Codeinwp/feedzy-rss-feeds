@@ -204,6 +204,10 @@
 		return true;
 	}
 
+	function htmlEntities(str) {
+		return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+	}
+
 	$(document).ready(function () {
 		initImportScreen();
 		initSummary();
@@ -383,7 +387,7 @@
 		} );
 
 		// Tagify for normal mix content field.
-		$( '.fz-textarea-tagify' ).tagify( {
+		var mixContent = $( '.fz-textarea-tagify' ).tagify( {
 			mode: 'mix',
 			editTags: false,
 			originalInputValueFormat: function( valuesArr ) {
@@ -393,6 +397,12 @@
 				.join( ', ' );
 			}
 		} );
+
+		if ( mixContent ) {
+			mixContent.data('tagify').removeAllTags();
+			mixContent.data('tagify').parseMixTags( htmlEntities( mixContent.text() )
+				);
+		}
 
 		// Tagify for outside tags with allowed duplicates.
 		$( '.fz-tagify-outside' ).tagify( {

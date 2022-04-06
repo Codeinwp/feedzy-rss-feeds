@@ -4,7 +4,7 @@
     "login": "wordpress",
     "pass": "wordpress",
     "settings": {
-        "tabs": 4
+        "tabs": 6
     },
     "shortcode": {
         "single": "[feedzy-rss feeds='https://s3.amazonaws.com/downloads.themeisle.com/sample-feed.xml' max='11' offset='1' feed_title='yes' refresh='1_hours' meta='yes' multiple_meta='yes' summary='yes' price='yes' mapping='price=im:price' thumb='yes' keywords_title='God, Mendes, Cyrus, Taylor' keywords_ban='Cyrus' template='style1']",
@@ -28,7 +28,7 @@
       "locked": 6,
       "url": "https://s3.amazonaws.com/downloads.themeisle.com/sample-feed-import.xml",
       "invalidurl": "test",
-      "title": "[#item_date] [#item_custom_guid] [#item_title]",
+      "title": "[#item_date], [#item_custom_guid], [#item_title]",
       "content": "<span>check if html tags are supported</span>[#item_content] start:[#item_categories]:end",
       "items": "10",
       "taxonomy": [
