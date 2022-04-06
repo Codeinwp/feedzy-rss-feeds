@@ -1123,10 +1123,10 @@ class Feedzy_Rss_Feeds_Import {
 		$inc_on               = get_post_meta( $job->ID, 'inc_on', true );
 		$exc_on               = get_post_meta( $job->ID, 'exc_on', true );
 		$import_title         = get_post_meta( $job->ID, 'import_post_title', true );
-		$import_title         = $this->feedzy_import_trim_tags( $import_title  );
+		$import_title         = $this->feedzy_import_trim_tags( $import_title );
 		$import_date          = get_post_meta( $job->ID, 'import_post_date', true );
 		$post_excerpt         = get_post_meta( $job->ID, 'import_post_excerpt', true );
-		$post_excerpt         = $this->feedzy_import_trim_tags( $post_excerpt  );
+		$post_excerpt         = $this->feedzy_import_trim_tags( $post_excerpt );
 		$import_content       = get_post_meta( $job->ID, 'import_post_content', true );
 		$import_content       = str_replace( array( '[[{"value":"', '"}]]' ), '', $import_content );
 		$import_featured_img  = get_post_meta( $job->ID, 'import_post_featured_img', true );
