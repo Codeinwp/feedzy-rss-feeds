@@ -267,6 +267,11 @@ class Feedzy_Rss_Feeds {
 			self::$instance->loader->add_action( 'admin_notices', $plugin_import, 'feedzy_import_clone_success_notice' );
 			// Remove elementor feature.
 			self::$instance->loader->add_action( 'elementor/experiments/feature-registered', self::$instance->admin, 'feedzy_remove_elementor_feature', 10, 2 );
+
+			// Register elementor widget.
+			$plugin_elementor_widget = new Feedzy_Rss_Feeds_Elementor();
+			$this->loader->add_action( 'elementor/widgets/register', $plugin_elementor_widget, 'feedzy_elementor_widgets_registered' );
+			$this->loader->add_action( 'elementor/controls/register', $plugin_elementor_widget, 'feedzy_elementor_register_datetime_local_control' );
 		}
 
 		if ( ! defined( 'TI_UNIT_TESTING' ) ) {

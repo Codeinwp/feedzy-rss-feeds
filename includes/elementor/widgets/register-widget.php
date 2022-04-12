@@ -1,0 +1,697 @@
+<?php
+use Elementor\Controls_Manager;
+use Elementor\Core\Base\Document;
+use Elementor\Core\Settings\Manager as SettingsManager;
+
+/**
+ * Register feedzy elementor widget.
+ *
+ * @package    feedzy-rss-feeds
+ * @subpackage feedzy-rss-feeds/includes/elementor
+ */
+class Feedzy_Register_Widget extends Elementor\Widget_Base {
+
+	/**
+	 * Widget name.
+	 */
+	public function get_name() {
+		return 'feedzy-rss-feeds';
+	}
+
+	/**
+	 * Widget title.
+	 */
+	public function get_title() {
+		return __( 'Feedzy RSS Feeds', 'feedzy-rss-feeds' );
+	}
+
+	/**
+	 * Widget icon.
+	 */
+	public function get_icon() {
+		return 'dashicons dashicons-rss';
+	}
+
+	/**
+	 * Widget search keywords.
+	 */
+	public function get_keywords() {
+		return array( 'elementor', 'template', 'feed', 'rss', 'feedzy' );
+	}
+
+	/**
+	 * Widget register controls.
+	 */
+	protected function register_controls() { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
+		$ui_theme = SettingsManager::get_settings_managers( 'editorPreferences' )->get_model()->get_settings( 'ui_theme' );
+		$ui_theme = 'auto' === $ui_theme ? 'light' : $ui_theme;
+
+		// Start general setting section.
+		$this->start_controls_section(
+			'fz-general-settings',
+			array(
+				'label' => __( 'General Settings', 'feedzy-rss-feeds' ),
+			)
+		);
+		$this->add_control(
+			'fz-section-title',
+			array(
+				'label'       => __( 'Section Title', 'feedzy-rss-feeds' ),
+				'label_block' => true,
+				'type'        => Controls_Manager::TEXT,
+				'placeholder' => __( 'Add your title, that will be added in page', 'feedzy-rss-feeds' ),
+				'classes'     => 'feedzy-el-feed-source',
+			)
+		);
+		$this->add_control(
+			'fz-intro-text',
+			array(
+				'label_block' => true,
+				'label'       => __( 'Intro text', 'feedzy-rss-feeds' ),
+				'type'        => Controls_Manager::TEXTAREA,
+			)
+		);
+		$this->end_controls_section(); // End general setting section.
+
+		// Start feed source section.
+		$this->start_controls_section(
+			'fz-feed-source',
+			array(
+				'label' => __( 'Feed Source', 'feedzy-rss-feeds' ),
+			)
+		);
+		$this->add_control(
+			'fz-source',
+			array(
+				'label_block' => true,
+				'label'       => __( 'RSS Feed source', 'feedzy-rss-feeds' ),
+				'type'        => Controls_Manager::TEXTAREA,
+				'description' => wp_sprintf( __( 'You can add multiple sources at once, by separating them with commas. <a href="%s" class="feedzy-source">Click here</a> to check if the feed is valid. Invalid feeds may not import anything.', 'feedzy-rss-feeds' ), esc_url( 'https://validator.w3.org/feed/' ) ), // phpcs:ignore
+			)
+		);
+		$this->add_control(
+			'fz-max',
+			array(
+				'label_block' => true,
+				'label'       => __( 'Number of items to display', 'feedzy-rss-feeds' ),
+				'type'        => Controls_Manager::NUMBER,
+				'classes'     => 'feedzy-el-full-width',
+				'default'     => 5,
+				'min'         => 1,
+			)
+		);
+		$this->add_control(
+			'fz-orderby',
+			array(
+				'label_block' => true,
+				'label'       => __( 'Order items by', 'feedzy-rss-feeds' ),
+				'type'        => Controls_Manager::SELECT,
+				'default'     => '',
+				'options'     => array(
+					''           => __( 'Default', 'feedzy-rss-feeds' ),
+					'date_desc'  => __( 'Date Descending', 'feedzy-rss-feeds' ),
+					'date_asc'   => __( 'Date Ascending', 'feedzy-rss-feeds' ),
+					'title_desc' => __( 'Title Descending', 'feedzy-rss-feeds' ),
+					'title_asc'  => __( 'Title Ascending', 'feedzy-rss-feeds' ),
+				),
+			)
+		);
+		$this->add_control(
+			'fz-refresh',
+			array(
+				'label_block' => true,
+				'label'       => __( 'For how long we will cache the feed results', 'feedzy-rss-feeds' ),
+				'type'        => Controls_Manager::SELECT,
+				'default'     => '12_hours',
+				'options'     => array(
+					'1_hours'  => wp_sprintf( __( '%d Hour', 'feedzy-rss-feeds' ), 1 ),
+					'3_hours'  => wp_sprintf( __( '%d Hour', 'feedzy-rss-feeds' ), 3 ),
+					'12_hours' => wp_sprintf( __( '%d Hour', 'feedzy-rss-feeds' ), 12 ),
+					'1_days'   => wp_sprintf( __( '%d Day', 'feedzy-rss-feeds' ), 12 ),
+					'3_days'   => wp_sprintf( __( '%d Days', 'feedzy-rss-feeds' ), 3 ),
+					'15_days'  => wp_sprintf( __( '%d Days', 'feedzy-rss-feeds' ), 15 ),
+				),
+				'separator' => 'before',
+			)
+		);
+		$this->add_control(
+			'fz-error-empty',
+			array(
+				'label_block' => true,
+				'label'       => __( 'Message to show when feed is empty', 'feedzy-rss-feeds' ),
+				'type'        => Controls_Manager::TEXTAREA,
+			)
+		);
+		$this->end_controls_section(); // End feed source section.
+
+		// Start filter items section.
+		$this->start_controls_section(
+			'fz-filter-items',
+			array(
+				'label'   => wp_sprintf( __( 'Filter items%s', 'feedzy-rss-feeds' ), $this->upsell_title_label() ),
+				'classes' => $this->upsell_class(),
+			)
+		);
+		$this->add_control(
+			'fz-filter-inc-on',
+			array(
+				'label'   => __( 'Display items if', 'feedzy-rss-feeds' ),
+				'type'    => Controls_Manager::SELECT,
+				'default' => 'title',
+				'options' => array(
+					'title'        => __( 'Title', 'feedzy-rss-feeds' ),
+					'description'  => __( 'Description', 'feedzy-rss-feeds' ),
+					'author'       => __( 'Author', 'feedzy-rss-feeds' ),
+					'full-content' => __( 'Full Content', 'feedzy-rss-feeds' ),
+				),
+				'classes' => $this->upsell_class(),
+			)
+		);
+		$this->add_control(
+			'fz-filter-inc-key',
+			array(
+				'label_block' => true,
+				'label'       => __( 'Contains:', 'feedzy-rss-feeds' ),
+				'type'        => Controls_Manager::TEXTAREA,
+				'description' => __( 'You can add multiple keywords at once by separating them with comma (,) or use the plus sign (+) to bind multiple keywords.', 'feedzy-rss-feeds' ),
+				'classes'     => $this->upsell_class(),
+			)
+		);
+		$this->add_control(
+			'fz-filter-exc-on',
+			array(
+				'label'   => __( 'Exclude items if', 'feedzy-rss-feeds' ),
+				'type'    => Controls_Manager::SELECT,
+				'default' => 'title',
+				'options' => array(
+					'title'        => __( 'Title', 'feedzy-rss-feeds' ),
+					'description'  => __( 'Description', 'feedzy-rss-feeds' ),
+					'author'       => __( 'Author', 'feedzy-rss-feeds' ),
+					'full-content' => __( 'Full Content', 'feedzy-rss-feeds' ),
+				),
+				'separator' => 'before',
+				'classes'   => $this->upsell_class(),
+			)
+		);
+		$this->add_control(
+			'fz-filter-exc-key',
+			array(
+				'label_block' => true,
+				'label'       => __( 'Contains:', 'feedzy-rss-feeds' ),
+				'type'        => Controls_Manager::TEXTAREA,
+				'description' => __( 'You can add multiple keywords at once by separating them with comma (,) or use the plus sign (+) to bind multiple keywords.', 'feedzy-rss-feeds' ),
+				'classes'     => $this->upsell_class(),
+			)
+		);
+		$this->add_control(
+			'fz-filter-from-dt',
+			array(
+				'label_block' => true,
+				'label'       => __( 'Filter items by time range, from: ', 'feedzy-rss-feeds' ),
+				'type'        => 'date_time_local',
+				'classes'     => $this->upsell_class(),
+				'separator'   => 'before',
+			)
+		);
+		$this->add_control(
+			'fz-filter-to-dt',
+			array(
+				'label_block' => true,
+				'label'       => __( 'To ', 'feedzy-rss-feeds' ),
+				'type'        => 'date_time_local',
+				'classes'     => $this->upsell_class(),
+			)
+		);
+		$this->end_controls_section(); // End filter items section.
+
+		// Start item options section.
+		$this->start_controls_section(
+			'fz-item-options',
+			array(
+				'label'   => wp_sprintf( __( 'Item Options', 'feedzy-rss-feeds' ) ),
+			)
+		);
+		$this->add_control(
+			'fz-item-target',
+			array(
+				'label_block' => true,
+				'label'   => __( 'Links behavior (opened in the same window or a new tab)', 'feedzy-rss-feeds' ),
+				'type'    => Controls_Manager::SELECT,
+				'default' => '',
+				'options' => array(
+					''          => __( 'Auto', 'feedzy-rss-feeds' ),
+					'_blank'    => __( '_blank', 'feedzy-rss-feeds' ),
+					'_self'     => __( '_self', 'feedzy-rss-feeds' ),
+					'_top'      => __( '_top', 'feedzy-rss-feeds' ),
+					'framename' => __( 'framename', 'feedzy-rss-feeds' ),
+				),
+			)
+		);
+		$this->add_control(
+			'fz-item-nofollow-link',
+			array(
+				'label'        => __( 'Add ”nofollow” tag to links', 'feedzy-rss-feeds' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'default'      => 'no',
+				'label_on'     => esc_html__( 'Yes', 'feedzy-rss-feeds' ),
+				'label_off'    => esc_html__( 'No', 'feedzy-rss-feeds' ),
+				'return_value' => 'yes',
+			)
+		);
+		$this->add_control(
+			'fz-item-display-title',
+			array(
+				'label'        => __( 'Display item Title', 'feedzy-rss-feeds' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'default'      => 'yes',
+				'label_on'     => esc_html__( 'Yes', 'feedzy-rss-feeds' ),
+				'label_off'    => esc_html__( 'No', 'feedzy-rss-feeds' ),
+				'return_value' => 'yes',
+				'separator'    => 'before',
+			)
+		);
+		$this->add_control(
+			'fz-item-title-length',
+			array(
+				'label'       => __( 'Max Title length (in characters)', 'feedzy-rss-feeds' ),
+				'label_block' => true,
+				'type'        => Controls_Manager::NUMBER,
+				'min'         => 1,
+				'classes'     => 'feedzy-el-full-width',
+			)
+		);
+		$this->add_control(
+			'fz-item-display-desc',
+			array(
+				'label'        => __( 'Display item Description', 'feedzy-rss-feeds' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'default'      => 'yes',
+				'label_on'     => esc_html__( 'Yes', 'feedzy-rss-feeds' ),
+				'label_off'    => esc_html__( 'No', 'feedzy-rss-feeds' ),
+				'return_value' => 'yes',
+				'separator'    => 'before',
+			)
+		);
+		$this->add_control(
+			'fz-item-desc-length',
+			array(
+				'label'       => __( 'Max Description length (in characters)', 'feedzy-rss-feeds' ),
+				'label_block' => true,
+				'type'        => Controls_Manager::NUMBER,
+				'min'         => 1,
+				'classes'     => 'feedzy-el-full-width',
+			)
+		);
+		$this->end_controls_section(); // End item options section.
+
+		// Start item thumbnail section.
+		$this->start_controls_section(
+			'fz-item-thumbnail',
+			array(
+				'label'   => wp_sprintf( __( 'Item Thumbnail Options', 'feedzy-rss-feeds' ) ),
+			)
+		);
+		$this->add_control(
+			'fz-item-thumb',
+			array(
+				'label_block' => true,
+				'label'   => __( 'Display first image, when available', 'feedzy-rss-feeds' ),
+				'type'    => Controls_Manager::SELECT,
+				'default' => '',
+				'options' => array(
+					''       => __( 'Yes (without a fallback image)', 'feedzy-rss-feeds' ),
+					'yes'    => __( 'Yes (with a fallback image)', 'feedzy-rss-feeds' ),
+					'no'     => __( 'No', 'feedzy-rss-feeds' ),
+				),
+			)
+		);
+		$this->add_control(
+			'fz-item-fallback-thumb',
+			array(
+				'label_block' => true,
+				'label'   => __( 'Choose the Fallback Image', 'feedzy-rss-feeds' ),
+				'type'    => Controls_Manager::MEDIA,
+				'default' => array(
+					'url' => \Elementor\Utils::get_placeholder_image_src(),
+				),
+			)
+		);
+		$this->add_control(
+			'fz-item-thumb-size',
+			array(
+				'label'       => __( 'Thumbnails dimensions', 'feedzy-rss-feeds' ),
+				'label_block' => true,
+				'type'        => Controls_Manager::TEXT,
+				'placeholder' => esc_attr__( 'Eg. 250', 'feedzy-rss-feeds' ),
+			)
+		);
+		$this->add_control(
+			'fz-item-thumb-http',
+			array(
+				'label_block' => true,
+				'label'   => __( 'How should we treat HTTP images?', 'feedzy-rss-feeds' ),
+				'type'    => Controls_Manager::SELECT,
+				'default' => '',
+				'options' => array(
+					''        => __( 'Show with HTTP link', 'feedzy-rss-feeds' ),
+					'https'   => __( 'Force HTTPS (please verify that the images exist on HTTPS)', 'feedzy-rss-feeds' ),
+					'default' => __( 'Ignore and show the default image instead', 'feedzy-rss-feeds' ),
+				),
+				'separator' => 'before',
+			)
+		);
+		$this->end_controls_section(); // End item thumbnail section.
+
+		// Start layout section.
+		$this->start_controls_section(
+			'fz-layout',
+			array(
+				'label'   => wp_sprintf( __( 'Feed Layout%s', 'feedzy-rss-feeds' ), $this->upsell_title_label() ),
+				'classes' => $this->upsell_class(),
+			)
+		);
+		$this->add_control(
+			'fz-layout-columns',
+			array(
+				'label'      => esc_html__( 'Columns', 'feedzy-rss-feeds' ),
+				'type'       => Controls_Manager::SLIDER,
+				'classes'    => $this->upsell_class(),
+			)
+		);
+
+		$ui_class = 'dark' === $ui_theme ? 'fz-el-dark-mode' : 'fz-el-light-mode';
+
+		$this->add_control(
+			'fz-layout-template',
+			array(
+				'label_block' => true,
+				'type'        => 'fz-layout-template',
+				'template_options' => array(
+					'default' => array(
+						'title' => esc_html__( 'Default', 'feedzy-rss-feeds' ),
+						'icon'  => 'eicon-text-align-left',
+						'image' => FEEDZY_ABSURL . 'img/' . $ui_theme . '-mode-default.png',
+					),
+					'style1' => array(
+						'title' => esc_html__( 'Style 1', 'feedzy-rss-feeds' ),
+						'icon' => 'eicon-text-align-center',
+						'image' => FEEDZY_ABSURL . 'img/' . $ui_theme . '-mode-style1.png',
+					),
+					'style2' => array(
+						'title' => esc_html__( 'Style 2', 'feedzy-rss-feeds' ),
+						'icon' => 'eicon-text-align-right',
+						'image' => FEEDZY_ABSURL . 'img/' . $ui_theme . '-mode-style2.png',
+					),
+				),
+				'default' => 'default',
+				'toggle'  => true,
+				'classes' => $this->upsell_class( $ui_class ),
+			)
+		);
+		$this->end_controls_section(); // End layout section.
+
+		// Start custom options section.
+		$this->start_controls_section(
+			'fz-custom-options',
+			array(
+				'label'   => __( 'Feed Items Custom Options', 'feedzy-rss-feeds' ),
+			)
+		);
+		$this->add_control(
+			'fz-cus-hide-meta',
+			array(
+				'label'        => __( 'Hide items Meta', 'feedzy-rss-feeds' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'default'      => 'no',
+				'label_on'     => esc_html__( 'Yes', 'feedzy-rss-feeds' ),
+				'label_off'    => esc_html__( 'No', 'feedzy-rss-feeds' ),
+				'return_value' => 'yes',
+			)
+		);
+		$this->add_control(
+			'fz-cus-meta-fields',
+			array(
+				'label'       => __( 'Display additional meta fields (author, date, time or categories)', 'feedzy-rss-feeds' ),
+				'label_block' => true,
+				'type'        => Controls_Manager::TEXT,
+				'description' => wp_sprintf(
+					__(
+						'You can add multiple tags at once, by separating them with commas. 
+				<a href="%s" target="_blank">View documentation here</a>.', 'feedzy-rss-feeds'
+					), esc_url( 'https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed' )
+				),
+			)
+		);
+		$this->add_control(
+			'fz-cus-display-price',
+			array(
+				'label'        => __( 'Display price if available', 'feedzy-rss-feeds' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'default'      => 'no',
+				'label_on'     => esc_html__( 'Yes', 'feedzy-rss-feeds' ),
+				'label_off'    => esc_html__( 'No', 'feedzy-rss-feeds' ),
+				'return_value' => 'yes',
+				'separator'    => 'before',
+				'description'  => wp_sprintf( __( 'Learn more about this feature in <a href="%s" target="_blank">Feedzy docs</a>.', 'feedzy-rss-feeds' ), esc_url( 'https://docs.themeisle.com/article/923-how-price-is-displayed-from-the-feed' ) ),
+				'classes'      => $this->upsell_class(),
+			)
+		);
+		$this->add_control(
+			'fz-show-item-source',
+			array(
+				'label'        => __( 'Show item source', 'feedzy-rss-feeds' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'default'      => 'no',
+				'label_on'     => esc_html__( 'Yes', 'feedzy-rss-feeds' ),
+				'label_off'    => esc_html__( 'No', 'feedzy-rss-feeds' ),
+				'return_value' => 'yes',
+				'separator'    => 'before',
+				'description' => __( 'When using multiple sources this will append the item source to the author tag (required).', 'feedzy-rss-feeds' ),
+			)
+		);
+		$this->add_control(
+			'fz-offset',
+			array(
+				'label'       => __( 'Ignore the first N items of the feed', 'feedzy-rss-feeds' ),
+				'label_block' => true,
+				'type'        => Controls_Manager::NUMBER,
+				'separator'   => 'before',
+				'min'         => 0,
+				'classes'     => 'feedzy-el-full-width',
+				'default'     => 0,
+			)
+		);
+		$this->add_control(
+			'fz-lazy-load',
+			array(
+				'label'        => __( 'Lazy load the feed', 'feedzy-rss-feeds' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'default'      => 'no',
+				'label_on'     => esc_html__( 'Yes', 'feedzy-rss-feeds' ),
+				'label_off'    => esc_html__( 'No', 'feedzy-rss-feeds' ),
+				'return_value' => 'yes',
+				'separator'    => 'before',
+				'description'  => __( 'Enabling this won\'t slow down the page.', 'feedzy-rss-feeds' ),
+			)
+		);
+		$this->end_controls_section(); // End custom options section.
+
+		// Start referral URL section.
+		$this->start_controls_section(
+			'fz-referral-url',
+			array(
+				'label'   => wp_sprintf( __( 'Referral URL%s', 'feedzy-rss-feeds' ), $this->upsell_title_label() ),
+				'classes' => $this->upsell_class(),
+			)
+		);
+		$this->add_control(
+			'fz-referral-parameters',
+			array(
+				'label'       => __( 'Add your referral parameters', 'feedzy-rss-feeds' ),
+				'label_block' => true,
+				'type'        => Controls_Manager::TEXT,
+				'description' => ! feedzy_is_pro() ? wp_sprintf( __( 'Unlock this feature and more advanced options with <a href="%s" target="_blank">Feedzy Pro</a>.', 'feedzy-rss-feeds' ), esc_url( 'https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/' ) ) : '',
+				'classes' => $this->upsell_class(),
+			)
+		);
+		$this->end_controls_section(); // End referral URL section.
+
+		// $this->add_control(
+		// 'important_note',
+		// [
+		// 'label' => esc_html__( 'Important Note', 'plugin-name' ),
+		// 'type' => Controls_Manager::RAW_HTML,
+		// 'raw' => esc_html__( 'A very important message to show in the panel.', 'plugin-name' ),
+		// 'content_classes' => 'your-class',
+		// ]
+		// );
+	}
+
+	/**
+	 * Upsell calss.
+	 *
+	 * @param string $class ClassName.
+	 * @return string
+	 */
+	public function upsell_class( $class = '' ) {
+		if ( ! feedzy_is_pro() ) {
+			$class .= ' fz-feat-locked';
+		}
+		return trim( $class );
+	}
+
+	/**
+	 * Append pro lable.
+	 *
+	 * @return string
+	 */
+	public function upsell_title_label() {
+		if ( ! feedzy_is_pro() ) {
+			return '<i class="eicon-lock"></i>';
+		}
+		return '';
+	}
+
+	/**
+	 * Get custom help URL.
+	 *
+	 * Retrieve a URL where the user can get more information about the widget.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 * @return string Widget help URL.
+	 */
+	public function get_custom_help_urlss() {
+		$help  = '<div class="fz-widget-help-box">';
+		$help .= '<h2>Discover Feedzy Pro</h2>';
+		$help .= '</div>';
+		return $help;
+	}
+
+	/**
+	 * Render widget.
+	 */
+	protected function render() {
+		$feedzy_template_id = $this->get_settings( 'feedzy_template_id' );
+
+		if ( 'publish' !== get_post_status( $feedzy_template_id ) ) {
+			return;
+		}
+
+		$source = $this->get_settings( 'feeds' );
+		$max = $this->get_settings( 'max' );
+		$offset = $this->get_settings( 'offset' );
+		$summarylength = $this->get_settings( 'summarylength' );
+
+		$options = array(
+			'feeds'   => $source,
+			'max'     => $max ? $max : 5,
+			'offset'  => $offset ? $offset : 0,
+			'refresh' => $this->get_settings( 'refresh' ),
+			'feed_title' => 'no',
+			'target'         => '',
+			'title'          => '',
+			'meta'           => 'yes',
+			'summary'        => 'yes',
+			'summarylength'  => ! empty( $summarylength ) ? $summarylength : '',
+			'thumb'          => 'auto',
+			'size'    => '250',
+			'default' => '',
+			'keywords_title' => '',
+			'keywords_ban'   => '',
+			'columns'        => 1,
+			'multiple_meta'  => 'no',
+		);
+
+		// $template_content = Plugin::elementor()->frontend->get_builder_content_for_display( $feedzy_template_id );
+		$template_content = '';
+
+		$admin = new \Feedzy_Rss_Feeds_Import( 'feedzy-rss-feeds', Feedzy_Rss_Feeds::get_version() );
+		$feed_items = $admin->get_job_feed( $options, $template_content );
+
+		$error_message = __( 'Feed has no items.', 'feedzy-rss-feeds' );
+		if ( empty( $source ) ) {
+			$error_message = __( 'Please enter a valid feed URL/feed categories slug in feed source setting.', 'feedzy-rss-feeds' );
+		}
+
+		?>
+		<div class="elementor-template">
+			<?php
+			if ( ! empty( $feed_items ) ) {
+				$feed_content = '';
+				foreach ( $feed_items as $item ) {
+					// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+					$item_date = date( get_option( 'date_format' ) . ' at ' . get_option( 'time_format' ), $item['item_date'] );
+					$item_url = $item['item_url'];
+					$item_description = wp_kses_post( feedzy_feed_item_desc( $item ) );
+					// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+					$item_date = date( get_option( 'date_format' ) . ' at ' . get_option( 'time_format' ), $item['item_date'] );
+					$item_date = $item['item_date_formatted'];
+
+					// Default image tag.
+					$item_img = FEEDZY_ABSURL . '/img/feedzy.svg?tag=[#item_img]';
+
+					$author = '';
+					if ( $item['item_author'] ) {
+						if ( is_string( $item['item_author'] ) ) {
+							$author = $item['item_author'];
+						} elseif ( is_object( $item['item_author'] ) ) {
+							$author = $item['item_author']->get_name();
+							if ( empty( $author ) ) {
+								$author = $item['item_author']->get_email();
+							}
+						}
+					}
+					$feed_content .= str_replace(
+						array(
+							'[#item_url]',
+							esc_url( '[#item_url]' ),
+							'[#item_title]',
+							$item_img,
+							'[#item_date]',
+							'[#item_date_local]',
+							'[#item_date_feed]',
+							'[#item_author]',
+							'[#item_description]',
+							'[#item_content]',
+							'[#item_source]',
+						),
+						array(
+							$item_url,
+							$item_url,
+							$item['item_title'],
+							! empty( $item['item_img_path'] ) ? $item['item_img_path'] : $item_img,
+							$item_date,
+							$item_date,
+							$item_date,
+							$author,
+							$item['item_description'],
+							$item_description,
+							$item['item_source'],
+						),
+						$template_content
+					);
+				}
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo $feed_content;
+			} else {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo $error_message;
+			}
+			?>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Render content template.
+	 */
+	protected function content_template() {}
+
+	/**
+	 * Render plain content.
+	 *
+	 * @param object $instance Field instance.
+	 */
+	public function render_plain_content( $instance = array() ) {}
+}
