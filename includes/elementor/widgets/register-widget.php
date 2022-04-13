@@ -43,9 +43,6 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 	 * Widget register controls.
 	 */
 	protected function register_controls() { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-		$ui_theme = SettingsManager::get_settings_managers( 'editorPreferences' )->get_model()->get_settings( 'ui_theme' );
-		$ui_theme = 'auto' === $ui_theme ? 'light' : $ui_theme;
-
 		// Start general setting section.
 		$this->start_controls_section(
 			'fz-general-settings',
@@ -379,10 +376,8 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 			)
 		);
 
-		$ui_class = 'dark' === $ui_theme ? 'fz-el-dark-mode' : 'fz-el-light-mode';
-
 		$this->add_control(
-			'fz-layout-template',
+			'fz-template',
 			array(
 				'label_block' => true,
 				'type'        => 'fz-layout-template',
@@ -390,22 +385,22 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 					'default' => array(
 						'title' => esc_html__( 'Default', 'feedzy-rss-feeds' ),
 						'icon'  => 'eicon-text-align-left',
-						'image' => FEEDZY_ABSURL . 'img/' . $ui_theme . '-mode-default.png',
+						'image' => FEEDZY_ABSURL . 'img/{{ui_mode}}-mode-default.png',
 					),
 					'style1' => array(
 						'title' => esc_html__( 'Style 1', 'feedzy-rss-feeds' ),
 						'icon' => 'eicon-text-align-center',
-						'image' => FEEDZY_ABSURL . 'img/' . $ui_theme . '-mode-style1.png',
+						'image' => FEEDZY_ABSURL . 'img/{{ui_mode}}-mode-style1.png',
 					),
 					'style2' => array(
 						'title' => esc_html__( 'Style 2', 'feedzy-rss-feeds' ),
 						'icon' => 'eicon-text-align-right',
-						'image' => FEEDZY_ABSURL . 'img/' . $ui_theme . '-mode-style2.png',
+						'image' => FEEDZY_ABSURL . 'img/{{ui_mode}}-mode-style2.png',
 					),
 				),
 				'default' => 'default',
 				'toggle'  => true,
-				'classes' => $this->upsell_class( $ui_class ),
+				'classes' => $this->upsell_class(),
 			)
 		);
 		$this->end_controls_section(); // End layout section.
@@ -515,16 +510,6 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 			)
 		);
 		$this->end_controls_section(); // End referral URL section.
-
-		// $this->add_control(
-		// 'important_note',
-		// [
-		// 'label' => esc_html__( 'Important Note', 'plugin-name' ),
-		// 'type' => Controls_Manager::RAW_HTML,
-		// 'raw' => esc_html__( 'A very important message to show in the panel.', 'plugin-name' ),
-		// 'content_classes' => 'your-class',
-		// ]
-		// );
 	}
 
 	/**
@@ -553,134 +538,107 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 	}
 
 	/**
-	 * Get custom help URL.
-	 *
-	 * Retrieve a URL where the user can get more information about the widget.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 * @return string Widget help URL.
-	 */
-	public function get_custom_help_urlss() {
-		$help  = '<div class="fz-widget-help-box">';
-		$help .= '<h2>Discover Feedzy Pro</h2>';
-		$help .= '</div>';
-		return $help;
-	}
-
-	/**
 	 * Render widget.
 	 */
 	protected function render() {
-		$feedzy_template_id = $this->get_settings( 'feedzy_template_id' );
+		$title         = $this->get_settings_for_display( 'fz-section-title' );
+		$intro         = $this->get_settings_for_display( 'fz-intro-text' );
+		$lazy          = $this->get_settings_for_display( 'fz-lazy-load' );
+		$fallback_img  = $this->get_settings_for_display( 'fz-item-fallback-thumb' );
+		$columns       = $this->get_settings_for_display( 'fz-layout-columns' );
+		$hide_meta     = $this->get_settings_for_display( 'fz-cus-hide-meta' );
+		$hide_title    = $this->get_settings_for_display( 'fz-item-display-title' );
 
-		if ( 'publish' !== get_post_status( $feedzy_template_id ) ) {
-			return;
+		// Disable lazy load for elementor frontend editor.
+		if ( \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
+			$lazy = false;
 		}
 
-		$source = $this->get_settings( 'feeds' );
-		$max = $this->get_settings( 'max' );
-		$offset = $this->get_settings( 'offset' );
-		$summarylength = $this->get_settings( 'summarylength' );
-
-		$options = array(
-			'feeds'   => $source,
-			'max'     => $max ? $max : 5,
-			'offset'  => $offset ? $offset : 0,
-			'refresh' => $this->get_settings( 'refresh' ),
-			'feed_title' => 'no',
-			'target'         => '',
-			'title'          => '',
-			'meta'           => 'yes',
-			'summary'        => 'yes',
-			'summarylength'  => ! empty( $summarylength ) ? $summarylength : '',
-			'thumb'          => 'auto',
-			'size'    => '250',
-			'default' => '',
-			'keywords_title' => '',
-			'keywords_ban'   => '',
-			'columns'        => 1,
-			'multiple_meta'  => 'no',
+		$settings = array(
+			'referral_url' => $this->get_settings_for_display( 'fz-referral-parameters' ),
+			'price'        => $this->get_settings_for_display( 'fz-cus-display-price' ),
+			'template'     => $this->get_settings_for_display( 'fz-template' ),
+			'columns'      => ! empty( $columns['size'] ) ? $columns['size'] : 1,
 		);
 
-		// $template_content = Plugin::elementor()->frontend->get_builder_content_for_display( $feedzy_template_id );
-		$template_content = '';
-
-		$admin = new \Feedzy_Rss_Feeds_Import( 'feedzy-rss-feeds', Feedzy_Rss_Feeds::get_version() );
-		$feed_items = $admin->get_job_feed( $options, $template_content );
-
-		$error_message = __( 'Feed has no items.', 'feedzy-rss-feeds' );
-		if ( empty( $source ) ) {
-			$error_message = __( 'Please enter a valid feed URL/feed categories slug in feed source setting.', 'feedzy-rss-feeds' );
+		if ( ! empty( $settings['columns'] ) && $settings['columns'] > 6 ) {
+			$settings['columns'] = 6;
 		}
 
-		?>
-		<div class="elementor-template">
-			<?php
-			if ( ! empty( $feed_items ) ) {
-				$feed_content = '';
-				foreach ( $feed_items as $item ) {
-					// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-					$item_date = date( get_option( 'date_format' ) . ' at ' . get_option( 'time_format' ), $item['item_date'] );
-					$item_url = $item['item_url'];
-					$item_description = wp_kses_post( feedzy_feed_item_desc( $item ) );
-					// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-					$item_date = date( get_option( 'date_format' ) . ' at ' . get_option( 'time_format' ), $item['item_date'] );
-					$item_date = $item['item_date_formatted'];
+		// Check if title is set.
+		if ( ! empty( $title ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo '<p class="widget-title">' . wp_kses_post( $title ) . '</p>';
+		}
+		// Check if text intro is set.
+		if ( ! empty( $intro ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo '<p class="feedzy-widget-intro">' . wp_kses_post( $intro ) . '</p>';
+		}
+		$feedzy_widget_shortcode_attributes = array(
+			'feeds'           => $this->get_settings_for_display( 'fz-source' ),
+			'max'             => $this->get_settings_for_display( 'fz-max' ),
+			'feed_title'      => $this->get_settings_for_display( 'fz-show-item-source' ),
+			'target'          => $this->get_settings_for_display( 'fz-item-target' ),
+			'title'           => $this->get_settings_for_display( 'fz-item-title-length' ),
+			'meta'            => self::bool_to_enum( $this->get_settings_for_display( 'fz-cus-meta-fields' ) ),
+			'summary'         => self::bool_to_enum( $this->get_settings_for_display( 'fz-item-display-desc' ) ),
+			'summarylength'   => $this->get_settings_for_display( 'fz-item-desc-length' ),
+			'thumb'           => self::bool_to_enum( $this->get_settings_for_display( 'fz-item-thumb' ) ),
+			'default'         => ! empty( $fallback_img['url'] ) ? $fallback_img['url'] : '',
+			'size'            => $this->get_settings_for_display( 'fz-item-thumb-size' ),
+			'http'            => $this->get_settings_for_display( 'fz-item-thumb-http' ),
+			'keywords_title'  => $this->get_settings_for_display( 'fz-filter-inc-key' ),
+			'keywords_inc_on' => $this->get_settings_for_display( 'fz-filter-inc-on' ),
+			'keywords_ban'    => $this->get_settings_for_display( 'fz-filter-exc-key' ),
+			'keywords_exc_on' => $this->get_settings_for_display( 'fz-filter-exc-on' ),
+			'error_empty'     => $this->get_settings_for_display( 'fz-error-empty' ),
+			'sort'            => $this->get_settings_for_display( 'fz-orderby' ),
+			'refresh'         => $this->get_settings_for_display( 'fz-refresh' ),
+			'follow'          => $this->get_settings_for_display( 'fz-item-nofollow-link' ),
+			'lazy'            => $lazy ? self::bool_to_enum( $lazy ) : false,
+			'offset'          => $this->get_settings_for_display( 'fz-offset' ),
+			'from_datetime'   => $this->get_settings_for_display( 'fz-filter-from-dt' ),
+			'to_datetime'     => $this->get_settings_for_display( 'fz-filter-to-dt' ),
+		);
+		$feedzy_widget_shortcode_attributes = apply_filters( 'feedzy_widget_shortcode_attributes_filter', $feedzy_widget_shortcode_attributes, array(), $settings );
+		// Hide item meta.
+		if ( ! empty( $hide_meta ) && 'yes' === $hide_meta ) {
+			unset( $feedzy_widget_shortcode_attributes['meta'] );
+		}
+		// Hide item title.
+		if ( empty( $hide_title ) || 'yes' !== $hide_title ) {
+			$feedzy_widget_shortcode_attributes['title'] = 0;
+		}
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo feedzy_rss( $feedzy_widget_shortcode_attributes );
+	}
 
-					// Default image tag.
-					$item_img = FEEDZY_ABSURL . '/img/feedzy.svg?tag=[#item_img]';
+	/**
+	 * Convert binary values to yes/no touple.
+	 *
+	 * @param mixed $value string Value to convert to yes/no.
+	 *
+	 * @return bool
+	 */
+	public static function bool_to_enum( $value ) {
+		if ( in_array( $value, array( 'yes', 'no' ), true ) ) {
+			return $value;
+		}
+		$value = strval( $value );
+		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+		if ( '1' == $value || 'true' == $value ) {
+			return 'yes';
+		}
+		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+		if ( '0' == $value || 'false' == $value ) {
+			return 'no';
+		}
+		if ( '' === $value ) {
+			return 'auto';
+		}
+		return $value;
 
-					$author = '';
-					if ( $item['item_author'] ) {
-						if ( is_string( $item['item_author'] ) ) {
-							$author = $item['item_author'];
-						} elseif ( is_object( $item['item_author'] ) ) {
-							$author = $item['item_author']->get_name();
-							if ( empty( $author ) ) {
-								$author = $item['item_author']->get_email();
-							}
-						}
-					}
-					$feed_content .= str_replace(
-						array(
-							'[#item_url]',
-							esc_url( '[#item_url]' ),
-							'[#item_title]',
-							$item_img,
-							'[#item_date]',
-							'[#item_date_local]',
-							'[#item_date_feed]',
-							'[#item_author]',
-							'[#item_description]',
-							'[#item_content]',
-							'[#item_source]',
-						),
-						array(
-							$item_url,
-							$item_url,
-							$item['item_title'],
-							! empty( $item['item_img_path'] ) ? $item['item_img_path'] : $item_img,
-							$item_date,
-							$item_date,
-							$item_date,
-							$author,
-							$item['item_description'],
-							$item_description,
-							$item['item_source'],
-						),
-						$template_content
-					);
-				}
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				echo $feed_content;
-			} else {
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				echo $error_message;
-			}
-			?>
-		</div>
-		<?php
 	}
 
 	/**

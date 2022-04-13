@@ -272,6 +272,7 @@ class Feedzy_Rss_Feeds {
 			$plugin_elementor_widget = new Feedzy_Rss_Feeds_Elementor();
 			$this->loader->add_action( 'elementor/widgets/register', $plugin_elementor_widget, 'feedzy_elementor_widgets_registered' );
 			$this->loader->add_action( 'elementor/controls/register', $plugin_elementor_widget, 'feedzy_elementor_register_datetime_local_control' );
+			$this->loader->add_action( 'elementor/frontend/before_enqueue_styles', $plugin_elementor_widget, 'feedzy_elementor_before_enqueue_scripts' );
 		}
 
 		if ( ! defined( 'TI_UNIT_TESTING' ) ) {

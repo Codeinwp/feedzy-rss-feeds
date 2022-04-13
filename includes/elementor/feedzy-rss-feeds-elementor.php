@@ -24,6 +24,14 @@ class Feedzy_Rss_Feeds_Elementor {
 	}
 
 	/**
+	 * Editor frontend before script.
+	 */
+	public function feedzy_elementor_before_enqueue_scripts() {
+		wp_register_style( 'feedzy-rss-feeds-elementor', FEEDZY_ABSURL . 'css/feedzy-rss-feeds.css', array( 'elementor-frontend' ), true, 'all' );
+		wp_enqueue_style( 'feedzy-rss-feeds-elementor' );
+	}
+
+	/**
 	 * Register feedzy widget.
 	 *
 	 * @return void

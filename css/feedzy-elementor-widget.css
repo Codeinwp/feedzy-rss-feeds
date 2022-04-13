@@ -65,3 +65,57 @@
 .fz-el-light-mode .fz-layout-list li input:checked ~ .elementor-control-unit .img{
   background: #C7CCD1;
 }
+
+.fz-pro-notice{
+  text-align: center;
+  max-width: 202px;
+  margin: 0 auto;
+  padding: 56px 0 30px;
+}
+.fz-pro-notice .fz-logo{
+  padding-bottom: 20px;
+}
+.fz-pro-notice h3{
+  font-size: 16px;
+  line-height: 19px;
+  font-weight: 700;
+  color: #E0E1E3;
+  margin-bottom: 5px;
+}
+.fz-light-mode.fz-pro-notice h3{
+  color: #757575;
+}
+.fz-pro-notice p{
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 15px;
+  color: #E0E1E3;
+  margin-bottom: 16px;
+}
+.fz-light-mode.fz-pro-notice p{
+  color: #757575;
+}
+.docs-btn a{
+  display: inline-block;
+  background: #4268CF;
+  padding: 6px 12px;
+  border-radius: 3px;
+  font-weight: 700;
+  font-size: 11px;
+  line-height: 13px;
+  text-transform: uppercase;
+  color: #FFFFFF;
+}
+.docs-btn a:hover,
+.docs-btn a:focus{  
+  color: #FFFFFF;
+}
+.docs-btn span{
+  display: block;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 13px;
+  color: #757575;
+  padding-top: 8px;
+}

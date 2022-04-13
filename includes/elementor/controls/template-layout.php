@@ -31,6 +31,27 @@ class Control_Template_Layout extends Base_Data_Control {
 	public function enqueue() {
 		wp_register_script( 'feedzy-elementor', FEEDZY_ABSURL . 'js/feedzy-elementor-widget.js', array( 'jquery' ), true, true );
 		wp_enqueue_script( 'feedzy-elementor' );
+		$notice_text = '';
+		if ( feedzy_is_pro ) {
+			$notice_text = '<div class="fz-pro-notice">
+			<div class="fz-logo">
+				<img src="' . FEEDZY_ABSURL . 'img/feedzy-logo.png">
+			</div>
+			<h3>' . esc_html__( 'Discover Feedzy Pro', 'feedzy-rss-feeds' ) . '</h3>
+			<p>' . esc_html__( 'With Feedzy Pro you get more features, like Custom Templates, Magic Tags, Keywords filters and much more.', 'feedzy-rss-feeds' ) . '</p>
+			<div class="docs-btn">
+				<a href="' . esc_url( 'https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation' ) . '" target="_blank">' . esc_html__( 'Learn more', 'feedzy-rss-feeds' ) . '</a>
+				<span>' . esc_html__( 'Open Feedzy docs', 'feedzy-rss-feeds' ) . '</span>
+			</div>
+		</div>';
+		}
+		wp_localize_script(
+			'feedzy-elementor',
+			'FeedzyElementorEditor',
+			array(
+				'notice' => $notice_text,
+			)
+		);
 	}
 
 	/**
@@ -60,7 +81,7 @@ class Control_Template_Layout extends Base_Data_Control {
 						}
 						#>
 						<li>
-							<input id="<?php $this->print_control_uid( $control_uid_input_type ); ?>" type="radio" name="{{ data.name }}" value="{{ value }}"{{checked}}>
+							<input id="<?php $this->print_control_uid( $control_uid_input_type ); ?>" type="radio" name="elementor-choose-{{ data.name }}-{{ data._cid }}" value="{{ value }}"{{checked}}>
 							<label class="elementor-control-unit tooltip-target" for="<?php $this->print_control_uid( $control_uid_input_type ); ?>" data-tooltip="{{ options.title }}" title="{{ options.title }}">
 							<div class="img">
 								<img src="{{{ options.image }}}">
