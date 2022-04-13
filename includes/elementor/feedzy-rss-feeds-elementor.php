@@ -40,7 +40,7 @@ class Feedzy_Rss_Feeds_Elementor {
 		// We check if the Elementor plugin has been installed / activated.
 		if ( defined( 'ELEMENTOR_PATH' ) && class_exists( 'Elementor\Widget_Base' ) ) {
 			require_once FEEDZY_ABSPATH . '/includes/elementor/widgets/register-widget.php';
-			\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new Feedzy_Register_Widget() );
+			\Elementor\Plugin::instance()->widgets_manager->register( new Feedzy_Register_Widget() );
 
 			add_action( 'elementor/editor/after_enqueue_styles', array( $this, 'feedzy_elementor_widgets_assets' ) );
 		}

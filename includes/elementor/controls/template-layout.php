@@ -32,7 +32,7 @@ class Control_Template_Layout extends Base_Data_Control {
 		wp_register_script( 'feedzy-elementor', FEEDZY_ABSURL . 'js/feedzy-elementor-widget.js', array( 'jquery' ), true, true );
 		wp_enqueue_script( 'feedzy-elementor' );
 		$notice_text = '';
-		if ( feedzy_is_pro ) {
+		if ( ! feedzy_is_pro() ) {
 			$notice_text = '<div class="fz-pro-notice">
 			<div class="fz-logo">
 				<img src="' . FEEDZY_ABSURL . 'img/feedzy-logo.png">
