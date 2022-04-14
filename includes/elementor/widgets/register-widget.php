@@ -83,7 +83,7 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 				'label_block' => true,
 				'label'       => __( 'RSS Feed source', 'feedzy-rss-feeds' ),
 				'type'        => Controls_Manager::TEXTAREA,
-				'description' => wp_sprintf( __( 'You can add multiple sources at once, by separating them with commas. <a href="%s" class="feedzy-source">Click here</a> to check if the feed is valid. Invalid feeds may not import anything.', 'feedzy-rss-feeds' ), esc_url( 'https://validator.w3.org/feed/' ) ), // phpcs:ignore
+				'description' => wp_sprintf( __( 'You can add multiple sources at once, by separating them with commas. <a href="%s" class="feedzy-source" target="_blank">Click here</a> to check if the feed is valid. Invalid feeds may not import anything.', 'feedzy-rss-feeds' ), esc_url( 'https://validator.w3.org/feed/' ) ), // phpcs:ignore
 			)
 		);
 		$this->add_control(
