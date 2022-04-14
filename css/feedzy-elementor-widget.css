@@ -83,7 +83,7 @@
   margin-bottom: 5px;
 }
 .fz-light-mode.fz-pro-notice h3{
-  color: #757575;
+  color: #6D7882;
 }
 .fz-pro-notice p{
   font-weight: 400;
@@ -93,7 +93,7 @@
   margin-bottom: 16px;
 }
 .fz-light-mode.fz-pro-notice p{
-  color: #757575;
+  color: #6D7882;
 }
 .docs-btn a{
   display: inline-block;
@@ -118,4 +118,7 @@
   line-height: 13px;
   color: #757575;
   padding-top: 8px;
+}
+.fz-light-mode .docs-btn span {
+  color: #757575;
 }

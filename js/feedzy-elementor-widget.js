@@ -41,10 +41,13 @@ window.addEventListener( 'elementor/init', function() {
 				// Append notice.
 				jQuery( FeedzyElementorEditor.notice ).insertAfter( jQuery('.elementor-control-fz-referral-url').parents('div.elementor-controls-stack') );
 				// Set UI theme mode.
+				var fzLogo = jQuery('.fz-pro-notice .fz-logo img');
 				if ( 'dark' === themeMode ) {
+					fzLogo.attr( 'src', fzLogo.attr( 'src' ).replace( '{{ui_mode}}', 'dark' ) );
 					jQuery('.fz-pro-notice').removeClass( 'fz-light-mode' );
 				} else {
 					jQuery('.fz-pro-notice').addClass( 'fz-light-mode' );
+					fzLogo.attr( 'src', fzLogo.attr( 'src' ).replace( '{{ui_mode}}', 'light' ) );
 				}
 			}
 		}

@@ -35,7 +35,7 @@ class Control_Template_Layout extends Base_Data_Control {
 		if ( ! feedzy_is_pro() ) {
 			$notice_text = '<div class="fz-pro-notice">
 			<div class="fz-logo">
-				<img src="' . FEEDZY_ABSURL . 'img/feedzy-logo.png">
+				<img src="' . FEEDZY_ABSURL . 'img/{{ui_mode}}-feedzy-logo.png">
 			</div>
 			<h3>' . esc_html__( 'Discover Feedzy Pro', 'feedzy-rss-feeds' ) . '</h3>
 			<p>' . esc_html__( 'With Feedzy Pro you get more features, like Custom Templates, Magic Tags, Keywords filters and much more.', 'feedzy-rss-feeds' ) . '</p>
