@@ -57,5 +57,8 @@
     "replace-in-file": "^6.2.0",
     "semantic-release": "^17.4.2",
     "semantic-release-slack-bot": "^2.1.0"
+  },
+  "dependencies": {
+    "classnames": "^2.3.1"
   }
 }

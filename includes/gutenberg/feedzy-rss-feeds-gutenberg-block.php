@@ -190,6 +190,10 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 					'to_datetime'   => array(
 						'type' => 'string',
 					),
+					'itemTitle' => array(
+						'type' => 'boolean',
+						'default' => true,
+					),
 				),
 			)
 		);
@@ -223,6 +227,9 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		}
 		if ( ! empty( $attr['sort'] ) && 'default' === $attr['sort'] ) {
 			unset( $attr['sort'] );
+		}
+		if ( empty( $attr['itemTitle'] ) ) {
+			$attr['title'] = 0;
 		}
 		$params = wp_parse_args( $attr );
 		return feedzy_rss( $params );
