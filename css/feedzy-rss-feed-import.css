@@ -8,7 +8,7 @@
  * Author: Themeisle
  */
 
- #feedzy_import_feeds{
+#feedzy_import_feeds{
 	background: transparent;
 	border: 0;
 	box-shadow: none;
@@ -107,7 +107,7 @@ tr.feedzy-import-status-row table tr:last-of-type td {
 }
 
 td.feedzy-error-status a {
-    vertical-align: middle;
+	vertical-align: middle;
 }
 
 a.feedzy-popup-details {
@@ -130,7 +130,82 @@ td.feedzy-has-popup {
 	color: #ca4a1f !important;
 	background-color: inherit !important;
 }
-
+.feedzy-onboarding-modal {
+	max-width: 350px;
+}
+.feedzy-onboarding-modal .components-modal__header {
+	text-align: center;
+}
+.feedzy-onboarding-modal .components-modal__header h1 {
+	width: 100%;
+}
+.feedzy-onboarding-modal .feedzy-onboarding-modal-content {
+	text-align: center;
+	margin: 10px 0 15px;
+}
+.feedzy-onboarding-modal .feedzy-onboarding-modal-action {
+	text-align: center;
+	margin: 10px 0;
+}
+.feedzy-onboarding-modal .feedzy-onboarding-modal-action .components-button {
+	padding: 2px 20px;
+	font-size: 14px;
+	margin-right: 10px;
+}
+.components-modal__screen-overlay {
+	background-color: rgba(0, 0, 0, 0.5);
+}
+.react-joyride__tooltip {
+	font-size: 13px !important;
+}
+.react-joyride__tooltip > div {
+	text-align: left !important;
+}
+.react-joyride__tooltip div:nth-of-type( 2) {
+	margin-top: 5px !important;
+}
+.react-joyride__tooltip button {
+	text-decoration: underline;
+}
+.react-joyride__beacon span:first-child {
+	background-color: #4268CF !important;
+}
+.react-joyride__beacon span:last-child {
+	background-color: rgba(66, 104, 207, 0.4) !important;
+	border: 2px solid #4268CF !important;
+}
+.react-joyride__tooltip button[data-action="primary"] {
+	background: #4268cf !important;
+	border-color: #006a95 #00648c #00648c !important;
+	box-shadow: inset 0 -1px 0 #00648c !important;
+	color: #fff !important;
+	text-decoration: none !important;
+	text-shadow: 0 -1px 1px #005d82, 1px 0 1px #005d82, 0 1px 1px #005d82, -1px 0 1px #005d82 !important;
+	padding: 2px 20px !important;
+	height: auto !important;
+	line-height: 28px !important;
+	font-size: 14px !important;
+}
+.react-joyride__tooltip button[data-action="back"] {
+	color: #23282d !important;
+	font-size: 14px !important;
+}
+.react-notification-root .notification-container-bottom-left {
+	bottom: 40px;
+}
+.react-notification-root .notification-container-mobile-bottom {
+	bottom: 60px;
+}
+.feedzy-onboarding-modal-action .components-button.is-primary,
+.feedzy-onboarding-modal-action .components-button.is-primary:hover:not(:disabled) {
+	background: #4268cf;
+}
+.feedzy-onboarding-modal-action .components-button.is-secondary,
+.feedzy-onboarding-modal-action .components-button.is-secondary:hover:not(:disabled),
+.feedzy-onboarding-modal-action .components-button.is-tertiary:hover:not(:disabled) {
+	box-shadow: inset 0 0 0 1px #4268cf;
+	color: #4268cf;
+}
 @media screen and (max-width: 782px) {
 	tr.feedzy-import-status-row table {
 		width: 100%;

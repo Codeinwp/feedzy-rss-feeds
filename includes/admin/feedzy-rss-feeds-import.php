@@ -240,6 +240,18 @@ class Feedzy_Rss_Feeds_Import {
 		);
 		$args     = apply_filters( 'feedzy_imports_args', $args );
 		register_post_type( 'feedzy_imports', $args );
+
+		// Register setting field.
+		register_setting(
+			'feedzy_import_tour_settings',
+			'feedzy_import_tour',
+			array(
+				'type'         => 'boolean',
+				'description'  => __( 'Show tour for Feedzy.', 'feedzy-rss-feeds' ),
+				'show_in_rest' => true,
+				'default'      => true,
+			)
+		);
 	}
 
 	/**

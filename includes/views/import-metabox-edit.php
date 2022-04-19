@@ -8,7 +8,9 @@
 
 global $post;
 ?>
-
+<?php if ( get_option( 'feedzy_import_tour' ) ) : ?>
+	<div id="fz-on-boarding"></div>
+<?php endif; ?>
 <div class="feedzy-wrap" id="feedzy-import-form">
 	<div class="feedzy-accordion">
 		<!-- <div> -->
@@ -95,7 +97,7 @@ global $post;
 		<!-- Sources configuration Step End -->
 		<!-- Filters Step Start -->
 		<div class="feedzy-accordion-item">
-			<div class="feedzy-accordion-item__title">
+			<div class="feedzy-accordion-item__title" id="fz-import-filters">
 				<button type="button" class="feedzy-accordion-item__button">
 					<div class="feedzy-accordion__step-number help-text"><?php esc_html_e( 'Step 2', 'feedzy-rss-feeds' ); ?></div>
 					<div class="feedzy-accordion__step-title h2"><?php esc_html_e( 'Filters', 'feedzy-rss-feeds' ); ?></div>
@@ -227,7 +229,7 @@ global $post;
 		</div>
 		<!-- Filters Step End -->
 		<div class="feedzy-accordion-item">
-			<div class="feedzy-accordion-item__title">
+			<div class="feedzy-accordion-item__title" id="fz-import-map-content">
 				<button type="button" class="feedzy-accordion-item__button">
 					<div class="feedzy-accordion__step-number help-text"><?php esc_html_e( 'Step 3', 'feedzy-rss-feeds' ); ?></div>
 					<div class="feedzy-accordion__step-title h2"><?php esc_html_e( 'Map content', 'feedzy-rss-feeds' ); ?></div>
@@ -663,7 +665,7 @@ global $post;
 			</div>
 		</div>
 		<div class="feedzy-accordion-item">
-			<div class="feedzy-accordion-item__title">
+			<div class="feedzy-accordion-item__title" id="fz-import-general-settings">
 				<button type="button" class="feedzy-accordion-item__button">
 					<div class="feedzy-accordion__step-number help-text"><?php esc_html_e( 'Step 4', 'feedzy-rss-feeds' ); ?></div>
 					<div class="feedzy-accordion__step-title h2"><?php esc_html_e( 'General feed settings', 'feedzy-rss-feeds' ); ?></div>

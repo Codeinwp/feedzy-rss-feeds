@@ -11,7 +11,7 @@
 		<div class="feedzy-accordion-item">
 			<div class="feedzy-accordion-item__title">
 				<div class="feedzy-accordion-item__button">
-					<div class="feedzy-accordion__step-title h2">General</div>
+					<div class="feedzy-accordion__step-title h2"><?php esc_html_e( 'General', 'feedzy-rss-feeds' ); ?></div>
 				</div>
 			</div>
 			<div class="feedzy-accordion-item__content">
@@ -58,7 +58,6 @@
 					switch ( $active_tab ) {
 						case 'general':
 							?>
-							<!-- <h2><?php // esc_html_e( 'General', 'feedzy-rss-feeds' ); ?></h2> -->
 							<div class="fz-form-wrap">
 								<div class="form-block">
 									<div class="fz-form-group">
@@ -97,7 +96,6 @@
 							break;
 						case 'headers':
 							?>
-							<!-- <h2><?php // esc_html_e( 'Headers', 'feedzy-rss-feeds' ); ?></h2> -->
 							<div class="fz-form-wrap">
 								<div class="form-block">
 									<div class="fz-form-group">
@@ -111,7 +109,6 @@
 							break;
 						case 'proxy':
 							?>
-							<!-- <h2><?php // esc_html_e( 'Proxy Settings', 'feedzy-rss-feeds' ); ?></h2> -->
 							<div class="fz-form-wrap">
 								<div class="form-block pb-0">
 									<div class="fz-form-row">
@@ -195,18 +192,4 @@
 	<?php if ( $this->error ) { ?>
 		<div class="error"><p><?php echo wp_kses_post( $this->error ); ?></p></div>
 	<?php } ?>
-
-
-	<div class="fz-features-content">
-		<div id="feedzy_import_feeds" class="fz-feature-features">
-			<div class="fz-feature">
-				<div class="fz-feature-inner">
-					<div class="fz-feature-features">
-
-					
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
 </div>
