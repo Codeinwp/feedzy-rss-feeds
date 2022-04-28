@@ -90,7 +90,7 @@ Layout For Document Page of Feedzy RSS Feeds
 					<h3 class="h3">In Feedzy how do I...</h3>
 					<p>Learn some of the most popular hooks you can use with the Feedzy plugin.</p>
 					<div class="cta">
-						<a href="https://docs.themeisle.com/article/540-what-actions-and-filters-are-available-in-feedzy" class="btn btn-outline-primary" target="_blank">Learn more</a>
+						<a href="https://docs.themeisle.com/article/942-in-feedzy-how-do-i" class="btn btn-outline-primary" target="_blank">Learn more</a>
 					</div>
 				</div>
 			</div>

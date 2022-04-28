@@ -1,57 +1,3 @@
-@font-face {
-	font-family: 'SF Pro Display';
-	src: url('../fonts/SFProDisplay-Semibold.woff2') format('woff2'),
-			url('../fonts/SFProDisplay-Semibold.woff') format('woff');
-	font-weight: 600;
-	font-style: normal;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: 'SF Pro Text';
-	src: url('../fonts/SFProText-Bold.woff2') format('woff2'),
-			url('../fonts/SFProText-Bold.woff') format('woff');
-	font-weight: bold;
-	font-style: normal;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: 'SF Pro Text';
-	src: url('../fonts/SFProText-Regular.woff2') format('woff2'),
-			url('../fonts/SFProText-Regular.woff') format('woff');
-	font-weight: normal;
-	font-style: normal;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: 'SF Pro Display';
-	src: url('../fonts/SFProDisplay-Bold.woff2') format('woff2'),
-			url('../fonts/SFProDisplay-Bold.woff') format('woff');
-	font-weight: bold;
-	font-style: normal;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: 'SF Pro Display';
-	src: url('../fonts/SFProDisplay-Medium.woff2') format('woff2'),
-			url('../fonts/SFProDisplay-Medium.woff') format('woff');
-	font-weight: 500;
-	font-style: normal;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: 'SF Pro Display';
-	src: url('../fonts/SFProDisplay-Regular.woff2') format('woff2'),
-			url('../fonts/SFProDisplay-Regular.woff') format('woff');
-	font-weight: normal;
-	font-style: normal;
-	font-display: swap;
-}
-
 .feedzy-wrap *{
 	box-sizing: border-box;
 	margin: 0;
@@ -75,29 +21,26 @@
 	background: #757575;
 }
 
+
 .h1{
-	font-family: 'SF Pro Display', sans-serif;
 	font-size: 45px;
 	line-height: 54px;
 	font-weight: 600;
 	color: #050505;
 }
 .h2{
-	font-family: 'SF Pro Display', sans-serif;
 	font-size: 32px;
 	line-height: 38px;
 	font-weight: 600;
 	color: #050505;
 }
 .h3{
-	font-family: 'SF Pro Display', sans-serif;
 	font-size: 24px;
 	line-height: 28px;
 	font-weight: 600;
 	color: #050505;
 }
 .h4{
-	font-family: 'SF Pro Display', sans-serif;
 	font-size: 20px;
 	line-height: 24px;
 	font-weight: 600;
@@ -105,21 +48,18 @@
 }
 
 .form-label{
-	font-family: 'SF Pro Display', sans-serif;
 	font-size: 16px;
 	line-height: 19px;
 	font-weight: 600;
 	color: #000000;
 }
 .desc-text{
-	font-family: 'SF Pro Display', sans-serif;
 	font-size: 14px;
 	line-height: 17px;
 	font-weight: 400;
 	color: #000000;
 }
 .help-text{
-	font-family: 'SF Pro Display', sans-serif;
 	font-size: 14px;
 	line-height: 17px;
 	font-weight: 400;
@@ -151,7 +91,6 @@
 }
 
 .pro-label{
-	font-family: 'SF Pro Display', sans-serif;
 	display: inline-block;
 	padding: 5px 10px;
 	background: #4268CF;
@@ -217,7 +156,6 @@ div#side-sortables{
 	background: #E4E6E8;
 }
 .feedzy-accordion-item .feedzy-accordion-item__content{
-	font-family: 'SF Pro Display', sans-serif;
 	font-size: 16px;
 	line-height: 24px;
 	color: #000000;
@@ -267,7 +205,6 @@ div#side-sortables{
 
 /* feedzy form style start */
 .fz-form-wrap{
-	font-family: 'SF Pro Display', sans-serif;
 }
 .fz-form-wrap .form-block{
 	padding: 24px 0;
@@ -579,7 +516,6 @@ fieldset[disabled] .form-control {
 .fz-form-wrap .chosen-container-multi .chosen-choices li.search-field input[type="text"]{
 	font-size: 16px;
 	color: #838383;
-	font-family: 'SF Pro Display', sans-serif;
 }
 .fz-form-wrap .chosen-container-multi .chosen-choices li.search-choice{
 	padding: 5px 36px 5px 8px;
@@ -733,7 +669,6 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 
 /* feedzy button style start */
 .btn{
-	font-family: 'SF Pro Display', sans-serif;
 	padding: 13px 20px;
 	font-size: 16px;
 	line-height: 19px;
@@ -744,6 +679,7 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 	outline: 0;
 	cursor: pointer;
 	text-decoration: none;
+	text-transform: capitalize;
 	-webkit-transition: all 0.3s ease-in-out;
 	-moz-transition: all 0.3s ease-in-out;
 	-o-transition: all 0.3s ease-in-out;
@@ -788,8 +724,11 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 	color: #4268CF;
 }
 .btn.btn-outline-primary:hover{
-	background: transparent;
+	/*background: transparent;
 	border-color: #4268CF;
+	color: #4268CF;*/
+	box-shadow: inset 0 0 0 1px #4268cf, inset 0 0 0 2px #f7f9fd;
+	background: #F7F9FD;
 	color: #4268CF;
 }
 .btn.btn-outline-primary:focus,
@@ -797,6 +736,7 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 	background: transparent;
 	border-color: #4268CF;
 	color: #4268CF;
+	box-shadow: 0 0 0 1px #fff, 0 0 0 3px #2271b1;
 }
 
 .btn.btn-outline-primary.disabled{
@@ -1017,7 +957,6 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 	font-size: 14px;
 	line-height: 17px;
 	font-weight: 700;
-	font-family: 'SF Pro Display', sans-serif;
 }
 
 .fz-content{
@@ -1042,6 +981,7 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 	flex-wrap: wrap;
 	border-bottom: 1px solid #D9D9D9;
 }
+
 .fz-tabs-menu ul li a{
 	font-weight: 600;
 	font-size: 16px;
@@ -1086,6 +1026,12 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 	padding: 4px 7px;
 	position: relative;
 	top: -7px;
+}
+.fz-tabs-menu ul li a:focus {
+	color: #4268CF;
+}
+.fz-tabs-menu ul li a:focus:after {
+	opacity: 1;
 }
 
 .fz-tabs-content .fz-tab-content{

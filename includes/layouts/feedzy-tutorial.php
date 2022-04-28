@@ -60,7 +60,7 @@ Layout For Tutorial Page of Feedzy RSS Feeds
 					<div class="support-box">
 						<h3 class="h3">Keyword Filtering<?php echo ! $is_pro ? ' <span class="pro-label">PRO</span>' : ''; ?></h3>
 						<p>Filter feed items, and Display or Exclude items if the title or content contains specific keyword(s). </p>
-						<a href="https://themeisle.com/plugins/feedzy-rss-feeds/#reasons" class="btn btn-outline-primary" target="blank">Learn more</a>
+						<a href="https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#filters" class="btn btn-outline-primary" target="blank">Learn more</a>
 					</div>
 				</li>
 			</ul>

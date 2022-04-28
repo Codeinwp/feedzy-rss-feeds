@@ -52,4 +52,11 @@
 	.fz-document-list > ul > li{width: 100%;}
 	.fz-help-improve-box .left{width: 100%;}
 	.fz-help-improve-box .right{width: 100%;}
+	.fz-tabs-menu ul {flex-wrap: wrap;}
+	.fz-tabs-menu ul li{flex-shrink: 0; width: 50%;}
+	.fz-tabs-menu ul li a{padding: 0px; border: 1px solid transparent;}
+	.fz-tabs-menu ul li a:after{display: none}
+	.fz-tabs-menu ul li a:focus{border: 1px solid #4268CF}
+	.fz-tabs-menu ul li a.active{border: 0;}
 }
+

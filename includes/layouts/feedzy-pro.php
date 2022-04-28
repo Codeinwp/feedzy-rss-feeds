@@ -93,6 +93,6 @@
 	</div>
 
 	<div class="cta">
-		<a href="https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation" class="btn btn-block btn-primary btn-lg" target="_blank">View all Feedzy Pro features</a>
+		<a href="https://themeisle.com/plugins/feedzy-rss-feeds/#pricing" class="btn btn-block btn-primary btn-lg" target="_blank">View all Feedzy Pro features</a>
 	</div>
 </div>

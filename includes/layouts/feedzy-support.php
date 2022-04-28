@@ -5,13 +5,34 @@
 	<?php
 	// phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
 	$active_tab = isset( $_REQUEST['tab'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['tab'] ) ) : 'help';
+
 	?>
 
 	<div class="feedzy-container">
 		<div class="feedzy-accordion-item mb-30">
 			<div class="feedzy-accordion-item__title">
 				<div class="feedzy-accordion-item__button">
-					<div class="feedzy-accordion__step-title h2"><?php esc_html_e( 'Gettting Started', 'feedzy-rss-feeds' ); ?></div>
+					<div class="feedzy-accordion__step-title h2">
+						<?php
+						switch( $active_tab ) {
+							case 'help':
+								esc_html_e( 'Gettting Started', 'feedzy-rss-feeds' );
+							break;
+							case 'docs':
+								esc_html_e( 'Documentation', 'feedzy-rss-feeds' );
+							break;
+							case 'feedzy-pro':
+								esc_html_e( 'Feedzy Pro', 'feedzy-rss-feeds' );
+							break;
+							case 'improve':
+								esc_html_e( 'Help us improve!', 'feedzy-rss-feeds' );
+							break;
+							default:
+								echo ucwords( str_replace( array( '-', '_' ), ' ', $active_tab ) );
+							break;
+						}
+						?>
+					</div>
 				</div>
 			</div>
 			<div class="feedzy-accordion-item__content">
@@ -62,13 +83,14 @@
 				?>
 			</div>
 		</div>
-
-		<div class="feedzy-accordion-item need-help-box">
-			<div class="feedzy-accordion-item__content">
-				<h3 class="h3"><?php esc_html_e( 'Need help with Feedzy?', 'feedzy-rss-feeds' ); ?></h3>
-				<p><?php echo wp_kses_post( __( 'If you didn\'t found an answer in our Knowledge Base, you can always ask for help from our support team or get priority support with your Developer or Agency license.', 'feedzy-rss-feeds' ) ); ?></a></p>
-				<a href="https://store.themeisle.com/contact/" class="btn btn-outline-primary" target="_blank"><?php esc_html_e( 'Support Forum', 'feedzy-rss-feeds' ); ?></a>
+		<?php if ( in_array( $active_tab, array( 'help', 'docs' ), true ) ) : ?>
+			<div class="feedzy-accordion-item need-help-box">
+				<div class="feedzy-accordion-item__content">
+					<h3 class="h3"><?php esc_html_e( 'Need help with Feedzy?', 'feedzy-rss-feeds' ); ?></h3>
+					<p><?php echo wp_kses_post( wp_sprintf( __( 'If you didn\'t found an answer in our Knowledge Base, you can always ask for help from our support team or <a href="%s" target="_blank">get priority support with your Developer or Agency license.</a>', 'feedzy-rss-feeds' ), esc_url( 'https://themeisle.com/contact/' ) ) ); ?></p>
+					<a href="https://wordpress.org/support/plugin/feedzy-rss-feeds/" class="btn btn-outline-primary" target="_blank"><?php esc_html_e( 'Support Forum', 'feedzy-rss-feeds' ); ?></a>
+				</div>
 			</div>
-		</div>
+		<?php endif; ?>
 	</div>
 </div>
