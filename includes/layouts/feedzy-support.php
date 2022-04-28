@@ -14,22 +14,22 @@
 				<div class="feedzy-accordion-item__button">
 					<div class="feedzy-accordion__step-title h2">
 						<?php
-						switch( $active_tab ) {
+						switch ( $active_tab ) {
 							case 'help':
 								esc_html_e( 'Gettting Started', 'feedzy-rss-feeds' );
-							break;
+								break;
 							case 'docs':
 								esc_html_e( 'Documentation', 'feedzy-rss-feeds' );
-							break;
+								break;
 							case 'feedzy-pro':
 								esc_html_e( 'Feedzy Pro', 'feedzy-rss-feeds' );
-							break;
+								break;
 							case 'improve':
 								esc_html_e( 'Help us improve!', 'feedzy-rss-feeds' );
-							break;
+								break;
 							default:
 								echo ucwords( str_replace( array( '-', '_' ), ' ', $active_tab ) );
-							break;
+								break;
 						}
 						?>
 					</div>
