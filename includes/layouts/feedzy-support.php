@@ -28,7 +28,7 @@
 								esc_html_e( 'Help us improve!', 'feedzy-rss-feeds' );
 								break;
 							default:
-								echo ucwords( str_replace( array( '-', '_' ), ' ', $active_tab ) );
+								echo esc_html( ucwords( str_replace( array( '-', '_' ), ' ', $active_tab ) ) );
 								break;
 						}
 						?>
