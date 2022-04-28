@@ -33,7 +33,7 @@
 	.feedzy-header{padding: 15px 0;}
 	.feedzy-header .feedzy-logo .feedzy-logo-icon{max-width: 40px;}
 	.feedzy-header .feedzy-logo .feedzy-logo-icon img{max-width: 100%;}
-	.post-type-feedzy_imports:not(.edit-php) #wpcontent{padding-top: 46px;}
+	.post-type-feedzy_imports:not(.edit-php) #wpcontent, .feedzy_page_feedzy-support #wpcontent, .feedzy_page_feedzy-settings #wpcontent{padding-top: 46px;}
 	#wpbody{padding-top: 0;}
 	.feedzy-accordion .feedzy-accordion-item{margin-bottom: 15px;}
 	.feedzy-accordion-item .feedzy-accordion-item__button{padding: 15px 60px 15px 15px;}
