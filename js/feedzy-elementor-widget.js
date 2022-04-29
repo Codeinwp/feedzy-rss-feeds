@@ -52,4 +52,14 @@ window.addEventListener( 'elementor/init', function() {
 			}
 		}
 	} );
+
+	var proTitleText = function() {
+		if ( jQuery( '.fz-feat-locked:not(.elementor-control-type-section)' ).length > 0 ) {
+			jQuery( '.fz-feat-locked:not(.elementor-control-type-section)' ).attr( 'title', FeedzyElementorEditor.pro_title_text );
+		}
+	};
+
+	elementor.channels.editor.on( 'section:activated', function() {
+		proTitleText();
+	} );
 } );

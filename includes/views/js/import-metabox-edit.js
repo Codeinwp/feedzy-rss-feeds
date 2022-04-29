@@ -131,6 +131,7 @@
 	}
 
 	function toggle_dropdown() {
+		$( '.dropdown.open' ).not( $(this).parent() ).removeClass( 'open' );
 		$(this).parent().toggleClass("open");
 	}
 
@@ -374,6 +375,23 @@
 		$(document).on('input', "#post_title", function (e) {
 			jQuery( '.fz-form-wrap input[name="post_title"]' ).val( $(this).val() );
 		});
+
+		// Close dropdown when user click on document.
+		$( 'body' ).on( 'click', function( e ) {
+			if ( $( e.target ).parent( '.dropdown-item' ).length > 0 ) {
+				return;
+			}
+			if ( $( e.target ).attr( 'disabled' ) ) {
+				return;
+			}
+			if ( $( e.target ).hasClass( 'dashicons-plus-alt2' ) ) {
+				return;
+			}
+			if ( $( e.target ).hasClass( 'dropdown-toggle' ) ) {
+				return;
+			}
+			$( '.dropdown.open' ).removeClass( 'open' );
+		} );
 
 		// Tagify for normal textbox.
 		$( '.fz-input-tagify' ).tagify( {

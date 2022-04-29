@@ -6,6 +6,19 @@
 	// phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
 	$active_tab  = isset( $_REQUEST['tab'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['tab'] ) ) : 'general';
 	$show_button = true;
+
+	$help_btn_url = 'https://docs.themeisle.com/category/712-feedzy';
+	if ( 'headers' === $active_tab ) {
+		$help_btn_url = 'https://docs.themeisle.com/article/713-how-to-change-user-agent-in-feedzy';
+	} elseif ( 'proxy' === $active_tab ) {
+		$help_btn_url = 'https://docs.themeisle.com/article/714-how-to-use-proxy-settings-in-feezy';
+	} elseif ( 'misc' === $active_tab ) {
+		$help_btn_url = 'https://docs.themeisle.com/article/841-how-to-add-canonical-tags-for-imported-posts';
+	} elseif ( 'wordai' === $active_tab ) {
+		$help_btn_url = 'https://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy#wordai';
+	} elseif ( 'spinnerchief' === $active_tab ) {
+		$help_btn_url = 'https://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy#spinner';
+	}
 	?>
 	<div class="feedzy-container">
 		<div class="feedzy-accordion-item">
@@ -42,10 +55,9 @@
 							}
 						}
 						?>
-			
 					</ul>
 				</div>
-				
+
 				<form method="post" action="">
 					<?php
 					$disble_featured_image = '';
@@ -79,7 +91,7 @@
 											<a href="javascript:;" class="feedzy-remove-media btn btn-outline-primary <?php echo $default_thumbnail_id ? esc_attr( 'is-show' ) : ''; ?>"><?php esc_html_e( 'Remove image', 'feedzy-rss-feeds' ); ?></a>
 											<input type="hidden" name="default-thumbnail-id" id="feed-post-default-thumbnail" value="<?php echo esc_attr( $default_thumbnail_id ); ?>">
 										</div>
-										<div class="help-text">This image will be used for the Feed Items that don't have one. </div>
+										<div class="help-text"><?php esc_html_e( 'This image will be used for the Feed Items that don\'t have one.', 'feedzy-rss-feeds' ); ?></div>
 									</div>
 								</div>
 								<?php if ( feedzy_is_pro() ) : ?>
@@ -181,7 +193,7 @@
 		</div>
 
 		<div class="cta pt-30">
-			<a href="https://store.themeisle.com/contact/" class="btn btn-ghost" target="_blank"><?php esc_html_e( 'Need help?', 'feedzy-rss-feeds' ); ?></a>
+			<a href="<?php echo esc_url( $help_btn_url ); ?>" class="btn btn-ghost" target="_blank"><?php esc_html_e( 'Need help?', 'feedzy-rss-feeds' ); ?></a>
 		</div>
 	</div>
 

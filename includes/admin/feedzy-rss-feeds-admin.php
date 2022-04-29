@@ -297,6 +297,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			<strong>' . sprintf( __( 'Please be aware that multiple feeds, when mashed together, may sometimes not work as expected as explained %1$shere%2$s.', 'feedzy-rss-feeds' ), '<a href="http://simplepie.org/wiki/faq/typical_multifeed_gotchas" target="_blank">', '</a>' ) . '</strong><br/><br/>'
 			. $invalid
 			. '<textarea name="feedzy_category_feed" rows="15" class="widefat" placeholder="' . __( 'Place your URL\'s here followed by a comma.', 'feedzy-rss-feeds' ) . '" >' . $feed . '</textarea>
+			<p><a href="https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation#categories" target="_blank">' . __( 'Learn how to organize feeds in Categories', 'feedzy-rss-feeds' ) . '</a></p>
         ';
 		echo wp_kses( $output, apply_filters( 'feedzy_wp_kses_allowed_html', array() ) );
 	}

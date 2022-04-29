@@ -50,6 +50,7 @@ class Control_Template_Layout extends Base_Data_Control {
 			'FeedzyElementorEditor',
 			array(
 				'notice' => $notice_text,
+				'pro_title_text' => __( 'Unlock this feature with Feedzy Pro', 'feedzy-rss-feeds' ),
 			)
 		);
 	}

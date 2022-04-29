@@ -75,7 +75,7 @@ global $post;
 											?>
 											<div class="no-data p-8">
 												<div class="help-text"><?php esc_html_e( 'You don&#8217;t have any categories, yet.', 'feedzy-rss-feeds' ); ?></div>
-												<div class="cta-text"><a href="<?php echo esc_url( add_query_arg( 'post_type', 'feedzy_categories', admin_url( 'post-new.php' ) ) ); ?>"><?php esc_html_e( 'Add a Category', 'feedzy-rss-feeds' ); ?></a></div>
+												<div class="cta-text"><a href="<?php echo esc_url( add_query_arg( 'post_type', 'feedzy_categories', admin_url( 'post-new.php' ) ) ); ?>" target="_blank"><?php esc_html_e( 'Add a Category', 'feedzy-rss-feeds' ); ?></a></div>
 											</div>
 											<?php
 										}
@@ -677,7 +677,7 @@ global $post;
 					<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
 						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '' ) ); ?>
 						<div class="left">
-							<h4 class="h4"><?php esc_html_e( 'Auto-Delete', 'feedzy-rss-feeds' ); ?></h4>
+							<h4 class="h4"><?php esc_html_e( 'Auto-Delete', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
 						</div>
 						<div class="right">
 							<div class="fz-form-group">

@@ -237,6 +237,7 @@ class Feedzy_Rss_Feeds {
 			self::$instance->loader->add_action( 'feedzy_upsell_content', $plugin_import, 'upsell_content', 10, 1 );
 			self::$instance->loader->add_action( 'admin_enqueue_scripts', $plugin_import, 'enqueue_styles' );
 			self::$instance->loader->add_action( 'init', $plugin_import, 'register_import_post_type', 9, 1 );
+			self::$instance->loader->add_action( 'add_meta_boxes', $plugin_import, 'add_feedzy_import_metaboxes', 1, 2 );
 			self::$instance->loader->add_action( 'feedzy_cron', $plugin_import, 'run_cron' );
 			self::$instance->loader->add_action( 'save_post_feedzy_imports', $plugin_import, 'save_feedzy_import_feed_meta', 1, 2 );
 			self::$instance->loader->add_action( 'wp_ajax_feedzy', $plugin_import, 'ajax' );

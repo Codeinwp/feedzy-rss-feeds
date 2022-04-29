@@ -236,7 +236,6 @@ class Feedzy_Rss_Feeds_Import {
 				'slug' => 'feedzy-import',
 			),
 			'show_in_menu'         => 'feedzy-admin-menu',
-			'register_meta_box_cb' => array( $this, 'add_feedzy_import_metaboxes' ),
 		);
 		$args     = apply_filters( 'feedzy_imports_args', $args );
 		register_post_type( 'feedzy_imports', $args );
@@ -261,7 +260,11 @@ class Feedzy_Rss_Feeds_Import {
 	 * @since   1.2.0
 	 * @access  public
 	 */
-	public function add_feedzy_import_metaboxes() {
+	public function add_feedzy_import_metaboxes( $post_type, $post ) {
+		if ( 'feedzy_imports' !== $post_type ) {
+			return;
+		}
+
 		add_meta_box(
 			'feedzy_import_feeds',
 			__( 'Feed Import Options', 'feedzy-rss-feeds' ),
@@ -2064,11 +2067,11 @@ class Feedzy_Rss_Feeds_Import {
 
 		// disabled tags.
 		if ( ! feedzy_is_pro() ) {
-			$default['item_full_content:disabled']         = __( 'Item Full Content', 'feedzy-rss-feeds' );
-			$default['content_spinnerchief:disabled']      = __( 'Content from SpinnerChief', 'feedzy-rss-feeds' );
-			$default['full_content_spinnerchief:disabled'] = __( 'Full content from SpinnerChief', 'feedzy-rss-feeds' );
-			$default['content_wordai:disabled']            = __( 'Content from WordAI', 'feedzy-rss-feeds' );
-			$default['full_content_wordai:disabled']       = __( 'Full content from WordAI', 'feedzy-rss-feeds' );
+			$default['item_full_content:disabled']         = __( 'Item Full Content(Pro)', 'feedzy-rss-feeds' );
+			$default['content_spinnerchief:disabled']      = __( 'Content from SpinnerChief(Pro)', 'feedzy-rss-feeds' );
+			$default['full_content_spinnerchief:disabled'] = __( 'Full content from SpinnerChief(Pro)', 'feedzy-rss-feeds' );
+			$default['content_wordai:disabled']            = __( 'Content from WordAI(Pro)', 'feedzy-rss-feeds' );
+			$default['full_content_wordai:disabled']       = __( 'Full content from WordAI(Pro)', 'feedzy-rss-feeds' );
 		}
 		return $default;
 	}

@@ -103,7 +103,7 @@
 	vertical-align: middle;
 }
 
-div#side-sortables{
+.feedzy-wrap + .wrap div#side-sortables{
 	display: none;
 }
 .feedzy-container{
@@ -868,6 +868,9 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 	background: #F2F2F2;
 	color: #050505;
 }
+.dropdown-item[disabled] {
+	opacity: 0.6;
+}
 /* feedzy dropdown style end */
 
 .tag-list{
@@ -1373,4 +1376,54 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 
 .fz-pro-features-table-row .pro-label{
 	text-transform: none;
+}
+.post-type-feedzy_categories #minor-publishing #save-action .button {
+	background: transparent;
+	border-color: #4268CF;
+	color: #4268CF;
+	text-transform: capitalize;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+.post-type-feedzy_categories #minor-publishing #save-action .button:hover {
+	box-shadow: inset 0 0 0 1px #4268cf, inset 0 0 0 2px #f7f9fd;
+	background: #F7F9FD;
+	color: #4268CF;
+}
+.post-type-feedzy_categories #minor-publishing #save-action .button:focus {
+	background: transparent;
+	border-color: #4268CF;
+	color: #4268CF;
+	box-shadow: 0 0 0 1px #fff, 0 0 0 3px #2271b1;
+}
+
+.post-type-feedzy_categories a {
+	 	color: #4268CF;
+}
+
+.post-type-feedzy_categories.wp-core-ui .button-primary,
+.post-type-feedzy_categories.wp-core-ui .button-primary.active,
+.post-type-feedzy_categories.wp-core-ui .button-primary:active{
+	background: #4268CF;
+	border-color: #4268CF;
+	color:  #fff;
+	-webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+.post-type-feedzy_categories.wp-core-ui .button-primary:hover{
+	background: #3458BC;
+	border-color: #3458BC;
+}
+.post-type-feedzy_categories.wp-core-ui .button-primary:focus{
+	background: #213483;
+	border-color: #213483;
+}
+
+.post-type-feedzy_categories #titlediv #title:focus,
+.post-type-feedzy_categories .widefat:focus{
+	border-color: #4268CF;
 }
