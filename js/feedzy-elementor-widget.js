@@ -16,7 +16,9 @@ window.addEventListener( 'elementor/init', function() {
 		},
 		changeUiImage() { // Set UI theme mode.
 			var themeMode = elementor.settings.editorPreferences.model.get('ui_theme');
-			if ( 'dark' === themeMode ) {
+			var userPrefersDark = matchMedia('(prefers-color-scheme: dark)').matches;
+
+			if ( 'dark' === themeMode || userPrefersDark ) {
 				this.$el.removeClass( 'fz-el-light-mode' ).addClass( 'fz-el-dark-mode' );
 			} else {
 				this.$el.addClass( 'fz-el-light-mode' ).removeClass( 'fz-el-dark-mode' );
@@ -36,13 +38,15 @@ window.addEventListener( 'elementor/init', function() {
 	// Edit widget event.
 	elementor.hooks.addAction( 'panel/open_editor/widget/feedzy-rss-feeds', function( panel, model, view ) {
 		var themeMode = elementor.settings.editorPreferences.model.get('ui_theme');
+		var userPrefersDark = matchMedia('(prefers-color-scheme: dark)').matches;
+
 		if ( FeedzyElementorEditor.notice ) {
 			if ( jQuery('.fz-pro-notice').length <= 0 && jQuery('.elementor-control-fz-referral-url').length > 0 ) {
 				// Append notice.
 				jQuery( FeedzyElementorEditor.notice ).insertAfter( jQuery('.elementor-control-fz-referral-url').parents('div.elementor-controls-stack') );
 				// Set UI theme mode.
 				var fzLogo = jQuery('.fz-pro-notice .fz-logo img');
-				if ( 'dark' === themeMode ) {
+				if ( 'dark' === themeMode || userPrefersDark ) {
 					fzLogo.attr( 'src', fzLogo.attr( 'src' ).replace( '{{ui_mode}}', 'dark' ) );
 					jQuery('.fz-pro-notice').removeClass( 'fz-light-mode' );
 				} else {
