@@ -384,6 +384,9 @@
 			if ( $( e.target ).attr( 'disabled' ) ) {
 				return;
 			}
+			if ( $( e.target ).hasClass( 'dashicons-arrow-down-alt2' ) ) {
+				return;
+			}
 			if ( $( e.target ).hasClass( 'dashicons-plus-alt2' ) ) {
 				return;
 			}
