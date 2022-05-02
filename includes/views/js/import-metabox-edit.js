@@ -419,7 +419,7 @@
 			}
 		} );
 
-		if ( mixContent ) {
+		if ( mixContent.length ) {
 			mixContent.data('tagify').removeAllTags();
 			mixContent.data('tagify').parseMixTags( htmlEntities( mixContent.text() )
 				);
