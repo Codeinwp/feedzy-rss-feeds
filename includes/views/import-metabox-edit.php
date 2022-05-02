@@ -422,7 +422,7 @@ global $post;
 												<div class="fz-group">
 													<textarea name="feedzy_meta_data[import_post_content]"
 														placeholder="<?php esc_html_e( 'Post Content', 'feedzy-rss-feeds' ); ?>"
-														class="form-control fz-textarea-tagify"><?php echo esc_html( feedzy_custom_tag_escape( $import_content ) ); ?></textarea>
+														class="form-control<?php echo ! defined( 'TI_CYPRESS_TESTING' ) ? ' fz-textarea-tagify' : ''; ?>"><?php echo esc_html( feedzy_custom_tag_escape( $import_content ) ); ?></textarea>
 												</div>
 												<div class="help-text">
 													<?php
