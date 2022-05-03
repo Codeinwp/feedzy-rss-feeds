@@ -396,82 +396,78 @@
 			$( '.dropdown.open' ).removeClass( 'open' );
 		} );
 
-		if ( $( '.feedzy-accordion-item' ).length ) {
-
-			// Tagify for normal textbox.
-			$( '.fz-input-tagify' ).tagify( {
-				editTags: false,
-				originalInputValueFormat: function( valuesArr ) {
-					return valuesArr.map( function( item ) {
-						return item.value;
-					} )
-					.join( ', ' );
-				}
-			} );
-
-			// Tagify for normal mix content field.
-			var mixContent = $( '.fz-textarea-tagify' ).tagify( {
-				mode: 'mix',
-				editTags: false,
-				originalInputValueFormat: function( valuesArr ) {
-					return valuesArr.map( function( item ) {
-						return item.value;
-					} )
-					.join( ', ' );
-				}
-			} );
-
-			if ( mixContent.length ) {
-				mixContent.data('tagify').removeAllTags();
-				mixContent.data('tagify').parseMixTags( htmlEntities( mixContent.text() )
-					);
+		// Tagify for normal textbox.
+		$( '.fz-input-tagify' ).tagify( {
+			editTags: false,
+			originalInputValueFormat: function( valuesArr ) {
+				return valuesArr.map( function( item ) {
+					return item.value;
+				} )
+				.join( ', ' );
 			}
+		} );
 
-			// Tagify for outside tags with allowed duplicates.
-			$( '.fz-tagify-outside' ).tagify( {
-				editTags: true,
-				duplicates: true,
-				userInput: false,
-				originalInputValueFormat: function( valuesArr ) {
-					return valuesArr.map( function( item ) {
-						return item.value;
-					} )
-					.join( ', ' );
-				}
-			} )
-			.on( 'add', function( e ) {
-				var target = $( e.target );
-				target.parents( '.tag-list' ).removeClass( 'hidden' );
-			} )
-			.on( 'removeTag', function( e, tagData ) {
-				var target = $( e.target );
-				if ( tagData.index <= 0 ) {
-					target.parents( '.tag-list' ).addClass( 'hidden' );
-				}
-			} );
+		// Tagify for normal mix content field.
+		var mixContent = $( '.fz-textarea-tagify' ).tagify( {
+			mode: 'mix',
+			editTags: false,
+			originalInputValueFormat: function( valuesArr ) {
+				return valuesArr.map( function( item ) {
+					return item.value;
+				} )
+				.join( ', ' );
+			}
+		} );
 
-			// Tagify for outside tags with not allowed duplicates.
-			$( '.fz-tagify--outside' ).tagify( {
-				editTags: true,
-				userInput: false,
-				originalInputValueFormat: function( valuesArr ) {
-					return valuesArr.map( function( item ) {
-						return item.value;
-					} )
-					.join( ', ' );
-				}
-			} )
-			.on( 'add', function( e ) {
-				var target = $( e.target );
-				target.parents( '.tag-list' ).removeClass( 'hidden' );
-			} )
-			.on( 'removeTag', function( e, tagData ) {
-				var target = $( e.target );
-				if ( tagData.index <= 0 ) {
-					target.parents( '.tag-list' ).addClass( 'hidden' );
-				}
-			} );
+		if ( mixContent.length ) {
+			mixContent.data('tagify').removeAllTags();
+			mixContent.data('tagify').parseMixTags( htmlEntities( mixContent.text() ) );
 		}
+
+		// Tagify for outside tags with allowed duplicates.
+		$( '.fz-tagify-outside' ).tagify( {
+			editTags: true,
+			duplicates: true,
+			userInput: false,
+			originalInputValueFormat: function( valuesArr ) {
+				return valuesArr.map( function( item ) {
+					return item.value;
+				} )
+				.join( ', ' );
+			}
+		} )
+		.on( 'add', function( e ) {
+			var target = $( e.target );
+			target.parents( '.tag-list' ).removeClass( 'hidden' );
+		} )
+		.on( 'removeTag', function( e, tagData ) {
+			var target = $( e.target );
+			if ( tagData.index <= 0 ) {
+				target.parents( '.tag-list' ).addClass( 'hidden' );
+			}
+		} );
+
+		// Tagify for outside tags with not allowed duplicates.
+		$( '.fz-tagify--outside' ).tagify( {
+			editTags: true,
+			userInput: false,
+			originalInputValueFormat: function( valuesArr ) {
+				return valuesArr.map( function( item ) {
+					return item.value;
+				} )
+				.join( ', ' );
+			}
+		} )
+		.on( 'add', function( e ) {
+			var target = $( e.target );
+			target.parents( '.tag-list' ).removeClass( 'hidden' );
+		} )
+		.on( 'removeTag', function( e, tagData ) {
+			var target = $( e.target );
+			if ( tagData.index <= 0 ) {
+				target.parents( '.tag-list' ).addClass( 'hidden' );
+			}
+		} );
 	}
 
 	function initSummary() {
