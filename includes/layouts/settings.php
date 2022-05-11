@@ -20,6 +20,13 @@
 		$help_btn_url = 'https://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy#spinner';
 	}
 	?>
+	<?php if ( $this->notice ) { ?>
+		<div class="updated"><p><?php echo wp_kses_post( $this->notice ); ?></p></div>
+	<?php } ?>
+
+	<?php if ( $this->error ) { ?>
+		<div class="error"><p><?php echo wp_kses_post( $this->error ); ?></p></div>
+	<?php } ?>
 	<div class="feedzy-container">
 		<div class="feedzy-accordion-item">
 			<div class="feedzy-accordion-item__title">
@@ -196,12 +203,4 @@
 			<a href="<?php echo esc_url( $help_btn_url ); ?>" class="btn btn-ghost" target="_blank"><?php esc_html_e( 'Need help?', 'feedzy-rss-feeds' ); ?></a>
 		</div>
 	</div>
-
-	<?php if ( $this->notice ) { ?>
-		<div class="updated"><p><?php echo wp_kses_post( $this->notice ); ?></p></div>
-	<?php } ?>
-
-	<?php if ( $this->error ) { ?>
-		<div class="error"><p><?php echo wp_kses_post( $this->error ); ?></p></div>
-	<?php } ?>
 </div>

@@ -32,7 +32,7 @@
 		var field_name = $(this).data("field-name");
 		var field_tag = $(this).data("field-tag");
 		$('[name="feedzy_meta_data[' + field_name + ']"]').val(field_tag);
-		$('[name="feedzy_meta_data[' + field_name + ']"]').focus();
+		$('[name="feedzy_meta_data[' + field_name + ']"]').focus().addClass( 'source-category-added' );
 		return false;
 	}
 
@@ -42,6 +42,11 @@
 
 		if ( '' === tags ) {
 			return false;
+		}
+
+		if ( $( '#feedzy-source-tags' ).hasClass( 'source-category-added' ) ) {
+			$( '#feedzy-source-tags' ).data('tagify').removeAllTags();
+			$( '#feedzy-source-tags' ).removeClass( 'source-category-added' );
 		}
 
 		outsideWrap.find( '.form-control' ).val('');
@@ -175,7 +180,13 @@
 			if (taxonomies.length !== 0) {
 				$.each(taxonomies, function (index, terms) {
 					if (terms.length !== 0) {
-						options += '<optgroup label="' + index + '">';
+						var groupName = index;
+						if ( 'category' === groupName ) {
+							groupName = 'Category';
+						} else if( 'post_tag' === groupName ) {
+							groupName = 'Tag';
+						}
+						options += '<optgroup label="' + groupName + '">';
 						$.each(terms, function (i, term) {
 							var sel_option = "";
 							if (in_array(index + "_" + term.term_id, tax_selected)) {
@@ -464,8 +475,10 @@
 		} )
 		.on( 'removeTag', function( e, tagData ) {
 			var target = $( e.target );
-			if ( tagData.index <= 0 ) {
-				target.parents( '.tag-list' ).addClass( 'hidden' );
+			var tagList = target.parents( '.tag-list' );
+			if ( tagList.find( '.tagify__tag' ).length === 0 ) {
+				tagList.addClass( 'hidden' );
+				tagList.find( 'input:text' ).val( '' );
 			}
 		} );
 	}

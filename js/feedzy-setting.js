@@ -51,6 +51,9 @@ jQuery( function( $ ) {
   $( ':input' ).change(function () {         
     unsaved = true;
   });
+  $( '#feedzy-settings-submit' ).on( 'click', function() {
+    unsaved = false;
+  } );
   window.addEventListener( 'beforeunload', function( e ) {
     if ( unsaved ) {
       e.preventDefault();

@@ -111,7 +111,14 @@ global $post;
 						<div class="left">
 							<h4 class="h4"><?php esc_html_e( 'Filter by Keyword(s)', 'feedzy-rss-feeds' ); ?><?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
 							<div class="form-block-pro-text">
-							<?php esc_html_e( 'This feature is only for Pro users.', 'feedzy-rss-feeds' ); ?><br>
+								<?php
+								if ( ! feedzy_is_pro() ) {
+									esc_html_e( 'This feature is only for Pro users.', 'feedzy-rss-feeds' );
+									?>
+								<br>
+									<?php
+								}
+								?>
 								<a href="https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#filters" target="_blank"><?php esc_html_e( 'Learn More', 'feedzy-rss-feeds' ); ?></a>
 							</div>
 						</div>

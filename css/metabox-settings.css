@@ -60,3 +60,16 @@
 	.fz-tabs-menu ul li a.active{border: 0;}
 }
 
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-resolution: 144dpi), only screen and (min-resolution: 1.5dppx) {
+	.fz-form-wrap .chosen-rtl .chosen-search input[type="text"],
+	.fz-form-wrap .chosen-container-single .chosen-single abbr,
+	.fz-form-wrap .chosen-container-single .chosen-single div b,
+	.fz-form-wrap .chosen-container-single .chosen-search input[type="text"],
+	.fz-form-wrap .chosen-container-multi .chosen-choices .search-choice .search-choice-close,
+	.fz-form-wrap .chosen-container .chosen-results-scroll-down span,
+	.fz-form-wrap .chosen-container .chosen-results-scroll-up span {
+		background: #ffffff !important;
+		background-repeat: no-repeat !important;
+		background-size: inherit !important;
+	}
+}
