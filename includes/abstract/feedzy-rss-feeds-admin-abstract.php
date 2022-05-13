@@ -1213,7 +1213,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				}
 
 				if ( is_array( $feed ) ) {
-					foreach( $feed as $f ) {
+					foreach ( $feed as $f ) {
 						if ( FEEDZY_ALLOW_HTTPS ) {
 							$feed_url[] = $f;
 						} else {
