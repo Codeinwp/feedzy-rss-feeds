@@ -1201,12 +1201,31 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$feed = trim( $feed );
 				// scheme-less URLs.
 				if ( strpos( $feed, 'http' ) !== 0 ) {
-					$feed = 'http://' . $feed;
+					$is_feedzy_category = get_page_by_path( $feed, OBJECT, 'feedzy_categories' );
+					if ( $is_feedzy_category ) {
+						$category_feed = get_post_meta( $is_feedzy_category->ID, 'feedzy_category_feed', true );
+						if ( ! empty( $category_feed ) ) {
+							$feed = $this->get_feed_url( $category_feed );
+						}
+					} else {
+						$feed = 'http://' . $feed;
+					}
 				}
-				if ( FEEDZY_ALLOW_HTTPS ) {
-					$feed_url[] = $feed;
+
+				if ( is_array( $feed ) ) {
+					foreach( $feed as $f ) {
+						if ( FEEDZY_ALLOW_HTTPS ) {
+							$feed_url[] = $f;
+						} else {
+							$feed_url[] = preg_replace( '/^https:/i', 'http:', $f );
+						}
+					}
 				} else {
-					$feed_url[] = preg_replace( '/^https:/i', 'http:', $feed );
+					if ( FEEDZY_ALLOW_HTTPS ) {
+						$feed_url[] = $feed;
+					} else {
+						$feed_url[] = preg_replace( '/^https:/i', 'http:', $feed );
+					}
 				}
 			}
 			if ( count( $feed_url ) === 1 ) {

@@ -31,8 +31,10 @@
 	function add_source() {
 		var field_name = $(this).data("field-name");
 		var field_tag = $(this).data("field-tag");
-		$('[name="feedzy_meta_data[' + field_name + ']"]').val(field_tag);
-		$('[name="feedzy_meta_data[' + field_name + ']"]').focus().addClass( 'source-category-added' );
+		$('[name="feedzy_meta_data[' + field_name + ']"]').data('tagify')
+			.addTags(field_tag);
+		$('[data-toggle="dropdown"]').parent().removeClass("open");
+		$('[name="feedzy_meta_data[' + field_name + ']"]').focus();
 		return false;
 	}
 
@@ -42,11 +44,6 @@
 
 		if ( '' === tags ) {
 			return false;
-		}
-
-		if ( $( '#feedzy-source-tags' ).hasClass( 'source-category-added' ) ) {
-			$( '#feedzy-source-tags' ).data('tagify').removeAllTags();
-			$( '#feedzy-source-tags' ).removeClass( 'source-category-added' );
 		}
 
 		outsideWrap.find( '.form-control' ).val('');
@@ -255,7 +252,7 @@
 			}
 		} );
 
-		$("a.dropdown-item").on("click", append_tag);
+		$("a.dropdown-item:not(.source)").on("click", append_tag);
 		$(".add-outside-tags").on("click", append_outside_tag);
 		$("a.dropdown-item.source").on("click", add_source);
 		$( document ).on( 'click', '.btn-remove-fields', remove_row );
