@@ -350,7 +350,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$keywords = $sc['keywords_ban'];
 			if ( ! empty( $keywords ) ) {
 				if ( ! empty( $exc_on ) ) {
-					$keywords_ban = $this->feedzy_feed_item_keywords_by($item, $exc_on, $keywords, $sc );
+					$keywords_ban = $this->feedzy_feed_item_keywords_by( $item, $exc_on, $keywords, $sc );
 					if ( $keywords_ban ) {
 						$continue = false;
 					}
@@ -541,7 +541,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			return $feed;
 		}
 		$sc      = $this->sanitize_attr( $sc, $feed_url );
-		$content = $this->render_content( $sc, $feed, $feed_url, '');
+		$content = $this->render_content( $sc, $feed, $feed_url, '' );
 
 		// save the content as a transient so that whenever the feed is refreshed next, this stale content is displayed first.
 		set_transient( sprintf( 'feedzy-lazy-%s', ( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ) ), $content, apply_filters( 'feedzy_lazyload_cache_time', DAY_IN_SECONDS, $feed_url ) );
@@ -1027,12 +1027,12 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @param   array  $sc The shorcode attributes array.
 	 * @param   object $feed The feed object.
-	 * @param   string $content The original content.
 	 * @param   string $feed_url The feed url.
+	 * @param   string $content The original content.
 	 *
 	 * @return  string
 	 */
-	private function render_content( $sc, $feed, $feed_url, $content = '') {
+	private function render_content( $sc, $feed, $feed_url, $content = '' ) {
 		$count                   = 0;
 		$sizes                   = array(
 			'width'  => $sc['size'],
@@ -1772,9 +1772,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Keyword filter in multiple fields.
 	 *
+	 * @param object $item The feed item.
 	 * @param string $filter_by Filter by.
 	 * @param string $keywords Keywords.
-	 * @param object $item The feed item.
 	 *
 	 * @return bool
 	 */

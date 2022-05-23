@@ -168,7 +168,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! in_array( $screen->base, $upsell_screens, true ) && strpos( $screen->id, 'feedzy' ) === false ) {
 			return;
 		}
-		wp_enqueue_style( $this->plugin_name . '-settings', FEEDZY_ABSURL . 'css/settings.css', [], $this->version );
+		wp_enqueue_style( $this->plugin_name . '-settings', FEEDZY_ABSURL . 'css/settings.css', array(), $this->version );
 		wp_enqueue_style( $this->plugin_name . '-metabox', FEEDZY_ABSURL . 'css/metabox-settings.css', array( $this->plugin_name . '-settings' ), $this->version );
 	}
 
@@ -763,7 +763,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @access  public
 	 */
-	public function get_source_validity_error( $message = '', $post='', $class = '' ) {
+	public function get_source_validity_error( $message = '', $post = '', $class = '' ) {
 		$invalid = $text = null;
 		switch ( $post->post_type ) {
 			case 'feedzy_categories':
