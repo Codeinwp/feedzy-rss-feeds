@@ -763,7 +763,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @access  public
 	 */
-	public function get_source_validity_error( $message = '', $post, $class = '' ) {
+	public function get_source_validity_error( $message = '', $post='', $class = '' ) {
 		$invalid = $text = null;
 		switch ( $post->post_type ) {
 			case 'feedzy_categories':

@@ -910,8 +910,8 @@ class Feedzy_Rss_Feeds_Import {
 	public function ajax() {
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
 
-		$_POST['feedzy_category_meta_noncename'] = filter_input( INPUT_POST, 'security', FILTER_SANITIZE_STRING );
-		$_action                                 = filter_input( INPUT_POST, '_action', FILTER_SANITIZE_STRING );
+		$_POST['feedzy_category_meta_noncename'] = filter_input( INPUT_POST, 'security', FILTER_UNSAFE_RAW );
+		$_action                                 = filter_input( INPUT_POST, '_action', FILTER_UNSAFE_RAW );
 
 		switch ( $_action ) {
 			case 'import_status':
@@ -2167,7 +2167,7 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	public function pre_get_posts( $query ) {
 
-		if ( ! function_exists( 'wp_verify_nonce' ) || ( ! wp_verify_nonce( filter_input( INPUT_GET, '_nonce', FILTER_SANITIZE_STRING ), 'job_run_linked_posts' ) ) ) {
+		if ( ! function_exists( 'wp_verify_nonce' ) || ( ! wp_verify_nonce( filter_input( INPUT_GET, '_nonce', FILTER_UNSAFE_RAW ), 'job_run_linked_posts' ) ) ) {
 			return;
 		}
 
