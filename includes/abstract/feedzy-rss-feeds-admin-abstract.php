@@ -826,7 +826,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		// to avoid the Warning! Non-numeric value encountered. This can be removed once SimplePie in core is fixed.
 		if ( version_compare( phpversion(), '7.1', '>=' ) ) {
-			error_reporting( E_ALL ^ E_WARNING );
+			error_reporting( E_ALL & ~E_WARNING & ~E_DEPRECATED );
 			// reset the error_reporting back to its original value.
 			add_action(
 				'shutdown',
