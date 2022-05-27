@@ -54,6 +54,7 @@
 
 .feedzy-rss .rss_item .rss_image {
 	margin: 0.3em 1em 0 0;
+	content-visibility: auto;
 }
 
 .feedzy-rss .rss_item .rss_content small {
