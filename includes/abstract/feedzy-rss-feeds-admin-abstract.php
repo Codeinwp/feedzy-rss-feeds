@@ -1505,6 +1505,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			foreach ( (array) $enclosures as $enclosure ) {
 				// Item thumbnail.
 				$thumbnail = $enclosure->get_thumbnail();
+				$medium    = $enclosure->get_medium();
+				if ( in_array( $medium, array( 'video' ), true ) ) {
+					break;
+				}
 				if ( $thumbnail ) {
 					$the_thumbnail = $thumbnail;
 				}
