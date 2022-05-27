@@ -1677,6 +1677,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'mrgreen.png',
 			'rolleyes.png',
 			'simple-smile.png',
+			'//s.w.org/images/core/emoji/',
 		);
 
 		return apply_filters( 'feedzy_feed_blacklist_images', $blacklist );
