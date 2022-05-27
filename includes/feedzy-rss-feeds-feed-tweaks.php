@@ -295,6 +295,7 @@ add_filter(
 			'label'  => array(
 				'id'  => array(),
 				'for' => array(),
+				'class' => array(),
 			),
 			'a'      => array(
 				'href'  => array(),

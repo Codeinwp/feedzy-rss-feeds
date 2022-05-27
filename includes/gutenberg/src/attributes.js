@@ -113,6 +113,10 @@ const attributes = {
 	to_datetime: {
 		type: 'string',
 	},
+	itemTitle: {
+		type: 'boolean',
+		default: true,
+	}
 };
 
 export default attributes;

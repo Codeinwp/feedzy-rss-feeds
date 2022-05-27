@@ -8,54 +8,59 @@
  * Author: Themeisle
  */
 
-#feedzy_import_feeds h4 {
-	margin: 20px 0 10px;
-	font-size: 16px;
-}
-
-#feedzy_import_feeds .form-group label {
-	display: block;
-	margin: 0 0 5px;
-}
-
-#feedzy_import_feeds .form-group .chosen-single {
-	height: 44px;
-	padding: 0 20px;
-	border: 1px solid #ddd;
-	border-radius: 4px;
-	color: #888;
-	background: #fff;
+#feedzy_import_feeds{
+	background: transparent;
+	border: 0;
 	box-shadow: none;
-	font-family: "Roboto", sans-serif;
-	font-size: 16px;
-	font-weight: 300;
-	line-height: 44px;
+	max-width: 1224px;
+	margin: 0 auto;
+	padding-left: 12px;
+	padding-right: 12px;
+	box-sizing: border-box;
 }
-
-#feedzy_import_feeds .chosen-container-single .chosen-single div {
-	top: 10px;
-	right: -2px;
+#feedzy_import_feeds > .postbox-header{
+	display: none;
 }
-
-#feedzy_import_feeds #feedzy_post_type_chosen,
-#feedzy_import_feeds #feedzy_post_terms_chosen {
-	margin-bottom: 20px;
+.post-type-feedzy_imports:not(.edit-php) .page-title-action, .post-type-feedzy_imports:not(.edit-php) .wp-heading-inline {
+	display: none !important;
 }
-
-#feedzy_import_feeds .chosen-container-single .chosen-drop {
-	border-color: #ddd;
-	z-index: 99999999;
+.post-type-feedzy_imports:not(.edit-php) #wpcontent{
+	padding-left: 0;
 }
-
-#feedzy_import_feeds .chosen-container-single .chosen-search input[type="text"] {
-	border-color: #ddd;
+.post-type-feedzy_imports:not(.edit-php) #post-body-content{
+	display: none;
 }
-
-#feedzy_import_feeds .chosen-container .chosen-results li.highlighted {
-	background-color: #099bb2;
-	background-image: none;
+.post-type-feedzy_imports:not(.edit-php) .wrap{
+	margin-top: 0;
+	margin-right: 0;
 }
-
+.post-type-feedzy_imports:not(.edit-php) .wrap > .wp-heading-inline,
+.post-type-feedzy_imports:not(.edit-php) .wrap > .wp-header-end{
+	display: none;
+}
+.post-type-feedzy_imports:not(.edit-php) #poststuff{
+	padding-top: 0;
+}
+.post-type-feedzy_imports:not(.edit-php) #poststuff .inside{
+	margin-top: 0;
+	padding-left: 0;
+	padding-right: 0;
+}
+.post-type-feedzy_imports:not(.edit-php) #poststuff #post-body.columns-2{
+	margin-right: 0;
+}
+.post-type-feedzy_imports:not(.edit-php) #post-body.columns-2 #postbox-container-1{
+	width: 100%;
+	float: none;
+}
+.feedzy_page_feedzy-settings #wpcontent,
+.feedzy_page_feedzy-support #wpcontent{
+	padding-left: 0;
+}
+.feedzy_page_feedzy-settings .feedzy-header,
+.feedzy_page_feedzy-support .feedzy-header{
+	margin-bottom: 40px;
+}
 .feedzy-api-error,
 .feedzy-error-critical {
 	color: #ff0000;
@@ -102,7 +107,7 @@ tr.feedzy-import-status-row table tr:last-of-type td {
 }
 
 td.feedzy-error-status a {
-    vertical-align: middle;
+	vertical-align: middle;
 }
 
 a.feedzy-popup-details {
@@ -125,8 +130,82 @@ td.feedzy-has-popup {
 	color: #ca4a1f !important;
 	background-color: inherit !important;
 }
-
-
+.feedzy-onboarding-modal {
+	max-width: 350px;
+}
+.feedzy-onboarding-modal .components-modal__header {
+	text-align: center;
+}
+.feedzy-onboarding-modal .components-modal__header h1 {
+	width: 100%;
+}
+.feedzy-onboarding-modal .feedzy-onboarding-modal-content {
+	text-align: center;
+	margin: 10px 0 15px;
+}
+.feedzy-onboarding-modal .feedzy-onboarding-modal-action {
+	text-align: center;
+	margin: 10px 0;
+}
+.feedzy-onboarding-modal .feedzy-onboarding-modal-action .components-button {
+	padding: 2px 20px;
+	font-size: 14px;
+	margin-right: 10px;
+}
+.components-modal__screen-overlay {
+	background-color: rgba(0, 0, 0, 0.5);
+}
+.react-joyride__tooltip {
+	font-size: 13px !important;
+}
+.react-joyride__tooltip > div {
+	text-align: left !important;
+}
+.react-joyride__tooltip div:nth-of-type( 2) {
+	margin-top: 5px !important;
+}
+.react-joyride__tooltip button {
+	text-decoration: underline;
+}
+.react-joyride__beacon span:first-child {
+	background-color: #4268CF !important;
+}
+.react-joyride__beacon span:last-child {
+	background-color: rgba(66, 104, 207, 0.4) !important;
+	border: 2px solid #4268CF !important;
+}
+.react-joyride__tooltip button[data-action="primary"] {
+	background: #4268cf !important;
+	border-color: #006a95 #00648c #00648c !important;
+	box-shadow: inset 0 -1px 0 #00648c !important;
+	color: #fff !important;
+	text-decoration: none !important;
+	text-shadow: 0 -1px 1px #005d82, 1px 0 1px #005d82, 0 1px 1px #005d82, -1px 0 1px #005d82 !important;
+	padding: 2px 20px !important;
+	height: auto !important;
+	line-height: 28px !important;
+	font-size: 14px !important;
+}
+.react-joyride__tooltip button[data-action="back"] {
+	color: #23282d !important;
+	font-size: 14px !important;
+}
+.react-notification-root .notification-container-bottom-left {
+	bottom: 40px;
+}
+.react-notification-root .notification-container-mobile-bottom {
+	bottom: 60px;
+}
+.feedzy-onboarding-modal-action .components-button.is-primary,
+.feedzy-onboarding-modal-action .components-button.is-primary:hover:not(:disabled) {
+	background: #4268cf;
+}
+.feedzy-onboarding-modal-action .components-button.is-secondary,
+.feedzy-onboarding-modal-action .components-button.is-secondary:hover:not(:disabled),
+.feedzy-onboarding-modal-action .components-button.is-tertiary:hover:not(:disabled) {
+	box-shadow: inset 0 0 0 1px #4268cf;
+	color: #4268cf;
+}
 @media screen and (max-width: 782px) {
 	tr.feedzy-import-status-row table {
 		width: 100%;

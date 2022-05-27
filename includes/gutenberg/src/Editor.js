@@ -63,11 +63,12 @@ class Editor extends Component {
         this.onColumns              = this.onColumns.bind( this );
         this.onTemplate             = this.onTemplate.bind( this );
         this.onTogglePrice          = this.onTogglePrice.bind( this );
-        this.onKeywordsIncludeOn        = this.onKeywordsIncludeOn.bind( this );
-        this.onKeywordsExcludeOn        = this.onKeywordsExcludeOn.bind( this );
-        this.onFromDateTime        = this.onFromDateTime.bind( this );
-        this.onToDateTime        = this.onToDateTime.bind( this );
-        this.feedzyCategoriesList          = this.feedzyCategoriesList.bind( this );
+        this.onKeywordsIncludeOn    = this.onKeywordsIncludeOn.bind( this );
+        this.onKeywordsExcludeOn    = this.onKeywordsExcludeOn.bind( this );
+        this.onFromDateTime         = this.onFromDateTime.bind( this );
+        this.onToDateTime           = this.onToDateTime.bind( this );
+        this.feedzyCategoriesList   = this.feedzyCategoriesList.bind( this );
+        this.onToggleItemTitle      = this.onToggleItemTitle.bind( this )
 		this.state = {
             // home: when the block is just added
             // fetched: when the feed is fetched
@@ -319,6 +320,9 @@ class Editor extends Component {
         }
         return url;
     }
+    onToggleItemTitle(value) {
+        this.props.setAttributes( { itemTitle: ! this.props.attributes.itemTitle } );
+    }
 
     render() {
 		return [
@@ -423,7 +427,7 @@ class Editor extends Component {
 										</div>
 									) }
 									<div className="rss_content_wrap">
-										{ ( ( this.props.attributes.title !== 0 ) ? <span className="title">
+										{ ( ( this.props.attributes.itemTitle && this.props.attributes.title !== 0 ) ? <span className="title">
 											<a>
 												{ ( this.props.attributes.title && unescapeHTML( item['title'] ).length > this.props.attributes.title ) ? (
 													unescapeHTML( item['title'] ).substring( 0, this.props.attributes.title ) + '...'
