@@ -259,6 +259,12 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 	public function feedzy_rest_route( $data ) {
 
 		$feed = $data;
+		if ( isset( $data['feeds'] ) ) {
+			$feed_category = $this->feedzy_sanitize_categories( $data['feeds'] );
+			if ( $feed_category ) {
+				$data['url'] = $feed_category;
+			}
+		}
 		if ( ! empty( $data['url'] ) ) {
 			$feed = $data['url'];
 		} elseif ( ! empty( $data['category'] ) ) {

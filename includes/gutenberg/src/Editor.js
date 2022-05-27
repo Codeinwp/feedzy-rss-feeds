@@ -180,6 +180,7 @@ class Editor extends Component {
                             _this.props.setAttributes( { feeds: ui.item.label } );
                         }
                     });
+
                 },
             ).fail(
                 err => {
