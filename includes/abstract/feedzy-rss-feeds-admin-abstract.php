@@ -48,7 +48,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! $doing_import_job && empty( $default_img ) ) {
 			$settings = apply_filters( 'feedzy_get_settings', array() );
 			if ( $settings && ! empty( $settings['general']['default-thumbnail-id'] ) ) {
-				$default_img = wp_get_attachment_image( $default_thumbnail_id, 'full' );
+				$default_img = wp_get_attachment_image( $settings['general']['default-thumbnail-id'], 'full' );
 			} else {
 				$default_img = FEEDZY_ABSURL . 'img/feedzy.svg';
 			}
@@ -311,7 +311,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			if ( ! empty( $keywords ) ) {
 				$continue = false;
 				if ( ! empty( $inc_on ) ) {
-					$continue = $this->feedzy_feed_item_keywords_by( $inc_on, $keywords, $item, $sc );
+					$continue = $this->feedzy_feed_item_keywords_by( $item, $inc_on, $keywords, $sc );
 				} else {
 					if ( preg_match( "/^$keywords.*$/i", $item->get_title() ) || preg_match( "/^$keywords.*$/i", $item->get_description() ) ) {
 						$continue = true;
@@ -323,7 +323,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			if ( ! empty( $keywords ) ) {
 				$continue = false;
 				if ( ! empty( $inc_on ) ) {
-					$continue = $this->feedzy_feed_item_keywords_by( $inc_on, $keywords, $item, $sc );
+					$continue = $this->feedzy_feed_item_keywords_by( $item, $inc_on, $keywords, $sc );
 				} else {
 					if ( preg_match( "/^$keywords.*$/i", $item->get_title() ) ) {
 						$continue = true;
@@ -336,7 +336,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$keywords = $sc['keywords_exc'];
 			if ( ! empty( $keywords ) ) {
 				if ( ! empty( $exc_on ) ) {
-					$exc_item = $this->feedzy_feed_item_keywords_by( $exc_on, $keywords, $item, $sc );
+					$exc_item = $this->feedzy_feed_item_keywords_by( $item, $exc_on, $keywords, $sc );
 					if ( $exc_item ) {
 						$continue = false;
 					}
@@ -350,7 +350,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$keywords = $sc['keywords_ban'];
 			if ( ! empty( $keywords ) ) {
 				if ( ! empty( $exc_on ) ) {
-					$keywords_ban = $this->feedzy_feed_item_keywords_by( $exc_on, $keywords, $item, $sc );
+					$keywords_ban = $this->feedzy_feed_item_keywords_by( $item, $exc_on, $keywords, $sc );
 					if ( $keywords_ban ) {
 						$continue = false;
 					}
@@ -431,6 +431,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function feedzy_rss( $atts, $content = '' ) {
 		wp_print_styles( $this->plugin_name );
+		// Enqueue style using `wp_enqueue_style` in case `wp_print_styles` not working.
+		if ( ! wp_style_is( $this->plugin_name, 'done' ) ) {
+			wp_enqueue_style( $this->plugin_name );
+		}
 		$sc      = $this->get_short_code_attributes( $atts );
 		$feed_url = $this->normalize_urls( $sc['feeds'] );
 		if ( empty( $feed_url ) ) {
@@ -491,7 +495,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			return $feed;
 		}
 		$sc      = $this->sanitize_attr( $sc, $feed_url );
-		$content = $this->render_content( $sc, $feed, $content, $feed_url );
+		$content = $this->render_content( $sc, $feed, $feed_url, $content );
 
 		return $content;
 	}
@@ -537,7 +541,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			return $feed;
 		}
 		$sc      = $this->sanitize_attr( $sc, $feed_url );
-		$content = $this->render_content( $sc, $feed, '', $feed_url );
+		$content = $this->render_content( $sc, $feed, $feed_url, '' );
 
 		// save the content as a transient so that whenever the feed is refreshed next, this stale content is displayed first.
 		set_transient( sprintf( 'feedzy-lazy-%s', ( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ) ), $content, apply_filters( 'feedzy_lazyload_cache_time', DAY_IN_SECONDS, $feed_url ) );
@@ -694,7 +698,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @return SimplePie|string|void|WP_Error The feed resource.
 	 */
-	public function fetch_feed( $feed_url, $cache = '12_hours', $sc ) {
+	public function fetch_feed( $feed_url, $cache = '12_hours', $sc = '' ) {
 		// Load SimplePie if not already.
 		do_action( 'feedzy_pre_http_setup', $feed_url );
 
@@ -822,7 +826,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		// to avoid the Warning! Non-numeric value encountered. This can be removed once SimplePie in core is fixed.
 		if ( version_compare( phpversion(), '7.1', '>=' ) ) {
-			error_reporting( E_ALL ^ E_WARNING );
+			error_reporting( E_ALL & ~E_WARNING & ~E_DEPRECATED );
 			// reset the error_reporting back to its original value.
 			add_action(
 				'shutdown',
@@ -1023,12 +1027,12 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @param   array  $sc The shorcode attributes array.
 	 * @param   object $feed The feed object.
-	 * @param   string $content The original content.
 	 * @param   string $feed_url The feed url.
+	 * @param   string $content The original content.
 	 *
 	 * @return  string
 	 */
-	private function render_content( $sc, $feed, $content = '', $feed_url ) {
+	private function render_content( $sc, $feed, $feed_url, $content = '' ) {
 		$count                   = 0;
 		$sizes                   = array(
 			'width'  => $sc['size'],
@@ -1201,12 +1205,31 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$feed = trim( $feed );
 				// scheme-less URLs.
 				if ( strpos( $feed, 'http' ) !== 0 ) {
-					$feed = 'http://' . $feed;
+					$is_feedzy_category = get_page_by_path( $feed, OBJECT, 'feedzy_categories' );
+					if ( $is_feedzy_category ) {
+						$category_feed = get_post_meta( $is_feedzy_category->ID, 'feedzy_category_feed', true );
+						if ( ! empty( $category_feed ) ) {
+							$feed = $this->get_feed_url( $category_feed );
+						}
+					} else {
+						$feed = 'http://' . $feed;
+					}
 				}
-				if ( FEEDZY_ALLOW_HTTPS ) {
-					$feed_url[] = $feed;
+
+				if ( is_array( $feed ) ) {
+					foreach ( $feed as $f ) {
+						if ( FEEDZY_ALLOW_HTTPS ) {
+							$feed_url[] = $f;
+						} else {
+							$feed_url[] = preg_replace( '/^https:/i', 'http:', $f );
+						}
+					}
 				} else {
-					$feed_url[] = preg_replace( '/^https:/i', 'http:', $feed );
+					if ( FEEDZY_ALLOW_HTTPS ) {
+						$feed_url[] = $feed;
+					} else {
+						$feed_url[] = preg_replace( '/^https:/i', 'http:', $feed );
+					}
 				}
 			}
 			if ( count( $feed_url ) === 1 ) {
@@ -1502,6 +1525,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			foreach ( (array) $enclosures as $enclosure ) {
 				// Item thumbnail.
 				$thumbnail = $enclosure->get_thumbnail();
+				$medium    = $enclosure->get_medium();
+				if ( in_array( $medium, array( 'video' ), true ) ) {
+					break;
+				}
 				if ( $thumbnail ) {
 					$the_thumbnail = $thumbnail;
 				}
@@ -1670,6 +1697,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'mrgreen.png',
 			'rolleyes.png',
 			'simple-smile.png',
+			'//s.w.org/images/core/emoji/',
 		);
 
 		return apply_filters( 'feedzy_feed_blacklist_images', $blacklist );
@@ -1769,13 +1797,13 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Keyword filter in multiple fields.
 	 *
+	 * @param object $item The feed item.
 	 * @param string $filter_by Filter by.
 	 * @param string $keywords Keywords.
-	 * @param object $item The feed item.
 	 *
 	 * @return bool
 	 */
-	public function feedzy_feed_item_keywords_by( $filter_by = '', $keywords = '', $item, $sc = array() ) {
+	public function feedzy_feed_item_keywords_by( $item, $filter_by = '', $keywords = '', $sc = array() ) {
 		$is_valid = false;
 
 		if ( empty( $filter_by ) ) {
@@ -1803,7 +1831,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 		} elseif ( 'fullcontent' === $filter_by ) {
 			$content = $item->get_item_tags( SIMPLEPIE_NAMESPACE_ATOM_10, 'full-content' );
-			$content = wp_strip_all_tags( $content[0]['data'], true );
+			$content = ! empty( $content[0]['data'] ) ? $content[0]['data'] : '';
+			$content = wp_strip_all_tags( $content, true );
 			if ( ! empty( $content ) && preg_match( "/^$keywords.*$/i", $content ) ) {
 				$is_valid = true;
 			}
