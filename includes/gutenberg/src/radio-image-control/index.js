@@ -20,7 +20,7 @@ function RadioImageControl( { label, selected, help, instanceId, onChange, disab
 	const onChangeValue = ( event ) => onChange( event.target.value );
 
 	return ! isEmpty( options ) && (
-		<BaseControl label={ label } id={ id } help={ help } className="components-radio-image-control">
+		<BaseControl label={ label } id={ id } help={ help } className="components-radio-image-control feedzy-template">
 			<div className="components-radio-image-control__container">
 				{ options.map( ( option, index ) =>
 					<div
@@ -42,6 +42,7 @@ function RadioImageControl( { label, selected, help, instanceId, onChange, disab
 							<img src={ option.src } />
 							<span class="image-clickable"></span>
 						</label>
+						<span>{ option.label }</span>
 					</div>
 				) }
 			</div>

@@ -1,53 +1,96 @@
-<div id="fz-features" class="fz-settings">
+<div id="fz-features" class="feedzy-wrap">
 
 	<?php load_template( FEEDZY_ABSPATH . '/includes/layouts/header.php' ); ?>
 
 	<?php
 	// phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
 	$active_tab = isset( $_REQUEST['tab'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['tab'] ) ) : 'help';
-	$show_more  = ! feedzy_is_pro() || false === apply_filters( 'feedzy_is_license_of_type', false, 'agency' );
+
 	?>
 
-	<h2 class="nav-tab-wrapper">
-		<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-support&tab=help' ) ); ?>"
-			class="nav-tab <?php echo 'help' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Support', 'feedzy-rss-feeds' ); ?></a>
-		<?php
-		if ( $show_more ) {
-			?>
-		<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-support&tab=more' ) ); ?>"
-			class="nav-tab <?php echo 'more' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'More Features', 'feedzy-rss-feeds' ); ?></a>
-			<?php
-		}
-		?>
-		<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-support&tab=improve' ) ); ?>"
-			class="nav-tab <?php echo 'improve' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Help us improve!', 'feedzy-rss-feeds' ); ?></a>
-
-		<?php echo wp_kses_post( apply_filters( 'feedzy_support_tab_heading', '', $active_tab ) ); ?>
-	</h2>
-
-	<div class="fz-features-content">
-			<div id="feedzy_import_feeds" class="fz-feature-features">
-					<?php
-					switch ( $active_tab ) {
-						case 'help':
-							load_template( FEEDZY_ABSPATH . '/includes/layouts/feedzy-tutorial.php' );
-							break;
-						case 'more':
-							if ( $show_more ) {
-								load_template( FEEDZY_ABSPATH . '/includes/layouts/feedzy-upsell.php' );
-							}
-							break;
-						case 'improve':
-							load_template( FEEDZY_ABSPATH . '/includes/layouts/feedzy-improve.php' );
-							break;
-						default:
-							$template = apply_filters( 'feedzy_support_tab_content', '', $active_tab );
-							if ( ! empty( $template ) ) {
-								load_template( $template );
-							}
-					}
-					?>
+	<div class="feedzy-container">
+		<div class="feedzy-accordion-item mb-30">
+			<div class="feedzy-accordion-item__title">
+				<div class="feedzy-accordion-item__button">
+					<div class="feedzy-accordion__step-title h2">
+						<?php
+						switch ( $active_tab ) {
+							case 'help':
+								esc_html_e( 'Gettting Started', 'feedzy-rss-feeds' );
+								break;
+							case 'docs':
+								esc_html_e( 'Documentation', 'feedzy-rss-feeds' );
+								break;
+							case 'feedzy-pro':
+								esc_html_e( 'Feedzy Pro', 'feedzy-rss-feeds' );
+								break;
+							case 'improve':
+								esc_html_e( 'Help us improve!', 'feedzy-rss-feeds' );
+								break;
+							default:
+								echo esc_html( ucwords( str_replace( array( '-', '_' ), ' ', $active_tab ) ) );
+								break;
+						}
+						?>
+					</div>
+				</div>
 			</div>
-	</div>
+			<div class="feedzy-accordion-item__content">
+				<div class="fz-tabs-menu">
+					<ul>
+						<li>
+							<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-support&tab=help' ) ); ?>"
+								class="<?php echo 'help' === $active_tab ? 'active' : ''; ?>"><?php esc_html_e( 'Gettting Started', 'feedzy-rss-feeds' ); ?></a>
+						</li>
+						<li>
+							<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-support&tab=docs' ) ); ?>"
+							class="<?php echo 'docs' === $active_tab ? 'active' : ''; ?>"><?php esc_html_e( 'Documentation', 'feedzy-rss-feeds' ); ?></a>
+						</li>
+						<li>
+							<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-support&tab=feedzy-pro' ) ); ?>"
+								class="<?php echo 'feedzy-pro' === $active_tab ? 'active' : ''; ?>"><?php esc_html_e( 'Feedzy Pro', 'feedzy-rss-feeds' ); ?></a>
+						</li>
+						<li>
+							<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-support&tab=improve' ) ); ?>"
+								class="<?php echo 'improve' === $active_tab ? 'active' : ''; ?>"><?php esc_html_e( 'Help us improve!', 'feedzy-rss-feeds' ); ?></a>
+						</li>
+						<li>
+							<?php echo wp_kses_post( apply_filters( 'feedzy_support_tab_heading', '', $active_tab ) ); ?>
+						</li>
+					</ul>
+				</div>
 
+				<?php
+				switch ( $active_tab ) {
+					case 'help':
+						load_template( FEEDZY_ABSPATH . '/includes/layouts/feedzy-tutorial.php' );
+						break;
+					case 'docs':
+						load_template( FEEDZY_ABSPATH . '/includes/layouts/feedzy-documentation.php' );
+						break;
+					case 'feedzy-pro':
+						load_template( FEEDZY_ABSPATH . '/includes/layouts/feedzy-pro.php' );
+						break;
+					case 'improve':
+						load_template( FEEDZY_ABSPATH . '/includes/layouts/feedzy-improve.php' );
+						break;
+					default:
+						$template = apply_filters( 'feedzy_support_tab_content', '', $active_tab );
+						if ( ! empty( $template ) ) {
+							load_template( $template );
+						}
+				}
+				?>
+			</div>
+		</div>
+		<?php if ( in_array( $active_tab, array( 'help', 'docs' ), true ) ) : ?>
+			<div class="feedzy-accordion-item need-help-box">
+				<div class="feedzy-accordion-item__content">
+					<h3 class="h3"><?php esc_html_e( 'Need help with Feedzy?', 'feedzy-rss-feeds' ); ?></h3>
+					<p><?php echo wp_kses_post( wp_sprintf( __( 'If you didn\'t found an answer in our Knowledge Base, you can always ask for help from our support team or <a href="%s" target="_blank">get priority support with your Developer or Agency license.</a>', 'feedzy-rss-feeds' ), esc_url( 'https://themeisle.com/contact/' ) ) ); ?></p>
+					<a href="https://wordpress.org/support/plugin/feedzy-rss-feeds/" class="btn btn-outline-primary" target="_blank"><?php esc_html_e( 'Support Forum', 'feedzy-rss-feeds' ); ?></a>
+				</div>
+			</div>
+		<?php endif; ?>
+	</div>
 </div>

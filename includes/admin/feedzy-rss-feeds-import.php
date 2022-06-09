@@ -97,14 +97,11 @@ class Feedzy_Rss_Feeds_Import {
 	public function upsell_content( $content ) {
 		if ( ! feedzy_is_pro() ) {
 			$content = '
-			<div>
-				<div class="only-pro-content">
-					<div class="only-pro-container">
-						<div class="only-pro-inner">
-							<p>' . __( 'This feature is only enabled in the Pro version! To learn more about the benefits of Pro and how you can upgrade', 'feedzy-rss-feeds' ) . '
-							<a target="_blank" href="' . FEEDZY_UPSELL_LINK . '" title="' . __( 'Buy Now', 'feedzy-rss-feeds' ) . '">' . __( 'Click here!', 'feedzy-rss-feeds' ) . '</a>
-							</p>
-						</div>
+			<div class="only-pro-content">
+				<div class="only-pro-container">
+					<div class="only-pro-inner upgrade-alert">
+						' . __( 'This feature is available in the Pro version.  Unlock more features, by', 'feedzy-rss-feeds' ) . '
+						<a target="_blank" href="' . FEEDZY_UPSELL_LINK . '" title="' . __( 'Buy Now', 'feedzy-rss-feeds' ) . '">' . __( 'upgrading to Feedzy Pro', 'feedzy-rss-feeds' ) . '</a>
 					</div>
 				</div>
 			</div>';
@@ -122,8 +119,10 @@ class Feedzy_Rss_Feeds_Import {
 		wp_enqueue_style( $this->plugin_name, FEEDZY_ABSURL . 'css/feedzy-rss-feed-import.css', array(), $this->version, 'all' );
 		if ( get_current_screen()->post_type === 'feedzy_imports' ) {
 			wp_enqueue_style( $this->plugin_name . '_chosen', FEEDZY_ABSURL . 'includes/views/css/chosen.css', array(), $this->version, 'all' );
+			wp_enqueue_style( $this->plugin_name . '_tagify', FEEDZY_ABSURL . 'includes/views/css/tagify.css', array(), $this->version, 'all' );
 			wp_enqueue_style( $this->plugin_name . '_metabox_edit', FEEDZY_ABSURL . 'includes/views/css/import-metabox-edit.css', array( 'wp-jquery-ui-dialog' ), $this->version, 'all' );
 			wp_enqueue_script( $this->plugin_name . '_chosen_script', FEEDZY_ABSURL . 'includes/views/js/chosen.js', array( 'jquery' ), $this->version, true );
+			wp_enqueue_script( $this->plugin_name . '_tagify_script', FEEDZY_ABSURL . 'includes/views/js/jquery.tagify.min.js', array( 'jquery' ), $this->version, true );
 			wp_enqueue_script(
 				$this->plugin_name . '_metabox_edit_script',
 				FEEDZY_ABSURL . 'includes/views/js/import-metabox-edit.js',
@@ -214,8 +213,8 @@ class Feedzy_Rss_Feeds_Import {
 			'name'               => __( 'Import Posts', 'feedzy-rss-feeds' ),
 			'singular_name'      => __( 'Import Post', 'feedzy-rss-feeds' ),
 			'add_new'            => __( 'New Import', 'feedzy-rss-feeds' ),
-			'add_new_item'       => __( 'New Import', 'feedzy-rss-feeds' ),
-			'edit_item'          => __( 'Edit Import', 'feedzy-rss-feeds' ),
+			'add_new_item'       => false,
+			'edit_item'          => false,
 			'new_item'           => __( 'New Import Post', 'feedzy-rss-feeds' ),
 			'view_item'          => __( 'View Import', 'feedzy-rss-feeds' ),
 			'search_items'       => __( 'Search Imports', 'feedzy-rss-feeds' ),
@@ -227,7 +226,7 @@ class Feedzy_Rss_Feeds_Import {
 		);
 		$args     = array(
 			'labels'               => $labels,
-			'supports'             => $supports,
+			'supports'             => false,
 			'public'               => true,
 			'exclude_from_search'  => true,
 			'publicly_queryable'   => false,
@@ -237,10 +236,21 @@ class Feedzy_Rss_Feeds_Import {
 				'slug' => 'feedzy-import',
 			),
 			'show_in_menu'         => 'feedzy-admin-menu',
-			'register_meta_box_cb' => array( $this, 'add_feedzy_import_metaboxes' ),
 		);
 		$args     = apply_filters( 'feedzy_imports_args', $args );
 		register_post_type( 'feedzy_imports', $args );
+
+		// Register setting field.
+		register_setting(
+			'feedzy_import_tour_settings',
+			'feedzy_import_tour',
+			array(
+				'type'         => 'boolean',
+				'description'  => __( 'Show tour for Feedzy.', 'feedzy-rss-feeds' ),
+				'show_in_rest' => true,
+				'default'      => true,
+			)
+		);
 	}
 
 	/**
@@ -250,7 +260,11 @@ class Feedzy_Rss_Feeds_Import {
 	 * @since   1.2.0
 	 * @access  public
 	 */
-	public function add_feedzy_import_metaboxes() {
+	public function add_feedzy_import_metaboxes( $post_type, $post ) {
+		if ( 'feedzy_imports' !== $post_type ) {
+			return;
+		}
+
 		add_meta_box(
 			'feedzy_import_feeds',
 			__( 'Feed Import Options', 'feedzy-rss-feeds' ),
@@ -910,8 +924,8 @@ class Feedzy_Rss_Feeds_Import {
 	public function ajax() {
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
 
-		$_POST['feedzy_category_meta_noncename'] = filter_input( INPUT_POST, 'security', FILTER_SANITIZE_STRING );
-		$_action                                 = filter_input( INPUT_POST, '_action', FILTER_SANITIZE_STRING );
+		$_POST['feedzy_category_meta_noncename'] = filter_input( INPUT_POST, 'security', FILTER_UNSAFE_RAW );
+		$_action                                 = filter_input( INPUT_POST, '_action', FILTER_UNSAFE_RAW );
 
 		switch ( $_action ) {
 			case 'import_status':
@@ -1124,9 +1138,12 @@ class Feedzy_Rss_Feeds_Import {
 		$inc_on               = get_post_meta( $job->ID, 'inc_on', true );
 		$exc_on               = get_post_meta( $job->ID, 'exc_on', true );
 		$import_title         = get_post_meta( $job->ID, 'import_post_title', true );
+		$import_title         = $this->feedzy_import_trim_tags( $import_title );
 		$import_date          = get_post_meta( $job->ID, 'import_post_date', true );
 		$post_excerpt         = get_post_meta( $job->ID, 'import_post_excerpt', true );
+		$post_excerpt         = $this->feedzy_import_trim_tags( $post_excerpt );
 		$import_content       = get_post_meta( $job->ID, 'import_post_content', true );
+		$import_content       = str_replace( array( '[[{"value":"', '"}]]' ), '', $import_content );
 		$import_featured_img  = get_post_meta( $job->ID, 'import_post_featured_img', true );
 		$import_post_type     = get_post_meta( $job->ID, 'import_post_type', true );
 		$import_post_term     = get_post_meta( $job->ID, 'import_post_term', true );
@@ -1927,7 +1944,11 @@ class Feedzy_Rss_Feeds_Import {
 	 * @access  public
 	 */
 	public function settings_tabs( $tabs ) {
-		$tabs['misc'] = __( 'Miscellaneous', 'feedzy-rss-feeds' );
+		$tabs['misc']   = __( 'Miscellaneous', 'feedzy-rss-feeds' );
+		if ( ! feedzy_is_pro() ) {
+			$tabs['wordai'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'WordAi', 'feedzy-rss-feeds' ) );
+			$tabs['spinnerchief'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'SpinnerChief', 'feedzy-rss-feeds' ) );
+		}
 		return $tabs;
 	}
 
@@ -1962,6 +1983,14 @@ class Feedzy_Rss_Feeds_Import {
 		switch ( $name ) {
 			case 'misc':
 				$file = FEEDZY_ABSPATH . '/includes/views/' . $name . '-view.php';
+				break;
+			case 'wordai':
+			case 'spinnerchief':
+				if ( ! feedzy_is_pro() ) {
+					$file = FEEDZY_ABSPATH . '/includes/views/' . $name . '-view.php';
+				} else {
+					$file = apply_filters( 'feedzy_render_view', $file, $name );
+				}
 				break;
 			default:
 				$file = apply_filters( 'feedzy_render_view', $file, $name );
@@ -2191,7 +2220,7 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	public function pre_get_posts( $query ) {
 
-		if ( ! function_exists( 'wp_verify_nonce' ) || ( ! wp_verify_nonce( filter_input( INPUT_GET, '_nonce', FILTER_SANITIZE_STRING ), 'job_run_linked_posts' ) ) ) {
+		if ( ! function_exists( 'wp_verify_nonce' ) || ( ! wp_verify_nonce( filter_input( INPUT_GET, '_nonce', FILTER_UNSAFE_RAW ), 'job_run_linked_posts' ) ) ) {
 			return;
 		}
 
@@ -2382,5 +2411,111 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Clone import job.
+	 */
+	public function feedzy_clone_import_job() {
+		// Check if import job ID has been provided and action.
+		if ( empty( $_GET['feedzy_job_id'] ) ) {
+			wp_die( esc_html__( 'No post to duplicate has been provided!', 'feedzy-rss-feeds' ) );
+		}
+
+		// Nonce verification.
+		if ( ! isset( $_GET['clone_import'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['clone_import'] ) ), FEEDZY_BASENAME ) ) {
+			return;
+		}
+
+		// Get the original import job ID.
+		$feedzy_job_id = absint( $_GET['feedzy_job_id'] );
+		// Get the original import job.
+		$feedzy_job = get_post( $feedzy_job_id );
+
+		if ( $feedzy_job ) {
+			$current_user    = wp_get_current_user();
+			$new_post_author = $current_user->ID;
+
+			// new post data array
+			$args = array(
+				'post_author'    => $new_post_author,
+				'post_status'    => 'draft',
+				'post_title'     => $feedzy_job->post_title,
+				'post_type'      => $feedzy_job->post_type,
+			);
+
+			// insert the new import job by wp_insert_post() function.
+			$new_post_id = wp_insert_post( $args );
+			// Get all post meta.
+			$post_meta = get_post_meta( $feedzy_job_id );
+			// Exclude metakey.
+			$blacklist_metakey = array(
+				'import_errors',
+				'import_info',
+				'_edit_lock',
+				'last_run_id',
+				'last_run',
+				'imported_items_hash',
+				'imported_items_count',
+			);
+
+			if ( $post_meta ) {
+				foreach ( $post_meta as $meta_key => $meta_values ) {
+					if ( in_array( $meta_key, $blacklist_metakey, true ) ) {
+						continue;
+					}
+					foreach ( $meta_values as $meta_value ) {
+						add_post_meta( $new_post_id, $meta_key, $meta_value );
+					}
+				}
+			}
+
+			wp_safe_redirect(
+				add_query_arg(
+					array(
+						'post_type' => ( 'post' !== get_post_type( $feedzy_job ) ? get_post_type( $feedzy_job ) : false ),
+						'saved' => 'fz_duplicate_import_job_created',
+					),
+					admin_url( 'edit.php' )
+				)
+			);
+			exit;
+		} else {
+			wp_die( esc_html__( 'Post creation failed, could not find original post.', 'feedzy-rss-feeds' ) );
+		}
+	}
+
+	/**
+	 * Display import job clone notice.
+	 */
+	public function feedzy_import_clone_success_notice() {
+		// Get the current screen.
+		$screen = get_current_screen();
+
+		if ( 'edit' !== $screen->base ) {
+			return;
+		}
+
+		// Display success notice if clone succeed.
+		if ( isset( $_GET['saved'] ) && 'fz_duplicate_import_job_created' === $_GET['saved'] ) { // phpcs:ignore WordPress.Security.NonceVerification
+			?>
+			<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Duplicate import job created', 'feedzy-rss-feeds' ); ?></p></div>
+			<?php
+		}
+	}
+
+	/**
+	 * Trim tags.
+	 *
+	 * @param string $content Field value.
+	 * @return string
+	 */
+	public function feedzy_import_trim_tags( $content = '' ) {
+		if ( ! empty( $content ) && is_string( $content ) ) {
+			$content = explode( ',', $content );
+			$content = array_map( 'trim', $content );
+			$content = implode( ' ', $content );
+		}
+		return $content;
 	}
 }
