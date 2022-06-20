@@ -1444,7 +1444,7 @@ class Feedzy_Rss_Feeds_Import {
 
 			// Translate full-content.
 			if ( $import_auto_translation && false !== strpos( $post_content, '[#translated_full_content]' ) ) {
-				$translated_full_content = apply_filters( 'feedzy_invoke_auto_translate_services', $item['item_url'], '[#translated_full_content]', $import_translation_lang, $job );
+				$translated_full_content = apply_filters( 'feedzy_invoke_auto_translate_services', $item['item_url'], '[#translated_full_content]', $import_translation_lang, $job, $language_code );
 				$post_content = str_replace( '[#translated_full_content]', rtrim( $translated_full_content, '.' ), $post_content );
 			}
 
