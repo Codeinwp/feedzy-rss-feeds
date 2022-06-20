@@ -103,7 +103,7 @@
 	vertical-align: middle;
 }
 
-.feedzy-wrap + .wrap div#side-sortables{
+.post-type-feedzy_imports:not(.edit-post) .wrap div#side-sortables{
 	display: none;
 }
 .feedzy-container{
