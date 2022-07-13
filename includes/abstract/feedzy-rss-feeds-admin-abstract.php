@@ -431,6 +431,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function feedzy_rss( $atts, $content = '' ) {
 		wp_print_styles( $this->plugin_name );
+		// Enqueue style using `wp_enqueue_style` in case `wp_print_styles` not working.
+		if ( ! wp_style_is( $this->plugin_name, 'done' ) ) {
+			wp_enqueue_style( $this->plugin_name );
+		}
 		$sc      = $this->get_short_code_attributes( $atts );
 		$feed_url = $this->normalize_urls( $sc['feeds'] );
 		if ( empty( $feed_url ) ) {
@@ -1802,7 +1806,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 		} elseif ( 'fullcontent' === $filter_by ) {
 			$content = $item->get_item_tags( SIMPLEPIE_NAMESPACE_ATOM_10, 'full-content' );
-			$content = wp_strip_all_tags( $content[0]['data'], true );
+			$content = ! empty( $content[0]['data'] ) ? $content[0]['data'] : '';
+			$content = wp_strip_all_tags( $content, true );
 			if ( ! empty( $content ) && preg_match( "/^$keywords.*$/i", $content ) ) {
 				$is_valid = true;
 			}

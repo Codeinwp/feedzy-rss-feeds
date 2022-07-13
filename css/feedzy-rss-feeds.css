@@ -2,7 +2,7 @@
  * feedzy-rss-feeds.css
  * Feedzy RSS Feed
  * Copyright: (c) 2016 Themeisle, themeisle.com
- * Version: 3.8.2
+ * Version: 3.8.3
  * Plugin Name: FEEDZY RSS Feeds
  * Plugin URI: http://themeisle.com/plugins/feedzy-rss-feeds/
  * Author: Themeisle
@@ -82,7 +82,7 @@
 }
 
 .feedzy-rss .rss_item {
-	margin: 2%;
+	margin: 1.8%;
 	padding: 0;
 }
 

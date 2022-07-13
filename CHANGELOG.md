@@ -1,3 +1,9 @@
+##### [Version 3.8.3](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.8.2...v3.8.3) (2022-03-16)
+
+#### Fixes
+- A warning is printed when filter for Item Full content is used and no items found for the import
+- Fix broken style on twentytwentytwo theme
+
 ##### [Version 3.8.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.8.1...v3.8.2) (2022-01-28)
 
 - Add a new filter to add the custom refresh time
