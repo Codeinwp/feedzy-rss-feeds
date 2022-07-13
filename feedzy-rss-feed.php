@@ -15,7 +15,7 @@
  * Plugin Name:       Feedzy RSS Feeds Lite
  * Plugin URI:        https://themeisle.com/plugins/feedzy-rss-feeds-lite/
  * Description:       A small and lightweight RSS aggregator plugin. Fast and very easy to use, it allows you to aggregate multiple RSS feeds into your WordPress site through fully customizable shortcodes & widgets.
- * Version:           3.7.2
+ * Version:           3.8.2
  * Author:            Themeisle
  * Author URI:        http://themeisle.com
  * License:           GPL-2.0+
@@ -40,7 +40,7 @@ function activate_feedzy_rss_feeds() {
 
 /**
  * The code that runs during plugin deactivation.
- * This action is documented in includes/feedzy-rss-feeds-deactivator.php
+ * This action is  documented in includes/feedzy-rss-feeds-deactivator.php
  *
  * @since    3.0.0
  */
@@ -51,7 +51,7 @@ function deactivate_feedzy_rss_feeds() {
 register_activation_hook( __FILE__, 'activate_feedzy_rss_feeds' );
 register_deactivation_hook( __FILE__, 'deactivate_feedzy_rss_feeds' );
 /**
- * The function that will handle the queue for autoloader.
+ * The function thast will handle the queue for autoloader.
  *
  * @since    3.0.0
  */
@@ -98,7 +98,7 @@ function feedzy_rss_feeds_autoload( $class ) {
 		}
 	}
 	if ( is_readable( plugin_dir_path( __FILE__ ) . 'includes/admin/feedzy-wp-widget.php' ) ) {
-		require_once plugin_dir_path( __FILE__ ) . 'includes/admin/feedzy-wp-widget.php';
+		require_once plugin_dir_path( __FILE__ )   . 'includes/admin/feedzy-wp-widget.php';
 
 		return true;
 	}
@@ -111,9 +111,9 @@ function feedzy_rss_feeds_autoload( $class ) {
  *
  * Since everything within the plugin is registered via hooks,
  * then kicking off the plugin from this point in the file does
- * not affect the page life cycle.
+ * not affect the page life cycle.s
  *
- * @since    3.0.0
+ * @since    3.0.0.
  */
 function run_feedzy_rss_feeds() {
 	define( 'FEEDZY_BASEFILE', __FILE__ );

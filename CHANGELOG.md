@@ -1,3 +1,55 @@
+##### [Version 3.8.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.8.1...v3.8.2) (2022-01-28)
+
+- Add a new filter to add the custom refresh time
+- Remove elementor hidden WP widget feature so feedzy widget can be used
+- Fix keyword filter issue with date filter
+- Fix cURL timeout error
+- Add new import job setting field and manipulate custom tag data
+- Fix trimming title issue for Elementor & Gutenberg
+
+##### [Version 3.8.1](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.8.0...v3.8.1) (2021-12-20)
+
+- Show the import job title in post row action
+- Add default thumbnail image support in the external image
+- [#item_url] magic tag allows opening in a new tab
+- Style for the input fields of setting form
+
+#### [Version 3.8.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.7.5...v3.8.0) (2021-10-19)
+
+#### Features: 
+ - Adds compatibility with pro features for [Elementor Template Builder](https://docs.themeisle.com/article/1396-elementor-compatibility-in-feedzy) and Dynamic Tags support.
+ - Adds compatibility for pro [Enhanced keyword](https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#filters) filtering support.
+
+#### Fixes
+- Fix category dropdown in Gutenberg Block
+- Magic tags that are unavailable with the free version listed in one line.
+- Fix typo in the import setup
+
+##### [Version 3.7.5](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.7.4...v3.7.5) (2021-09-06)
+
+#### Fixes
+- Fix broken image issues with certain feeds
+- Adds new line character support for import content
+- Fix import on custom values when full content is used
+
+##### [Version 3.7.4](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.7.3...v3.7.4) (2021-09-01)
+
+* Fix regression issue with Elementor widget not showing with lower WP versions.
+* Fix regression with cron import not working with lower WP versions.
+
+##### [Version 3.7.3](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.7.2...v3.7.3) (2021-08-27)
+
+#### Features
+* Support default Gutenberg editor instead of importing content in the Classic block 
+* Adds support for Feedzy widget in the widget block editor 
+* Adds default thumbnail image support when no image is available
+
+#### Fixes
+* Title Character Limit and the Description Character Limit parameter in the Feedzy Block
+* Displaying Default Thumbnail Image does not show in Block or Shortcode approach
+* Custom tag is trimmed on save of the import if used inside <iframe> 
+* Keyword filters break the import with PHP 8.0
+
 ##### [Version 3.7.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.7.1...v3.7.2) (2021-08-04)
 
 #### Features
