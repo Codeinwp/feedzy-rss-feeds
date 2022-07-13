@@ -1672,6 +1672,7 @@ class Feedzy_Rss_Feeds_Import {
 									array(
 										'item_url' => $item['item_url'],
 										'license'  => $license,
+										'site_url' => get_site_url(),
 									)
 								),
 							)

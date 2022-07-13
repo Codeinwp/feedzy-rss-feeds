@@ -13,7 +13,7 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Feedzy RSS Feeds Lite
- * Plugin URI:        https://themeisle.com/plugins/feedzy-rss-feeds-lite/
+ * Plugin URI:        https://themeisle.com/plugins/feedzy-rss-feeds/
  * Description:       A small and lightweight RSS aggregator plugin. Fast and very easy to use, it allows you to aggregate multiple RSS feeds into your WordPress site through fully customizable shortcodes & widgets.
  * Version:           3.8.3
  * Author:            Themeisle
