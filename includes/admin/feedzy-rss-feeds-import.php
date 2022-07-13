@@ -118,6 +118,7 @@ class Feedzy_Rss_Feeds_Import {
 	public function enqueue_styles() {
 		wp_enqueue_style( $this->plugin_name, FEEDZY_ABSURL . 'css/feedzy-rss-feed-import.css', array(), $this->version, 'all' );
 		if ( get_current_screen()->post_type === 'feedzy_imports' ) {
+
 			wp_enqueue_style( $this->plugin_name . '_chosen', FEEDZY_ABSURL . 'includes/views/css/chosen.css', array(), $this->version, 'all' );
 			wp_enqueue_style( $this->plugin_name . '_tagify', FEEDZY_ABSURL . 'includes/views/css/tagify.css', array(), $this->version, 'all' );
 			wp_enqueue_style( $this->plugin_name . '_metabox_edit', FEEDZY_ABSURL . 'includes/views/css/import-metabox-edit.css', array( 'wp-jquery-ui-dialog' ), $this->version, 'all' );
@@ -1239,7 +1240,7 @@ class Feedzy_Rss_Feeds_Import {
 		delete_post_meta( $job->ID, 'import_info' );
 
 		// let's increase this time in case spinnerchief/wordai is being used.
-		ini_set( 'max_execution_time', apply_filters( 'feedzy_max_execution_time', 500 ) );
+		set_time_limit( apply_filters( 'feedzy_max_execution_time', 500 ) );
 
 		$count = $index = $import_image_errors = $duplicates = 0;
 
@@ -1457,7 +1458,7 @@ class Feedzy_Rss_Feeds_Import {
 			if ( $import_auto_translation && false !== strpos( $post_content, '[#translated_full_content]' ) ) {
 				$translated_full_content = apply_filters( 'feedzy_invoke_auto_translate_services', $item['item_url'], '[#translated_full_content]', $import_translation_lang, $job, $language_code );
 				$post_content = str_replace( '[#translated_full_content]', rtrim( $translated_full_content, '.' ), $post_content );
-        			}
+			}
 			// Rewriter item content from feedzy API.
 			if ( $rewrite_service_endabled && false !== strpos( $post_content, '[#content_feedzy_rewrite]' ) ) {
 				$item_content = ! empty( $item['item_content'] ) ? $item['item_content'] : $item['item_description'];
@@ -1469,8 +1470,7 @@ class Feedzy_Rss_Feeds_Import {
 			if ( $rewrite_service_endabled && false !== strpos( $post_content, '[#full_content_feedzy_rewrite]' ) ) {
 				$full_content_feedzy_rewrite = apply_filters( 'feedzy_invoke_content_rewrite_services', $item['item_url'], '[#full_content_feedzy_rewrite]', $job );
 				$post_content = str_replace( '[#full_content_feedzy_rewrite]', $full_content_feedzy_rewrite, $post_content );
-      }
-
+			}
 
 			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 			$item_date = date( 'Y-m-d H:i:s', $item['item_date'] );
@@ -2107,12 +2107,12 @@ class Feedzy_Rss_Feeds_Import {
 
 		// disabled tags.
 		if ( ! feedzy_is_pro() ) {
-			$default['title_spinnerchief:disabled'] = __( 'Title from SpinnerChief', 'feedzy-rss-feeds' );
-			$default['title_wordai:disabled']       = __( 'Title from WordAI', 'feedzy-rss-feeds' );
+			$default['title_spinnerchief:disabled'] = __( '🚫 Title from SpinnerChief', 'feedzy-rss-feeds' );
+			$default['title_wordai:disabled']       = __( '🚫 Title from WordAI', 'feedzy-rss-feeds' );
 
-			$default['translated_title:disabled']   = __( 'Translated Title', 'feedzy-rss-feeds' );
+			$default['translated_title:disabled']   = __( '🚫 Translated Title', 'feedzy-rss-feeds' );
 
-			$default['title_feedzy_rewrite:disabled'] = __( 'Title from Feedzy rewrite', 'feedzy-rss-feeds' );
+			$default['title_feedzy_rewrite:disabled'] = __( '🚫 Paraphrased Title using Feedzy', 'feedzy-rss-feeds' );
 
 		}
 		return $default;
@@ -2150,18 +2150,18 @@ class Feedzy_Rss_Feeds_Import {
 
 		// disabled tags.
 		if ( ! feedzy_is_pro() ) {
-			$default['item_full_content:disabled']         = __( 'Item Full Content', 'feedzy-rss-feeds' );
-			$default['content_spinnerchief:disabled']      = __( 'Content from SpinnerChief', 'feedzy-rss-feeds' );
-			$default['full_content_spinnerchief:disabled'] = __( 'Full content from SpinnerChief', 'feedzy-rss-feeds' );
-			$default['content_wordai:disabled']            = __( 'Content from WordAI', 'feedzy-rss-feeds' );
-			$default['full_content_wordai:disabled']       = __( 'Full content from WordAI', 'feedzy-rss-feeds' );
+			$default['item_full_content:disabled']         = __( '🚫 Item Full Content', 'feedzy-rss-feeds' );
+			$default['content_spinnerchief:disabled']      = __( '🚫 Content from SpinnerChief', 'feedzy-rss-feeds' );
+			$default['full_content_spinnerchief:disabled'] = __( '🚫 Full content from SpinnerChief', 'feedzy-rss-feeds' );
+			$default['content_wordai:disabled']            = __( '🚫 Content from WordAI', 'feedzy-rss-feeds' );
+			$default['full_content_wordai:disabled']       = __( '🚫 Full content from WordAI', 'feedzy-rss-feeds' );
 
-			$default['translated_content:disabled']        = __( 'Translated Content', 'feedzy-rss-feeds' );
-			$default['translated_description:disabled']    = __( 'Translated Description', 'feedzy-rss-feeds' );
-			$default['translated_full_content:disabled']   = __( 'Translated Full Content', 'feedzy-rss-feeds' );
+			$default['translated_content:disabled']        = __( '🚫 Translated Content', 'feedzy-rss-feeds' );
+			$default['translated_description:disabled']    = __( '🚫 Translated Description', 'feedzy-rss-feeds' );
+			$default['translated_full_content:disabled']   = __( '🚫 Translated Full Content', 'feedzy-rss-feeds' );
 
-			$default['content_feedzy_rewrite:disabled']      = __( 'Content from Feedzy rewrite', 'feedzy-rss-feeds' );
-			$default['full_content_feedzy_rewrite:disabled']  = __( 'Full content from Feedzy rewrite', 'feedzy-rss-feeds' );
+			$default['content_feedzy_rewrite:disabled']      = __( '🚫 Paraphrased content using Feedzy', 'feedzy-rss-feeds' );
+			$default['full_content_feedzy_rewrite:disabled']  = __( '🚫 Paraphrased Full content using Feedzy', 'feedzy-rss-feeds' );
 
 		}
 		return $default;
@@ -2465,9 +2465,9 @@ class Feedzy_Rss_Feeds_Import {
 		$default['item_description']       = __( 'Item Description', 'feedzy-rss-feeds' );
 		// disabled tags.
 		if ( ! feedzy_is_pro() ) {
-			$default['translated_title:disabled']        = __( 'Translated Title', 'feedzy-rss-feeds' );
-			$default['translated_content:disabled']      = __( 'Translated Content', 'feedzy-rss-feeds' );
-			$default['translated_description:disabled']  = __( 'Translated Description', 'feedzy-rss-feeds' );
+			$default['translated_title:disabled']        = __( '🚫 Translated Title', 'feedzy-rss-feeds' );
+			$default['translated_content:disabled']      = __( '🚫 Translated Content', 'feedzy-rss-feeds' );
+			$default['translated_description:disabled']  = __( '🚫 Translated Description', 'feedzy-rss-feeds' );
 		}
 		return $default;
 	}

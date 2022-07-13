@@ -41,8 +41,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function feedzy_define_default_image( $default_img ) {
 		$doing_import_job = false;
-		// phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
-		if ( wp_doing_ajax() && ! empty( $_POST['_action'] ) && 'run_now' === $_POST['_action'] ) {
+
+		if ( wp_doing_ajax() && ! empty( $_POST['_action'] ) && 'run_now' === $_POST['_action'] ) {// phpcs:ignore WordPress.Security.NonceVerification
 			$doing_import_job = true;
 		}
 		if ( ! $doing_import_job && empty( $default_img ) ) {
@@ -946,8 +946,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( $feed->error() ) {
 			return false;
 		}
-		// phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
-		if ( isset( $_POST['feedzy_meta_data']['import_link_author_admin'] ) && 'yes' === $_POST['feedzy_meta_data']['import_link_author_admin'] ) {
+		if ( isset( $_POST['feedzy_meta_data']['import_link_author_admin'] ) && 'yes' === $_POST['feedzy_meta_data']['import_link_author_admin'] ) { //phpcs:ignore WordPress.Security.NonceVerification
 			if ( $feed->get_items() ) {
 				$author = $feed->get_items()[0]->get_author();
 				if ( empty( $author ) ) {

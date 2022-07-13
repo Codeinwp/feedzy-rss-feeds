@@ -10,7 +10,7 @@
 				<p>If your feedback is especially helpful and we choose to do an interview with you to discuss your suggestions, you will even gain a yearly membership for free for your trouble.</p>
 			<?php } ?>
 			<div class="cta">
-				<a href="<?php echo esc_url( FEEDZY_SURVEY ); ?>" target="_blank" class="btn btn-outline-primary">Take the Survey</a>
+				<a href="<?php echo esc_url( feedzy_is_pro() ? FEEDZY_SURVEY_PRO : FEEDZY_SURVEY_FREE ); ?>" target="_blank" class="btn btn-outline-primary">Take the Survey</a>
 			</div>
 		</div>		
 	</div>

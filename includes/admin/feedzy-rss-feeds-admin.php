@@ -256,25 +256,35 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			'normal',
 			'high'
 		);
-		add_meta_box(
-			'feedzy_category_feeds_rn',
-			__( 'Increase your social media presence', 'feedzy-rss-feeds' ),
-			array(
-				$this,
-				'render_upsell_rn',
-			),
-			'feedzy_categories',
-			'side',
-			'low'
-		);
+		if ( ! feedzy_is_pro() ) {
+			add_meta_box(
+				'feedzy_category_feeds_rn',
+				__( 'Extend Feedzy', 'feedzy-rss-feeds' ),
+				array(
+					$this,
+					'render_upsell_rn',
+				),
+				'feedzy_categories',
+				'side',
+				'low'
+			);
+		}
 	}
 
 	/**
 	 * Render RN upsell metabox.
 	 */
 	public function render_upsell_rn() {
-		echo '<p>Learn how you can connect with people by sharing content from RSS feeds on your social media accounts. </p>';
-		echo '<a class="button button-primary  " href="https://revive.social/plugins/revive-network/" target="_blank">View more details</a>';
+		echo '<strong>Get access to more features.</strong>';
+		echo '<ul>
+			<li>- Remove branding label</li>
+			<li>- Auto add referral parameters to links</li>
+			<li>- Full Text Import</li>
+			<li>- Parahrase content</li>
+			<li>- Translate content</li>
+			<li>- Elementor Templates support</li>
+		</ul>';
+		echo '<a class="button button-primary  " href="' . esc_url( FEEDZY_UPSELL_LINK ) . '" target="_blank">View more details</a>';
 
 	}
 

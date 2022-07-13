@@ -37,23 +37,23 @@ const Onboarding = () => {
   const steps = [
     {
       target: '#post_title',
-      content: __( 'Add import name', 'feedzy-rss-feeds' ),
+      content: __( 'Choose a descriptive name for your importing schedule to help you easily find it later.', 'feedzy-rss-feeds' ),
     },
     {
       target: '.fz-input-group-left .fz-input-icon',
-      content: __( 'Add your feed source URL', 'feedzy-rss-feeds' ),
+      content: __( 'Add here your RSS feed URL which Feedzy will use to fetch the content from. You can use Feedzy\'s Feed categories too.', 'feedzy-rss-feeds' ),
     },
     {
       target: '#fz-import-filters',
-      content: __( 'Config feedzy additional setting', 'feedzy-rss-feeds' ),
+      content: __( 'Choose the data which you want to import from the feed. Filter by time or keywords.', 'feedzy-rss-feeds' ),
     },
     {
       target: '#fz-import-map-content',
-      content: __( 'Map import fields', 'feedzy-rss-feeds' ),
+      content: __( 'Choose how you would like to import the data into your site. Map the Feed content to a specific post type and customize the imported posts. Extend to PRO to import full content from feed articles, paraphrase the content before import or translate automatically.', 'feedzy-rss-feeds' ),
     },
     {
       target: '#fz-import-general-settings',
-      content: __( 'General import seetings', 'feedzy-rss-feeds' ),
+      content: __( 'Customize the importing schedule by cleaning up old imports, remove duplicates or number of imported items per run.', 'feedzy-rss-feeds' ),
     }
   ];
 
@@ -91,7 +91,7 @@ const Onboarding = () => {
           className="feedzy-onboarding-modal"
         >
           <div className="feedzy-onboarding-modal-content">
-            { __( 'Would you like to start the onboarding wizard which will help you personalize the plugin for yourself?', 'feedzy-rss-feeds' ) }
+            { __( 'Would you like to start the onboarding wizard which will help you explore the plugin features?', 'feedzy-rss-feeds' ) }
           </div>
 
           <div className="feedzy-onboarding-modal-action">

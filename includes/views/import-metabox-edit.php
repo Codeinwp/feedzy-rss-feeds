@@ -882,9 +882,9 @@ global $post;
 						?>
 						<div class="form-block form-block-two-column">
 							<div class="left">
-								<h4 class="h4"><?php esc_html_e( 'Enable Automatically Translation?', 'feedzy-rss-feeds' ); ?></h4>
+								<h4 class="h4"><?php esc_html_e( 'Enable automatic translation?', 'feedzy-rss-feeds' ); ?></h4>
 									<div class="form-block-pro-text">
-										<?php esc_html_e( 'Enable and select the language to translate the text automatically. The default is English', 'feedzy-rss-feeds' ); ?>
+										<?php esc_html_e( 'Enable and select the language to translate the text automatically. Enable this only if you used the Translate magic tags. The default is English', 'feedzy-rss-feeds' ); ?>
 									</div>
 							</div>
 							<div class="right">
@@ -934,12 +934,12 @@ global $post;
 			<?php
 			if ( 'publish' === $post_status ) {
 				?>
-				<button type="submit" name="publish" class="btn btn-outline-primary" value="Publish"><?php esc_html_e( 'Save Options', 'feedzy-rss-feeds' ); ?></button>
+				<button type="submit" name="publish" class="btn btn-outline-primary" value="Publish"><?php esc_html_e( 'Save', 'feedzy-rss-feeds' ); ?></button>
 				<?php
 			} else {
 				?>
-				<button type="submit" name="save" class="btn btn-outline-primary" value="Save Draft" style="float: none;"><?php esc_html_e( 'Save Options', 'feedzy-rss-feeds' ); ?></button>
-				<button type="submit" name="publish" class="btn btn-primary" value="Publish"><?php esc_html_e( 'Save & Activate', 'feedzy-rss-feeds' ); ?></button>
+				<button type="submit" name="save" class="btn btn-outline-primary" value="Save Draft" style="float: none;"><?php esc_html_e( 'Save', 'feedzy-rss-feeds' ); ?></button>
+				<button type="submit" name="publish" class="btn btn-primary" value="Publish"><?php esc_html_e( 'Save & Activate importing', 'feedzy-rss-feeds' ); ?></button>
 				<?php
 			}
 			?>

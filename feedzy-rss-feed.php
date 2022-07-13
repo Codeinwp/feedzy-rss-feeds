@@ -98,7 +98,7 @@ function feedzy_rss_feeds_autoload( $class ) {
 		}
 	}
 	if ( is_readable( plugin_dir_path( __FILE__ ) . 'includes/admin/feedzy-wp-widget.php' ) ) {
-		require_once plugin_dir_path( __FILE__ )   . 'includes/admin/feedzy-wp-widget.php';
+		require_once plugin_dir_path( __FILE__ ) . 'includes/admin/feedzy-wp-widget.php';
 
 		return true;
 	}
@@ -142,7 +142,8 @@ function run_feedzy_rss_feeds() {
 	add_filter( 'themeisle_sdk_products', 'feedzy_register_sdk', 10, 1 );
 	add_filter( 'pirate_parrot_log', 'feedzy_register_parrot', 10, 1 );
 
-	define( 'FEEDZY_SURVEY', feedzy_is_pro() ? 'https://forms.gle/FZXhL3D48KJUhb7q9' : 'https://forms.gle/yQUGSrKEa7XJTGLx8' );
+	define( 'FEEDZY_SURVEY_PRO', 'https://forms.gle/FZXhL3D48KJUhb7q9' );
+	define( 'FEEDZY_SURVEY_FREE', 'https://forms.gle/yQUGSrKEa7XJTGLx8' );
 
 }
 

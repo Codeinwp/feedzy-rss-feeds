@@ -22,7 +22,7 @@
 								esc_html_e( 'Documentation', 'feedzy-rss-feeds' );
 								break;
 							case 'feedzy-pro':
-								esc_html_e( 'Feedzy Pro', 'feedzy-rss-feeds' );
+								esc_html_e( 'Free vs Pro', 'feedzy-rss-feeds' );
 								break;
 							case 'improve':
 								esc_html_e( 'Help us improve!', 'feedzy-rss-feeds' );
@@ -46,10 +46,12 @@
 							<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-support&tab=docs' ) ); ?>"
 							class="<?php echo 'docs' === $active_tab ? 'active' : ''; ?>"><?php esc_html_e( 'Documentation', 'feedzy-rss-feeds' ); ?></a>
 						</li>
-						<li>
-							<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-support&tab=feedzy-pro' ) ); ?>"
-								class="<?php echo 'feedzy-pro' === $active_tab ? 'active' : ''; ?>"><?php esc_html_e( 'Feedzy Pro', 'feedzy-rss-feeds' ); ?></a>
-						</li>
+						<?php if ( ! feedzy_is_pro() ) : ?>
+							<li>
+								<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-support&tab=feedzy-pro' ) ); ?>"
+								   class="<?php echo 'feedzy-pro' === $active_tab ? 'active' : ''; ?>"><?php esc_html_e( 'Free vs Pro', 'feedzy-rss-feeds' ); ?></a>
+							</li>
+						<?php endif; ?>
 						<li>
 							<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-support&tab=improve' ) ); ?>"
 								class="<?php echo 'improve' === $active_tab ? 'active' : ''; ?>"><?php esc_html_e( 'Help us improve!', 'feedzy-rss-feeds' ); ?></a>
@@ -90,8 +92,13 @@
 			<div class="feedzy-accordion-item need-help-box">
 				<div class="feedzy-accordion-item__content">
 					<h3 class="h3"><?php esc_html_e( 'Need help with Feedzy?', 'feedzy-rss-feeds' ); ?></h3>
-					<p><?php echo wp_kses_post( wp_sprintf( __( 'If you didn\'t found an answer in our Knowledge Base, you can always ask for help from our support team or <a href="%s" target="_blank">get priority support with your Developer or Agency license.</a>', 'feedzy-rss-feeds' ), esc_url( 'https://themeisle.com/contact/' ) ) ); ?></p>
-					<a href="https://wordpress.org/support/plugin/feedzy-rss-feeds/" class="btn btn-outline-primary" target="_blank"><?php esc_html_e( 'Support Forum', 'feedzy-rss-feeds' ); ?></a>
+					<?php if ( ! defined( 'FEEDZY_PRO_VERSION' ) ) : ?>
+					<p><?php echo wp_kses_post( wp_sprintf( __( 'If you didn\'t found an answer in our Knowledge Base, you can always ask for help from our community based forum or <a href="%s" target="_blank">get dedicated support with our premium plans.</a>', 'feedzy-rss-feeds' ), esc_url( FEEDZY_UPSELL_LINK ) ) ); ?></p>
+					<a href="https://wordpress.org/support/plugin/feedzy-rss-feeds/" class="btn btn-outline-primary" target="_blank"><?php esc_html_e( 'Community Forum', 'feedzy-rss-feeds' ); ?></a>
+					<?php else : ?>
+						<p><?php echo wp_kses_post( wp_sprintf( __( 'If you didn\'t found an answer in our Knowledge Base, our dedicated support team standby to help you.', 'feedzy-rss-feeds' ) ) ); ?></p>
+						<a href="https://store.themeisle.com/contact" class="btn btn-outline-primary" target="_blank"><?php esc_html_e( 'Contact Support', 'feedzy-rss-feeds' ); ?></a>
+					<?php endif; ?>
 				</div>
 			</div>
 		<?php endif; ?>

@@ -3,8 +3,7 @@
 	<?php load_template( FEEDZY_ABSPATH . '/includes/layouts/header.php' ); ?>
 
 	<?php
-	// phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
-	$active_tab  = isset( $_REQUEST['tab'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['tab'] ) ) : 'general';
+	$active_tab  = isset( $_REQUEST['tab'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['tab'] ) ) : 'general';// phpcs:ignore WordPress.Security.NonceVerification
 	$show_button = true;
 
 	$help_btn_url = 'https://docs.themeisle.com/category/712-feedzy';
