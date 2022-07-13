@@ -1285,6 +1285,8 @@ class Feedzy_Rss_Feeds_Import {
 			return 0;
 		}
 
+		$rewrite_service_endabled = $this->rewrite_content_service_endabled();
+
 		$duplicates = $items_found = array();
 		$found_duplicates = array();
 		foreach ( $result as $item ) {
@@ -1367,6 +1369,15 @@ class Feedzy_Rss_Feeds_Import {
 			}
 
 			$item_link  = '<a href="' . $item['item_url'] . '" target="_blank" class="feedzy-rss-link-icon">' . $item_link_txt . '</a>';
+
+			// Rewriter item title from feedzy API.
+			if ( $rewrite_service_endabled && false !== strpos( $post_title, '[#title_feedzy_rewrite]' ) ) {
+				$title_feedzy_rewrite = apply_filters( 'feedzy_invoke_content_rewrite_services', $item['item_title'], '[#title_feedzy_rewrite]', $job );
+				$post_title = str_replace( '[#title_feedzy_rewrite]', $title_feedzy_rewrite, $post_title );
+			}
+
+			$item_link  = '<a href="' . $item['item_url'] . '" target="_blank" class="feedzy-rss-link-icon">' . __( 'Read More', 'feedzy-rss-feeds' ) . '</a>';
+
 			$image_html = '';
 			if ( ! empty( $item['item_img_path'] ) ) {
 				$image_html = '<img src="' . $item['item_img_path'] . '" title="' . $item['item_title'] . '" />';
@@ -1446,7 +1457,20 @@ class Feedzy_Rss_Feeds_Import {
 			if ( $import_auto_translation && false !== strpos( $post_content, '[#translated_full_content]' ) ) {
 				$translated_full_content = apply_filters( 'feedzy_invoke_auto_translate_services', $item['item_url'], '[#translated_full_content]', $import_translation_lang, $job, $language_code );
 				$post_content = str_replace( '[#translated_full_content]', rtrim( $translated_full_content, '.' ), $post_content );
+        			}
+			// Rewriter item content from feedzy API.
+			if ( $rewrite_service_endabled && false !== strpos( $post_content, '[#content_feedzy_rewrite]' ) ) {
+				$item_content = ! empty( $item['item_content'] ) ? $item['item_content'] : $item['item_description'];
+				$content_feedzy_rewrite = apply_filters( 'feedzy_invoke_content_rewrite_services', $item_content, '[#content_feedzy_rewrite]', $job );
+				$post_content = str_replace( '[#content_feedzy_rewrite]', $content_feedzy_rewrite, $post_content );
 			}
+
+			// Rewriter item full content from feedzy API.
+			if ( $rewrite_service_endabled && false !== strpos( $post_content, '[#full_content_feedzy_rewrite]' ) ) {
+				$full_content_feedzy_rewrite = apply_filters( 'feedzy_invoke_content_rewrite_services', $item['item_url'], '[#full_content_feedzy_rewrite]', $job );
+				$post_content = str_replace( '[#full_content_feedzy_rewrite]', $full_content_feedzy_rewrite, $post_content );
+      }
+
 
 			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 			$item_date = date( 'Y-m-d H:i:s', $item['item_date'] );
@@ -2085,7 +2109,11 @@ class Feedzy_Rss_Feeds_Import {
 		if ( ! feedzy_is_pro() ) {
 			$default['title_spinnerchief:disabled'] = __( 'Title from SpinnerChief', 'feedzy-rss-feeds' );
 			$default['title_wordai:disabled']       = __( 'Title from WordAI', 'feedzy-rss-feeds' );
+
 			$default['translated_title:disabled']   = __( 'Translated Title', 'feedzy-rss-feeds' );
+
+			$default['title_feedzy_rewrite:disabled'] = __( 'Title from Feedzy rewrite', 'feedzy-rss-feeds' );
+
 		}
 		return $default;
 	}
@@ -2127,9 +2155,14 @@ class Feedzy_Rss_Feeds_Import {
 			$default['full_content_spinnerchief:disabled'] = __( 'Full content from SpinnerChief', 'feedzy-rss-feeds' );
 			$default['content_wordai:disabled']            = __( 'Content from WordAI', 'feedzy-rss-feeds' );
 			$default['full_content_wordai:disabled']       = __( 'Full content from WordAI', 'feedzy-rss-feeds' );
+
 			$default['translated_content:disabled']        = __( 'Translated Content', 'feedzy-rss-feeds' );
 			$default['translated_description:disabled']    = __( 'Translated Description', 'feedzy-rss-feeds' );
 			$default['translated_full_content:disabled']   = __( 'Translated Full Content', 'feedzy-rss-feeds' );
+
+			$default['content_feedzy_rewrite:disabled']      = __( 'Content from Feedzy rewrite', 'feedzy-rss-feeds' );
+			$default['full_content_feedzy_rewrite:disabled']  = __( 'Full content from Feedzy rewrite', 'feedzy-rss-feeds' );
+
 		}
 		return $default;
 	}
@@ -2437,6 +2470,20 @@ class Feedzy_Rss_Feeds_Import {
 			$default['translated_description:disabled']  = __( 'Translated Description', 'feedzy-rss-feeds' );
 		}
 		return $default;
+	}
+
+	/**
+	 * Check feedzy rewrite content tool enabled or not.
+	 *
+	 * @return bool
+	 */
+	private function rewrite_content_service_endabled() {
+		// Check license type.
+		if ( $this->feedzy_is_business() || $this->feedzy_is_agency() ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
