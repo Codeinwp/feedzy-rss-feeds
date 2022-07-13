@@ -1491,6 +1491,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'item_description'    => $content_summary,
 			'item_content'        => apply_filters( 'feedzy_content', $item_content, $item ),
 			'item_source'         => $feed_source,
+			'item_full_description' => $item->get_description(),
 		);
 		$item_array = apply_filters( 'feedzy_item_filter', $item_array, $item, $sc, $index, $item_index );
 

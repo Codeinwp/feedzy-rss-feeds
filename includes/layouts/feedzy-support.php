@@ -3,7 +3,7 @@
 	<?php load_template( FEEDZY_ABSPATH . '/includes/layouts/header.php' ); ?>
 
 	<?php
-	// phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
+	// phpcs:ignore WordPress.Security.NonceVerification
 	$active_tab = isset( $_REQUEST['tab'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['tab'] ) ) : 'help';
 
 	?>
@@ -54,9 +54,12 @@
 							<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-support&tab=improve' ) ); ?>"
 								class="<?php echo 'improve' === $active_tab ? 'active' : ''; ?>"><?php esc_html_e( 'Help us improve!', 'feedzy-rss-feeds' ); ?></a>
 						</li>
-						<li>
-							<?php echo wp_kses_post( apply_filters( 'feedzy_support_tab_heading', '', $active_tab ) ); ?>
-						</li>
+						<?php $support_tab_heading = apply_filters( 'feedzy_support_tab_heading', '', $active_tab ); ?>
+						<?php if ( ! empty( $support_tab_heading ) ) : ?>
+							<li>
+								<?php echo wp_kses_post( $support_tab_heading ); ?>
+							</li>
+						<?php endif; ?>
 					</ul>
 				</div>
 
