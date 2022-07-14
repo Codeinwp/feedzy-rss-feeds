@@ -464,6 +464,23 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
+#### [Version 4.0.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.8.3...v4.0.0) (2022-07-14)
+
+#### Features: 
+* Major UI update to make the plugin much easier and cleaner to use.
+* Display image from description element
+* Adds lazy load render images support
+* Adds support for translations
+* Adds support for paraphrased content
+
+#### Fixes: 
+- Fix Deprecated functions error messages with PHP 8.1
+- Fix emoji is imported as a featured image when no image is found in a post
+- Fix edge case when valid feed shows up as invalid when used as part of the Feedzy category
+
+
+
+
 ##### [Version 3.8.3](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.8.2...v3.8.3) (2022-03-16)
 
 #### Fixes
