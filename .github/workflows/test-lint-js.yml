@@ -1,5 +1,7 @@
 name: NPM Tests
-
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
+  cancel-in-progress: true
 on:
   push:
     branches-ignore:

@@ -58,3 +58,127 @@
 	overflow-x: hidden;
 	padding-right: 20px;
 }
+.fz-section-header-panel {
+	&.is-opened {
+		padding: 0;
+	}
+	.header-tab {
+		display: inline-block;
+		width: calc( 100% / 3 );
+		height: auto;
+		padding: 10px 20px;
+		text-align: center;
+		cursor: pointer;
+
+		&.is-selected {
+			border-bottom: 2px solid #0085ba;
+			background: #f3f4f5;
+		}
+
+		&:hover {
+			&:not(:disabled):not([aria-disabled="true"]):not(.is-secondary):not(.is-primary):not(.is-tertiary):not(.is-link) {
+				background: #f3f4f5;
+				box-shadow: none;
+			}
+		}
+
+		span {
+			display: inline-block;
+			font-size: 12px;
+
+			.dashicon {
+				display: block;
+				margin: 0 auto;
+				font-size: 20px;
+			}
+		}
+	}
+}
+.block-editor-block-inspector {
+	.components-base-control {
+		margin: 24px 0;
+	}
+}
+.fz-locked {
+	cursor: not-allowed;
+	>div {
+		&:not(.fz-upsell-notice) {
+			opacity: 0.2;
+			pointer-events: none;
+		}
+	}
+	>p {
+		opacity: 0.2;
+		pointer-events: none;
+	}
+	>.fz-main-label {
+		opacity: 0.2;
+		pointer-events: none;
+	}
+}
+.fz-pro-label {
+	background: #4268CF;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 10px;
+    color: #FFFFFF;
+    border-radius: 2px;
+    font-weight: 700;
+    font-size: 9.152px;
+    line-height: 10px;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    margin: 0px 10px;
+    text-transform: uppercase;
+}
+.fz-upsell-notice {
+	font-style: italic;
+	font-weight: 500;
+	font-size: 12px;
+	line-height: 18px;
+	color: #1E1E1E;
+}
+
+.feedzy-template{
+	.components-radio-image-control__container{
+		display: flex;
+		flex-wrap: wrap;
+		margin: 0 -10px;
+		.components-radio-image-control__option{
+			width: 50%;
+			padding: 0 10px 20px;
+			label{
+				height: 74px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background: #F3F4F5;
+				border: 1px solid #E2E4E7;
+				border-radius: 4px;
+				&:hover{
+					background: #ffffff;
+				}
+			}
+			span{
+				display: block;
+				text-align: center;
+				padding-top: 6px;
+				color: #A8A8A8;
+				font-weight: 500;
+				font-size: 12px;
+				line-height: 18px;
+			}
+		}
+	}
+	&.components-radio-image-control input:checked + label{
+		border-color: #0071AE;
+		box-shadow: 0 0 0 1px #0071AE;
+		img{
+			border: 0;
+			box-shadow: none;
+		}
+	}
+}

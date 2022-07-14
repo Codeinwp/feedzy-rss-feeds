@@ -13,7 +13,7 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Feedzy RSS Feeds Lite
- * Plugin URI:        https://themeisle.com/plugins/feedzy-rss-feeds-lite/
+ * Plugin URI:        https://themeisle.com/plugins/feedzy-rss-feeds/
  * Description:       A small and lightweight RSS aggregator plugin. Fast and very easy to use, it allows you to aggregate multiple RSS feeds into your WordPress site through fully customizable shortcodes & widgets.
  * Version:           3.8.3
  * Author:            Themeisle
@@ -40,7 +40,7 @@ function activate_feedzy_rss_feeds() {
 
 /**
  * The code that runs during plugin deactivation.
- * This action is documented in includes/feedzy-rss-feeds-deactivator.php
+ * This action is  documented in includes/feedzy-rss-feeds-deactivator.php
  *
  * @since    3.0.0
  */
@@ -51,7 +51,7 @@ function deactivate_feedzy_rss_feeds() {
 register_activation_hook( __FILE__, 'activate_feedzy_rss_feeds' );
 register_deactivation_hook( __FILE__, 'deactivate_feedzy_rss_feeds' );
 /**
- * The function that will handle the queue for autoloader.
+ * The function thast will handle the queue for autoloader.
  *
  * @since    3.0.0
  */
@@ -89,6 +89,12 @@ function feedzy_rss_feeds_autoload( $class ) {
 
 				return true;
 			}
+			$filename = plugin_dir_path( __FILE__ ) . 'includes/elementor/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
+			if ( is_readable( $filename ) ) {
+				require_once $filename;
+
+				return true;
+			}
 		}
 	}
 	if ( is_readable( plugin_dir_path( __FILE__ ) . 'includes/admin/feedzy-wp-widget.php' ) ) {
@@ -105,9 +111,9 @@ function feedzy_rss_feeds_autoload( $class ) {
  *
  * Since everything within the plugin is registered via hooks,
  * then kicking off the plugin from this point in the file does
- * not affect the page life cycle.
+ * not affect the page life cycle.s
  *
- * @since    3.0.0
+ * @since    3.0.0.
  */
 function run_feedzy_rss_feeds() {
 	define( 'FEEDZY_BASEFILE', __FILE__ );
@@ -136,7 +142,8 @@ function run_feedzy_rss_feeds() {
 	add_filter( 'themeisle_sdk_products', 'feedzy_register_sdk', 10, 1 );
 	add_filter( 'pirate_parrot_log', 'feedzy_register_parrot', 10, 1 );
 
-	define( 'FEEDZY_SURVEY', feedzy_is_pro() ? 'https://forms.gle/FZXhL3D48KJUhb7q9' : 'https://forms.gle/yQUGSrKEa7XJTGLx8' );
+	define( 'FEEDZY_SURVEY_PRO', 'https://forms.gle/FZXhL3D48KJUhb7q9' );
+	define( 'FEEDZY_SURVEY_FREE', 'https://forms.gle/yQUGSrKEa7XJTGLx8' );
 
 }
 

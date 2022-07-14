@@ -51,23 +51,27 @@ describe('Test Free - gutenberg', function() {
             cy.get('div.edit-post-sidebar div.components-base-control.feedzy-max input.components-input-control__input').invoke('val', '').clear({force:true}).type(gutenberg.max, {force:true}).blur({force:true});
             cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] div.feedzy-rss ul.feedzy-default li').should('have.length', gutenberg.max);
 
-            cy.get('div.edit-post-sidebar div.components-base-control.feedzy-offset input.components-input-control__input').invoke('val', '').clear({force:true}).type(gutenberg.offset, {force:true}).blur({force:true});
+            cy.get('.fz-section-header-panel .header-tab:eq(2)').click({force:true}).then( () => {
+                cy.get('.feedzy-advanced-options .components-panel__body-toggle:eq(0)').click({force:true}).then( () => {
+                    cy.get('div.edit-post-sidebar div.components-base-control.feedzy-offset input.components-input-control__input').invoke('val', '').clear({force:true}).type(gutenberg.offset, {force:true}).blur({force:true});
+                });
+            });
             cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] div.feedzy-rss ul.feedzy-default li').should('have.length', parseInt(gutenberg.max) - parseInt(gutenberg.offset));
 
             // item options
-            cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-item-options button.components-panel__body-toggle').click().then( () => {
-                cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-item-options div.components-base-control.feedzy-meta input.components-text-control__input').type(gutenberg.meta, {force: true});
-                cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-item-options div.components-base-control.feedzy-multiple-meta input.components-text-control__input').type(gutenberg.multiple_meta, {force: true});
-                /* for pro 
-                cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-item-options div.components-base-control.feedzy-include input.components-text-control__input').type(gutenberg.include);
-                cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-item-options div.components-base-control.feedzy-ban input.components-text-control__input').type(gutenberg.ban);
-                */
-                cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] div.feedzy-rss ul.feedzy-default li').should('have.length', gutenberg.results);
-            });
+            cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-advanced-options div.components-base-control.feedzy-meta input.components-text-control__input').type(gutenberg.meta, {force: true});
+            cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-advanced-options div.components-base-control.feedzy-multiple-meta input.components-text-control__input').type(gutenberg.multiple_meta, {force: true});
+            /* for pro 
+            cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-advanced-options div.components-base-control.feedzy-include input.components-text-control__input').type(gutenberg.include);
+            cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-advanced-options div.components-base-control.feedzy-ban input.components-text-control__input').type(gutenberg.ban);
+            */
+            cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] div.feedzy-rss ul.feedzy-default li').should('have.length', gutenberg.results);
 
             // image options
-            cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-image-options button.components-button.components-panel__body-toggle').click().then( () => {
-                cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-image-options .feedzy-thumb .components-select-control__input').select(gutenberg.thumb);
+            cy.get('.fz-section-header-panel .header-tab:eq(1)').click({force:true}).then( () => {
+                cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-image-options button.components-button.components-panel__body-toggle').click().then( () => {
+                    cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-image-options .feedzy-thumb .components-select-control__input').select(gutenberg.thumb);
+                });
             });
 
             cy.get('button.editor-post-publish-panel__toggle').click().then( () => {
@@ -105,20 +109,24 @@ describe('Test Free - gutenberg', function() {
         cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"] div.feedzy-rss ul.feedzy-default li').should('have.length', gutenberg.results.toString());
 
         cy.get('div.edit-post-sidebar div.components-base-control.feedzy-max input.components-input-control__input').should('have.value', gutenberg.max.toString());
-        cy.get('div.edit-post-sidebar div.components-base-control.feedzy-offset input.components-input-control__input').should('have.value', gutenberg.offset.toString());
-        // item options
-        cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-item-options button.components-panel__body-toggle').click().then( () => {
-            cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-item-options div.components-base-control.feedzy-meta input.components-text-control__input').should('have.value', gutenberg.meta);
-            cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-item-options div.components-base-control.feedzy-multiple-meta input.components-text-control__input').should('have.value', gutenberg.multiple_meta);
-            /* for pro 
-            cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-item-options div.components-base-control.feedzy-include input.components-text-control__input').should('have.value', gutenberg.include);
-            cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-item-options div.components-base-control.feedzy-ban input.components-text-control__input').should('have.value', gutenberg.ban);
-            */
+        cy.get( '.fz-section-header-panel .header-tab:eq(2)').click({force:true}).then( () => {
+            cy.get( '.feedzy-advanced-options .components-panel__body-toggle:eq(0)').click({force:true}).then( () => {
+                cy.get('div.edit-post-sidebar div.components-base-control.feedzy-offset input.components-input-control__input').should('have.value', gutenberg.offset.toString());
+                // item options
+                cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-advanced-options div.components-base-control.feedzy-meta input.components-text-control__input').should('have.value', gutenberg.meta);
+                cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-advanced-options div.components-base-control.feedzy-multiple-meta input.components-text-control__input').should('have.value', gutenberg.multiple_meta);
+                /* for pro 
+                cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-advanced-options div.components-base-control.feedzy-include input.components-text-control__input').should('have.value', gutenberg.include);
+                cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-advanced-options div.components-base-control.feedzy-ban input.components-text-control__input').should('have.value', gutenberg.ban);
+                */
+            });
         });
 
         // image options
-        cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-image-options button.components-panel__body-toggle').click().then( () => {
-            cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-image-options .feedzy-thumb .components-select-control__input').invoke('prop', 'selectedIndex').should('equal', 1);
+        cy.get('.fz-section-header-panel .header-tab:eq(1)').click({force:true}).then( () => {
+            cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-image-options button.components-panel__body-toggle').click().then( () => {
+                cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-image-options .feedzy-thumb .components-select-control__input').invoke('prop', 'selectedIndex').should('equal', 1);
+            });
         });
 
         // we want to do this so that the next test succeeds - otherwise it will throw up an alert box and stop the page
@@ -156,7 +164,11 @@ describe('Test Free - gutenberg', function() {
         cy.get('div[data-type="feedzy-rss-feeds/feedzy-block"]').focus();
 
         // switch on lazy
-        cy.get('div.edit-post-sidebar div.components-base-control.feedzy-lazy input').click();
+        cy.get( '.fz-section-header-panel .header-tab:eq(2)').click({force:true}).then( () => {
+            cy.get( '.feedzy-advanced-options .components-panel__body-toggle:eq(0)').click({force:true}).then( () => {
+                cy.get('div.edit-post-sidebar div.components-base-control.feedzy-lazy input').click();
+            });
+        });
 
         // we want to do this so that the next test succeeds - otherwise it will throw up an alert box and stop the page
         cy.get('button.editor-post-publish-button').click();

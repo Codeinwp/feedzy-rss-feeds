@@ -19,7 +19,7 @@ describe('Test Free - Import Feed', function() {
         cy.visit('/wp-admin/admin.php?page=feedzy-settings');
 
         const settings = Cypress.env('settings');
-        cy.get('.nav-tab').should('have.length', settings.tabs);
+        cy.get('.fz-tabs-menu li a').should('have.length', settings.tabs);
     })
 
     it('Create/Verify/Run import', function() {
@@ -27,8 +27,9 @@ describe('Test Free - Import Feed', function() {
         cy.visit('/wp-admin/post-new.php?post_type=feedzy_imports');
 
         // fill up the form
-        cy.get('#title').clear().type( feed.invalidurl );
-        cy.get('[name="feedzy_meta_data[source]"]').clear().type( feed.url );
+        cy.get('#post_title').clear().type( feed.invalidurl );
+        cy.get('#feedzy-import-source').clear().type( feed.url );
+        cy.get('#feedzy-import-source').next('.fz-input-group-append').find('.add-outside-tags').click();
 
         // locked for pro?
         cy.get('.only-pro').should('have.length', feed.locked);
@@ -41,17 +42,21 @@ describe('Test Free - Import Feed', function() {
         cy.get('[name="feedzy_meta_data[import_link_author_public]"]').should('not.be.visible');
         */
 
+        cy.get( '.feedzy-accordion-item__title:eq(3) button' ).click();
         cy.get('#feedzy_item_limit').invoke('val', '').clear().type(feed.items).blur();
+
+        cy.get( '.feedzy-accordion-item__title:eq(2) button' ).click()
+        cy.get( '[data-id="fz-general"]' ).click();
 
         cy.get('#feedzy_post_terms').invoke('show').then( () => {
             cy.get('#feedzy_post_terms').select(feed.taxonomy, {force:true});
         });
 
-        cy.get('[name="feedzy_meta_data[import_post_title]"]').scrollIntoView().clear().type( PREFIX + feed.title, {force:true} );
-        cy.get('[name="feedzy_meta_data[import_post_content]"]').scrollIntoView().clear().type( PREFIX + feed.fullcontent.content + feed.content, {force:true} );
+        cy.get('[name="feedzy_meta_data[import_post_title]"]').scrollIntoView().clear({force:true}).type( PREFIX + feed.title, {force:true} );
+        cy.get('[name="feedzy_meta_data[import_post_content]"]').scrollIntoView().clear({force:true}).type( PREFIX + feed.fullcontent.content + feed.content, {force:true} );
 
         // image from URL
-        cy.get('[name="feedzy_meta_data[import_post_featured_img]"]').scrollIntoView().clear().type( feed.image.url, {force:true} );
+        cy.get('[name="feedzy_meta_data[import_post_featured_img]"]').scrollIntoView().clear({force:true}).type( feed.image.url, {force:true} );
 
         // check disallowd magic tags
         const tags = feed.tags.disallowed;
@@ -89,8 +94,9 @@ describe('Test Free - Import Feed', function() {
         cy.get('tr:nth-of-type(1) .row-title').click();
 
         // fill up the form
-        cy.get('#title').clear().type( feed.url );
-        cy.get('[name="feedzy_meta_data[source]"]').clear().type( feed.url );
+        cy.get('#post_title').clear().type( feed.url );
+        cy.get('#feedzy-import-source').clear().type( feed.url );
+        cy.get('#feedzy-import-source').next('.fz-input-group-append').find('.add-outside-tags').click();
 
         cy.get('button[type="submit"][name="save"]').scrollIntoView().click({force:true});
 
@@ -101,9 +107,14 @@ describe('Test Free - Import Feed', function() {
 
         // 2. VERIFY
         cy.get('tr:nth-of-type(1) .row-title').click();
-        cy.get('#title').should('have.value', feed.url);
-        cy.get('[name="feedzy_meta_data[source]"]').should('have.value', feed.url);
+        cy.get('#post_title').should('have.value', feed.url);
+        cy.get('#feedzy-source-tags').should('have.value', feed.url);
+
+        cy.get( '.feedzy-accordion-item__title:eq(3) button' ).click();
         cy.get('#feedzy_item_limit').should('have.value', feed.items);
+
+        cy.get( '.feedzy-accordion-item__title:eq(2) button' ).click()
+        cy.get( '[data-id="fz-general"]' ).click();
 
         cy.get('#feedzy_post_terms').invoke('show').then( () => {
             cy.get('#feedzy_post_terms option:selected').should('have.length', feed.taxonomy.length);

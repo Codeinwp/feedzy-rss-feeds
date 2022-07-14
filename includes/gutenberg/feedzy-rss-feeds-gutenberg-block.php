@@ -190,6 +190,10 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 					'to_datetime'   => array(
 						'type' => 'string',
 					),
+					'itemTitle' => array(
+						'type' => 'boolean',
+						'default' => true,
+					),
 				),
 			)
 		);
@@ -223,6 +227,9 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		}
 		if ( ! empty( $attr['sort'] ) && 'default' === $attr['sort'] ) {
 			unset( $attr['sort'] );
+		}
+		if ( empty( $attr['itemTitle'] ) ) {
+			$attr['title'] = 0;
 		}
 		$params = wp_parse_args( $attr );
 		return feedzy_rss( $params );
@@ -259,6 +266,12 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 	public function feedzy_rest_route( $data ) {
 
 		$feed = $data;
+		if ( isset( $data['feeds'] ) ) {
+			$feed_category = $this->feedzy_sanitize_categories( $data['feeds'] );
+			if ( $feed_category ) {
+				$data['url'] = $feed_category;
+			}
+		}
 		if ( ! empty( $data['url'] ) ) {
 			$feed = $data['url'];
 		} elseif ( ! empty( $data['category'] ) ) {
