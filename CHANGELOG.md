@@ -1,3 +1,9 @@
+##### [Version 4.0.1](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.0.0...v4.0.1) (2022-07-19)
+
+#### Fixes: 
+* Fix typo in map content description
+* Fix compatibility with WordAI and Spinnerchief connection
+
 #### [Version 4.0.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.8.3...v4.0.0) (2022-07-14)
 
 #### Features: 
