@@ -247,7 +247,6 @@ global $post;
 				<div class="fz-content">
 					<p>
 						<?php
-							esc_html_e( 'Map content', 'feedzy-rss-feeds' );
 							esc_html_e( 'Using magic tags, specify what part(s) of the source should form part of the imported post.', 'feedzy-rss-feeds' );
 						?>
 						<?php if ( false === apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) { ?>
