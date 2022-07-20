@@ -1051,7 +1051,7 @@ class Feedzy_Rss_Feeds_Import {
 		$msg = $count > 0 ? __( 'Successfully run!', 'feedzy-rss-feeds' ) : __( 'Nothing imported!', 'feedzy-rss-feeds' );
 		$msg .= ' (' . __( 'Refresh this page for the updated status', 'feedzy-rss-feeds' ) . ')';
 
-		wp_send_json_success( array( 'msg' => $msg ) );
+		wp_send_json_success( array( 'msg' => $msg, 'import_success' => $count > 0 ) );
 	}
 
 	/**

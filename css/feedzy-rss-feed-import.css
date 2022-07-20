@@ -130,6 +130,11 @@ td.feedzy-has-popup {
 	color: #ca4a1f !important;
 	background-color: inherit !important;
 }
+
+.feedzy_run_now_msg.import_success {
+	color: #246B3B !important;
+}
+
 .feedzy-onboarding-modal {
 	max-width: 350px;
 }
