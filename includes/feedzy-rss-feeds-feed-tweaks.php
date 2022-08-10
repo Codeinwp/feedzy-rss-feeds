@@ -242,6 +242,7 @@ add_filter(
 				'class'       => array(),
 				'selected'    => array(),
 				'data-feedzy' => array(),
+				'disabled' => array(),
 			),
 			'option' => array(
 				'type'     => array(),
@@ -260,6 +261,7 @@ add_filter(
 				'checked'     => array(),
 				'placeholder' => array(),
 				'data-feedzy' => array(),
+				'disabled' => array(),
 			),
 			'textarea'  => array(
 				'id'          => array(),
@@ -321,6 +323,9 @@ add_filter(
 				'frameborder'     => array(),
 				'allowfullscreen' => array(),
 				'data-*'          => true,
+			),
+			'small' => array(
+				'class' => array(),
 			),
 		);
 	}
