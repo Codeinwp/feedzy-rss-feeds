@@ -1,6 +1,6 @@
 {
   "name": "feedzy-rss-feeds",
-  "version": "3.7.2",
+  "version": "3.8.3",
   "description": "Feedzy RSS Feeds - lite version",
   "repository": {
     "type": "git",
@@ -57,5 +57,10 @@
     "replace-in-file": "^6.2.0",
     "semantic-release": "^17.4.2",
     "semantic-release-slack-bot": "^2.1.0"
+  },
+  "dependencies": {
+    "classnames": "^2.3.1",
+    "lodash": "^4.17.21",
+    "react-joyride": "^2.4.0"
   }
 }

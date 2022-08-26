@@ -33,6 +33,7 @@ const extractConfig = {
 module.exports = {
     entry: {
         './includes/gutenberg/build/block': './includes/gutenberg/src/block.js',
+        './js/Onboarding/import-onboarding.min': './js/Onboarding/import-onboarding.js',
     },
     output: {
         path: path.resolve(__dirname),

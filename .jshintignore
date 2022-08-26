@@ -1,3 +1,4 @@
 webpack.config.js
 includes/gutenberg/dist/block.js
 includes/view/js/chosen.js
+includes/view/js/tagify.min.js

@@ -3,7 +3,7 @@ Contributors: themeisle,codeinwp,hardeepasrani,rozroz
 Tags: rss aggregator, news aggregator, autoblogging, feed to post, rss import
 Requires at least: 3.7
 Requires PHP: 5.6
-Tested up to: 5.8
+Tested up to: 5.9
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -52,6 +52,8 @@ If you love FEEDZY RSS Aggregator, why not bring your site to the next level wit
 * **[Keyword filter](https://docs.themeisle.com/article/942-in-feedzy-how-do-i#specific-keywords)**: you can choose to import feed to post and display content if they include or exclude certain keywords.
 * **Map the imported feed elements to your post elements**: totally control and customize how your feed to post, such as using the feed’s image or your image as the featured image, importing only the feed’s content or both the content and image into the post content, creating post drafts first to review or publishing right away, and so many more.
 * **[Full text RSS feeds import (with image)](https://docs.themeisle.com/article/742-how-to-import-posts-from-feeds-in-feedzy)** (with image): by extracting the entire HTML from each feed item, you can import full text content to post, not just the feed excerpt.
+* **Paraphrasing content before import**: Rewrite your content before import with the built-in feature.
+* **Automatically translate the content on import**: Choose to translate the feed into various languages before import.
 * **[Multiple feed templates](https://demo.themeisle.com/feedzy-rss-feeds/)**: choose the best template for each feed, such as standard grid layout, blog layout, online shop layout, or audio playback (soundcloud) playout.
 * **[WordAI and SpinnerChief integration](https://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy)** to avoid duplicated content.
 * **[Parse and display pricings](https://docs.themeisle.com/article/923-how-price-is-displayed-from-the-feed)** for online shop and product feeds.
@@ -461,6 +463,85 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
  == Changelog ==
+
+##### [Version 3.8.3](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.8.2...v3.8.3) (2022-03-16)
+
+#### Fixes
+- A warning is printed when filter for Item Full content is used and no items found for the import
+- Fix broken style on twentytwentytwo theme
+
+
+
+
+##### [Version 3.8.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.8.1...v3.8.2) (2022-01-28)
+
+- Add a new filter to add the custom refresh time
+- Remove elementor hidden WP widget feature so feedzy widget can be used
+- Fix keyword filter issue with date filter
+- Fix cURL timeout error
+- Add new import job setting field and manipulate custom tag data
+- Fix trimming title issue for Elementor & Gutenberg
+
+
+
+
+##### [Version 3.8.1](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.8.0...v3.8.1) (2021-12-20)
+
+- Show the import job title in post row action
+- Add default thumbnail image support in the external image
+- [#item_url] magic tag allows opening in a new tab
+- Style for the input fields of setting form
+
+
+
+
+#### [Version 3.8.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.7.5...v3.8.0) (2021-10-19)
+
+#### Features: 
+ - Adds compatibility with pro features for [Elementor Template Builder](https://docs.themeisle.com/article/1396-elementor-compatibility-in-feedzy) and Dynamic Tags support.
+ - Adds compatibility for pro [Enhanced keyword](https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#filters) filtering support.
+
+#### Fixes
+- Fix category dropdown in Gutenberg Block
+- Magic tags that are unavailable with the free version listed in one line.
+- Fix typo in the import setup
+
+
+
+
+##### [Version 3.7.5](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.7.4...v3.7.5) (2021-09-06)
+
+#### Fixes
+- Fix broken image issues with certain feeds
+- Adds new line character support for import content
+- Fix import on custom values when full content is used
+
+
+
+
+##### [Version 3.7.4](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.7.3...v3.7.4) (2021-09-01)
+
+* Fix regression issue with Elementor widget not showing with lower WP versions.
+* Fix regression with cron import not working with lower WP versions.
+
+
+
+
+##### [Version 3.7.3](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.7.2...v3.7.3) (2021-08-27)
+
+#### Features
+* Support default Gutenberg editor instead of importing content in the Classic block 
+* Adds support for Feedzy widget in the widget block editor 
+* Adds default thumbnail image support when no image is available
+
+#### Fixes
+* Title Character Limit and the Description Character Limit parameter in the Feedzy Block
+* Displaying Default Thumbnail Image does not show in Block or Shortcode approach
+* Custom tag is trimmed on save of the import if used inside iframe 
+* Keyword filters break the import with PHP 8.0
+
+
+
 
 ##### [Version 3.7.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.7.1...v3.7.2) (2021-08-04)
 

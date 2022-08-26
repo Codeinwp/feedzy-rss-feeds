@@ -21,7 +21,7 @@ $html_parts = Feedzy_Rss_Feeds_Ui_Lang::get_form_elements();
 	<meta http-equiv="cache-control" content="no-cache"/>
 	<meta http-equiv="expires" content="0"/>
 	<meta http-equiv="pragma" content="no-cache"/>
-	<?php echo sprintf( '<link rel="stylesheet" href="%s" type="text/css" media="all"/>', esc_url( FEEDZY_ABSURL . 'css/form.css?h=' . date( 'dmYHis' ) ) ); //phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet ?>
+	<?php echo sprintf( '<link rel="stylesheet" href="%s" type="text/css" media="all"/>', esc_url( FEEDZY_ABSURL . 'css/form.css?h=' . gmdate( 'dmYHis' ) ) ); //phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet ?>
 </head>
 <body>
 <div class="feedzy-popup-form container">

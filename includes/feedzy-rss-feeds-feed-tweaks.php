@@ -148,8 +148,16 @@ function feedzy_is_new() {
  *
  * @return bool If the users is pro or not
  */
-function feedzy_is_pro() {
-	return defined( 'FEEDZY_PRO_ABSPATH' );
+function feedzy_is_pro( $check_license = true ) {
+
+	static $status = null;
+	if ( $status === null ) {
+		$status = apply_filters( 'product_feedzy_license_status', false ) === 'valid';
+	}
+	if ( ! $check_license ) {
+		$status = true;
+	}
+	return defined( 'FEEDZY_PRO_ABSPATH' ) && $status === true;
 }
 
 
@@ -295,6 +303,7 @@ add_filter(
 			'label'  => array(
 				'id'  => array(),
 				'for' => array(),
+				'class' => array(),
 			),
 			'a'      => array(
 				'href'  => array(),

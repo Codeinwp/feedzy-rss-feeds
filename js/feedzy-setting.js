@@ -33,7 +33,7 @@ jQuery( function( $ ) {
         $( '<div class="fz-form-group feedzy-media-preview"><img src="' + attachmentUrl + '"></div>' ).insertBefore( button.parent() );
       }
       button.parent().find( '.feedzy-remove-media' ).addClass( 'is-show' );
-      button.parent().find( 'input:hidden' ).val( attachment.id );
+      button.parent().find( 'input:hidden' ).val( attachment.id ).trigger( 'change' );
     } ).open();
   });
 
@@ -43,6 +43,21 @@ jQuery( function( $ ) {
     var button = $( this );
     button.parent().prev( '.feedzy-media-preview' ).remove();
     button.removeClass( 'is-show' );
-    button.parent().find( 'input:hidden' ).val( '' );
+    button.parent().find( 'input:hidden' ).val( '' ).trigger( 'change' );
+  });
+
+  // Unsaved form exit confirmation.
+  var unsaved = false;
+  $( ':input' ).change(function () {         
+    unsaved = true;
+  });
+  $( '#feedzy-settings-submit, #check_wordai_api, #check_spinnerchief_api' ).on( 'click', function() {
+    unsaved = false;
+  } );
+  window.addEventListener( 'beforeunload', function( e ) {
+    if ( unsaved ) {
+      e.preventDefault();
+      e.returnValue = '';
+    }
   });
 });

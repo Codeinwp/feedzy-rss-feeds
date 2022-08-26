@@ -159,16 +159,18 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			);
 		}
 
-		if ( in_array( $screen->base, array( 'post' ), true ) ) {
-			wp_enqueue_style( $this->plugin_name . '-admin', FEEDZY_ABSURL . 'css/admin.css', array(), $this->version, 'all' );
-		}
-
 		$upsell_screens = array( 'feedzy-rss_page_feedzy-settings', 'feedzy-rss_page_feedzy-admin-menu-pro-upsell' );
+		if ( ( ! defined( 'TI_CYPRESS_TESTING' ) ) && ( 'feedzy_imports' === $screen->post_type && get_option( 'feedzy_import_tour' ) ) ) {
+			wp_enqueue_script( $this->plugin_name . '_react', 'https://unpkg.com/react@18/umd/react.production.min.js', array( 'wp-editor', 'wp-api' ), $this->version, true );
+			wp_enqueue_script( $this->plugin_name . '_react_dom', 'https://unpkg.com/react-dom@18/umd/react-dom.production.min.js', array(), $this->version, true );
+			wp_enqueue_script( $this->plugin_name . '_on_boarding', FEEDZY_ABSURL . 'js/Onboarding/import-onboarding.min.js', array(), $this->version, true );
+			wp_enqueue_style( 'wp-block-editor' );
+		}
 
 		if ( ! in_array( $screen->base, $upsell_screens, true ) && strpos( $screen->id, 'feedzy' ) === false ) {
 			return;
 		}
-		wp_enqueue_style( $this->plugin_name . '-settings', FEEDZY_ABSURL . 'css/settings.css', [], $this->version );
+		wp_enqueue_style( $this->plugin_name . '-settings', FEEDZY_ABSURL . 'css/settings.css', array(), $this->version );
 		wp_enqueue_style( $this->plugin_name . '-metabox', FEEDZY_ABSURL . 'css/metabox-settings.css', array( $this->plugin_name . '-settings' ), $this->version );
 	}
 
@@ -254,25 +256,35 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			'normal',
 			'high'
 		);
-		add_meta_box(
-			'feedzy_category_feeds_rn',
-			__( 'Increase your social media presence', 'feedzy-rss-feeds' ),
-			array(
-				$this,
-				'render_upsell_rn',
-			),
-			'feedzy_categories',
-			'side',
-			'low'
-		);
+		if ( ! feedzy_is_pro() ) {
+			add_meta_box(
+				'feedzy_category_feeds_rn',
+				__( 'Extend Feedzy', 'feedzy-rss-feeds' ),
+				array(
+					$this,
+					'render_upsell_rn',
+				),
+				'feedzy_categories',
+				'side',
+				'low'
+			);
+		}
 	}
 
 	/**
 	 * Render RN upsell metabox.
 	 */
 	public function render_upsell_rn() {
-		echo '<p>Learn how you can connect with people by sharing content from RSS feeds on your social media accounts. </p>';
-		echo '<a class="button button-primary  " href="https://revive.social/plugins/revive-network/" target="_blank">View more details</a>';
+		echo '<strong>Get access to more features.</strong>';
+		echo '<ul>
+			<li>- Remove branding label</li>
+			<li>- Auto add referral parameters to links</li>
+			<li>- Full Text Import</li>
+			<li>- Parahrase content</li>
+			<li>- Translate content</li>
+			<li>- Elementor Templates support</li>
+		</ul>';
+		echo '<a class="button button-primary  " href="' . esc_url( FEEDZY_UPSELL_LINK ) . '" target="_blank">View more details</a>';
 
 	}
 
@@ -295,6 +307,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			<strong>' . sprintf( __( 'Please be aware that multiple feeds, when mashed together, may sometimes not work as expected as explained %1$shere%2$s.', 'feedzy-rss-feeds' ), '<a href="http://simplepie.org/wiki/faq/typical_multifeed_gotchas" target="_blank">', '</a>' ) . '</strong><br/><br/>'
 			. $invalid
 			. '<textarea name="feedzy_category_feed" rows="15" class="widefat" placeholder="' . __( 'Place your URL\'s here followed by a comma.', 'feedzy-rss-feeds' ) . '" >' . $feed . '</textarea>
+			<p><a href="https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation#categories" target="_blank">' . __( 'Learn how to organize feeds in Categories', 'feedzy-rss-feeds' ) . '</a></p>
         ';
 		echo wp_kses( $output, apply_filters( 'feedzy_wp_kses_allowed_html', array() ) );
 	}
@@ -763,7 +776,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @access  public
 	 */
-	public function get_source_validity_error( $message = '', $post, $class = '' ) {
+	public function get_source_validity_error( $message = '', $post = '', $class = '' ) {
 		$invalid = $text = null;
 		switch ( $post->post_type ) {
 			case 'feedzy_categories':
