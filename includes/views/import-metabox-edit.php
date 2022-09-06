@@ -58,7 +58,7 @@ global $post;
 							</div>
 							<div class="fz-input-group-right">
 									<div class="dropdown">
-										<button type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+										<button type="button" class="btn btn-outline-primary dropdown-toggle" aria-haspopup="true"
 												aria-expanded="false">
 										<?php esc_html_e( 'Use Feed Category', 'feedzy-rss-feeds' ); ?> <span
 													class="dashicons dashicons-arrow-down-alt2"></span>
@@ -367,7 +367,7 @@ global $post;
 											</div>
 											<div class="fz-input-group-right">
 													<div class="dropdown">
-														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" data-toggle="dropdown" 	aria-haspopup="true" aria-expanded="false">
+														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" 	aria-haspopup="true" aria-expanded="false">
 															<?php esc_html_e( 'Insert Tag', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-plus-alt2"></span>
 														</button>
 														<div class="dropdown-menu dropdown-menu-right">
@@ -402,7 +402,7 @@ global $post;
 											</div>
 											<div class="fz-input-group-right">
 													<div class="dropdown">
-														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" aria-haspopup="true"
 															aria-expanded="false">
 															<?php esc_html_e( 'Insert Tag', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-plus-alt2"></span>
 														</button>
@@ -454,7 +454,7 @@ global $post;
 											</div>
 											<div class="fz-input-group-right">
 													<div class="dropdown">
-														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" aria-haspopup="true"
 															aria-expanded="false">
 															<?php esc_html_e( 'Insert Tag', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-plus-alt2"></span>
 														</button>
@@ -497,7 +497,7 @@ global $post;
 											</div>
 											<div class="fz-input-group-right">
 													<div class="dropdown">
-														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" aria-haspopup="true"
 															aria-expanded="false">
 															<?php esc_html_e( 'Insert Tag', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-plus-alt2"></span>
 														</button>
@@ -591,7 +591,7 @@ global $post;
 											</div>
 											<div class="fz-input-group-right">
 													<div class="dropdown">
-														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" aria-haspopup="true"
 															aria-expanded="false">
 															<?php esc_html_e( 'Insert Tag', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-plus-alt2"></span>
 														</button>
