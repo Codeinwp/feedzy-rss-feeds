@@ -4,26 +4,25 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4bbfd8f46749fb9e0565d3cf79063178",
+    "content-hash": "4418430d79b972be928369b75aa4c12d",
     "packages": [
         {
             "name": "codeinwp/themeisle-sdk",
-            "version": "dev-master",
+            "version": "3.2.29",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeinwp/themeisle-sdk.git",
-                "reference": "618ff8917151973f639d930f190c5d6d6b87329d"
+                "reference": "9456fb0944ec69c3975de04aaf56233ddc2f828c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeinwp/themeisle-sdk/zipball/618ff8917151973f639d930f190c5d6d6b87329d",
-                "reference": "618ff8917151973f639d930f190c5d6d6b87329d",
+                "url": "https://api.github.com/repos/Codeinwp/themeisle-sdk/zipball/9456fb0944ec69c3975de04aaf56233ddc2f828c",
+                "reference": "9456fb0944ec69c3975de04aaf56233ddc2f828c",
                 "shasum": ""
             },
             "require-dev": {
                 "codeinwp/phpcs-ruleset": "dev-main"
             },
-            "default-branch": true,
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -43,9 +42,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Codeinwp/themeisle-sdk/issues",
-                "source": "https://github.com/Codeinwp/themeisle-sdk/tree/master"
+                "source": "https://github.com/Codeinwp/themeisle-sdk/tree/v3.2.29"
             },
-            "time": "2022-06-30T07:58:53+00:00"
+            "time": "2022-09-08T15:34:21+00:00"
         }
     ],
     "packages-dev": [
@@ -414,5 +413,5 @@
     "platform-overrides": {
         "php": "5.6"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.1.0"
 }
