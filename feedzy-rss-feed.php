@@ -120,6 +120,7 @@ function run_feedzy_rss_feeds() {
 	define( 'FEEDZY_ABSURL', plugins_url( '/', __FILE__ ) );
 	define( 'FEEDZY_BASENAME', plugin_basename( __FILE__ ) );
 	define( 'FEEDZY_ABSPATH', dirname( __FILE__ ) );
+	define( 'FEEDZY_DIRNAME', basename( FEEDZY_ABSPATH ) );
 	define( 'FEEDZY_UPSELL_LINK', 'https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/' );
 	define( 'FEEDZY_NAME', 'Feedzy RSS Feeds' );
 	define( 'FEEDZY_USER_AGENT', 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36' );
@@ -132,16 +133,24 @@ function run_feedzy_rss_feeds() {
 	// also used in gutenberg.
 	define( 'FEEDZY_DISABLE_CACHE_FOR_TESTING', false );
 
-	$feedzy = Feedzy_Rss_Feeds::instance();
-	$feedzy->run();
 	$vendor_file = FEEDZY_ABSPATH . '/vendor/autoload.php';
 	if ( is_readable( $vendor_file ) ) {
 		require_once $vendor_file;
 	}
-
+	$feedzy = Feedzy_Rss_Feeds::instance();
+	$feedzy->run();
 	add_filter( 'themeisle_sdk_products', 'feedzy_register_sdk', 10, 1 );
 	add_filter( 'pirate_parrot_log', 'feedzy_register_parrot', 10, 1 );
-
+	add_filter(
+		'themeisle_sdk_compatibilities/' . FEEDZY_DIRNAME, function ( $compatibilities ) {
+			$compatibilities['FeedzyPRO'] = array(
+				'basefile'  => defined( 'FEEDZY_PRO_BASEFILE' ) ? FEEDZY_PRO_BASEFILE : '',
+				'required'  => '1.7',
+				'tested_up' => '2.1',
+			);
+			return $compatibilities;
+		}
+	);
 	define( 'FEEDZY_SURVEY_PRO', 'https://forms.gle/FZXhL3D48KJUhb7q9' );
 	define( 'FEEDZY_SURVEY_FREE', 'https://forms.gle/yQUGSrKEa7XJTGLx8' );
 
