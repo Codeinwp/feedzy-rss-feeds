@@ -3,7 +3,7 @@ Contributors: themeisle,codeinwp,hardeepasrani,rozroz
 Tags: rss aggregator, news aggregator, autoblogging, feed to post, rss import
 Requires at least: 3.7
 Requires PHP: 5.6
-Tested up to: 5.9
+Tested up to: 6.0
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -463,6 +463,32 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
  == Changelog ==
+
+##### [Version 4.0.1](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.0.0...v4.0.1) (2022-07-19)
+
+#### Fixes: 
+* Fix typo in map content description
+* Fix compatibility with WordAI and Spinnerchief connection
+
+
+
+
+#### [Version 4.0.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.8.3...v4.0.0) (2022-07-14)
+
+#### Features: 
+* Major UI update to make the plugin much easier and cleaner to use.
+* Display image from description element
+* Adds lazy load render images support
+* Adds support for translations
+* Adds support for paraphrased content
+
+#### Fixes: 
+- Fix Deprecated functions error messages with PHP 8.1
+- Fix emoji is imported as a featured image when no image is found in a post
+- Fix edge case when valid feed shows up as invalid when used as part of the Feedzy category
+
+
+
 
 ##### [Version 3.8.3](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v3.8.2...v3.8.3) (2022-03-16)
 
