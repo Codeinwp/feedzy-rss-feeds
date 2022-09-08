@@ -93,7 +93,7 @@
 				<div class="feedzy-accordion-item__content">
 					<h3 class="h3"><?php esc_html_e( 'Need help with Feedzy?', 'feedzy-rss-feeds' ); ?></h3>
 					<?php if ( ! defined( 'FEEDZY_PRO_VERSION' ) ) : ?>
-					<p><?php echo wp_kses_post( wp_sprintf( __( 'If you didn\'t found an answer in our Knowledge Base, you can always ask for help from our community based forum or <a href="%s" target="_blank">get dedicated support with our premium plans.</a>', 'feedzy-rss-feeds' ), esc_url( FEEDZY_UPSELL_LINK ) ) ); ?></p>
+					<p><?php echo wp_kses_post( wp_sprintf( __( 'If you didn\'t found an answer in our Knowledge Base, you can always ask for help from our community based forum or <a href="%s" target="_blank">get dedicated support with our premium plans.</a>', 'feedzy-rss-feeds' ), tsdk_utmify( FEEDZY_UPSELL_LINK, 'dedicatedsupport' ) ) ); ?></p>
 					<a href="https://wordpress.org/support/plugin/feedzy-rss-feeds/" class="btn btn-outline-primary" target="_blank"><?php esc_html_e( 'Community Forum', 'feedzy-rss-feeds' ); ?></a>
 					<?php else : ?>
 						<p><?php echo wp_kses_post( wp_sprintf( __( 'If you didn\'t found an answer in our Knowledge Base, our dedicated support team standby to help you.', 'feedzy-rss-feeds' ) ) ); ?></p>

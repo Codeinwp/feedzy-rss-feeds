@@ -125,7 +125,7 @@ $is_pro = feedzy_is_pro();
 	</ul>
 	<?php if ( ! $is_pro ) : ?>
 		<div class="cta">
-			<a href="<?php echo esc_url( FEEDZY_UPSELL_LINK ); ?> " class="btn btn-ghost" target="blank">View all Feedzy
+			<a href="<?php echo tsdk_utmify( FEEDZY_UPSELL_LINK, 'viewall', 'tutorial' ); ?> " class="btn btn-ghost" target="blank">View all Feedzy
 				features</a>
 		</div>
 	<?php endif; ?>
