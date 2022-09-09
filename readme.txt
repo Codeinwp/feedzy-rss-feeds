@@ -464,6 +464,18 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
+##### [Version 4.0.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.0.1...v4.0.2) (2022-09-09)
+
+#### Fixes
+- Fix compatibility issues with Jnews-essential
+- Fix duplicate upsell card
+- Fix Feedzy icon not visible in the classic editor
+- Change red color after import 
+- Update dependencies
+
+
+
+
 ##### [Version 4.0.1](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.0.0...v4.0.1) (2022-07-19)
 
 #### Fixes: 
