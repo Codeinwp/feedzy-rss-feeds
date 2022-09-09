@@ -102,7 +102,7 @@ class Feedzy_Rss_Feeds_Import {
 				<div class="only-pro-container">
 					<div class="only-pro-inner upgrade-alert">
 						' . __( 'This feature is available in the Pro version.  Unlock more features, by', 'feedzy-rss-feeds' ) . '
-						<a target="_blank" href="' . FEEDZY_UPSELL_LINK . '" title="' . __( 'Buy Now', 'feedzy-rss-feeds' ) . '">' . __( 'upgrading to Feedzy Pro', 'feedzy-rss-feeds' ) . '</a>
+						<a target="_blank" href="' . tsdk_utmify( FEEDZY_UPSELL_LINK, 'upsell-content', 'import' ) . '" title="' . __( 'Buy Now', 'feedzy-rss-feeds' ) . '">' . __( 'upgrading to Feedzy Pro', 'feedzy-rss-feeds' ) . '</a>
 					</div>
 				</div>
 			</div>';
@@ -1051,7 +1051,7 @@ class Feedzy_Rss_Feeds_Import {
 		$msg = $count > 0 ? __( 'Successfully run!', 'feedzy-rss-feeds' ) : __( 'Nothing imported!', 'feedzy-rss-feeds' );
 		$msg .= ' (' . __( 'Refresh this page for the updated status', 'feedzy-rss-feeds' ) . ')';
 
-		wp_send_json_success( array( 'msg' => $msg ) );
+		wp_send_json_success( array( 'msg' => $msg, 'import_success' => $count > 0 ) );
 	}
 
 	/**
@@ -1367,7 +1367,7 @@ class Feedzy_Rss_Feeds_Import {
 				$import_title
 			);
 
-			if ( $this->feedzy_is_business() ) {
+			if ( $this->feedzy_is_business() || $this->feedzy_is_personal() ) {
 				$post_title = apply_filters( 'feedzy_parse_custom_tags', $post_title, ! empty( $xml_results ) ? $xml_results['feed'] : $results['feed'], $item['item_index'] );
 			}
 
@@ -1458,7 +1458,7 @@ class Feedzy_Rss_Feeds_Import {
 				$post_content = apply_filters( 'feedzy_invoke_services', $post_content, 'full_content', $full_content, $job );
 			}
 
-			if ( $this->feedzy_is_business() ) {
+			if ( $this->feedzy_is_business() || $this->feedzy_is_personal() ) {
 				$post_content = apply_filters( 'feedzy_parse_custom_tags', $post_content, ! empty( $xml_results ) ? $xml_results['feed'] : $results['feed'], $item['item_index'] );
 			}
 
@@ -1525,7 +1525,7 @@ class Feedzy_Rss_Feeds_Import {
 				$post_excerpt
 			);
 
-			if ( $this->feedzy_is_business() ) {
+			if ( $this->feedzy_is_business() || $this->feedzy_is_personal() ) {
 				$item_post_excerpt = apply_filters( 'feedzy_parse_custom_tags', $item_post_excerpt, ! empty( $xml_results ) ? $xml_results['feed'] : $results['feed'], $item['item_index'] );
 			}
 
@@ -1570,7 +1570,9 @@ class Feedzy_Rss_Feeds_Import {
 					}
 				} elseif ( strpos( $import_featured_img, '[#item_custom' ) !== false ) {
 					// custom image tag
-					$value = apply_filters( 'feedzy_parse_custom_tags', $import_featured_img, $results['feed'], $index );
+					if ( $this->feedzy_is_business() || $this->feedzy_is_personal() ) {
+						$value = apply_filters( 'feedzy_parse_custom_tags', $import_featured_img, $results['feed'], $index );
+					}
 					if ( ! empty( $value ) && strpos( $value, '[#item_custom' ) === false ) {
 						$image_url = $value;
 					} else {
@@ -1661,7 +1663,9 @@ class Feedzy_Rss_Feeds_Import {
 					}
 				} elseif ( strpos( $import_featured_img, '[#item_custom' ) !== false ) {
 					// custom image tag
-					$value = apply_filters( 'feedzy_parse_custom_tags', $import_featured_img, ! empty( $xml_results ) ? $xml_results['feed'] : $results['feed'], $index );
+					if ( $this->feedzy_is_business() || $this->feedzy_is_personal() ) {
+						$value = apply_filters( 'feedzy_parse_custom_tags', $import_featured_img, ! empty( $xml_results ) ? $xml_results['feed'] : $results['feed'], $index );
+					}
 					if ( ! empty( $value ) && strpos( $value, '[#item_custom' ) === false ) {
 						$image_url = $value;
 					} else {
@@ -1945,6 +1949,17 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	public function feedzy_is_agency() {
 		return $this->feedzy_is_license_of_type( false, 'agency' );
+	}
+
+	/**
+	 * Method to return if licence is personal.
+	 *
+	 * @return bool
+	 * @since   1.8.2
+	 * @access  public
+	 */
+	public function feedzy_is_personal() {
+		return $this->feedzy_is_license_of_type( false, 'pro' );
 	}
 
 	/**

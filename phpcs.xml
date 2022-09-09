@@ -58,7 +58,11 @@
     <rule ref="Squiz.Commenting.FunctionComment.ScalarTypeHintMissing">
         <severity>0</severity>
     </rule>
-
+    <rule ref="WordPress.Security.EscapeOutput">
+        <properties>
+            <property name="customAutoEscapedFunctions" type="array" value="tsdk_utmify"/>
+        </properties>
+    </rule>
     <arg name="extensions" value="php"/>
     <arg value="sp"/>
     <arg name="basepath" value="./" />
