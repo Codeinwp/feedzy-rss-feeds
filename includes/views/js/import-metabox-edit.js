@@ -234,6 +234,12 @@
 			return false;
 		});
 
+		$( '#feedzy-import-source' ).on( 'blur', function(e) {
+			var addTagBtn = $( this ).parents( '.fz-input-icon' ).find( '.add-outside-tags' );
+			addTagBtn.trigger( 'click' );
+			$( this ).val('');
+		} );
+
 		$( '.feedzy-keyword-filter, #feedzy-import-source' ).on('keyup keypress', function(e) {
 			var keyCode = e.keyCode || e.which;
 			var addTagBtn = $( this ).parents( '.fz-input-icon' ).find( '.add-outside-tags' );
@@ -328,6 +334,8 @@
 
 		$("#feedzy-validate-feed").on("click", function (e) {
 			let $url = $("#feedzy-source-tags").val();
+			$url = $url.split( ',' );
+			$url = $.trim( $url.pop() );
 			let $anchor = $(this);
 			$anchor.attr("href", $anchor.attr("data-href-base") + $url);
 		});
