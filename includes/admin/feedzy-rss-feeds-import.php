@@ -2050,6 +2050,7 @@ class Feedzy_Rss_Feeds_Import {
 		if ( ! feedzy_is_pro() ) {
 			$tabs['wordai']       = sprintf( '%s <span class="pro-label">PRO</span>', __( 'WordAi', 'feedzy-rss-feeds' ) );
 			$tabs['spinnerchief'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'SpinnerChief', 'feedzy-rss-feeds' ) );
+			$tabs['amazon-product-advertising'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'Amazon Product Advertising', 'feedzy-rss-feeds' ) );
 		}
 
 		return $tabs;
@@ -2089,6 +2090,7 @@ class Feedzy_Rss_Feeds_Import {
 				break;
 			case 'wordai':
 			case 'spinnerchief':
+			case 'amazon-product-advertising':
 				if ( ! feedzy_is_pro() ) {
 					$file = FEEDZY_ABSPATH . '/includes/views/' . $name . '-view.php';
 				} else {

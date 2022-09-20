@@ -702,8 +702,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		// Load SimplePie if not already.
 		do_action( 'feedzy_pre_http_setup', $feed_url );
 		if ( function_exists( 'feedzy_amazon_get_locale_hosts' ) ) {
-			$amazon_hosts  = feedzy_amazon_get_locale_hosts();
-			$url_host      = 'webservices.' . wp_parse_url( $feed_url, PHP_URL_HOST );
+			$amazon_hosts = feedzy_amazon_get_locale_hosts();
+			$url_host     = 'webservices.' . wp_parse_url( $feed_url, PHP_URL_HOST );
 			if ( ! empty( $amazon_hosts ) && in_array( $url_host, $amazon_hosts, true ) ) {
 				$feed = $this->init_amazon_api(
 					$feed_url,
@@ -1911,18 +1911,22 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Init amazon API.
 	 *
-	 * @param string $url Source URL.
-	 * @param string $cache Cache time.
-	 * @param array  $additional Additional settings.
+	 * @param string[] $urls Source URL.
+	 * @param string   $cache Cache time.
+	 * @param array    $additional Additional settings.
 	 *
 	 * @return mixed
 	 */
-	public function init_amazon_api( $url, $cache, $additional = array() ) {
+	public function init_amazon_api( $urls, $cache, $additional = array() ) {
 		$additional['refresh'] = $cache;
-		$amazon_product = new Feedzy_Rss_Feeds_Pro_Amazon_Product_Advertising();
-		$settings = get_option( 'feedzy-rss-feeds-settings', array() );
-		$url = str_replace( array( 'http://', 'https://' ), '', $url );
-		$amazon_product->set_config_option( $url, $settings );
-		return $amazon_product->call_api( $amazon_product->get_api_option( 'access_key' ), $amazon_product->get_api_option( 'secret_key' ), $amazon_product->get_api_option( 'partner_tag' ), $additional );
+		$urls                  = is_array( $urls ) ? $urls : array( $urls );
+		$amazon_product        = new Feedzy_Rss_Feeds_Pro_Amazon_Product_Advertising();
+		$settings              = get_option( 'feedzy-rss-feeds-settings', array() );
+		foreach ( $urls as $url ) {
+			$url = str_replace( array( 'http://', 'https://' ), '', $url );
+			$amazon_product->set_config_option( $url, $settings );
+			$amazon_product->call_api( $amazon_product->get_api_option( 'access_key' ), $amazon_product->get_api_option( 'secret_key' ), $amazon_product->get_api_option( 'partner_tag' ), $additional );
+		}
+		return $amazon_product;
 	}
 }
