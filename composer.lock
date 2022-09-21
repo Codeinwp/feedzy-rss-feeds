@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4bbfd8f46749fb9e0565d3cf79063178",
+    "content-hash": "4418430d79b972be928369b75aa4c12d",
     "packages": [
         {
             "name": "codeinwp/themeisle-sdk",
-            "version": "dev-master",
+            "version": "3.2.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeinwp/themeisle-sdk.git",
-                "reference": "bab0314e1f6e2f811116a2da7736b94cbe6af90f"
+                "reference": "7239104ae452b13cd6d506d44e8fc127232d35ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeinwp/themeisle-sdk/zipball/bab0314e1f6e2f811116a2da7736b94cbe6af90f",
-                "reference": "bab0314e1f6e2f811116a2da7736b94cbe6af90f",
+                "url": "https://api.github.com/repos/Codeinwp/themeisle-sdk/zipball/7239104ae452b13cd6d506d44e8fc127232d35ce",
+                "reference": "7239104ae452b13cd6d506d44e8fc127232d35ce",
                 "shasum": ""
             },
             "require-dev": {
@@ -40,7 +40,7 @@
             "keywords": [
                 "wordpress"
             ],
-            "time": "2022-08-23T13:09:40+00:00"
+            "time": "2022-09-15T19:54:34+00:00"
         }
     ],
     "packages-dev": [

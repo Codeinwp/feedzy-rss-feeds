@@ -65,7 +65,7 @@ global $post;
 							</div>
 							<div class="fz-input-group-right">
 									<div class="dropdown">
-										<button type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+										<button type="button" class="btn btn-outline-primary dropdown-toggle" aria-haspopup="true"
 												aria-expanded="false">
 										<?php esc_html_e( 'Use Feed Category', 'feedzy-rss-feeds' ); ?> <span
 													class="dashicons dashicons-arrow-down-alt2"></span>
@@ -257,7 +257,7 @@ global $post;
 							esc_html_e( 'Using magic tags, specify what part(s) of the source should form part of the imported post.', 'feedzy-rss-feeds' );
 						?>
 						<?php if ( false === apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) { ?>
-							<?php echo wp_kses_post( sprintf( __( 'The magic tags that are greyed out and disabled, are unavailable for your current license. Unlock all features, by %1$supgrading to Feedzy Pro%2$s', 'feedzy-rss-feeds' ), '<a href="' . esc_url( FEEDZY_UPSELL_LINK ) . '" target="_blank" title="' . __( 'upgrading to Feedzy Pro', 'feedzy-rss-feeds' ) . '">', '</a>' ) ); ?>
+							<?php echo wp_kses_post( sprintf( __( 'The magic tags that are greyed out and disabled, are unavailable for your current license. Unlock all features, by %1$supgrading to Feedzy Pro%2$s', 'feedzy-rss-feeds' ), '<a href="' . tsdk_utmify( FEEDZY_UPSELL_LINK, 'magictags' ) . '" target="_blank" title="' . __( 'upgrading to Feedzy Pro', 'feedzy-rss-feeds' ) . '">', '</a>' ) ); ?>
 						<?php } ?>
 					</p>
 				</div>
@@ -374,7 +374,7 @@ global $post;
 											</div>
 											<div class="fz-input-group-right">
 													<div class="dropdown">
-														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" data-toggle="dropdown" 	aria-haspopup="true" aria-expanded="false">
+														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" 	aria-haspopup="true" aria-expanded="false">
 															<?php esc_html_e( 'Insert Tag', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-plus-alt2"></span>
 														</button>
 														<div class="dropdown-menu dropdown-menu-right">
@@ -409,7 +409,7 @@ global $post;
 											</div>
 											<div class="fz-input-group-right">
 													<div class="dropdown">
-														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" aria-haspopup="true"
 															aria-expanded="false">
 															<?php esc_html_e( 'Insert Tag', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-plus-alt2"></span>
 														</button>
@@ -461,7 +461,7 @@ global $post;
 											</div>
 											<div class="fz-input-group-right">
 													<div class="dropdown">
-														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" aria-haspopup="true"
 															aria-expanded="false">
 															<?php esc_html_e( 'Insert Tag', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-plus-alt2"></span>
 														</button>
@@ -475,7 +475,7 @@ global $post;
 									<?php if ( ! feedzy_is_pro() ) : ?>
 										<div class="upgrade-alert">
 											<?php
-												echo wp_kses_post( sprintf( __( 'Add more advanced tags, like item price, rating and many more, by %1$supgrading to Feedzy Pro%2$s', 'feedzy-rss-feeds' ), '<a href="' . FEEDZY_UPSELL_LINK . '" target="_blank">', '</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>' ) );
+												echo wp_kses_post( sprintf( __( 'Add more advanced tags, like item price, rating and many more, by %1$supgrading to Feedzy Pro%2$s', 'feedzy-rss-feeds' ), '<a href="' . tsdk_utmify( FEEDZY_UPSELL_LINK, 'moreadvanced' ) . '" target="_blank">', '</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>' ) );
 											?>
 										</div>
 									<?php endif; ?>
@@ -504,7 +504,7 @@ global $post;
 											</div>
 											<div class="fz-input-group-right">
 													<div class="dropdown">
-														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" aria-haspopup="true"
 															aria-expanded="false">
 															<?php esc_html_e( 'Insert Tag', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-plus-alt2"></span>
 														</button>
@@ -598,7 +598,7 @@ global $post;
 											</div>
 											<div class="fz-input-group-right">
 													<div class="dropdown">
-														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" aria-haspopup="true"
 															aria-expanded="false">
 															<?php esc_html_e( 'Insert Tag', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-plus-alt2"></span>
 														</button>
@@ -612,7 +612,7 @@ global $post;
 									<?php if ( ! feedzy_is_pro() ) : ?>
 										<div class="upgrade-alert">
 											<?php
-												echo wp_kses_post( sprintf( __( 'Add more advanced tags, like item price, rating and many more, by %1$supgrading to Feedzy Pro%2$s', 'feedzy-rss-feeds' ), '<a href="' . FEEDZY_UPSELL_LINK . '" target="_blank">', '</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>' ) );
+												echo wp_kses_post( sprintf( __( 'Add more advanced tags, like item price, rating and many more, by %1$supgrading to Feedzy Pro%2$s', 'feedzy-rss-feeds' ), '<a href="' . tsdk_utmify( FEEDZY_UPSELL_LINK, 'upgradealert' ) . '" target="_blank">', '</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>' ) );
 											?>
 										</div>
 									<?php endif; ?>

@@ -236,7 +236,7 @@ class Inspector extends Component {
 								initialOpen={false}
 								className={feedzyjs.isPro ? 'feedzy-item-filter' : 'feedzy-item-filter fz-locked'}
 							>
-								{!feedzyjs.isPro && <div className="fz-upsell-notice">{__('Unlock this feature and more advanced options with')} <ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/">{__('Feedzy Pro')}</ExternalLink></div>}
+								{!feedzyjs.isPro && <div className="fz-upsell-notice">{__('Unlock this feature and more advanced options with')} <ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=keywordsfilter&utm_content=feedzy-rss-feeds">{__('Feedzy Pro')}</ExternalLink></div>}
 								<TextControl
 									label={__('Only display if selected field contains:')}
 									help={__('Use comma(,) and plus(+) keyword')}
@@ -413,7 +413,7 @@ class Inspector extends Component {
 								initialOpen={false}
 								className={feedzyjs.isPro ? 'feedzy-layout' : 'feedzy-layout fz-locked'}
 							>
-								{!feedzyjs.isPro && <div className="fz-upsell-notice">{__('Unlock this feature and more advanced options with')} <ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/">{__('Feedzy Pro')}</ExternalLink></div>}
+								{!feedzyjs.isPro && <div className="fz-upsell-notice">{__('Unlock this feature and more advanced options with')} <ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=layouts&utm_content=feedzy-rss-feeds">{__('Feedzy Pro')}</ExternalLink></div>}
 
 								<RangeControl
 									label={__('Columns')}
@@ -527,7 +527,7 @@ class Inspector extends Component {
 								initialOpen={false}
 								className={feedzyjs.isPro ? 'feedzy-pro-options' : 'feedzy-pro-options fz-locked'}
 							>
-								{!feedzyjs.isPro && <div className="fz-upsell-notice">{__('Unlock this feature and more advanced options with')} <ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/">{__('Feedzy Pro')}</ExternalLink></div>}
+								{!feedzyjs.isPro && <div className="fz-upsell-notice">{__('Unlock this feature and more advanced options with')} <ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=refferal&utm_content=feedzy-rss-feeds">{__('Feedzy Pro')}</ExternalLink></div>}
 								<TextControl
 									label={__('Referral URL parameters.')}
 									help={__('Without ("?")')}

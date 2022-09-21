@@ -505,7 +505,7 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 				'label'       => __( 'Add your referral parameters', 'feedzy-rss-feeds' ),
 				'label_block' => true,
 				'type'        => Controls_Manager::TEXT,
-				'description' => ! feedzy_is_pro() ? wp_sprintf( __( 'Unlock this feature and more advanced options with <a href="%s" target="_blank">Feedzy Pro</a>.', 'feedzy-rss-feeds' ), esc_url( 'https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/' ) ) : '',
+				'description' => ! feedzy_is_pro() ? wp_sprintf( __( 'Unlock this feature and more advanced options with <a href="%s" target="_blank">Feedzy Pro</a>.', 'feedzy-rss-feeds' ), ( tsdk_utmify( FEEDZY_UPSELL_LINK, 'refferal', 'widget-area' ) ) ) : '',
 				'classes' => $this->upsell_class(),
 			)
 		);

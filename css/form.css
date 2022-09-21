@@ -708,15 +708,15 @@ img {
 }
 
 .feedzy-template-default {
-	background: url(../img/feedzy-default-template.jpg) no-repeat bottom center;
+	background: url(../img/feedzy-default-template.png) no-repeat bottom center;
 }
 
 .feedzy-template-style1 {
-	background: url(../img/feedzy-style1-template.jpg) no-repeat bottom center;
+	background: url(../img/feedzy-style1-template.png) no-repeat bottom center;
 }
 
 .feedzy-template-style2 {
-	background: url(../img/feedzy-style2-template.jpg) no-repeat bottom center;
+	background: url(../img/feedzy-style2-template.png) no-repeat bottom center;
 }
 
 input[disabled],
