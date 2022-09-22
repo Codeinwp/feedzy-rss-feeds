@@ -454,3 +454,33 @@ input:checked + .feedzy-track:before {
 .components-select-control {
 	height:auto;
 }
+/* Elementor page notice */
+.fz-el-upsell-notice {
+	width: 100%;
+	padding: 15px 36px 15px 15px;
+	background: #CCE5FF;
+	font-size: 13px;
+	text-align: left;
+	color: #264494 !important;
+	font-weight: 400;
+	line-height: 15px;
+	font-style: italic;
+	position: relative;
+}
+.fz-el-upsell-notice a{
+	font-weight: 700;
+	color: #264494 !important;
+}
+.fz-el-upsell-notice .remove-alert:hover {
+	background: none;
+}
+.fz-el-upsell-notice .remove-alert {
+	position: absolute;
+	padding: 0;
+	right: 22px; /*13px;*/
+	top: 50%;
+	margin-top: -10px;
+	font-weight: 400;
+	background: none !important;
+	color: #264494 !important;
+}

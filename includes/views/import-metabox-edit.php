@@ -29,7 +29,16 @@ global $post;
 						<?php if ( ! feedzy_is_pro() ) : ?>
 							<div class="fz-upsell-notice upgrade-alert mb-24">
 								<?php
-								echo wp_kses_post( wp_sprintf( __( '<strong>NEW! </strong>Enable Amazon Product Advertising feeds to generate affiliate revenue by <a href="%s" target="_blank">upgrading to Feedzy Pro.</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>', 'feedzy-rss-feeds' ), FEEDZY_UPSELL_LINK ) );
+								$upsell_url = add_query_arg(
+									array(
+										'utm_source'   => 'wpadmin',
+										'utm_medium'   => 'importfeed',
+										'utm_campaign' => 'amazonproductadvertising',
+										'utm_content'  => 'feedzy-rss-feeds',
+									),
+									FEEDZY_UPSELL_LINK
+								);
+								echo wp_kses_post( wp_sprintf( __( '<strong>NEW! </strong>Enable Amazon Product Advertising feeds to generate affiliate revenue by <a href="%s" target="_blank">upgrading to Feedzy Pro.</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>', 'feedzy-rss-feeds' ), esc_url_raw( $upsell_url ) ) );
 								?>
 							</div>
 						<?php endif; ?>

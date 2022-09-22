@@ -723,3 +723,50 @@ input[disabled],
 select[disabled] {
 	cursor: not-allowed;
 }
+
+.feedzy-popup-form .upgrade-alert{
+	padding:15px 22px;
+	background: #CCE5FF;
+	text-align: center;
+	font-weight: 400;
+	font-size: 13px;
+	line-height: 15px;
+	color: #264494;
+	position: relative;
+	margin-bottom: 24px;
+	text-align: left;
+	border-left: 4px solid #4268CF;
+	font-style: italic;
+}
+.feedzy-popup-form .upgrade-alert a{
+	font-weight: 700;
+	color: #264494;
+}
+.feedzy-popup-form .upgrade-alert .remove-alert{
+	position: absolute;
+	right: 18px;
+	top: 50%;
+	margin-top: -12px;
+	width: 24px;
+	height: 24px;
+	background: transparent;
+	border: 0;
+	color: #264494;
+	font-size: 24px;
+	line-height: 1;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	-webkit-border-radius: 24px;
+	-moz-border-radius: 24px;
+	border-radius: 24px;
+	-webkit-transition: background 0.3s ease-in-out;
+	-moz-transition: background 0.3s ease-in-out;
+	-o-transition: background 0.3s ease-in-out;
+	transition: background 0.3s ease-in-out;
+}
+.feedzy-popup-form .upgrade-alert .remove-alert:hover{
+	background: #ffffff;
+	color: #4268CF;
+}

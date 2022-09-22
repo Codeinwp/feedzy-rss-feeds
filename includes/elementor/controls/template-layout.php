@@ -45,12 +45,25 @@ class Control_Template_Layout extends Base_Data_Control {
 			</div>
 		</div>';
 		}
+		$upsell_notice  = '<div class="fz-upsell-notice">';
+		$upsell_url = add_query_arg(
+			array(
+				'utm_source'   => 'wpadmin',
+				'utm_medium'   => 'elementoreditor',
+				'utm_campaign' => 'amazonproductadvertising',
+				'utm_content'  => 'feedzy-rss-feeds',
+			),
+			FEEDZY_UPSELL_LINK
+		);
+		$upsell_notice .= wp_kses_post( wp_sprintf( __( '<strong>NEW! </strong>Enable Amazon Product Advertising feeds to generate affiliate revenue by <a href="%s" target="_blank">upgrading to Feedzy Pro.</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>', 'feedzy-rss-feeds' ), esc_url_raw( $upsell_url ) ) );
+		$upsell_notice .= '<div>';
 		wp_localize_script(
 			'feedzy-elementor',
 			'FeedzyElementorEditor',
 			array(
 				'notice' => $notice_text,
 				'pro_title_text' => __( 'Unlock this feature with Feedzy Pro', 'feedzy-rss-feeds' ),
+				'upsell_notice'  => ! feedzy_is_pro() ? $upsell_notice : '',
 			)
 		);
 	}

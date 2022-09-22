@@ -106,6 +106,13 @@ class Inspector extends Component {
 								title={__('Feed Source')}
 								initialOpen={true}
 							>
+								{(this.props.attributes.status !== 0 && !feedzyjs.isPro) && [
+									<div className="fz-upgrade-alert">
+										<strong>{__('NEW!')} </strong>{__('Enable Amazon Product Advertising feeds to generate affiliate revenue by ')}
+										<ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=amazonproductadvertising&utm_content=feedzy-rss-feeds">{__('upgrading to Feedzy Pro.')}</ExternalLink>
+										<Dashicon icon="no-alt" onClick={(el) => {el.target.parentNode.style.display="none"}}/>
+									</div>
+								]}
 								{(this.props.attributes.status !== 0) && [
 									<TextControl
 										label={__('Feed Source')}
