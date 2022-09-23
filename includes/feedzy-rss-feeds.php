@@ -277,7 +277,8 @@ class Feedzy_Rss_Feeds {
 			self::$instance->loader->add_action( 'admin_notices', $plugin_import, 'feedzy_import_clone_success_notice' );
 			// Remove elementor feature.
 			self::$instance->loader->add_action( 'elementor/experiments/feature-registered', self::$instance->admin, 'feedzy_remove_elementor_feature', 10, 2 );
-
+			// Remove widget.
+			self::$instance->loader->add_filter( 'elementor/widgets/black_list', self::$instance->admin, 'feedzy_remove_elementor_widgets' );
 			// Register elementor widget.
 			$plugin_elementor_widget = new Feedzy_Rss_Feeds_Elementor();
 			$this->loader->add_action( 'elementor/widgets/register', $plugin_elementor_widget, 'feedzy_elementor_widgets_registered' );
