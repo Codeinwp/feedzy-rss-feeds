@@ -5,10 +5,11 @@
 		</div>
 		<div class="left">
 			<h3 class="h3 pb-16">Answer a few questions to help us improve Feedzy</h3>
-			<p>We're always looking for suggestions to further improve Feedzy. If your feedback is especially helpful, and we choose to do an interview with you to discuss your suggestions, you will even gain a yearly membership for free for your trouble. </p>
+			<p>We're always looking for suggestions to further improve Feedzy.
 			<?php if ( ! feedzy_is_pro() ) { ?>
-				<p>If your feedback is especially helpful and we choose to do an interview with you to discuss your suggestions, you will even gain a yearly membership for free for your trouble.</p>
+				 If your feedback is especially helpful and we choose to do an interview with you to discuss your suggestions, you will even gain a yearly membership for free for your trouble.
 			<?php } ?>
+			</p>
 			<div class="cta">
 				<a href="<?php echo esc_url( feedzy_is_pro() ? FEEDZY_SURVEY_PRO : FEEDZY_SURVEY_FREE ); ?>" target="_blank" class="btn btn-outline-primary">Take the Survey</a>
 			</div>
