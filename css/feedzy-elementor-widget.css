@@ -95,7 +95,7 @@
 .fz-light-mode.fz-pro-notice p{
   color: #6D7882;
 }
-.docs-btn a{
+.docs-btn a.fz-upgrade-link{
   display: inline-block;
   background: #4268CF;
   padding: 6px 12px;
@@ -106,8 +106,8 @@
   text-transform: uppercase;
   color: #FFFFFF;
 }
-.docs-btn a:hover,
-.docs-btn a:focus{  
+.docs-btn a.fz-upgrade-link:hover,
+.docs-btn a.fz-upgrade-link:focus{  
   color: #FFFFFF;
 }
 .docs-btn span{
@@ -118,6 +118,9 @@
   line-height: 13px;
   color: #757575;
   padding-top: 8px;
+}
+.docs-btn span a {
+  color: #757575;
 }
 .fz-light-mode .docs-btn span {
   color: #757575;
