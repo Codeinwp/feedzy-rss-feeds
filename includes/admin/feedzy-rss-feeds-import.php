@@ -1300,7 +1300,16 @@ class Feedzy_Rss_Feeds_Import {
 
 		$duplicates       = $items_found = array();
 		$found_duplicates = array();
-		foreach ( $result as $item ) {
+		foreach ( $result as $key => $item ) {
+			$item_obj = $item;
+			// find item index key when import full content.
+			if ( ! empty( $xml_results ) ) {
+				$item_unique_hash = array_column( $xml_results['items'], 'item_unique_hash' );
+				$real_index_key   = array_search( $item['item_unique_hash'], $item_unique_hash, true );
+				if ( isset( $xml_results['items'][ $real_index_key ] ) ) {
+					$item_obj = $xml_results['items'][ $real_index_key ];
+				}
+			}
 			$item_hash                        = $use_new_hash ? $item['item_id'] : hash( 'sha256', $item['item_url'] . '_' . $item['item_date'] );
 			$is_duplicate                     = $use_new_hash ? in_array( $item_hash, $imported_items_new, true ) : in_array( $item_hash, $imported_items_old, true );
 			$items_found[ $item['item_url'] ] = $item['item_title'];
@@ -1367,8 +1376,8 @@ class Feedzy_Rss_Feeds_Import {
 				$import_title
 			);
 
-			if ( $this->feedzy_is_business() || $this->feedzy_is_personal() ) {
-				$post_title = apply_filters( 'feedzy_parse_custom_tags', $post_title, ! empty( $xml_results ) ? $xml_results['feed'] : $results['feed'], $item['item_index'] );
+			if ( $this->feedzy_is_business() ) {
+				$post_title = apply_filters( 'feedzy_parse_custom_tags', $post_title, $item_obj );
 			}
 
 			$post_title = apply_filters( 'feedzy_invoke_services', $post_title, 'title', $item['item_title'], $job );
@@ -1458,8 +1467,8 @@ class Feedzy_Rss_Feeds_Import {
 				$post_content = apply_filters( 'feedzy_invoke_services', $post_content, 'full_content', $full_content, $job );
 			}
 
-			if ( $this->feedzy_is_business() || $this->feedzy_is_personal() ) {
-				$post_content = apply_filters( 'feedzy_parse_custom_tags', $post_content, ! empty( $xml_results ) ? $xml_results['feed'] : $results['feed'], $item['item_index'] );
+			if ( $this->feedzy_is_business() ) {
+				$post_content = apply_filters( 'feedzy_parse_custom_tags', $post_content, $item_obj );
 			}
 
 			$post_content = apply_filters( 'feedzy_invoke_services', $post_content, 'content', $item['item_description'], $job );
@@ -1525,8 +1534,8 @@ class Feedzy_Rss_Feeds_Import {
 				$post_excerpt
 			);
 
-			if ( $this->feedzy_is_business() || $this->feedzy_is_personal() ) {
-				$item_post_excerpt = apply_filters( 'feedzy_parse_custom_tags', $item_post_excerpt, ! empty( $xml_results ) ? $xml_results['feed'] : $results['feed'], $item['item_index'] );
+			if ( $this->feedzy_is_business() ) {
+				$item_post_excerpt = apply_filters( 'feedzy_parse_custom_tags', $item_post_excerpt, $item_obj );
 			}
 
 			$new_post = apply_filters(
@@ -1571,8 +1580,9 @@ class Feedzy_Rss_Feeds_Import {
 				} elseif ( strpos( $import_featured_img, '[#item_custom' ) !== false ) {
 					// custom image tag
 					if ( $this->feedzy_is_business() || $this->feedzy_is_personal() ) {
-						$value = apply_filters( 'feedzy_parse_custom_tags', $import_featured_img, $results['feed'], $index );
+						$value = apply_filters( 'feedzy_parse_custom_tags', $import_featured_img, $item_obj );
 					}
+
 					if ( ! empty( $value ) && strpos( $value, '[#item_custom' ) === false ) {
 						$image_url = $value;
 					} else {
@@ -1647,7 +1657,7 @@ class Feedzy_Rss_Feeds_Import {
 				}
 			}
 
-			do_action( 'feedzy_import_extra', $job, ! empty( $xml_results ) ? $xml_results : $results, $new_post_id, $index, $item['item_index'], $import_errors, $import_info );
+			do_action( 'feedzy_import_extra', $job, $item_obj, $new_post_id, $import_errors, $import_info );
 
 			if ( ! empty( $import_featured_img ) && 'attachment' !== $import_post_type ) {
 				$image_url   = '';
@@ -1664,7 +1674,7 @@ class Feedzy_Rss_Feeds_Import {
 				} elseif ( strpos( $import_featured_img, '[#item_custom' ) !== false ) {
 					// custom image tag
 					if ( $this->feedzy_is_business() || $this->feedzy_is_personal() ) {
-						$value = apply_filters( 'feedzy_parse_custom_tags', $import_featured_img, ! empty( $xml_results ) ? $xml_results['feed'] : $results['feed'], $index );
+						$value = apply_filters( 'feedzy_parse_custom_tags', $import_featured_img, $item_obj );
 					}
 					if ( ! empty( $value ) && strpos( $value, '[#item_custom' ) === false ) {
 						$image_url = $value;
