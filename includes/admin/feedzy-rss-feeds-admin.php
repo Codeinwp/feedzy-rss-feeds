@@ -861,6 +861,14 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	public function feedzy_remove_elementor_widgets( $list ) {
 		global $post;
 
+		if ( ! defined( 'ELEMENTOR_PATH' ) || ! class_exists( '\Elementor\Plugin', false ) ) {
+			return $list;
+		}
+
+		if ( ! method_exists( \Elementor\Plugin::$instance->documents, 'get' ) ) {
+			return $list;
+		}
+
 		$black_list = array( 'feedzy_wp_widget' );
 		$data       = \Elementor\Plugin::$instance->documents->get( $post->ID )->get_elements_data();
 
