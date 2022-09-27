@@ -777,6 +777,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( false === apply_filters( 'feedzy_disable_db_cache', false, $feed_url ) ) {
 			SimplePie_Cache::register( 'wp_transient', 'WP_Feed_Cache_Transient' );
 			$feed->set_cache_location( 'wp_transient' );
+			$feed->set_cache_duration( $cache_time );
 			add_filter(
 				'wp_feed_cache_transient_lifetime',
 				function( $time ) use ( $cache_time ) {
@@ -1472,6 +1473,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$item_content = esc_html__( 'Post Content', 'feedzy-rss-feeds' );
 		}
 		$item_array = array(
+			'feed_url'            => $item->get_feed()->subscribe_url(),
+			'item_unique_hash'    => wp_hash( $item->get_permalink() ),
 			'item_img_class'      => 'rss_image',
 			'item_img_style'      => 'width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px;',
 			'item_url'            => $new_link,

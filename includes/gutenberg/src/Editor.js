@@ -68,7 +68,8 @@ class Editor extends Component {
         this.onFromDateTime         = this.onFromDateTime.bind( this );
         this.onToDateTime           = this.onToDateTime.bind( this );
         this.feedzyCategoriesList   = this.feedzyCategoriesList.bind( this );
-        this.onToggleItemTitle      = this.onToggleItemTitle.bind( this )
+        this.onToggleItemTitle      = this.onToggleItemTitle.bind( this );
+        this.handleKeyUp                = this.handleKeyUp.bind( this );
 		this.state = {
             // home: when the block is just added
             // fetched: when the feed is fetched
@@ -324,6 +325,12 @@ class Editor extends Component {
         this.props.setAttributes( { itemTitle: ! this.props.attributes.itemTitle } );
     }
 
+    handleKeyUp( event ) {
+        if ( 13 === event.keyCode ) {
+            this.loadFeed();
+        }
+    }
+
     render() {
 		return [
 			( 'fetched' === this.state.route ) && (
@@ -354,6 +361,7 @@ class Editor extends Component {
 							className="feedzy-source"
 							placeholder={ __( 'Enter URL or category of your feed here...' ) }
 							onChange={ this.onChangeFeed }
+                            onKeyUp={ this.handleKeyUp }
 							value={ this.props.attributes.feeds }
 						/>
                         <span className="dashicons dashicons-arrow-down-alt2" onClick={this.feedzyCategoriesList}></span></div>,
