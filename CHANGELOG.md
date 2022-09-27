@@ -1,3 +1,10 @@
+##### [Version 4.0.3](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.0.2...v4.0.3) (2022-09-27)
+
+- Fix Feedzy RSS feed cache not working on the widgets.
+- Remove legacy elementor widget for new users
+- Fix external image support on import for some websites
+- Enter key on feed fields should load the feed automatically
+
 ##### [Version 4.0.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.0.1...v4.0.2) (2022-09-09)
 
 #### Fixes
