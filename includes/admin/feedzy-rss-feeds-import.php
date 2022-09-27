@@ -102,7 +102,7 @@ class Feedzy_Rss_Feeds_Import {
 				<div class="only-pro-container">
 					<div class="only-pro-inner upgrade-alert">
 						' . __( 'This feature is available in the Pro version.  Unlock more features, by', 'feedzy-rss-feeds' ) . '
-						<a target="_blank" href="' . FEEDZY_UPSELL_LINK . '" title="' . __( 'Buy Now', 'feedzy-rss-feeds' ) . '">' . __( 'upgrading to Feedzy Pro', 'feedzy-rss-feeds' ) . '</a>
+						<a target="_blank" href="' . tsdk_utmify( FEEDZY_UPSELL_LINK, 'upsell-content', 'import' ) . '" title="' . __( 'Buy Now', 'feedzy-rss-feeds' ) . '">' . __( 'upgrading to Feedzy Pro', 'feedzy-rss-feeds' ) . '</a>
 					</div>
 				</div>
 			</div>';
@@ -1051,7 +1051,7 @@ class Feedzy_Rss_Feeds_Import {
 		$msg = $count > 0 ? __( 'Successfully run!', 'feedzy-rss-feeds' ) : __( 'Nothing imported!', 'feedzy-rss-feeds' );
 		$msg .= ' (' . __( 'Refresh this page for the updated status', 'feedzy-rss-feeds' ) . ')';
 
-		wp_send_json_success( array( 'msg' => $msg ) );
+		wp_send_json_success( array( 'msg' => $msg, 'import_success' => $count > 0 ) );
 	}
 
 	/**
@@ -1579,7 +1579,10 @@ class Feedzy_Rss_Feeds_Import {
 					}
 				} elseif ( strpos( $import_featured_img, '[#item_custom' ) !== false ) {
 					// custom image tag
-					$value = apply_filters( 'feedzy_parse_custom_tags', $import_featured_img, $item_obj );
+					if ( $this->feedzy_is_business() || $this->feedzy_is_personal() ) {
+						$value = apply_filters( 'feedzy_parse_custom_tags', $import_featured_img, $item_obj );
+					}
+
 					if ( ! empty( $value ) && strpos( $value, '[#item_custom' ) === false ) {
 						$image_url = $value;
 					} else {
@@ -1670,7 +1673,9 @@ class Feedzy_Rss_Feeds_Import {
 					}
 				} elseif ( strpos( $import_featured_img, '[#item_custom' ) !== false ) {
 					// custom image tag
-					$value = apply_filters( 'feedzy_parse_custom_tags', $import_featured_img, $item_obj );
+					if ( $this->feedzy_is_business() || $this->feedzy_is_personal() ) {
+						$value = apply_filters( 'feedzy_parse_custom_tags', $import_featured_img, $item_obj );
+					}
 					if ( ! empty( $value ) && strpos( $value, '[#item_custom' ) === false ) {
 						$image_url = $value;
 					} else {
@@ -1954,6 +1959,17 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	public function feedzy_is_agency() {
 		return $this->feedzy_is_license_of_type( false, 'agency' );
+	}
+
+	/**
+	 * Method to return if licence is personal.
+	 *
+	 * @return bool
+	 * @since   1.8.2
+	 * @access  public
+	 */
+	public function feedzy_is_personal() {
+		return $this->feedzy_is_license_of_type( false, 'pro' );
 	}
 
 	/**

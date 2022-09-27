@@ -538,6 +538,9 @@
 					_action: "run_now",
 				},
 				success: function (data) {
+					if ( data.data.import_success ) {
+						numberRow.find("td:first").addClass('import_success');
+					}
 					numberRow.find("td:first").html(data.data.msg);
 				},
 				complete: function () {
