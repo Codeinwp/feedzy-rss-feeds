@@ -78,6 +78,9 @@ function display_external_post_image( $html, $post_id, $post_thumbnail_id, $size
 		$alt  = get_the_title( $post_id );
 		$attr['alt'] = $alt;
 		$attr = apply_filters( 'wp_get_attachment_image_attributes', $attr, '', '' );
+		if ( isset( $attr['style'] ) ) {
+			unset( $attr['style'] );
+		}
 		$attr = array_map( 'esc_attr', $attr );
 		$html = sprintf( '<img src="%s"', esc_url( $url ) );
 		foreach ( $attr as $name => $value ) {

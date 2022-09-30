@@ -103,16 +103,16 @@
 	cursor: not-allowed;
 	>div {
 		&:not(.fz-upsell-notice) {
-			opacity: 0.2;
+			opacity: 0.4;
 			pointer-events: none;
 		}
 	}
 	>p {
-		opacity: 0.2;
+		opacity: 0.4;
 		pointer-events: none;
 	}
 	>.fz-main-label {
-		opacity: 0.2;
+		opacity: 0.4;
 		pointer-events: none;
 	}
 }

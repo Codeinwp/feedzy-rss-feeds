@@ -858,4 +858,37 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	public function feedzy_remove_elementor_feature( $manager_object, $experimental_data ) {
 		$manager_object->remove_feature( 'e_hidden_wordpress_widgets' );
 	}
+
+	/**
+	 * Remove legacy widget.
+	 *
+	 * @param array $list Black list widgets.
+	 * @return array
+	 */
+	public function feedzy_remove_elementor_widgets( $list ) {
+		global $post;
+
+		if ( ! defined( 'ELEMENTOR_PATH' ) || ! class_exists( '\Elementor\Plugin', false ) ) {
+			return $list;
+		}
+
+		if ( ! method_exists( \Elementor\Plugin::$instance->documents, 'get' ) ) {
+			return $list;
+		}
+
+		$black_list = array( 'feedzy_wp_widget' );
+		$data       = \Elementor\Plugin::$instance->documents->get( $post->ID )->get_elements_data();
+
+		if ( ! empty( $data ) ) {
+			\Elementor\Plugin::$instance->db->iterate_data(
+				$data,
+				function ( $element ) use ( &$black_list ) {
+					if ( ! empty( $element['widgetType'] ) && 'wp-widget-feedzy_wp_widget' === $element['widgetType'] ) {
+						$black_list = array();
+					}
+				}
+			);
+		}
+		return array_merge( $list, $black_list );
+	}
 }
