@@ -9,7 +9,7 @@
 			<div class="fz-form-group mb-20">
 				<?php
 					// translators: %1$s to available amazon domain.
-					echo wp_kses_post( __( 'Please use the following method <strong>amazon.[extension]?keyword=Laptop</strong> or <strong>amazon.com?asin=ASIN_1|ASIN_2</strong> URL when get amazom product info. here is available amazon domain <strong>com, au, br, ca, fr, de, in, it, jp, mx, nl, pl, sg, sa, es, se, tr, ae, uk</strong>', 'feedzy-rss-feeds' ) );
+					echo wp_kses_post( __( 'Please use this URL structure <strong>amazon.[extension]?keyword=Laptop</strong> or <strong>amazon.com?asin=ASIN_1|ASIN_2</strong> while getting Amazon product information. <br> Here is available amazon domain <strong>com, au, br, ca, fr, de, in, it, jp, mx, nl, pl, sg, sa, es, se, tr, ae, uk</strong>', 'feedzy-rss-feeds' ) );
 				?>
 			</div>
 			<div class="fz-form-row">

@@ -280,6 +280,7 @@ add_filter(
 			'span'   => array(
 				'class' => array(),
 				'disabled' => array(),
+				'style' => array(),
 			),
 			'div'    => array(
 				'class' => array(),

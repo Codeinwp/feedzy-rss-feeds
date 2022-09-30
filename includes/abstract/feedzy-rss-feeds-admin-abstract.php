@@ -1012,10 +1012,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				}
 			}
 		}
+		// Update source type.
+		update_post_meta( $post_id, '__feedzy_source_type', $source_type );
 
-		if ( $is_valid ) {
-			update_post_meta( $post_id, '__feedzy_source_type', $source_type );
-		}
 		return $is_valid;
 	}
 
