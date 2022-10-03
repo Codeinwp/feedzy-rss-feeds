@@ -865,6 +865,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			return $list;
 		}
 
+		if ( ! $post || ! \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
+			return $list;
+		}
+
 		if ( ! method_exists( \Elementor\Plugin::$instance->documents, 'get' ) ) {
 			return $list;
 		}
