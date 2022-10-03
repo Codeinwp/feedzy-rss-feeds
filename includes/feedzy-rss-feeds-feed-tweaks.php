@@ -319,7 +319,10 @@ add_filter(
 			),
 			'br'     => array(),
 			'em'     => array(),
-			'strong' => array(),
+			'strong' => array(
+				'class' => array(),
+				'style' => array(),
+			),
 			'iframe' => array(
 				'src'             => array(),
 				'height'          => array(),

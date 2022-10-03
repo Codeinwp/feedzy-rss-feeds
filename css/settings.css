@@ -1453,3 +1453,9 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 	right: 8px;
 	margin-top: -12px;
 }
+.fz-setting-message {
+	margin-top: 10px;
+}
+.fz-select-control {
+	min-width: 100%;
+}
