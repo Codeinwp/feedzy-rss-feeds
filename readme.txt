@@ -464,6 +464,14 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
+##### [Version 4.0.4](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.0.3...v4.0.4) (2022-10-04)
+
+* Fix cache time overwrite with filter
+* Fix edge case fatal error when using with Elementor builder
+
+
+
+
 ##### [Version 4.0.3](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.0.2...v4.0.3) (2022-09-27)
 
 - Fix Feedzy RSS feed cache not working on the widgets.
