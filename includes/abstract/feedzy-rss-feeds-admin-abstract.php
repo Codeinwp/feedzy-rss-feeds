@@ -777,7 +777,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( false === apply_filters( 'feedzy_disable_db_cache', false, $feed_url ) ) {
 			SimplePie_Cache::register( 'wp_transient', 'WP_Feed_Cache_Transient' );
 			$feed->set_cache_location( 'wp_transient' );
-			$feed->set_cache_duration( $cache_time );
+			$feed->set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', $cache_time, $feed_url ) );
 			add_filter(
 				'wp_feed_cache_transient_lifetime',
 				function( $time ) use ( $cache_time ) {
