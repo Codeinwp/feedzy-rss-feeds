@@ -198,7 +198,11 @@ class Feedzy_Rss_Feeds_Import {
 		$categories = $item->get_categories();
 		if ( $categories ) {
 			foreach ( $categories as $category ) {
-				$cats[] = $category->get_label();
+				if ( is_string( $category ) ) {
+					$cats[] = $category;
+				} else {
+					$cats[] = $category->get_label();
+				}
 			}
 		}
 
@@ -1427,7 +1431,6 @@ class Feedzy_Rss_Feeds_Import {
 				$translated_content = apply_filters( 'feedzy_invoke_auto_translate_services', $translated_content, '[#translated_content]', $import_translation_lang, $job, $language_code );
 			}
 
-			// exit;
 			$post_content = str_replace(
 				array(
 					'[#item_description]',
@@ -1438,6 +1441,8 @@ class Feedzy_Rss_Feeds_Import {
 					'[#item_source]',
 					'[#translated_description]',
 					'[#translated_content]',
+					'[#item_price]',
+					'[#item_author]',
 				),
 				array(
 					$item['item_description'],
@@ -1448,6 +1453,8 @@ class Feedzy_Rss_Feeds_Import {
 					$item['item_source'],
 					$translated_description,
 					$translated_content,
+					! empty( $item['item_price'] ) ? $item['item_price'] : '',
+					$author,
 				),
 				$import_content
 			);
@@ -1812,14 +1819,9 @@ class Feedzy_Rss_Feeds_Import {
 		if ( ! method_exists( $admin, 'normalize_urls' ) ) {
 			return array();
 		}
-		$feedURL = $admin->normalize_urls( $options['feeds'] );
-
-		$feedURL = apply_filters( 'feedzy_import_feed_url', $feedURL, $import_content, $options );
-		if ( is_wp_error( $feedURL ) ) {
-			return $feedURL;
-		}
-
+		$feedURL     = $admin->normalize_urls( $options['feeds'] );
 		$source_type = get_post_meta( $options['__jobID'], '__feedzy_source_type', true );
+
 		if ( 'amazon' === $source_type ) {
 			$feed = $admin->init_amazon_api(
 				$feedURL,
@@ -1833,6 +1835,10 @@ class Feedzy_Rss_Feeds_Import {
 				return array();
 			}
 		} else {
+			$feedURL = apply_filters( 'feedzy_import_feed_url', $feedURL, $import_content, $options );
+			if ( is_wp_error( $feedURL ) ) {
+				return $feedURL;
+			}
 			$feed = $admin->fetch_feed( $feedURL, isset( $options['refresh'] ) ? $options['refresh'] : '12_hours', $options );
 
 			$feed->force_feed( true );
