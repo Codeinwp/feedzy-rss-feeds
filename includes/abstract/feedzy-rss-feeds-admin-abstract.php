@@ -303,8 +303,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			return true;
 		}
 
-		$inc_on = ! empty( $sc['keywords_inc_on'] ) ? $sc['keywords_inc_on'] : '';
-		$exc_on = ! empty( $sc['keywords_exc_on'] ) ? $sc['keywords_exc_on'] : '';
+		$inc_on = ! empty( $sc['keywords_inc_on'] ) ? $sc['keywords_inc_on'] : 'title';
+		$exc_on = ! empty( $sc['keywords_exc_on'] ) ? $sc['keywords_exc_on'] : 'title';
 
 		if ( isset( $sc['keywords_inc'] ) && ! empty( $sc['keywords_inc'] ) ) {
 			$keywords = $sc['keywords_inc'];
