@@ -777,15 +777,17 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( false === apply_filters( 'feedzy_disable_db_cache', false, $feed_url ) ) {
 			SimplePie_Cache::register( 'wp_transient', 'WP_Feed_Cache_Transient' );
 			$feed->set_cache_location( 'wp_transient' );
+			if ( ! has_filter( 'wp_feed_cache_transient_lifetime' ) ) {
+				add_filter(
+					'wp_feed_cache_transient_lifetime',
+					function( $time ) use ( $cache_time ) {
+						return $cache_time;
+					},
+					10,
+					1
+				);
+			}
 			$feed->set_cache_duration( apply_filters( 'wp_feed_cache_transient_lifetime', $cache_time, $feed_url ) );
-			add_filter(
-				'wp_feed_cache_transient_lifetime',
-				function( $time ) use ( $cache_time ) {
-					return $cache_time;
-				},
-				10,
-				1
-			);
 		} else {
 			require_once ABSPATH . 'wp-admin/includes/file.php';
 			WP_Filesystem();
