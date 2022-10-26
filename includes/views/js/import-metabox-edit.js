@@ -463,7 +463,8 @@
 		} )
 		.on( 'removeTag', function( e, tagData ) {
 			var target = $( e.target );
-			if ( tagData.index <= 0 ) {
+			var emptyTags = target.parents( '.tag-list' ).find( '.tagify--empty' ).length;
+			if ( emptyTags ) {
 				target.parents( '.tag-list' ).addClass( 'hidden' );
 			}
 		} );
