@@ -464,6 +464,14 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
+##### [Version 4.0.5](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.0.4...v4.0.5) (2022-10-26)
+
+* Fix possible cache expiration filter change.
+* Fix compatibilities with keyword filtering on full content and Elementor context.
+
+
+
+
 ##### [Version 4.0.4](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.0.3...v4.0.4) (2022-10-04)
 
 * Fix cache time overwrite with filter
