@@ -156,10 +156,9 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 				'type'    => Controls_Manager::SELECT,
 				'default' => 'title',
 				'options' => array(
-					'title'        => __( 'Title', 'feedzy-rss-feeds' ),
-					'description'  => __( 'Description', 'feedzy-rss-feeds' ),
-					'author'       => __( 'Author', 'feedzy-rss-feeds' ),
-					'full-content' => __( 'Full Content', 'feedzy-rss-feeds' ),
+					'title'       => __( 'Title', 'feedzy-rss-feeds' ),
+					'description' => __( 'Description', 'feedzy-rss-feeds' ),
+					'author'      => __( 'Author', 'feedzy-rss-feeds' ),
 				),
 				'classes' => $this->upsell_class(),
 			)
@@ -181,10 +180,9 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 				'type'    => Controls_Manager::SELECT,
 				'default' => 'title',
 				'options' => array(
-					'title'        => __( 'Title', 'feedzy-rss-feeds' ),
-					'description'  => __( 'Description', 'feedzy-rss-feeds' ),
-					'author'       => __( 'Author', 'feedzy-rss-feeds' ),
-					'full-content' => __( 'Full Content', 'feedzy-rss-feeds' ),
+					'title'       => __( 'Title', 'feedzy-rss-feeds' ),
+					'description' => __( 'Description', 'feedzy-rss-feeds' ),
+					'author'      => __( 'Author', 'feedzy-rss-feeds' ),
 				),
 				'separator' => 'before',
 				'classes'   => $this->upsell_class(),
