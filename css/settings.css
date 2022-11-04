@@ -80,6 +80,7 @@
 .pb-16{padding-bottom: 16px;}
 .pb-30{padding-bottom: 30px;}
 .pt-30{padding-top: 30px;}
+.mb-20{margin-bottom: 20px;}
 .mb-30{margin-bottom: 30px;}
 .mb-24{margin-bottom: 24px;}
 .mx-320{
@@ -1426,4 +1427,35 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 .post-type-feedzy_categories #titlediv #title:focus,
 .post-type-feedzy_categories .widefat:focus{
 	border-color: #4268CF;
+}
+.fz-upsell-notice {
+	padding: 8px 32px 8px 8px;
+    background: #CCE5FF;
+    font-size: 14px;
+    text-align: left;
+    color: #264494;
+    font-weight: 400;
+    line-height: 16px;
+    position: relative;
+}
+.fz-upsell-notice a,
+.fz-upsell-notice .remove-alert {
+	color: #264494;
+	font-weight: 400;
+}
+.fz-upsell-notice .remove-alert:hover {
+	background: none;
+	color: #264494;
+}
+.fz-upsell-notice .remove-alert {
+	position: absolute;
+	top: 50%;
+	right: 8px;
+	margin-top: -12px;
+}
+.fz-setting-message {
+	margin-top: 10px;
+}
+.fz-select-control {
+	min-width: 100%;
 }

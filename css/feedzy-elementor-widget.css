@@ -125,3 +125,59 @@
 .fz-light-mode .docs-btn span {
   color: #757575;
 }
+
+.fz-upsell-notice.light-mode {
+  padding: 12px;
+  background: #F3FCFF;
+  border-left: 3px solid #4268CF;
+  font-style: italic;
+  color: #6D7882;
+  margin: 10px 15px;
+  position: relative;
+}
+.fz-upsell-notice.light-mode a {
+  color: #4268CF;
+  font-weight: 700;
+}
+.fz-upsell-notice.light-mode .remove-alert {
+  color: #6F7882;
+  font-weight: 400;
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
+.fz-upsell-notice.light-mode .remove-alert:hover {
+  color: #6F7882;
+}
+
+.fz-upsell-notice.dark-mode {
+  padding: 12px;
+  background: #4C4F56;
+  border-left: 3px solid #71D7F7;
+  font-style: italic;
+  color: #E0E1E3;
+  margin: 10px 15px;
+  position: relative;
+}
+.fz-upsell-notice.dark-mode a {
+  color: #71D7F7;
+  font-weight: 700;
+}
+.fz-upsell-notice.dark-mode .remove-alert {
+  color: #E0E1E3;
+  font-weight: 400;
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
+.fz-upsell-notice.dark-mode .remove-alert:hover {
+  color: #E0E1E3;
+}

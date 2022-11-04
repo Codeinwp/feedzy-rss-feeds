@@ -739,9 +739,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! is_array( $urls ) ) {
 			$urls = array( $urls );
 		}
-		$valid   = $this->get_valid_feed_urls( $urls, '1_mins', false );
+		$valid   = $this->get_valid_source_urls( $urls, '1_mins', false );
 		$invalid = array_diff( $urls, $valid );
-
 		if ( $add_pseudo_transient && ( empty( $valid ) || ! empty( $invalid ) ) ) {
 			// let's save the invalid urls in a pseudo-transient so that we can show it in the import edit screen.
 			switch ( $post_type ) {
@@ -749,8 +748,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					update_post_meta( $post_id, '__transient_feedzy_category_feed', $invalid );
 					break;
 				case 'feedzy_imports':
-					$invalid_dc_namespace = get_post_meta( $post_id, '__transient_feedzy_invalid_dc_namespace', true );
-					if ( empty( $invalid_dc_namespace ) ) {
+					$invalid_dc_namespace  = get_post_meta( $post_id, '__transient_feedzy_invalid_dc_namespace', true );
+					$invalid_source_errors = get_post_meta( $post_id, '__transient_feedzy_invalid_source_errors', true );
+					if ( empty( $invalid_dc_namespace ) && empty( $invalid_source_errors ) ) {
 						update_post_meta( $post_id, '__transient_feedzy_invalid_source', $invalid );
 					}
 					break;
@@ -787,6 +787,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			case 'feedzy_imports':
 				$invalid_source = get_post_meta( $post->ID, '__transient_feedzy_invalid_source', true );
 				$invalid_dc_namespace = get_post_meta( $post->ID, '__transient_feedzy_invalid_dc_namespace', true );
+				$invalid_source_errors = get_post_meta( $post->ID, '__transient_feedzy_invalid_source_errors', true );
 				if ( $invalid_source ) {
 					$text = __( 'This source has invalid URLs. Please correct/remove the following', 'feedzy-rss-feeds' );
 					$invalid = $invalid_source;
@@ -795,6 +796,12 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					$text = __( 'Please enter a valid feed URL to import the author', 'feedzy-rss-feeds' );
 					$invalid = $invalid_dc_namespace;
 					delete_post_meta( $post->ID, '__transient_feedzy_invalid_dc_namespace' );
+				} elseif ( $invalid_source_errors ) {
+					$source_type = ! empty( $invalid_source_errors['source_type'] ) ? $invalid_source_errors['source_type'] : '';
+					$text    = join( ', ', $invalid_source_errors['errors'] );
+					$text    = $source_type . preg_replace( '/\.$/', '', $text );
+					$invalid = $invalid_source_errors['source'];
+					delete_post_meta( $post->ID, '__transient_feedzy_invalid_source_errors' );
 				}
 				break;
 			default:

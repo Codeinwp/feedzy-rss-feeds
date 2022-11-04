@@ -182,3 +182,38 @@
 		}
 	}
 }
+.fz-upgrade-alert{
+	background-color: #F7F7F7;
+	border-left: 4px solid #4268CF;
+	padding: 8px 12px;
+	font-style: italic;
+	font-size: 13px;
+	line-height: 15px;
+	color: #1E1E1E;
+	position: relative;
+	a {
+		color: #4268CF !important;
+		font-weight: 700;
+	}
+	span.dashicons-no-alt{
+		position: absolute;
+		right: 4px;
+		top: 4px;
+		color: #6F7882;
+		cursor: pointer;
+	}
+}
+.fz-source-upgrade-alert{
+	width: 100%;
+	background-color: #CCE5FF;
+	border-left: 4px solid #4268CF;
+	padding: 15px 5px;
+	font-style: italic;
+	font-size: 13px;
+	line-height: 15px;
+	color: #264494;
+	a{
+		color: #264494 !important;
+		font-weight: 700;
+	}
+}

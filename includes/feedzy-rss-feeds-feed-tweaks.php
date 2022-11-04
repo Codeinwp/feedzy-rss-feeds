@@ -283,6 +283,7 @@ add_filter(
 			'span'   => array(
 				'class' => array(),
 				'disabled' => array(),
+				'style' => array(),
 			),
 			'div'    => array(
 				'class' => array(),
@@ -318,7 +319,10 @@ add_filter(
 			),
 			'br'     => array(),
 			'em'     => array(),
-			'strong' => array(),
+			'strong' => array(
+				'class' => array(),
+				'style' => array(),
+			),
 			'iframe' => array(
 				'src'             => array(),
 				'height'          => array(),

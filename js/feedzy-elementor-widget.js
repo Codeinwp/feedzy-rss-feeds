@@ -55,6 +55,23 @@ window.addEventListener( 'elementor/init', function() {
 				}
 			}
 		}
+
+		if( '' !== FeedzyElementorEditor.upsell_notice ) {
+			if ( 'dark' === themeMode || userPrefersDark ) {
+				jQuery( FeedzyElementorEditor.upsell_notice ).addClass( 'dark-mode' ).removeClass( 'light-mode' ).insertAfter( '.elementor-panel-navigation' );
+			} else {
+				jQuery( FeedzyElementorEditor.upsell_notice ).addClass( 'light-mode' ).removeClass( 'dark-mode' ).insertAfter( '.elementor-panel-navigation' );
+			}
+
+			jQuery( document ).on( 'click', '.remove-alert', function() {
+				var upSellNotice = jQuery(this).parents( '.fz-upsell-notice' );
+				upSellNotice.fadeOut( 500,
+					function() {
+						upSellNotice.remove();
+					}
+				);
+			} );
+		}
 	} );
 
 	var proTitleText = function() {
