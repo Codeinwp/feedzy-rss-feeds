@@ -875,7 +875,7 @@ global $post;
 							'sr' => __( 'Serbian', 'feedzy-rss-feeds' ),
 							'ss' => __( 'Swati', 'feedzy-rss-feeds' ),
 							'su' => __( 'Sundanese', 'feedzy-rss-feeds' ),
-							'sv' => __( 'Swedish', 'feedzy-rss-feeds' ),
+							'swe' => __( 'Swedish', 'feedzy-rss-feeds' ),
 							'sw' => __( 'Swahili', 'feedzy-rss-feeds' ),
 							'ta' => __( 'Tamil', 'feedzy-rss-feeds' ),
 							'th' => __( 'Thai', 'feedzy-rss-feeds' ),
