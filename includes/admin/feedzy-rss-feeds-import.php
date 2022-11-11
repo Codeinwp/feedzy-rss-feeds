@@ -1704,7 +1704,7 @@ class Feedzy_Rss_Feeds_Import {
 				}
 
 				// Fetch image from graby.
-				if ( empty( $image_url ) && defined( 'FEEDZY_PRO_FETCH_ITEM_IMG_URL' ) ) {
+				if ( empty( $image_url ) && ( wp_doing_cron() || defined( 'FEEDZY_PRO_FETCH_ITEM_IMG_URL' ) ) ) {
 					// if license does not exist, use the site url
 					// this should obviously never happen unless on dev instances.
 					$license = apply_filters( 'product_feedzy_license_key', sprintf( 'n/a - %s', get_site_url() ) );
