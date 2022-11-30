@@ -494,6 +494,21 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				'render_support',
 			)
 		);
+
+		if ( ! feedzy_is_pro() && get_option( 'feedzy_fresh_install', false ) ) {
+			$hook = add_submenu_page(
+				'feedzy-admin-menu',
+				__( 'Setup Wizard', 'feedzy-rss-feeds' ),
+				__( 'Setup Wizard', 'feedzy-rss-feeds' ),
+				'manage_options',
+				'feedzy-setup-wizard',
+				array(
+					$this,
+					'feedzy_setup_wizard_page',
+				)
+			);
+			add_action( "load-$hook", array( $this, 'feedzy_load_setup_wizard_page' ) );
+		}
 	}
 
 	/**
@@ -682,12 +697,19 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( get_option( 'feedzy-activated' ) ) {
 			delete_option( 'feedzy-activated' );
 			if ( ! headers_sent() ) {
+				$redirect_url = array(
+					'page' => 'feedzy-support',
+					'tab'  => 'help#shortcode',
+				);
+				if ( ! feedzy_is_pro() && ! empty( get_option( 'feedzy_fresh_install', false ) ) ) {
+					$redirect_url = array(
+						'page' => 'feedzy-setup-wizard',
+						'tab'  => '#step-1',
+					);
+				}
 				wp_safe_redirect(
 					add_query_arg(
-						array(
-							'page' => 'feedzy-support',
-							'tab'  => 'help#shortcode',
-						),
+						$redirect_url,
 						admin_url( 'admin.php' )
 					)
 				);
@@ -894,5 +916,328 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			);
 		}
 		return array_merge( $list, $black_list );
+	}
+
+	/**
+	 * Add classes to make the wizard full screen
+	 *
+	 * @param string $classes Body classes.
+	 * @return string
+	 */
+	public function add_wizard_classes( $classes ) {
+		if ( get_option( 'feedzy_fresh_install', false ) ) {
+			$classes .= ' feedzy-wizard-fullscreen';
+		}
+		return trim( $classes );
+	}
+
+	/**
+	 * Method to register the setup wizard page.
+	 *
+	 * @access  public
+	 */
+	public function feedzy_setup_wizard_page() {
+		include FEEDZY_ABSPATH . '/includes/layouts/setup-wizard.php';
+	}
+
+	/**
+	 * Load setup wizard page.
+	 */
+	public function feedzy_load_setup_wizard_page() {
+		add_action( 'admin_enqueue_scripts', array( $this, 'feedzy_enqueue_setup_wizard_scripts' ) );
+	}
+
+	/**
+	 * Enqueue setup wizard required scripts.
+	 */
+	public function feedzy_enqueue_setup_wizard_scripts() {
+		wp_enqueue_style( $this->plugin_name . '_chosen' );
+		wp_enqueue_style( $this->plugin_name . '_smart_wizard', FEEDZY_ABSURL . 'css/smart_wizard_all.min.css', array(), $this->version );
+		wp_enqueue_style( $this->plugin_name . '_setup_wizard', FEEDZY_ABSURL . 'includes/views/css/style-wizard.css', array( $this->plugin_name . '-settings' ), $this->version, 'all' );
+
+		wp_enqueue_script( $this->plugin_name . '_jquery_smart_wizard', FEEDZY_ABSURL . 'js/jquery.smartWizard.min.js', array( 'jquery', 'clipboard', $this->plugin_name . '_chosen_script' ), $this->version, true );
+		wp_enqueue_script( $this->plugin_name . '_setup_wizard', FEEDZY_ABSURL . 'js/feedzy-setup-wizard.js', array( 'jquery' ), $this->version, true );
+		wp_localize_script(
+			$this->plugin_name . '_setup_wizard',
+			'feedzySetupWizardData',
+			array(
+				'ajax'           => array(
+					'url'      => admin_url( 'admin-ajax.php' ),
+					'security' => wp_create_nonce( FEEDZY_BASEFILE ),
+				),
+				'nextButtonText' => __( 'Next Step', 'feedzy-rss-feeds' ),
+				'backButtonText' => __( 'Back', 'feedzy-rss-feeds' ),
+			)
+		);
+	}
+
+	/**
+	 * Skip setup wizard.
+	 */
+	public function skip_wizard() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$status = isset( $_REQUEST['status'] ) ? (int) $_REQUEST['status'] : 0;
+		update_option( 'feedzy_fresh_install', $status );
+		wp_safe_redirect( remove_query_arg( array( 'action', 'status' ) ) );
+		exit;
+	}
+
+	/**
+	 * Setup wizard process.
+	 */
+	public function feedzy_wizard_step_process() {
+		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
+		$step = ! empty( $_POST['step'] ) ? filter_input( INPUT_POST, 'step', FILTER_SANITIZE_STRING ) : 1;
+		switch ( $step ) {
+			case 'step_2':
+				$this->setup_wizard_import_feed();
+				break;
+			case 'step_3':
+				$this->setup_wizard_install_plugin();
+				break;
+			case 'step_4':
+				$this->setup_wizard_subscribe_process();
+				break;
+			case 'create_draft_page':
+				$this->setup_wizard_create_draft_page();
+				break;
+			default:
+				wp_send_json( array( 'status' => 0 ) );
+				break;
+		}
+	}
+
+	/**
+	 * Step: 2 import feed.
+	 */
+	private function setup_wizard_import_feed() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$feed_url = ! empty( $_POST['feed'] ) ? filter_input( INPUT_POST, 'feed', FILTER_SANITIZE_STRING ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$integrate_with = ! empty( $_POST['integrate_with'] ) ? filter_input( INPUT_POST, 'integrate_with', FILTER_SANITIZE_STRING ) : '';
+
+		$feed_url = $this->normalize_urls( $feed_url );
+		if ( ! is_array( $feed_url ) ) {
+			$feed_url = array( $feed_url );
+		}
+		$response = array(
+			'status' => 1,
+		);
+		$feed     = $this->fetch_feed( $feed_url, '1_mins', array( '' ) );
+		if ( empty( $feed->error() ) ) {
+			$wizard_data = array(
+				'feed'           => implode( ',', $feed_url ),
+				'integrate_with' => $integrate_with,
+			);
+			update_option( 'feedzy_wizard_data', $wizard_data );
+			// Create draft page.
+			$type = 'block_editor';
+			if ( defined( 'ELEMENTOR_PATH' ) && class_exists( 'Elementor\Widget_Base' ) ) {
+				$type = 'elementor_editor';
+			}
+			$page_id = $this->setup_wizard_create_draft_page( $type, true );
+		} else {
+			$response['status']  = 0;
+			$response['message'] = sprintf( '<p><strong>%s</strong></p>', apply_filters( 'feedzy_default_error', $feed->error(), $feed, $feed_url ) );
+		}
+		wp_send_json( $response );
+	}
+
+	/**
+	 * Step: 3 Install plugin.
+	 */
+	private function setup_wizard_install_plugin() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$slug = ! empty( $_POST['slug'] ) ? filter_input( INPUT_POST, 'slug', FILTER_SANITIZE_STRING ) : '';
+
+		if ( empty( $slug ) ) {
+			wp_send_json(
+				array(
+					'status'  => 0,
+					'message' => __( 'No plugin specified.', 'feedzy-rss-feeds' ),
+				)
+			);
+		}
+
+		if ( ! current_user_can( 'install_plugins' ) ) {
+			wp_send_json(
+				array(
+					'status'  => 0,
+					'message' => __( 'Sorry, you are not allowed to install plugins on this site.', 'feedzy-rss-feeds' ),
+				)
+			);
+		}
+
+		if ( ! empty( $slug ) ) {
+			require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+			include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+
+			$api = plugins_api(
+				'plugin_information',
+				array(
+					'slug'   => sanitize_key( wp_unslash( $slug ) ),
+					'fields' => array(
+						'sections' => false,
+					),
+				)
+			);
+
+			if ( is_wp_error( $api ) ) {
+				wp_send_json(
+					array(
+						'status'  => 0,
+						'message' => $api->get_error_message(),
+					)
+				);
+			}
+
+			$skin     = new WP_Ajax_Upgrader_Skin();
+			$upgrader = new Plugin_Upgrader( $skin );
+			$result   = $upgrader->install( $api->download_link );
+			if ( is_wp_error( $result ) ) {
+				wp_send_json(
+					array(
+						'status'  => 0,
+						'message' => $api->get_error_message(),
+					)
+				);
+			} elseif ( is_wp_error( $skin->result ) ) {
+				if ( 'folder_exists' !== $skin->result->get_error_code() ) {
+					wp_send_json(
+						array(
+							'status'  => 0,
+							'message' => $skin->result->get_error_message(),
+						)
+					);
+				}
+			} elseif ( $skin->get_errors()->has_errors() ) {
+				if ( 'folder_exists' !== $skin->get_error_code() ) {
+					wp_send_json(
+						array(
+							'status'  => 0,
+							'message' => $skin->get_error_message(),
+						)
+					);
+				}
+			} elseif ( is_null( $result ) ) {
+				global $wp_filesystem;
+				$status = array();
+				$status['message'] = __( 'Unable to connect to the filesystem. Please confirm your credentials.', 'feedzy-rss-feeds' );
+
+				// Pass through the error from WP_Filesystem if one was raised.
+				if ( $wp_filesystem instanceof WP_Filesystem_Base && is_wp_error( $wp_filesystem->errors ) && $wp_filesystem->errors->has_errors() ) {
+					$status['message'] = esc_html( $wp_filesystem->errors->get_error_message() );
+				}
+
+				wp_send_json( $status );
+			}
+
+			activate_plugin( 'optimole-wp/optimole-wp.php' );
+			$wizard_data = get_option( 'feedzy_wizard_data', array() );
+
+			$wizard_data['enable_perfomance'] = true;
+			update_option( 'feedzy_wizard_data', $wizard_data );
+
+			wp_send_json(
+				array(
+					'status' => 1,
+				)
+			);
+		}
+	}
+
+	/**
+	 * Step: 4 skip and subscribe process.
+	 */
+	private function setup_wizard_subscribe_process() {
+		$wizard_data    = get_option( 'feedzy_wizard_data', array() );
+		$integrate_with = ! empty( $wizard_data['integrate_with'] ) ? $wizard_data['integrate_with'] : '';
+		$post_type      = ! empty( $wizard_data['post_type'] ) ? $wizard_data['post_type'] : '';
+		$page_id        = ! empty( $wizard_data['page_id'] ) ? $wizard_data['page_id'] : '';
+		$response       = array(
+			'status'      => 0,
+			'redirect_to' => '',
+		);
+
+		$with_subscribe = ! empty( $_POST['with_subscribe'] ) ? (bool) $_POST['with_subscribe'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$email          = ! empty( $_POST['email'] ) ? filter_input( INPUT_POST, 'email', FILTER_SANITIZE_EMAIL ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+
+		if ( 'feed' === $integrate_with ) {
+			$redirect_to = get_post_type_archive_link( $post_type );
+			$response    = array(
+				'status'      => 1,
+				'redirect_to' => $redirect_to,
+			);
+		} elseif ( 'shortcode' === $integrate_with ) {
+			$response = array(
+				'status'      => 1,
+				'redirect_to' => get_edit_post_link( $page_id ),
+			);
+		} elseif ( 'page_builder' === $integrate_with ) {
+			if ( defined( 'ELEMENTOR_PATH' ) && class_exists( 'Elementor\Widget_Base' ) ) {
+				$post_edit_link = add_query_arg(
+					array(
+						'post'   => $page_id,
+						'action' => 'elementor',
+					),
+					admin_url( 'post.php' )
+				);
+			}
+			$response = array(
+				'status'      => 1,
+				'redirect_to' => $post_edit_link,
+			);
+		}
+		// Dismiss flag.
+		update_option( 'feedzy_fresh_install', false );
+		// Delete wizard data.
+		delete_option( 'feedzy_wizard_data' );
+		wp_send_json( $response );
+	}
+
+	/**
+	 * Create draft page.
+	 *
+	 * @param string $type Page type.
+	 * @param bool   $return_page_id Page ID.
+	 */
+	private function setup_wizard_create_draft_page( $type = 'shortcode', $return_page_id = false ) {
+		$add_basic_shortcode = ! empty( $_POST['add_basic_shortcode'] ) ? (bool) $_POST['add_basic_shortcode'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$basic_shortcode     = ! empty( $_POST['basic_shortcode'] ) ? filter_input( INPUT_POST, 'basic_shortcode', FILTER_SANITIZE_STRING ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+
+		$post_title = __( 'Feedzy Demo Page', 'feedzy-rss-feeds' );
+		$page_id    = post_exists( $post_title, '', '', 'page' );
+		$args       = array(
+			'post_type'    => 'page',
+			'post_title'   => $post_title,
+			'post_content' => $add_basic_shortcode ? $basic_shortcode : '',
+			'post_status'  => 'publish',
+		);
+		if ( ! $page_id ) {
+			$page_id = wp_insert_post( $args );
+		} else {
+			$args['ID'] = $page_id;
+			$page_id    = wp_update_post( $args );
+		}
+
+		if ( $page_id ) {
+			// Delete previous meta data.
+			$meta = get_post_meta( $page_id );
+			foreach ( $meta as $key => $value ) {
+				delete_post_meta( $job_id, $key );
+			}
+			// Save wizard data.
+			$wizard_data            = get_option( 'feedzy_wizard_data', array() );
+			$wizard_data['page_id'] = $page_id;
+			update_option( 'feedzy_wizard_data', $wizard_data );
+		}
+		if ( $return_page_id ) {
+			return $page_id;
+		}
+		wp_send_json(
+			array(
+				'status' => $page_id,
+			)
+		);
 	}
 }
