@@ -219,8 +219,26 @@ jQuery(function ($) {
 			security: feedzySetupWizardData.ajax.security,
 			step: 'step_4',
 		};
+		var emailElement = $( '#fz_subscribe_email' );
+		// Remove error message.
+		emailElement.next( '.fz-field-error' ).remove();
+
 		if ( withSubscribe ) {
-			postData.email = $( '#fz_subscribe_email' ).val();
+			var subscribeEmail = emailElement.val();
+			var EmailTest = /^[\w\-\.\+]+\@[a-zA-Z0-9\.\-]+\.[a-zA-z0-9]{2,4}$/;
+			var errorMessage = '';
+
+			if ( '' === subscribeEmail ) {
+				errorMessage = feedzySetupWizardData.errorMessages.requiredEmail;
+			} else if ( ! EmailTest.test( subscribeEmail ) ) {
+				errorMessage = feedzySetupWizardData.errorMessages.invalidEmail;
+			}
+			if ( '' !== errorMessage ) {
+				$( '<span class="fz-field-error">' + errorMessage + '</span>' ).insertAfter( emailElement );
+				return false;
+			}
+
+			postData.email = subscribeEmail;
 			postData.with_subscribe = withSubscribe;
 		}
 		$( '#step-4' ).find( '.spinner' ).addClass( 'is-active' );

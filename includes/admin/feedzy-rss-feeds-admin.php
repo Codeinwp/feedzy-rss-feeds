@@ -965,6 +965,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					'url'      => admin_url( 'admin-ajax.php' ),
 					'security' => wp_create_nonce( FEEDZY_BASEFILE ),
 				),
+				'errorMessages'  => array(
+					'requiredEmail' => __( 'This field is required.', 'feedzy-rss-feeds' ),
+					'invalidEmail'  => __( 'Please enter a valid email address.', 'feedzy-rss-feeds' ),
+				),
 				'nextButtonText' => __( 'Next Step', 'feedzy-rss-feeds' ),
 				'backButtonText' => __( 'Back', 'feedzy-rss-feeds' ),
 			)
@@ -972,14 +976,21 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	}
 
 	/**
-	 * Skip setup wizard.
+	 * Dismiss setup wizard.
+	 *
+	 * @param bool $redirect_to_dashboard Redirect to dashboard.
+	 * @return bool|void
 	 */
-	public function skip_wizard() {
+	public function feedzy_dismiss_wizard( $redirect_to_dashboard = true ) {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$status = isset( $_REQUEST['status'] ) ? (int) $_REQUEST['status'] : 0;
 		update_option( 'feedzy_fresh_install', $status );
-		wp_safe_redirect( remove_query_arg( array( 'action', 'status' ) ) );
-		exit;
+		delete_option( 'feedzy_wizard_data' );
+		if ( $redirect_to_dashboard ) {
+			wp_safe_redirect( remove_query_arg( array( 'action', 'status' ) ) );
+			exit;
+		}
+		return true;
 	}
 
 	/**
@@ -1188,11 +1199,35 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				'redirect_to' => $post_edit_link,
 			);
 		}
-		// Dismiss flag.
-		update_option( 'feedzy_fresh_install', false );
-		// Delete wizard data.
-		delete_option( 'feedzy_wizard_data' );
-		wp_send_json( $response );
+		if ( $with_subscribe && is_email( $email ) ) {
+			$request_res = wp_remote_post(
+				FEEDZY_SUBSCRIBE_API,
+				array(
+					'timeout' => 100,
+					'body'    => array(
+						'slug'  => 'feedzy-rss-feeds',
+						'site'  => home_url(),
+						'email' => $email,
+					),
+				)
+			);
+			if ( ! is_wp_error( $request_res ) ) {
+				$body = json_decode( wp_remote_retrieve_body( $request_res ) );
+				if ( 'success' === $body->code ) {
+					$this->feedzy_dismiss_wizard( false );
+					wp_send_json( $response );
+				}
+			}
+			wp_send_json(
+				array(
+					'status'      => 0,
+					'redirect_to' => '',
+				)
+			);
+		} else {
+			$this->feedzy_dismiss_wizard( false );
+			wp_send_json( $response );
+		}
 	}
 
 	/**

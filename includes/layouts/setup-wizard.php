@@ -8,7 +8,7 @@
 $dashboard_url = add_query_arg(
 	array(
 		'post_type' => 'feedzy_imports',
-		'action'    => 'skip_wizard',
+		'action'    => 'feedzy_dismiss_wizard',
 		'status'    => 0,
 	),
 	admin_url( 'edit.php' )

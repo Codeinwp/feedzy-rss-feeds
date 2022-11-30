@@ -289,6 +289,10 @@
     color: #ffffff;
 }
 
+.feedzy-wizard-fullscreen .fz-field-error {
+	color: #F00;
+}
+
 @media (max-width: 767px){
 	.wp-toolbar .feedzy-wizard-fullscreen{margin-top: 0;}
 	.feedzy-wizard .sw-theme-basic>.nav{max-width: 270px;}

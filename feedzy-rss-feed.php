@@ -122,6 +122,7 @@ function run_feedzy_rss_feeds() {
 	define( 'FEEDZY_ABSPATH', dirname( __FILE__ ) );
 	define( 'FEEDZY_DIRNAME', basename( FEEDZY_ABSPATH ) );
 	define( 'FEEDZY_UPSELL_LINK', 'https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/' );
+	define( 'FEEDZY_SUBSCRIBE_API', 'https://api.themeisle.com/tracking/subscribe' );
 	define( 'FEEDZY_NAME', 'Feedzy RSS Feeds' );
 	define( 'FEEDZY_USER_AGENT', 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36' );
 	define( 'FEEDZY_ALLOW_HTTPS', true );
