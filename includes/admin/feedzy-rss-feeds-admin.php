@@ -1259,7 +1259,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			// Delete previous meta data.
 			$meta = get_post_meta( $page_id );
 			foreach ( $meta as $key => $value ) {
-				delete_post_meta( $job_id, $key );
+				delete_post_meta( $page_id, $key );
 			}
 			// Save wizard data.
 			$wizard_data            = get_option( 'feedzy_wizard_data', array() );
