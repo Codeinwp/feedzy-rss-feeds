@@ -1,9 +1,9 @@
 .feedzy-wizard-fullscreen #adminmenumain,
 .feedzy-wizard-fullscreen #wpadminbar,
 .feedzy-wizard-fullscreen .notice:not(.fz-error-notice),
-.feedzy-wizard-fullscreen .wrap .notice:not(.fz-error-notice),
-.feedzy-wizard-fullscreen .wrap .error,
-.feedzy-wizard-fullscreen .wrap .updated,
+.feedzy-wizard-fullscreen .notice:not(.fz-error-notice),
+.feedzy-wizard-fullscreen .error:not(#message),
+.feedzy-wizard-fullscreen .updated,
 .feedzy-wizard-fullscreen #wpfooter {
     display: none !important;
 }

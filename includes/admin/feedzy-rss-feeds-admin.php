@@ -1042,11 +1042,13 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			);
 			update_option( 'feedzy_wizard_data', $wizard_data );
 			// Create draft page.
-			$type = 'block_editor';
-			if ( defined( 'ELEMENTOR_PATH' ) && class_exists( 'Elementor\Widget_Base' ) ) {
-				$type = 'elementor_editor';
+			if ( 'page_builder' === $integrate_with ) {
+				$type = 'block_editor';
+				if ( defined( 'ELEMENTOR_PATH' ) && class_exists( 'Elementor\Widget_Base' ) ) {
+					$type = 'elementor_editor';
+				}
+				$this->setup_wizard_create_draft_page( $type, true );
 			}
-			$page_id = $this->setup_wizard_create_draft_page( $type, true );
 		} else {
 			$response['status']  = 0;
 			$response['message'] = sprintf( '<p><strong>%s</strong></p>', apply_filters( 'feedzy_default_error', $feed->error(), $feed, $feed_url ) );
@@ -1182,9 +1184,11 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		} elseif ( 'shortcode' === $integrate_with ) {
 			$response = array(
 				'status'      => 1,
-				'redirect_to' => get_edit_post_link( $page_id ),
+				'redirect_to' => get_edit_post_link( $page_id, 'db' ),
 			);
 		} elseif ( 'page_builder' === $integrate_with ) {
+			$post_edit_link = get_edit_post_link( $page_id, 'db' );
+			// Get elementor edit page link.
 			if ( defined( 'ELEMENTOR_PATH' ) && class_exists( 'Elementor\Widget_Base' ) ) {
 				$post_edit_link = add_query_arg(
 					array(
@@ -1239,7 +1243,11 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	private function setup_wizard_create_draft_page( $type = 'shortcode', $return_page_id = false ) {
 		$add_basic_shortcode = ! empty( $_POST['add_basic_shortcode'] ) ? (bool) $_POST['add_basic_shortcode'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$basic_shortcode     = ! empty( $_POST['basic_shortcode'] ) ? filter_input( INPUT_POST, 'basic_shortcode', FILTER_SANITIZE_STRING ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-
+		$wizard_data         = get_option( 'feedzy_wizard_data', array() );
+		if ( 'block_editor' === $type ) {
+			$add_basic_shortcode = true;
+			$basic_shortcode     = $this->feedzy_block_editor_content( $wizard_data );
+		}
 		$post_title = __( 'Feedzy Demo Page', 'feedzy-rss-feeds' );
 		$page_id    = post_exists( $post_title, '', '', 'page' );
 		$args       = array(
@@ -1261,8 +1269,11 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			foreach ( $meta as $key => $value ) {
 				delete_post_meta( $page_id, $key );
 			}
-			// Save wizard data.
-			$wizard_data            = get_option( 'feedzy_wizard_data', array() );
+			// Create elementor page with feedzy widgets.
+			if ( 'elementor_editor' === $type ) {
+				$this->feedzy_make_elementor_page( $wizard_data, $page_id );
+			}
+			// Update wizard data.
 			$wizard_data['page_id'] = $page_id;
 			update_option( 'feedzy_wizard_data', $wizard_data );
 		}
@@ -1274,5 +1285,90 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				'status' => $page_id,
 			)
 		);
+	}
+
+	/**
+	 * Create post content for block editor.
+	 *
+	 * @param array $wizard_data Setup wizard data.
+	 * @return string
+	 */
+	public function feedzy_block_editor_content( $wizard_data = array() ) {
+		$post_content = '';
+		if ( empty( $wizard_data['feed'] ) ) {
+			return $post_content;
+		}
+
+		$feed_url        = $wizard_data['feed'];
+		$feedzy_rest_url = get_rest_url( null, 'feedzy/v' . FEEDZY_REST_VERSION . '/feed/' );
+		$response        = wp_remote_post(
+			$feedzy_rest_url,
+			array(
+				'timeout' => 100,
+				'body'    => array(
+					'url' => array( $feed_url ),
+				),
+			)
+		);
+		if ( ! is_wp_error( $response ) ) {
+			$data         = wp_remote_retrieve_body( $response );
+			$data         = json_decode( $data );
+			$data->feeds  = $feed_url;
+			$data         = wp_json_encode( $data );
+			$post_content = '<!-- wp:feedzy-rss-feeds/feedzy-block ' . $data . ' /-->';
+		}
+		return $post_content;
+	}
+
+	/**
+	 * Create elementor page with feedzy widget.
+	 *
+	 * @param array $wizard_data Setup wizard data.
+	 * @param int   $page_id Page ID.
+	 * @return int Page ID.
+	 */
+	public function feedzy_make_elementor_page( $wizard_data = array(), $page_id = 0 ) {
+		if ( empty( $wizard_data['feed'] ) ) {
+			return $page_id;
+		}
+		$feed_url = $wizard_data['feed'];
+		update_post_meta( $page_id, '_elementor_template_type', 'wp-page' );
+		update_post_meta( $page_id, '_elementor_edit_mode', 'builder' );
+		if ( defined( 'ELEMENTOR_VERSION' ) ) {
+			update_post_meta( $page_id, '_elementor_version', ELEMENTOR_VERSION );
+		}
+		if ( defined( 'ELEMENTOR_PRO_VERSION' ) ) {
+			update_post_meta( $page_id, '_elementor_pro_version', ELEMENTOR_PRO_VERSION );
+		}
+		$widget_type = Elementor\Plugin::$instance->widgets_manager->get_widget_types( 'feedzy-rss-feeds' );
+		$settings    = array(
+			'fz-source' => $feed_url,
+		);
+		$elementor_data = array(
+			array(
+				'id' => Elementor\Utils::generate_random_string(),
+				'elType' => 'section',
+				'elements' => array(
+					array(
+						'id' => Elementor\Utils::generate_random_string(),
+						'elType' => 'column',
+						'settings' => array(
+							'_column_size' => 100,
+							'_inline_size' => '',
+						),
+						'elements' => array(
+							array(
+								'id' => Elementor\Utils::generate_random_string(),
+								'elType' => $widget_type::get_type(),
+								'widgetType' => $widget_type->get_name(),
+								'settings' => $settings,
+							),
+						),
+					),
+				),
+			),
+		);
+		update_post_meta( $page_id, '_elementor_data', $elementor_data );
+		return $page_id;
 	}
 }
