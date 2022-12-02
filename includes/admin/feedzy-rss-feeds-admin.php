@@ -986,7 +986,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$status = isset( $_REQUEST['status'] ) ? (int) $_REQUEST['status'] : 0;
 		update_option( 'feedzy_fresh_install', $status );
 		delete_option( 'feedzy_wizard_data' );
-		if ( $redirect_to_dashboard ) {
+		if ( false !== $redirect_to_dashboard ) {
 			wp_safe_redirect( remove_query_arg( array( 'action', 'status' ) ) );
 			exit;
 		}
