@@ -78,9 +78,9 @@ if ( ! empty( $integrate_with ) ) {
 													<label for="radio-3">
 														<?php
 														if ( defined( 'ELEMENTOR_PATH' ) && class_exists( 'Elementor\Widget_Base' ) ) {
-															esc_html_e( 'Display RSS feeds using Elementor or block editor', 'feedzy-rss-feeds' );
+															esc_html_e( 'Display RSS feed using elementor', 'feedzy-rss-feeds' );
 														} else {
-															esc_html_e( 'Display RSS feeds using block editor', 'feedzy-rss-feeds' );
+															esc_html_e( 'Display RSS feed using block editor', 'feedzy-rss-feeds' );
 														}
 														?>
 													</label>
@@ -201,7 +201,7 @@ if ( ! empty( $integrate_with ) ) {
 															<h4 class="h4"><?php esc_html_e( 'Add basic short code in draft page', 'feedzy-rss-feeds' ); ?> <span
 																	class="pro-label free-label"><?php esc_html_e( 'Free', 'feedzy-rss-feeds' ); ?></span></h4>
 															<div class="check">
-																<input type="checkbox" id="add_basic_shortcode" class="fz-switch-toggle" value="1">
+																<input type="checkbox" id="add_basic_shortcode" class="fz-switch-toggle" value="1" checked>
 															</div>
 														</div>
 														<div class="fz-shortcode-preview">
@@ -243,7 +243,7 @@ if ( ! empty( $integrate_with ) ) {
 													<div class="feedzy-accordion-item fz-features-accordion mb-0">
 														<div class="feedzy-accordion-item__title feedzy-accordion-checkbox__title">
 															<div class="fz-checkbox">
-																<input type="checkbox" name="feedzy[wizard_data][enable_perfomance]" class="fz-checkbox-btn">
+																<input type="checkbox" name="feedzy[wizard_data][enable_perfomance]" class="fz-checkbox-btn" checked>
 															</div>
 															<button type="button" class="feedzy-accordion-item__button">
 																<div class="feedzy-accordion__step-title h4 pb-4"><?php esc_html_e( 'Enable performance features for your website.', 'feedzy-rss-feeds' ); ?>
@@ -276,8 +276,8 @@ if ( ! empty( $integrate_with ) ) {
 												</div>
 											</div>
 											<div class="form-block">
-												<button class="btn btn-primary next-btn skip-improvement"><?php esc_html_e( 'Skip Improvement', 'feedzy-rss-feeds' ); ?></button>
-												<button class="btn btn-primary fz-wizard-install-plugin" style="display: none;" data-step_number="3"><?php esc_html_e( 'Improve now', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-arrow-right-alt"></span></button>
+												<button class="btn btn-primary fz-wizard-install-plugin" data-step_number="3"><?php esc_html_e( 'Improve now', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-arrow-right-alt"></span></button>
+												<button class="btn btn-primary next-btn skip-improvement" style="display: none;"><?php esc_html_e( 'Skip Improvement', 'feedzy-rss-feeds' ); ?></button>
 												<span class="spinner"></span>
 											</div>
 										</div>

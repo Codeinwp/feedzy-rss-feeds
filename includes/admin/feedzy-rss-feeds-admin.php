@@ -971,6 +971,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				),
 				'nextButtonText' => __( 'Next Step', 'feedzy-rss-feeds' ),
 				'backButtonText' => __( 'Back', 'feedzy-rss-feeds' ),
+				'draftPageButtonText' => array(
+					'firstButtonText' => __( 'Create Page', 'feedzy-rss-feeds' ),
+					'secondButtonText' => __( 'Do not create', 'feedzy-rss-feeds' ),
+				),
 			)
 		);
 	}
@@ -1182,10 +1186,17 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				'redirect_to' => $redirect_to,
 			);
 		} elseif ( 'shortcode' === $integrate_with ) {
-			$response = array(
-				'status'      => 1,
-				'redirect_to' => get_edit_post_link( $page_id, 'db' ),
-			);
+			if ( ! empty( $page_id ) ) {
+				$response = array(
+					'status'      => 1,
+					'redirect_to' => get_edit_post_link( $page_id, 'db' ),
+				);
+			} else {
+				$response = array(
+					'status'      => 1,
+					'redirect_to' => add_query_arg( 'post_type', 'feedzy_imports', admin_url( 'edit.php' ) ),
+				);
+			}
 		} elseif ( 'page_builder' === $integrate_with ) {
 			$post_edit_link = get_edit_post_link( $page_id, 'db' );
 			// Get elementor edit page link.
@@ -1241,9 +1252,20 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @param bool   $return_page_id Page ID.
 	 */
 	private function setup_wizard_create_draft_page( $type = 'shortcode', $return_page_id = false ) {
-		$add_basic_shortcode = ! empty( $_POST['add_basic_shortcode'] ) ? (bool) $_POST['add_basic_shortcode'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$add_basic_shortcode = ! empty( $_POST['add_basic_shortcode'] ) ? sanitize_text_field( wp_unslash( $_POST['add_basic_shortcode'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$add_basic_shortcode = 'true' === $add_basic_shortcode ? true : false;
 		$basic_shortcode     = ! empty( $_POST['basic_shortcode'] ) ? filter_input( INPUT_POST, 'basic_shortcode', FILTER_SANITIZE_STRING ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$wizard_data         = get_option( 'feedzy_wizard_data', array() );
+
+		// Do not create draft page.
+		if ( 'shortcode' === $type && false === $add_basic_shortcode ) {
+			wp_send_json(
+				array(
+					'status' => 1,
+				)
+			);
+		}
+
+		$wizard_data = get_option( 'feedzy_wizard_data', array() );
 		if ( 'block_editor' === $type ) {
 			$add_basic_shortcode = true;
 			$basic_shortcode     = $this->feedzy_block_editor_content( $wizard_data );

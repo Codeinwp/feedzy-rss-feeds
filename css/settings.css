@@ -1636,6 +1636,7 @@ input[type=checkbox].fz-checkbox-btn:before{
 .fz-btn-group{
 	display: flex;
 	flex-wrap: wrap;
+	align-items: center;
 }
 .fz-btn-group .btn{
 	margin-bottom: 8px;
@@ -1643,6 +1644,9 @@ input[type=checkbox].fz-checkbox-btn:before{
 }
 .fz-btn-group .btn:last-child{
 	margin-right: 0px;
+}
+.fz-btn-group span.spinner {
+	margin-bottom: 8px;
 }
 
 

@@ -280,6 +280,15 @@ jQuery(function ($) {
 		$( '#step-1' ).find( '[data-step_number="1"]' ).removeClass( 'disabled' );
 	} );
 
+	// Change button text.
+	$( document ).on( 'change', '#add_basic_shortcode', function() {
+		if ( $( this ).is( ':checked' ) ) {
+			$( '.fz-create-page' ).html( feedzySetupWizardData.draftPageButtonText.firstButtonText + ' <span class="dashicons dashicons-arrow-right-alt"></span>' );
+		} else {
+			$( '.fz-create-page' ).html( feedzySetupWizardData.draftPageButtonText.secondButtonText + ' <span class="dashicons dashicons-arrow-right-alt"></span>' );
+		}
+	} );
+
 	// Init chosen selectbox.
 	$( '.feedzy-chosen' ).chosen( { width: '100%' } );
 });
