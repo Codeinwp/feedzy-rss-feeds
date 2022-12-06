@@ -884,6 +884,7 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 	position: relative;
 	margin-left: 0;
 	margin-right: 16px;
+	margin-bottom: 16px;
 }
 .fz-form-wrap .tagify__tag>div{
 	padding: 7px 8px 6px 8px;
