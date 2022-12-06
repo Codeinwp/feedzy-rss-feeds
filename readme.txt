@@ -464,6 +464,17 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
+#### [Version 4.1.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.0.5...v4.1.0) (2022-12-06)
+
+
+- Improve tag items selections on the import screen [#701](https://github.com/Codeinwp/feedzy-rss-feeds/issues/701) 
+- Allow adding all the Magic tags in one flow [#697](https://github.com/Codeinwp/feedzy-rss-feeds/issues/697) 
+- Improve image import support in PRO
+- Improve full content import in various languages
+
+
+
+
 ##### [Version 4.0.5](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.0.4...v4.0.5) (2022-10-26)
 
 * Fix possible cache expiration filter change.
