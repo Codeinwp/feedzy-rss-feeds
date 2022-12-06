@@ -30,7 +30,24 @@
 		<div class="feedzy-accordion-item">
 			<div class="feedzy-accordion-item__title">
 				<div class="feedzy-accordion-item__button">
-					<div class="feedzy-accordion__step-title h2"><?php esc_html_e( 'General', 'feedzy-rss-feeds' ); ?></div>
+					<div class="feedzy-accordion__step-title h2">
+						<?php
+						switch ( $active_tab ) {
+							case 'misc':
+								esc_html_e( 'Miscellaneous', 'feedzy-rss-feeds' );
+								break;
+							case 'spinnerchief':
+								esc_html_e( 'SpinnerChief', 'feedzy-rss-feeds' );
+								break;
+							case 'wordai':
+								esc_html_e( 'WordAI', 'feedzy-rss-feeds' );
+								break;
+							default:
+								echo esc_html( ucwords( str_replace( array( '-', '_' ), ' ', $active_tab ) ) );
+								break;
+						}
+						?>
+					</div>
 				</div>
 			</div>
 			<div class="feedzy-accordion-item__content">
@@ -185,7 +202,7 @@
 					<?php
 					wp_nonce_field( $active_tab, 'nonce' );
 					if ( $show_button ) {
-							$disable_button = ! feedzy_is_pro() && in_array( $active_tab, array( 'spinnerchief', 'wordai' ), true ) ? ' disabled' : '';
+							$disable_button = ! feedzy_is_pro() && in_array( $active_tab, array( 'spinnerchief', 'wordai', 'amazon-product-advertising' ), true ) ? ' disabled' : '';
 						?>
 						<div class="mb-24">
 							<button type="submit" class="btn btn-primary<?php echo esc_attr( $disable_button ); ?>" id="feedzy-settings-submit" name="feedzy-settings-submit"><?php esc_html_e( 'Save Settings', 'feedzy-rss-feeds' ); ?></button>

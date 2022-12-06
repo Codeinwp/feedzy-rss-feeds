@@ -40,10 +40,6 @@
             "keywords": [
                 "wordpress"
             ],
-            "support": {
-                "issues": "https://github.com/Codeinwp/themeisle-sdk/issues",
-                "source": "https://github.com/Codeinwp/themeisle-sdk/tree/v3.2.30"
-            },
             "time": "2022-09-15T19:54:34+00:00"
         }
     ],
@@ -413,5 +409,5 @@
     "platform-overrides": {
         "php": "5.6"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "1.1.0"
 }

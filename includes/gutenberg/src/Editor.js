@@ -374,6 +374,7 @@ class Editor extends Component {
 							{ __( 'Load Feed' ) }
 						</Button>,
                         <ExternalLink href={ this.getValidateURL() } title={ __( 'Validate Feed ' ) }>{ __( 'Validate ' ) }</ExternalLink>,
+                        ( ! feedzyjs.isPro ) && <div className="fz-source-upgrade-alert"><strong>{__('NEW!')} </strong>{__('Enable Amazon Product Advertising feeds to generate affiliate revenue by ')}<ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=keywordsfilter&utm_content=feedzy-rss-feeds">{__('upgrading to Feedzy Pro.')}</ExternalLink></div>,
                         ( this.state.error ) && <div>{ __( 'Feed URL is invalid. Invalid feeds will NOT display items.') }</div>,
                         <p>{ __( 'Enter the full URL of the feed source you wish to display here, or the name of a category you\'ve created. Also you can add multiple URLs just separate them with a comma. You can manage your categories feed from') } <a href="edit.php?post_type=feedzy_categories" title={ __( 'feedzy categories ' ) } target="_blank">{ __( 'here ' ) }</a></p>
 					] }

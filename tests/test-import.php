@@ -48,9 +48,10 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 
 		$category_id    = wp_create_category( 'some name' );
 
-		$_POST['post_type']                             = 'feedzy_categories';
-		$_POST['feedzy_category_feed']                = $urls;
-		$_POST['feedzy_category_meta_noncename']    = wp_create_nonce( FEEDZY_BASEFILE );
+		$_POST['id']                             = $p->ID;
+		$_POST['post_type']                      = 'feedzy_categories';
+		$_POST['feedzy_category_feed']           = $urls;
+		$_POST['feedzy_category_meta_noncename'] = wp_create_nonce( FEEDZY_BASEFILE );
 
 		// Test Create Feedzy Category
 		do_action( 'save_post', $p->ID, $p );
@@ -122,6 +123,8 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 
 		// Do Cron
 		$options = array(
+			// Import Job ID.
+			'__jobID'        => $p->ID,
 			'feeds'          => $source,
 			// comma separated feeds url
 			'max'            => $import_feed_limit,

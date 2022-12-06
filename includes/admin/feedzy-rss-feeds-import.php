@@ -198,7 +198,11 @@ class Feedzy_Rss_Feeds_Import {
 		$categories = $item->get_categories();
 		if ( $categories ) {
 			foreach ( $categories as $category ) {
-				$cats[] = $category->get_label();
+				if ( is_string( $category ) ) {
+					$cats[] = $category;
+				} else {
+					$cats[] = $category->get_label();
+				}
 			}
 		}
 
@@ -524,9 +528,10 @@ class Feedzy_Rss_Feeds_Import {
 		if ( 'feedzy_imports' === $post->post_type ) {
 			// if invalid source has been found, redirect back to edit screen
 			// where errors can be shown
-			$invalid              = get_post_meta( $post_id, '__transient_feedzy_invalid_source', true );
-			$invalid_dc_namespace = get_post_meta( $post_id, '__transient_feedzy_invalid_dc_namespace', true );
-			if ( empty( $invalid ) && empty( $invalid_dc_namespace ) ) {
+			$invalid = get_post_meta( $post_id, '__transient_feedzy_invalid_source', true );
+			$invalid_dc_namespace  = get_post_meta( $post_id, '__transient_feedzy_invalid_dc_namespace', true );
+			$invalid_source_errors = get_post_meta( $post_id, '__transient_feedzy_invalid_source_errors', true );
+			if ( empty( $invalid ) && empty( $invalid_dc_namespace ) && empty( $invalid_source_errors ) ) {
 				return admin_url( 'edit.php?post_type=feedzy_imports' );
 			}
 		}
@@ -619,7 +624,17 @@ class Feedzy_Rss_Feeds_Import {
 				$src = get_post_meta( $post_id, 'source', true );
 				// if the source is a category, link it.
 				if ( strpos( $src, 'http' ) === false && strpos( $src, 'https' ) === false ) {
-					$src = sprintf( '%s: %s%s%s', __( 'Feed Category', 'feedzy-rss-feeds' ), '<a href="' . admin_url( 'edit.php?post_type=feedzy_categories' ) . '" target="_blank">', $src, '</a>' );
+					if ( function_exists( 'feedzy_amazon_get_locale_hosts' ) ) {
+						$amazon_hosts = feedzy_amazon_get_locale_hosts();
+						$src_path     = 'webservices.' . wp_parse_url( $src, PHP_URL_PATH );
+						if ( in_array( $src_path, $amazon_hosts, true ) ) {
+							$src = sprintf( '%s: %s%s%s', __( 'Amazon Product Advertising API', 'feedzy-rss-feeds' ), '<a>', $src, '</a>' );
+						} else {
+							$src = sprintf( '%s: %s%s%s', __( 'Feed Category', 'feedzy-rss-feeds' ), '<a href="' . admin_url( 'edit.php?post_type=feedzy_categories' ) . '" target="_blank">', $src, '</a>' );
+						}
+					} else {
+						$src = sprintf( '%s: %s%s%s', __( 'Feed Category', 'feedzy-rss-feeds' ), '<a href="' . admin_url( 'edit.php?post_type=feedzy_categories' ) . '" target="_blank">', $src, '</a>' );
+					}
 				} else {
 					// else link it to the feed but shorten it if it is too long.
 					$too_long = 65;
@@ -1351,7 +1366,7 @@ class Feedzy_Rss_Feeds_Import {
 			// Get translated item title.
 			$translated_title = '';
 			if ( $import_auto_translation && ( false !== strpos( $import_title, '[#translated_title]' ) || false !== strpos( $post_excerpt, '[#translated_title]' ) ) ) {
-				$translated_title = apply_filters( 'feedzy_invoke_auto_translate_services', $item['item_title'], '[#translated_title]', $import_translation_lang, $job, $language_code );
+				$translated_title = apply_filters( 'feedzy_invoke_auto_translate_services', $item['item_title'], '[#translated_title]', $import_translation_lang, $job, $language_code, $item );
 			}
 
 			$post_title = str_replace(
@@ -1385,14 +1400,14 @@ class Feedzy_Rss_Feeds_Import {
 			// Get translated item link text.
 			$item_link_txt = __( 'Read More', 'feedzy-rss-feeds' );
 			if ( $import_auto_translation && false !== strpos( $import_content, '[#item_url]' ) ) {
-				$item_link_txt = apply_filters( 'feedzy_invoke_auto_translate_services', $item_link_txt, '[#item_url]', $import_translation_lang, $job, $language_code );
+				$item_link_txt = apply_filters( 'feedzy_invoke_auto_translate_services', $item_link_txt, '[#item_url]', $import_translation_lang, $job, $language_code, $item );
 			}
 
 			$item_link = '<a href="' . $item['item_url'] . '" target="_blank" class="feedzy-rss-link-icon">' . $item_link_txt . '</a>';
 
 			// Rewriter item title from feedzy API.
 			if ( $rewrite_service_endabled && false !== strpos( $post_title, '[#title_feedzy_rewrite]' ) ) {
-				$title_feedzy_rewrite = apply_filters( 'feedzy_invoke_content_rewrite_services', $item['item_title'], '[#title_feedzy_rewrite]', $job );
+				$title_feedzy_rewrite = apply_filters( 'feedzy_invoke_content_rewrite_services', $item['item_title'], '[#title_feedzy_rewrite]', $job, $item );
 				$post_title           = str_replace( '[#title_feedzy_rewrite]', $title_feedzy_rewrite, $post_title );
 			}
 
@@ -1406,17 +1421,16 @@ class Feedzy_Rss_Feeds_Import {
 			// Get translated item description.
 			$translated_description = '';
 			if ( $import_auto_translation && ( false !== strpos( $import_content, '[#translated_description]' ) || false !== strpos( $post_excerpt, '[#translated_description]' ) ) ) {
-				$translated_description = apply_filters( 'feedzy_invoke_auto_translate_services', $item['item_full_description'], '[#translated_description]', $import_translation_lang, $job, $language_code );
+				$translated_description = apply_filters( 'feedzy_invoke_auto_translate_services', $item['item_full_description'], '[#translated_description]', $import_translation_lang, $job, $language_code, $item );
 			}
 
 			// Get translated item content.
 			$translated_content = '';
 			if ( $import_auto_translation && ( false !== strpos( $import_content, '[#translated_content]' ) || false !== strpos( $post_excerpt, '[#translated_content]' ) ) ) {
 				$translated_content = ! empty( $item['item_content'] ) ? $item['item_content'] : $item['item_description'];
-				$translated_content = apply_filters( 'feedzy_invoke_auto_translate_services', $translated_content, '[#translated_content]', $import_translation_lang, $job, $language_code );
+				$translated_content = apply_filters( 'feedzy_invoke_auto_translate_services', $translated_content, '[#translated_content]', $import_translation_lang, $job, $language_code, $item );
 			}
 
-			// exit;
 			$post_content = str_replace(
 				array(
 					'[#item_description]',
@@ -1427,6 +1441,8 @@ class Feedzy_Rss_Feeds_Import {
 					'[#item_source]',
 					'[#translated_description]',
 					'[#translated_content]',
+					'[#item_price]',
+					'[#item_author]',
 				),
 				array(
 					$item['item_description'],
@@ -1437,6 +1453,8 @@ class Feedzy_Rss_Feeds_Import {
 					$item['item_source'],
 					$translated_description,
 					$translated_content,
+					! empty( $item['item_price'] ) ? $item['item_price'] : '',
+					$author,
 				),
 				$import_content
 			);
@@ -1475,19 +1493,19 @@ class Feedzy_Rss_Feeds_Import {
 
 			// Translate full-content.
 			if ( $import_auto_translation && false !== strpos( $post_content, '[#translated_full_content]' ) ) {
-				$translated_full_content = apply_filters( 'feedzy_invoke_auto_translate_services', $item['item_url'], '[#translated_full_content]', $import_translation_lang, $job, $language_code );
+				$translated_full_content = apply_filters( 'feedzy_invoke_auto_translate_services', $item['item_url'], '[#translated_full_content]', $import_translation_lang, $job, $language_code, $item );
 				$post_content            = str_replace( '[#translated_full_content]', rtrim( $translated_full_content, '.' ), $post_content );
 			}
 			// Rewriter item content from feedzy API.
 			if ( $rewrite_service_endabled && false !== strpos( $post_content, '[#content_feedzy_rewrite]' ) ) {
 				$item_content           = ! empty( $item['item_content'] ) ? $item['item_content'] : $item['item_description'];
-				$content_feedzy_rewrite = apply_filters( 'feedzy_invoke_content_rewrite_services', $item_content, '[#content_feedzy_rewrite]', $job );
+				$content_feedzy_rewrite = apply_filters( 'feedzy_invoke_content_rewrite_services', $item_content, '[#content_feedzy_rewrite]', $job, $item );
 				$post_content           = str_replace( '[#content_feedzy_rewrite]', $content_feedzy_rewrite, $post_content );
 			}
 
 			// Rewriter item full content from feedzy API.
 			if ( $rewrite_service_endabled && false !== strpos( $post_content, '[#full_content_feedzy_rewrite]' ) ) {
-				$full_content_feedzy_rewrite = apply_filters( 'feedzy_invoke_content_rewrite_services', $item['item_url'], '[#full_content_feedzy_rewrite]', $job );
+				$full_content_feedzy_rewrite = apply_filters( 'feedzy_invoke_content_rewrite_services', $item['item_url'], '[#full_content_feedzy_rewrite]', $job, $item );
 				$post_content                = str_replace( '[#full_content_feedzy_rewrite]', $full_content_feedzy_rewrite, $post_content );
 			}
 
@@ -1686,7 +1704,7 @@ class Feedzy_Rss_Feeds_Import {
 				}
 
 				// Fetch image from graby.
-				if ( empty( $image_url ) && defined( 'FEEDZY_PRO_FETCH_ITEM_IMG_URL' ) ) {
+				if ( empty( $image_url ) && ( wp_doing_cron() || defined( 'FEEDZY_PRO_FETCH_ITEM_IMG_URL' ) ) ) {
 					// if license does not exist, use the site url
 					// this should obviously never happen unless on dev instances.
 					$license = apply_filters( 'product_feedzy_license_key', sprintf( 'n/a - %s', get_site_url() ) );
@@ -1801,20 +1819,34 @@ class Feedzy_Rss_Feeds_Import {
 		if ( ! method_exists( $admin, 'normalize_urls' ) ) {
 			return array();
 		}
-		$feedURL = $admin->normalize_urls( $options['feeds'] );
+		$feedURL     = $admin->normalize_urls( $options['feeds'] );
+		$source_type = get_post_meta( $options['__jobID'], '__feedzy_source_type', true );
 
-		$feedURL = apply_filters( 'feedzy_import_feed_url', $feedURL, $import_content, $options );
-		if ( is_wp_error( $feedURL ) ) {
-			return $feedURL;
-		}
+		if ( 'amazon' === $source_type ) {
+			$feed = $admin->init_amazon_api(
+				$feedURL,
+				isset( $options['refresh'] ) ? $options['refresh'] : '12_hours',
+				array(
+					'number_of_item' => $options['max'],
+					'no-cache'       => false,
+				)
+			);
+			if ( ! empty( $feed->get_errors() ) ) {
+				return array();
+			}
+		} else {
+			$feedURL = apply_filters( 'feedzy_import_feed_url', $feedURL, $import_content, $options );
+			if ( is_wp_error( $feedURL ) ) {
+				return $feedURL;
+			}
+			$feed = $admin->fetch_feed( $feedURL, isset( $options['refresh'] ) ? $options['refresh'] : '12_hours', $options );
 
-		$feed = $admin->fetch_feed( $feedURL, isset( $options['refresh'] ) ? $options['refresh'] : '12_hours', $options );
+			$feed->force_feed( true );
+			$feed->enable_order_by_date( false );
 
-		$feed->force_feed( true );
-		$feed->enable_order_by_date( false );
-
-		if ( is_string( $feed ) ) {
-			return array();
+			if ( is_string( $feed ) ) {
+				return array();
+			}
 		}
 		$sizes      = array(
 			'width'  => $options['size'],
@@ -1822,7 +1854,6 @@ class Feedzy_Rss_Feeds_Import {
 		);
 		$sizes      = apply_filters( 'feedzy_thumb_sizes', $sizes, $feedURL );
 		$feed_items = apply_filters( 'feedzy_get_feed_array', array(), $options, $feed, $feedURL, $sizes );
-
 		if ( $raw_feed_also ) {
 			return array(
 				'items' => $feed_items,
@@ -2050,6 +2081,7 @@ class Feedzy_Rss_Feeds_Import {
 		if ( ! feedzy_is_pro() ) {
 			$tabs['wordai']       = sprintf( '%s <span class="pro-label">PRO</span>', __( 'WordAi', 'feedzy-rss-feeds' ) );
 			$tabs['spinnerchief'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'SpinnerChief', 'feedzy-rss-feeds' ) );
+			$tabs['amazon-product-advertising'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'Amazon Product Advertising', 'feedzy-rss-feeds' ) );
 		}
 
 		return $tabs;
@@ -2089,6 +2121,7 @@ class Feedzy_Rss_Feeds_Import {
 				break;
 			case 'wordai':
 			case 'spinnerchief':
+			case 'amazon-product-advertising':
 				if ( ! feedzy_is_pro() ) {
 					$file = FEEDZY_ABSPATH . '/includes/views/' . $name . '-view.php';
 				} else {

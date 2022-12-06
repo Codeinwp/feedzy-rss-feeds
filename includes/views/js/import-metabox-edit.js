@@ -69,6 +69,12 @@
 			$('[name="feedzy_meta_data[' + field_name + ']"]').data('tagify').addTags(
 				"[#" + field_tag + "]"
 			);
+		} else if( field_name === "import_post_content" ) {
+			$('[name="feedzy_meta_data[' + field_name + ']"]').focus();
+			$('[name="feedzy_meta_data[' + field_name + ']"]').data('tagify').addTags(
+				"[#" + field_tag + "]"
+			);
+			return false;
 		} else {
 			$('[name="feedzy_meta_data[' + field_name + ']"]').data('tagify').addTags(
 				"[#" + field_tag + "]"
