@@ -42,7 +42,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	public function feedzy_define_default_image( $default_img ) {
 		$doing_import_job = false;
 
-		if ( wp_doing_ajax() && ! empty( $_POST['_action'] ) && 'run_now' === $_POST['_action'] ) {// phpcs:ignore WordPress.Security.NonceVerification
+		if ( wp_doing_ajax() && ! empty( $_POST['_action'] ) && 'run_now' === $_POST['_action'] ) { // phpcs:ignore WordPress.Security.NonceVerification
+			$doing_import_job = true;
+		}
+		if ( wp_doing_cron() ) {
 			$doing_import_job = true;
 		}
 		if ( ! $doing_import_job && empty( $default_img ) ) {
