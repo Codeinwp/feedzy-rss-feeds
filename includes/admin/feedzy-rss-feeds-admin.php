@@ -944,6 +944,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * Load setup wizard page.
 	 */
 	public function feedzy_load_setup_wizard_page() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_GET['page'] ) && 'feedzy-setup-wizard' === $_GET['page'] ) {
+			remove_all_actions( 'admin_notices' );
+		}
 		add_action( 'admin_enqueue_scripts', array( $this, 'feedzy_enqueue_setup_wizard_scripts' ) );
 	}
 
@@ -961,6 +965,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$this->plugin_name . '_setup_wizard',
 			'feedzySetupWizardData',
 			array(
+				'adminPage' => add_query_arg( 'post_type', 'feedzy_imports', admin_url( 'edit.php' ) ),
 				'ajax'           => array(
 					'url'      => admin_url( 'admin-ajax.php' ),
 					'security' => wp_create_nonce( FEEDZY_BASEFILE ),
@@ -1276,7 +1281,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			'post_type'    => 'page',
 			'post_title'   => $post_title,
 			'post_content' => $add_basic_shortcode ? $basic_shortcode : '',
-			'post_status'  => 'publish',
+			'post_status'  => 'draft',
 		);
 		if ( ! $page_id ) {
 			$page_id = wp_insert_post( $args );

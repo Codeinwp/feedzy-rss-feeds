@@ -247,13 +247,22 @@ jQuery(function ($) {
 			feedzySetupWizardData.ajax.url,
 			postData,
 			function( res ) {
+				$( '.redirect-popup' ).show();
 				if ( 1 === res.status ) {
-					window.location.href = res.redirect_to;
+					setTimeout( function() {
+						if ( res.redirect_to !== feedzySetupWizardData.adminPage ) {
+							window.open( res.redirect_to, '_blank' ).focus();
+						}
+						window.location.href = feedzySetupWizardData.adminPage;
+					}, 5000 );
+				} else {
+					$( '.redirect-popup' ).hide();
 				}
 				$( '#step-4' ).find( '.spinner' ).removeClass( 'is-active' );
 			}
 		)
 		.fail( function() {
+			$( '.redirect-popup' ).hide();
 			$( '#step-4' ).find( '.spinner' ).removeClass( 'is-active' );
 		} );
 		e.preventDefault();

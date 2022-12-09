@@ -295,6 +295,62 @@
 	color: #F00;
 }
 
+.redirect-popup{
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(217, 217, 217, 0.2);
+	backdrop-filter: blur(1px);
+	z-index: 123;
+	padding: 10px;
+display: none;
+}
+.redirect-popup-box{
+	position: absolute;
+	width: 90%;
+	max-width: 429px;
+	height: 243px;
+	inset: 0;
+	margin: auto;
+	padding: 24px 20px 10px;
+	background: #FFFFFF;
+	border-radius: 8px;
+	text-align: center;
+	color: #757575;
+}
+.redirect-popup-box .icon{
+	width: 64px;
+	height: 64px;
+	background: rgba(47, 90, 174, 0.25);
+	border-radius: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 auto 24px;
+}
+.redirect-popup-box .h3{
+	font-weight: 700;
+	color: #757575;
+	padding-bottom: 28px;
+}
+@-webkit-keyframes spin { 
+    100% { -webkit-transform: rotate(360deg); } 
+}
+@keyframes spin { 
+    100% { 
+        -webkit-transform: rotate(360deg); 
+        transform:rotate(360deg); 
+    } 
+}
+
+.redirect-popup-box .redirect-loader img{
+	-webkit-animation:spin 2s linear infinite;
+    -moz-animation:spin 2s linear infinite;
+    animation:spin 2s linear infinite;
+}
+
 @media (max-width: 767px){
 	.wp-toolbar .feedzy-wizard-fullscreen{margin-top: 0;}
 	.feedzy-wizard .sw-theme-basic>.nav{max-width: 270px;}

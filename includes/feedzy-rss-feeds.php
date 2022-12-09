@@ -240,7 +240,7 @@ class Feedzy_Rss_Feeds {
 		self::$instance->loader->add_action( 'rest_api_init', self::$instance->admin, 'rest_route', 10 );
 
 		// Wizard screen setup.
-		self::$instance->loader->add_action( 'admin_body_class', self::$instance->admin, 'add_wizard_classes', 10 );
+		self::$instance->loader->add_action( 'admin_body_class', self::$instance->admin, 'add_wizard_classes', 20 );
 		self::$instance->loader->add_action( 'wp_ajax_feedzy_wizard_step_process', self::$instance->admin, 'feedzy_wizard_step_process' );
 
 		// do not include import feature if this is a pro version that does not know of this new support.

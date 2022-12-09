@@ -14,8 +14,10 @@ $dashboard_url = add_query_arg(
 	admin_url( 'edit.php' )
 );
 // phpcs:ignore WordPress.Security.NonceVerification
-$integrate_with = ! empty( $_GET['integrate-with'] ) ? sanitize_text_field( wp_unslash( $_GET['integrate-with'] ) ) : '';
-$feed_source    = '';
+$integrate_with     = ! empty( $_GET['integrate-with'] ) ? sanitize_text_field( wp_unslash( $_GET['integrate-with'] ) ) : '';
+$feed_source        = '';
+$wp_optimole_active = is_plugin_active( 'optimole-wp/optimole-wp.php' );
+
 if ( ! empty( $integrate_with ) ) {
 	$wizard_data = get_option( 'feedzy_wizard_data', array() );
 	$feed_source = ! empty( $wizard_data['feed'] ) ? $wizard_data['feed'] : '';
@@ -45,9 +47,11 @@ if ( ! empty( $integrate_with ) ) {
 					<li class="nav-item">
 						<a class="nav-link" href="#step-2">2</a>
 					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#step-3">3</a>
-					</li>
+					<?php if ( ! $wp_optimole_active ) : ?>
+						<li class="nav-item">
+							<a class="nav-link" href="#step-3">3</a>
+						</li>
+					<?php endif; ?>
 					<li class="nav-item">
 						<a class="nav-link" href="#step-4">4</a>
 					</li>
@@ -150,16 +154,8 @@ if ( ! empty( $integrate_with ) ) {
 												<div class="pb-30">
 													<div class="mx-320">
 														<select name="feedzy[wizard_data][import_post_type]" class="form-control feedzy-chosen">
-															<?php
-															$post_types = get_post_types( '', 'names' );
-															$post_types = array_diff( $post_types, array( 'feedzy_imports', 'feedzy_categories' ) );
-															foreach ( $post_types as $_post_type ) {
-																?>
-																<option value="<?php echo esc_attr( $_post_type ); ?>">
-																<?php echo esc_html( $_post_type ); ?></option>
-																<?php
-															}
-															?>
+															<option value="post"><?php esc_html_e( 'Post', 'feedzy-rss-feeds' ); ?></option>
+															<option value="page"><?php esc_html_e( 'Page', 'feedzy-rss-feeds' ); ?></option>
 														</select>
 													</div>
 												</div>
@@ -224,66 +220,68 @@ if ( ! empty( $integrate_with ) ) {
 									</div>
 								</div>
 							</div>
-							<div id="step-3" class="tab-pane" role="tabpanel" aria-labelledby="step-3">
-								<div class="feedzy-accordion-item">
-									<div class="feedzy-accordion-item__title">
-										<div class="feedzy-accordion-item__button">
-											<h2 class="h2 pb-8"><?php esc_html_e( 'Extra Features', 'feedzy-rss-feeds' ); ?></h2>
-											<p class="p"><?php esc_html_e( 'We\'re confident you\'ll see the improvements. Otherwise, you can remove it anytime', 'feedzy-rss-feeds' ); ?></p>
-										</div>
-									</div>
-									<div class="feedzy-accordion-item__content border-top">
-										<div class="fz-form-wrap">
-											<div class="form-block">
-												<div class="fz-error-notice hidden">
-													<div id="message" class="error">
-													</div>
-												</div>
-												<div class="feedzy-accordion">
-													<div class="feedzy-accordion-item fz-features-accordion mb-0">
-														<div class="feedzy-accordion-item__title feedzy-accordion-checkbox__title">
-															<div class="fz-checkbox">
-																<input type="checkbox" name="feedzy[wizard_data][enable_perfomance]" class="fz-checkbox-btn" checked>
-															</div>
-															<button type="button" class="feedzy-accordion-item__button">
-																<div class="feedzy-accordion__step-title h4 pb-4"><?php esc_html_e( 'Enable performance features for your website.', 'feedzy-rss-feeds' ); ?>
-																</div>
-																<p class="help-text"><?php esc_html_e( 'Optimise and speed up your site with our trusted addon - It’s Free', 'feedzy-rss-feeds' ); ?></p>
-																<div class="feedzy-accordion__icon"><span class="dashicons dashicons-arrow-down-alt2"></span></div>
-															</button>
-														</div>
-														<div class="feedzy-accordion-item__content">
-															<div class="fz-features-list">
-																<ul>
-																	<li>
-																		<div class="icon">
-																			<img src="<?php echo esc_url( FEEDZY_ABSURL . 'img/boost-logo.png' ); ?>" width="37" height="30" alt="">
-																		</div>
-																		<div class="txt">
-																			<div class="h4 pb-4"><?php esc_html_e( 'Boost your website speed', 'feedzy-rss-feeds' ); ?> <span class="pro-label free-label"><?php esc_html_e( 'Free', 'feedzy-rss-feeds' ); ?></span>
-																			</div>
-																			<p class="help-text">
-																				<?php
-																				echo wp_kses_post( sprintf( __( 'Improve your website speed and images by %1$s with <a href="%2$s" target="_blank">Optimole</a>', 'feedzy-rss-feeds' ), '80%', tsdk_utmify( 'https://optimole.com/pricing/', 'setupWizard' ) ) );
-																				?>
-																			</p>
-																		</div>
-																	</li>
-																</ul>
-															</div>
-														</div>
-													</div>
-												</div>
+							<?php if ( ! $wp_optimole_active ) : ?>
+								<div id="step-3" class="tab-pane" role="tabpanel" aria-labelledby="step-3">
+									<div class="feedzy-accordion-item">
+										<div class="feedzy-accordion-item__title">
+											<div class="feedzy-accordion-item__button">
+												<h2 class="h2 pb-8"><?php esc_html_e( 'Extra Features', 'feedzy-rss-feeds' ); ?></h2>
+												<p class="p"><?php esc_html_e( 'We\'re confident you\'ll see the improvements. Otherwise, you can remove it anytime', 'feedzy-rss-feeds' ); ?></p>
 											</div>
-											<div class="form-block">
-												<button class="btn btn-primary fz-wizard-install-plugin" data-step_number="3"><?php esc_html_e( 'Improve now', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-arrow-right-alt"></span></button>
-												<button class="btn btn-primary next-btn skip-improvement" style="display: none;"><?php esc_html_e( 'Skip Improvement', 'feedzy-rss-feeds' ); ?></button>
-												<span class="spinner"></span>
+										</div>
+										<div class="feedzy-accordion-item__content border-top">
+											<div class="fz-form-wrap">
+												<div class="form-block">
+													<div class="fz-error-notice hidden">
+														<div id="message" class="error">
+														</div>
+													</div>
+													<div class="feedzy-accordion">
+														<div class="feedzy-accordion-item fz-features-accordion mb-0">
+															<div class="feedzy-accordion-item__title feedzy-accordion-checkbox__title">
+																<div class="fz-checkbox">
+																	<input type="checkbox" name="feedzy[wizard_data][enable_perfomance]" class="fz-checkbox-btn" checked>
+																</div>
+																<button type="button" class="feedzy-accordion-item__button">
+																	<div class="feedzy-accordion__step-title h4 pb-4"><?php esc_html_e( 'Enable performance features for your website.', 'feedzy-rss-feeds' ); ?>
+																	</div>
+																	<p class="help-text"><?php esc_html_e( 'Optimise and speed up your site with our trusted addon - It’s Free', 'feedzy-rss-feeds' ); ?></p>
+																	<div class="feedzy-accordion__icon"><span class="dashicons dashicons-arrow-down-alt2"></span></div>
+																</button>
+															</div>
+															<div class="feedzy-accordion-item__content">
+																<div class="fz-features-list">
+																	<ul>
+																		<li>
+																			<div class="icon">
+																				<img src="<?php echo esc_url( FEEDZY_ABSURL . 'img/boost-logo.png' ); ?>" width="37" height="30" alt="">
+																			</div>
+																			<div class="txt">
+																				<div class="h4 pb-4"><?php esc_html_e( 'Boost your website speed', 'feedzy-rss-feeds' ); ?> <span class="pro-label free-label"><?php esc_html_e( 'Free', 'feedzy-rss-feeds' ); ?></span>
+																				</div>
+																				<p class="help-text">
+																					<?php
+																					echo wp_kses_post( sprintf( __( 'Improve your website speed and images by %1$s with <a href="%2$s" target="_blank">Optimole</a>', 'feedzy-rss-feeds' ), '80%', tsdk_utmify( 'https://optimole.com/pricing/', 'setupWizard' ) ) );
+																					?>
+																				</p>
+																			</div>
+																		</li>
+																	</ul>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="form-block">
+													<button class="btn btn-primary fz-wizard-install-plugin" data-step_number="3"><?php esc_html_e( 'Improve now', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-arrow-right-alt"></span></button>
+													<button class="btn btn-primary next-btn skip-improvement" style="display: none;"><?php esc_html_e( 'Skip Improvement', 'feedzy-rss-feeds' ); ?></button>
+													<span class="spinner"></span>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
+							<?php endif; ?>
 							<div id="step-4" class="tab-pane" role="tabpanel" aria-labelledby="step-4">
 								<div class="feedzy-accordion-item">
 									<div class="feedzy-accordion-item__title">
@@ -321,6 +319,19 @@ if ( ! empty( $integrate_with ) ) {
 						</div>
 					</form>
 			</div>
+		</div>
+	</div>
+</div>
+<div class="redirect-popup">
+	<div class="redirect-popup-box">
+		<div class="icon">
+			<svg width="5" height="23" viewBox="0 0 5 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d="M0.6875 23V6.4375H4.57812V23H0.6875ZM4.15625 3.65625C3.73958 4.0625 3.22917 4.26562 2.625 4.26562C2.02083 4.26562 1.51042 4.0625 1.09375 3.65625C0.677083 3.23958 0.46875 2.73958 0.46875 2.15625C0.46875 1.5625 0.677083 1.0625 1.09375 0.65625C1.51042 0.239583 2.02083 0.03125 2.625 0.03125C3.22917 0.03125 3.73958 0.239583 4.15625 0.65625C4.58333 1.0625 4.79688 1.5625 4.79688 2.15625C4.79688 2.73958 4.58333 3.23958 4.15625 3.65625Z" fill="#2F5AAE" fill-opacity="0.75"/>
+			</svg>
+		</div>
+		<h3 class="h3"><?php esc_html_e( 'Redirecting to draft page', 'feedzy-rss-feeds' ); ?></h3>
+		<div class="redirect-loader">
+			<img src="<?php echo esc_url( FEEDZY_ABSURL . 'img/mask-loader.jpg' ); ?>" width="45" height="45" alt="loader">
 		</div>
 	</div>
 </div>
