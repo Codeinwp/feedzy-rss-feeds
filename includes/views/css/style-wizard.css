@@ -351,6 +351,9 @@ display: none;
     animation:spin 2s linear infinite;
 }
 
+.feedzy-wizard .sw-theme-basic {
+	border: none;
+}
 @media (max-width: 767px){
 	.wp-toolbar .feedzy-wizard-fullscreen{margin-top: 0;}
 	.feedzy-wizard .sw-theme-basic>.nav{max-width: 270px;}

@@ -1190,6 +1190,12 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				'status'      => 1,
 				'redirect_to' => $redirect_to,
 			);
+			if ( false === $redirect_to ) {
+				$response = array(
+					'status'      => 1,
+					'redirect_to' => add_query_arg( 'post_type', $post_type, admin_url( 'edit.php' ) ),
+				);
+			}
 		} elseif ( 'shortcode' === $integrate_with ) {
 			if ( ! empty( $page_id ) ) {
 				$response = array(

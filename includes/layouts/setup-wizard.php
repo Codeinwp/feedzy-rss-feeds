@@ -17,7 +17,7 @@ $dashboard_url = add_query_arg(
 $integrate_with     = ! empty( $_GET['integrate-with'] ) ? sanitize_text_field( wp_unslash( $_GET['integrate-with'] ) ) : '';
 $feed_source        = '';
 $wp_optimole_active = is_plugin_active( 'optimole-wp/optimole-wp.php' );
-
+$last_step_number   = 3;
 if ( ! empty( $integrate_with ) ) {
 	$wizard_data = get_option( 'feedzy_wizard_data', array() );
 	$feed_source = ! empty( $wizard_data['feed'] ) ? $wizard_data['feed'] : '';
@@ -47,14 +47,17 @@ if ( ! empty( $integrate_with ) ) {
 					<li class="nav-item">
 						<a class="nav-link" href="#step-2">2</a>
 					</li>
-					<?php if ( ! $wp_optimole_active ) : ?>
+					<li class="nav-item">
+						<a class="nav-link" href="#step-3">3</a>
+					</li>
+					<?php
+					if ( ! $wp_optimole_active ) :
+						$last_step_number = 4;
+						?>
 						<li class="nav-item">
-							<a class="nav-link" href="#step-3">3</a>
+							<a class="nav-link" href="#step-4">4</a>
 						</li>
 					<?php endif; ?>
-					<li class="nav-item">
-						<a class="nav-link" href="#step-4">4</a>
-					</li>
 				</ul>
 					<form method="post" class="fz-wizard-form">
 						<div class="tab-content">
@@ -282,7 +285,7 @@ if ( ! empty( $integrate_with ) ) {
 									</div>
 								</div>
 							<?php endif; ?>
-							<div id="step-4" class="tab-pane" role="tabpanel" aria-labelledby="step-4">
+							<div id="step-<?php echo esc_attr( $last_step_number ); ?>" class="tab-pane" role="tabpanel" aria-labelledby="step-<?php echo esc_attr( $last_step_number ); ?>">
 								<div class="feedzy-accordion-item">
 									<div class="feedzy-accordion-item__title">
 										<div class="feedzy-accordion-item__button">
