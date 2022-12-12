@@ -1193,7 +1193,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			if ( false === $redirect_to ) {
 				$response = array(
 					'status'      => 1,
-					'redirect_to' => add_query_arg( 'post_type', $post_type, admin_url( 'edit.php' ) ),
+					'redirect_to' => add_query_arg( 'post_type', 'feedzy_imports', admin_url( 'edit.php' ) ),
 				);
 			}
 		} elseif ( 'shortcode' === $integrate_with ) {
