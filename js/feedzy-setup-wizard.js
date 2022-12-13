@@ -251,7 +251,7 @@ jQuery(function ($) {
 				if ( 1 === res.status ) {
 					setTimeout( function() {
 						if ( res.redirect_to !== feedzySetupWizardData.adminPage ) {
-							window.open( res.redirect_to, '_blank' ).focus();
+							window.open( res.redirect_to, '_blank' );
 						}
 						window.location.href = feedzySetupWizardData.adminPage;
 					}, 5000 );

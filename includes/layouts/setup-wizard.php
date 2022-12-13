@@ -29,7 +29,7 @@ if ( ! empty( $integrate_with ) ) {
 		<div class="container">
 			<div class="feedzy-logo">
 				<div class="feedzy-logo-icon">
-					<img src="<?php echo esc_url( FEEDZY_ABSURL . 'img/feedzy-logo.png' ); ?>" width="110" height="40">
+					<img src="<?php echo esc_url( FEEDZY_ABSURL . 'img/feedzy.svg' ); ?>" width="50" height="50">
 				</div>
 			</div>
 			<div class="back-btn">
