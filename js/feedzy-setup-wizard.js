@@ -247,6 +247,7 @@ jQuery(function ($) {
 			feedzySetupWizardData.ajax.url,
 			postData,
 			function( res ) {
+				$( '.redirect-popup' ).find( 'h3.popup-title' ).html( res.message );
 				$( '.redirect-popup' ).show();
 				if ( 1 === res.status ) {
 					setTimeout( function() {

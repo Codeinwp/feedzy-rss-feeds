@@ -105,7 +105,7 @@ if ( ! empty( $integrate_with ) ) {
 									<div class="feedzy-accordion-item__title">
 										<div class="feedzy-accordion-item__button">
 											<h2 class="h3 pb-8"><?php esc_html_e( 'Add feed source URL', 'feedzy-rss-feeds' ); ?></h2>
-											<p class="p"><?php esc_html_e( 'Quick tip: Use demo Feed link which you can customize it later', 'feedzy-rss-feeds' ); ?></p>
+											<p class="p"><?php esc_html_e( 'Quick tip: Use demo Feed link which you can customize later', 'feedzy-rss-feeds' ); ?></p>
 										</div>
 										<div class="feedzy-accordion-item__button hidden">
 											<h2 class="h3"><?php esc_html_e( 'Feed Source URL', 'feedzy-rss-feeds' ); ?></h2>
@@ -179,7 +179,7 @@ if ( ! empty( $integrate_with ) ) {
 									<div class="feedzy-accordion-item__title">
 										<div class="feedzy-accordion-item__button">
 											<h2 class="h2 pb-8"><?php esc_html_e( 'Feed preview and shortcode', 'feedzy-rss-feeds' ); ?></h2>
-											<p class="p"><?php esc_html_e( 'Don’t worry! You can customize every settings later on', 'feedzy-rss-feeds' ); ?></p>
+											<p class="p"><?php esc_html_e( 'Don’t worry! You can customize every setting later on', 'feedzy-rss-feeds' ); ?></p>
 										</div>
 									</div>
 									<div class="feedzy-accordion-item__content border-top">
@@ -206,7 +206,7 @@ if ( ! empty( $integrate_with ) ) {
 														<div class="fz-shortcode-preview">
 															<h4 class="h4 pb-8"><?php esc_html_e( 'Basic Shortcode', 'feedzy-rss-feeds' ); ?></h4>
 															<div class="fz-code-box">
-																<input type="text" redonly value='[feedzy-rss feeds="{{feed_source}}"]' id="basic_shortcode">
+																<input type="text" redonly value='[feedzy-rss feeds={{feed_source}}]' id="basic_shortcode">
 																<button type="button" class="fz-copy-code-btn" data-clipboard-target="#basic_shortcode"><?php esc_html_e( 'click to copy', 'feedzy-rss-feeds' ); ?> <img src="<?php echo esc_url( FEEDZY_ABSURL . 'img/copy.svg' ); ?>" alt="">
 																</button>
 															</div>
@@ -332,7 +332,7 @@ if ( ! empty( $integrate_with ) ) {
 				<path d="M0.6875 23V6.4375H4.57812V23H0.6875ZM4.15625 3.65625C3.73958 4.0625 3.22917 4.26562 2.625 4.26562C2.02083 4.26562 1.51042 4.0625 1.09375 3.65625C0.677083 3.23958 0.46875 2.73958 0.46875 2.15625C0.46875 1.5625 0.677083 1.0625 1.09375 0.65625C1.51042 0.239583 2.02083 0.03125 2.625 0.03125C3.22917 0.03125 3.73958 0.239583 4.15625 0.65625C4.58333 1.0625 4.79688 1.5625 4.79688 2.15625C4.79688 2.73958 4.58333 3.23958 4.15625 3.65625Z" fill="#2F5AAE" fill-opacity="0.75"/>
 			</svg>
 		</div>
-		<h3 class="h3"><?php esc_html_e( 'Redirecting to draft page', 'feedzy-rss-feeds' ); ?></h3>
+		<h3 class="h3 popup-title"></h3>
 		<div class="redirect-loader">
 			<img src="<?php echo esc_url( FEEDZY_ABSURL . 'img/mask-loader.jpg' ); ?>" width="45" height="45" alt="loader">
 		</div>

@@ -1155,6 +1155,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 
 			activate_plugin( 'optimole-wp/optimole-wp.php' );
+			delete_transient( 'optml_fresh_install' );
 			$wizard_data = get_option( 'feedzy_wizard_data', array() );
 
 			$wizard_data['enable_perfomance'] = true;
@@ -1179,6 +1180,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$response       = array(
 			'status'      => 0,
 			'redirect_to' => '',
+			'message'     => '',
 		);
 
 		$with_subscribe = ! empty( $_POST['with_subscribe'] ) ? (bool) $_POST['with_subscribe'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
@@ -1189,11 +1191,13 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$response    = array(
 				'status'      => 1,
 				'redirect_to' => $redirect_to,
+				'message'     => __( 'Redirecting to archive page', 'feedzy-rss-feeds' ),
 			);
 			if ( false === $redirect_to ) {
 				$response = array(
 					'status'      => 1,
 					'redirect_to' => add_query_arg( 'post_type', 'feedzy_imports', admin_url( 'edit.php' ) ),
+					'message'     => __( 'Redirecting to feedzy dashboard', 'feedzy-rss-feeds' ),
 				);
 			}
 		} elseif ( 'shortcode' === $integrate_with ) {
@@ -1201,11 +1205,13 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				$response = array(
 					'status'      => 1,
 					'redirect_to' => get_edit_post_link( $page_id, 'db' ),
+					'message'     => __( 'Redirecting to draft page', 'feedzy-rss-feeds' ),
 				);
 			} else {
 				$response = array(
 					'status'      => 1,
 					'redirect_to' => add_query_arg( 'post_type', 'feedzy_imports', admin_url( 'edit.php' ) ),
+					'message'     => __( 'Redirecting to feedzy dashboard', 'feedzy-rss-feeds' ),
 				);
 			}
 		} elseif ( 'page_builder' === $integrate_with ) {
@@ -1223,6 +1229,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$response = array(
 				'status'      => 1,
 				'redirect_to' => $post_edit_link,
+				'message'     => __( 'Redirecting to draft page', 'feedzy-rss-feeds' ),
 			);
 		}
 		if ( $with_subscribe && is_email( $email ) ) {
@@ -1248,6 +1255,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				array(
 					'status'      => 0,
 					'redirect_to' => '',
+					'message'     => '',
 				)
 			);
 		} else {
