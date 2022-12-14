@@ -310,7 +310,7 @@ if ( ! empty( $integrate_with ) ) {
 											</div>
 											<div class="form-block">
 												<div class="fz-btn-group">
-													<button class="btn btn-primary fz-subscribe" data-fz_subscribe="true"><?php esc_html_e( 'Send my access', 'feedzy-rss-feeds' ); ?></button>
+													<button class="btn btn-primary fz-subscribe" data-fz_subscribe="true"><?php esc_html_e( 'Send Me Access', 'feedzy-rss-feeds' ); ?></button>
 													<button class="btn btn-outline-primary fz-subscribe" data-fz_subscribe="false"><?php esc_html_e( 'Skip, Don’t give me access', 'feedzy-rss-feeds' ); ?></button>
 													<span class="spinner"></span>
 												</div>
