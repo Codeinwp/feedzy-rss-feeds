@@ -633,6 +633,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$atts,
 			'feedzy_default'
 		);
+		if ( ! isset( $sc['classname'] ) ) {
+			$sc['classname'] = $sc['className'];
+			unset( $sc['className'] );
+		}
 		$sc = array_merge( $sc, apply_filters( 'feedzy_get_short_code_attributes_filter', $atts ) );
 
 		return $sc;
