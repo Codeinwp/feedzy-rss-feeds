@@ -573,10 +573,11 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo '<p class="feedzy-widget-intro">' . wp_kses_post( $intro ) . '</p>';
 		}
+		$display_source = $this->get_settings_for_display( 'fz-show-item-source' );
 		$feedzy_widget_shortcode_attributes = array(
 			'feeds'           => $this->get_settings_for_display( 'fz-source' ),
 			'max'             => $this->get_settings_for_display( 'fz-max' ),
-			'feed_title'      => $this->get_settings_for_display( 'fz-show-item-source' ),
+			'feed_title'      => 'no',
 			'target'          => $this->get_settings_for_display( 'fz-item-target' ),
 			'title'           => $this->get_settings_for_display( 'fz-item-title-length' ),
 			'meta'            => self::bool_to_enum( $this->get_settings_for_display( 'fz-cus-meta-fields' ) ),
@@ -598,6 +599,7 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 			'offset'          => $this->get_settings_for_display( 'fz-offset' ),
 			'from_datetime'   => $this->get_settings_for_display( 'fz-filter-from-dt' ),
 			'to_datetime'     => $this->get_settings_for_display( 'fz-filter-to-dt' ),
+			'multiple_meta'   => $display_source ? 'source' : '',
 		);
 		$feedzy_widget_shortcode_attributes = apply_filters( 'feedzy_widget_shortcode_attributes_filter', $feedzy_widget_shortcode_attributes, array(), $settings );
 		// Hide item meta.
