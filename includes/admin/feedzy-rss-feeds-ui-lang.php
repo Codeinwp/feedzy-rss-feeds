@@ -137,32 +137,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'placeholder' => __( '(eg: 1_days, defaults: 12_hours)', 'feedzy-rss-feeds' ),
 						'type'        => 'select',
 						'value'       => '12_hours',
-						'opts'        => array(
-							'1_hours'  => array(
-								'label' => '1' . ' ' . __( 'Hour', 'feedzy-rss-feeds' ),
-								'value' => '1_hours',
-							),
-							'3_hours'  => array(
-								'label' => '3' . ' ' . __( 'Hours', 'feedzy-rss-feeds' ),
-								'value' => '3_hours',
-							),
-							'12_hours' => array(
-								'label' => '12' . ' ' . __( 'Hours', 'feedzy-rss-feeds' ),
-								'value' => '12_hours',
-							),
-							'1_days'   => array(
-								'label' => '1' . ' ' . __( 'Day', 'feedzy-rss-feeds' ),
-								'value' => '1_days',
-							),
-							'3_days'   => array(
-								'label' => '3' . ' ' . __( 'Days', 'feedzy-rss-feeds' ),
-								'value' => '3_days',
-							),
-							'15_days'  => array(
-								'label' => '15' . ' ' . __( 'Days', 'feedzy-rss-feeds' ),
-								'value' => '15_days',
-							),
-						),
+						'opts'        => feedzy_classic_widget_refresh_options(),
 					),
 					'sort'        => array(
 						'label' => __( 'Sorting order.', 'feedzy-rss-feeds' ),
