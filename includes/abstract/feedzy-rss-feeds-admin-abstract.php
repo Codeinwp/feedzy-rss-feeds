@@ -1116,10 +1116,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$feed_items = apply_filters( 'feedzy_get_feed_array', array(), $sc, $feed, $feed_url, $sizes );
 		$class      = array_filter( apply_filters( 'feedzy_add_classes_block', array( $sc['className'], 'feedzy-' . md5( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ) ), $sc, $feed, $feed_url ) );
-		$content   .= '<div class="feedzy-rss ' . implode( ' ', $class ) . '">';
+		$content   .= '<div class="feedzy-rss ' . esc_attr( implode( ' ', $class ) ) . '">';
 		if ( $feed_title['use_title'] ) {
 			$content .= '<div class="rss_header">';
-			$content .= '<h2><a href="' . $feed->get_permalink() . '" class="rss_title" rel="noopener">' . html_entity_decode( $feed->get_title() ) . '</a> <span class="rss_description"> ' . $feed->get_description() . '</span></h2>';
+			$content .= '<h2><a href="' . esc_url( $feed->get_permalink() ) . '" class="rss_title" rel="noopener">' . wp_kses_post( html_entity_decode( $feed->get_title() ) ) . '</a> <span class="rss_description"> ' . wp_kses_post( $feed->get_description() ) . '</span></h2>';
 			$content .= '</div>';
 		}
 		$content .= '<ul>';
@@ -1141,20 +1141,20 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$details  = $this->get_dry_run_results( $sc, $item );
 				$content .= sprintf(
 					$dry_run_item,
-					$item['itemAttr'],
-					sprintf( $anchor2, $item['item_url'], $item['item_url_target'], $item['item_url_follow'], $item['item_title'] ),
+					wp_kses_post( $item['itemAttr'] ),
+					sprintf( $anchor2, esc_url( $item['item_url'] ), esc_attr( $item['item_url_target'] ), esc_attr( $item['item_url_follow'] ), wp_kses_post( $item['item_title'] ) ),
 					$details
 				);
 			} else {
 				$content .= sprintf(
 					$line_item,
-					$item['itemAttr'],
-					! empty( $item['item_img'] ) && 'no' !== $sc['thumb'] ? sprintf( '<div class="%s" style="%s">%s</div>', $item['item_img_class'], $item['item_img_style'], sprintf( $anchor1, $item['item_url'], $item['item_url_target'], $item['item_url_follow'], $item['item_url_title'], $item['item_img_style'], $item['item_img'] ) ) : '',
-					sprintf( $anchor2, $item['item_url'], $item['item_url_target'], $item['item_url_follow'], $item['item_title'] ),
-					$item['item_content_class'],
-					$item['item_content_style'],
-					empty( $item['item_meta'] ) ? '' : sprintf( '<small>%s</small>', $item['item_meta'] ),
-					empty( $item['item_description'] ) ? '' : sprintf( '<p>%s</p>', $item['item_description'] )
+					wp_kses_post( $item['itemAttr'] ),
+					! empty( $item['item_img'] ) && 'no' !== $sc['thumb'] ? sprintf( '<div class="%s" style="%s">%s</div>', $item['item_img_class'], $item['item_img_style'], sprintf( $anchor1, esc_url( $item['item_url'] ), esc_attr( $item['item_url_target'] ), esc_attr( $item['item_url_follow'] ), $item['item_url_title'], $item['item_img_style'], $item['item_img'] ) ) : '',
+					sprintf( $anchor2, esc_url( $item['item_url'] ), esc_attr( $item['item_url_target'] ), esc_attr( $item['item_url_follow'] ), wp_kses_post( $item['item_title'] ) ),
+					esc_attr( $item['item_content_class'] ),
+					esc_attr( $item['item_content_style'] ),
+					empty( $item['item_meta'] ) ? '' : sprintf( '<small>%s</small>', wp_kses_post( $item['item_meta'] ) ),
+					empty( $item['item_description'] ) ? '' : sprintf( '<p>%s</p>', wp_kses_post( $item['item_description'] ) )
 				);
 			}
 		}
