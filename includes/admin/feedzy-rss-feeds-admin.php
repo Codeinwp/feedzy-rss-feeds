@@ -1173,6 +1173,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * Step: 4 skip and subscribe process.
 	 */
 	private function setup_wizard_subscribe_process() {
+		$segment        = 0;
 		$wizard_data    = get_option( 'feedzy_wizard_data', array() );
 		$integrate_with = ! empty( $wizard_data['integrate_with'] ) ? $wizard_data['integrate_with'] : '';
 		$post_type      = ! empty( $wizard_data['post_type'] ) ? $wizard_data['post_type'] : '';
@@ -1187,6 +1188,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$email          = ! empty( $_POST['email'] ) ? filter_input( INPUT_POST, 'email', FILTER_SANITIZE_EMAIL ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		if ( 'feed' === $integrate_with ) {
+			$segment     = 1;
 			$redirect_to = get_post_type_archive_link( $post_type );
 			$response    = array(
 				'status'      => 1,
@@ -1201,6 +1203,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				);
 			}
 		} elseif ( 'shortcode' === $integrate_with ) {
+			$segment = 2;
 			if ( ! empty( $page_id ) ) {
 				$response = array(
 					'status'      => 1,
@@ -1218,6 +1221,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$post_edit_link = get_edit_post_link( $page_id, 'db' );
 			// Get elementor edit page link.
 			if ( defined( 'ELEMENTOR_PATH' ) && class_exists( 'Elementor\Widget_Base' ) ) {
+				$segment        = 3;
 				$post_edit_link = add_query_arg(
 					array(
 						'post'   => $page_id,
@@ -1225,6 +1229,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					),
 					admin_url( 'post.php' )
 				);
+			} else {
+				$segment = 4;
 			}
 			$response = array(
 				'status'      => 1,
@@ -1241,6 +1247,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 						'slug'  => 'feedzy-rss-feeds',
 						'site'  => home_url(),
 						'email' => $email,
+						'data'  => array(
+							'segment' => $segment,
+						),
 					),
 				)
 			);
