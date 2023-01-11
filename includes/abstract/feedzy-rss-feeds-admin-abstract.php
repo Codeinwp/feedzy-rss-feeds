@@ -1120,7 +1120,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$feed_items = apply_filters( 'feedzy_get_feed_array', array(), $sc, $feed, $feed_url, $sizes );
 		$class      = array_filter( apply_filters( 'feedzy_add_classes_block', array( $sc['classname'], 'feedzy-' . md5( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ) ), $sc, $feed, $feed_url ) );
-	  $content   .= '<div class="feedzy-rss ' . esc_attr( implode( ' ', $class ) ) . '">';
+		$content   .= '<div class="feedzy-rss ' . esc_attr( implode( ' ', $class ) ) . '">';
 		if ( $feed_title['use_title'] ) {
 			$content .= '<div class="rss_header">';
 			$content .= '<h2><a href="' . esc_url( $feed->get_permalink() ) . '" class="rss_title" rel="noopener">' . wp_kses_post( html_entity_decode( $feed->get_title() ) ) . '</a> <span class="rss_description"> ' . wp_kses_post( $feed->get_description() ) . '</span></h2>';
