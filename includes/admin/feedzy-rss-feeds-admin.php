@@ -1243,13 +1243,20 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				FEEDZY_SUBSCRIBE_API,
 				array(
 					'timeout' => 100,
-					'body'    => array(
-						'slug'  => 'feedzy-rss-feeds',
-						'site'  => home_url(),
-						'email' => $email,
-						'data'  => array(
-							'segment' => $segment,
-						),
+					'headers' => array(
+						'Content-Type'  => 'application/json',
+						'Cache-Control' => 'no-cache',
+						'Accept'        => 'application/json, */*;q=0.1',
+					),
+					'body'    => wp_json_encode(
+						array(
+							'slug'  => 'feedzy-rss-feeds',
+							'site'  => home_url(),
+							'email' => $email,
+							'data'  => array(
+								'segment' => $segment,
+							),
+						)
 					),
 				)
 			);
