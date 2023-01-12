@@ -1651,7 +1651,7 @@ class Feedzy_Rss_Feeds_Import {
 				// let's get the slug of the uncategorized category, even if it renamed.
 				$uncategorized    = get_category( 1 );
 				$terms            = explode( ',', $import_post_term );
-				$default_category = get_option( 'default_category' );
+				$default_category = (int) get_option( 'default_category' );
 				foreach ( $terms as $term ) {
 					// this handles both x_2, where 2 is the term id and x is the taxonomy AND x_2_3_4 where 4 is the term id and the taxonomy name is "x 2 3 4".
 					$array    = explode( '_', $term );
