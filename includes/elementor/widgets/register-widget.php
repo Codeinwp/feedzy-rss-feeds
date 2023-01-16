@@ -508,6 +508,24 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 			)
 		);
 		$this->end_controls_section(); // End referral URL section.
+
+		// Start additional CSS section.
+		$this->start_controls_section(
+			'fz-additional-css-section',
+			array(
+				'label' => esc_html__( 'Additional CSS', 'feedzy-rss-feeds' ),
+			)
+		);
+		$this->add_control(
+			'fz-additional-css',
+			array(
+				'label'       => __( 'Add your custom css', 'feedzy-rss-feeds' ),
+				'label_block' => true,
+				'type'        => Controls_Manager::TEXTAREA,
+				'classes'     => 'feedzy_additional_css',
+			)
+		);
+		$this->end_controls_section(); // End additional CSS section.
 	}
 
 	/**
@@ -598,6 +616,7 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 			'offset'          => $this->get_settings_for_display( 'fz-offset' ),
 			'from_datetime'   => $this->get_settings_for_display( 'fz-filter-from-dt' ),
 			'to_datetime'     => $this->get_settings_for_display( 'fz-filter-to-dt' ),
+			'additional_css'  => $this->get_settings_for_display( 'fz-additional-css' ),
 		);
 		$feedzy_widget_shortcode_attributes = apply_filters( 'feedzy_widget_shortcode_attributes_filter', $feedzy_widget_shortcode_attributes, array(), $settings );
 		// Hide item meta.

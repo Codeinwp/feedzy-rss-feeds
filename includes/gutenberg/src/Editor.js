@@ -382,7 +382,7 @@ class Editor extends Component {
 				</div>
 			),
 			!! ( 'fetched' === this.state.route && this.props.attributes.feedData !== undefined ) && (
-				<div className="feedzy-rss">
+				<div className={ `feedzy-rss fz-custom-style-${this.props.clientId.substr( 0, 8 )}` }>
 					{ ( ( this.props.attributes.feed_title ) && ( this.props.attributes.feedData['channel'] !== null ) ) && (
 						<div className="rss_header">
 							<h2>

@@ -31,6 +31,26 @@ class Control_Template_Layout extends Base_Data_Control {
 	public function enqueue() {
 		wp_register_script( 'feedzy-elementor', FEEDZY_ABSURL . 'js/feedzy-elementor-widget.js', array( 'jquery' ), true, true );
 		wp_enqueue_script( 'feedzy-elementor' );
+
+		// Add code editor (Code Mirror) to the `feedzy_additional_css` textarea.
+		$custom_editor_option = array();
+		if ( isset( $GLOBALS['wp_version'] ) && version_compare( $GLOBALS['wp_version'], '4.9.0', '>=' ) && function_exists( 'wp_enqueue_code_editor' ) ) {
+			global $current_user;
+			// Force enable syntax highlighting.
+			$current_user->syntax_highlighting = true;
+
+			$custom_editor_option = wp_enqueue_code_editor(
+				array(
+					'type'       => 'text/css',
+					'codemirror' => array(
+						'indentUnit'  => 2,
+						'tabSize'     => 2,
+						'lineNumbers' => true,
+					),
+				)
+			);
+		}
+
 		$notice_text = '';
 		if ( ! feedzy_is_pro() ) {
 			$notice_text = '<div class="fz-pro-notice">
@@ -61,9 +81,10 @@ class Control_Template_Layout extends Base_Data_Control {
 			'feedzy-elementor',
 			'FeedzyElementorEditor',
 			array(
-				'notice' => $notice_text,
-				'pro_title_text' => __( 'Unlock this feature with Feedzy Pro', 'feedzy-rss-feeds' ),
-				'upsell_notice'  => ! feedzy_is_pro() ? $upsell_notice : '',
+				'notice'             => $notice_text,
+				'pro_title_text'     => __( 'Unlock this feature with Feedzy Pro', 'feedzy-rss-feeds' ),
+				'upsell_notice'      => ! feedzy_is_pro() ? $upsell_notice : '',
+				'customEditorOption' => $custom_editor_option,
 			)
 		);
 	}

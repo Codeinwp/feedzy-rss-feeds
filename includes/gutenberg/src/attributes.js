@@ -116,6 +116,10 @@ const attributes = {
 	itemTitle: {
 		type: 'boolean',
 		default: true,
+	},
+	customCSS: {
+		type: 'string',
+		default: '',
 	}
 };
 

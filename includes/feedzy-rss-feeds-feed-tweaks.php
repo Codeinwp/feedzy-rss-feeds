@@ -233,6 +233,58 @@ function feedzy_filter_custom_pattern( $keyword = '' ) {
 	return $pattern;
 }
 
+/**
+ * Feedzy CSS.
+ *
+ * @param string $css Inline CSS.
+ * @return string
+ */
+function feedzy_minimize_css( $css, $suffix_class = '' ) {
+	if ( empty( $css ) ) {
+		return $css;
+	}
+	// Append class suffix.
+	if ( ! empty( $suffix_class ) ) {
+		$suffix_class = '.' . $suffix_class;
+		$css          = explode( '}', $css );
+		$css          = array_filter( $css );
+		$css          = array_map(
+			function( $c ) use ( $suffix_class ) {
+				if ( false !== strpos( $c, '.feedzy-rss' ) ) {
+					return sprintf( '%s%s', $suffix_class, $c );
+				}
+				return sprintf( '%s %s', $suffix_class, $c );
+			},
+			$css
+		);
+		$css          = implode( '}', $css );
+		$css         .= '}';
+	}
+	// Normalize whitespace.
+	$css = preg_replace( '/\s+/', ' ', $css );
+	// Remove spaces before and after comment.
+	$css = preg_replace( '/(\s+)(\/\*(.*?)\*\/)(\s+)/', '$2', $css );
+	// Remove comment blocks, everything between /* and */, unless.
+	// preserved with /*! ... */ or /** ... */.
+	$css = preg_replace( '~/\*(?![\!|\*])(.*?)\*/~', '', $css );
+	// Remove ; before }.
+	$css = preg_replace( '/;(?=\s*})/', '', $css );
+	// Remove space after , : ; { } */ >.
+	$css = preg_replace( '/(,|:|;|\{|}|\*\/|>) /', '$1', $css );
+	// Remove space before , ; { } ( ) >.
+	$css = preg_replace( '/ (,|;|\{|}|\(|\)|>)/', '$1', $css );
+	// Strips leading 0 on decimal values (converts 0.5px into .5px).
+	$css = preg_replace( '/(:| )0\.([0-9]+)(%|em|ex|px|in|cm|mm|pt|pc)/i', '${1}.${2}${3}', $css );
+	// Strips units if value is 0 (converts 0px to 0).
+	$css = preg_replace( '/(:| )(\.?)0(%|em|ex|px|in|cm|mm|pt|pc)/i', '${1}0', $css );
+	// Converts all zeros value into short-hand.
+	$css = preg_replace( '/0 0 0 0/', '0', $css );
+	// Shortern 6-character hex color codes to 3-character where possible.
+	$css = preg_replace( '/#([a-f0-9])\\1([a-f0-9])\\2([a-f0-9])\\3/i', '#\1\2\3', $css );
+
+	return trim( $css );
+}
+
 add_filter(
 	'feedzy_wp_kses_allowed_html',
 	function( $allowed_html = array() ) {

@@ -30,6 +30,14 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	protected $plugin_name;
 
 	/**
+	 * Number of shortcode count.
+	 *
+	 * @access   protected
+	 * @var      int $shortcode_count
+	 */
+	protected $shortcode_count = 0;
+
+	/**
 	 * Defines the default image to use on RSS Feeds
 	 *
 	 * @since   3.0.0
@@ -243,7 +251,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$padding_top    = number_format( ( 15 / 150 ) * $sizes['height'], 0 );
 		$padding_bottom = number_format( ( 25 / 150 ) * $sizes['height'], 0 );
 		$style_padding  = ' style="padding: ' . $padding_top . 'px 0 ' . $padding_bottom . 'px"';
-
 		return $item_attr . $style_padding;
 	}
 
@@ -444,6 +451,15 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			return $content;
 		}
 		$cache = $sc['refresh'];
+
+		if ( empty( $sc['additional_css'] ) ) {
+			$settings = apply_filters( 'feedzy_get_settings', null );
+			if ( isset( $settings['general']['additional-css'] ) ) {
+				$sc['additional_css'] = $settings['general']['additional-css'];
+			}
+		}
+
+		$this->shortcode_count++;
 
 		// Disregard the pseudo-shortcode coming from Gutenberg as a lazy one.
 		if ( ( true === $sc['lazy'] || 'yes' === $sc['lazy'] ) && ! isset( $sc['gutenberg'] ) ) {
@@ -1120,7 +1136,13 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$feed_items = apply_filters( 'feedzy_get_feed_array', array(), $sc, $feed, $feed_url, $sizes );
 		$class      = array_filter( apply_filters( 'feedzy_add_classes_block', array( $sc['classname'], 'feedzy-' . md5( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ) ), $sc, $feed, $feed_url ) );
-	  $content   .= '<div class="feedzy-rss ' . esc_attr( implode( ' ', $class ) ) . '">';
+		$class[]    = 'feedzy-custom-style-' . $this->shortcode_count;
+
+		if ( ! empty( $sc['additional_css'] ) ) {
+			$content .= '<style type="text/css" media="all">' . esc_attr( feedzy_minimize_css( $sc['additional_css'], end( $class ) ) ) . '</style>';
+		}
+
+		$content .= '<div class="feedzy-rss ' . esc_attr( implode( ' ', $class ) ) . '">';
 		if ( $feed_title['use_title'] ) {
 			$content .= '<div class="rss_header">';
 			$content .= '<h2><a href="' . esc_url( $feed->get_permalink() ) . '" class="rss_title" rel="noopener">' . wp_kses_post( html_entity_decode( $feed->get_title() ) ) . '</a> <span class="rss_description"> ' . wp_kses_post( $feed->get_description() ) . '</span></h2>';
@@ -1337,7 +1359,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				}
 				$item_attr                        = apply_filters( 'feedzy_item_attributes', $item_attr = '', $sizes, $item, $feed_url, $sc, $index );
 				$feed_items[ $count ]             = $this->get_feed_item_filter( $sc, $sizes, $item, $feed_url, $count, $index );
-				$feed_items[ $count ]['itemAttr'] = $item_attr;
+				if ( ! empty( $sc['additional_css'] ) ) {
+					$item_attr = preg_replace( '/ style=\\"[^\\"]*\\"/', '', $item_attr );
+				}
+				$feed_items[ $count ]['itemAttr'] = trim( $item_attr );
 				$count++;
 			}
 			$index++;

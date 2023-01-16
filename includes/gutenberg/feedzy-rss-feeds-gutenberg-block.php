@@ -56,8 +56,24 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 			$version = $this->version;
 		}
 
+		wp_enqueue_code_editor(
+			array(
+				'type'       => 'text/css',
+				'codemirror' => array(
+					'indentUnit'  => 2,
+					'tabSize'     => 2,
+					'lineNumbers' => true,
+				),
+			)
+		);
+
+		wp_add_inline_script(
+			'wp-codemirror',
+			'window.CodeMirror = wp.CodeMirror;'
+		);
+
 		// Dependent WordPress core libraries.
-		$depends = array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-compose', 'wp-editor', 'wp-api', 'lodash', 'wp-hooks' );
+		$depends = array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-compose', 'wp-editor', 'wp-api', 'lodash', 'wp-hooks', 'code-editor', 'csslint' );
 
 		// Remove "wp-editor" script for widget block.
 		if ( wp_use_widgets_block_editor() && wp_script_is( 'wp-edit-widgets' ) ) {
@@ -194,6 +210,10 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 						'type' => 'boolean',
 						'default' => true,
 					),
+					'customCSS' => array(
+						'type' => 'string',
+						'default' => '',
+					),
 				),
 			)
 		);
@@ -230,6 +250,9 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		}
 		if ( empty( $attr['itemTitle'] ) ) {
 			$attr['title'] = 0;
+		}
+		if ( ! empty( $attr['customCSS'] ) ) {
+			$attr['additional_css'] = $attr['customCSS'];
 		}
 		$params = wp_parse_args( $attr );
 		return feedzy_rss( $params );

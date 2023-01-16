@@ -126,6 +126,15 @@
 										</div>
 									</div>
 								<?php endif; ?>
+								<div class="form-block">
+									<div class="fz-form-group">
+										<?php
+											$additional_css = isset( $settings['general']['additional-css'] ) ? $settings['general']['additional-css'] : '';
+										?>
+										<label class="form-label"><?php esc_html_e( 'Additional CSS', 'feedzy-rss-feeds' ); ?></label>
+										<textarea name="additional-css" id="feedzy_additional_css" class="form-control" aria-describedby="editor-keyboard-trap-help-1 editor-keyboard-trap-help-2 editor-keyboard-trap-help-3 editor-keyboard-trap-help-4"><?php echo esc_attr( $additional_css ); ?></textarea>
+									</div>
+								</div>
 							</div>
 							<?php
 							break;

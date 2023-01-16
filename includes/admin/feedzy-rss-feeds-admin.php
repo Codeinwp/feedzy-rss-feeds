@@ -157,6 +157,22 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					),
 				)
 			);
+
+			// Add code editor (Code Mirror) to the `feedzy_additional_css` textarea.
+			if ( isset( $GLOBALS['wp_version'] ) && version_compare( $GLOBALS['wp_version'], '4.9.0', '>=' ) && function_exists( 'wp_enqueue_code_editor' ) ) {
+				$settings = wp_enqueue_code_editor(
+					array(
+						'type'       => 'text/css',
+						'codemirror' => array(
+							'indentUnit'  => 2,
+							'tabSize'     => 2,
+							'lineNumbers' => true,
+						),
+					)
+				);
+
+				wp_add_inline_script( 'code-editor', sprintf( 'jQuery(function ($) { wp.codeEditor.initialize("feedzy_additional_css", %s); });', wp_json_encode( $settings ) ) );
+			}
 		}
 
 		$upsell_screens = array( 'feedzy-rss_page_feedzy-settings', 'feedzy-rss_page_feedzy-admin-menu-pro-upsell' );
@@ -531,6 +547,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				$settings['general']['rss-feeds'] = isset( $_POST['rss-feeds'] ) ? (int) filter_input( INPUT_POST, 'rss-feeds', FILTER_SANITIZE_NUMBER_INT ) : '';
 				$settings['general']['feedzy-delete-days'] = isset( $_POST['feedzy-delete-days'] ) ? (int) filter_input( INPUT_POST, 'feedzy-delete-days', FILTER_SANITIZE_NUMBER_INT ) : '';
 				$settings['general']['default-thumbnail-id'] = isset( $_POST['default-thumbnail-id'] ) ? (int) filter_input( INPUT_POST, 'default-thumbnail-id', FILTER_SANITIZE_NUMBER_INT ) : 0;
+				$settings['general']['additional-css'] = isset( $_POST['additional-css'] ) ? filter_input( INPUT_POST, 'additional-css', FILTER_SANITIZE_STRING ) : 0;
 				break;
 			case 'headers':
 				$settings['header']['user-agent'] = isset( $_POST['user-agent'] ) ? filter_input( INPUT_POST, 'user-agent', FILTER_SANITIZE_STRING ) : '';

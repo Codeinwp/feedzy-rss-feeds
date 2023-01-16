@@ -80,7 +80,20 @@ window.addEventListener( 'elementor/init', function() {
 		}
 	};
 
+	var initWPCodeEditor = function() {
+		var editorInitialized = false;
+		var additionalCSSTextArea = document.querySelector( '.feedzy_additional_css textarea' );
+		if ( null === additionalCSSTextArea || editorInitialized ) {
+			return false;
+		}
+		if ( FeedzyElementorEditor.customEditorOption ) {
+			editorInitialized = true;
+			wp.codeEditor.initialize( additionalCSSTextArea, FeedzyElementorEditor.customEditorOption );
+		}
+	};
+
 	elementor.channels.editor.on( 'section:activated', function() {
 		proTitleText();
+		// initWPCodeEditor();
 	} );
 } );

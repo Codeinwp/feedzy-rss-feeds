@@ -41,6 +41,15 @@ const {
 } = wp.components;
 
 /**
+ * Internal dependencies.
+ */
+
+import CSSEditor from './css/editor.js';
+
+import './css/inject-css.js';
+
+
+/**
 * Create an Inspector Controls wrapper Component
 */
 
@@ -455,6 +464,18 @@ class Inspector extends Component {
 									]}
 									onChange={this.props.edit.onTemplate}
 								/>
+							</PanelBody>
+
+							<PanelBody
+								title={__('Additional CSS')}
+								initialOpen={false}
+								className="feedzy-additional-css"
+							>
+							<CSSEditor
+								clientId={this.props.clientId}
+								setAttributes={ this.props.setAttributes }
+								attributes={ this.props.attributes }
+							/>
 							</PanelBody>
 						</Fragment>
 					]}
