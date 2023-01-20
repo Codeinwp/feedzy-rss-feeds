@@ -69,6 +69,7 @@ class Editor extends Component {
         this.onToDateTime           = this.onToDateTime.bind( this );
         this.feedzyCategoriesList   = this.feedzyCategoriesList.bind( this );
         this.onToggleItemTitle      = this.onToggleItemTitle.bind( this );
+        this.onToggleDisableStyle   = this.onToggleDisableStyle.bind( this );
         this.handleKeyUp                = this.handleKeyUp.bind( this );
 		this.state = {
             // home: when the block is just added
@@ -323,6 +324,9 @@ class Editor extends Component {
     }
     onToggleItemTitle(value) {
         this.props.setAttributes( { itemTitle: ! this.props.attributes.itemTitle } );
+    }
+    onToggleDisableStyle(value) {
+        this.props.setAttributes( { disableStyle: ! this.props.attributes.disableStyle } );
     }
 
     handleKeyUp( event ) {

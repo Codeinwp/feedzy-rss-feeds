@@ -260,6 +260,7 @@ class feedzy_wp_widget extends WP_Widget {
 			'keywords_exc_on'  => isset( $instance['keywords_exc_on'] ) ? $instance['keywords_exc_on'] : '',
 			'from_datetime'  => isset( $instance['from_datetime'] ) ? $instance['from_datetime'] : '',
 			'to_datetime'  => isset( $instance['to_datetime'] ) ? $instance['to_datetime'] : '',
+			'disable_default_style' => isset( $instance['disable_default_style'] ) ? $instance['disable_default_style'] : 'no',
 		);
 		$feedzy_widget_shortcode_attributes = apply_filters( 'feedzy_widget_shortcode_attributes_filter', $feedzy_widget_shortcode_attributes, $args, $instance );
 

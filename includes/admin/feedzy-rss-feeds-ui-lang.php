@@ -212,6 +212,22 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 							),
 						),
 					),
+					'disable_default_style' => array(
+						'label'       => __( 'Disable default style', 'feedzy-rss-feeds' ),
+						'description' => __( 'If disabled, it will be considered the global setting.', 'feedzy-rss-feeds' ),
+						'type'        => 'select',
+						'value'       => 'no',
+						'opts'        => array(
+							'yes' => array(
+								'label' => __( 'Yes', 'feedzy-rss-feeds' ),
+								'value' => 'yes',
+							),
+							'no'  => array(
+								'label' => __( 'No', 'feedzy-rss-feeds' ),
+								'value' => 'no',
+							),
+						),
+					),
 				),
 			),
 			'section_item'  => array(

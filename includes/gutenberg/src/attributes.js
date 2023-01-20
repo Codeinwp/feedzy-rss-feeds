@@ -116,6 +116,10 @@ const attributes = {
 	itemTitle: {
 		type: 'boolean',
 		default: true,
+	},
+	disableStyle: {
+		type: 'boolean',
+		default: false,
 	}
 };
 

@@ -68,6 +68,18 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 				'type'        => Controls_Manager::TEXTAREA,
 			)
 		);
+		$this->add_control(
+			'fz-disable-default-style',
+			array(
+				'label'        => __( 'Disable default style', 'feedzy-rss-feeds' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'default'      => 'no',
+				'label_on'     => esc_html__( 'Yes', 'feedzy-rss-feeds' ),
+				'label_off'    => esc_html__( 'No', 'feedzy-rss-feeds' ),
+				'return_value' => 'yes',
+				'description'  => __( 'If disabled, it will be considered the global setting.', 'feedzy-rss-feeds' ),
+			)
+		);
 		$this->end_controls_section(); // End general setting section.
 
 		// Start feed source section.
@@ -575,29 +587,30 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 		}
 		$feedzy_widget_shortcode_attributes = array(
 			'feeds'           => $this->get_settings_for_display( 'fz-source' ),
-			'max'             => $this->get_settings_for_display( 'fz-max' ),
-			'feed_title'      => $this->get_settings_for_display( 'fz-show-item-source' ),
-			'target'          => $this->get_settings_for_display( 'fz-item-target' ),
-			'title'           => $this->get_settings_for_display( 'fz-item-title-length' ),
-			'meta'            => self::bool_to_enum( $this->get_settings_for_display( 'fz-cus-meta-fields' ) ),
-			'summary'         => self::bool_to_enum( $this->get_settings_for_display( 'fz-item-display-desc' ) ),
-			'summarylength'   => $this->get_settings_for_display( 'fz-item-desc-length' ),
-			'thumb'           => self::bool_to_enum( $this->get_settings_for_display( 'fz-item-thumb' ) ),
-			'default'         => ! empty( $fallback_img['url'] ) ? $fallback_img['url'] : '',
-			'size'            => $this->get_settings_for_display( 'fz-item-thumb-size' ),
-			'http'            => $this->get_settings_for_display( 'fz-item-thumb-http' ),
-			'keywords_title'  => $this->get_settings_for_display( 'fz-filter-inc-key' ),
-			'keywords_inc_on' => $this->get_settings_for_display( 'fz-filter-inc-on' ),
-			'keywords_ban'    => $this->get_settings_for_display( 'fz-filter-exc-key' ),
-			'keywords_exc_on' => $this->get_settings_for_display( 'fz-filter-exc-on' ),
-			'error_empty'     => $this->get_settings_for_display( 'fz-error-empty' ),
-			'sort'            => $this->get_settings_for_display( 'fz-orderby' ),
-			'refresh'         => $this->get_settings_for_display( 'fz-refresh' ),
-			'follow'          => $this->get_settings_for_display( 'fz-item-nofollow-link' ),
-			'lazy'            => $lazy ? self::bool_to_enum( $lazy ) : false,
-			'offset'          => $this->get_settings_for_display( 'fz-offset' ),
-			'from_datetime'   => $this->get_settings_for_display( 'fz-filter-from-dt' ),
-			'to_datetime'     => $this->get_settings_for_display( 'fz-filter-to-dt' ),
+			'max'                   => $this->get_settings_for_display( 'fz-max' ),
+			'feed_title'            => $this->get_settings_for_display( 'fz-show-item-source' ),
+			'target'                => $this->get_settings_for_display( 'fz-item-target' ),
+			'title'                 => $this->get_settings_for_display( 'fz-item-title-length' ),
+			'meta'                  => self::bool_to_enum( $this->get_settings_for_display( 'fz-cus-meta-fields' ) ),
+			'summary'               => self::bool_to_enum( $this->get_settings_for_display( 'fz-item-display-desc' ) ),
+			'summarylength'         => $this->get_settings_for_display( 'fz-item-desc-length' ),
+			'thumb'                 => self::bool_to_enum( $this->get_settings_for_display( 'fz-item-thumb' ) ),
+			'default'               => ! empty( $fallback_img['url'] ) ? $fallback_img['url'] : '',
+			'size'                  => $this->get_settings_for_display( 'fz-item-thumb-size' ),
+			'http'                  => $this->get_settings_for_display( 'fz-item-thumb-http' ),
+			'keywords_title'        => $this->get_settings_for_display( 'fz-filter-inc-key' ),
+			'keywords_inc_on'       => $this->get_settings_for_display( 'fz-filter-inc-on' ),
+			'keywords_ban'          => $this->get_settings_for_display( 'fz-filter-exc-key' ),
+			'keywords_exc_on'       => $this->get_settings_for_display( 'fz-filter-exc-on' ),
+			'error_empty'           => $this->get_settings_for_display( 'fz-error-empty' ),
+			'sort'                  => $this->get_settings_for_display( 'fz-orderby' ),
+			'refresh'               => $this->get_settings_for_display( 'fz-refresh' ),
+			'follow'                => $this->get_settings_for_display( 'fz-item-nofollow-link' ),
+			'lazy'                  => $lazy ? self::bool_to_enum( $lazy ) : false,
+			'offset'                => $this->get_settings_for_display( 'fz-offset' ),
+			'from_datetime'         => $this->get_settings_for_display( 'fz-filter-from-dt' ),
+			'to_datetime'           => $this->get_settings_for_display( 'fz-filter-to-dt' ),
+			'disable_default_style' => $this->get_settings_for_display( 'fz-disable-default-style' ),
 		);
 		$feedzy_widget_shortcode_attributes = apply_filters( 'feedzy_widget_shortcode_attributes_filter', $feedzy_widget_shortcode_attributes, array(), $settings );
 		// Hide item meta.
