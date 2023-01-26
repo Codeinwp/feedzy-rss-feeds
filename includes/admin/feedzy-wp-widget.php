@@ -260,6 +260,9 @@ class feedzy_wp_widget extends WP_Widget {
 			'keywords_exc_on'  => isset( $instance['keywords_exc_on'] ) ? $instance['keywords_exc_on'] : '',
 			'from_datetime'  => isset( $instance['from_datetime'] ) ? $instance['from_datetime'] : '',
 			'to_datetime'  => isset( $instance['to_datetime'] ) ? $instance['to_datetime'] : '',
+			'className'  => isset( $instance['classname'] ) ? $instance['classname'] : '',
+			'_dryrun_'  => isset( $instance['dryrun'] ) ? $instance['dryrun'] : '',
+			'_dry_run_tags_'  => isset( $instance['dry_run_tags'] ) ? $instance['dry_run_tags'] : '',
 		);
 		$feedzy_widget_shortcode_attributes = apply_filters( 'feedzy_widget_shortcode_attributes_filter', $feedzy_widget_shortcode_attributes, $args, $instance );
 
