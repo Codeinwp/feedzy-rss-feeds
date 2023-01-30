@@ -31,6 +31,7 @@ class Feedzy_Rss_Feeds_Activator {
 	 */
 	public static function activate() {
 		$options           = get_option( Feedzy_Rss_Feeds::get_plugin_name(), array() );
+		$is_fresh_install  = get_option( 'feedzy_fresh_install', false );
 		$old_logger_option = get_option( 'feedzy_logger_flag', 'no' );
 		if ( $old_logger_option === 'yes' ) {
 			update_option( 'feedzy_rss_feeds_logger_flag', 'yes' );
@@ -43,6 +44,9 @@ class Feedzy_Rss_Feeds_Activator {
 					'is_new' => 'yes',
 				)
 			);
+		}
+		if ( ! defined( 'TI_CYPRESS_TESTING' ) && false === $is_fresh_install ) {
+			update_option( 'feedzy_fresh_install', '1' );
 		}
 		add_option( 'feedzy-activated', true );
 	}
