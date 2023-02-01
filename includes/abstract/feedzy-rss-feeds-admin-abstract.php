@@ -1548,7 +1548,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'item_img_style'      => 'width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px;',
 			'item_url'            => $new_link,
 			'item_url_target'     => $sc['target'],
-			'item_url_follow'     => isset( $sc['follow'] ) && 'no' === $sc['follow'] ? 'nofollow' : '',
+			'item_url_follow'     => isset( $sc['follow'] ) && 'yes' === $sc['follow'] ? 'nofollow' : '',
 			'item_url_title'      => $item->get_title(),
 			'item_img'            => $content_thumb,
 			'item_img_path'       => $this->feedzy_retrieve_image( $item, $sc ),
