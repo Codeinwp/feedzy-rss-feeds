@@ -33,6 +33,7 @@ const {
 	PanelBody,
 	RangeControl,
 	TextControl,
+	TextareaControl,
 	Button,
 	ToggleControl,
 	SelectControl,
@@ -128,7 +129,12 @@ class Inspector extends Component {
 										className="loadFeed"
 									>
 										{__('Load Feed')}
-									</Button>
+									</Button>,
+									<TextareaControl
+										label={__('Message to show when feed is empty')}
+										value={this.props.attributes.error_empty}
+										onChange={this.props.edit.onErrorEmpty}
+									/>
 								]}
 								{('fetched' === this.props.state.route) && [
 									<RangeControl
@@ -193,6 +199,22 @@ class Inspector extends Component {
 										},
 									]}
 									onChange={this.props.edit.onTarget}
+								/>
+
+								<SelectControl
+									label={__('Make this link a "nofollow" link?')}
+									value={this.props.attributes.follow}
+									options={[
+										{
+											label: __('No'),
+											value: 'no',
+										},
+										{
+											label: __('Yes'),
+											value: 'yes',
+										},
+									]}
+									onChange={this.props.edit.onLinkNoFollow}
 								/>
 
 								<ToggleControl
@@ -555,6 +577,40 @@ class Inspector extends Component {
 									placeholder={_('(eg. promo_code=feedzy_is_awesome)')}
 									value={this.props.attributes.referral_url}
 									onChange={this.props.edit.onReferralURL}
+								/>
+							</PanelBody>
+
+							<PanelBody
+								title={__('Additional options')}
+								initialOpen={false}
+								className="feedzy-additional-options"
+							>
+								<TextControl
+									label={__('Wrap custom class')}
+									value={this.props.attributes.className}
+									onChange={this.props.edit.onclassName}
+								/>
+
+								<SelectControl
+									label={__('Dry run?')}
+									value={this.props.attributes._dryrun_}
+									options={[
+										{
+											label: __('No'),
+											value: 'no',
+										},
+										{
+											label: __('Yes'),
+											value: 'yes',
+										},
+									]}
+									onChange={this.props.edit.onDryRun}
+								/>
+
+								<TextControl
+									label={__('Dry run tags')}
+									value={this.props.attributes._dry_run_tags_}
+									onChange={this.props.edit.onDryRunTags}
 								/>
 							</PanelBody>
 						</Fragment>

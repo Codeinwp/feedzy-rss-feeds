@@ -635,7 +635,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				// auto = continue as it is.
 				'http'            => 'auto',
 				// message to show when feed is empty.
-				'error_empty'     => 'Feed has no items.',
+				'error_empty'     => __( 'Feed has no items.', 'feedzy-rss-feeds' ),
 				// to disable amp support, use 'no'. This is currently not available as part of the shortcode tinymce form.
 				'amp'             => 'yes',
 				// paginate.
@@ -1144,6 +1144,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$feed_items = apply_filters( 'feedzy_get_feed_array', array(), $sc, $feed, $feed_url, $sizes );
 		$class      = array_filter( apply_filters( 'feedzy_add_classes_block', array( $sc['classname'], 'feedzy-' . md5( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ) ), $sc, $feed, $feed_url ) );
+
 		$main_class = 'feedzy-rss';
 		if ( isset( $sc['disable_default_style'] ) && 'yes' === $sc['disable_default_style'] ) {
 			$main_class = 'feedzy-rss-' . $this->shortcode_count;
@@ -1586,7 +1587,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'item_img_style'      => 'width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px;',
 			'item_url'            => $new_link,
 			'item_url_target'     => $sc['target'],
-			'item_url_follow'     => isset( $sc['follow'] ) && 'no' === $sc['follow'] ? 'nofollow' : '',
+			'item_url_follow'     => isset( $sc['follow'] ) && 'yes' === $sc['follow'] ? 'nofollow' : '',
 			'item_url_title'      => $item->get_title(),
 			'item_img'            => $content_thumb,
 			'item_img_path'       => $this->feedzy_retrieve_image( $item, $sc ),

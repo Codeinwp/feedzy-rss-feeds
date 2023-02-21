@@ -410,3 +410,55 @@ add_filter(
 		);
 	}
 );
+
+/**
+ * Elementor feed refresh options.
+ *
+ * @return array
+ */
+function feedzy_elementor_widget_refresh_options() {
+	$options = array(
+		'1_hours'  => wp_sprintf( __( '%d Hour', 'feedzy-rss-feeds' ), 1 ),
+		'3_hours'  => wp_sprintf( __( '%d Hour', 'feedzy-rss-feeds' ), 3 ),
+		'12_hours' => wp_sprintf( __( '%d Hour', 'feedzy-rss-feeds' ), 12 ),
+		'1_days'   => wp_sprintf( __( '%d Day', 'feedzy-rss-feeds' ), 1 ),
+		'3_days'   => wp_sprintf( __( '%d Days', 'feedzy-rss-feeds' ), 3 ),
+		'15_days'  => wp_sprintf( __( '%d Days', 'feedzy-rss-feeds' ), 15 ),
+	);
+	return apply_filters( 'feedzy_elementor_widget_refresh_options', $options );
+}
+
+/**
+ * Classic widget feed refresh options.
+ *
+ * @return array
+ */
+function feedzy_classic_widget_refresh_options() {
+	$options = array(
+		'1_hours'  => array(
+			'label' => '1' . ' ' . __( 'Hour', 'feedzy-rss-feeds' ),
+			'value' => '1_hours',
+		),
+		'3_hours'  => array(
+			'label' => '3' . ' ' . __( 'Hours', 'feedzy-rss-feeds' ),
+			'value' => '3_hours',
+		),
+		'12_hours' => array(
+			'label' => '12' . ' ' . __( 'Hours', 'feedzy-rss-feeds' ),
+			'value' => '12_hours',
+		),
+		'1_days'   => array(
+			'label' => '1' . ' ' . __( 'Day', 'feedzy-rss-feeds' ),
+			'value' => '1_days',
+		),
+		'3_days'   => array(
+			'label' => '3' . ' ' . __( 'Days', 'feedzy-rss-feeds' ),
+			'value' => '3_days',
+		),
+		'15_days'  => array(
+			'label' => '15' . ' ' . __( 'Days', 'feedzy-rss-feeds' ),
+			'value' => '15_days',
+		),
+	);
+	return apply_filters( 'feedzy_classic_widget_refresh_options', $options );
+}
