@@ -81,4 +81,16 @@ class Feedzy_Rss_Feeds_Util_SimplePie extends SimplePie {
 		}
 		return parent::sort_items( $a, $b );
 	}
+
+	/**
+	 * Return the filename (i.e. hash, without path and without extension) of the file to cache a given URL.
+	 *
+	 * @param string $url The URL of the feed to be cached.
+	 * @return string A filename (i.e. hash, without path and without extension).
+	 */
+	public function get_cache_filename( $url ) {
+		// Append custom parameters to the URL to avoid cache pollution in case of multiple calls with different parameters.
+		$url .= $this->force_feed ? '#force_feed' : '';
+		return call_user_func( $this->cache_name_function, $url );
+	}
 }
