@@ -29,3 +29,5 @@ delete_option( 'feedzy_rss_feeds_logger_flag' );
 delete_option( 'feedzy_logger_flag' );
 delete_option( 'feedzy-settings' );
 delete_option( 'feedzy-rss-feeds' );
+delete_option( 'feedzy_fresh_install' );
+delete_option( 'feedzy_wizard_data' );

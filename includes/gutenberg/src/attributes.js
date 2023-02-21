@@ -116,6 +116,30 @@ const attributes = {
 	itemTitle: {
 		type: 'boolean',
 		default: true,
+	},
+	disableStyle: {
+		type: 'boolean',
+		default: false,
+  },
+	follow: {
+		type: 'string',
+		default: 'no',
+	},
+	error_empty: {
+		type: 'string',
+		default: '',
+	},
+	className: {
+		type: 'string',
+		default: '',
+	},
+	_dryrun_: {
+		type: 'string',
+		default: 'no',
+	},
+	_dry_run_tags_: {
+		type: 'string',
+		default: '',
 	}
 };
 

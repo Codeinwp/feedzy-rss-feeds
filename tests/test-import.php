@@ -302,7 +302,7 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 	 * @return string
 	 */
 	private function get_two_rand_feeds() {
-		return 'http://s3.amazonaws.com/downloads.themeisle.com/sample-feed-import.xml';
+		return 'http://s3.amazonaws.com/verti-utils/sample-feed-import.xml';
 	}
 
 	/**
