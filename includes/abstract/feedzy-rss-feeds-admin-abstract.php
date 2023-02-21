@@ -59,7 +59,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! $doing_import_job && empty( $default_img ) ) {
 			$settings = apply_filters( 'feedzy_get_settings', array() );
 			if ( $settings && ! empty( $settings['general']['default-thumbnail-id'] ) ) {
-				$default_img = wp_get_attachment_image( $settings['general']['default-thumbnail-id'], 'full' );
+				$default_img = wp_get_attachment_image_src( $settings['general']['default-thumbnail-id'], 'full' );
+				$default_img = ! empty( $default_img ) ? reset( $default_img ) : '';
 			} else {
 				$default_img = FEEDZY_ABSURL . 'img/feedzy.svg';
 			}
