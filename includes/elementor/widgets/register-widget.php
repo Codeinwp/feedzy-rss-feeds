@@ -120,14 +120,7 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 				'label'       => __( 'For how long we will cache the feed results', 'feedzy-rss-feeds' ),
 				'type'        => Controls_Manager::SELECT,
 				'default'     => '12_hours',
-				'options'     => array(
-					'1_hours'  => wp_sprintf( __( '%d Hour', 'feedzy-rss-feeds' ), 1 ),
-					'3_hours'  => wp_sprintf( __( '%d Hour', 'feedzy-rss-feeds' ), 3 ),
-					'12_hours' => wp_sprintf( __( '%d Hour', 'feedzy-rss-feeds' ), 12 ),
-					'1_days'   => wp_sprintf( __( '%d Day', 'feedzy-rss-feeds' ), 12 ),
-					'3_days'   => wp_sprintf( __( '%d Days', 'feedzy-rss-feeds' ), 3 ),
-					'15_days'  => wp_sprintf( __( '%d Days', 'feedzy-rss-feeds' ), 15 ),
-				),
+				'options'     => feedzy_elementor_widget_refresh_options(),
 				'separator' => 'before',
 			)
 		);
