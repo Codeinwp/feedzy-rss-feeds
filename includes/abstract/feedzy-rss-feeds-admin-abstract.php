@@ -733,9 +733,22 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		// Load SimplePie if not already.
 		do_action( 'feedzy_pre_http_setup', $feed_url );
 		if ( function_exists( 'feedzy_amazon_get_locale_hosts' ) ) {
-			$amazon_hosts = feedzy_amazon_get_locale_hosts();
-			$url_host     = 'webservices.' . wp_parse_url( $feed_url, PHP_URL_HOST );
-			if ( ! empty( $amazon_hosts ) && in_array( $url_host, $amazon_hosts, true ) ) {
+			$amazon_hosts     = feedzy_amazon_get_locale_hosts();
+			$is_amazon_source = false;
+			if ( is_array( $feed_url ) ) {
+				$url_host = array_map(
+					function( $url ) {
+						return 'webservices.' . wp_parse_url( $url, PHP_URL_HOST );
+					},
+					$feed_url
+				);
+				$url_host         = array_diff( $url_host, $amazon_hosts );
+				$is_amazon_source = ! empty( $amazon_hosts ) && empty( $url_host );
+			} else {
+				$url_host         = 'webservices.' . wp_parse_url( $feed_url, PHP_URL_HOST );
+				$is_amazon_source = ! empty( $amazon_hosts ) && in_array( $url_host, $amazon_hosts, true );
+			}
+			if ( $is_amazon_source ) {
 				$feed = $this->init_amazon_api(
 					$feed_url,
 					isset( $sc['refresh'] ) ? $sc['refresh'] : '12_hours',
