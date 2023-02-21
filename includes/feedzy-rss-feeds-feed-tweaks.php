@@ -233,6 +233,79 @@ function feedzy_filter_custom_pattern( $keyword = '' ) {
 	return $pattern;
 }
 
+/**
+ * Feedzy CSS.
+ *
+ * @param string $css Inline CSS.
+ * @return string
+ */
+function feedzy_minimize_css( $css ) {
+	if ( empty( $css ) ) {
+		return $css;
+	}
+	// Normalize whitespace.
+	$css = preg_replace( '/\s+/', ' ', $css );
+	// Remove spaces before and after comment.
+	$css = preg_replace( '/(\s+)(\/\*(.*?)\*\/)(\s+)/', '$2', $css );
+	// Remove comment blocks, everything between /* and */, unless.
+	// preserved with /*! ... */ or /** ... */.
+	$css = preg_replace( '~/\*(?![\!|\*])(.*?)\*/~', '', $css );
+	// Remove ; before }.
+	$css = preg_replace( '/;(?=\s*})/', '', $css );
+	// Remove space after , : ; { } */ >.
+	$css = preg_replace( '/(,|:|;|\{|}|\*\/|>) /', '$1', $css );
+	// Remove space before , ; { } ( ) >.
+	$css = preg_replace( '/ (,|;|\{|}|\(|\)|>)/', '$1', $css );
+	// Strips leading 0 on decimal values (converts 0.5px into .5px).
+	$css = preg_replace( '/(:| )0\.([0-9]+)(%|em|ex|px|in|cm|mm|pt|pc)/i', '${1}.${2}${3}', $css );
+	// Strips units if value is 0 (converts 0px to 0).
+	$css = preg_replace( '/(:| )(\.?)0(%|em|ex|px|in|cm|mm|pt|pc)/i', '${1}0', $css );
+	// Converts all zeros value into short-hand.
+	$css = preg_replace( '/0 0 0 0/', '0', $css );
+	// Shortern 6-character hex color codes to 3-character where possible.
+	$css = preg_replace( '/#([a-f0-9])\\1([a-f0-9])\\2([a-f0-9])\\3/i', '#\1\2\3', $css );
+
+	return trim( $css );
+}
+
+/**
+ * Feedzy default CSS.
+ *
+ * @param string $suffix_class CSS class prefix.
+ * @return string
+ */
+function feedzy_default_css( $suffix_class = '' ) {
+	$default_css = '.feedzy-rss .rss_item .rss_image {
+		float: left;
+		position: relative;
+		border: none;
+		text-decoration: none;
+		max-width: 100%;
+	}
+	.feedzy-rss .rss_item .rss_image span {
+		display: inline-block;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		background-position: 50%;
+		background-size: cover;
+	}
+	.feedzy-rss .rss_item .rss_image {
+		margin: 0.3em 1em 0 0;
+		content-visibility: auto;
+	}
+	.feedzy-rss ul {
+		list-style: none;
+	}
+	.feedzy-rss ul li {
+		display: inline-block;
+	}';
+	if ( ! empty( $suffix_class ) ) {
+		$default_css = str_replace( 'feedzy-rss', $suffix_class, $default_css );
+	}
+	return feedzy_minimize_css( $default_css );
+}
+
 add_filter(
 	'feedzy_wp_kses_allowed_html',
 	function( $allowed_html = array() ) {
@@ -337,3 +410,55 @@ add_filter(
 		);
 	}
 );
+
+/**
+ * Elementor feed refresh options.
+ *
+ * @return array
+ */
+function feedzy_elementor_widget_refresh_options() {
+	$options = array(
+		'1_hours'  => wp_sprintf( __( '%d Hour', 'feedzy-rss-feeds' ), 1 ),
+		'3_hours'  => wp_sprintf( __( '%d Hour', 'feedzy-rss-feeds' ), 3 ),
+		'12_hours' => wp_sprintf( __( '%d Hour', 'feedzy-rss-feeds' ), 12 ),
+		'1_days'   => wp_sprintf( __( '%d Day', 'feedzy-rss-feeds' ), 1 ),
+		'3_days'   => wp_sprintf( __( '%d Days', 'feedzy-rss-feeds' ), 3 ),
+		'15_days'  => wp_sprintf( __( '%d Days', 'feedzy-rss-feeds' ), 15 ),
+	);
+	return apply_filters( 'feedzy_elementor_widget_refresh_options', $options );
+}
+
+/**
+ * Classic widget feed refresh options.
+ *
+ * @return array
+ */
+function feedzy_classic_widget_refresh_options() {
+	$options = array(
+		'1_hours'  => array(
+			'label' => '1' . ' ' . __( 'Hour', 'feedzy-rss-feeds' ),
+			'value' => '1_hours',
+		),
+		'3_hours'  => array(
+			'label' => '3' . ' ' . __( 'Hours', 'feedzy-rss-feeds' ),
+			'value' => '3_hours',
+		),
+		'12_hours' => array(
+			'label' => '12' . ' ' . __( 'Hours', 'feedzy-rss-feeds' ),
+			'value' => '12_hours',
+		),
+		'1_days'   => array(
+			'label' => '1' . ' ' . __( 'Day', 'feedzy-rss-feeds' ),
+			'value' => '1_days',
+		),
+		'3_days'   => array(
+			'label' => '3' . ' ' . __( 'Days', 'feedzy-rss-feeds' ),
+			'value' => '3_days',
+		),
+		'15_days'  => array(
+			'label' => '15' . ' ' . __( 'Days', 'feedzy-rss-feeds' ),
+			'value' => '15_days',
+		),
+	);
+	return apply_filters( 'feedzy_classic_widget_refresh_options', $options );
+}

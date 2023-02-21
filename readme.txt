@@ -464,6 +464,14 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
+##### [Version 4.1.1](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.1.0...v4.1.1) (2023-01-03)
+
+- fix className parameter in the shortcode
+- Improve plugin security
+
+
+
+
 #### [Version 4.1.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.0.5...v4.1.0) (2022-12-06)
 
 

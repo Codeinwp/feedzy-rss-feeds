@@ -68,6 +68,27 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 				'type'        => Controls_Manager::TEXTAREA,
 			)
 		);
+		$this->add_control(
+			'fz-disable-default-style',
+			array(
+				'label'        => __( 'Disable default style', 'feedzy-rss-feeds' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'default'      => 'no',
+				'label_on'     => esc_html__( 'Yes', 'feedzy-rss-feeds' ),
+				'label_off'    => esc_html__( 'No', 'feedzy-rss-feeds' ),
+				'return_value' => 'yes',
+				'description'  => __( 'If disabled, it will be considered the global setting.', 'feedzy-rss-feeds' ),
+			)
+		);
+		$this->add_control(
+			'fz-custom-class',
+			array(
+				'label_block' => true,
+				'label'       => __( 'Wrap custom class', 'feedzy-rss-feeds' ),
+				'type'        => Controls_Manager::TEXT,
+				'classes'     => 'feedzy-el-custom-class',
+			)
+		);
 		$this->end_controls_section(); // End general setting section.
 
 		// Start feed source section.
@@ -120,14 +141,7 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 				'label'       => __( 'For how long we will cache the feed results', 'feedzy-rss-feeds' ),
 				'type'        => Controls_Manager::SELECT,
 				'default'     => '12_hours',
-				'options'     => array(
-					'1_hours'  => wp_sprintf( __( '%d Hour', 'feedzy-rss-feeds' ), 1 ),
-					'3_hours'  => wp_sprintf( __( '%d Hour', 'feedzy-rss-feeds' ), 3 ),
-					'12_hours' => wp_sprintf( __( '%d Hour', 'feedzy-rss-feeds' ), 12 ),
-					'1_days'   => wp_sprintf( __( '%d Day', 'feedzy-rss-feeds' ), 12 ),
-					'3_days'   => wp_sprintf( __( '%d Days', 'feedzy-rss-feeds' ), 3 ),
-					'15_days'  => wp_sprintf( __( '%d Days', 'feedzy-rss-feeds' ), 15 ),
-				),
+				'options'     => feedzy_elementor_widget_refresh_options(),
 				'separator' => 'before',
 			)
 		);
@@ -137,6 +151,28 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 				'label_block' => true,
 				'label'       => __( 'Message to show when feed is empty', 'feedzy-rss-feeds' ),
 				'type'        => Controls_Manager::TEXTAREA,
+				'separator'   => 'before',
+			)
+		);
+		$this->add_control(
+			'fz-dry-run',
+			array(
+				'label_block' => true,
+				'label'       => __( 'Dry run?', 'feedzy-rss-feeds' ),
+				'type'        => Controls_Manager::SELECT,
+				'default'     => 'no',
+				'options'     => array(
+					'yes' => __( 'Yes', 'feedzy-rss-feeds' ),
+					'no'  => __( 'No', 'feedzy-rss-feeds' ),
+				),
+			)
+		);
+		$this->add_control(
+			'fz-dry-run-tags',
+			array(
+				'label_block' => true,
+				'label'       => __( 'Dry run tags', 'feedzy-rss-feeds' ),
+				'type'        => Controls_Manager::TEXT,
 			)
 		);
 		$this->end_controls_section(); // End feed source section.
@@ -436,6 +472,21 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 			)
 		);
 		$this->add_control(
+			'fz-cus-multiple-meta',
+			array(
+				'label'       => __( 'When using multiple sources, should we display additional meta fields?', 'feedzy-rss-feeds' ),
+				'placeholder' => __( '(eg: source)', 'feedzy-rss-feeds' ),
+				'label_block' => true,
+				'type'        => Controls_Manager::TEXT,
+				'description' => wp_sprintf(
+					__(
+						'You can find more info about available meta field values here.(opens in a new tab). 
+				<a href="%s" target="_blank">View documentation here</a>.', 'feedzy-rss-feeds'
+					), esc_url( 'https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed' )
+				),
+			)
+		);
+		$this->add_control(
 			'fz-cus-display-price',
 			array(
 				'label'        => __( 'Display price if available', 'feedzy-rss-feeds' ),
@@ -546,6 +597,7 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 		$columns       = $this->get_settings_for_display( 'fz-layout-columns' );
 		$hide_meta     = $this->get_settings_for_display( 'fz-cus-hide-meta' );
 		$hide_title    = $this->get_settings_for_display( 'fz-item-display-title' );
+		$multiple_meta = $this->get_settings_for_display( 'fz-cus-multiple-meta' );
 
 		// Disable lazy load for elementor frontend editor.
 		if ( \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
@@ -600,15 +652,23 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 			'from_datetime'   => $this->get_settings_for_display( 'fz-filter-from-dt' ),
 			'to_datetime'     => $this->get_settings_for_display( 'fz-filter-to-dt' ),
 			'multiple_meta'   => $display_source ? 'source' : '',
+			'disable_default_style' => $this->get_settings_for_display( 'fz-disable-default-style' ),
+			'className'       => $this->get_settings_for_display( 'fz-custom-class' ),
+			'_dryrun_'        => $this->get_settings_for_display( 'fz-dry-run' ),
+			'_dry_run_tags_'  => $this->get_settings_for_display( 'fz-dry-run-tags' ),
 		);
 		$feedzy_widget_shortcode_attributes = apply_filters( 'feedzy_widget_shortcode_attributes_filter', $feedzy_widget_shortcode_attributes, array(), $settings );
 		// Hide item meta.
-		if ( ! empty( $hide_meta ) && 'yes' === $hide_meta ) {
+		if ( empty( $hide_meta ) ) {
 			unset( $feedzy_widget_shortcode_attributes['meta'] );
 		}
 		// Hide item title.
 		if ( empty( $hide_title ) || 'yes' !== $hide_title ) {
 			$feedzy_widget_shortcode_attributes['title'] = 0;
+		}
+		// Multiple meta.
+		if ( ! empty( $multiple_meta ) ) {
+			$feedzy_widget_shortcode_attributes['multiple_meta'] = $multiple_meta;
 		}
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo feedzy_rss( $feedzy_widget_shortcode_attributes );

@@ -2,7 +2,7 @@
  * feedzy-rss-feeds.css
  * Feedzy RSS Feed
  * Copyright: (c) 2016 Themeisle, themeisle.com
- * Version: 4.1.0
+ * Version: 4.1.1
  * Plugin Name: FEEDZY RSS Feeds
  * Plugin URI: http://themeisle.com/plugins/feedzy-rss-feeds/
  * Author: Themeisle
@@ -483,4 +483,6 @@ input:checked + .feedzy-track:before {
 	font-weight: 400;
 	background: none !important;
 	color: #264494 !important;
+	border: none;
+	box-shadow: none;
 }
