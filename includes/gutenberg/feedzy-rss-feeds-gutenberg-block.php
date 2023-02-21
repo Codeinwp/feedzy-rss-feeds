@@ -197,7 +197,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 					'disableStyle' => array(
 						'type' => 'boolean',
 						'default' => false,
-            ),
+					),
 					'follow' => array(
 						'type' => 'string',
 						'default' => 'no',

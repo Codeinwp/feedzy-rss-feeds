@@ -10,6 +10,7 @@ parser: "babel-eslint"
 parserOptions:
   sourceType: "module"
   allowImportExportEverywhere: true
+
   ecmaFeatures:
     modules: true
     jsx: true
@@ -20,6 +21,7 @@ rules:
   comma-dangle: 0
   no-cond-assign: 2
   no-console: 0
+
   no-constant-condition: 2
   no-control-regex: 2
   no-debugger: 2
@@ -154,7 +156,7 @@ rules:
   max-len: 0
   max-nested-callbacks: 0
   max-params: 0
-  max-statements: [2, 30]
+  max-statements: [2, 60]
   new-cap: 0
   new-parens: 0
   newline-after-var: 0

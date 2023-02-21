@@ -202,7 +202,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 								'value' => 'no',
 							),
 						),
-            ),
+					),
 					'classname' => array(
 						'label'       => __( 'Wrap custom class', 'feedzy-rss-feeds' ),
 						'type'        => 'text',

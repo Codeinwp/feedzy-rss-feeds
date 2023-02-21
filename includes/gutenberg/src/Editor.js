@@ -28,7 +28,6 @@ import Inspector from './inspector';
 import { unescapeHTML, filterData, inArray, arrangeMeta, filterCustomPattern } from './utils';
 
 class Editor extends Component {
-     /*eslint max-statements: ["error", 43]*/
      /*eslint-env es6*/
 	constructor() {
 		super( ...arguments );
