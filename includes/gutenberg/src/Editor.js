@@ -69,6 +69,8 @@ class Editor extends Component {
         this.onToDateTime           = this.onToDateTime.bind( this );
         this.feedzyCategoriesList   = this.feedzyCategoriesList.bind( this );
         this.onToggleItemTitle      = this.onToggleItemTitle.bind( this );
+        this.onToggleDisableStyle   = this.onToggleDisableStyle.bind( this );
+        this.handleKeyUp                = this.handleKeyUp.bind( this );
         this.handleKeyUp            = this.handleKeyUp.bind( this );
         this.onLinkNoFollow         = this.onLinkNoFollow.bind( this );
         this.onErrorEmpty           = this.onErrorEmpty.bind( this ); 
@@ -328,6 +330,9 @@ class Editor extends Component {
     }
     onToggleItemTitle(value) {
         this.props.setAttributes( { itemTitle: ! this.props.attributes.itemTitle } );
+    }
+    onToggleDisableStyle(value) {
+        this.props.setAttributes( { disableStyle: ! this.props.attributes.disableStyle } );
     }
     onLinkNoFollow(value) {
         this.props.setAttributes( { follow: value } );

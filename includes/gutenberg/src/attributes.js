@@ -117,6 +117,10 @@ const attributes = {
 		type: 'boolean',
 		default: true,
 	},
+	disableStyle: {
+		type: 'boolean',
+		default: false,
+  },
 	follow: {
 		type: 'string',
 		default: 'no',

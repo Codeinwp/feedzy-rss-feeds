@@ -478,6 +478,20 @@ class Inspector extends Component {
 									onChange={this.props.edit.onTemplate}
 								/>
 							</PanelBody>
+
+							<PanelBody
+								title={__('Disable default style')}
+								initialOpen={false}
+								className="feedzy-disable-style"
+							>
+							<ToggleControl
+								label={__('Disable default style?')}
+								checked={!!this.props.attributes.disableStyle}
+								onChange={this.props.edit.onToggleDisableStyle}
+								className="feedzy-summary"
+								help={__('If disabled, it will be considered the global setting.')}
+							/>
+							</PanelBody>
 						</Fragment>
 					]}
 					{('fetched' === this.props.state.route && 'advanced' === this.state.tab) && [

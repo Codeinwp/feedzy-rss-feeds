@@ -88,6 +88,11 @@
 						$disble_featured_image = 'checked';
 					}
 
+					$disble_default_style = 0;
+					if ( isset( $settings['general']['disable-default-style'] ) && 1 === intval( $settings['general']['disable-default-style'] ) ) {
+						$disble_default_style = 1;
+					}
+
 					$feedzy_delete_days = isset( $settings['general']['feedzy-delete-days'] ) ? $settings['general']['feedzy-delete-days'] : 0;
 					$default_thumbnail_id = isset( $settings['general']['default-thumbnail-id'] ) ? $settings['general']['default-thumbnail-id'] : 0;
 					switch ( $active_tab ) {
@@ -115,6 +120,16 @@
 											<input type="hidden" name="default-thumbnail-id" id="feed-post-default-thumbnail" value="<?php echo esc_attr( $default_thumbnail_id ); ?>">
 										</div>
 										<div class="help-text"><?php esc_html_e( 'This image will be used for the Feed Items that don\'t have one.', 'feedzy-rss-feeds' ); ?></div>
+									</div>
+								</div>
+								<div class="form-block">
+									<div class="fz-form-switch pb-0">
+										<input type="checkbox" id="disable-default-style" class="fz-switch-toggle" name="disable-default-style"
+										value="1" <?php checked( 1, $disble_default_style ); ?> />
+										<label for="disable-default-style" class="form-label"><?php esc_html_e( 'Disable default style', 'feedzy-rss-feeds' ); ?></label>
+									</div>
+									<div class="fz-form-group">
+										<div class="help-text pt-8"><?php esc_html_e( 'This setting will be used to inherit the current theme style instead of the default style. If disabled, it will be considered the individual widget/block/shortcode setting.', 'feedzy-rss-feeds' ); ?></div>
 									</div>
 								</div>
 								<?php if ( feedzy_is_pro() ) : ?>
