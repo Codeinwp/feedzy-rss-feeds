@@ -194,6 +194,26 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 						'type' => 'boolean',
 						'default' => true,
 					),
+					'follow' => array(
+						'type' => 'string',
+						'default' => 'no',
+					),
+					'error_empty' => array(
+						'type' => 'string',
+						'default' => '',
+					),
+					'className' => array(
+						'type' => 'string',
+						'default' => '',
+					),
+					'_dryrun_' => array(
+						'type' => 'string',
+						'default' => 'no',
+					),
+					'_dry_run_tags_' => array(
+						'type' => 'string',
+						'default' => '',
+					),
 				),
 			)
 		);

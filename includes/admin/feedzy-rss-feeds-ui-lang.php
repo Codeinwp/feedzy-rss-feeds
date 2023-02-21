@@ -187,6 +187,31 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 							),
 						),
 					),
+					'classname' => array(
+						'label'       => __( 'Wrap custom class', 'feedzy-rss-feeds' ),
+						'type'        => 'text',
+						'value'       => '',
+					),
+					'dryrun'        => array(
+						'label' => __( 'Dry run?', 'feedzy-rss-feeds' ),
+						'type'  => 'select',
+						'value' => 'no',
+						'opts'  => array(
+							'yes' => array(
+								'label' => __( 'Yes', 'feedzy-rss-feeds' ),
+								'value' => 'yes',
+							),
+							'no'  => array(
+								'label' => __( 'No', 'feedzy-rss-feeds' ),
+								'value' => 'no',
+							),
+						),
+					),
+					'dry_run_tags' => array(
+						'label'       => __( 'Dry run tags', 'feedzy-rss-feeds' ),
+						'type'        => 'text',
+						'value'       => '',
+					),
 				),
 			),
 			'section_item'  => array(
