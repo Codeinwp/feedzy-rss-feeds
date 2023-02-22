@@ -172,7 +172,7 @@ class Test_Feedzy extends WP_UnitTestCase {
 			$this->assertNotEquals( strlen( $desc ), strlen( $summaries[ $index++ ] ), $desc );
 			// the last character should be a ] as we cannot directly check for '[&hellip;]'
 			$this->assertNotEquals( ']', substr( $desc, -1, 1 ), $desc );
-			$this->assertContains( $_replace, $desc, $desc );
+			$this->assertStringContainsString( $_replace, $desc, $desc );
 		}
 
 	}

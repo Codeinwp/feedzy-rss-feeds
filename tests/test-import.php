@@ -13,7 +13,7 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 	/**
 	 * Sets up the test methods.
 	 */
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 		 // avoids error - readfile(/src/wp-includes/js/wp-emoji-loader.js): failed to open stream: No such file or directory
 		remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
@@ -194,22 +194,23 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 		$categories = wp_get_post_categories(
 			$created[0]->ID,
 			array(
-				'fields' => 'ids',
+				'fields'  => 'ids',
+				'exclude' => 1,
 			)
 		);
 		$this->assertEquals( $test[0]['item_url_title'], $created[0]->post_title );
 		$this->assertEquals( 'post', $created[0]->post_type );
-		$this->assertNotContains( '[#item_full_content]', $created[0]->post_content );
+		$this->assertStringNotContainsString( '[#item_full_content]', $created[0]->post_content );
 		$item_content   = ! empty( $test[0]['item_content'] ) ? $test[0]['item_content'] : $test[0]['item_description'];
 		if ( '[#item_categories]' === $magic_tags ) {
 			$item_content   = ! empty( $test[0]['item_categories'] ) ? $test[0]['item_categories'] : '';
 			$this->assertArrayNotHasKey( 'item_full_content', $test[0] );
 			$this->assertEquals( strip_tags( $item_content ), strip_tags( $created[0]->post_content ) );
 			if ( strpos( $created[0]->post_content, 'Infrastructure (Public Works)' ) !== false ) {
-				$this->assertContains( 'Infrastructure (Public Works)', $created[0]->post_content );
+				$this->assertStringContainsString( 'Infrastructure (Public Works)', $created[0]->post_content );
 			}
 			if ( strpos( $created[0]->post_content, 'Newark Watershed Conservation and Development Corp' ) !== false ) {
-				$this->assertContains( 'Newark Watershed Conservation and Development Corp', $created[0]->post_content );
+				$this->assertStringContainsString( 'Newark Watershed Conservation and Development Corp', $created[0]->post_content );
 			}
 		} else {
 			$this->assertArrayNotHasKey( 'item_full_content', $test[0] );
