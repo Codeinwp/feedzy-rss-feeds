@@ -65,8 +65,8 @@ if ( ! empty( $integrate_with ) ) {
 								<div class="feedzy-accordion-item">
 									<div class="feedzy-accordion-item__title">
 										<div class="feedzy-accordion-item__button">
-											<h2 class="h3 pb-8"><?php esc_html_e( 'How you want to integrate Feedzy into your website?', 'feedzy-rss-feeds' ); ?></h2>
-											<p class="p"><?php esc_html_e( 'Pro tip: Consider the option that fits your requirements', 'feedzy-rss-feeds' ); ?></p>
+											<h2 class="h3 pb-8"><?php esc_html_e( 'How would you like to integrate Feedzy into your website?', 'feedzy-rss-feeds' ); ?></h2>
+											<p class="p"><?php esc_html_e( 'Pro tip: Choose the option that best meets your needs.', 'feedzy-rss-feeds' ); ?></p>
 										</div>
 									</div>
 									<div class="feedzy-accordion-item__content border-top">
@@ -74,7 +74,7 @@ if ( ! empty( $integrate_with ) ) {
 											<div class="form-block">
 												<div class="fz-radio pb-16">
 													<input type="radio" class="fz-radio-btn" name="feedzy[wizard_data][integrate]" id="radio-1" value="feed" required<?php checked( $integrate_with, 'feed' ); ?>>
-													<label for="radio-1"><?php esc_html_e( 'Import RSS feeds to your website content', 'feedzy-rss-feeds' ); ?></label>
+													<label for="radio-1"><?php esc_html_e( 'Importing RSS feeds to your website content', 'feedzy-rss-feeds' ); ?></label>
 												</div>
 												<div class="fz-radio pb-16">
 													<input type="radio" class="fz-radio-btn" name="feedzy[wizard_data][integrate]" id="radio-2" value="shortcode" required<?php checked( $integrate_with, 'shortcode' ); ?>>
@@ -104,8 +104,8 @@ if ( ! empty( $integrate_with ) ) {
 								<div class="feedzy-accordion-item mb-30" id="feed_source">
 									<div class="feedzy-accordion-item__title">
 										<div class="feedzy-accordion-item__button">
-											<h2 class="h3 pb-8"><?php esc_html_e( 'Add feed source URL', 'feedzy-rss-feeds' ); ?></h2>
-											<p class="p"><?php esc_html_e( 'Quick tip: Use demo Feed link which you can customize later', 'feedzy-rss-feeds' ); ?></p>
+											<h2 class="h3 pb-8"><?php esc_html_e( 'Add RSS feed URL', 'feedzy-rss-feeds' ); ?></h2>
+											<p class="p"><?php esc_html_e( 'Quick tip: Use demo RSS feed URL which you can customize later', 'feedzy-rss-feeds' ); ?></p>
 										</div>
 										<div class="feedzy-accordion-item__button hidden">
 											<h2 class="h3"><?php esc_html_e( 'Feed Source URL', 'feedzy-rss-feeds' ); ?></h2>
@@ -123,7 +123,7 @@ if ( ! empty( $integrate_with ) ) {
 														</div>
 													</div>
 													<div class="fz-col-md-6">
-														<div class="help-text"><?php echo wp_kses_post( sprintf( __( 'No Feed URL? <a href="%s" class="feed-demo-link">Click here</a> to use demo link', 'feedzy-rss-feeds' ), esc_url( 'https://www.codeinwp.com/feed/' ) ) ); ?> </div>
+														<div class="help-text"><?php echo wp_kses_post( sprintf( __( 'No Feed URL? <a href="%s" class="feed-demo-link">Click here</a> to use demo URL', 'feedzy-rss-feeds' ), esc_url( 'https://www.codeinwp.com/feed/' ) ) ); ?> </div>
 													</div>
 												</div>
 												<p class="help-text help-text-primary"><?php echo wp_kses_post( sprintf( __( 'Enable Amazon Product Advertising feeds compatibility to generate affiliate revenue with <a href="%s" target="_blank">Premium version</a>', 'feedzy-rss-feeds' ), tsdk_utmify( FEEDZY_UPSELL_LINK, 'setupWizard' ) ) ); ?></p>
@@ -197,7 +197,7 @@ if ( ! empty( $integrate_with ) ) {
 													</div>
 													<div class="fz-shortcode-preview-content">
 														<div class="content-title">
-															<h4 class="h4"><?php esc_html_e( 'Add basic short code in draft page', 'feedzy-rss-feeds' ); ?> <span
+															<h4 class="h4"><?php esc_html_e( 'Add basic short code in a draft page', 'feedzy-rss-feeds' ); ?> <span
 																	class="pro-label free-label"><?php esc_html_e( 'Free', 'feedzy-rss-feeds' ); ?></span></h4>
 															<div class="check">
 																<input type="checkbox" id="add_basic_shortcode" class="fz-switch-toggle" value="1" checked>
