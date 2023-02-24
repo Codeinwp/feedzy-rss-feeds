@@ -28,7 +28,6 @@ import Inspector from './inspector';
 import { unescapeHTML, filterData, inArray, arrangeMeta, filterCustomPattern } from './utils';
 
 class Editor extends Component {
-     /*eslint max-statements: ["error", 40]*/
      /*eslint-env es6*/
 	constructor() {
 		super( ...arguments );
@@ -69,7 +68,14 @@ class Editor extends Component {
         this.onToDateTime           = this.onToDateTime.bind( this );
         this.feedzyCategoriesList   = this.feedzyCategoriesList.bind( this );
         this.onToggleItemTitle      = this.onToggleItemTitle.bind( this );
+        this.onToggleDisableStyle   = this.onToggleDisableStyle.bind( this );
         this.handleKeyUp                = this.handleKeyUp.bind( this );
+        this.handleKeyUp            = this.handleKeyUp.bind( this );
+        this.onLinkNoFollow         = this.onLinkNoFollow.bind( this );
+        this.onErrorEmpty           = this.onErrorEmpty.bind( this ); 
+        this.onclassName            = this.onclassName.bind( this ); 
+        this.onDryRun               = this.onDryRun.bind( this ); 
+        this.onDryRunTags           = this.onDryRunTags.bind( this ); 
 		this.state = {
             // home: when the block is just added
             // fetched: when the feed is fetched
@@ -323,6 +329,24 @@ class Editor extends Component {
     }
     onToggleItemTitle(value) {
         this.props.setAttributes( { itemTitle: ! this.props.attributes.itemTitle } );
+    }
+    onToggleDisableStyle(value) {
+        this.props.setAttributes( { disableStyle: ! this.props.attributes.disableStyle } );
+    }
+    onLinkNoFollow(value) {
+        this.props.setAttributes( { follow: value } );
+    }
+    onErrorEmpty(value) {
+        this.props.setAttributes( { error_empty: value } );
+    }
+    onclassName(value) {
+        this.props.setAttributes( { className: value } );
+    }
+    onDryRun(value) {
+        this.props.setAttributes( { _dryrun_: value } );
+    }
+    onDryRunTags(value) {
+        this.props.setAttributes( { _dry_run_tags_: value } );
     }
 
     handleKeyUp( event ) {

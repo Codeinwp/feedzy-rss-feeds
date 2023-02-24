@@ -119,6 +119,9 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	public function enqueue_styles() {
 		wp_enqueue_style( $this->plugin_name, FEEDZY_ABSURL . 'css/feedzy-rss-feed-import.css', array(), $this->version, 'all' );
+		wp_register_style( $this->plugin_name . '_chosen', FEEDZY_ABSURL . 'includes/views/css/chosen.css', array(), $this->version, 'all' );
+		wp_register_script( $this->plugin_name . '_chosen_script', FEEDZY_ABSURL . 'includes/views/js/chosen.js', array( 'jquery' ), $this->version, true );
+
 		if ( get_current_screen()->post_type === 'feedzy_imports' ) {
 
 			wp_enqueue_style( $this->plugin_name . '_chosen', FEEDZY_ABSURL . 'includes/views/css/chosen.css', array(), $this->version, 'all' );
@@ -975,6 +978,9 @@ class Feedzy_Rss_Feeds_Import {
 			case 'fetch_custom_fields':
 				$this->fetch_custom_fields();
 				break;
+			case 'wizard_import_feed':
+				$this->wizard_import_feed();
+				break;
 		}
 	}
 
@@ -1649,8 +1655,9 @@ class Feedzy_Rss_Feeds_Import {
 
 			if ( $import_post_term !== 'none' && strpos( $import_post_term, '_' ) > 0 ) {
 				// let's get the slug of the uncategorized category, even if it renamed.
-				$uncategorized = get_category( 1 );
-				$terms         = explode( ',', $import_post_term );
+				$uncategorized    = get_category( 1 );
+				$terms            = explode( ',', $import_post_term );
+				$default_category = (int) get_option( 'default_category' );
 				foreach ( $terms as $term ) {
 					// this handles both x_2, where 2 is the term id and x is the taxonomy AND x_2_3_4 where 4 is the term id and the taxonomy name is "x 2 3 4".
 					$array    = explode( '_', $term );
@@ -1660,15 +1667,17 @@ class Feedzy_Rss_Feeds_Import {
 					// uncategorized
 					// 1. may be the unmodified category ID 1
 					// 2. may have been recreated ('uncategorized') and may have a different slug in different languages.
-					wp_remove_object_terms(
-						$new_post_id, apply_filters(
-							'feedzy_uncategorized', array(
-								1,
-								'uncategorized',
-								$uncategorized->slug,
-							), $job->ID
-						), 'category'
-					);
+					if ( $default_category !== $uncategorized->term_id ) {
+						wp_remove_object_terms(
+							$new_post_id, apply_filters(
+								'feedzy_uncategorized', array(
+									1,
+									'uncategorized',
+									$uncategorized->slug,
+								), $job->ID
+							), 'category'
+						);
+					}
 
 					$result = wp_set_object_terms( $new_post_id, intval( $term_id ), $taxonomy, true );
 					do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'After creating post in %s/%d, result = %s', $taxonomy, $term_id, print_r( $result, true ) ), 'debug', __FILE__, __LINE__ );
@@ -2662,8 +2671,9 @@ class Feedzy_Rss_Feeds_Import {
 		// Display success notice if clone succeed.
 		if ( isset( $_GET['saved'] ) && 'fz_duplicate_import_job_created' === $_GET['saved'] ) { // phpcs:ignore WordPress.Security.NonceVerification
 			?>
-			<div class="notice notice-success is-dismissible">
-				<p><?php esc_html_e( 'Duplicate import job created', 'feedzy-rss-feeds' ); ?></p></div>
+<div class="notice notice-success is-dismissible">
+	<p><?php esc_html_e( 'Duplicate import job created', 'feedzy-rss-feeds' ); ?></p>
+</div>
 			<?php
 		}
 	}
@@ -2683,5 +2693,65 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		return $content;
+	}
+
+	/**
+	 * Run a wizard import feed.
+	 */
+	private function wizard_import_feed() {
+		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
+
+		$post_type   = ! empty( $_POST['post_type'] ) ? filter_input( INPUT_POST, 'post_type', FILTER_SANITIZE_STRING ) : '';
+		$wizard_data = get_option( 'feedzy_wizard_data', array() );
+		$wizard_data = ! empty( $wizard_data ) ? $wizard_data : array();
+		$wizard_data['post_type'] = $post_type;
+
+		$post_title = __( 'Setup Wizard', 'feedzy-rss-feeds' );
+		$job_id     = post_exists( $post_title, '', '', 'feedzy_imports' );
+
+		$response = array(
+			'status' => 0,
+		);
+
+		// Delete previous meta data.
+		if ( $job_id ) {
+			$meta = get_post_meta( $job_id );
+			foreach ( $meta as $key => $value ) {
+				delete_post_meta( $job_id, $key );
+			}
+		}
+
+		// Create new import job.
+		if ( ! $job_id ) {
+			$job_id = wp_insert_post(
+				array(
+					'post_title' => $post_title,
+					'post_type' => 'feedzy_imports',
+					'post_status' => 'publish',
+				)
+			);
+		}
+
+		if ( ! is_wp_error( $job_id ) ) {
+			update_post_meta( $job_id, 'source', $wizard_data['feed'] );
+			update_post_meta( $job_id, 'import_post_title', '[#item_title]' );
+			update_post_meta( $job_id, 'import_post_date', '[#item_date]' );
+			update_post_meta( $job_id, 'import_post_content', '[#item_content]' );
+			update_post_meta( $job_id, 'import_post_content', '[#item_content]' );
+			update_post_meta( $job_id, 'import_post_type', $post_type );
+			update_post_meta( $job_id, 'import_post_status', 'publish' );
+			update_post_meta( $job_id, 'import_post_featured_img', '[#item_image]' );
+
+			// Update wizard data.
+			update_option( 'feedzy_wizard_data', $wizard_data );
+
+			$job   = get_post( $job_id );
+			$count = $this->run_job( $job, 10 );
+			do_action( 'feedzy_run_cron_extra', $job );
+			$response = array(
+				'status' => $count > 0,
+			);
+		}
+		wp_send_json( $response );
 	}
 }

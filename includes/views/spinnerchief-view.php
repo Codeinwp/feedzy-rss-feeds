@@ -6,20 +6,6 @@
 			?>
 		</div>
 		<div class="locked-form-block">
-			<div class="fz-form-row">
-				<div class="fz-form-col-6">
-					<div class="fz-form-group">
-						<label class="form-label"><?php esc_html_e( 'The SpinnerChief username:', 'feedzy-rss-feeds' ); ?></label>
-						<input type="text" class="form-control" placeholder="<?php echo esc_html_x( 'SpinnerChief Username', 'Username for SpinnerChief service', 'feedzy-rss-feeds' ); ?>"/>
-					</div>
-				</div>
-				<div class="fz-form-col-6">
-					<div class="fz-form-group">
-						<label class="form-label"><?php echo esc_html_x( 'The SpinnerChief password:', 'Password for SpinnerChief service', 'feedzy-rss-feeds' ); ?></label>
-						<input type="password" class="form-control" placeholder="<?php echo esc_html_x( 'SpinnerChief Password', 'Password for SpinnerChief service', 'feedzy-rss-feeds' ); ?>"/>
-					</div>
-				</div>
-			</div>
 			<div class="fz-form-group">
 				<label class="form-label"><?php esc_html_e( 'SpinnerChief API key', 'feedzy-rss-feeds' ); ?></label>
 				<div class="fz-input-group">

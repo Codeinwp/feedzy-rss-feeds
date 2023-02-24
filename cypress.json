@@ -7,14 +7,14 @@
         "tabs": 7
     },
     "shortcode": {
-        "single": "[feedzy-rss feeds='https://s3.amazonaws.com/downloads.themeisle.com/sample-feed.xml' max='11' offset='1' feed_title='yes' refresh='1_hours' meta='yes' multiple_meta='yes' summary='yes' price='yes' mapping='price=im:price' thumb='yes' keywords_title='God, Mendes, Cyrus, Taylor' keywords_ban='Cyrus' template='style1']",
+        "single": "[feedzy-rss feeds='https://s3.amazonaws.com/verti-utils/sample-feed.xml' max='11' offset='1' feed_title='yes' refresh='1_hours' meta='yes' multiple_meta='yes' summary='yes' price='yes' mapping='price=im:price' thumb='yes' keywords_title='God, Mendes, Cyrus, Taylor' keywords_ban='Cyrus' template='style1']",
         "single_results": 9,
-        "lazy": "[feedzy-rss feeds='https://s3.amazonaws.com/downloads.themeisle.com/sample-feed.xml' max='11' offset='1' feed_title='yes' refresh='1_hours' meta='yes' multiple_meta='yes' summary='yes' price='yes' mapping='price=im:price' thumb='yes' keywords_title='God, Mendes, Cyrus, Taylor' keywords_ban='Cyrus' template='style1' lazy='yes']",
-        "multiple": "[feedzy-rss feeds='https://s3.amazonaws.com/downloads.themeisle.com/sample-feed-multiple1.xml, https://s3.amazonaws.com/downloads.themeisle.com/sample-feed-multiple2.xml' max='10' feed_title='no' refresh='1_hours' meta='yes' multiple_meta='yes' summary='yes' thumb='yes' template='style1']",
+        "lazy": "[feedzy-rss feeds='https://s3.amazonaws.com/verti-utils/sample-feed.xml' max='11' offset='1' feed_title='yes' refresh='1_hours' meta='yes' multiple_meta='yes' summary='yes' price='yes' mapping='price=im:price' thumb='yes' keywords_title='God, Mendes, Cyrus, Taylor' keywords_ban='Cyrus' template='style1' lazy='yes']",
+        "multiple": "[feedzy-rss feeds='https://s3.amazonaws.com/verti-utils/sample-feed-multiple1.xml, https://s3.amazonaws.com/verti-utils/sample-feed-multiple2.xml' max='10' feed_title='no' refresh='1_hours' meta='yes' multiple_meta='yes' summary='yes' thumb='yes' template='style1']",
         "multiple_results": 10
     },
     "gutenberg": {
-        "url": "https://s3.amazonaws.com/downloads.themeisle.com/sample-feed.xml",
+        "url": "https://s3.amazonaws.com/verti-utils/sample-feed.xml",
         "max": 10,
         "offset": 1,
         "include": "God, Mendes, Cyrus, Taylor",
@@ -26,7 +26,7 @@
     },
     "import-feed": {
       "locked": 6,
-      "url": "https://s3.amazonaws.com/downloads.themeisle.com/sample-feed-import.xml",
+      "url": "https://s3.amazonaws.com/verti-utils/sample-feed-import.xml",
       "invalidurl": "test",
       "title": "[#item_date], [#item_custom_guid] [#item_title]",
       "content": "[#item_content] start:[#item_categories]:end",

@@ -137,32 +137,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'placeholder' => __( '(eg: 1_days, defaults: 12_hours)', 'feedzy-rss-feeds' ),
 						'type'        => 'select',
 						'value'       => '12_hours',
-						'opts'        => array(
-							'1_hours'  => array(
-								'label' => '1' . ' ' . __( 'Hour', 'feedzy-rss-feeds' ),
-								'value' => '1_hours',
-							),
-							'3_hours'  => array(
-								'label' => '3' . ' ' . __( 'Hours', 'feedzy-rss-feeds' ),
-								'value' => '3_hours',
-							),
-							'12_hours' => array(
-								'label' => '12' . ' ' . __( 'Hours', 'feedzy-rss-feeds' ),
-								'value' => '12_hours',
-							),
-							'1_days'   => array(
-								'label' => '1' . ' ' . __( 'Day', 'feedzy-rss-feeds' ),
-								'value' => '1_days',
-							),
-							'3_days'   => array(
-								'label' => '3' . ' ' . __( 'Days', 'feedzy-rss-feeds' ),
-								'value' => '3_days',
-							),
-							'15_days'  => array(
-								'label' => '15' . ' ' . __( 'Days', 'feedzy-rss-feeds' ),
-								'value' => '15_days',
-							),
-						),
+						'opts'        => feedzy_classic_widget_refresh_options(),
 					),
 					'sort'        => array(
 						'label' => __( 'Sorting order.', 'feedzy-rss-feeds' ),
@@ -211,6 +186,47 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 								'value' => 'no',
 							),
 						),
+					),
+					'disable_default_style' => array(
+						'label'       => __( 'Disable default style', 'feedzy-rss-feeds' ),
+						'description' => __( 'If disabled, it will be considered the global setting.', 'feedzy-rss-feeds' ),
+						'type'        => 'select',
+						'value'       => 'no',
+						'opts'  => array(
+							'yes' => array(
+								'label' => __( 'Yes', 'feedzy-rss-feeds' ),
+								'value' => 'yes',
+							),
+							'no'  => array(
+								'label' => __( 'No', 'feedzy-rss-feeds' ),
+								'value' => 'no',
+							),
+						),
+					),
+					'classname' => array(
+						'label'       => __( 'Wrap custom class', 'feedzy-rss-feeds' ),
+						'type'        => 'text',
+						'value'       => '',
+					),
+					'dryrun'        => array(
+						'label' => __( 'Dry run?', 'feedzy-rss-feeds' ),
+						'type'  => 'select',
+						'value' => 'no',
+						'opts'  => array(
+							'yes' => array(
+								'label' => __( 'Yes', 'feedzy-rss-feeds' ),
+								'value' => 'yes',
+							),
+							'no'  => array(
+								'label' => __( 'No', 'feedzy-rss-feeds' ),
+								'value' => 'no',
+							),
+						),
+					),
+					'dry_run_tags' => array(
+						'label'       => __( 'Dry run tags', 'feedzy-rss-feeds' ),
+						'type'        => 'text',
+						'value'       => '',
 					),
 				),
 			),
