@@ -1,3 +1,19 @@
+#### [Version 4.2.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.1.1...v4.2.0) (2023-02-24)
+
+### Features: 
+
+- Add onboarding screen
+- Improve caching mechanism for feeds
+- Ensure consistency between parameters in widgets/shortcodes/elementor contexts
+- Add a no-style attribute when displaying feeds which removes any extra style 
+
+### Fixes: 
+- Minor UI fixes
+- Fix redirect to archive page issues
+- Fix display title on multiple feeds 
+- Fix the refresh option on elementor 
+- Fix additional classes parameter in Gutenberg
+
 ##### [Version 4.1.1](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.1.0...v4.1.1) (2023-01-03)
 
 - fix className parameter in the shortcode
