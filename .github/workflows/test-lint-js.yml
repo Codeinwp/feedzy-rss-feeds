@@ -6,6 +6,7 @@ on:
   push:
     branches-ignore:
       - 'master'
+      - 'dependabot/**'
 
 jobs:
   npm:
