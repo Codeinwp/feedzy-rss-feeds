@@ -1,3 +1,9 @@
+##### [Version 4.2.1](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.2.0...v4.2.1) (2023-02-27)
+
+- fix uncategorized category is being added by default to imported post
+- fix assigning a different author doesn't work with item_full_content tag
+- pro version compatibility
+
 #### [Version 4.2.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.1.1...v4.2.0) (2023-02-24)
 
 ### Features: 
