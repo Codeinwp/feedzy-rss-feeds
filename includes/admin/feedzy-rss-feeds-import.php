@@ -1572,7 +1572,7 @@ class Feedzy_Rss_Feeds_Import {
 					'post_status'  => $import_post_status,
 					'post_excerpt' => $item_post_excerpt,
 				),
-				$item,
+				$item_obj,
 				$post_title,
 				$post_content,
 				$item_post_excerpt,
