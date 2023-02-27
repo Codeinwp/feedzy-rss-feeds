@@ -1667,7 +1667,7 @@ class Feedzy_Rss_Feeds_Import {
 					// uncategorized
 					// 1. may be the unmodified category ID 1
 					// 2. may have been recreated ('uncategorized') and may have a different slug in different languages.
-					if ( $default_category !== $uncategorized->term_id ) {
+					if ( $default_category === $uncategorized->term_id ) {
 						wp_remove_object_terms(
 							$new_post_id, apply_filters(
 								'feedzy_uncategorized', array(

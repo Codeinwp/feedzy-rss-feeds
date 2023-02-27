@@ -195,7 +195,6 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 			$created[0]->ID,
 			array(
 				'fields'  => 'ids',
-				'exclude' => 1,
 			)
 		);
 		$this->assertEquals( $test[0]['item_url_title'], $created[0]->post_title );
