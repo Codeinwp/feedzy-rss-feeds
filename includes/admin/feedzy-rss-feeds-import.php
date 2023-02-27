@@ -1572,7 +1572,7 @@ class Feedzy_Rss_Feeds_Import {
 					'post_status'  => $import_post_status,
 					'post_excerpt' => $item_post_excerpt,
 				),
-				$item,
+				$item_obj,
 				$post_title,
 				$post_content,
 				$item_post_excerpt,
@@ -1667,7 +1667,7 @@ class Feedzy_Rss_Feeds_Import {
 					// uncategorized
 					// 1. may be the unmodified category ID 1
 					// 2. may have been recreated ('uncategorized') and may have a different slug in different languages.
-					if ( $default_category !== $uncategorized->term_id ) {
+					if ( $default_category === $uncategorized->term_id ) {
 						wp_remove_object_terms(
 							$new_post_id, apply_filters(
 								'feedzy_uncategorized', array(
