@@ -2362,7 +2362,7 @@ class Feedzy_Rss_Feeds_Import {
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
 
 		$id                 = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
-		$del_imported_posts = filter_input( INPUT_POST, 'del_imported_posts', FILTER_VALIDATE_BOOL );
+		$del_imported_posts = filter_input( INPUT_POST, 'del_imported_posts', FILTER_VALIDATE_BOOLEAN );
 		$post               = get_post( $id );
 		if ( 'feedzy_imports' !== $post->post_type ) {
 			wp_die();
