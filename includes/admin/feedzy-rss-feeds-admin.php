@@ -48,14 +48,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	protected $version;
 
 	/**
-	 * Cron job schedule.
-	 *
-	 * @access   public
-	 * @var      array $cron_schedules Cron schedules list.
-	 */
-	public $cron_schedules = array();
-
-	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since   3.0.0
