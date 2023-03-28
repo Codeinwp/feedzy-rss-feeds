@@ -1950,9 +1950,35 @@ class Feedzy_Rss_Feeds_Import {
 	 * @access  public
 	 */
 	public function add_cron() {
-		if ( false === wp_next_scheduled( 'feedzy_cron' ) ) {
-			wp_schedule_event( time(), 'hourly', 'feedzy_cron' );
+		$time     = ! empty( $this->free_settings['general']['fz_cron_execution'] ) ? $this->get_cron_execution( $this->free_settings['general']['fz_cron_execution'] ) : time();
+		$schedule = ! empty( $this->free_settings['general']['fz_cron_schedule'] ) ? $this->free_settings['general']['fz_cron_schedule'] : 'hourly';
+		if ( isset( $_POST['nonce'] ) && wp_verify_nonce( filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING ), filter_input( INPUT_POST, 'tab', FILTER_SANITIZE_STRING ) ) ) {
+			if ( ! empty( $_POST['fz_cron_execution'] ) && ! empty( $_POST['fz_cron_schedule'] ) && ! empty( $_POST['fz_execution_offset'] ) ) {
+				$execution = sanitize_text_field( wp_unslash( $_POST['fz_cron_execution'] ) );
+				$offset    = sanitize_text_field( wp_unslash( $_POST['fz_execution_offset'] ) );
+				$time      = $this->get_cron_execution( $execution, $offset );
+				$schedule  = sanitize_text_field( wp_unslash( $_POST['fz_cron_schedule'] ) );
+				wp_clear_scheduled_hook( 'feedzy_cron' );
+			}
 		}
+		if ( false === wp_next_scheduled( 'feedzy_cron' ) ) {
+			wp_schedule_event( $time, $schedule, 'feedzy_cron' );
+		}
+	}
+
+	/**
+	 * Get cron job execution.
+	 *
+	 * @param string $execution Execution time.
+	 * @param int    $offset Offset.
+	 * @return int
+	 */
+	public function get_cron_execution( $execution, $offset = 0 ) {
+		if ( empty( $offset ) && ! empty( $this->free_settings['general']['fz_execution_offset'] ) ) {
+			$offset = $this->free_settings['general']['fz_execution_offset'];
+		}
+		$execution = strtotime( $execution ) ? strtotime( $execution ) + ( HOUR_IN_SECONDS * $offset ) : time() + ( HOUR_IN_SECONDS * $offset );
+		return $execution;
 	}
 
 	/**

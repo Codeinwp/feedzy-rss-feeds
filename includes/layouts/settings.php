@@ -140,6 +140,46 @@
 											<div class="help-text pt-8"><?php esc_html_e( 'Helpful if you want to remove stale or old items automatically. If you choose 0, it will be considered the individual import setting.', 'feedzy-rss-feeds' ); ?></div>
 										</div>
 									</div>
+									<div class="form-block">
+										<div class="fz-form-row">
+											<div class="fz-form-col-6">
+												<div class="fz-form-group">
+													<label class="form-label"><?php esc_html_e( 'First cron execution time', 'feedzy-rss-feeds' ); ?></label>
+													<input type="hidden" name="fz_execution_offset" id="fz-execution-offset" value="<?php echo ! empty( $settings['general']['fz_execution_offset'] ) ? esc_attr( $settings['general']['fz_execution_offset'] ) : ''; ?>">
+													<input type="datetime-local" id="fz-event-execution" name="fz_cron_execution" class="form-control" value="<?php echo ! empty( $settings['general']['fz_cron_execution'] ) ? esc_attr( $settings['general']['fz_cron_execution'] ) : ''; ?>">
+													<div class="help-text pt-8"><?php esc_html_e( 'When past date will be provided or left empty, event will be executed in the next queue.', 'feedzy-rss-feeds' ); ?></div>
+												</div>
+											</div>
+											<div class="fz-form-col-6">
+												<div class="fz-form-group">
+													<label class="form-label"><?php esc_html_e( 'Schedule', 'feedzy-rss-feeds' ); ?></label>
+													<?php
+													$save_schedule = ! empty( $settings['general']['fz_cron_schedule'] ) ? $settings['general']['fz_cron_schedule'] : '';
+
+													$schedules = wp_get_schedules();
+													if ( isset( $schedules['hourly'] ) ) {
+														$hourly = $schedules['hourly'];
+														unset( $schedules['hourly'] );
+														$schedules = array_merge( array( 'hourly' => $hourly ), $schedules );
+													}
+													?>
+													<select id="fz-event-schedule" class="form-control fz-select-control" name="fz_cron_schedule">
+														<?php
+														$duplicate_schedule = array();
+														foreach ( $schedules as $slug => $schedule ) :
+															if ( empty( $schedule['interval'] ) || in_array( $schedule['interval'], $duplicate_schedule, true ) ) {
+																continue;
+															}
+															$duplicate_schedule[] = $schedule['interval'];
+															?>
+														<option value="<?php echo esc_attr( $slug ); ?>"<?php selected( $save_schedule, $slug ); ?>><?php echo esc_html( $schedule['display'] ); ?> (<?php echo esc_html( $slug ); ?>)</option>
+														<?php endforeach; ?>
+													</select>
+													<div class="help-text pt-8"><?php esc_html_e( 'After first execution repeat.', 'feedzy-rss-feeds' ); ?></div>
+												</div>
+											</div>
+										</div>
+									</div>
 								<?php endif; ?>
 							</div>
 							<?php
