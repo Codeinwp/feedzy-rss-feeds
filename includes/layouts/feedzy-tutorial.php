@@ -91,7 +91,7 @@ $is_pro = feedzy_is_pro();
 				<h3 class="h3">Paraphrase & Translate
 					Content<?php echo ! $is_pro ? ' <span class="pro-label">PRO</span>' : ''; ?></h3>
 				<p>Automatically paraphrase or translate content on import.</p>
-				<a href="https://docs.themeisle.com/article/1691-how-to-use-the-rephrasing-service-in-feedzy"
+				<a href="https://docs.themeisle.com/article/1690-how-to-use-the-translating-service-in-feedzy"
 				   class="btn btn-outline-primary" target="blank">Learn more</a>
 			</div>
 		</li>
@@ -125,7 +125,7 @@ $is_pro = feedzy_is_pro();
 	</ul>
 	<?php if ( ! $is_pro ) : ?>
 		<div class="cta">
-			<a href="<?php echo tsdk_utmify( FEEDZY_UPSELL_LINK, 'viewall', 'tutorial' ); ?> " class="btn btn-ghost" target="blank">View all Feedzy
+			<a href="<?php echo tsdk_utmify( FEEDZY_UPSELL_LINK, 'viewall', 'tutorial' ); ?>#pro-features" class="btn btn-ghost" target="blank">View all Feedzy
 				features</a>
 		</div>
 	<?php endif; ?>
