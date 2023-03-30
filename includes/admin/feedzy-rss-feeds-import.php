@@ -154,6 +154,7 @@ class Feedzy_Rss_Feeds_Import {
 											 . '<p><b>' . __( 'Please note that if some of these items have already have been imported in previous runs with the same filters, they may be shown here but will not be imported again.', 'feedzy-rss-feeds' ) . '</b></p>'
 											 . '<p class="loading-img hide-when-loaded"><img src="' . includes_url( 'images/wpspin-2x.gif' ) . '"></p><div></div>',
 						'dry_run_title'   => __( 'Importable Items', 'feedzy-rss-feeds' ),
+						'delete_post_message' => __( 'Would you also like to delete all the imported posts for this import job?', 'feedzy-rss-feeds' ),
 					),
 				)
 			);
@@ -2360,10 +2361,32 @@ class Feedzy_Rss_Feeds_Import {
 	private function purge_data() {
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
 
-		$id   = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
-		$post = get_post( $id );
-		if ( $post->post_type !== 'feedzy_imports' ) {
+		$id                 = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
+		$del_imported_posts = filter_input( INPUT_POST, 'del_imported_posts', FILTER_VALIDATE_BOOLEAN );
+		$post               = get_post( $id );
+		if ( 'feedzy_imports' !== $post->post_type ) {
 			wp_die();
+		}
+
+		// Delete imported posts.
+		if ( $del_imported_posts ) {
+			$post_types    = get_post_meta( $id, 'import_post_type', true );
+			$imported_post = get_posts(
+				array(
+					'post_type'      => $post_types,
+					'post_status'    => 'any',
+					'fields'         => 'ids',
+					'meta_key'       => 'feedzy_job', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+					'meta_value'     => $id, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+					'meta_compare'   => '=',
+					'posts_per_page' => 999, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
+				)
+			);
+			if ( ! empty( $imported_post ) ) {
+				foreach ( $imported_post as $post_id ) {
+					wp_delete_post( $post_id, true );
+				}
+			}
 		}
 
 		delete_post_meta( $id, 'imported_items_hash' );
