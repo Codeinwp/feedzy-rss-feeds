@@ -547,6 +547,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				$settings['general']['disable-default-style'] = isset( $_POST['disable-default-style'] ) ? (int) filter_input( INPUT_POST, 'disable-default-style', FILTER_SANITIZE_NUMBER_INT ) : '';
 				$settings['general']['feedzy-delete-days'] = isset( $_POST['feedzy-delete-days'] ) ? (int) filter_input( INPUT_POST, 'feedzy-delete-days', FILTER_SANITIZE_NUMBER_INT ) : '';
 				$settings['general']['default-thumbnail-id'] = isset( $_POST['default-thumbnail-id'] ) ? (int) filter_input( INPUT_POST, 'default-thumbnail-id', FILTER_SANITIZE_NUMBER_INT ) : 0;
+				$settings['general']['fz_cron_execution'] = isset( $_POST['fz_cron_execution'] ) ? sanitize_text_field( wp_unslash( $_POST['fz_cron_execution'] ) ) : '';
+				$settings['general']['fz_cron_schedule'] = isset( $_POST['fz_cron_schedule'] ) ? filter_input( INPUT_POST, 'fz_cron_schedule', FILTER_SANITIZE_STRING ) : 'hourly';
+				$settings['general']['fz_execution_offset'] = isset( $_POST['fz_execution_offset'] ) ? filter_input( INPUT_POST, 'fz_execution_offset', FILTER_SANITIZE_STRING ) : '';
 				break;
 			case 'headers':
 				$settings['header']['user-agent'] = isset( $_POST['user-agent'] ) ? filter_input( INPUT_POST, 'user-agent', FILTER_SANITIZE_STRING ) : '';

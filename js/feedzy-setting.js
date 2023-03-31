@@ -60,4 +60,9 @@ jQuery( function( $ ) {
       e.returnValue = '';
     }
   });
+
+  // Select cron execution time.
+  $( document ).on( 'change', '#fz-event-execution', function() {
+      $( '#fz-execution-offset' ).val( new Date().getTimezoneOffset() / 60 );
+  } );
 });

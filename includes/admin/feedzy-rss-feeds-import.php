@@ -154,6 +154,7 @@ class Feedzy_Rss_Feeds_Import {
 											 . '<p><b>' . __( 'Please note that if some of these items have already have been imported in previous runs with the same filters, they may be shown here but will not be imported again.', 'feedzy-rss-feeds' ) . '</b></p>'
 											 . '<p class="loading-img hide-when-loaded"><img src="' . includes_url( 'images/wpspin-2x.gif' ) . '"></p><div></div>',
 						'dry_run_title'   => __( 'Importable Items', 'feedzy-rss-feeds' ),
+						'delete_post_message' => __( 'Would you also like to delete all the imported posts for this import job?', 'feedzy-rss-feeds' ),
 					),
 				)
 			);
@@ -1887,6 +1888,13 @@ class Feedzy_Rss_Feeds_Import {
 	 * @access  private
 	 */
 	private function generate_featured_image( $file, $post_id, $desc, &$import_errors, &$import_info, $post_data = array() ) {
+		// Find existing attachment by item title.
+		$attachment_id = post_exists( $desc, '', '', 'attachment' );
+		if ( $attachment_id ) {
+			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Found an existing attachment(ID: %d) image for %s and postID %d', $attachment_id, $file, $post_id ), 'debug', __FILE__, __LINE__ );
+			return $attachment_id;
+		}
+
 		do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Trying to generate featured image for %s and postID %d', $file, $post_id ), 'debug', __FILE__, __LINE__ );
 
 		require_once ABSPATH . 'wp-admin' . '/includes/image.php';
@@ -1950,9 +1958,35 @@ class Feedzy_Rss_Feeds_Import {
 	 * @access  public
 	 */
 	public function add_cron() {
-		if ( false === wp_next_scheduled( 'feedzy_cron' ) ) {
-			wp_schedule_event( time(), 'hourly', 'feedzy_cron' );
+		$time     = ! empty( $this->free_settings['general']['fz_cron_execution'] ) ? $this->get_cron_execution( $this->free_settings['general']['fz_cron_execution'] ) : time();
+		$schedule = ! empty( $this->free_settings['general']['fz_cron_schedule'] ) ? $this->free_settings['general']['fz_cron_schedule'] : 'hourly';
+		if ( isset( $_POST['nonce'] ) && wp_verify_nonce( filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING ), filter_input( INPUT_POST, 'tab', FILTER_SANITIZE_STRING ) ) ) {
+			if ( ! empty( $_POST['fz_cron_execution'] ) && ! empty( $_POST['fz_cron_schedule'] ) && ! empty( $_POST['fz_execution_offset'] ) ) {
+				$execution = sanitize_text_field( wp_unslash( $_POST['fz_cron_execution'] ) );
+				$offset    = sanitize_text_field( wp_unslash( $_POST['fz_execution_offset'] ) );
+				$time      = $this->get_cron_execution( $execution, $offset );
+				$schedule  = sanitize_text_field( wp_unslash( $_POST['fz_cron_schedule'] ) );
+				wp_clear_scheduled_hook( 'feedzy_cron' );
+			}
 		}
+		if ( false === wp_next_scheduled( 'feedzy_cron' ) ) {
+			wp_schedule_event( $time, $schedule, 'feedzy_cron' );
+		}
+	}
+
+	/**
+	 * Get cron job execution.
+	 *
+	 * @param string $execution Execution time.
+	 * @param int    $offset Offset.
+	 * @return int
+	 */
+	public function get_cron_execution( $execution, $offset = 0 ) {
+		if ( empty( $offset ) && ! empty( $this->free_settings['general']['fz_execution_offset'] ) ) {
+			$offset = $this->free_settings['general']['fz_execution_offset'];
+		}
+		$execution = strtotime( $execution ) ? strtotime( $execution ) + ( HOUR_IN_SECONDS * $offset ) : time() + ( HOUR_IN_SECONDS * $offset );
+		return $execution;
 	}
 
 	/**
@@ -2360,10 +2394,32 @@ class Feedzy_Rss_Feeds_Import {
 	private function purge_data() {
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
 
-		$id   = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
-		$post = get_post( $id );
-		if ( $post->post_type !== 'feedzy_imports' ) {
+		$id                 = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
+		$del_imported_posts = filter_input( INPUT_POST, 'del_imported_posts', FILTER_VALIDATE_BOOLEAN );
+		$post               = get_post( $id );
+		if ( 'feedzy_imports' !== $post->post_type ) {
 			wp_die();
+		}
+
+		// Delete imported posts.
+		if ( $del_imported_posts ) {
+			$post_types    = get_post_meta( $id, 'import_post_type', true );
+			$imported_post = get_posts(
+				array(
+					'post_type'      => $post_types,
+					'post_status'    => 'any',
+					'fields'         => 'ids',
+					'meta_key'       => 'feedzy_job', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+					'meta_value'     => $id, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+					'meta_compare'   => '=',
+					'posts_per_page' => 999, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
+				)
+			);
+			if ( ! empty( $imported_post ) ) {
+				foreach ( $imported_post as $post_id ) {
+					wp_delete_post( $post_id, true );
+				}
+			}
 		}
 
 		delete_post_meta( $id, 'imported_items_hash' );

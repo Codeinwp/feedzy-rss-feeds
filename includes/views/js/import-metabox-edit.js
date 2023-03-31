@@ -577,8 +577,8 @@
 		$(".feedzy_purge").on("click", function (e) {
 			e.preventDefault();
 			var element = $(this);
+			var deleteImportedPosts = confirm(feedzy.i10n.delete_post_message);
 			showSpinner(element);
-
 			$.ajax({
 				url: ajaxurl,
 				method: "post",
@@ -587,6 +587,7 @@
 					id: $(this).find("a").attr("data-id"),
 					action: "feedzy",
 					_action: "purge",
+					del_imported_posts: deleteImportedPosts
 				},
 				success: function () {
 					location.reload();
