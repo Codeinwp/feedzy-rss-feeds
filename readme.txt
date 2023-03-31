@@ -464,6 +464,17 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
+##### [Version 4.2.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.2.1...v4.2.2) (2023-03-31)
+
+- Changed the document URL for the support page [#734](https://github.com/Codeinwp/feedzy-rss-feeds/issues/734)
+- Added an option to delete all imported posts when purging an import job
+- Fixed multiple attachments generating issue
+- Update Dependencies and WordPress core tested up to version 6.2
+- Added custom cron scheduler support [PRO]
+
+
+
+
 ##### [Version 4.2.1](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.2.0...v4.2.1) (2023-02-27)
 
 - fix uncategorized category is being added by default to imported post
