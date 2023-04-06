@@ -863,7 +863,7 @@ global $post;
 							'pa' => __( 'Punjabi', 'feedzy-rss-feeds' ),
 							'pl' => __( 'Polish', 'feedzy-rss-feeds' ),
 							'ps' => __( 'Pushto', 'feedzy-rss-feeds' ),
-							'pt' => __( 'Portuguese', 'feedzy-rss-feeds' ),
+							'por' => __( 'Portuguese', 'feedzy-rss-feeds' ),
 							'ro' => __( 'Romanian', 'feedzy-rss-feeds' ),
 							'ru' => __( 'Russian', 'feedzy-rss-feeds' ),
 							'sd' => __( 'Sindhi', 'feedzy-rss-feeds' ),
