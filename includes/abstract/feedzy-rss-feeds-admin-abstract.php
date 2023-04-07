@@ -1418,7 +1418,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$item_link = $item->get_permalink();
 		// if the item has no link (possible in some cases), use the feed link.
 		if ( empty( $item_link ) ) {
-			$item_link = $item->get_feed()->get_permalink();
+			$item_link = $item->get_id();
+			if ( empty( $item_link ) ) {
+				$item_link = $item->get_feed()->get_permalink();
+			}
 		}
 		$new_link = apply_filters( 'feedzy_item_url_filter', $item_link, $sc, $item );
 
