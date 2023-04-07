@@ -20,11 +20,11 @@ describe('Test Free - gutenberg', function() {
         cy.get('.edit-post-visual-editor__post-title-wrapper .editor-post-title__input').type(PREFIX);
 
         // insert a feedzy block
-        cy.get('div.edit-post-header__toolbar button.edit-post-header-toolbar__inserter-toggle').click();
+        cy.get('div.edit-post-header__toolbar button.edit-post-header-toolbar__inserter-toggle').click({force:true});
         cy.get('.edit-post-editor__inserter-panel-content').then(function ($popup) {
             cy.wrap($popup).find('.components-search-control__input').type('feedzy');
             cy.wrap($popup).find('.block-editor-block-types-list .editor-block-list-item-feedzy-rss-feeds-feedzy-block').should('have.length', 1);
-            cy.wrap($popup).find('.block-editor-block-types-list .editor-block-list-item-feedzy-rss-feeds-feedzy-block').click();
+            cy.wrap($popup).find('.block-editor-block-types-list .editor-block-list-item-feedzy-rss-feeds-feedzy-block').click({force:true});
         });
 
         // see the block has the correct elements.
