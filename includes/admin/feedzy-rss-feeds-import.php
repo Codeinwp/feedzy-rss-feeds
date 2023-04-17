@@ -1155,7 +1155,10 @@ class Feedzy_Rss_Feeds_Import {
 		);
 		$feedzy_imports = get_posts( $args );
 		foreach ( $feedzy_imports as $job ) {
-			$this->run_job( $job, $max );
+			$result = $this->run_job( $job, $max );
+			if ( empty( $result ) ) {
+				$this->run_job( $job, $max );
+			}
 			do_action( 'feedzy_run_cron_extra', $job );
 		}
 	}
