@@ -1336,7 +1336,7 @@ class Feedzy_Rss_Feeds_Import {
 			$is_duplicate                     = $use_new_hash ? in_array( $item_hash, $imported_items_new, true ) : in_array( $item_hash, $imported_items_old, true );
 			$items_found[ $item['item_url'] ] = $item['item_title'];
 
-			if ( 'yes' === $import_remove_duplicates && ! $is_duplicate ) {
+			if ( 'yes' === $import_remove_duplicates ) {
 				$is_duplicate_post = $this->is_duplicate_post( $import_post_type, 'feedzy_item_url', esc_url_raw( $item['item_url'] ) );
 				if ( ! empty( $is_duplicate_post ) ) {
 					foreach ( $is_duplicate_post as $p ) {
