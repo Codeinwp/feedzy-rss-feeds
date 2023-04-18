@@ -1889,6 +1889,9 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	private function generate_featured_image( $file, $post_id, $desc, &$import_errors, &$import_info, $post_data = array() ) {
 		// Find existing attachment by item title.
+		if ( ! function_exists( 'post_exists' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/post.php';
+		}
 		$attachment_id = post_exists( $desc, '', '', 'attachment' );
 		if ( $attachment_id ) {
 			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Found an existing attachment(ID: %d) image for %s and postID %d', $attachment_id, $file, $post_id ), 'debug', __FILE__, __LINE__ );
