@@ -1889,52 +1889,52 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	private function generate_featured_image( $file, $post_id, $desc, &$import_errors, &$import_info, $post_data = array() ) {
 		// Find existing attachment by item title.
-		$attachment_id = post_exists( $desc, '', '', 'attachment' );
-		if ( $attachment_id ) {
-			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Found an existing attachment(ID: %d) image for %s and postID %d', $attachment_id, $file, $post_id ), 'debug', __FILE__, __LINE__ );
-			return $attachment_id;
-		}
+		$id = post_exists( $desc, '', '', 'attachment' );
 
-		do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Trying to generate featured image for %s and postID %d', $file, $post_id ), 'debug', __FILE__, __LINE__ );
+		if ( ! $id ) {
+			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Trying to generate featured image for %s and postID %d', $file, $post_id ), 'debug', __FILE__, __LINE__ );
 
-		require_once ABSPATH . 'wp-admin' . '/includes/image.php';
-		require_once ABSPATH . 'wp-admin' . '/includes/file.php';
-		require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+			require_once ABSPATH . 'wp-admin' . '/includes/image.php';
+			require_once ABSPATH . 'wp-admin' . '/includes/file.php';
+			require_once ABSPATH . 'wp-admin' . '/includes/media.php';
 
-		$file_array = array();
-		$local_file = download_url( $file );
-		if ( is_wp_error( $local_file ) ) {
-			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to download file = %s and postID %d', print_r( $local_file, true ), $post_id ), 'error', __FILE__, __LINE__ );
-
-			return false;
-		}
-
-		$type = mime_content_type( $local_file );
-		// the file is downloaded with a .tmp extension
-		// if the URL mentions the extension of the file, the upload succeeds
-		// but if the URL is like https://source.unsplash.com/random, then the upload fails
-		// so let's determine the file's mime type and then rename the .tmp file with that extension
-		if ( in_array( $type, array_values( get_allowed_mime_types() ), true ) ) {
-			$new_local_file = str_replace( '.tmp', str_replace( 'image/', '.', $type ), $local_file );
-			$renamed        = rename( $local_file, $new_local_file );
-			if ( $renamed ) {
-				$local_file = $new_local_file;
-			} else {
-				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to rename file for postID %d', $post_id ), 'error', __FILE__, __LINE__ );
+			$file_array = array();
+			$local_file = download_url( $file );
+			if ( is_wp_error( $local_file ) ) {
+				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to download file = %s and postID %d', print_r( $local_file, true ), $post_id ), 'error', __FILE__, __LINE__ );
 
 				return false;
 			}
-		}
 
-		$file_array['tmp_name'] = $local_file;
-		$file_array['name']     = basename( $local_file );
+			$type = mime_content_type( $local_file );
+			// the file is downloaded with a .tmp extension
+			// if the URL mentions the extension of the file, the upload succeeds
+			// but if the URL is like https://source.unsplash.com/random, then the upload fails
+			// so let's determine the file's mime type and then rename the .tmp file with that extension
+			if ( in_array( $type, array_values( get_allowed_mime_types() ), true ) ) {
+				$new_local_file = str_replace( '.tmp', str_replace( 'image/', '.', $type ), $local_file );
+				$renamed        = rename( $local_file, $new_local_file );
+				if ( $renamed ) {
+					$local_file = $new_local_file;
+				} else {
+					do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to rename file for postID %d', $post_id ), 'error', __FILE__, __LINE__ );
 
-		$id = media_handle_sideload( $file_array, $post_id, $desc, $post_data );
-		if ( is_wp_error( $id ) ) {
-			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to attach file for postID %d = %s', $post_id, print_r( $id, true ) ), 'error', __FILE__, __LINE__ );
-			unlink( $file_array['tmp_name'] );
+					return false;
+				}
+			}
 
-			return false;
+			$file_array['tmp_name'] = $local_file;
+			$file_array['name']     = basename( $local_file );
+
+			$id = media_handle_sideload( $file_array, $post_id, $desc, $post_data );
+			if ( is_wp_error( $id ) ) {
+				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to attach file for postID %d = %s', $post_id, print_r( $id, true ) ), 'error', __FILE__, __LINE__ );
+				unlink( $file_array['tmp_name'] );
+
+				return false;
+			}
+		} else {
+			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Found an existing attachment(ID: %d) image for %s and postID %d', $id, $file, $post_id ), 'debug', __FILE__, __LINE__ );
 		}
 
 		if ( ! empty( $post_data ) ) {
