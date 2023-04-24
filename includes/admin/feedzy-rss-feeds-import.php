@@ -1155,7 +1155,10 @@ class Feedzy_Rss_Feeds_Import {
 		);
 		$feedzy_imports = get_posts( $args );
 		foreach ( $feedzy_imports as $job ) {
-			$this->run_job( $job, $max );
+			$result = $this->run_job( $job, $max );
+			if ( empty( $result ) ) {
+				$this->run_job( $job, $max );
+			}
 			do_action( 'feedzy_run_cron_extra', $job );
 		}
 	}
@@ -1336,7 +1339,7 @@ class Feedzy_Rss_Feeds_Import {
 			$is_duplicate                     = $use_new_hash ? in_array( $item_hash, $imported_items_new, true ) : in_array( $item_hash, $imported_items_old, true );
 			$items_found[ $item['item_url'] ] = $item['item_title'];
 
-			if ( 'yes' === $import_remove_duplicates && ! $is_duplicate ) {
+			if ( 'yes' === $import_remove_duplicates ) {
 				$is_duplicate_post = $this->is_duplicate_post( $import_post_type, 'feedzy_item_url', esc_url_raw( $item['item_url'] ) );
 				if ( ! empty( $is_duplicate_post ) ) {
 					foreach ( $is_duplicate_post as $p ) {
@@ -1890,6 +1893,9 @@ class Feedzy_Rss_Feeds_Import {
 	private function generate_featured_image( $file, $post_id, $desc, &$import_errors, &$import_info, $post_data = array() ) {
 		// Find existing attachment by item title.
 		$id = post_exists( $desc, '', '', 'attachment' );
+		if ( ! function_exists( 'post_exists' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/post.php';
+		}
 
 		if ( ! $id ) {
 			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Trying to generate featured image for %s and postID %d', $file, $post_id ), 'debug', __FILE__, __LINE__ );
@@ -1960,7 +1966,7 @@ class Feedzy_Rss_Feeds_Import {
 	public function add_cron() {
 		$time     = ! empty( $this->free_settings['general']['fz_cron_execution'] ) ? $this->get_cron_execution( $this->free_settings['general']['fz_cron_execution'] ) : time();
 		$schedule = ! empty( $this->free_settings['general']['fz_cron_schedule'] ) ? $this->free_settings['general']['fz_cron_schedule'] : 'hourly';
-		if ( isset( $_POST['nonce'] ) && wp_verify_nonce( filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING ), filter_input( INPUT_POST, 'tab', FILTER_SANITIZE_STRING ) ) ) {
+		if ( ( isset( $_POST['nonce'] ) && isset( $_POST['tab'] ) ) && ( wp_verify_nonce( filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING ), filter_input( INPUT_POST, 'tab', FILTER_SANITIZE_STRING ) ) ) ) {
 			if ( ! empty( $_POST['fz_cron_execution'] ) && ! empty( $_POST['fz_cron_schedule'] ) && ! empty( $_POST['fz_execution_offset'] ) ) {
 				$execution = sanitize_text_field( wp_unslash( $_POST['fz_cron_execution'] ) );
 				$offset    = sanitize_text_field( wp_unslash( $_POST['fz_execution_offset'] ) );
