@@ -1336,7 +1336,7 @@ class Feedzy_Rss_Feeds_Import {
 			$is_duplicate                     = $use_new_hash ? in_array( $item_hash, $imported_items_new, true ) : in_array( $item_hash, $imported_items_old, true );
 			$items_found[ $item['item_url'] ] = $item['item_title'];
 
-			if ( 'yes' === $import_remove_duplicates && ! $is_duplicate ) {
+			if ( 'yes' === $import_remove_duplicates ) {
 				$is_duplicate_post = $this->is_duplicate_post( $import_post_type, 'feedzy_item_url', esc_url_raw( $item['item_url'] ) );
 				if ( ! empty( $is_duplicate_post ) ) {
 					foreach ( $is_duplicate_post as $p ) {
@@ -1889,6 +1889,9 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	private function generate_featured_image( $file, $post_id, $desc, &$import_errors, &$import_info, $post_data = array() ) {
 		// Find existing attachment by item title.
+		if ( ! function_exists( 'post_exists' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/post.php';
+		}
 		$attachment_id = post_exists( $desc, '', '', 'attachment' );
 		if ( $attachment_id ) {
 			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Found an existing attachment(ID: %d) image for %s and postID %d', $attachment_id, $file, $post_id ), 'debug', __FILE__, __LINE__ );
