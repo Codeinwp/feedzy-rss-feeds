@@ -1892,9 +1892,15 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	private function generate_featured_image( $file, $post_id, $desc, &$import_errors, &$import_info, $post_data = array() ) {
 		// Find existing attachment by item title.
-		$id = post_exists( $desc, '', '', 'attachment' );
 		if ( ! function_exists( 'post_exists' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/post.php';
+		}
+		$id = post_exists( $desc, '', '', 'attachment' );
+		if ( $id ) {
+			$mime_type = get_post_mime_type( $id );
+			if ( false === strpos( $mime_type, 'image/' ) ) {
+				$id = 0;
+			}
 		}
 
 		if ( ! $id ) {
