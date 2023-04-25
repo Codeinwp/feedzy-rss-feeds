@@ -1891,17 +1891,11 @@ class Feedzy_Rss_Feeds_Import {
 	 * @access  private
 	 */
 	private function generate_featured_image( $file, $post_id, $desc, &$import_errors, &$import_info, $post_data = array() ) {
-		// Find existing attachment by item title.
 		if ( ! function_exists( 'post_exists' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/post.php';
 		}
+		// Find existing attachment by item title.
 		$id = post_exists( $desc, '', '', 'attachment' );
-		if ( $id ) {
-			$mime_type = get_post_mime_type( $id );
-			if ( false === strpos( $mime_type, 'image/' ) ) {
-				$id = 0;
-			}
-		}
 
 		if ( ! $id ) {
 			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Trying to generate featured image for %s and postID %d', $file, $post_id ), 'debug', __FILE__, __LINE__ );
