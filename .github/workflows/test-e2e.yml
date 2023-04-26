@@ -47,6 +47,18 @@ jobs:
           install: ${{ ! steps.npm-and-build-cache.outputs.cache-hit }}
           headless: true
           spec: cypress/integration/${{ matrix.env }}/**/*
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+      - name: Upload videos
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: cypress-videos
+          path: cypress/videos
       - name: Output debug log
         if: ${{ failure() }}
         run: |
