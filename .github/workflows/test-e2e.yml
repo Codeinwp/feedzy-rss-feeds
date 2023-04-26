@@ -63,3 +63,9 @@ jobs:
         if: ${{ failure() }}
         run: |
           tail -1000 ~/wpcore/wp-content/debug.log
+      - name: Upload debug.log file
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: debug-log
+          path: ~/wpcore/wp-content/debug.log
