@@ -128,7 +128,7 @@ function run_feedzy_rss_feeds() {
 	define( 'FEEDZY_ALLOW_HTTPS', true );
 	define( 'FEEDZY_REST_VERSION', '1' );
 	// to redirect all themeisle_log_event to error log.
-	define( 'FEEDZY_LOCAL_DEBUG', true );
+	define( 'FEEDZY_LOCAL_DEBUG', false );
 
 	// always make this true before testing
 	// also used in gutenberg.
