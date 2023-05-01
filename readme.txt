@@ -464,6 +464,16 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
+##### [Version 4.2.4](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.2.3...v4.2.4) (2023-05-01)
+
+- Fixed duplicate items import issue
+- Fixed conflict with the ACF plugin
+- Added cron job retry method
+- Fixed set custom featured image issue
+
+
+
+
 ##### [Version 4.2.3](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.2.2...v4.2.3) (2023-04-07)
 
 - Fixed duplicated/deleted items and missing featured images issue
