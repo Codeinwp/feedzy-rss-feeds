@@ -57,7 +57,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		}
 
 		// Dependent WordPress core libraries.
-		$depends = array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-compose', 'wp-editor', 'wp-api', 'lodash', 'wp-hooks' );
+		$depends = array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-compose', 'wp-editor', 'wp-api', 'lodash', 'wp-hooks', 'jquery-ui-autocomplete' );
 
 		// Remove "wp-editor" script for widget block.
 		if ( wp_use_widgets_block_editor() && wp_script_is( 'wp-edit-widgets' ) ) {
@@ -305,7 +305,10 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 			$feed = $data['category'];
 		}
 
-		$url = $feed;
+		$url = '';
+		if ( ! $feed instanceof \WP_REST_Request ) {
+			$url = $feed;
+		}
 
 		$meta_args = array(
 			'date_format' => get_option( 'date_format' ),
@@ -314,7 +317,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 
 		$instance = Feedzy_Rss_Feeds::instance();
 		$admin    = $instance->get_admin();
-		$feed     = $admin->fetch_feed( $feed, '12_hours', array( '' ) );
+		$feed     = $admin->fetch_feed( $url, '12_hours', array( '' ) );
 		$feedy    = array();
 
 		if ( ! $feed->init() ) {
