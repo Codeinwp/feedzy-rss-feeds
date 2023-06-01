@@ -508,6 +508,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				)
 			);
 			add_action( "load-$hook", array( $this, 'feedzy_load_setup_wizard_page' ) );
+			add_action( 'adminmenu', array( $this, 'feedzy_hide_wizard_menu' ) );
 		}
 	}
 
@@ -1431,5 +1432,17 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		);
 		update_post_meta( $page_id, '_elementor_data', $elementor_data );
 		return $page_id;
+	}
+
+	/**
+	 * Hide setup wizard menu.
+	 */
+	public function feedzy_hide_wizard_menu() { ?>
+		<style>
+			.toplevel_page_feedzy-admin-menu ul.wp-submenu li:nth-child(6) {
+				display: none;
+			}
+		</style>
+		<?php
 	}
 }
