@@ -152,6 +152,18 @@ function run_feedzy_rss_feeds() {
 			return $compatibilities;
 		}
 	);
+	add_filter(
+		'feedzy_rss_feeds_about_us_metadata',
+		function() {
+			return array(
+				'logo'             => FEEDZY_ABSURL . 'img/feedzy.svg',
+				'location'         => 'feedzy-admin-menu',
+				'has_upgrade_menu' => ! feedzy_is_pro(),
+				'upgrade_text'     => esc_html__( 'Upgrade to Pro', 'feedzy-rss-feeds' ),
+				'upgrade_link'     => tsdk_utmify( FEEDZY_UPSELL_LINK, 'aboutUsPage' ),
+			);
+		}
+	);
 	define( 'FEEDZY_SURVEY_PRO', 'https://forms.gle/FZXhL3D48KJUhb7q9' );
 	define( 'FEEDZY_SURVEY_FREE', 'https://forms.gle/yQUGSrKEa7XJTGLx8' );
 

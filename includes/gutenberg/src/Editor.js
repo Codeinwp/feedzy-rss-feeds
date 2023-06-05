@@ -178,7 +178,12 @@ class Editor extends Component {
                     } );
                     let _this = this;
                     _this.props.setAttributes( { categories: categories } );
-                    jQuery( '.feedzy-source input' ).autocomplete({
+                    var editorCanvas = jQuery( 'iframe[name="editor-canvas"]' );
+                    var $target = jQuery( '.feedzy-source input' );
+                    if ( editorCanvas.length > 0 ) {
+                        $target = jQuery( '.feedzy-source input', editorCanvas.contents() );
+                    }
+                    $target.autocomplete({disabled: false}).autocomplete({
                         classes: {
                             'ui-autocomplete': 'feedzy-ui-autocomplete',
                         },
@@ -318,7 +323,12 @@ class Editor extends Component {
         this.props.setAttributes( { to_datetime: value } );
     }
     feedzyCategoriesList(value) {
-        jQuery( '.feedzy-source input' ).autocomplete( 'search', '' );
+        var editorCanvas = jQuery( 'iframe[name="editor-canvas"]' );
+        var $target = jQuery( '.feedzy-source input' );
+        if ( editorCanvas.length > 0 ) {
+            $target = jQuery( '.feedzy-source input', editorCanvas.contents() );
+        }
+        $target.autocomplete({disabled: false}).autocomplete( 'search', '' );
     }
     getValidateURL() {
         let url = 'https://validator.w3.org/feed/';
