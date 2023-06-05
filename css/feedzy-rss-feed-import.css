@@ -277,10 +277,6 @@ i.mce-i-feedzy-icon {
 	text-align: center;
 }
 
-.toplevel_page_feedzy-admin-menu ul.wp-submenu li:nth-child(6) {
-	display: none;
-}
-
 @media screen and (max-width: 782px) {
 	tr.feedzy-import-status-row table {
 		width: 100%;
