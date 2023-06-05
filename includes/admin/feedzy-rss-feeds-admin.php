@@ -160,7 +160,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		$upsell_screens = array( 'feedzy-rss_page_feedzy-settings', 'feedzy-rss_page_feedzy-admin-menu-pro-upsell' );
-		if ( ( ! defined( 'TI_CYPRESS_TESTING' ) ) && ( 'feedzy_imports' === $screen->post_type && get_option( 'feedzy_import_tour' ) ) ) {
+		if ( ( ! defined( 'TI_CYPRESS_TESTING' ) ) && ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type && get_option( 'feedzy_import_tour' ) ) ) {
 			wp_enqueue_script( $this->plugin_name . '_react', 'https://unpkg.com/react@18/umd/react.production.min.js', array( 'wp-editor', 'wp-api' ), $this->version, true );
 			wp_enqueue_script( $this->plugin_name . '_react_dom', 'https://unpkg.com/react-dom@18/umd/react-dom.production.min.js', array(), $this->version, true );
 			wp_enqueue_script( $this->plugin_name . '_on_boarding', FEEDZY_ABSURL . 'js/Onboarding/import-onboarding.min.js', array(), $this->version, true );
