@@ -220,14 +220,6 @@ class Feedzy_Rss_Feeds {
 		self::$instance->loader->add_filter( 'feedzy_check_source_validity', self::$instance->admin, 'check_source_validity', 10, 4 );
 		self::$instance->loader->add_filter( 'feedzy_get_source_validity_error', self::$instance->admin, 'get_source_validity_error', 10, 3 );
 		self::$instance->loader->add_filter( 'post_row_actions', self::$instance->admin, 'add_feedzy_category_actions', 10, 2 );
-		add_action(
-			'wp_footer', function () {
-				$is_feedzy = get_post_meta( get_the_ID(), 'feedzy', true );
-				if ( ! feedzy_is_pro() && (bool) $is_feedzy ) {
-					printf( '<s' . 'pa' . 'n st' . 'yle="' . 'op' . 'ac' . 'it' . 'y' . ':0.' . '7;' . 'p' . 'osit' . 'ion:f' . 'ixe' . 'd; ' . 'ri' . 'ght: 2' . '0px;' . ' bo' . 'tto' . 'm: 1' . '0px; z-i' . 'ndex:1' . '000; fo' . 'nt-si' . 'ze: 1' . '6px">G' . 'en' . 'er' . 'at' . 'ed b' . 'y <a h' . 're' . 'f="ht' . 'tp' . 's:/' . '/t' . 'he' . 'mei' . 's' . 'le' . '.c' . 'om' . '/p' . 'lu' . 'gi' . 'ns/' . 'fe' . 'ed' . 'zy-' . 'r' . 's' . 's-' . 'f' . 'ee' . 'ds' . '/" t' . 'arg' . 'et="' . '_blan' . 'k" re' . 'l=' . '"no' . 'fol' . 'l' . 'ow"' . '>' . 'Fe' . 'e' . 'dz' . 'y</' . 'a></' . 'spa' . 'n>' );
-				}
-			}, 10, 2
-		);
 
 		// do not load this with the loader as this will need a corresponding remove_filter also.
 		add_filter( 'update_post_metadata', array( self::$instance->admin, 'validate_category_feeds' ), 10, 5 );
