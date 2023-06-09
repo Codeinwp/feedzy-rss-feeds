@@ -1,3 +1,7 @@
+##### [Version 4.2.6](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.2.5...v4.2.6) (2023-06-09)
+
+- Removed branding label
+
 ##### [Version 4.2.5](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.2.4...v4.2.5) (2023-06-05)
 
 - Fixed compatibility issue with the FSE editor
