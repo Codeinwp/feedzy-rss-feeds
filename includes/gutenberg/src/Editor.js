@@ -224,7 +224,7 @@ class Editor extends Component {
         }
 
         if ( background ){
-            url = 'url(' + url + ')';
+            url = 'url("' + url + '")';
         }
         return url;
     }
