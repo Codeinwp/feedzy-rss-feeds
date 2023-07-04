@@ -1049,6 +1049,8 @@ class Feedzy_Rss_Feeds_Import {
 					array(
 						'taxonomy'   => $taxonomy,
 						'hide_empty' => false,
+						'fields'     => 'id=>name',
+						'number'     => apply_filters( 'feedzy_post_taxonomy_limit', 999, $taxonomy ),
 					)
 				);
 				$results[ $taxonomy ] = $terms;
