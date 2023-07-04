@@ -247,6 +247,7 @@ class Feedzy_Rss_Feeds_Import {
 				'slug' => 'feedzy-import',
 			),
 			'show_in_menu'        => 'feedzy-admin-menu',
+			'show_ui'             => feedzy_current_user_can(),
 		);
 		$args     = apply_filters( 'feedzy_imports_args', $args );
 		register_post_type( 'feedzy_imports', $args );
