@@ -1,3 +1,9 @@
+##### [Version 4.2.7](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.2.6...v4.2.7) (2023-07-06)
+
+- Fixed image displaying issue in Gutenberg block
+- Fixed import job page loading issue
+- Changed top-level menu page accessibility per roles
+
 ##### [Version 4.2.6](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.2.5...v4.2.6) (2023-06-09)
 
 - Removed branding label
