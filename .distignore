@@ -19,6 +19,8 @@ composer.lock
 package-lock.json
 key.enc
 includes/gutenberg/src
+js/Onboarding/import-onboarding.js
+js/ActionPopup/action-popup.js
 webpack.config.js
 dist
 cypress
