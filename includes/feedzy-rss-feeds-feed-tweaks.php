@@ -47,7 +47,7 @@ add_filter( 'the_content_feed', 'feedzy_insert_thumbnail' );
  * @param string       $attr              Query string of attributes.
  * @return string post thumbnail HTML.
  */
-function display_external_post_image( $html, $post_id, $post_thumbnail_id, $size, $attr ) {
+function feedzy_display_external_post_image( $html, $post_id, $post_thumbnail_id, $size, $attr ) {
 	// If check post thumbnail exists OR not.
 	if ( $post_thumbnail_id ) {
 		return $html;
@@ -90,7 +90,7 @@ function display_external_post_image( $html, $post_id, $post_thumbnail_id, $size
 	}
 	return $html;
 }
-add_filter( 'post_thumbnail_html', 'display_external_post_image', 10, 5 );
+add_filter( 'post_thumbnail_html', 'feedzy_display_external_post_image', 10, 5 );
 
 /**
  * Filters the Attachment Image HTML
@@ -100,7 +100,7 @@ add_filter( 'post_thumbnail_html', 'display_external_post_image', 10, 5 );
  * @param string $image_size_key Settings key for image size.
  * @param string $image_key      Settings key for image.
  */
-function elementor_display_external_post_image( $html, $settings, $image_size_key, $image_key ) {
+function feedzy_el_display_external_post_image( $html, $settings, $image_size_key, $image_key ) {
 	if ( ! empty( $html ) ) {
 		return $html;
 	}
@@ -150,7 +150,7 @@ function elementor_display_external_post_image( $html, $settings, $image_size_ke
 	return $html;
 
 }
-add_filter( 'elementor/image_size/get_attachment_image_html', 'elementor_display_external_post_image', 10, 4 );
+add_filter( 'elementor/image_size/get_attachment_image_html', 'feedzy_el_display_external_post_image', 10, 4 );
 
 /**
  * Filters whether a post has a post thumbnail.
