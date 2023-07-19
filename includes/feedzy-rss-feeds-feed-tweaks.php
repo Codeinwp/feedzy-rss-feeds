@@ -93,6 +93,66 @@ function display_external_post_image( $html, $post_id, $post_thumbnail_id, $size
 add_filter( 'post_thumbnail_html', 'display_external_post_image', 10, 5 );
 
 /**
+ * Filters the Attachment Image HTML
+ *
+ * @param string $html the attachment image HTML string.
+ * @param array  $settings       Control settings.
+ * @param string $image_size_key Settings key for image size.
+ * @param string $image_key      Settings key for image.
+ */
+function elementor_display_external_post_image( $html, $settings, $image_size_key, $image_key ) {
+	if ( ! empty( $html ) ) {
+		return $html;
+	}
+
+	if ( ! $image_key ) {
+		$image_key = $image_size_key;
+	}
+
+	$image = $settings[ $image_key ];
+
+	// Old version of image settings.
+	if ( ! isset( $settings[ $image_size_key . '_size' ] ) ) {
+		$settings[ $image_size_key . '_size' ] = '';
+	}
+
+	$size = $settings[ $image_size_key . '_size' ];
+	// If is the new version - with image size.
+	$image_sizes   = get_intermediate_image_sizes();
+	$image_sizes[] = 'full';
+
+	$image_class           = ! empty( $settings['hover_animation'] ) ? 'elementor-animation-' . $settings['hover_animation'] : '';
+	$is_static_render_mode = \Elementor\Plugin::instance()->frontend->is_static_render_mode();
+
+	// On static mode don't use WP responsive images.
+	if ( in_array( $size, $image_sizes, true ) && ! $is_static_render_mode ) {
+		$image_class .= " attachment-$size size-$size";
+	}
+	$post_id   = get_the_ID();
+	$image_src = get_post_meta( $post_id, 'feedzy_item_external_url', true );
+
+	if ( empty( $image_src ) ) {
+		return $html;
+	}
+
+	if ( ! empty( $image_src ) ) {
+		$attr['class'] = ! empty( $image_class ) ? ' class="' . trim( $image_class ) . '"' : '';
+		$attr['alt']   = get_the_title( $post_id );
+		$attr          = apply_filters( 'wp_get_attachment_image_attributes', $attr, '', '' );
+		$attr          = array_map( 'esc_attr', $attr );
+		$html          = sprintf( '<img src="%s"', esc_url( $image_src ) );
+		foreach ( $attr as $name => $value ) {
+			$html .= " $name=" . '"' . $value . '"';
+		}
+		$html .= ' />';
+
+	}
+	return $html;
+
+}
+add_filter( 'elementor/image_size/get_attachment_image_html', 'elementor_display_external_post_image', 10, 4 );
+
+/**
  * Filters whether a post has a post thumbnail.
  *
  * @since      3.5.2
