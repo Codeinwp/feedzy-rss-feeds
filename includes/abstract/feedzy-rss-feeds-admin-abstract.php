@@ -483,12 +483,14 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 			$content = get_transient( sprintf( 'feedzy-lazy-%s', is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ) );
 
-			$class = array_filter( apply_filters( 'feedzy_add_classes_block', array( $sc['classname'], 'feedzy-' . md5( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ) ), $sc, null, $feed_url ) );
-			$html  = "<div class='feedzy-lazy' $attributes>";
 			// the first time the shortcode is being called it will not have any content.
 			if ( empty( $content ) ) {
 				$content = apply_filters( 'feedzy_lazyload_loading_msg', __( 'Loading', 'feedzy-rss-feeds' ) . '...', $feed_url );
+			} else {
+				$attributes .= 'data-has_valid_cache="true"';
 			}
+			$class = array_filter( apply_filters( 'feedzy_add_classes_block', array( $sc['classname'], 'feedzy-' . md5( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ) ), $sc, null, $feed_url ) );
+			$html  = "<div class='feedzy-lazy' $attributes>";
 			$html .= "$content</div>";
 
 			wp_register_script( $this->plugin_name . '-lazy', FEEDZY_ABSURL . 'js/feedzy-lazy.js', array( 'jquery' ), $this->version, 'all' );
