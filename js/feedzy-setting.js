@@ -8,6 +8,17 @@
 /* global feedzy_setting */
 /* jshint unused:false */
 jQuery( function( $ ) {
+
+  // Snackbar notice.
+  var snackbarNotice = function() {
+    $( '.fz-snackbar-notice' ).toggleClass( 'open', 1000 );
+    if ( $( '.fz-snackbar-notice' ).hasClass( 'open' ) ) {
+      setTimeout( function() {
+        snackbarNotice();
+      }, 3000 );
+    }
+  };
+
   // on upload button click
   $( 'body' ).on( 'click', '.feedzy-open-media', function( e ) {
     e.preventDefault();
@@ -34,6 +45,7 @@ jQuery( function( $ ) {
       }
       button.parent().find( '.feedzy-remove-media' ).addClass( 'is-show' );
       button.parent().find( 'input:hidden' ).val( attachment.id ).trigger( 'change' );
+      $( '.feedzy-open-media' ).html( feedzy_setting.l10n.action_btn_text_2 );
     } ).open();
   });
 
@@ -44,6 +56,7 @@ jQuery( function( $ ) {
     button.parent().prev( '.feedzy-media-preview' ).remove();
     button.removeClass( 'is-show' );
     button.parent().find( 'input:hidden' ).val( '' ).trigger( 'change' );
+    $( '.feedzy-open-media' ).html( feedzy_setting.l10n.action_btn_text_1 );
   });
 
   // Unsaved form exit confirmation.
@@ -65,4 +78,5 @@ jQuery( function( $ ) {
   $( document ).on( 'change', '#fz-event-execution', function() {
       $( '#fz-execution-offset' ).val( new Date().getTimezoneOffset() / 60 );
   } );
+  snackbarNotice();
 });
