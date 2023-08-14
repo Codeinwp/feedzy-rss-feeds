@@ -135,6 +135,6 @@ const Onboarding = () => {
 }
 
 ReactDOM.render(
-  <Onboarding />,
+  <React.StrictMode><Onboarding /></React.StrictMode>,
   document.querySelector('#fz-on-boarding')
 );

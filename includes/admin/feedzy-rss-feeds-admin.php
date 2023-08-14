@@ -160,11 +160,18 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		$upsell_screens = array( 'feedzy-rss_page_feedzy-settings', 'feedzy-rss_page_feedzy-admin-menu-pro-upsell' );
-		if ( ( ! defined( 'TI_CYPRESS_TESTING' ) ) && ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type && get_option( 'feedzy_import_tour' ) ) ) {
-			wp_enqueue_script( $this->plugin_name . '_react', 'https://unpkg.com/react@18/umd/react.production.min.js', array( 'wp-editor', 'wp-api' ), $this->version, true );
-			wp_enqueue_script( $this->plugin_name . '_react_dom', 'https://unpkg.com/react-dom@18/umd/react-dom.production.min.js', array(), $this->version, true );
-			wp_enqueue_script( $this->plugin_name . '_on_boarding', FEEDZY_ABSURL . 'js/Onboarding/import-onboarding.min.js', array(), $this->version, true );
+		if ( 'feedzy_imports' === $screen->post_type && 'edit' !== $screen->base ) {
+			if ( ! wp_script_is( 'react' ) ) {
+				wp_register_script( 'react', 'https://unpkg.com/react@18/umd/react.production.min.js', array(), $this->version, true );
+			}
+			if ( ! wp_script_is( 'react-dom' ) ) {
+				wp_register_script( 'react-dom', 'https://unpkg.com/react-dom@18/umd/react-dom.production.min.js', array(), $this->version, true );
+			}
+			wp_enqueue_script( $this->plugin_name . '_action_popup', FEEDZY_ABSURL . 'js/ActionPopup/action-popup.min.js', array( 'react', 'react-dom', 'wp-editor', 'wp-api' ), $this->version, true );
 			wp_enqueue_style( 'wp-block-editor' );
+		}
+		if ( ! defined( 'TI_CYPRESS_TESTING' ) && ( 'feedzy_imports' === $screen->post_type && get_option( 'feedzy_import_tour' ) ) ) {
+			wp_enqueue_script( $this->plugin_name . '_on_boarding', FEEDZY_ABSURL . 'js/Onboarding/import-onboarding.min.js', array( 'react', 'react-dom', 'wp-editor', 'wp-api' ), $this->version, true );
 		}
 
 		if ( ! in_array( $screen->base, $upsell_screens, true ) && strpos( $screen->id, 'feedzy' ) === false ) {

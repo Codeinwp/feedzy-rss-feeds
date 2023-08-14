@@ -263,7 +263,7 @@
 			}
 		} );
 
-		$("a.dropdown-item:not(.source)").on("click", append_tag);
+		$("a.dropdown-item:not(.source,[data-action_popup])").on("click", append_tag);
 		$(".add-outside-tags").on("click", append_outside_tag);
 		$("a.dropdown-item.source").on("click", add_source);
 		$( document ).on( 'click', '.btn-remove-fields', remove_row );
@@ -436,11 +436,32 @@
 		var mixContent = $( '.fz-textarea-tagify' ).tagify( {
 			mode: 'mix',
 			editTags: false,
-			originalInputValueFormat: function( valuesArr ) {
+			/*originalInputValueFormat: function( valuesArr ) {
 				return valuesArr.map( function( item ) {
 					return item.value;
 				} )
 				.join( ', ' );
+			},*/
+			templates: {
+				tag: function( tagData ) {
+					try{
+						var isEncoded = typeof tagData.value === "string" && decodeURIComponent(tagData.value) !== tagData.value;
+						if ( isEncoded ) {
+							tagData['data-actions'] = tagData.value;
+						}
+						return `
+						<tag title='${tagData['data-actions'] ? '[#import_content]' : tagData.value}' contenteditable='false' spellcheck="false" class='tagify__tag ${tagData['data-actions'] ? 'fz-content-action' : ''}'>
+							<x title='remove tag' class='tagify__tag__removeBtn'></x>
+							<div>
+								<span class='tagify__tag-text'>${tagData['data-actions'] ? '[#import_content]' : tagData.value}</span>
+								${tagData['data-actions'] ?
+									`<a href="javascript:;" class="tagify__filter-icon" ${this.getAttributes(tagData)}></a>` : ''
+								}
+							</div>
+						</tag>`
+					}
+					catch(err){}
+				}
 			}
 		} );
 
