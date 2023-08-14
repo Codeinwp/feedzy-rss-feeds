@@ -127,6 +127,7 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 */
 		public function extract_magic_tags() {
 			preg_match_all( '/\[\[\{(.*)\}\]\]/U', $this->actions, $item_magic_tags, PREG_PATTERN_ORDER );
+			$extract_tags = array();
 			if ( ! empty( $item_magic_tags[0] ) ) {
 				$extract_tags = array_map(
 					function( $tag ) {
