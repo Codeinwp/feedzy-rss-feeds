@@ -72,7 +72,7 @@ const ActionModal = () => {
 			}
 		};
 
-		if ( ['fz_translate', 'fz_paraphrase', 'fz_summarize'].indexOf( actionId ) > -1 ) {
+		if ( ['fz_translate', 'fz_paraphrase', 'fz_summarize', 'wordAI', 'spinnerchief'].indexOf( actionId ) > -1 ) {
 			actionData.data[actionId] = true;
 		}
 		let newAction = [actionData];
@@ -165,7 +165,6 @@ const ActionModal = () => {
 						editAction = JSON.parse( decodeURIComponent( editAction ) );
 						setAction(prevState => ( editAction ) );
 						let magicTag = editAction[0] || {};
-						console.log( magicTag );
 						let tag = magicTag.tag;
 						setEditModeTag(event.target);
 						document.querySelector( '[data-action_popup="' + tag + '"]' ).click();
@@ -205,11 +204,41 @@ const ActionModal = () => {
 									<div className="popover-action-list">
 										<ul>
 											<li onClick={ () => addAction('trim') }>{__( 'Trim Content', 'feedzy-rss-feeds' )}</li>
-											<li onClick={ () => addAction('fz_translate') }>{__( 'Translate with Feedzy', 'feedzy-rss-feeds' )}</li>
+											{
+												feedzyData.isPro ? (
+													<li onClick={ () => addAction('fz_translate') }>{__( 'Translate with Feedzy', 'feedzy-rss-feeds' )}</li>
+												) : (
+													<li onClick={ () => addAction('fz_translate') }>{__( 'Translate with Feedzy', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+												)
+											}
 											<li onClick={ () => addAction('search_replace') }>{__( 'Search / Replace', 'feedzy-rss-feeds' )}</li>
-											<li onClick={ () => addAction('fz_paraphrase') }>{__( 'Paraphrase with Feedzy', 'feedzy-rss-feeds' )}</li>
-											<li onClick={ () => addAction('chat_cpt_paraphrase') }>{__( 'Paraphrase with ChatGPT', 'feedzy-rss-feeds' )}</li>
-											<li onClick={ () => addAction('fz_summarize') }>{__( 'Summarize with Feedzy', 'feedzy-rss-feeds' )}</li>
+											{
+												'item_categories' !== shortCode && (
+													feedzyData.isPro ? (
+														<li onClick={ () => addAction('fz_paraphrase') }>{__( 'Paraphrase with Feedzy', 'feedzy-rss-feeds' )}</li>
+													) : (
+														<li onClick={ () => addAction('fz_paraphrase') }>{__( 'Paraphrase with Feedzy', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+													)
+												)
+											}
+											{
+												'item_categories' !== shortCode && (
+													feedzyData.isPro ? (
+														<li onClick={ () => addAction('spinnerchief') }>{__( 'Spin using Spinnerchief', 'feedzy-rss-feeds' )}</li>
+													) : (
+														<li onClick={ () => addAction('spinnerchief') }>{__( 'Spin using Spinnerchief', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+													)
+												)
+											}
+											{
+												'item_categories' !== shortCode && (
+													feedzyData.isPro ? (
+														<li onClick={ () => addAction('wordAI') }>{__( 'Spin using WordAI', 'feedzy-rss-feeds' )}</li>
+													) : (
+														<li onClick={ () => addAction('wordAI') }>{__( 'Spin using WordAI', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+													)
+												)
+											}
 											<li className="link-item"><ExternalLink href="https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation">{ __( 'Learn more about this feature.', 'feedzy-rss-feeds' ) }</ExternalLink></li>
 										</ul>
 									</div>

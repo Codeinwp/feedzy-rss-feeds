@@ -445,15 +445,20 @@
 			templates: {
 				tag: function( tagData ) {
 					try{
-						var isEncoded = typeof tagData.value === "string" && decodeURIComponent(tagData.value) !== tagData.value;
+						var decodeTagData = decodeURIComponent(tagData.value);
+						var isEncoded = typeof tagData.value === "string" && decodeTagData !== tagData.value;
+						var tagLabel = tagData.value;
 						if ( isEncoded ) {
+							decodeTagData = JSON.parse( decodeTagData );
+							decodeTagData = decodeTagData[0] || {};
+							tagLabel = decodeTagData.tag.replaceAll( '_', ' ' );
 							tagData['data-actions'] = tagData.value;
 						}
 						return `
-						<tag title='${tagData['data-actions'] ? '[#import_content]' : tagData.value}' contenteditable='false' spellcheck="false" class='tagify__tag ${tagData['data-actions'] ? 'fz-content-action' : ''}'>
+						<tag title='${tagLabel}' contenteditable='false' spellcheck="false" class='tagify__tag ${isEncoded ? 'fz-content-action' : ''}'>
 							<x title='remove tag' class='tagify__tag__removeBtn'></x>
 							<div>
-								<span class='tagify__tag-text'>${tagData['data-actions'] ? '[#import_content]' : tagData.value}</span>
+								<span class='tagify__tag-text'>${tagLabel}</span>
 								${tagData['data-actions'] ?
 									`<a href="javascript:;" class="tagify__filter-icon" ${this.getAttributes(tagData)}></a>` : ''
 								}

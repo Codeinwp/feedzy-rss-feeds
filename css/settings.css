@@ -1660,6 +1660,7 @@ input[type=checkbox].fz-checkbox-btn:before{
 .fz-action-popup .components-modal__content {
 	margin-top: 0;
 	padding: 0;
+	overflow: inherit;
 }
 .fz-action-popup .components-modal__header {
 	display: none;
@@ -1760,6 +1761,7 @@ input[type=checkbox].fz-checkbox-btn:before{
 	position: relative;
 }
 .popover-action-list{
+	width: 250px;
 	position: absolute;
 	left: 100%;
 	/*bottom: 0;*/
@@ -1780,6 +1782,9 @@ input[type=checkbox].fz-checkbox-btn:before{
 	color: #050505;
 	white-space: nowrap;
 	cursor: pointer;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
 }
 .popover-action-list ul li.link-item{
 	padding-top: 9px;
@@ -1788,7 +1793,12 @@ input[type=checkbox].fz-checkbox-btn:before{
 .fz-action-popup .popover-action-list ul li.link-item .components-external-link{
 	font-size: 14px;
 }
-
+.fz-action-popup .popover-action-list .pro-label {
+	border-radius: 5px;
+    display: inline-flex;
+    padding: 4px 8px;
+    align-items: flex-start;
+}
 .fz-action-panel.components-panel{
 	padding: 0;
 	border: 0;
@@ -1942,20 +1952,23 @@ input[type=checkbox].fz-checkbox-btn:before{
 .fz-action-panel .fz-chat-cpt-action .components-panel__row {
 	display: block;
 }
-.fz-action-panel .fz-chat-cpt-action .fz-upgrade-notice {
+.fz-action-panel .fz-upgrade-notice {
 	margin: 0 0 20px;
 	border-radius: 6px;
 	border: 1px solid #8EB8DF;
 	background: rgba(161, 210, 255, 0.47);
 	padding: 12px;
 }
-.fz-action-panel .fz-chat-cpt-action .fz-upgrade-notice .components-notice__content {
+.fz-action-panel .fz-notice-wrap {
+	padding: 7px 44px 24px;
+}
+.fz-action-panel .fz-upgrade-notice .components-notice__content {
 	margin: 0;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 }
-.fz-action-panel .fz-chat-cpt-action .fz-upgrade-notice .components-notice__content .components-external-link {
+.fz-action-panel .fz-upgrade-notice .components-notice__content .components-external-link {
 	font-size: 14px;
 	font-style: normal;
 	font-weight: 700;
@@ -1963,13 +1976,13 @@ input[type=checkbox].fz-checkbox-btn:before{
 	text-decoration-line: underline;
 	color: #00499E;
 }
-.fz-action-panel .fz-chat-cpt-action .fz-upgrade-notice .components-notice__content p {
+.fz-action-panel .fz-upgrade-notice .components-notice__content p {
 	margin: 0;
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
 }
-.fz-action-panel .fz-chat-cpt-action .fz-upgrade-notice .components-notice__content p span {
+.fz-action-panel .fz-upgrade-notice .components-notice__content p span {
 	border-radius: 5px;
 	background: #4268CF;
 	display: inline-block;
@@ -2000,7 +2013,16 @@ input[type=checkbox].fz-checkbox-btn:before{
 }
 .fz-content-action div .tagify__tag-text {
 	padding-right: 10px;
+	text-transform: capitalize;
 }
+.popover-action-list ul li.fz-action-disabled {
+	cursor: not-allowed !important;
+}
+
+.fz-action-panel .fz-chat-cpt-action .fz-notice-wrap {
+	padding: 0;
+}
+
 @media (max-width: 767px){
 	.fz-row .fz-col-md-6{width: 100%;}
 	.fz-row .fz-col-md-6 .fz-form-group{padding-bottom: 8px;}

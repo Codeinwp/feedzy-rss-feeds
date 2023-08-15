@@ -204,14 +204,16 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 						continue;
 					}
 					$this->result = null;
-					foreach ( $jobs['replace_with'] as $job ) {
+					$replace_with = isset( $jobs['replace_with'] ) ? $jobs['replace_with'] : array();
+					$replace_to   = isset( $jobs['replace_to'] ) ? $jobs['replace_to'] : '';
+					foreach ( $replace_with as $job ) {
 						$this->current_job = $job;
 						$this->result      = $this->action_process( $job->tag );
-						$this->result      = str_replace( $jobs['replace_to'], $this->result, $this->post_content );
 					}
+					$this->post_content = str_replace( $replace_to, $this->result, $this->post_content );
 				}
 			}
-			return $this->result;
+			return $this->post_content;
 		}
 
 		/**
@@ -228,6 +230,12 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 					return $this->translate_content();
 				case 'search_replace':
 					return $this->search_replace();
+				case 'fz_paraphrase':
+					return $this->paraphrase_content();
+				case 'spinnerchief':
+					return $this->spinnerchief_spin_content();
+				case 'wordAI':
+					return $this->word_ai_content();
 				default:
 					return;
 			}
@@ -240,7 +248,36 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			if ( ! empty( $this->result ) ) {
 				return $this->result;
 			}
-			return $this->item['item_content'];
+			return ! empty( $this->item['item_content'] ) ? $this->item['item_content'] : $this->item['item_description'];
+		}
+
+		/**
+		 * Get full content.
+		 */
+		private function item_full_content() {
+			$full_content = ! empty( $this->item['item_full_content'] ) ? $this->item['item_full_content'] : $this->item['item_content'];
+			$post_content = apply_filters( 'feedzy_invoke_services', '[#item_full_content]', 'full_content', $full_content, $this->job );
+			return $full_content;
+		}
+
+		/**
+		 * Get item item_description.
+		 */
+		private function item_categories() {
+			if ( ! empty( $this->result ) ) {
+				return $this->result;
+			}
+			return ! empty( $this->item['item_categories'] ) ? $this->item['item_categories'] : '';
+		}
+
+		/**
+		 * Get item item_description.
+		 */
+		private function item_description() {
+			if ( ! empty( $this->result ) ) {
+				return $this->result;
+			}
+			return ! empty( $this->item['item_description'] ) ? $this->item['item_description'] : '';
 		}
 
 		/**
@@ -263,6 +300,15 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		}
 
 		/**
+		 * Paraphrase content with feedzy default service.
+		 */
+		private function paraphrase_content() {
+			$content = call_user_func( array( $this, $this->current_job->tag ) );
+			$content = apply_filters( 'feedzy_invoke_content_rewrite_services', $content, '[#content_feedzy_rewrite]', $this->job, $this->item );
+			return $content;
+		}
+
+		/**
 		 * Translate content.
 		 *
 		 * @return string
@@ -273,12 +319,31 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		}
 
 		/**
-		 * Get full content.
+		 * Spin content using spinnerchief.
+		 *
+		 * @return string
 		 */
-		private function get_full_content() {
-			$full_content = ! empty( $this->item['item_full_content'] ) ? $this->item['item_full_content'] : $this->item['item_content'];
-			$post_content = apply_filters( 'feedzy_invoke_services', '[#item_full_content]', 'full_content', $full_content, $this->job );
-			return $full_content;
+		private function spinnerchief_spin_content() {
+			$content       = call_user_func( array( $this, $this->current_job->tag ) );
+			$wordai_result = apply_filters( 'feedzy_invoke_services', '[#content_spinnerchief]', 'content', $content, $this->job );
+			if ( ! empty( $wordai_result ) ) {
+				$content = $wordai_result;
+			}
+			return $content;
+		}
+
+		/**
+		 * Spin content using WordAI.
+		 *
+		 * @return string
+		 */
+		private function word_ai_content() {
+			$content       = call_user_func( array( $this, $this->current_job->tag ) );
+			$wordai_result = apply_filters( 'feedzy_invoke_services', '[#content_wordai]', 'content', $content, $this->job );
+			if ( ! empty( $wordai_result ) ) {
+				$content = $wordai_result;
+			}
+			return $content;
 		}
 	}
 }

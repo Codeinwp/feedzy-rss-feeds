@@ -26,6 +26,21 @@ import {
 	trash
 } from '@wordpress/icons';
 
+const UpgradeNotice = () => {
+	if ( feedzyData.isPro ) {
+		return(
+			<></>
+		);
+	}
+	return(
+		<>
+		<div className="fz-notice-wrap">
+			<Notice status="info" isDismissible={false} className="fz-upgrade-notice"><p><span>PRO</span> {__('This action is a Premium feature. ')}</p> <ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=import&utm_campaign=upsell-content&utm_content=feedzy-rss-feeds">{ __( 'Update to Feedzy PRO' ) }</ExternalLink></Notice>
+		</div>
+		</>
+	);
+};
+
 export default function Actions( props ) {
 	if ( props.data && props.data.length === 0 ) {
 		return(
@@ -136,7 +151,7 @@ export default function Actions( props ) {
 									<div className="fz-action-event">
 										<PanelBody title={ __( 'Paraphrase with Chat GPT' ) } icon={ dragHandle } initialOpen={ false }>
 											<PanelRow>
-												<Notice status="info" isDismissible={false} className="fz-upgrade-notice"><p><span>PRO</span> {__('This action is a Premium feature. ')}</p> <ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=import&utm_campaign=upsell-content&utm_content=feedzy-rss-feeds">{ __( 'Update to Feedzy PRO' ) }</ExternalLink></Notice>
+												<UpgradeNotice />
 												<BaseControl>
 													<TextareaControl
 														label={ __( 'Main Prompt', 'feedzy-rss-feeds' ) }
@@ -164,6 +179,7 @@ export default function Actions( props ) {
 								<li className="fz-action-control">
 									<div className="fz-action-event">
 										<PanelBody title={ __( 'Summarise with Feedzy', 'feedzy-rss-feeds' ) } icon={ dragHandle } initialOpen={ false } className="fz-hide-icon">
+											<UpgradeNotice />
 										</PanelBody>
 									</div>
 									<div className="fz-trash-action">
@@ -182,6 +198,45 @@ export default function Actions( props ) {
 								<li className="fz-action-control">
 									<div className="fz-action-event">
 										<PanelBody title={ __( 'Translate with Feedzy', 'feedzy-rss-feeds' ) } icon={ dragHandle } initialOpen={ false } className="fz-hide-icon">
+											<UpgradeNotice />
+										</PanelBody>
+									</div>
+									<div className="fz-trash-action">
+										<button type="button" onClick={() => { props.removeCallback(index) }}>
+											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+												<path d="M20 5.0002H14.3C14.3 3.7002 13.3 2.7002 12 2.7002C10.7 2.7002 9.7 3.7002 9.7 5.0002H4V7.0002H5.5V7.3002L7.2 18.4002C7.3 19.4002 8.2 20.1002 9.2 20.1002H14.9C15.9 20.1002 16.7 19.4002 16.9 18.4002L18.6 7.3002V7.0002H20V5.0002ZM16.8 7.0002L15.1 18.1002C15.1 18.2002 15 18.3002 14.8 18.3002H9.1C9 18.3002 8.8 18.2002 8.8 18.1002L7.2 7.0002H16.8Z" fill="black"/>
+											</svg>
+										</button>
+									</div>
+								</li>
+							);
+						}
+
+						if ( 'spinnerchief' === item.id ) {
+							return(
+								<li className="fz-action-control">
+									<div className="fz-action-event">
+										<PanelBody title={ __( 'Spin using Spinnerchief', 'feedzy-rss-feeds' ) } icon={ dragHandle } initialOpen={ false } className="fz-hide-icon">
+											<UpgradeNotice />
+										</PanelBody>
+									</div>
+									<div className="fz-trash-action">
+										<button type="button" onClick={() => { props.removeCallback(index) }}>
+											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+												<path d="M20 5.0002H14.3C14.3 3.7002 13.3 2.7002 12 2.7002C10.7 2.7002 9.7 3.7002 9.7 5.0002H4V7.0002H5.5V7.3002L7.2 18.4002C7.3 19.4002 8.2 20.1002 9.2 20.1002H14.9C15.9 20.1002 16.7 19.4002 16.9 18.4002L18.6 7.3002V7.0002H20V5.0002ZM16.8 7.0002L15.1 18.1002C15.1 18.2002 15 18.3002 14.8 18.3002H9.1C9 18.3002 8.8 18.2002 8.8 18.1002L7.2 7.0002H16.8Z" fill="black"/>
+											</svg>
+										</button>
+									</div>
+								</li>
+							);
+						}
+
+						if ( 'wordAI' === item.id ) {
+							return(
+								<li className="fz-action-control">
+									<div className="fz-action-event">
+										<PanelBody title={ __( 'Spin using WordAI', 'feedzy-rss-feeds' ) } icon={ dragHandle } initialOpen={ false } className="fz-hide-icon">
+											<UpgradeNotice />
 										</PanelBody>
 									</div>
 									<div className="fz-trash-action">

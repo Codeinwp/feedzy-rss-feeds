@@ -168,6 +168,13 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				wp_register_script( 'react-dom', 'https://unpkg.com/react-dom@18/umd/react-dom.production.min.js', array(), $this->version, true );
 			}
 			wp_enqueue_script( $this->plugin_name . '_action_popup', FEEDZY_ABSURL . 'js/ActionPopup/action-popup.min.js', array( 'react', 'react-dom', 'wp-editor', 'wp-api' ), $this->version, true );
+			wp_localize_script(
+				$this->plugin_name . '_action_popup',
+				'feedzyData',
+				array(
+					'isPro' => feedzy_is_pro(),
+				)
+			);
 			wp_enqueue_style( 'wp-block-editor' );
 		}
 		if ( ! defined( 'TI_CYPRESS_TESTING' ) && ( 'feedzy_imports' === $screen->post_type && get_option( 'feedzy_import_tour' ) ) ) {
