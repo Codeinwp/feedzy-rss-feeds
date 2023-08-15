@@ -60,7 +60,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		$depends = array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-compose', 'wp-editor', 'wp-api', 'lodash', 'wp-hooks', 'jquery-ui-autocomplete' );
 
 		// Remove "wp-editor" script for widget block.
-		if ( wp_use_widgets_block_editor() && wp_script_is( 'wp-edit-widgets' ) ) {
+		if ( wp_script_is( 'wp-edit-widgets' ) && wp_use_widgets_block_editor() ) {
 			$index = array_search( 'wp-editor', $depends, true );
 			if ( false !== $index ) {
 				unset( $depends[ $index ] );
