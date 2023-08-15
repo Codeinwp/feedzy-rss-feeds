@@ -2230,7 +2230,7 @@ class Feedzy_Rss_Feeds_Import {
 				}
 				if ( 'import_post_content' === $type ) {
 					if ( in_array( $tag, array( 'item_content', 'item_description', 'item_full_content', 'item_categories' ), true ) ) {
-						$default .= '<a class="dropdown-item" href="#" data-action_popup="' . $tag . '">' . $label . ' <small>[#' . $tag . ']</small></a>';
+						$default .= '<a class="dropdown-item" href="#" data-field-name="' . $type . '" data-field-tag="' . $tag . '" data-action_popup="' . $tag . '">' . $label . ' <small>[#' . $tag . ']</small></a>';
 						continue;
 					}
 					$default .= '<a class="dropdown-item" href="#" data-field-name="' . $type . '" data-field-tag="' . $tag . '">' . $label . ' <small>[#' . $tag . ']</small></a>';
