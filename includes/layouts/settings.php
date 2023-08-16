@@ -20,11 +20,11 @@
 	}
 	?>
 	<?php if ( $this->notice ) { ?>
-		<div class="updated"><p><?php echo wp_kses_post( $this->notice ); ?></p></div>
+		<div class="fz-snackbar-notice updated"><p><?php echo wp_kses_post( $this->notice ); ?></p></div>
 	<?php } ?>
 
 	<?php if ( $this->error ) { ?>
-		<div class="error"><p><?php echo wp_kses_post( $this->error ); ?></p></div>
+		<div class="fz-snackbar-notice error"><p><?php echo wp_kses_post( $this->error ); ?></p></div>
 	<?php } ?>
 	<div class="feedzy-container">
 		<div class="feedzy-accordion-item">
@@ -109,14 +109,18 @@
 									</div>
 									<div class="fz-form-group">
 										<div class="help-text pb-8"><?php esc_html_e( 'Select an image to be the fallback featured image(Feed2Post).', 'feedzy-rss-feeds' ); ?></div>
-										<?php if ( $default_thumbnail_id ) : ?>
+										<?php
+										$btn_label = esc_html__( 'Choose image', 'feedzy-rss-feeds' );
+										if ( $default_thumbnail_id ) :
+											$btn_label = esc_html__( 'Replace image', 'feedzy-rss-feeds' );
+											?>
 											<div class="fz-form-group feedzy-media-preview">
 												<?php echo wp_get_attachment_image( $default_thumbnail_id, 'thumbnail' ); ?>
 											</div>
 										<?php endif; ?>
 										<div class="fz-cta-group pb-8">
-											<a href="javascript:;" class="feedzy-open-media btn btn-primary"><?php esc_html_e( 'Choose image', 'feedzy-rss-feeds' ); ?></a>
-											<a href="javascript:;" class="feedzy-remove-media btn btn-outline-primary <?php echo $default_thumbnail_id ? esc_attr( 'is-show' ) : ''; ?>"><?php esc_html_e( 'Remove image', 'feedzy-rss-feeds' ); ?></a>
+											<a href="javascript:;" class="feedzy-open-media btn btn-outline-primary"><?php echo esc_html( $btn_label ); ?></a>
+											<a href="javascript:;" class="feedzy-remove-media btn btn-outline-primary <?php echo $default_thumbnail_id ? esc_attr( 'is-show' ) : ''; ?>"><?php esc_html_e( 'Remove', 'feedzy-rss-feeds' ); ?></a>
 											<input type="hidden" name="default-thumbnail-id" id="feed-post-default-thumbnail" value="<?php echo esc_attr( $default_thumbnail_id ); ?>">
 										</div>
 										<div class="help-text"><?php esc_html_e( 'This image will be used for the Feed Items that don\'t have one.', 'feedzy-rss-feeds' ); ?></div>

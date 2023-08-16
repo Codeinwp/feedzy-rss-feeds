@@ -104,7 +104,7 @@ class Feedzy_Rss_Feeds {
 	 */
 	public function init() {
 		self::$plugin_name = 'feedzy-rss-feeds';
-		self::$version     = '4.2.7';
+		self::$version     = '4.2.8';
 		self::$instance->load_dependencies();
 		self::$instance->set_locale();
 		self::$instance->define_admin_hooks();
@@ -220,6 +220,7 @@ class Feedzy_Rss_Feeds {
 		self::$instance->loader->add_filter( 'feedzy_check_source_validity', self::$instance->admin, 'check_source_validity', 10, 4 );
 		self::$instance->loader->add_filter( 'feedzy_get_source_validity_error', self::$instance->admin, 'get_source_validity_error', 10, 3 );
 		self::$instance->loader->add_filter( 'post_row_actions', self::$instance->admin, 'add_feedzy_category_actions', 10, 2 );
+		self::$instance->loader->add_filter( 'admin_footer', self::$instance->admin, 'handle_upgrade_submenu' );
 
 		// do not load this with the loader as this will need a corresponding remove_filter also.
 		add_filter( 'update_post_metadata', array( self::$instance->admin, 'validate_category_feeds' ), 10, 5 );

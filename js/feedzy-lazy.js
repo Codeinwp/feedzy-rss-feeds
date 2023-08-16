@@ -18,6 +18,11 @@
                 $attributes[this.name.replace('data-', '')] = this.value;
             }
         });
+
+        if ( 'true' === $attributes.has_valid_cache ) {
+            return;
+        }
+        delete $attributes.has_valid_cache;
         setTimeout( function(){
             $feedzy_block.addClass('loading');
             $.ajax({

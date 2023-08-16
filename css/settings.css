@@ -2023,6 +2023,37 @@ input[type=checkbox].fz-checkbox-btn:before{
 	padding: 0;
 }
 
+.feedzy-remove-media:not(.is-show) {
+	display: none;
+}
+.feedzy_page_feedzy-settings .fz-snackbar-notice {
+	position: fixed;
+	left: 160px;
+	bottom: -100%;
+	z-index: 9991;
+	border: none;
+    background: #1e1e1e;
+    color: #fff;
+	font-size: 13px;
+	border-radius: 2px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+	padding: 16px 24px;
+	box-sizing: border-box;
+	cursor: pointer;
+	pointer-events: auto;
+	-webkit-transition: all 0.5s ease-in-out;
+	-moz-transition: all 0.5s ease-in-out;
+	-o-transition: all 0.5s ease-in-out;
+	transition: all 0.5s ease-in-out;
+}
+.feedzy_page_feedzy-settings .fz-snackbar-notice p {
+	margin: 0;
+	padding: 0;
+}
+.feedzy_page_feedzy-settings .fz-snackbar-notice.open {
+	bottom: 30px;
+}
+
 @media (max-width: 767px){
 	.fz-row .fz-col-md-6{width: 100%;}
 	.fz-row .fz-col-md-6 .fz-form-group{padding-bottom: 8px;}

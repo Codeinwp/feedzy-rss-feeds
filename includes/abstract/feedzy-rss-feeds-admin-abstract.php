@@ -481,14 +481,17 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				}
 				$attributes .= 'data-' . esc_attr( $key ) . '="' . esc_attr( $val ) . '"';
 			}
-			$content = get_transient( sprintf( 'feedzy-lazy-%s', is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ) );
+			$lazyload_cache_key = md5( sprintf( 'feedzy-lazy-%s', ( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ) ) );
+			$content            = get_transient( $lazyload_cache_key );
 
-			$class = array_filter( apply_filters( 'feedzy_add_classes_block', array( $sc['classname'], 'feedzy-' . md5( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ) ), $sc, null, $feed_url ) );
-			$html  = "<div class='feedzy-lazy' $attributes>";
 			// the first time the shortcode is being called it will not have any content.
 			if ( empty( $content ) ) {
 				$content = apply_filters( 'feedzy_lazyload_loading_msg', __( 'Loading', 'feedzy-rss-feeds' ) . '...', $feed_url );
+			} else {
+				$attributes .= 'data-has_valid_cache="true"';
 			}
+			$class = array_filter( apply_filters( 'feedzy_add_classes_block', array( $sc['classname'], 'feedzy-' . md5( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ) ), $sc, null, $feed_url ) );
+			$html  = "<div class='feedzy-lazy' $attributes>";
 			$html .= "$content</div>";
 
 			wp_register_script( $this->plugin_name . '-lazy', FEEDZY_ABSURL . 'js/feedzy-lazy.js', array( 'jquery' ), $this->version, 'all' );
@@ -570,7 +573,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$content = $this->render_content( $sc, $feed, $feed_url, '' );
 
 		// save the content as a transient so that whenever the feed is refreshed next, this stale content is displayed first.
-		set_transient( sprintf( 'feedzy-lazy-%s', ( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ) ), $content, apply_filters( 'feedzy_lazyload_cache_time', DAY_IN_SECONDS, $feed_url ) );
+		$lazyload_cache_key = md5( sprintf( 'feedzy-lazy-%s', ( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ) ) );
+		set_transient( $lazyload_cache_key, $content, apply_filters( 'feedzy_lazyload_cache_time', DAY_IN_SECONDS, $feed_url ) );
 
 		wp_send_json_success( array( 'content' => $content ) );
 	}

@@ -154,6 +154,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					'l10n' => array(
 						'media_iframe_title'  => __( 'Select image', 'feedzy-rss-feeds' ),
 						'media_iframe_button' => __( 'Set default image', 'feedzy-rss-feeds' ),
+						'action_btn_text_1'   => __( 'Choose image', 'feedzy-rss-feeds' ),
+						'action_btn_text_2'   => __( 'Replace image', 'feedzy-rss-feeds' ),
 					),
 				)
 			);
@@ -1461,6 +1463,25 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				display: none;
 			}
 		</style>
+		<?php
+	}
+
+	/**
+	 * Handle upgrade submenu.
+	 */
+	public function handle_upgrade_submenu() {
+		if ( feedzy_is_pro() ) {
+			return;
+		}
+		?>
+		<script type="text/javascript">
+			jQuery( document ).ready( function( $ ) {
+				$( '.toplevel_page_feedzy-admin-menu ul.wp-submenu' ).on( 'click', 'a[href*="plugins/feedzy-rss-feeds/upgrade/"]', function( event ) {
+					event.preventDefault();
+					window.open( $( this ).attr( 'href' ), '_blank').focus();
+				} );
+			} );
+		</script>
 		<?php
 	}
 }

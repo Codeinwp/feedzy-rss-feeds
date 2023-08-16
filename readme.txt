@@ -3,7 +3,7 @@ Contributors: themeisle,codeinwp,hardeepasrani,rozroz
 Tags: rss aggregator, news aggregator, autoblogging, feed to post, rss import
 Requires at least: 3.7
 Requires PHP: 7.2
-Tested up to: 6.2
+Tested up to: 6.3
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -463,6 +463,15 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 
  == Changelog ==
+
+##### [Version 4.2.8](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.2.7...v4.2.8) (2023-08-03)
+
+- Improved lazy load endpoint performance
+- Fixed minor layout issue
+- Fixed external image support issue with Elementor
+
+
+
 
 ##### [Version 4.2.7](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.2.6...v4.2.7) (2023-07-06)
 

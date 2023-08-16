@@ -1,3 +1,9 @@
+##### [Version 4.2.8](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.2.7...v4.2.8) (2023-08-03)
+
+- Improved lazy load endpoint performance
+- Fixed minor layout issue
+- Fixed external image support issue with Elementor
+
 ##### [Version 4.2.7](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.2.6...v4.2.7) (2023-07-06)
 
 - Fixed image displaying issue in Gutenberg block
