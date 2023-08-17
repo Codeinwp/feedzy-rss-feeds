@@ -1660,7 +1660,6 @@ input[type=checkbox].fz-checkbox-btn:before{
 .fz-action-popup .components-modal__content {
 	margin-top: 0;
 	padding: 0;
-	overflow: inherit;
 }
 .fz-action-popup .components-modal__header {
 	display: none;
@@ -1741,9 +1740,11 @@ input[type=checkbox].fz-checkbox-btn:before{
 	background-color: #4268CF;
 	color: #F0F2F5;
 }
-.fz-action-panel svg.components-panel__icon {
+.fz-action-panel .components-panel__body-title svg.components-panel__icon,
+.fz-action-control.draggable-item .components-panel__body-title svg.components-panel__icon {
     order: -1;
     margin: -2px 6px -2px 0;
+    cursor: row-resize;
 }
 .fz-action-popup .fz-action-header{
 	padding: 38px 25px 19px;
@@ -1806,7 +1807,6 @@ input[type=checkbox].fz-checkbox-btn:before{
 .fz-action-panel > ul{
 	margin: 0;
 	position: relative;
-	counter-reset: counter;
 }
 .fz-action-panel > ul:before{
 	content: "";
@@ -1822,7 +1822,6 @@ input[type=checkbox].fz-checkbox-btn:before{
 	padding: 0 0 20px 66px;
 	position: relative;
 	display: flex;
-	counter-increment: counter;
 }
 .fz-action-panel > ul > li:before{
 	content: "";
@@ -1834,7 +1833,7 @@ input[type=checkbox].fz-checkbox-btn:before{
 	position: absolute;
 }
 .fz-action-panel > ul > li:after{
-	content: counter(counter);
+	content: attr(data-counter);
 	display: grid;
 	place-items: center;
 	color: #7B7B7B;
@@ -1849,15 +1848,56 @@ input[type=checkbox].fz-checkbox-btn:before{
 	background: #ffffff;
 	border: 2px solid #E5E5E5;
 }
-.fz-action-panel .fz-action-event{
+
+/** Draggable item  **/
+li.fz-action-control.draggable-item{
+	margin: 0;
+	padding: 0 0 20px 66px;
+	position: relative;
+	display: flex;
+	counter-increment: counter;
+}
+li.fz-action-control.draggable-item:before{
+	content: "";
+	width: 35px;
+	height: 51px;
+	top: 0;
+	left: 0;
+	background: #fff;
+	position: absolute;
+}
+li.fz-action-control.draggable-item:after{
+	content: attr(data-counter);
+	display: grid;
+	place-items: center;
+	color: #7B7B7B;
+	font-size: 16px;
+	font-weight: 500;
+	position: absolute;
+	top: 7px;
+	left: 0;
+	width: 35px;
+	height: 35px;
+	border-radius: 100%;
+	background: #ffffff;
+	border: 2px solid #E5E5E5;
+}
+
+.fz-action-panel .fz-action-event,
+.fz-action-control.draggable-item .fz-action-event
+{
 	width: 100%;
 }
-.fz-action-panel .fz-trash-action{
+.fz-action-panel .fz-trash-action,
+.fz-action-control.draggable-item .fz-trash-action
+{
 	flex-shrink: 0;
 	margin-left: 10px;
 	padding-top: 15px;
 }
-.fz-action-panel .fz-trash-action button{
+.fz-action-panel .fz-trash-action button,
+.fz-action-control.draggable-item .fz-trash-action button
+{
 	background: transparent;
 	border: 0;
 	width: 24px;
@@ -1865,7 +1905,9 @@ input[type=checkbox].fz-checkbox-btn:before{
 	cursor: pointer;
 }
 
-.fz-action-panel .fz-action-event .components-panel__body{
+.fz-action-panel .fz-action-event .components-panel__body,
+.fz-action-control.draggable-item .components-panel__body
+{
 	border: 0;
 	padding: 0;
 	background: #F0F2F5;
@@ -2057,4 +2099,8 @@ input[type=checkbox].fz-checkbox-btn:before{
 @media (max-width: 767px){
 	.fz-row .fz-col-md-6{width: 100%;}
 	.fz-row .fz-col-md-6 .fz-form-group{padding-bottom: 8px;}
+}
+
+.draggable-item {
+	z-index: 999999;
 }

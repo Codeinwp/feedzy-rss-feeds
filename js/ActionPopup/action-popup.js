@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { arrayMoveImmutable } from 'array-move';
 import Actions from './Actions.js';
 
 import { __ } from '@wordpress/i18n';
@@ -33,6 +34,16 @@ const ActionModal = () => {
 	const [ action, setAction ] = useState([]);
 	const [ shortCode, setShortCode ] = useState('');
 	const [ editModeTag, setEditModeTag ] = useState(null);
+	const settingsRef = useRef(null);
+	const feedzyImportRef = useRef(null);
+
+	useEffect( () => {
+		window.wp.api.loadPromise.then( () => {
+			// Fetch settings.
+			settingsRef.current = new window.wp.api.models.Settings();
+			settingsRef.current.fetch();
+		});
+	}, []);
 
 	const handleChange = (args) => {
 		let id = args.index;
@@ -80,16 +91,9 @@ const ActionModal = () => {
 		toggleVisible(false);
 	};
 
-	const settingsRef = useRef(null);
-	const feedzyImportRef = useRef(null);
-
-	useEffect( () => {
-		window.wp.api.loadPromise.then( () => {
-			// Fetch settings.
-			settingsRef.current = new window.wp.api.models.Settings();
-			settingsRef.current.fetch();
-		});
-	}, []);
+	const onSortEnd = ({ oldIndex, newIndex }) => {
+		setAction(prevItem => (arrayMoveImmutable(prevItem, oldIndex, newIndex)));
+	};
 
 	/**
 	 * Hide action popup.
@@ -132,6 +136,10 @@ const ActionModal = () => {
 			postContent.replaceTag(editModeTag.closest( '.fz-content-action' ), {value: _action});
 		}
 		closeModal();
+	};
+
+	const helperContainer = () => {
+		return document.querySelector( '.fz-action-popup .fz-action-panel ul' );
 	};
 
 	// Click to open action popup.
@@ -193,7 +201,7 @@ const ActionModal = () => {
 							</div>
 						) }
 						
-						<Actions data={action} removeCallback={removeAction} onChangeHandler={handleChange}/>
+						<Actions data={action} removeCallback={removeAction} onChangeHandler={handleChange} onSortEnd={onSortEnd} useDragHandle lockAxis="y" helperClass="draggable-item" distance={1} lockToContainerEdges={true} lockOffset="0%"/>
 
 						<div className="fz-action-btn">
 							<div className="fz-action-relative">
@@ -255,6 +263,6 @@ const ActionModal = () => {
 	};
 
 ReactDOM.render(
-	<React.StrictMode><ActionModal /></React.StrictMode>,
+	<ActionModal />,
 	document.querySelector('#fz-action-popup')
 );

@@ -436,12 +436,6 @@
 		var mixContent = $( '.fz-textarea-tagify' ).tagify( {
 			mode: 'mix',
 			editTags: false,
-			/*originalInputValueFormat: function( valuesArr ) {
-				return valuesArr.map( function( item ) {
-					return item.value;
-				} )
-				.join( ', ' );
-			},*/
 			templates: {
 				tag: function( tagData ) {
 					try{
