@@ -28,14 +28,16 @@ import {
 } from '@wordpress/icons';
 
 const ActionModal = () => {
+	// useRef
+	const settingsRef = useRef(null);
+	const feedzyImportRef = useRef(null);
+	// State
 	const [ isOpen, setOpen ] = useState(false);
 	const [ isHideMsg, setHideMeg ] = useState(false);
 	const [ isVisible, setIsVisible ] = useState( false );
 	const [ action, setAction ] = useState([]);
 	const [ shortCode, setShortCode ] = useState('');
 	const [ editModeTag, setEditModeTag ] = useState(null);
-	const settingsRef = useRef(null);
-	const feedzyImportRef = useRef(null);
 
 	useEffect( () => {
 		window.wp.api.loadPromise.then( () => {
@@ -155,6 +157,7 @@ const ActionModal = () => {
 			}
 			let tag = event.target.getAttribute( 'data-action_popup' ) || '';
 			if ( '' === tag ) {
+				event.target.closest('.dropdown-item').click();
 				return;
 			}
 			setShortCode( tag );
@@ -201,7 +204,7 @@ const ActionModal = () => {
 							</div>
 						) }
 						
-						<Actions data={action} removeCallback={removeAction} onChangeHandler={handleChange} onSortEnd={onSortEnd} useDragHandle lockAxis="y" helperClass="draggable-item" distance={1} lockToContainerEdges={true} lockOffset="0%"/>
+						{action.length > 0 && ( <Actions data={action} removeCallback={removeAction} onChangeHandler={handleChange} onSortEnd={onSortEnd} useDragHandle lockAxis="y" helperClass="draggable-item" distance={1} lockToContainerEdges={true} lockOffset="0%"/> )}
 
 						<div className="fz-action-btn">
 							<div className="fz-action-relative">

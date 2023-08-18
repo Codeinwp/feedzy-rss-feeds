@@ -1823,6 +1823,19 @@ input[type=checkbox].fz-checkbox-btn:before{
 	position: relative;
 	display: flex;
 }
+.fz-action-panel > ul > li span.error-message{
+	position: absolute;
+	top: 16px;
+	right: 10px;
+	color: #F00;
+	display: inline-flex;
+	z-index: 999;
+}
+.fz-action-panel > ul > li span.error-message .components-external-link {
+	margin-left: 5px;
+	border: none;
+	box-shadow: none;
+}
 .fz-action-panel > ul > li:before{
 	content: "";
 	width: 35px;
@@ -1857,6 +1870,12 @@ li.fz-action-control.draggable-item{
 	display: flex;
 	counter-increment: counter;
 }
+li.fz-action-control.draggable-item span.error-message{
+	position: absolute;
+	top: 16px;
+	left: 145px;
+	color: #F00;
+}
 li.fz-action-control.draggable-item:before{
 	content: "";
 	width: 35px;
@@ -1887,6 +1906,7 @@ li.fz-action-control.draggable-item:after{
 .fz-action-control.draggable-item .fz-action-event
 {
 	width: 100%;
+	position: relative;
 }
 .fz-action-panel .fz-trash-action,
 .fz-action-control.draggable-item .fz-trash-action

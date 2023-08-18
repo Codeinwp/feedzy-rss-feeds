@@ -7,7 +7,8 @@ import {
 	dragHandle,
 	close,
 	plus,
-	trash
+	trash,
+	external
 } from '@wordpress/icons';
 
 import {
@@ -37,13 +38,24 @@ const UpgradeNotice = () => {
 	return(
 		<>
 		<div className="fz-notice-wrap">
-			<Notice status="info" isDismissible={false} className="fz-upgrade-notice"><p><span>PRO</span> {__('This action is a Premium feature. ')}</p> <ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=import&utm_campaign=upsell-content&utm_content=feedzy-rss-feeds">{ __( 'Update to Feedzy PRO' ) }</ExternalLink></Notice>
+			<Notice status="info" isDismissible={false} className="fz-upgrade-notice"><p><span>PRO</span> {__('This action is a Premium feature.', 'feedzy-rss-feeds')}</p> <ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=import&utm_campaign=upsell-content&utm_content=feedzy-rss-feeds">{ __( 'Update to Feedzy PRO', 'feedzy-rss-feeds' ) }</ExternalLink></Notice>
 		</div>
 		</>
 	);
 };
 
+const CreditNotice = () => {
+	return(
+		<>
+		<div className="fz-notice-wrap">
+			<Notice status="warning" isDismissible={false} className="fz-credit-notice"><p><span></span> {__( 'You need more credits to use this actions!', 'feedzy-rss-feeds' )}</p><ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=import&utm_campaign=upsell-content&utm_content=feedzy-rss-feeds">{ __( 'Buy Credits', 'feedzy-rss-feeds' ) }</ExternalLink></Notice>
+		</div>
+		</>
+	)
+}
+
 const SortableItem = ({ propRef, loopIndex, item }) => {
+	console.log( propRef );
 	let counter = loopIndex + 1;
 	if ( 'trim' === item.id ) {
 		return(
@@ -121,9 +133,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 			<li className="fz-action-control" data-counter={counter}>
 				<div className="fz-action-event">
 					<PanelBody title={ __( 'Paraphrase with Feedzy', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false } className="fz-hide-icon">
-						<PanelRow>
-							<Notice status="warning" isDismissible={false} className="fz-credit-notice"><p><span></span> {__( 'You need more credits to use this actions!', 'feedzy-rss-feeds' )}</p><ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=import&utm_campaign=upsell-content&utm_content=feedzy-rss-feeds">{ __( 'Buy Credits' ) }</ExternalLink></Notice>
-						</PanelRow>
+						<UpgradeNotice />
 					</PanelBody>
 				</div>
 				<div className="fz-trash-action">
@@ -141,7 +151,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 		return(
 			<li className="fz-action-control fz-chat-cpt-action" data-counter={counter}>
 				<div className="fz-action-event">
-					<PanelBody title={ __( 'Paraphrase with Chat GPT' ) } icon={ DragHandle } initialOpen={ false }>
+					<PanelBody title={ __( 'Paraphrase with Chat GPT', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false }>
 						<PanelRow>
 							<UpgradeNotice />
 							<BaseControl>
@@ -208,6 +218,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 		return(
 			<li className="fz-action-control" data-counter={counter}>
 				<div className="fz-action-event">
+					{feedzyData.isPro && !feedzyData.apiLicenseStatus.spinnerChiefStatus && (<span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=spinnerchief"><Icon icon={external} size={16} fill="#4268CF"/></ExternalLink></span> )}
 					<PanelBody title={ __( 'Spin using Spinnerchief', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false } className="fz-hide-icon">
 						<UpgradeNotice />
 					</PanelBody>
@@ -227,6 +238,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 		return(
 			<li className="fz-action-control" data-counter={counter}>
 				<div className="fz-action-event">
+					{feedzyData.isPro && !feedzyData.apiLicenseStatus.wordaiStatus && (<span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=wordai"><Icon icon={external} size={16} fill="#4268CF"/></ExternalLink></span> )}
 					<PanelBody title={ __( 'Spin using WordAI', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false } className="fz-hide-icon">
 						<UpgradeNotice />
 					</PanelBody>

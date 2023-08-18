@@ -255,6 +255,9 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 * Get full content.
 		 */
 		private function item_full_content() {
+			if ( ! empty( $this->result ) ) {
+				return $this->result;
+			}
 			$full_content = ! empty( $this->item['item_full_content'] ) ? $this->item['item_full_content'] : $this->item['item_content'];
 			$post_content = apply_filters( 'feedzy_invoke_services', '[#item_full_content]', 'full_content', $full_content, $this->job );
 			return $full_content;

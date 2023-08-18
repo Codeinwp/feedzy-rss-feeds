@@ -174,7 +174,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				$this->plugin_name . '_action_popup',
 				'feedzyData',
 				array(
-					'isPro' => feedzy_is_pro(),
+					'isPro'            => feedzy_is_pro(),
+					'apiLicenseStatus' => $this->api_license_status(),
 				)
 			);
 			wp_enqueue_style( 'wp-block-editor' );
@@ -1483,5 +1484,28 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			} );
 		</script>
 		<?php
+	}
+
+	/**
+	 * API license status.
+	 *
+	 * @return array
+	 */
+	public function api_license_status() {
+		$pro_options = get_option( 'feedzy-rss-feeds-settings', array() );
+		$data        = array(
+			'spinnerChiefStatus' => false,
+			'wordaiStatus'       => false,
+		);
+		if ( ! feedzy_is_pro() ) {
+			return $data;
+		}
+		if ( isset( $pro_options['spinnerchief_licence'] ) && 'yes' === $pro_options['spinnerchief_licence'] ) {
+			$data['spinnerChiefStatus'] = true;
+		}
+		if ( isset( $pro_options['wordai_licence'] ) && 'yes' === $pro_options['wordai_licence'] ) {
+			$data['wordaiStatus'] = true;
+		}
+		return $data;
 	}
 }

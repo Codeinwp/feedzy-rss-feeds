@@ -21,6 +21,8 @@ key.enc
 includes/gutenberg/src
 js/Onboarding/import-onboarding.js
 js/ActionPopup/action-popup.js
+js/ActionPopup/Actions.js
+js/ActionPopup/SortableItem.js
 webpack.config.js
 dist
 cypress
