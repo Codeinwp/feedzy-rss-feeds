@@ -1708,8 +1708,10 @@ input[type=checkbox].fz-checkbox-btn:before{
 	font-weight: 400;
 }
 .fz-action-popup .components-external-link .components-visually-hidden,
-.fz-action-popup .components-external-link .components-external-link__icon{
-	display: none;
+.fz-action-popup .components-external-link .components-external-link__icon,
+span.error-message .components-external-link .components-external-link__icon,
+span.error-message .components-external-link .components-visually-hidden{
+	display: none !important;
 }
 .fz-close-popup {
 	flex-shrink: 0;
@@ -1831,7 +1833,8 @@ input[type=checkbox].fz-checkbox-btn:before{
 	display: inline-flex;
 	z-index: 999;
 }
-.fz-action-panel > ul > li span.error-message .components-external-link {
+.fz-action-panel > ul > li span.error-message .components-external-link,
+li.draggable-item span.error-message .components-external-link {
 	margin-left: 5px;
 	border: none;
 	box-shadow: none;
@@ -1873,8 +1876,10 @@ li.fz-action-control.draggable-item{
 li.fz-action-control.draggable-item span.error-message{
 	position: absolute;
 	top: 16px;
-	left: 145px;
+	right: 10px;
 	color: #F00;
+	display: inline-flex;
+	z-index: 999;
 }
 li.fz-action-control.draggable-item:before{
 	content: "";
@@ -1939,7 +1944,8 @@ li.fz-action-control.draggable-item:after{
 .fz-action-panel .components-panel__row{
 	padding: 7px 44px 24px;
 }
-.fz-action-panel .components-panel__body-toggle.components-button{
+.fz-action-panel .components-panel__body-toggle.components-button,
+li.draggable-item .components-panel__body-toggle.components-button{
 	border-radius: 5px;
 	padding: 16px 44px 16px 16px;
 	font-size: 16px;
