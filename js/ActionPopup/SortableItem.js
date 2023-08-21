@@ -217,7 +217,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 		return(
 			<li className="fz-action-control" data-counter={counter}>
 				<div className="fz-action-event">
-					{feedzyData.isPro && !feedzyData.apiLicenseStatus.spinnerChiefStatus && (<span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=spinnerchief"><Icon icon={external} size={16} fill="#4268CF"/></ExternalLink></span> )}
+					{feedzyData.isPro && !feedzyData.apiLicenseStatus.spinnerChiefStatus && (<span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=spinnerchief"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> )}
 					<PanelBody title={ __( 'Spin using Spinnerchief', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false } className="fz-hide-icon">
 						<UpgradeNotice />
 					</PanelBody>
@@ -237,7 +237,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 		return(
 			<li className="fz-action-control" data-counter={counter}>
 				<div className="fz-action-event">
-					{feedzyData.isPro && !feedzyData.apiLicenseStatus.wordaiStatus && (<span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=wordai"><Icon icon={external} size={16} fill="#4268CF"/></ExternalLink></span> )}
+					{feedzyData.isPro && !feedzyData.apiLicenseStatus.wordaiStatus && (<span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=wordai"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> )}
 					<PanelBody title={ __( 'Spin using WordAI', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false } className="fz-hide-icon">
 						<UpgradeNotice />
 					</PanelBody>

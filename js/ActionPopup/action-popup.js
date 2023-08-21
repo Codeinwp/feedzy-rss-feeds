@@ -68,6 +68,9 @@ const ActionModal = () => {
 		setOpen(false);
 		toggleVisible(false);
 		setEditModeTag(null);
+		if ( editModeTag && action.length === 0 ) {
+			editModeTag.closest( '.fz-content-action' ).querySelector( '.tagify__tag__removeBtn' ).click();
+		}
 		setAction([]);
 	};
 	const hideIntroMessage = ( status ) => setHideMeg( status );
@@ -124,11 +127,11 @@ const ActionModal = () => {
 	 * Save actions.
 	 */
 	const saveAction = () => {
-		let _action = encodeURIComponent( JSON.stringify( action ) );
 		if ( 'function' !== typeof jQuery ) {
 			return;
 		}
 		let postContent = jQuery( 'textarea.fz-textarea-tagify' ).data('tagify');
+		let _action = encodeURIComponent( JSON.stringify( action ) );
 		if ( null === editModeTag ) {
 			let tagElm = postContent.createTagElem({value: _action})
 			postContent.injectAtCaret(tagElm)

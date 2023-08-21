@@ -290,6 +290,9 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 */
 		private function trim_content() {
 			$content = call_user_func( array( $this, $this->current_job->tag ) );
+			if ( $this->current_job->data->trimLength <= 0 ) {
+				return $content;
+			}
 			$content = wp_strip_all_tags( $content );
 			return wp_trim_words( $content, $this->current_job->data->trimLength );
 		}
