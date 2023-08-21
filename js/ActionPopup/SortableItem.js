@@ -55,7 +55,6 @@ const CreditNotice = () => {
 }
 
 const SortableItem = ({ propRef, loopIndex, item }) => {
-	console.log( propRef );
 	let counter = loopIndex + 1;
 	if ( 'trim' === item.id ) {
 		return(

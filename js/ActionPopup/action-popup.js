@@ -188,7 +188,7 @@ const ActionModal = () => {
 	return (
 		<Fragment>
 		{ isOpen && (
-			<Modal isDismissible={ false } className="fz-action-popup">
+			<Modal isDismissible={ false } className="fz-action-popup" overlayClassName="fz-popup-wrap">
 				<div className="fz-action-content">
 					<div className="fz-action-header">
 						<div className="fz-modal-title">

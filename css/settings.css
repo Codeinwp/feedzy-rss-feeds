@@ -1767,7 +1767,7 @@ span.error-message .components-external-link .components-visually-hidden{
 	width: 250px;
 	position: absolute;
 	left: 100%;
-	/*bottom: 0;*/
+	bottom: 0;
 	margin-left: 10px;
 	padding: 25px 14px 30px 21px;
 	box-shadow: 0px 2px 11px 0px rgba(0, 0, 0, 0.16);
@@ -1832,6 +1832,8 @@ span.error-message .components-external-link .components-visually-hidden{
 	color: #F00;
 	display: inline-flex;
 	z-index: 999;
+	font-size: 12px;
+	font-weight: 400;
 }
 .fz-action-panel > ul > li span.error-message .components-external-link,
 li.draggable-item span.error-message .components-external-link {
@@ -2120,6 +2122,17 @@ li.draggable-item .components-panel__body-toggle.components-button{
 }
 .feedzy_page_feedzy-settings .fz-snackbar-notice.open {
 	bottom: 30px;
+}
+
+.components-modal__screen-overlay.fz-popup-wrap{
+	overflow: auto;
+	padding: 30px 0;
+}
+.components-modal__screen-overlay.fz-popup-wrap .components-modal__content{
+	overflow: visible;
+}
+.components-modal__screen-overlay.fz-popup-wrap .components-modal__frame{
+	max-height: inherit;
 }
 
 @media (max-width: 767px){
