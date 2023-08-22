@@ -208,7 +208,7 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 					$replace_to   = isset( $jobs['replace_to'] ) ? $jobs['replace_to'] : '';
 					foreach ( $replace_with as $job ) {
 						$this->current_job = $job;
-						$this->result      = $this->action_process( $job->tag );
+						$this->result      = $this->action_process();
 					}
 					$this->post_content = str_replace( $replace_to, $this->result, $this->post_content );
 				}
@@ -219,10 +219,9 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		/**
 		 * Action process.
 		 *
-		 * @param string $tag Magic tag.
 		 * @return string
 		 */
-		public function action_process( $tag ) {
+		public function action_process() {
 			switch ( $this->current_job->id ) {
 				case 'trim':
 					return $this->trim_content();
@@ -237,7 +236,7 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 				case 'wordAI':
 					return $this->word_ai_content();
 				default:
-					return;
+					return $this->default_content();
 			}
 		}
 
@@ -350,6 +349,18 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 				$content = $wordai_result;
 			}
 			return $content;
+		}
+
+		/**
+		 * Get item default content.
+		 *
+		 * @return string
+		 */
+		private function default_content() {
+			if ( ! method_exists( $this, $this->current_job->tag ) ) {
+				return '';
+			}
+			return call_user_func( array( $this, $this->current_job->tag ) );
 		}
 	}
 }

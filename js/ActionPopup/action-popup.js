@@ -68,9 +68,6 @@ const ActionModal = () => {
 		setOpen(false);
 		toggleVisible(false);
 		setEditModeTag(null);
-		if ( editModeTag && action.length === 0 ) {
-			editModeTag.closest( '.fz-content-action' ).querySelector( '.tagify__tag__removeBtn' ).click();
-		}
 		setAction([]);
 	};
 	const hideIntroMessage = ( status ) => setHideMeg( status );
@@ -130,8 +127,12 @@ const ActionModal = () => {
 		if ( 'function' !== typeof jQuery ) {
 			return;
 		}
-		let postContent = jQuery( 'textarea.fz-textarea-tagify' ).data('tagify');
 		let _action = encodeURIComponent( JSON.stringify( action ) );
+		if ( action.length === 0 ) {
+			setAction([]);
+			_action = encodeURIComponent( JSON.stringify( [ { id: '', tag: shortCode, data: {} } ] ) );
+		}
+		let postContent = jQuery( 'textarea.fz-textarea-tagify' ).data('tagify');
 		if ( null === editModeTag ) {
 			let tagElm = postContent.createTagElem({value: _action})
 			postContent.injectAtCaret(tagElm)
@@ -177,7 +178,7 @@ const ActionModal = () => {
 					if ( event.target.parentNode ) {
 						let editAction = event.target.getAttribute( 'data-actions' ) || '';
 						editAction = JSON.parse( decodeURIComponent( editAction ) );
-						setAction(prevState => ( editAction ) );
+						setAction( () => ([...editAction.filter((e)=>{return e.id !== ''})]));
 						let magicTag = editAction[0] || {};
 						let tag = magicTag.tag;
 						setEditModeTag(event.target);
@@ -258,7 +259,7 @@ const ActionModal = () => {
 									</div>
 								)}
 							</div>
-						{ action && action.length > 0 && ( <Button isPrimary className="fz-save-action" onClick={ () => { saveAction() } }>{ __( 'Save Actions', 'feedzy-rss-feeds' ) }</Button> ) }
+						{ action && ( <Button isPrimary className="fz-save-action" onClick={ () => { saveAction() } }>{ __( 'Save Actions', 'feedzy-rss-feeds' ) }</Button> ) }
 						</div>
 					</div>
 				</div>

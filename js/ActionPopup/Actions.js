@@ -15,7 +15,7 @@ const Actions = ( props ) => {
 		<>
 			<Panel header="" className="fz-action-panel" initialOpen={ false }>
 				<ul>
-					{props.data.map((value, index) => (
+					{props.data.map((value, index) => '' !== value.id && (
 						<SortableItem key={`item-${index}`} index={index} item={value} loopIndex={index} propRef={props}/>
 					))}
 				</ul>
