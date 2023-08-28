@@ -482,11 +482,13 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Screenshots ==
 
-1. Simple example
-2. Inserting a shortcode in the WYSIWYG
-3. Widget admin
-4. Widget render
-
+1. Add categories
+2. Import settings
+3. General settings
+4. Simple example
+5. Imported feeds
+6. Widget admin
+7. Widget render
 
  == Changelog ==
 
