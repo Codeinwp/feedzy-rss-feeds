@@ -1,4 +1,4 @@
-# RSS Aggregator by Feedzy - Powerful WP Autoblogging and News Aggregator #
+# RSS Aggregator by Feedzy – Feed to Post, Autoblogging, News & YouTube Video Feeds Aggregator #
 **Contributors:** [themeisle](https://profiles.wordpress.org/themeisle), [codeinwp](https://profiles.wordpress.org/codeinwp), [hardeepasrani](https://profiles.wordpress.org/hardeepasrani), [rozroz](https://profiles.wordpress.org/rozroz)  
 **Tags:** rss aggregator, news aggregator, autoblogging, feed to post, rss import, autoblog, rss feed  
 **Requires at least:** 3.7  
