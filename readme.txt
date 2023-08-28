@@ -8,76 +8,98 @@ Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-The most powerful WordPress RSS aggregator, helping you curate content, autoblog, import and display unlimited RSS feeds within a few minutes.
+The most powerful WordPress RSS aggregator, helping you curate content, autoblog, import RSS & display unlimited RSS feeds within a few minutes.
 
 ## Description ##
 
-## FEEDZY - The Powerful RSS Aggregator and Content Aggregator Plugin for Autoblogging ##
+## FEEDZY - The Powerful RSS Aggregator, Content Aggregator, and RSS import Plugin for Autoblogging ##
+
+The Ultimate WordPress RSS aggregator, helping you Curate content, Autoblog, Import RSS, News aggregator, YouTube video feeds aggregator and display unlimited RSS feeds within a few minutes.
+
+With FEEDZY RSS Aggregator, you can sit back, let your site autoblog and always stay fresh with new content, which in return helps improve content marketing, boost your SEO, increase audience engagement, and probably earn more money.
+
+## 🔗 HELPFUL LINKS: ##
+
+* Want to see Feedzy in action before installing? [VIEW FEEDZY DEMO](https://demo.themeisle.com/feedzy-rss-feeds/?utm_source=wpadmin&utm_medium=readme&utm_campaign=feeedzy)
+* Need any help with setup? [CHECK DOCUMENTATION](https://docs.themeisle.com/category/712-feedzy)
+* Don’t like reading? [CHECK YOUTUBE TUTORIALS](https://www.youtube.com/channel/UCAQcBsP3h6p5yXgFap4LEGA/search?query=feedzy)
+* Interested in Feedzy Pro? [KNOW MORE ABOUT FEEDZY PRO](https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=readme&utm_campaign=feeedzy)
 
 FEEDZY RSS Aggregator helps you aggregate unlimited RSS feeds and automatically publish them on your site within a few minutes.
-With FEEDZY RSS Aggregator, you can sit back, let your site autoblog and always stay fresh with new content, which in return helps improve content marketing, boost your SEO, increase audience’s engagement, and probably earn more money.
 
-## What you can do with Feedzy RSS Aggregator:  ##
+## 🤔 WHAT YOU CAN DO WITH FEEDZY RSS AGGREGATOR: ##
 
-* **[Feed to post](https://docs.themeisle.com/article/742-how-to-import-posts-from-feeds-in-feedzy)** (our most loved feature): automatically convert RSS feed items to Wordpress pages, posts, and custom post type.
+* **[Feed to post](https://docs.themeisle.com/article/742-how-to-import-posts-from-feeds-in-feedzy)** (our most loved feature 💕): automatically convert RSS feed items to Wordpress pages, posts, and custom post type.
 * **Automatically import** and aggregate unlimited RSS feeds from unlimited sources
-* **Bulk import and organize** multiple feed sources of similar topics into Categories. See how our user, Barry Seward, loves this feature [here](https://wordpress.org/support/topic/works-great-6051/)
+* **Bulk import and organize** multiple feed sources of similar topics into Categories. See how our user, **Barry Seward**, loves this feature [here](https://wordpress.org/support/topic/works-great-6051/)
 * **Easily display RSS feeds** using shortcodes, Gutenberg blocks, or widgets in your third-party page builders like Elementor
 * **Import images** with your RSS feeds or use your own image/logo for feeds without image. We know visuals are important and do not want your site to have a boring list of text and links.
-* **Control number of items** you want to display for a feed source. Just want to display 1 article or 20 articles in a block? You’ve got it with one click.
+* **Control the number of items** 🔢 you want to display for a feed source. Just want to display 1 article or 20 articles in a block? You’ve got it with one click.
 * Worried if the imported feed articles’ titles are too long and might not look nice on your site? Change them with the **Title Character Limit** function.
 * Choose your own **caching** time and how often you want to pull RSS feeds to ensure the **best performance** for your site.
 * Create a **sidebar** of your imported feed items.
-* **Control which meta** fields you want to display, such as author, date and time of the RSS feed.
-* **Responsive** content across platforms.
+* **Control which meta** 🎛️ fields you want to display, such as author, date and time of the RSS feed.
+* **Responsive** content 📱 across platforms.
 
-## You should use FEEDZY RSS Aggregator if: ##
+## CHECK OUT A QUICK OVERVIEW OF FEEDZY ##
+https://youtu.be/YcMn_yicgGg
+
+## ✨ YOU SHOULD USE FEEDZY RSS AGGREGATOR IF: ##
 
 * [You own a news site](https://themeisle.com/blog/wordpress-news-aggregator-website/); you want a WP news aggregator to make sure your site always updated with the latest news
 * You own a blog; you need a [WP content aggregator to autoblog](https://themeisle.com/blog/create-an-autoblogging-site-wordpress/) and keep your audience engaged with fresh content
 * You want to improve your SEO rankings. See how the SEO expert, MOZ, talked about 10 reasons “[How Fresh Content May Influence Google Rankings”](https://moz.com/blog/google-fresh-factor-new)“
 * You develop a site for your client and just want to quickly demo a news feed of frequently  updated content
-* You build a company website and want a news/blog page to enhance company’s reputation and SEO. Focus on your business and leave the content marketing work to FEEDZY RSS Aggregator.
+* You build a company website and want a news/blog page to enhance the company’s reputation and SEO. Focus on your business and leave the content marketing work to FEEDZY RSS Aggregator.
 * You run an affiliate business or want to earn extra from RSS affiliate marketing feeds
 * You need a simple but comprehensive solution to curate anything in your niche, such as property listing for a real estate website, product listing for an affiliated e-commerce site, etc.
-* It does not matter which industry or topic your site is about. +30,000 users have used FEEDZY RSS Aggregator to curate content from everywhere, such as  finance, technology, food, home furniture, e-commerce products, religion, sports, and so on.
-* You want to earn more money, thanks to the benefits above.
-* Note: to learn more about how to use curated content to boost your SEO in a proper and effective way, read more [here](http://www.curata.com/blog/content-curation-seo-dos-and-donts/).
+* Your goal is to generate increased revenue, thanks to the advantages outlined above.
 
+It doesn't matter which industry or topic your site focuses on. With over 50,000+ users, FEEDZY RSS Aggregator has been used to curate content from a diverse range, including finance, technology, food, home furniture, e-commerce products, religion, sports, and more. 
 
-## More powerful with FEEDZY RSS Aggregator’s premium features ##
+**Note:** To learn more about how to use curated content to boost your SEO in a proper and effective way, read more [here](http://www.curata.com/blog/content-curation-seo-dos-and-donts/).
+
+## 🤝 MORE POWER WITH FEEDZY RSS AGGREGATOR’S PREMIUM FEATURES ##
 
 If you love FEEDZY RSS Aggregator, why not bring your site to the next level with more powerful tools to boost your SEO and keep your audience on your site for longer.
 
 * **[Keyword filter](https://docs.themeisle.com/article/942-in-feedzy-how-do-i#specific-keywords)**: you can choose to import feed to post and display content if they include or exclude certain keywords.
+
+**USE CASE:** 🔍 Mark, a content curator, maximizes efficiency with Keyword Filter. He effortlessly refines his RSS feed imports by specifying keywords like "AI" and "tech trends." This automatic sorting saves Mark hours of manual review, allowing him to focus on crafting engaging content and boosting his blog's SEO impact. 
+
 * **Map the imported feed elements to your post elements**: totally control and customize how your feed to post, such as using the feed’s image or your image as the featured image, importing only the feed’s content or both the content and image into the post content, creating post drafts first to review or publishing right away, and so many more.
-* **[Full text RSS feeds import (with image)](https://docs.themeisle.com/article/742-how-to-import-posts-from-feeds-in-feedzy)** (with image): by extracting the entire HTML from each feed item, you can import full text content to post, not just the feed excerpt.
-* **Paraphrasing content before import**: Rewrite your content before import with the built-in feature.
+* **[Full-text RSS feeds import (with image)](https://docs.themeisle.com/article/742-how-to-import-posts-from-feeds-in-feedzy)** (with image): by extracting the entire HTML from each feed item, you can import full-text content to post, not just the feed excerpt.
+* **Paraphrasing content before import**: Rewrite your content before RSS import with the built-in feature.
 * **Automatically translate the content on import**: Choose to translate the feed into various languages before import.
 * **[Multiple feed templates](https://demo.themeisle.com/feedzy-rss-feeds/)**: choose the best template for each feed, such as standard grid layout, blog layout, online shop layout, or audio playback (soundcloud) playout.
 * **[WordAI and SpinnerChief integration](https://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy)** to avoid duplicated content.
 * **[Parse and display pricings](https://docs.themeisle.com/article/923-how-price-is-displayed-from-the-feed)** for online shop and product feeds.
 * **[Add affiliate links and referral parameters](https://docs.themeisle.com/article/715-feedzy-how-to-add-affiliate-referrals-to-feed-urls)** for your affiliate business.
-* Still skeptical? Ask your pre-sales questions here and we will get back shortly, or purchase with peace of mind and try it out yourself. We offer **30-day-no-questions-asked money back guarantee.**
 
-## We’re here for you, and we take all feedback seriously ##
+**USE CASE:** Mike, an affiliate marketing expert, is all about maximizing profits. By seamlessly incorporating personalized referral links into his content using the "Add Affiliate Links and Referral Parameters" feature, he simplifies tracking and improves campaign efficiency. The result? Heightened conversions, enhanced earnings, and a stronger affiliate game.
 
-* [Knowledge Base](https://docs.themeisle.com/category/712-feedzy): we’ve created a complete documentation library and we’re still constantly updating with new tutorials.
-* [Youtube tutorials](https://www.youtube.com/channel/UCAQcBsP3h6p5yXgFap4LEGA/search?query=feedzy): don’t like reading? We’ve created some Youtube tutorials to help you get started with FEEDZY RSS Aggregator plugin step by step.
-* [Support forum](https://wordpress.org/support/plugin/feedzy-rss-feeds/): we offer support to free version user here and try to reply within one business day.
-* [Premium support](https://themeisle.com/contact/): we offer priority support for Developer license customers and live chat support for Agency license customers.
-* If you have any feedback or feature suggestions for FEEDZY RSS Aggregator, don’t hesitate to tell us. We read all feedback and ideas.
+Unlock all these premium features with [Feedzy PRO!](https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=readme&utm_campaign=feeedzy)
 
+* Still sceptical? Ask your pre-sales questions [here](https://themeisle.com/contact/) and we will get back shortly, or purchase with peace of mind and try it out yourself. We offer **30-day-no-questions-asked money-back guarantee.**
+
+## WE’RE HERE FOR YOU, AND WE TAKE ALL FEEDBACK SERIOUSLY ##
+
+*📚 [Knowledge Base](https://docs.themeisle.com/category/712-feedzy): we’ve created a complete documentation library and we’re still constantly updating with new tutorials.
+*📽️ [Youtube tutorials](https://www.youtube.com/channel/UCAQcBsP3h6p5yXgFap4LEGA/search?query=feedzy): don’t like reading? We’ve created some YouTube tutorials to help you get started with the FEEDZY RSS Aggregator plugin step by step.
+*🦸 [Support forum](https://wordpress.org/support/plugin/feedzy-rss-feeds/): we offer support to free version user here and try to reply within one business day.
+*🌟 [Premium support](https://themeisle.com/contact/): We offer priority support for Developer license customers and live chat support for Agency license customers.
+
+If you have any feedback or feature suggestions for the FEEDZY RSS Aggregator, don’t hesitate to tell us. We read all feedback and ideas.
 
 ## You’re in good hands ##
 
-FEEDZY RSS Aggregator is one of many great products by [ThemeIsle](https://themeisle.com/). Join over 30,000 FEEDZY RSS Aggregator users and half of a million ThemeIsle users from all over the world.
+FEEDZY RSS Aggregator is one of many great products by [ThemeIsle](https://themeisle.com/). Join over 50,000+ FEEDZY RSS Aggregator users and half of a million Themeisle users from all over the world.
 
 See what real users talk about us:
 
 * FEEDZY RSS Aggregator in [WordPress Daily with Tom Mullins](https://www.youtube.com/watch?v=J7q_g0N7Efc)
 * [Lester Diaz showed how to make $200 per day](https://www.youtube.com/watch?v=WC2Tc830yMs) using FEEDZY RSS Aggregator
-* [“Simple and beautiful”](https://wordpress.org/support/topic/simple-and-beautiful-58/) and 5 stars from a power user using FEEDZY RSS Aggregator for blogspot
+* [“Simple and beautiful”](https://wordpress.org/support/topic/simple-and-beautiful-58/) and 5 stars from a power user using FEEDZY RSS Aggregator for Blogspot
 * [“Excellent plugin”](https://wordpress.org/support/topic/excellent-plugin-4867/) and 5 stars from a power user using FEEDZY RSS Aggregator for Mailchimp mailing list
 * [“Robust tool but also works great for simple needs”](https://wordpress.org/support/topic/robust-tool-but-also-works-great-for-simple-needs/) and 5 stars from a power user using FEEDZY RSS Aggregator to display recent posts with excerpts
 
@@ -140,6 +162,10 @@ FEEDZY RSS Aggregator supports any additional library and takes up minimal space
 * feedzy_feed_timestamp
 * shortcode_atts_feedzy_default
 `
+
+## BECOME A CONTRIBUTOR ##
+FEEDZY RSS Aggregator plugin is an open-source project, and we welcome contributors to be part of our vibrant community! Help us improve the plugin and make it even better - [GITHUB LINK](https://github.com/Codeinwp/feedzy-rss-feeds/)
+
 This plugin is maintained and supported by Themeisle, check out some of the other <a href="http://themeisle.com/wordpress-plugins/" rel="nofollow">WordPress plugins</a> and <a href="http://themeisle.com/wordpress-themes/free/" rel="nofollow">free themes</a> we've developed.
 
 == Installation ==
