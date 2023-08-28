@@ -1,6 +1,6 @@
 === RSS Aggregator by Feedzy – Feed to Post, Autoblogging, News & YouTube Video Feeds Aggregator ===
 Contributors: themeisle,codeinwp,hardeepasrani,rozroz
-Tags: rss aggregator, news aggregator, autoblogging, feed to post, rss import
+Tags: rss aggregator, news aggregator, autoblogging, feed to post, rss import, autoblog, rss feed
 Requires at least: 3.7
 Requires PHP: 7.2
 Tested up to: 6.3
