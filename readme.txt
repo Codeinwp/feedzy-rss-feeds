@@ -16,14 +16,14 @@ The most powerful WordPress RSS aggregator, helping you curate content, autoblog
 
 The Ultimate WordPress RSS aggregator, helping you Curate content, Autoblog, Import RSS, News aggregator, YouTube video feeds aggregator and display unlimited RSS feeds within a few minutes.
 
-With FEEDZY RSS Aggregator, you can sit back, let your site autoblog and always stay fresh with new content, which in return helps improve content marketing, boost your SEO, increase audience engagement, and probably earn more money.
-
 ## 🔗 HELPFUL LINKS: ##
 
 * Want to see Feedzy in action before installing? [VIEW FEEDZY DEMO](https://demo.themeisle.com/feedzy-rss-feeds/?utm_source=wpadmin&utm_medium=readme&utm_campaign=feeedzy)
 * Need any help with setup? [CHECK DOCUMENTATION](https://docs.themeisle.com/category/712-feedzy)
 * Don’t like reading? [CHECK YOUTUBE TUTORIALS](https://www.youtube.com/channel/UCAQcBsP3h6p5yXgFap4LEGA/search?query=feedzy)
 * Interested in Feedzy Pro? [KNOW MORE ABOUT FEEDZY PRO](https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=readme&utm_campaign=feeedzy)
+
+With FEEDZY RSS Aggregator, you can sit back, let your site autoblog and always stay fresh with new content, which in return helps improve content marketing, boost your SEO, increase audience engagement, and probably earn more money.
 
 FEEDZY RSS Aggregator helps you aggregate unlimited RSS feeds and automatically publish them on your site within a few minutes.
 
@@ -84,10 +84,10 @@ Unlock all these premium features with [Feedzy PRO!](https://themeisle.com/plugi
 
 ## WE’RE HERE FOR YOU, AND WE TAKE ALL FEEDBACK SERIOUSLY ##
 
-*📚 [Knowledge Base](https://docs.themeisle.com/category/712-feedzy): we’ve created a complete documentation library and we’re still constantly updating with new tutorials.
-*📽️ [Youtube tutorials](https://www.youtube.com/channel/UCAQcBsP3h6p5yXgFap4LEGA/search?query=feedzy): don’t like reading? We’ve created some YouTube tutorials to help you get started with the FEEDZY RSS Aggregator plugin step by step.
-*🦸 [Support forum](https://wordpress.org/support/plugin/feedzy-rss-feeds/): we offer support to free version user here and try to reply within one business day.
-*🌟 [Premium support](https://themeisle.com/contact/): We offer priority support for Developer license customers and live chat support for Agency license customers.
+* 📚 [Knowledge Base](https://docs.themeisle.com/category/712-feedzy): we’ve created a complete documentation library and we’re still constantly updating with new tutorials.
+* 📽️ [Youtube tutorials](https://www.youtube.com/channel/UCAQcBsP3h6p5yXgFap4LEGA/search?query=feedzy): don’t like reading? We’ve created some YouTube tutorials to help you get started with the FEEDZY RSS Aggregator plugin step by step.
+* 🦸 [Support forum](https://wordpress.org/support/plugin/feedzy-rss-feeds/): we offer support to free version user here and try to reply within one business day.
+* 🌟 [Premium support](https://themeisle.com/contact/): We offer priority support for Developer license customers and live chat support for Agency license customers.
 
 If you have any feedback or feature suggestions for the FEEDZY RSS Aggregator, don’t hesitate to tell us. We read all feedback and ideas.
 
