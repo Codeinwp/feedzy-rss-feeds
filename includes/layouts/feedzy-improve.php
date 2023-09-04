@@ -1,3 +1,4 @@
+<div id="fz-feedback-modal"></div>
 <div class="fz-help-improve-wrap">
 	<div class="fz-help-improve-box">
 		<div class="right">
@@ -11,7 +12,7 @@
 			<?php } ?>
 			</p>
 			<div class="cta">
-				<a href="<?php echo esc_url( feedzy_is_pro() ? FEEDZY_SURVEY_PRO : FEEDZY_SURVEY_FREE ); ?>" target="_blank" class="btn btn-outline-primary">Take the Survey</a>
+				<a href="javascript:void(0)" id="fz-feedback-btn" class="btn btn-outline-primary">Take the Survey</a>
 			</div>
 		</div>		
 	</div>

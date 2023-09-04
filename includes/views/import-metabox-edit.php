@@ -11,6 +11,7 @@ global $post;
 <?php if ( get_option( 'feedzy_import_tour' ) && ! defined( 'TI_CYPRESS_TESTING' ) ) : ?>
 	<div id="fz-on-boarding"></div>
 <?php endif; ?>
+<div id="fz-feedback-modal"></div>
 <div class="feedzy-wrap" id="feedzy-import-form">
 	<div class="feedzy-accordion">
 		<!-- <div> -->
@@ -1024,6 +1025,11 @@ global $post;
 							</div>
 						</div>
 					<?php endif; ?>
+					<div class="form-block form-block-two-column">
+						<div class="cta-text pt-8">
+							<a href="javascript:void(0)" id="fz-feedback-btn"><?php esc_html_e( 'Help us improve Feedzy', 'feedzy-rss-feeds' ); ?></a>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

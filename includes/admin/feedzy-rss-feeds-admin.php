@@ -169,9 +169,22 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			wp_enqueue_style( 'wp-block-editor' );
 		}
 
+		wp_enqueue_script( $this->plugin_name . '_feedback', FEEDZY_ABSURL . 'js/FeedBack/feedback.min.js', array( 'react', 'react-dom', 'wp-editor', 'wp-api' ), $this->version, true );
+		wp_enqueue_style( 'wp-block-editor' );
+
+		wp_localize_script(
+			$this->plugin_name . '_feedback',
+			'feedzyObj',
+			array(
+				'assetsUrl'     => FEEDZY_ABSURL,
+				'pluginVersion' => $this->version,
+			)
+		);
+
 		if ( ! in_array( $screen->base, $upsell_screens, true ) && strpos( $screen->id, 'feedzy' ) === false ) {
 			return;
 		}
+
 		wp_enqueue_style( $this->plugin_name . '-settings', FEEDZY_ABSURL . 'css/settings.css', array(), $this->version );
 		wp_enqueue_style( $this->plugin_name . '-metabox', FEEDZY_ABSURL . 'css/metabox-settings.css', array( $this->plugin_name . '-settings' ), $this->version );
 	}
