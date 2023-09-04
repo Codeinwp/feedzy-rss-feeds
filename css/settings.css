@@ -1699,9 +1699,13 @@ input[type=checkbox].fz-checkbox-btn:before{
 	min-width: 112px;
 	background: #3858E9;
 	border-radius: 4px;
+	box-shadow: none;
 }
 .fz-feedback-form .f-send:hover {
-	background: #3858E9;
+	background: #3858E9 !important;
+}
+.fz-feedback-form .f-send:focus {
+	box-shadow: none !important;
 }
 .fz-feedback-form .is-link {
 	color: #3858E9;
