@@ -29,7 +29,6 @@ const finishIcon = `${ window.feedzyObj.assetsUrl }img/finish-feedback.svg`;
 
 const FeedBack = () => {
 	const [ isOpen, setOpen ] = useState( false );
-	// const [ status, setStatus ] = useState( 'submitted' );
 	const [ status, setStatus ] = useState( 'notSubmitted' );
 	const closeModal = () => setOpen( false );
 

@@ -1761,7 +1761,7 @@ input[type=checkbox].fz-checkbox-btn:before{
 .fz-feedback-modal.no-header .components-modal__content::before {
 	display: none;
 }
-.fz-feedback-modal.no-header .components-modal__header {
+.fz-feedback-modal.no-header .components-modal__header .components-modal__header-heading {
 	display: none;
 }
 .fz-feedback-modal .components-modal__header {
