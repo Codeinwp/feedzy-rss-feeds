@@ -825,7 +825,7 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 	transition: all 0.3s ease-in-out;
 }
 .cta-text a:hover{
-	color: #050505;
+	color: #3458BC;
 }
 /* feedzy button style end */
 
@@ -1698,7 +1698,7 @@ input[type=checkbox].fz-checkbox-btn:before{
 .fz-feedback-form .f-send {
 	min-width: 112px;
 	background: #3858E9;
-	border-radius: 4px;
+	border-radius: 0px;
 	box-shadow: none;
 }
 .fz-feedback-form .f-send:hover {
@@ -1744,14 +1744,15 @@ input[type=checkbox].fz-checkbox-btn:before{
 	height: 132px;
 	border: 1px #757575 solid;
 	box-shadow: none;
+	border-radius: 0px;
 }
 .fz-feedback-form textarea:focus {
-	border: 1px #757575 solid;
+	border: 1px #4268CF solid;
 	box-shadow: none;
 }
 .fz-feedback-modal {
 	width: 490px;
-	border-radius: 10px;
+	border-radius: 0px;
 	overflow: visible;
 }
 .fz-feedback-modal.no-header .components-modal__content {
