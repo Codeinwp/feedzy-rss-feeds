@@ -1748,7 +1748,7 @@ input[type=checkbox].fz-checkbox-btn:before{
 }
 .fz-feedback-form textarea:focus {
 	border: 1px #4268CF solid;
-	box-shadow: 0 0 0 calc( 1.5px - 1px ) #4268CF;
+	box-shadow: 0 0 0 calc(1.5px - 1px) #4268CF;
 }
 .fz-feedback-modal {
 	width: 490px;
