@@ -1702,7 +1702,7 @@ input[type=checkbox].fz-checkbox-btn:before{
 	box-shadow: none;
 }
 .fz-feedback-form .f-send:hover {
-	background: #3858E9 !important;
+	background: #3458BC !important;
 }
 .fz-feedback-form .f-send:focus {
 	box-shadow: none !important;
@@ -1748,7 +1748,7 @@ input[type=checkbox].fz-checkbox-btn:before{
 }
 .fz-feedback-form textarea:focus {
 	border: 1px #4268CF solid;
-	box-shadow: none;
+	box-shadow: 0 0 0 calc( 1.5px - 1px ) #4268CF;
 }
 .fz-feedback-modal {
 	width: 490px;
