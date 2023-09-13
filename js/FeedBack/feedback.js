@@ -32,6 +32,13 @@ const FeedBack = () => {
 	const [ status, setStatus ] = useState( 'notSubmitted' );
 	const closeModal = () => setOpen( false );
 
+	document.querySelectorAll( '[role="button"]' ).forEach((button) => {
+		button.addEventListener('keydown', (evt) => { 
+			if(evt.keyCode == 13 || evt.keyCode == 32) {
+				button.click();
+			}
+		});
+	});
 	document.querySelector( '#fz-feedback-btn' ).addEventListener( 'click', () => setOpen( true ) );
 
 	return (

@@ -92,7 +92,7 @@
 .mx-320{
 	max-width: 320px;
 }
-.feedzy-wrap a:focus{
+.feedzy-wrap a:not(#fz-feedback-btn):focus{
 	box-shadow: none;
 	outline: 0;
 }
@@ -1704,15 +1704,8 @@ input[type=checkbox].fz-checkbox-btn:before{
 .fz-feedback-form .f-send:hover {
 	background: #3858E9 !important;
 }
-.fz-feedback-form .f-send:focus {
-	box-shadow: none !important;
-}
 .fz-feedback-form .is-link {
 	color: #3858E9;
-}
-.fz-feedback-form .is-link:focus {
-	border: none;
-	box-shadow: none;
 }
 .fz-feedback-form .f-send > svg {
 	margin: 0 auto;

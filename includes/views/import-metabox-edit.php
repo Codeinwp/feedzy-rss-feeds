@@ -1027,7 +1027,7 @@ global $post;
 					<?php endif; ?>
 					<div class="form-block form-block-two-column">
 						<div class="cta-text pt-8">
-							<a href="javascript:void(0)" id="fz-feedback-btn"><?php esc_html_e( 'Help us improve Feedzy', 'feedzy-rss-feeds' ); ?></a>
+							<a href="javascript:void(0)" id="fz-feedback-btn" role="button"><?php esc_html_e( 'Help us improve Feedzy', 'feedzy-rss-feeds' ); ?></a>
 						</div>
 					</div>
 				</div>
