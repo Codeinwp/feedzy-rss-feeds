@@ -323,6 +323,16 @@ global $post;
 											<?php esc_html_e( 'The imported post will be assigned to a taxonomy (eg. "Post Category", "Post Tag" etc.). Leave blank, if unsure.', 'feedzy-rss-feeds' ); ?>
 										</div>
 									</div>
+									<?php if ( ! feedzy_is_pro() ) : ?>
+										<div class="upgrade-alert">
+											<?php
+												echo wp_kses_post( sprintf( __( 'Add more advanced tags, like item categories and custom field, by %1$supgrading to Feedzy Pro%2$s', 'feedzy-rss-feeds' ), '<a href="' . tsdk_utmify( FEEDZY_UPSELL_LINK, 'moreadvanced' ) . '" target="_blank">', '</a>' ) );
+											?>
+										</div>
+									<?php endif; ?>
+									<div class="help-text pt-8">
+										<?php esc_html_e( 'You can use the magic tags, [#item_categories] and any customizable field like [#item_custom_category]', 'feedzy-rss-feeds' ); ?>
+									</div>
 								</div>
 							</div>
 
