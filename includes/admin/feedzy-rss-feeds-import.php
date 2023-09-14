@@ -1791,7 +1791,6 @@ class Feedzy_Rss_Feeds_Import {
 						$img_success = $this->generate_featured_image( $image_url, $new_post_id, $item['item_title'], $import_errors, $import_info );
 					}
 				}
-				$img_success = false;
 				// Set default thumbnail image.
 				if ( ! $img_success && ! empty( $default_thumbnail ) ) {
 					$img_success = set_post_thumbnail( $new_post_id, $default_thumbnail );
