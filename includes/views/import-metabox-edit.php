@@ -315,7 +315,7 @@ global $post;
 									<div class="fz-form-group">
 										<label class="form-label"><?php esc_html_e( 'Assigns the post to a Category', 'feedzy-rss-feeds' ); ?></label>
 										<div class="mx-320">
-											<select id="feedzy_post_terms" multiple class="form-control feedzy-chosen"
+											<select id="feedzy_post_terms" multiple class="form-control feedzy-chosen<?php echo feedzy_is_pro() ? ' fz-chosen-custom-tag' : ''; ?>"
 												name="feedzy_meta_data[import_post_term][]">
 											</select>
 										</div>
