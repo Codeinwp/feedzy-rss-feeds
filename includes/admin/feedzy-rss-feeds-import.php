@@ -1009,10 +1009,9 @@ class Feedzy_Rss_Feeds_Import {
 
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
 
-		$id      = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
-		$status  = filter_input( INPUT_POST, 'status', FILTER_SANITIZE_STRING );
+		$id      = isset( $_POST['id'] ) ? (int) $_POST['id'] : 0;
+		$status  = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '';
 		$publish = 'draft';
-
 		// no activation till source is not valid.
 		if ( 'true' === $status ) {
 			$invalid_urls = apply_filters( 'feedzy_check_source_validity', get_post_meta( $id, 'source', true ), $id, true, false );
@@ -2148,11 +2147,15 @@ class Feedzy_Rss_Feeds_Import {
 	 * @access  public
 	 */
 	public function settings_tabs( $tabs ) {
-		$tabs['misc'] = __( 'Miscellaneous', 'feedzy-rss-feeds' );
+		$tabs['misc']   = __( 'Miscellaneous', 'feedzy-rss-feeds' );
+		if ( $this->feedzy_is_business() || $this->feedzy_is_agency() ) {
+			$tabs['openai'] = __( 'OpenAI', 'feedzy-rss-feeds' );
+		}
 		if ( ! feedzy_is_pro() ) {
 			$tabs['wordai']       = sprintf( '%s <span class="pro-label">PRO</span>', __( 'WordAi', 'feedzy-rss-feeds' ) );
 			$tabs['spinnerchief'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'SpinnerChief', 'feedzy-rss-feeds' ) );
 			$tabs['amazon-product-advertising'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'Amazon Product Advertising', 'feedzy-rss-feeds' ) );
+			$tabs['openai'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'OpenAI', 'feedzy-rss-feeds' ) );
 		}
 
 		return $tabs;
@@ -2193,6 +2196,7 @@ class Feedzy_Rss_Feeds_Import {
 			case 'wordai':
 			case 'spinnerchief':
 			case 'amazon-product-advertising':
+			case 'openai':
 				if ( ! feedzy_is_pro() ) {
 					$file = FEEDZY_ABSPATH . '/includes/views/' . $name . '-view.php';
 				} else {
@@ -2844,6 +2848,7 @@ class Feedzy_Rss_Feeds_Import {
 	public function handle_content_actions( $actions = '' ) {
 		$action_instance = Feedzy_Rss_Feeds_Actions::instance();
 		$action_instance->set_actions( $actions );
+		$action_instance->set_settings( $this->settings );
 		return $action_instance;
 	}
 }

@@ -146,7 +146,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 		);
 	}
 
-	if ( 'chat_cpt_paraphrase' === item.id ) {
+	if ( 'chat_gpt_rewrite' === item.id ) {
 		return(
 			<li className="fz-action-control fz-chat-cpt-action" data-counter={counter}>
 				<div className="fz-action-event">
@@ -156,7 +156,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 							<BaseControl>
 								<TextareaControl
 									label={ __( 'Main Prompt', 'feedzy-rss-feeds' ) }
-									help={__( 'You can use { content } in the textarea such as: "Rephrase my {content} for better SEO.".', 'feedzy-rss-feeds' )}
+									help={__( 'You can use {content} in the textarea such as: "Rephrase my {content} for better SEO.".', 'feedzy-rss-feeds' )}
 									value={ item.data.ChatGPT || '' }
 									onChange={ ( currentValue ) => propRef.onChangeHandler( { 'index': loopIndex, 'ChatGPT': currentValue ?? '' } ) }
 								/>

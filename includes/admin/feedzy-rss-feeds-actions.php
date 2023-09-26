@@ -30,6 +30,13 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		private $actions;
 
 		/**
+		 * Setting options.
+		 *
+		 * @var string $settings Plugin setting.
+		 */
+		private $settings;
+
+		/**
 		 * Extract tags.
 		 *
 		 * @var string $extract_tags Extract tags.
@@ -118,6 +125,16 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			}
 			$this->extract_tags = $this->extract_magic_tags();
 			return $this->extract_tags;
+		}
+
+		/**
+		 * Set feedzy settings.
+		 *
+		 * @param string $options Setting option.
+		 * @return void
+		 */
+		public function set_settings( $options ) {
+			$this->settings = $options;
 		}
 
 		/**
@@ -235,6 +252,8 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 					return $this->spinnerchief_spin_content();
 				case 'wordAI':
 					return $this->word_ai_content();
+				case 'chat_gpt_rewrite':
+					return $this->chat_gpt_rewrite();
 				default:
 					return $this->default_content();
 			}
@@ -361,6 +380,17 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 				return '';
 			}
 			return call_user_func( array( $this, $this->current_job->tag ) );
+		}
+
+		/**
+		 * Chat GPT rewrite content.
+		 */
+		private function chat_gpt_rewrite() {
+			$content = call_user_func( array( $this, $this->current_job->tag ) );
+			$content = str_replace( array( '{content}' ), array( $content ), $this->current_job->data->ChatGPT );
+			$openai  = new Feedzy_Rss_Feeds_Pro_Openai();
+			$content = $openai->call_api( $this->settings, $content, '', array() );
+			return $content;
 		}
 	}
 }
