@@ -184,7 +184,6 @@ describe('Test Free - gutenberg', function() {
         cy.visit('/wp-admin/edit.php?post_type=post')
 
         var gutenberg = Cypress.env("gutenberg");
-        gutenberg.results = 3;
         gutenberg.thumb_1 = 'https://is5-ssl.mzstatic.com/image/thumb/Music123/v4/20/6f/b5/206fb560-6fd5-15f9-0b68-88d309ffc5a6/19UMGIM53909.rgb.jpg/100x100bb.png';
         gutenberg.thumb_2 = 'https://is4-ssl.mzstatic.com/image/thumb/Music123/v4/0d/13/51/0d1351cc-298c-0c1e-f4e0-3745091b21ec/19UMGIM53914.rgb.jpg/100x100bb.png';
         gutenberg.post_title_1 = 'Taylor Swift';
