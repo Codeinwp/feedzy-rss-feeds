@@ -25,7 +25,7 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
 
-Cypress.Commands.add('verify_feedzy_frontend', (options) => {
+Cypress.Commands.add('verify_feedzy_frontend', (count) => {
     cy.get('div.feedzy-rss').should('have.length', 1);
 
     // feed title
@@ -34,25 +34,20 @@ Cypress.Commands.add('verify_feedzy_frontend', (options) => {
 
     // no style
     cy.get('ul.feedzy-style1').should('have.length', 0);
+
     // # of items
-    console.log(options);
-    cy.get('ul li.rss_item').should('have.length', options.results);
+    cy.get('ul li.rss_item').should('have.length', count);
 
     // a valid image
-    cy.get('div.rss_image .fetched').first().invoke('attr', 'style').should('contain', options.thumb_1);
-    cy.get('div.rss_image .fetched').last().invoke('attr', 'style').should('contain', options.thumb_2);
-    //cy.get('div.rss_image .fetched').first().invoke('attr', 'style').should('contain', 'https://is5-ssl.mzstatic.com/image/thumb/Music123/v4/20/6f/b5/206fb560-6fd5-15f9-0b68-88d309ffc5a6/19UMGIM53909.rgb.jpg/100x100bb.png');
-    //cy.get('div.rss_image .fetched').last().invoke('attr', 'style').should('contain', 'https://is4-ssl.mzstatic.com/image/thumb/Music123/v4/0d/13/51/0d1351cc-298c-0c1e-f4e0-3745091b21ec/19UMGIM53914.rgb.jpg/100x100bb.png');
+    cy.get('div.rss_image .fetched').first().invoke('attr', 'style').should('contain', 'https://is3-ssl.mzstatic.com/image/thumb/Music123/v4/ba/e2/2a/bae22a5e-c878-da64-0ecc-4a3584a1a139/190295411411.jpg/100x100bb.png');
+    cy.get('div.rss_image .fetched').last().invoke('attr', 'style').should('contain', 'https://is3-ssl.mzstatic.com/image/thumb/Music123/v4/c6/04/02/c604029f-732b-ba65-425c-45f2cf91151e/4050538505542.jpg/100x100bb.png');
 
     // title
-    cy.get('div.feedzy-rss span.title').first().should('contain', options.post_title_1);
-    cy.get('div.feedzy-rss span.title').last().should('contain', options.post_title_2);
-
-    // cy.get('div.feedzy-rss span.title').first().should('contain', 'Taylor Swift');
-    // cy.get('div.feedzy-rss span.title').last().should('contain', 'Camila Cabello');
+    cy.get('div.feedzy-rss span.title').first().should('contain', 'Ed Sheeran');
+    cy.get('div.feedzy-rss span.title').last().should('contain', 'Blanco Brown');
 
     // meta - there is no class "meta" which is different from style1
-    cy.get('div.feedzy-rss div.rss_content').should('have.length', options.results);
+    cy.get('div.feedzy-rss div.rss_content').should('have.length', count);
     cy.get('div.feedzy-rss div.rss_content').first().should('contain', 'August 16, 2019 at 7:54 am');
     cy.get('div.feedzy-rss div.rss_content').last().should('contain', 'August 16, 2019 at 7:54 am');
     cy.get('div.feedzy-rss div.rss_content').should('contain', 'by');
@@ -62,7 +57,7 @@ Cypress.Commands.add('verify_feedzy_frontend', (options) => {
     cy.get('div.feedzy-rss div.rss_content').last().should('not.contain', ')');
 
     // description
-    cy.get('div.feedzy-rss div.rss_content p').should('have.length', options.results);
+    cy.get('div.feedzy-rss div.rss_content p').should('have.length', count);
 
     // the audio controls
     cy.get('div.feedzy-rss div.rss_content audio').should('have.length', 0);

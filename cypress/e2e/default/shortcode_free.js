@@ -30,7 +30,7 @@ describe('Test Shortcode for free', function() {
         // click to view post
         cy.get('tr td a.row-title:contains("' + PREFIX + 'shortcode-single")').first().parent().parent().find('span.view a').click({ force: true });
 
-        cy.verify_feedzy_frontend(Cypress.env('shortcode'));
+        cy.verify_feedzy_frontend(Cypress.env('shortcode').single_results);
     });
 
     it('Create the shortcode (multiple feeds)', function() {

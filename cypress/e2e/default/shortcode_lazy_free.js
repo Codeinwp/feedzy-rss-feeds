@@ -46,7 +46,7 @@ describe('Test Lazy Shortcode for free', function() {
         cy.get('div.feedzy-lazy').should('have.length', 1);
         cy.get('div.feedzy-lazy.loading').should('have.length', 0);
 
-        cy.verify_feedzy_frontend(Cypress.env('shortcode'));
+        cy.verify_feedzy_frontend(Cypress.env('shortcode').single_results);
 
     });
 

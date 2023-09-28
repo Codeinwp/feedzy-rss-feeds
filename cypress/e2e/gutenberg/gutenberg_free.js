@@ -138,17 +138,14 @@ describe('Test Free - gutenberg', function() {
         cy.visit('/wp-admin/edit.php?post_type=post')
 
         var gutenberg = Cypress.env("gutenberg");
-        gutenberg.thumb_1 = 'https://is3-ssl.mzstatic.com/image/thumb/Music123/v4/ba/e2/2a/bae22a5e-c878-da64-0ecc-4a3584a1a139/190295411411.jpg/100x100bb.png';
-        gutenberg.thumb_2 = 'https://is3-ssl.mzstatic.com/image/thumb/Music123/v4/c6/04/02/c604029f-732b-ba65-425c-45f2cf91151e/4050538505542.jpg/100x100bb.png';
-        gutenberg.post_title_1 = 'Justin Bieber';
-        gutenberg.post_title_2 = 'Blanco Brown';
+
         // should have 1 post.
         cy.get('tr td a.row-title:contains("' + PREFIX + '")').should('have.length', 1);
 
         // click to view post
         cy.get('tr td a.row-title:contains("' + PREFIX + '")').first().parent().parent().find('span.view a').click({ force: true });
 
-        cy.verify_feedzy_frontend(gutenberg);
+        cy.verify_feedzy_frontend(gutenberg.results);
 
     });
 
@@ -184,10 +181,6 @@ describe('Test Free - gutenberg', function() {
         cy.visit('/wp-admin/edit.php?post_type=post')
 
         var gutenberg = Cypress.env("gutenberg");
-        gutenberg.thumb_1 = 'https://is5-ssl.mzstatic.com/image/thumb/Music123/v4/20/6f/b5/206fb560-6fd5-15f9-0b68-88d309ffc5a6/19UMGIM53909.rgb.jpg/100x100bb.png';
-        gutenberg.thumb_2 = 'https://is4-ssl.mzstatic.com/image/thumb/Music123/v4/0d/13/51/0d1351cc-298c-0c1e-f4e0-3745091b21ec/19UMGIM53914.rgb.jpg/100x100bb.png';
-        gutenberg.post_title_1 = 'Taylor Swift';
-        gutenberg.post_title_2 = 'Camila Cabello';
 
         // should have 1 post.
         cy.get('tr td a.row-title:contains("' + PREFIX + '")').should('have.length', 1);
@@ -210,7 +203,7 @@ describe('Test Free - gutenberg', function() {
         cy.get('div.feedzy-lazy').should('have.length', 1);
         cy.get('div.feedzy-lazy.loading').should('have.length', 0);
 
-        cy.verify_feedzy_frontend(gutenberg);
+        cy.verify_feedzy_frontend(gutenberg.results);
     });
 
 })
