@@ -54,10 +54,10 @@ describe('Test Shortcode for free', function() {
         cy.get('tr td a.row-title:contains("' + PREFIX + 'shortcode-multiple")').first().parent().parent().find('span.view a').click({ force: true });
 
         // feedzy block
-        cy.get('div.feedzy-rss-1').should('have.length', 1);
+        cy.get('div.feedzy-rss').should('have.length', 1);
 
         // feed title
-        cy.get('div.feedzy-rss-1 a.rss_title').should('have.length', 0);
+        cy.get('div.feedzy-rss a.rss_title').should('have.length', 0);
 
         // no style
         cy.get('ul.feedzy-style1').should('have.length', 0);
@@ -66,26 +66,26 @@ describe('Test Shortcode for free', function() {
         cy.get('ul li.rss_item').should('have.length', Cypress.env('shortcode').multiple_results);
 
         // title
-        cy.get('div.feedzy-rss-1 span.title').first().should('contain', '10+ Best Themes');
-        cy.get('div.feedzy-rss-1 span.title').last().should('contain', 'Bluehost vs Hostinger');
+        cy.get('div.feedzy-rss span.title').first().should('contain', '10+ Best Themes');
+        cy.get('div.feedzy-rss span.title').last().should('contain', 'Bluehost vs Hostinger');
 
         // meta - there is no class "meta" which is different from style1
-        cy.get('div.feedzy-rss-1 div.rss_content').should('have.length', Cypress.env('shortcode').multiple_results);
-        cy.get('div.feedzy-rss-1 div.rss_content').first().should('contain', 'December 27, 2019 at 12:26 pm');
-        cy.get('div.feedzy-rss-1 div.rss_content').last().should('contain', 'December 17, 2019 at 8:36 am');
-        cy.get('div.feedzy-rss-1 div.rss_content').should('contain', 'by');
+        cy.get('div.feedzy-rss div.rss_content').should('have.length', Cypress.env('shortcode').multiple_results);
+        cy.get('div.feedzy-rss div.rss_content').first().should('contain', 'December 27, 2019 at 12:26 pm');
+        cy.get('div.feedzy-rss div.rss_content').last().should('contain', 'December 17, 2019 at 8:36 am');
+        cy.get('div.feedzy-rss div.rss_content').should('contain', 'by');
 
         // multiple feed meta
-        cy.get('div.feedzy-rss-1 div.rss_content').first().should('contain', 'Priya');
-        cy.get('div.feedzy-rss-1 div.rss_content').first().should('contain', 'CodeinWP');
-        cy.get('div.feedzy-rss-1 div.rss_content').last().should('contain', 'Megan Jones');
-        cy.get('div.feedzy-rss-1 div.rss_content').last().should('contain', 'ThemeIsle Blog');
+        cy.get('div.feedzy-rss div.rss_content').first().should('contain', 'Priya');
+        cy.get('div.feedzy-rss div.rss_content').first().should('contain', 'CodeinWP');
+        cy.get('div.feedzy-rss div.rss_content').last().should('contain', 'Megan Jones');
+        cy.get('div.feedzy-rss div.rss_content').last().should('contain', 'ThemeIsle Blog');
 
         // description
-        cy.get('div.feedzy-rss-1 div.rss_content p').should('have.length', Cypress.env('shortcode').multiple_results);
+        cy.get('div.feedzy-rss div.rss_content p').should('have.length', Cypress.env('shortcode').multiple_results);
 
         // the audio controls
-        cy.get('div.feedzy-rss-1 div.rss_content audio').should('have.length', 0);
+        cy.get('div.feedzy-rss div.rss_content audio').should('have.length', 0);
 
         // no price button.
         cy.get('button.price').should('have.length', 0);
