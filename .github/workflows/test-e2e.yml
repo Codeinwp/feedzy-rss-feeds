@@ -43,6 +43,7 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           env: host=localhost,port=8080
+          config-file: cypress.config.js
           browser: chrome
           install: ${{ ! steps.npm-and-build-cache.outputs.cache-hit }}
           spec: cypress/integration/${{ matrix.env }}/**/*
