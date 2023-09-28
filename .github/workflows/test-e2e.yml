@@ -40,7 +40,7 @@ jobs:
       - name: Run ${{ matrix.env }} Cypress tests
         env:
           GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v6
         with:
           env: host=localhost,port=8080
           browser: chrome

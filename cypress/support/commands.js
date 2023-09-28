@@ -25,42 +25,47 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
 
-Cypress.Commands.add('verify_feedzy_frontend', (count) => {
-    cy.get('div.feedzy-rss').should('have.length', 1);
+Cypress.Commands.add('verify_feedzy_frontend', (options) => {
+    cy.get('div.feedzy-rss-1').should('have.length', 1);
 
     // feed title
-    cy.get('div.feedzy-rss a.rss_title').should('have.length', 1);
-    cy.get('div.feedzy-rss a.rss_title').should('contain', 'iTunes Store: Top Songs');
+    cy.get('div.feedzy-rss-1 a.rss_title').should('have.length', 1);
+    cy.get('div.feedzy-rss-1 a.rss_title').should('contain', 'iTunes Store: Top Songs');
 
     // no style
     cy.get('ul.feedzy-style1').should('have.length', 0);
-
     // # of items
-    cy.get('ul li.rss_item').should('have.length', count);
+    console.log(options);
+    cy.get('ul li.rss_item').should('have.length', options.results);
 
     // a valid image
-    cy.get('div.rss_image .fetched').first().invoke('attr', 'style').should('contain', 'https://is3-ssl.mzstatic.com/image/thumb/Music123/v4/ba/e2/2a/bae22a5e-c878-da64-0ecc-4a3584a1a139/190295411411.jpg/100x100bb.png');
-    cy.get('div.rss_image .fetched').last().invoke('attr', 'style').should('contain', 'https://is3-ssl.mzstatic.com/image/thumb/Music123/v4/c6/04/02/c604029f-732b-ba65-425c-45f2cf91151e/4050538505542.jpg/100x100bb.png');
+    cy.get('div.rss_image .fetched').first().invoke('attr', 'style').should('contain', options.thumb_1);
+    cy.get('div.rss_image .fetched').last().invoke('attr', 'style').should('contain', options.thumb_2);
+    //cy.get('div.rss_image .fetched').first().invoke('attr', 'style').should('contain', 'https://is5-ssl.mzstatic.com/image/thumb/Music123/v4/20/6f/b5/206fb560-6fd5-15f9-0b68-88d309ffc5a6/19UMGIM53909.rgb.jpg/100x100bb.png');
+    //cy.get('div.rss_image .fetched').last().invoke('attr', 'style').should('contain', 'https://is4-ssl.mzstatic.com/image/thumb/Music123/v4/0d/13/51/0d1351cc-298c-0c1e-f4e0-3745091b21ec/19UMGIM53914.rgb.jpg/100x100bb.png');
 
     // title
-    cy.get('div.feedzy-rss span.title').first().should('contain', 'Ed Sheeran');
-    cy.get('div.feedzy-rss span.title').last().should('contain', 'Blanco Brown');
+    cy.get('div.feedzy-rss-1 span.title').first().should('contain', options.post_title_1);
+    cy.get('div.feedzy-rss-1 span.title').last().should('contain', options.post_title_2);
+
+    // cy.get('div.feedzy-rss-1 span.title').first().should('contain', 'Taylor Swift');
+    // cy.get('div.feedzy-rss-1 span.title').last().should('contain', 'Camila Cabello');
 
     // meta - there is no class "meta" which is different from style1
-    cy.get('div.feedzy-rss div.rss_content').should('have.length', count);
-    cy.get('div.feedzy-rss div.rss_content').first().should('contain', 'August 16, 2019 at 7:54 am');
-    cy.get('div.feedzy-rss div.rss_content').last().should('contain', 'August 16, 2019 at 7:54 am');
-    cy.get('div.feedzy-rss div.rss_content').should('contain', 'by');
+    cy.get('div.feedzy-rss-1 div.rss_content').should('have.length', options.results);
+    cy.get('div.feedzy-rss-1 div.rss_content').first().should('contain', 'August 16, 2019 at 7:54 am');
+    cy.get('div.feedzy-rss-1 div.rss_content').last().should('contain', 'August 16, 2019 at 7:54 am');
+    cy.get('div.feedzy-rss-1 div.rss_content').should('contain', 'by');
 
     // multiple feed meta should not be present 
-    cy.get('div.feedzy-rss div.rss_content').first().should('not.contain', '(');
-    cy.get('div.feedzy-rss div.rss_content').last().should('not.contain', ')');
+    cy.get('div.feedzy-rss-1 div.rss_content').first().should('not.contain', '(');
+    cy.get('div.feedzy-rss-1 div.rss_content').last().should('not.contain', ')');
 
     // description
-    cy.get('div.feedzy-rss div.rss_content p').should('have.length', count);
+    cy.get('div.feedzy-rss-1 div.rss_content p').should('have.length', options.results);
 
     // the audio controls
-    cy.get('div.feedzy-rss div.rss_content audio').should('have.length', 0);
+    cy.get('div.feedzy-rss-1 div.rss_content audio').should('have.length', 0);
 
     // no price button.
     cy.get('button.price').should('have.length', 0);
