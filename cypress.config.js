@@ -75,15 +75,16 @@ module.exports = defineConfig({
       },
     },
   },
-  videoUploadOnPasses: false,
   projectId: 'frqcxp',
+  experimentalStudio: true,
+  numTestsKeptInMemory: 0,
   e2e: {
     // We've imported your old cypress plugins here.
     // You may want to clean this up later by importing these.
-    setupNodeEvents(on, config) {
-      return require('./cypress/plugins/index.js')(on, config)
-    },
+    setupNodeEvents( on, config ) {},
+    supportFile: false,
     baseUrl: 'http://localhost:8080',
     specPattern: 'cypress/e2e/**/*.{js,jsx,ts,tsx}',
+    pageLoadTimeout : 300000,
   },
 })

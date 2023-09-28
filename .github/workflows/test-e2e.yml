@@ -45,7 +45,6 @@ jobs:
           env: host=localhost,port=8080
           browser: chrome
           install: ${{ ! steps.npm-and-build-cache.outputs.cache-hit }}
-          headless: true
           spec: cypress/integration/${{ matrix.env }}/**/*
       - name: Output debug log
         if: ${{ failure() }}
