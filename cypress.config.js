@@ -5,7 +5,7 @@ module.exports = defineConfig({
     login: 'wordpress',
     pass: 'wordpress',
     settings: {
-      tabs: 7,
+      tabs: 8,
     },
     shortcode: {
       single:
