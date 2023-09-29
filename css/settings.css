@@ -2143,3 +2143,6 @@ li.draggable-item .components-panel__body-toggle.components-button{
 .draggable-item {
 	z-index: 999999;
 }
+.fz-chat-cpt-action .error-message {
+    right: 40px !important;
+}

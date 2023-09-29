@@ -1496,6 +1496,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$data        = array(
 			'spinnerChiefStatus' => false,
 			'wordaiStatus'       => false,
+			'openaiStatus'       => false,
 		);
 		if ( ! feedzy_is_pro() ) {
 			return $data;
@@ -1505,6 +1506,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 		if ( isset( $pro_options['wordai_licence'] ) && 'yes' === $pro_options['wordai_licence'] ) {
 			$data['wordaiStatus'] = true;
+		}
+		if ( isset( $pro_options['openai_licence'] ) && 'yes' === $pro_options['openai_licence'] ) {
+			$data['openaiStatus'] = true;
 		}
 		return $data;
 	}

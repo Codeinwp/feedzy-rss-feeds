@@ -150,6 +150,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 		return(
 			<li className="fz-action-control fz-chat-cpt-action" data-counter={counter}>
 				<div className="fz-action-event">
+					{feedzyData.isPro && !feedzyData.apiLicenseStatus.openaiStatus && (<span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=openai"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> )}
 					<PanelBody title={ __( 'Paraphrase with Chat GPT', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false }>
 						<PanelRow>
 							<UpgradeNotice />
@@ -159,6 +160,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 									help={__( 'You can use {content} in the textarea such as: "Rephrase my {content} for better SEO.".', 'feedzy-rss-feeds' )}
 									value={ item.data.ChatGPT || '' }
 									onChange={ ( currentValue ) => propRef.onChangeHandler( { 'index': loopIndex, 'ChatGPT': currentValue ?? '' } ) }
+									readOnly={!feedzyData.isPro}
 								/>
 							</BaseControl>
 						</PanelRow>
