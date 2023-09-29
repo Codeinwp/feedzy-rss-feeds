@@ -14,8 +14,9 @@ describe('Test Free - gutenberg', function() {
 
         cy.visit('/wp-admin/post-new.php');
 
+        cy.wait( 1000 );
         // get rid of that irritating popup
-        cy.get('.edit-post-welcome-guide .components-modal__header button').click();
+        cy.get('.edit-post-welcome-guide .components-modal__header button').click({force:true});
 
         cy.get('.edit-post-visual-editor__post-title-wrapper .editor-post-title__input').type(PREFIX);
 
