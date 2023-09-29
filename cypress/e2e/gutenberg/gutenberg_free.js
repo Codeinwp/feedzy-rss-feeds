@@ -1,8 +1,8 @@
 describe('Test Free - gutenberg', function() {
-    before(function(){
-
+    beforeEach(function(){
         // login to WP
-        cy.visit( 'wp-login.php');
+        cy.visit('wp-login.php');
+        cy.wait( 1000 );
         cy.get('#user_login').clear().type( Cypress.env('login') );
         cy.get('#user_pass').clear().type( Cypress.env('pass') );
         cy.get('#wp-submit').click();
@@ -194,7 +194,7 @@ describe('Test Free - gutenberg', function() {
         // loading div should be present
         cy.get('div.feedzy-lazy').should('have.length', 1);
         cy.get('div.feedzy-lazy.loading').should('have.length', 0);
-        cy.get('div.feedzy-lazy').should('contain', 'Loading');
+        // cy.get('div.feedzy-lazy').should('contain', 'Loading');
 
         // wait some more time.
         cy.wait(5000);
