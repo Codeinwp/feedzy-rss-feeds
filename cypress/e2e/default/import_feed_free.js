@@ -1,8 +1,8 @@
 describe('Test Free - Import Feed', function() {
-    before(function(){
+    beforeEach(function(){
         // login to WP
-
         cy.visit('wp-login.php');
+        cy.wait( 1000 );
         cy.get('#user_login').clear().type( Cypress.env('login') );
         cy.get('#user_pass').clear().type( Cypress.env('pass') );
         cy.get('#wp-submit').click();
