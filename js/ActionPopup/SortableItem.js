@@ -160,7 +160,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 									help={__( 'You can use {content} in the textarea such as: "Rephrase my {content} for better SEO.".', 'feedzy-rss-feeds' )}
 									value={ item.data.ChatGPT || '' }
 									onChange={ ( currentValue ) => propRef.onChangeHandler( { 'index': loopIndex, 'ChatGPT': currentValue ?? '' } ) }
-									readOnly={!feedzyData.isPro}
+									disabled={!feedzyData.isPro || !feedzyData.apiLicenseStatus.openaiStatus}
 								/>
 							</BaseControl>
 						</PanelRow>
