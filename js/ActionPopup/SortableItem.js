@@ -1,7 +1,7 @@
 import React from 'react';
 import { SortableElement, sortableHandle } from 'react-sortable-hoc';
 import { __ } from '@wordpress/i18n';
-
+import { unescape } from 'lodash';
 import {
 	Icon,
 	dragHandle,
@@ -158,7 +158,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 								<TextareaControl
 									label={ __( 'Main Prompt', 'feedzy-rss-feeds' ) }
 									help={__( 'You can use {content} in the textarea such as: "Rephrase my {content} for better SEO.".', 'feedzy-rss-feeds' )}
-									value={ item.data.ChatGPT || '' }
+									value={ item.data.ChatGPT ? unescape(item.data.ChatGPT.replace('&#039;', '\'')) : '' }
 									onChange={ ( currentValue ) => propRef.onChangeHandler( { 'index': loopIndex, 'ChatGPT': currentValue ?? '' } ) }
 									disabled={!feedzyData.isPro || !feedzyData.apiLicenseStatus.openaiStatus}
 								/>
