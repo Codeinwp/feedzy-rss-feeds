@@ -1540,6 +1540,13 @@ class Feedzy_Rss_Feeds_Import {
 				$post_content                = str_replace( '[#full_content_feedzy_rewrite]', $full_content_feedzy_rewrite, $post_content );
 			}
 
+			if ( false !== strpos( $post_content, '[#item_summary]' ) && class_exists( '\Feedzy_Rss_Feeds_Pro_Openai' ) ) {
+				$openai            = new \Feedzy_Rss_Feeds_Pro_Openai();
+				$item_content      = ! empty( $item['item_content'] ) ? $item['item_content'] : $item['item_description'];
+				$summarize_content = $openai->call_api( $this->settings, $item_content, 'summarize', array() );
+				$post_content      = str_replace( '[#item_summary]', $summarize_content, $post_content );
+			}
+
 			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 			$item_date = date( 'Y-m-d H:i:s', $item['item_date'] );
 			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
@@ -2233,7 +2240,7 @@ class Feedzy_Rss_Feeds_Import {
 					continue;
 				}
 				if ( 'import_post_content' === $type ) {
-					if ( in_array( $tag, array( 'item_content', 'item_description', 'item_full_content', 'item_categories' ), true ) ) {
+					if ( in_array( $tag, array( 'item_content', 'item_description', 'item_full_content', 'item_categories', 'item_summary' ), true ) ) {
 						$default .= '<a class="dropdown-item" href="#" data-field-name="' . $type . '" data-field-tag="' . $tag . '" data-action_popup="' . $tag . '">' . $label . ' <small>[#' . $tag . ']</small></a>';
 						continue;
 					}
@@ -2316,6 +2323,7 @@ class Feedzy_Rss_Feeds_Import {
 
 		// disabled tags.
 		if ( ! feedzy_is_pro() ) {
+			$default['item_summary:disabled']      = __( '🚫 Item Summary', 'feedzy-rss-feeds' );
 			$default['item_full_content:disabled'] = __( '🚫 Item Full Content', 'feedzy-rss-feeds' );
 		}
 

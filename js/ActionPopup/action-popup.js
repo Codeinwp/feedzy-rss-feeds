@@ -263,6 +263,15 @@ const ActionModal = () => {
 													)
 												)
 											}
+											{
+												'item_categories' !== shortCode && 'item_summary' === shortCode && (
+													feedzyData.isPro ? (
+														<li onClick={ () => addAction('fz_summarize') }>{__( 'Summarize with Feedzy', 'feedzy-rss-feeds' )}</li>
+													) : (
+														<li onClick={ () => addAction('fz_summarize') }>{__( 'Summarize with Feedzy', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+													)
+												)
+											}
 											<li className="link-item"><ExternalLink href="https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation">{ __( 'Learn more about this feature.', 'feedzy-rss-feeds' ) }</ExternalLink></li>
 										</ul>
 									</div>

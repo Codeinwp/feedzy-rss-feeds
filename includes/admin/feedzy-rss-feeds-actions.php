@@ -254,6 +254,8 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 					return $this->word_ai_content();
 				case 'chat_gpt_rewrite':
 					return $this->chat_gpt_rewrite();
+				case 'fz_summarize':
+					return $this->summarize_content();
 				default:
 					return $this->default_content();
 			}
@@ -299,6 +301,16 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 				return $this->result;
 			}
 			return ! empty( $this->item['item_description'] ) ? $this->item['item_description'] : '';
+		}
+
+		/**
+		 * Get item_summary.
+		 */
+		private function item_summary() {
+			if ( ! empty( $this->result ) ) {
+				return $this->result;
+			}
+			return ! empty( $this->item['item_content'] ) ? $this->item['item_content'] : $this->item['item_description'];
 		}
 
 		/**
@@ -384,12 +396,32 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 
 		/**
 		 * Chat GPT rewrite content.
+		 *
+		 * @return string
 		 */
 		private function chat_gpt_rewrite() {
 			$content = call_user_func( array( $this, $this->current_job->tag ) );
 			$content = str_replace( array( '{content}' ), array( $content ), $this->current_job->data->ChatGPT );
-			$openai  = new Feedzy_Rss_Feeds_Pro_Openai();
+			if ( ! class_exists( '\Feedzy_Rss_Feeds_Pro_Openai' ) ) {
+				return $content;
+			}
+			$openai  = new \Feedzy_Rss_Feeds_Pro_Openai();
 			$content = $openai->call_api( $this->settings, $content, '', array() );
+			return $content;
+		}
+
+		/**
+		 * Summarize item content.
+		 *
+		 * @return string
+		 */
+		private function summarize_content() {
+			$content = call_user_func( array( $this, $this->current_job->tag ) );
+			if ( ! class_exists( '\Feedzy_Rss_Feeds_Pro_Openai' ) ) {
+				return $content;
+			}
+			$openai  = new \Feedzy_Rss_Feeds_Pro_Openai();
+			$content = $openai->call_api( $this->settings, $content, 'summarize', array() );
 			return $content;
 		}
 	}

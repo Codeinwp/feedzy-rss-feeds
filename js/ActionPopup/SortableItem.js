@@ -181,7 +181,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 		return(
 			<li className="fz-action-control" data-counter={counter}>
 				<div className="fz-action-event">
-					<PanelBody title={ __( 'Summarise with Feedzy', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false } className="fz-hide-icon">
+					<PanelBody title={ __( 'Summarize with Feedzy', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false } className="fz-hide-icon">
 						<UpgradeNotice />
 					</PanelBody>
 				</div>
