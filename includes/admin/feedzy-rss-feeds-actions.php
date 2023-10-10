@@ -304,16 +304,6 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		}
 
 		/**
-		 * Get item_summary.
-		 */
-		private function item_summary() {
-			if ( ! empty( $this->result ) ) {
-				return $this->result;
-			}
-			return ! empty( $this->item['item_content'] ) ? $this->item['item_content'] : $this->item['item_description'];
-		}
-
-		/**
 		 * Trim content.
 		 *
 		 * @return string

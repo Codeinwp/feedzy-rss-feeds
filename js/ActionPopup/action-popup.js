@@ -264,7 +264,7 @@ const ActionModal = () => {
 												)
 											}
 											{
-												'item_categories' !== shortCode && 'item_summary' === shortCode && (
+												'item_categories' !== shortCode && (
 													feedzyData.isPro ? (
 														<li onClick={ () => addAction('fz_summarize') }>{__( 'Summarize with Feedzy', 'feedzy-rss-feeds' )}</li>
 													) : (
