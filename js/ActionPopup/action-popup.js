@@ -229,7 +229,7 @@ const ActionModal = () => {
 											<li onClick={ () => addAction('search_replace') }>{__( 'Search / Replace', 'feedzy-rss-feeds' )}</li>
 											{
 												'item_categories' !== shortCode && (
-													feedzyData.isPro && feedzyData.isAgencyPlan ? (
+													feedzyData.isPro && ( feedzyData.isBusinessPlan || feedzyData.isAgencyPlan ) ? (
 														<li onClick={ () => addAction('fz_paraphrase') }>{__( 'Paraphrase with Feedzy', 'feedzy-rss-feeds' )}</li>
 													) : (
 														<li onClick={ () => addAction('fz_paraphrase') }>{__( 'Paraphrase with Feedzy', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>

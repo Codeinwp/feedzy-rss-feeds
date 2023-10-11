@@ -141,7 +141,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 			<li className="fz-action-control" data-counter={counter}>
 				<div className="fz-action-event">
 					<PanelBody title={ __( 'Paraphrase with Feedzy', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false } className="fz-hide-icon">
-						<UpgradeNotice higherPlanNotice={!feedzyData.isAgencyPlan}/>
+						<UpgradeNotice higherPlanNotice={!feedzyData.isBusinessPlan && !feedzyData.isAgencyPlan}/>
 					</PanelBody>
 				</div>
 				<div className="fz-trash-action">
