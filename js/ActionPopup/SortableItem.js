@@ -29,8 +29,17 @@ import {
 
 const DragHandle = sortableHandle(() => <Icon icon={dragHandle} size={18} className="components-panel__icon" />);
 
-const UpgradeNotice = () => {
+const UpgradeNotice = ({higherPlanNotice}) => {
 	if ( feedzyData.isPro ) {
+		if ( higherPlanNotice ) {
+			return(
+				<>
+				<div className="fz-notice-wrap">
+					<Notice status="info" isDismissible={false} className="fz-upgrade-notice"><p><span>PRO</span> {__('This action requires an upgrade to a higher plan.', 'feedzy-rss-feeds')}</p> <ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=import&utm_campaign=upsell-content&utm_content=feedzy-rss-feeds">{ __( 'Upgrade Feedzy PRO Plan', 'feedzy-rss-feeds' ) }</ExternalLink></Notice>
+				</div>
+				</>
+				);
+		}
 		return(
 			<></>
 		);
@@ -38,7 +47,7 @@ const UpgradeNotice = () => {
 	return(
 		<>
 		<div className="fz-notice-wrap">
-			<Notice status="info" isDismissible={false} className="fz-upgrade-notice"><p><span>PRO</span> {__('This action is a Premium feature.', 'feedzy-rss-feeds')}</p> <ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=import&utm_campaign=upsell-content&utm_content=feedzy-rss-feeds">{ __( 'Update to Feedzy PRO', 'feedzy-rss-feeds' ) }</ExternalLink></Notice>
+			<Notice status="info" isDismissible={false} className="fz-upgrade-notice"><p><span>PRO</span> {__('This action is a Premium feature.', 'feedzy-rss-feeds')}</p> <ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=import&utm_campaign=upsell-content&utm_content=feedzy-rss-feeds">{ __( 'Upgrade to Feedzy PRO', 'feedzy-rss-feeds' ) }</ExternalLink></Notice>
 		</div>
 		</>
 	);
@@ -132,7 +141,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 			<li className="fz-action-control" data-counter={counter}>
 				<div className="fz-action-event">
 					<PanelBody title={ __( 'Paraphrase with Feedzy', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false } className="fz-hide-icon">
-						<UpgradeNotice />
+						<UpgradeNotice higherPlanNotice={!feedzyData.isAgencyPlan}/>
 					</PanelBody>
 				</div>
 				<div className="fz-trash-action">
@@ -150,10 +159,10 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 		return(
 			<li className="fz-action-control fz-chat-cpt-action" data-counter={counter}>
 				<div className="fz-action-event">
-					{feedzyData.isPro && !feedzyData.apiLicenseStatus.openaiStatus && (<span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=openai"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> )}
+					{feedzyData.isPro && (feedzyData.isBusinessPlan || feedzyData.isAgencyPlan) && !feedzyData.apiLicenseStatus.openaiStatus && (<span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=openai"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> )}
 					<PanelBody title={ __( 'Paraphrase with Chat GPT', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false }>
 						<PanelRow>
-							<UpgradeNotice />
+							<UpgradeNotice higherPlanNotice={!feedzyData.isBusinessPlan && !feedzyData.isAgencyPlan}/>
 							<BaseControl>
 								<TextareaControl
 									label={ __( 'Main Prompt', 'feedzy-rss-feeds' ) }
@@ -181,9 +190,9 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 		return(
 			<li className="fz-action-control" data-counter={counter}>
 				<div className="fz-action-event">
-					{feedzyData.isPro && !feedzyData.apiLicenseStatus.openaiStatus && (<span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=openai"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> )}
+					{feedzyData.isPro && (feedzyData.isBusinessPlan || feedzyData.isAgencyPlan) && !feedzyData.apiLicenseStatus.openaiStatus && (<span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=openai"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> )}
 					<PanelBody title={ __( 'Summarize with Feedzy', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false } className="fz-hide-icon">
-						<UpgradeNotice />
+						<UpgradeNotice higherPlanNotice={!feedzyData.isBusinessPlan && !feedzyData.isAgencyPlan}/>
 					</PanelBody>
 				</div>
 				<div className="fz-trash-action">
@@ -202,7 +211,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 			<li className="fz-action-control" data-counter={counter}>
 				<div className="fz-action-event">
 					<PanelBody title={ __( 'Translate with Feedzy', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false } className="fz-hide-icon">
-						<UpgradeNotice />
+						<UpgradeNotice higherPlanNotice={!feedzyData.isAgencyPlan}/>
 					</PanelBody>
 				</div>
 				<div className="fz-trash-action">
@@ -220,9 +229,9 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 		return(
 			<li className="fz-action-control" data-counter={counter}>
 				<div className="fz-action-event">
-					{feedzyData.isPro && !feedzyData.apiLicenseStatus.spinnerChiefStatus && (<span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=spinnerchief"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> )}
+					{(feedzyData.isPro && feedzyData.isAgencyPlan) && !feedzyData.apiLicenseStatus.spinnerChiefStatus && (<span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=spinnerchief"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> )}
 					<PanelBody title={ __( 'Spin using Spinnerchief', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false } className="fz-hide-icon">
-						<UpgradeNotice />
+						<UpgradeNotice higherPlanNotice={!feedzyData.isAgencyPlan}/>
 					</PanelBody>
 				</div>
 				<div className="fz-trash-action">
@@ -240,9 +249,9 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 		return(
 			<li className="fz-action-control" data-counter={counter}>
 				<div className="fz-action-event">
-					{feedzyData.isPro && !feedzyData.apiLicenseStatus.wordaiStatus && (<span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=wordai"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> )}
+					{(feedzyData.isPro && feedzyData.isAgencyPlan) && !feedzyData.apiLicenseStatus.wordaiStatus && (<span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=wordai"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> )}
 					<PanelBody title={ __( 'Spin using WordAI', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false } className="fz-hide-icon">
-						<UpgradeNotice />
+						<UpgradeNotice higherPlanNotice={!feedzyData.isAgencyPlan}/>
 					</PanelBody>
 				</div>
 				<div className="fz-trash-action">

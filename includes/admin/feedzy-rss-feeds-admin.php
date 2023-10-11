@@ -170,13 +170,15 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				wp_register_script( 'react-dom', 'https://unpkg.com/react-dom@18/umd/react-dom.production.min.js', array(), $this->version, true );
 			}
 			wp_enqueue_script( $this->plugin_name . '_action_popup', FEEDZY_ABSURL . 'js/ActionPopup/action-popup.min.js', array( 'react', 'react-dom', 'wp-editor', 'wp-api' ), $this->version, true );
-			$license_plan = apply_filters( 'product_feedzy_license_plan', 0 );
+
 			wp_localize_script(
 				$this->plugin_name . '_action_popup',
 				'feedzyData',
 				array(
-					'isPro'            => feedzy_is_pro() && $license_plan > 1,
-					'apiLicenseStatus' => $this->api_license_status( $license_plan > 1 ),
+					'isPro'            => feedzy_is_pro(),
+					'isBusinessPlan'   => apply_filters( 'feedzy_is_license_of_type', false, 'business' ),
+					'isAgencyPlan'     => apply_filters( 'feedzy_is_license_of_type', false, 'agency' ),
+					'apiLicenseStatus' => $this->api_license_status(),
 				)
 			);
 			wp_enqueue_style( 'wp-block-editor' );
@@ -1490,10 +1492,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * API license status.
 	 *
-	 * @param bool $is_valid_plan Plan type.
 	 * @return array
 	 */
-	public function api_license_status( $is_valid_plan = false ) {
+	public function api_license_status() {
 		$pro_options = get_option( 'feedzy-rss-feeds-settings', array() );
 		$data        = array(
 			'spinnerChiefStatus' => false,
@@ -1503,17 +1504,18 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! feedzy_is_pro() ) {
 			return $data;
 		}
-		if ( ! $is_valid_plan ) {
-			return $data;
-		}
-		if ( isset( $pro_options['spinnerchief_licence'] ) && 'yes' === $pro_options['spinnerchief_licence'] ) {
-			$data['spinnerChiefStatus'] = true;
-		}
-		if ( isset( $pro_options['wordai_licence'] ) && 'yes' === $pro_options['wordai_licence'] ) {
-			$data['wordaiStatus'] = true;
+		if ( apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) {
+			if ( isset( $pro_options['spinnerchief_licence'] ) && 'yes' === $pro_options['spinnerchief_licence'] ) {
+				$data['spinnerChiefStatus'] = true;
+			}
+			if ( isset( $pro_options['wordai_licence'] ) && 'yes' === $pro_options['wordai_licence'] ) {
+				$data['wordaiStatus'] = true;
+			}
 		}
 		if ( isset( $pro_options['openai_licence'] ) && 'yes' === $pro_options['openai_licence'] ) {
-			$data['openaiStatus'] = true;
+			if ( apply_filters( 'feedzy_is_license_of_type', false, 'business' ) || apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) {
+				$data['openaiStatus'] = true;
+			}
 		}
 		return $data;
 	}
