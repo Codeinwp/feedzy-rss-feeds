@@ -28,7 +28,7 @@ module.exports = defineConfig({
       thumb: 'yes',
     },
     'import-feed': {
-      locked: 6,
+      locked: 7,
       url: 'https://s3.amazonaws.com/verti-utils/sample-feed-import.xml',
       invalidurl: 'test',
       title: '[#item_date], [#item_custom_guid] [#item_title]',
