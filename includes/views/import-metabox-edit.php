@@ -733,7 +733,35 @@ global $post;
 								</div>
 							</div>
 						</div>
-					</div>		
+					</div>
+					<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
+						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '' ) ); ?>
+						<div class="left">
+							<h4 class="h4"><?php esc_html_e( 'Fallback Image', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
+						</div>
+						<div class="right">
+							<div class="fz-form-group">
+								<label class="form-label"><?php esc_html_e( 'Select an image to be the fallback featured image.', 'feedzy-rss-feeds' ); ?></label>
+								<?php
+								$btn_label = esc_html__( 'Choose image', 'feedzy-rss-feeds' );
+								if ( $default_thumbnail_id ) :
+									$btn_label = esc_html__( 'Replace image', 'feedzy-rss-feeds' );
+									?>
+									<div class="fz-form-group feedzy-media-preview">
+										<?php echo wp_get_attachment_image( $default_thumbnail_id, 'thumbnail' ); ?>
+									</div>
+								<?php endif; ?>
+								<div class="fz-cta-group pb-8">
+									<a href="javascript:;" class="feedzy-open-media btn btn-outline-primary"><?php echo esc_html( $btn_label ); ?></a>
+									<a href="javascript:;" class="feedzy-remove-media btn btn-outline-primary <?php echo $default_thumbnail_id ? esc_attr( 'is-show' ) : ''; ?>"><?php esc_html_e( 'Remove', 'feedzy-rss-feeds' ); ?></a>
+									<input type="hidden" name="feedzy_meta_data[default_thumbnail_id]" id="feed-post-default-thumbnail" value="<?php echo esc_attr( $default_thumbnail_id ); ?>">
+								</div>
+								<div class="help-text pt-8">
+									<?php esc_html_e( 'Helpful if you want to set a fallback image for feed items that don\'t have an image. Default it will be considered the one from global settings.', 'feedzy-rss-feeds' ); ?>
+								</div>
+							</div>
+						</div>
+					</div>
 					<?php if ( function_exists( 'icl_get_languages' ) ) : ?>
 						<div class="form-block form-block-two-column">
 							<div class="left">

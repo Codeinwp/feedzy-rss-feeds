@@ -123,7 +123,9 @@ class Feedzy_Rss_Feeds_Import {
 		wp_register_script( $this->plugin_name . '_chosen_script', FEEDZY_ABSURL . 'includes/views/js/chosen.js', array( 'jquery' ), $this->version, true );
 
 		if ( get_current_screen()->post_type === 'feedzy_imports' ) {
-
+			if ( ! did_action( 'wp_enqueue_media' ) ) {
+				wp_enqueue_media();
+			}
 			wp_enqueue_style( $this->plugin_name . '_chosen', FEEDZY_ABSURL . 'includes/views/css/chosen.css', array(), $this->version, 'all' );
 			wp_enqueue_style( $this->plugin_name . '_tagify', FEEDZY_ABSURL . 'includes/views/css/tagify.css', array(), $this->version, 'all' );
 			wp_enqueue_style( $this->plugin_name . '_metabox_edit', FEEDZY_ABSURL . 'includes/views/css/import-metabox-edit.css', array( 'wp-jquery-ui-dialog' ), $this->version, 'all' );
@@ -155,6 +157,10 @@ class Feedzy_Rss_Feeds_Import {
 											 . '<p class="loading-img hide-when-loaded"><img src="' . includes_url( 'images/wpspin-2x.gif' ) . '"></p><div></div>',
 						'dry_run_title'   => __( 'Importable Items', 'feedzy-rss-feeds' ),
 						'delete_post_message' => __( 'Would you also like to delete all the imported posts for this import job?', 'feedzy-rss-feeds' ),
+						'media_iframe_title'  => __( 'Select image', 'feedzy-rss-feeds' ),
+						'media_iframe_button' => __( 'Set default image', 'feedzy-rss-feeds' ),
+						'action_btn_text_1'   => __( 'Choose image', 'feedzy-rss-feeds' ),
+						'action_btn_text_2'   => __( 'Replace image', 'feedzy-rss-feeds' ),
 					),
 				)
 			);
@@ -388,6 +394,13 @@ class Feedzy_Rss_Feeds_Import {
 		$import_feed_delete_days = intval( get_post_meta( $post->ID, 'import_feed_delete_days', true ) );
 		if ( empty( $import_feed_delete_days ) ) {
 			$import_feed_delete_days = ! empty( $this->free_settings['general']['feedzy-delete-days'] ) ? (int) $this->free_settings['general']['feedzy-delete-days'] : 0;
+		}
+		$default_thumbnail_id = 0;
+		if ( feedzy_is_pro() ) {
+			$default_thumbnail_id = get_post_meta( $post->ID, 'default_thumbnail_id', true );
+			if ( empty( $default_thumbnail_id ) ) {
+				$default_thumbnail_id = ! empty( $this->free_settings['general']['default-thumbnail-id'] ) ? (int) $this->free_settings['general']['default-thumbnail-id'] : 0;
+			}
 		}
 		$post_status        = $post->post_status;
 		$nonce              = wp_create_nonce( FEEDZY_BASEFILE );
@@ -1237,6 +1250,12 @@ class Feedzy_Rss_Feeds_Import {
 			$imported_items_new = array();
 		}
 
+		// Get default thumbnail ID.
+		$default_thumbnail = ! empty( $this->free_settings['general']['default-thumbnail-id'] ) ? (int) $this->free_settings['general']['default-thumbnail-id'] : 0;
+		if ( feedzy_is_pro() ) {
+			$default_thumbnail = get_post_meta( $job->ID, 'default_thumbnail_id', true );
+		}
+
 		// Note: this implementation will only work if only one of the fields is allowed to provide
 		// the date, because if the title can have UTC date and content can have local date then it
 		// all goes sideways.
@@ -1802,11 +1821,9 @@ class Feedzy_Rss_Feeds_Import {
 						$img_success = $this->generate_featured_image( $image_url, $new_post_id, $item['item_title'], $import_errors, $import_info );
 					}
 				}
-
 				// Set default thumbnail image.
-				if ( ! $img_success && isset( $this->free_settings['general']['default-thumbnail-id'] ) ) {
-					$default_thumbnail = $this->free_settings['general']['default-thumbnail-id'];
-					$img_success       = set_post_thumbnail( $new_post_id, $default_thumbnail );
+				if ( ! $img_success && ! empty( $default_thumbnail ) ) {
+					$img_success = set_post_thumbnail( $new_post_id, $default_thumbnail );
 				}
 
 				if ( ! $img_success ) {
