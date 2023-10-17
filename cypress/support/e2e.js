@@ -20,9 +20,6 @@ const dayjs = require('dayjs')
 
 Cypress.dayjs = dayjs
 // allow WP session to remain open during multiple cy.visit() invocations.
-Cypress.Cookies.defaults({
-    preserve: /wordpress_.*/
-})
 Cypress.on('uncaught:exception', (err, runnable) => {
   // returning false here prevents Cypress from failing the test
   return false

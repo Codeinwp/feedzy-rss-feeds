@@ -47,7 +47,7 @@
     "@wordpress/media-utils": "^1.20.3",
     "@wordpress/scripts": "^15.0.1",
     "conventional-changelog-simple-preset": "^1.0.15",
-    "cypress": "^7.3.0",
+    "cypress": "^13.2.0",
     "dayjs": "^1.10.4",
     "grunt": "^1.4.0",
     "grunt-version": "^2.0.0",
@@ -56,11 +56,11 @@
     "raw-loader": "^4.0.2",
     "replace-in-file": "^6.2.0",
     "semantic-release": "^17.4.2",
-    "semantic-release-slack-bot": "^2.1.0"
-  },
-  "dependencies": {
+    "semantic-release-slack-bot": "^2.1.0",
+    "array-move": "^4.0.0",
     "classnames": "^2.3.1",
     "lodash": "^4.17.21",
-    "react-joyride": "^2.4.0"
+    "react-joyride": "^2.4.0",
+    "react-sortable-hoc": "^2.0.0"
   }
 }
