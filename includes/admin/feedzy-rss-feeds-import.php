@@ -248,6 +248,7 @@ class Feedzy_Rss_Feeds_Import {
 			),
 			'show_in_menu'        => 'feedzy-admin-menu',
 			'show_ui'             => feedzy_current_user_can(),
+			'show_in_rest'        => true,
 		);
 		$args     = apply_filters( 'feedzy_imports_args', $args );
 		register_post_type( 'feedzy_imports', $args );
@@ -263,6 +264,17 @@ class Feedzy_Rss_Feeds_Import {
 				'default'      => true,
 			)
 		);
+		register_setting(
+			'feedzy_import_actions_settings',
+			'feedzy_hide_action_message',
+			array(
+				'type'         => 'boolean',
+				'description'  => __( 'Show intro message for Feedzy action popup.', 'feedzy-rss-feeds' ),
+				'show_in_rest' => true,
+				'default'      => false,
+			)
+		);
+
 	}
 
 	/**
@@ -997,10 +1009,9 @@ class Feedzy_Rss_Feeds_Import {
 
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
 
-		$id      = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
-		$status  = filter_input( INPUT_POST, 'status', FILTER_SANITIZE_STRING );
+		$id      = isset( $_POST['id'] ) ? (int) $_POST['id'] : 0;
+		$status  = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '';
 		$publish = 'draft';
-
 		// no activation till source is not valid.
 		if ( 'true' === $status ) {
 			$invalid_urls = apply_filters( 'feedzy_check_source_validity', get_post_meta( $id, 'source', true ), $id, true, false );
@@ -1185,7 +1196,6 @@ class Feedzy_Rss_Feeds_Import {
 		$post_excerpt             = get_post_meta( $job->ID, 'import_post_excerpt', true );
 		$post_excerpt             = $this->feedzy_import_trim_tags( $post_excerpt );
 		$import_content           = get_post_meta( $job->ID, 'import_post_content', true );
-		$import_content           = str_replace( array( '[[{"value":"', '"}]]' ), '', $import_content );
 		$import_featured_img      = get_post_meta( $job->ID, 'import_post_featured_img', true );
 		$import_post_type         = get_post_meta( $job->ID, 'import_post_type', true );
 		$import_post_term         = get_post_meta( $job->ID, 'import_post_term', true );
@@ -1200,8 +1210,12 @@ class Feedzy_Rss_Feeds_Import {
 		$import_translation_lang  = get_post_meta( $job->ID, 'import_auto_translation_lang', true );
 		$max                      = $import_feed_limit;
 		// Used as a new line character in import content.
+		$import_content = rawurldecode( $import_content );
 		$import_content = str_replace( PHP_EOL, "\r\n", $import_content );
 		$import_content = trim( $import_content );
+
+		$action_control = $this->handle_content_actions( $import_content );
+		$import_content = $action_control->get_tags();
 
 		if ( metadata_exists( $import_post_type, $job->ID, 'import_post_status' ) ) {
 			$import_post_status = get_post_meta( $job->ID, 'import_post_status', true );
@@ -1289,7 +1303,7 @@ class Feedzy_Rss_Feeds_Import {
 		$language_code = $results['feed']->get_language();
 
 		$xml_results = '';
-		if ( false !== strpos( $import_content, '[#item_full_content]' ) ) {
+		if ( str_contains( $import_content, '_full_content' ) ) {
 			$xml_results = $this->get_job_feed( $options, '[#item_content]', true );
 		}
 
@@ -1474,7 +1488,7 @@ class Feedzy_Rss_Feeds_Import {
 
 			if ( $this->feedzy_is_business() ) {
 				$full_content = ! empty( $item['item_full_content'] ) ? $item['item_full_content'] : $item['item_content'];
-				if ( false !== strpos( $post_content, '[#item_full_content]' ) ) {
+				if ( str_contains( $import_content, '_full_content' ) ) {
 					// if full content is empty, log a message
 					if ( empty( $full_content ) ) {
 						// let's see if there is an error.
@@ -1498,6 +1512,10 @@ class Feedzy_Rss_Feeds_Import {
 				$post_content = apply_filters( 'feedzy_invoke_services', $post_content, 'full_content', $full_content, $job );
 			}
 
+			// Item content action process.
+			$post_content = $action_control->run_action_job( $post_content, $import_translation_lang, $job, $language_code, $item );
+
+			// Parse custom tags.
 			if ( $this->feedzy_is_business() ) {
 				$post_content = apply_filters( 'feedzy_parse_custom_tags', $post_content, $item_obj );
 			}
@@ -1664,6 +1682,18 @@ class Feedzy_Rss_Feeds_Import {
 				// let's get the slug of the uncategorized category, even if it renamed.
 				$uncategorized    = get_category( 1 );
 				$terms            = explode( ',', $import_post_term );
+				$terms            = array_filter(
+					$terms,
+					function( $term ) {
+						if ( empty( $term ) ) {
+							return;
+						}
+						if ( false !== strpos( $term, '[#item_' ) ) {
+							return;
+						}
+						return $term;
+					}
+				);
 				$default_category = (int) get_option( 'default_category' );
 				foreach ( $terms as $term ) {
 					// this handles both x_2, where 2 is the term id and x is the taxonomy AND x_2_3_4 where 4 is the term id and the taxonomy name is "x 2 3 4".
@@ -2129,11 +2159,15 @@ class Feedzy_Rss_Feeds_Import {
 	 * @access  public
 	 */
 	public function settings_tabs( $tabs ) {
-		$tabs['misc'] = __( 'Miscellaneous', 'feedzy-rss-feeds' );
+		$tabs['misc']   = __( 'Miscellaneous', 'feedzy-rss-feeds' );
+		if ( $this->feedzy_is_business() || $this->feedzy_is_agency() ) {
+			$tabs['openai'] = __( 'OpenAI', 'feedzy-rss-feeds' );
+		}
 		if ( ! feedzy_is_pro() ) {
 			$tabs['wordai']       = sprintf( '%s <span class="pro-label">PRO</span>', __( 'WordAi', 'feedzy-rss-feeds' ) );
 			$tabs['spinnerchief'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'SpinnerChief', 'feedzy-rss-feeds' ) );
 			$tabs['amazon-product-advertising'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'Amazon Product Advertising', 'feedzy-rss-feeds' ) );
+			$tabs['openai'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'OpenAI', 'feedzy-rss-feeds' ) );
 		}
 
 		return $tabs;
@@ -2174,6 +2208,7 @@ class Feedzy_Rss_Feeds_Import {
 			case 'wordai':
 			case 'spinnerchief':
 			case 'amazon-product-advertising':
+			case 'openai':
 				if ( ! feedzy_is_pro() ) {
 					$file = FEEDZY_ABSPATH . '/includes/views/' . $name . '-view.php';
 				} else {
@@ -2207,6 +2242,14 @@ class Feedzy_Rss_Feeds_Import {
 			foreach ( $tags as $tag => $label ) {
 				if ( strpos( $tag, ':disabled' ) !== false ) {
 					$disabled[ str_replace( ':disabled', '', $tag ) ] = $label;
+					continue;
+				}
+				if ( 'import_post_content' === $type ) {
+					if ( in_array( $tag, array( 'item_content', 'item_description', 'item_full_content', 'item_categories' ), true ) ) {
+						$default .= '<a class="dropdown-item" href="#" data-field-name="' . $type . '" data-field-tag="' . $tag . '" data-action_popup="' . $tag . '">' . $label . ' <small>[#' . $tag . ']</small></a>';
+						continue;
+					}
+					$default .= '<a class="dropdown-item" href="#" data-field-name="' . $type . '" data-field-tag="' . $tag . '">' . $label . ' <small>[#' . $tag . ']</small></a>';
 					continue;
 				}
 				$default .= '<a class="dropdown-item" href="#" data-field-name="' . $type . '" data-field-tag="' . $tag . '">' . $label . ' -- <small>[#' . $tag . ']</small></a>';
@@ -2285,19 +2328,7 @@ class Feedzy_Rss_Feeds_Import {
 
 		// disabled tags.
 		if ( ! feedzy_is_pro() ) {
-			$default['item_full_content:disabled']         = __( '🚫 Item Full Content', 'feedzy-rss-feeds' );
-			$default['content_spinnerchief:disabled']      = __( '🚫 Content from SpinnerChief', 'feedzy-rss-feeds' );
-			$default['full_content_spinnerchief:disabled'] = __( '🚫 Full content from SpinnerChief', 'feedzy-rss-feeds' );
-			$default['content_wordai:disabled']            = __( '🚫 Content from WordAI', 'feedzy-rss-feeds' );
-			$default['full_content_wordai:disabled']       = __( '🚫 Full content from WordAI', 'feedzy-rss-feeds' );
-
-			$default['translated_content:disabled']      = __( '🚫 Translated Content', 'feedzy-rss-feeds' );
-			$default['translated_description:disabled']  = __( '🚫 Translated Description', 'feedzy-rss-feeds' );
-			$default['translated_full_content:disabled'] = __( '🚫 Translated Full Content', 'feedzy-rss-feeds' );
-
-			$default['content_feedzy_rewrite:disabled']      = __( '🚫 Paraphrased content using Feedzy', 'feedzy-rss-feeds' );
-			$default['full_content_feedzy_rewrite:disabled'] = __( '🚫 Paraphrased Full content using Feedzy', 'feedzy-rss-feeds' );
-
+			$default['item_full_content:disabled'] = __( '🚫 Item Full Content', 'feedzy-rss-feeds' );
 		}
 
 		return $default;
@@ -2818,5 +2849,18 @@ class Feedzy_Rss_Feeds_Import {
 			);
 		}
 		wp_send_json( $response );
+	}
+
+	/**
+	 * Handle item content actions.
+	 *
+	 * @param string $actions Item content actions.
+	 * @return object `Feedzy_Rss_Feeds_Actions` class instance.
+	 */
+	public function handle_content_actions( $actions = '' ) {
+		$action_instance = Feedzy_Rss_Feeds_Actions::instance();
+		$action_instance->set_actions( $actions );
+		$action_instance->set_settings( $this->settings );
+		return $action_instance;
 	}
 }

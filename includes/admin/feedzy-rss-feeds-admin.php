@@ -162,11 +162,29 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		$upsell_screens = array( 'feedzy-rss_page_feedzy-settings', 'feedzy-rss_page_feedzy-admin-menu-pro-upsell' );
-		if ( ( ! defined( 'TI_CYPRESS_TESTING' ) ) && ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type && get_option( 'feedzy_import_tour' ) ) ) {
-			wp_enqueue_script( $this->plugin_name . '_react', 'https://unpkg.com/react@18/umd/react.production.min.js', array( 'wp-editor', 'wp-api' ), $this->version, true );
-			wp_enqueue_script( $this->plugin_name . '_react_dom', 'https://unpkg.com/react-dom@18/umd/react-dom.production.min.js', array(), $this->version, true );
-			wp_enqueue_script( $this->plugin_name . '_on_boarding', FEEDZY_ABSURL . 'js/Onboarding/import-onboarding.min.js', array(), $this->version, true );
+		if ( 'feedzy_imports' === $screen->post_type && 'edit' !== $screen->base ) {
+			if ( ! wp_script_is( 'react' ) ) {
+				wp_register_script( 'react', 'https://unpkg.com/react@18/umd/react.production.min.js', array(), $this->version, true );
+			}
+			if ( ! wp_script_is( 'react-dom' ) ) {
+				wp_register_script( 'react-dom', 'https://unpkg.com/react-dom@18/umd/react-dom.production.min.js', array(), $this->version, true );
+			}
+			wp_enqueue_script( $this->plugin_name . '_action_popup', FEEDZY_ABSURL . 'js/ActionPopup/action-popup.min.js', array( 'react', 'react-dom', 'wp-editor', 'wp-api' ), $this->version, true );
+
+			wp_localize_script(
+				$this->plugin_name . '_action_popup',
+				'feedzyData',
+				array(
+					'isPro'            => feedzy_is_pro(),
+					'isBusinessPlan'   => apply_filters( 'feedzy_is_license_of_type', false, 'business' ),
+					'isAgencyPlan'     => apply_filters( 'feedzy_is_license_of_type', false, 'agency' ),
+					'apiLicenseStatus' => $this->api_license_status(),
+				)
+			);
 			wp_enqueue_style( 'wp-block-editor' );
+		}
+		if ( ! defined( 'TI_CYPRESS_TESTING' ) && ( 'feedzy_imports' === $screen->post_type && get_option( 'feedzy_import_tour' ) ) ) {
+			wp_enqueue_script( $this->plugin_name . '_on_boarding', FEEDZY_ABSURL . 'js/Onboarding/import-onboarding.min.js', array( 'react', 'react-dom', 'wp-editor', 'wp-api' ), $this->version, true );
 		}
 
 		if ( ! in_array( $screen->base, $upsell_screens, true ) && strpos( $screen->id, 'feedzy' ) === false ) {
@@ -1482,5 +1500,36 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			} );
 		</script>
 		<?php
+	}
+
+	/**
+	 * API license status.
+	 *
+	 * @return array
+	 */
+	public function api_license_status() {
+		$pro_options = get_option( 'feedzy-rss-feeds-settings', array() );
+		$data        = array(
+			'spinnerChiefStatus' => false,
+			'wordaiStatus'       => false,
+			'openaiStatus'       => false,
+		);
+		if ( ! feedzy_is_pro() ) {
+			return $data;
+		}
+		if ( apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) {
+			if ( isset( $pro_options['spinnerchief_licence'] ) && 'yes' === $pro_options['spinnerchief_licence'] ) {
+				$data['spinnerChiefStatus'] = true;
+			}
+			if ( isset( $pro_options['wordai_licence'] ) && 'yes' === $pro_options['wordai_licence'] ) {
+				$data['wordaiStatus'] = true;
+			}
+		}
+		if ( isset( $pro_options['openai_licence'] ) && 'yes' === $pro_options['openai_licence'] ) {
+			if ( apply_filters( 'feedzy_is_license_of_type', false, 'business' ) || apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) {
+				$data['openaiStatus'] = true;
+			}
+		}
+		return $data;
 	}
 }

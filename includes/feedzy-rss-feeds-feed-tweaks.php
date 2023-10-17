@@ -259,7 +259,7 @@ function feedzy_custom_tag_escape( $content = '' ) {
 			$content = wp_kses( $content, wp_kses_allowed_html( 'post' ) );
 		}
 	}
-	return $content;
+	return trim( $content );
 }
 
 /**
