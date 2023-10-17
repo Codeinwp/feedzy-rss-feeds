@@ -11,6 +11,7 @@ global $post;
 <?php if ( get_option( 'feedzy_import_tour' ) && ! defined( 'TI_CYPRESS_TESTING' ) ) : ?>
 	<div id="fz-on-boarding"></div>
 <?php endif; ?>
+<div id="fz-action-popup"></div>
 <div class="feedzy-wrap" id="feedzy-import-form">
 	<div class="feedzy-accordion">
 		<!-- <div> -->
@@ -380,15 +381,8 @@ global $post;
 												</div>
 												<div class="help-text">
 													<?php
-														$magic_tags = array(
-															'item_title',
-															'item_author',
-															'item_date',
-														);
-														$magic_tags = apply_filters( 'feedzy_get_service_magic_tags', $magic_tags, 'title' );
-
 														esc_html_e( 'You can add multiple items. Keep in mind that this field is mandatory - without it, a post will not be created.', 'feedzy-rss-feeds' );
-														?>
+													?>
 												</div>
 											</div>
 											<div class="fz-input-group-right">
@@ -458,24 +452,8 @@ global $post;
 												</div>
 												<div class="help-text">
 													<?php
-														$magic_tags = array(
-															'item_description',
-															'item_content',
-															'item_image',
-														);
-														if ( apply_filters( 'feedzy_is_license_of_type', false, 'business' ) ) {
-															$magic_tags = array_merge(
-																$magic_tags,
-																array(
-																	'item_full_content',
-																)
-															);
-															$magic_tags = apply_filters( 'feedzy_get_service_magic_tags', $magic_tags, 'full_content' );
-														}
-														$magic_tags = apply_filters( 'feedzy_get_service_magic_tags', $magic_tags, 'content' );
-
 														esc_html_e( 'You can add more tags and other things that will be added in the Single Post layout. This field is mandatory.', 'feedzy-rss-feeds' );
-														?>
+													?>
 												</div>
 											</div>
 											<div class="fz-input-group-right">

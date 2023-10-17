@@ -278,7 +278,7 @@
 			}
 		} );
 
-		$("a.dropdown-item:not(.source)").on("click", append_tag);
+		$("a.dropdown-item:not(.source,[data-action_popup])").on("click", append_tag);
 		$(".add-outside-tags").on("click", append_outside_tag);
 		$("a.dropdown-item.source").on("click", add_source);
 		$( document ).on( 'click', '.btn-remove-fields', remove_row );
@@ -480,11 +480,31 @@
 		var mixContent = $( '.fz-textarea-tagify' ).tagify( {
 			mode: 'mix',
 			editTags: false,
-			originalInputValueFormat: function( valuesArr ) {
-				return valuesArr.map( function( item ) {
-					return item.value;
-				} )
-				.join( ', ' );
+			templates: {
+				tag: function( tagData ) {
+					try{
+						var decodeTagData = decodeURIComponent(tagData.value);
+						var isEncoded = typeof tagData.value === "string" && decodeTagData !== tagData.value;
+						var tagLabel = tagData.value;
+						if ( isEncoded ) {
+							decodeTagData = JSON.parse( decodeTagData );
+							decodeTagData = decodeTagData[0] || {};
+							tagLabel = decodeTagData.tag.replaceAll( '_', ' ' );
+							tagData['data-actions'] = tagData.value;
+						}
+						return `
+						<tag title='${tagLabel}' contenteditable='false' spellcheck="false" class='tagify__tag ${isEncoded ? 'fz-content-action' : ''}'>
+							<x title='remove tag' class='tagify__tag__removeBtn'></x>
+							<div>
+								<span class='tagify__tag-text'>${tagLabel}</span>
+								${tagData['data-actions'] ?
+									`<a href="javascript:;" class="tagify__filter-icon" ${this.getAttributes(tagData)}></a>` : ''
+								}
+							</div>
+						</tag>`
+					}
+					catch(err){}
+				}
 			}
 		} );
 
