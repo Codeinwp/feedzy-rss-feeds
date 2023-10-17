@@ -193,6 +193,12 @@
 							var sel_option = "";
 							if (in_array(index + "_" + i, tax_selected)) {
 								sel_option = "selected";
+								if ( $("#feedzy_post_terms").hasClass('fz-chosen-custom-tag') ) {
+									var removeItem = index + "_" + i;
+									tax_selected = $.grep(tax_selected, function(value) {
+										return value != removeItem;
+									});
+								}
 							}
 							options +=
 								'<option value="' +
@@ -208,6 +214,11 @@
 						options += "</optgroup>";
 					}
 				});
+				if ( tax_selected.length > 0 && $("#feedzy_post_terms").hasClass('fz-chosen-custom-tag') ) {
+					$.each(tax_selected, function (index, customTag) {
+						options += '<option value="' + customTag + '" selected>' + customTag + '</option>';
+					} );
+				}
 			} else {
 				show_terms = false;
 				options = $("#empty_select_tpl").html();
@@ -219,7 +230,11 @@
 	}
 
 	function htmlEntities(str) {
-		return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+		return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+	}
+
+	function escapeSelector(string) {
+		return String(string).replace(/([ !"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~])/g,'\\$1');
 	}
 
 	$(document).ready(function () {
@@ -279,6 +294,35 @@
 		$(".feedzy-chosen").chosen({ width: "100%" });
 		$("#feedzy_post_type").on("change", update_taxonomy);
 		$("#feedzy_post_status").trigger("change");
+
+		// Add magic tag support for post taxonomy field.
+		$("#feedzy_post_terms.fz-chosen-custom-tag").on("chosen:no_results", function() {
+			var select = $(this);
+			var search = select.siblings(".chosen-container").find(".chosen-choices .search-field:last input");
+			var text = htmlEntities(search.val());
+    		// dont add if it already exists
+			if (! select.find('option[value=' + escapeSelector(search.val()) + ']').length) {
+				var btn = $('<li class="active-result highlighted">' + text + '</li>');
+				btn.on("mousedown mouseup click", function(e) {
+					var arr = select.val();
+					select.html(select.html() + "<option value='" + text + "'>" + text + "</option>");
+					select.val(arr.concat([text]));
+					select.trigger("chosen:updated").trigger('chosen:close');
+					// search.focus();
+					e.stopImmediatePropagation();
+					return false;
+				});
+				search.on("keydown", function(e) {
+					if (e.which == 13) {
+						btn.click();
+						return false;
+					}
+				});
+				select.siblings(".chosen-container").find(".no-results").replaceWith(btn);
+			} else {
+				select.siblings(".chosen-container").find(".no-results").replaceWith('');
+			}
+		})
 
 		/*
          Form
