@@ -294,6 +294,11 @@ class Feedzy_Rss_Feeds {
 				}
 			);
 		}
+
+		$offer = new Feedzy_Rss_Feeds_Limited_Offers();
+		if ( $offer->can_show_dashboard_banner() && $offer->is_active() ) {
+			$offer->load_dashboard_hooks();
+		}
 	}
 
 	/**

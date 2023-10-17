@@ -1,3 +1,5 @@
+@import url('https://fonts.cdnfonts.com/css/barlow');
+
 .feedzy-wrap *{
 	box-sizing: border-box;
 	margin: 0;
@@ -137,7 +139,7 @@
 	padding: 30px 90px 30px 30px;
 }
 .feedzy-accordion-item .feedzy-accordion__step-number{
-	padding-bottom: 10px;	
+	padding-bottom: 10px;
 }
 .feedzy-accordion-item .feedzy-accordion__step-title{
 	color: #050505;
@@ -2145,4 +2147,28 @@ li.draggable-item .components-panel__body-toggle.components-button{
 }
 .fz-chat-cpt-action .error-message {
     right: 40px !important;
+}
+
+.feedzy-sale {
+	margin-bottom: 20px;
+	display: flex;
+}
+
+.feedzy-sale a {
+	position: relative;
+}
+
+.feedzy-sale .feedzy-urgency {
+	position: absolute;
+	top: 15px;
+	left: 19px;
+
+	color: #FFF;
+	font-family: Barlow, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+	letter-spacing: 0.3px;
+	text-transform: uppercase;
 }
