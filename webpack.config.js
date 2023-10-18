@@ -31,6 +31,9 @@ const extractConfig = {
 };
 
 module.exports = {
+    externals: {
+        'lodash': 'lodash'
+    },
     entry: {
         './includes/gutenberg/build/block': './includes/gutenberg/src/block.js',
         './js/Onboarding/import-onboarding.min': './js/Onboarding/import-onboarding.js',

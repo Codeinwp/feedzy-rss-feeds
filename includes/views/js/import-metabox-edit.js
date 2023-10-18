@@ -781,7 +781,7 @@
 			if ( $( '.feedzy-media-preview' ).length ) {
 				$( '.feedzy-media-preview' ).find( 'img' ).attr( 'src', attachmentUrl );
 			} else {
-				$( '<div class="fz-form-group feedzy-media-preview"><img src="' + attachmentUrl + '"></div>' ).insertBefore( button.parent() );
+				$( '<div class="fz-form-group mb-20 feedzy-media-preview"><img src="' + attachmentUrl + '"></div>' ).insertBefore( button.parent() );
 			}
 			button.parent().find( '.feedzy-remove-media' ).addClass( 'is-show' );
 			button.parent().find( 'input:hidden' ).val( attachment.id ).trigger( 'change' );
