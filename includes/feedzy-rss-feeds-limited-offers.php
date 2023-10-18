@@ -69,7 +69,8 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 	 */
 	public function load_dashboard_hooks() {
 		add_filter( 'themeisle_products_deal_priority', array( $this, 'add_priority' ) );
-		add_action( 'admin_notices', array( $this, 'render_dashboard_banner' ) );
+		add_action( 'admin_notices', array( $this, 'render_notice') );
+		add_action( 'admin_notices', array( $this, 'render_banner' ) );
 		add_action( 'wp_ajax_dismiss_themeisle_sale_notice_feedzy', array( $this, 'disable_notification_ajax' ) );
 	}
 
@@ -95,6 +96,7 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 			'bannerAlt'     => 'Feedzy Black Friday Sale',
 			'linkDashboard' => tsdk_utmify( 'https://themeisle.com/plugins/feedzy-rss-feeds/blackfriday', 'blackfridayltd23', 'dashboard' ),
 			'linkGlobal'    => tsdk_utmify( 'https://themeisle.com/plugins/feedzy-rss-feeds/blackfriday', 'blackfridayltd23', 'globalnotice' ),
+			'urgencyText'   => 'Hurry Up! Only ' . $this->get_remaining_time_for_deal( $this->get_active_deal() ) . ' left',
 		);
 	}
 
@@ -217,10 +219,19 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 	 *
 	 * @return void
 	 */
-	public function render_dashboard_banner() {
+	public function render_notice() {
 
 		if ( ! $this->has_priority() ) {
 			return;
+		}
+
+		// Do not show this notice on the particular pages because it will interfere with the promotion from big banner.
+		if ( function_exists( 'get_current_screen' ) ) {
+			$screen = get_current_screen();
+			if ( $screen->base === 'edit' &&
+				( $screen->post_type === 'feedzy_imports' || $screen->post_type === 'feedzy_categories' ) ) {
+				return;
+			}
 		}
 
 		$message = 'Feedzy <strong>Black Friday Sale</strong> - Save big with a <strong>Lifetime License</strong> of Feedzy Agency Plan. <strong>Only 100 licenses</strong>, for a limited time!';
@@ -314,7 +325,17 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 	 * @return array Array enhanced with Neve priority.
 	 */
 	public function add_priority( $products ) {
+
 		$products['feedzy'] = 2;
+
+		if ( function_exists( 'get_current_screen' ) ) {
+			$screen = get_current_screen();
+			if ( $screen->base === 'edit' && ( $screen->post_type === 'feedzy_imports' || $screen->post_type === 'feedzy_categories' ) ) {
+				// Small hack to supress rendering of other notices in those pages.
+				$products['feedzy'] = -2;
+			}
+		}
+
 		return $products;
 	}
 
@@ -333,5 +354,60 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 
 		$highest_priority = array_search( min( $products ), $products, true );
 		return 'feedzy' === $highest_priority;
+	}
+
+	/**
+	 * Render the banner.
+	 *
+	 * @return void
+	 */
+	public function render_banner() {
+
+		if ( ! function_exists( 'get_current_screen' ) ) {
+			return;
+		}
+
+		$screen = get_current_screen();
+		if ( $screen->base !== 'edit' ||
+			( $screen->post_type !== 'feedzy_imports' && $screen->post_type !== 'feedzy_categories' ) ) {
+			return;
+		}
+
+		?>
+		<style>
+			.themeisle-sale-banner {
+				display: flex;
+				margin-top: 15px;
+			}
+			.themeisle-sale-banner a {
+				position: relative;
+			}
+			.themeisle-sale-banner img {
+				width: 100%
+			}
+			.themeisle-sale-banner .themeisle-sale-urgency {
+				position: absolute;
+				top: 15px;
+				left: 19px;
+
+				color: #FFF;
+				font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", sans-serif;
+				font-size: 14px;
+				font-style: normal;
+				font-weight: 700;
+				line-height: normal;
+				letter-spacing: 0.3px;
+				text-transform: uppercase;
+			}
+		</style>
+		<div class="themeisle-sale-banner">
+		   <a href="<?php echo esc_url( ! empty( $this->offer_metadata['linkDashboard'] ) ? $this->offer_metadata['linkDashboard'] : '' ); ?>" target="_blank" rel="external noreferrer noopener">
+			   <img src="<?php echo esc_url( ! empty( $this->offer_metadata['bannerUrl'] ) ? $this->offer_metadata['bannerUrl'] : '' ); ?>" alt="<?php echo esc_attr( ! empty( $this->offer_metadata['bannerAlt'] ) ? $this->offer_metadata['bannerAlt'] : '' ); ?>">
+			   <div class="themeisle-sale-urgency">
+					 <?php echo esc_html( ! empty( $this->offer_metadata['urgencyText'] ) ? $this->offer_metadata['urgencyText'] : '' ); ?>
+			   </div>
+		   </a>
+		</div>
+		<?php
 	}
 }
