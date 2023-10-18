@@ -269,10 +269,10 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 
 			<span>
 				<?php echo wp_kses_post( $message ); ?>
+				<a href="<?php echo esc_url( ! empty( $this->offer_metadata['linkGlobal'] ) ? $this->offer_metadata['linkGlobal'] : '' ); ?>" target="_blank" rel="external noreferrer noopener">
+					<?php esc_html_e( 'Learn more', 'feedzy-rss-feeds' ); ?>
+				</a>
 			</span>
-			<a href="<?php echo esc_url( ! empty( $this->offer_metadata['linkGlobal'] ) ? $this->offer_metadata['linkGlobal'] : '' ); ?>" target="_blank" rel="external noreferrer noopener">
-				<?php esc_html_e( 'Learn more', 'feedzy-rss-feeds' ); ?>
-			</a>
 			<span class="themeisle-sale-error"></span>
 		</div>
 		<script type="text/javascript">
@@ -378,17 +378,22 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 			.themeisle-sale-banner {
 				display: flex;
 				margin-top: 15px;
+
+				min-width: 230px;
+				min-height: 50px;
 			}
 			.themeisle-sale-banner a {
 				position: relative;
 			}
 			.themeisle-sale-banner img {
-				width: 100%
+				width: 100%;
+				height: 100%;
 			}
 			.themeisle-sale-banner .themeisle-sale-urgency {
 				position: absolute;
-				top: 15px;
-				left: 19px;
+
+				top: 10%;
+				left: 1.5%;
 
 				color: #FFF;
 				font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -398,6 +403,25 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 				line-height: normal;
 				letter-spacing: 0.3px;
 				text-transform: uppercase;
+
+
+			}
+			@media(max-width: 480px) {
+				.themeisle-sale-banner .themeisle-sale-urgency {
+					font-size: 7px;
+				}
+			}
+
+			@media (min-width: 481px) and (max-width: 1024px) {
+				.themeisle-sale-banner .themeisle-sale-urgency {
+					font-size: 10px;
+				}
+			}
+
+			@media (min-width: 411px) and (max-width: 1024px) {
+				.themeisle-sale-banner {
+					min-width: 500px;
+				}
 			}
 		</style>
 		<div class="themeisle-sale-banner">
