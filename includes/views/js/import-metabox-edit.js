@@ -509,11 +509,6 @@
 			}
 		} );
 
-		if ( mixContent.length ) {
-			mixContent.data('tagify').removeAllTags();
-			mixContent.data('tagify').parseMixTags( htmlEntities( mixContent.text() ) );
-		}
-
 		// Tagify for outside tags with allowed duplicates.
 		$( '.fz-tagify-outside' ).tagify( {
 			editTags: true,

@@ -161,7 +161,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			);
 		}
 
-		$upsell_screens = array( 'feedzy-rss_page_feedzy-settings', 'feedzy-rss_page_feedzy-admin-menu-pro-upsell' );
+		$upsell_screens = array( 'post', 'feedzy-rss_page_feedzy-settings', 'feedzy-rss_page_feedzy-admin-menu-pro-upsell' );
 		if ( 'feedzy_imports' === $screen->post_type && 'edit' !== $screen->base ) {
 			if ( ! wp_script_is( 'react' ) ) {
 				wp_register_script( 'react', 'https://unpkg.com/react@18/umd/react.production.min.js', array(), $this->version, true );
@@ -183,7 +183,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			);
 			wp_enqueue_style( 'wp-block-editor' );
 		}
-		if ( ! defined( 'TI_CYPRESS_TESTING' ) && ( 'feedzy_imports' === $screen->post_type && get_option( 'feedzy_import_tour' ) ) ) {
+		if ( ! defined( 'TI_CYPRESS_TESTING' ) && ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type && get_option( 'feedzy_import_tour' ) ) ) {
 			wp_enqueue_script( $this->plugin_name . '_on_boarding', FEEDZY_ABSURL . 'js/Onboarding/import-onboarding.min.js', array( 'react', 'react-dom', 'wp-editor', 'wp-api' ), $this->version, true );
 		}
 
@@ -191,17 +191,19 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			return;
 		}
 
-		wp_enqueue_script( $this->plugin_name . '_feedback', FEEDZY_ABSURL . 'js/FeedBack/feedback.min.js', array( 'react', 'react-dom', 'wp-editor', 'wp-api' ), $this->version, true );
-		wp_enqueue_style( 'wp-block-editor' );
+		if ( 'feedzy_page_feedzy-support' === $screen->base || ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type ) ) {
+			wp_enqueue_script( $this->plugin_name . '_feedback', FEEDZY_ABSURL . 'js/FeedBack/feedback.min.js', array( 'react', 'react-dom', 'wp-editor', 'wp-api' ), $this->version, true );
+			wp_enqueue_style( 'wp-block-editor' );
 
-		wp_localize_script(
-			$this->plugin_name . '_feedback',
-			'feedzyObj',
-			array(
-				'assetsUrl'     => FEEDZY_ABSURL,
-				'pluginVersion' => $this->version,
-			)
-		);
+			wp_localize_script(
+				$this->plugin_name . '_feedback',
+				'feedzyObj',
+				array(
+					'assetsUrl'     => FEEDZY_ABSURL,
+					'pluginVersion' => $this->version,
+				)
+			);
+		}
 
 		wp_enqueue_style( $this->plugin_name . '-settings', FEEDZY_ABSURL . 'css/settings.css', array(), $this->version );
 		wp_enqueue_style( $this->plugin_name . '-metabox', FEEDZY_ABSURL . 'css/metabox-settings.css', array( $this->plugin_name . '-settings' ), $this->version );
