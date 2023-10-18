@@ -79,7 +79,7 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 		$this->active     = 'bf';
 
 		$this->offer_metadata = array(
-			'bannerUrl'     => FEEDZY_ABSURL . 'img/black-friday-banner.png', // TODO: change this based on product.
+			'bannerUrl'     => FEEDZY_ABSURL . 'img/black-friday-banner.png',
 			'bannerAlt'     => 'Feedzy Black Friday Sale',
 			'linkDashboard' => tsdk_utmify( 'https://themeisle.com/plugins/feedzy-rss-feeds/blackfriday', 'blackfridayltd23', 'dashboard' ),
 			'linkGlobal'    => tsdk_utmify( 'https://themeisle.com/plugins/feedzy-rss-feeds/blackfriday', 'blackfridayltd23', 'globalnotice' ),
@@ -246,7 +246,6 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 		</style>
 		<div class="themeisle-sale notice notice-info is-dismissible">
 			<div class="notice-dismiss"></div>
-			<!--- TODO: change this based on product. -->
 			<svg width="24px" height="24px" viewBox="0 0 77 77" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 				<!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
 				<title>Combined Shape</title>
@@ -310,18 +309,19 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 	}
 
 	/**
-	 * Add priority to the filter.
+	 * Add product priority to the filter.
 	 *
 	 * @param array $products Registered products.
 	 * @return array Array enhanced with Neve priority.
 	 */
 	public function add_priority( $products ) {
-		$products['feedzy'] = 3; // TODO: change this based on product.
+		$products['feedzy'] = 2;
 		return $products;
 	}
 
 	/**
 	 * Check if the current product has priority.
+	 * Use this for conditional rendering if you want to show the banner only for one product.
 	 *
 	 * @return bool True if the current product has priority.
 	 */
@@ -333,6 +333,6 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 		}
 
 		$highest_priority = array_search( min( $products ), $products, true );
-		return 'feedzy' === $highest_priority; // TODO: change this based on product.
+		return 'feedzy' === $highest_priority;
 	}
 }
