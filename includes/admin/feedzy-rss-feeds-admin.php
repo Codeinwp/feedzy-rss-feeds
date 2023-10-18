@@ -557,7 +557,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @access  public
 	 */
 	public function feedzy_settings_page() {
-		if ( isset( $_POST['feedzy-settings-submit'] ) && isset( $_POST['tab'] ) && wp_verify_nonce( filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING ), filter_input( INPUT_POST, 'tab', FILTER_SANITIZE_STRING ) ) ) {
+		if ( isset( $_POST['feedzy-settings-submit'] ) && isset( $_POST['tab'] ) && wp_verify_nonce( filter_input( INPUT_POST, 'nonce', FILTER_UNSAFE_RAW ), filter_input( INPUT_POST, 'tab', FILTER_UNSAFE_RAW ) ) ) {
 			$this->save_settings();
 			$this->notice = __( 'Your settings were saved.', 'feedzy-rss-feeds' );
 		}
@@ -575,10 +575,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! isset( $_POST['tab'] ) ) {
 			return;
 		}
-		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING ), filter_input( INPUT_POST, 'tab', FILTER_SANITIZE_STRING ) ) ) {
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( filter_input( INPUT_POST, 'nonce', FILTER_UNSAFE_RAW ), filter_input( INPUT_POST, 'tab', FILTER_UNSAFE_RAW ) ) ) {
 			return;
 		}
-		$post_tab = isset( $_POST['tab'] ) ? filter_input( INPUT_POST, 'tab', FILTER_SANITIZE_STRING ) : '';
+		$post_tab = isset( $_POST['tab'] ) ? filter_input( INPUT_POST, 'tab', FILTER_UNSAFE_RAW ) : '';
 
 		$settings = apply_filters( 'feedzy_get_settings', array() );
 		switch ( $post_tab ) {
@@ -588,18 +588,18 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				$settings['general']['feedzy-delete-days'] = isset( $_POST['feedzy-delete-days'] ) ? (int) filter_input( INPUT_POST, 'feedzy-delete-days', FILTER_SANITIZE_NUMBER_INT ) : '';
 				$settings['general']['default-thumbnail-id'] = isset( $_POST['default-thumbnail-id'] ) ? (int) filter_input( INPUT_POST, 'default-thumbnail-id', FILTER_SANITIZE_NUMBER_INT ) : 0;
 				$settings['general']['fz_cron_execution'] = isset( $_POST['fz_cron_execution'] ) ? sanitize_text_field( wp_unslash( $_POST['fz_cron_execution'] ) ) : '';
-				$settings['general']['fz_cron_schedule'] = isset( $_POST['fz_cron_schedule'] ) ? filter_input( INPUT_POST, 'fz_cron_schedule', FILTER_SANITIZE_STRING ) : 'hourly';
-				$settings['general']['fz_execution_offset'] = isset( $_POST['fz_execution_offset'] ) ? filter_input( INPUT_POST, 'fz_execution_offset', FILTER_SANITIZE_STRING ) : '';
+				$settings['general']['fz_cron_schedule'] = isset( $_POST['fz_cron_schedule'] ) ? filter_input( INPUT_POST, 'fz_cron_schedule', FILTER_UNSAFE_RAW ) : 'hourly';
+				$settings['general']['fz_execution_offset'] = isset( $_POST['fz_execution_offset'] ) ? filter_input( INPUT_POST, 'fz_execution_offset', FILTER_UNSAFE_RAW ) : '';
 				break;
 			case 'headers':
-				$settings['header']['user-agent'] = isset( $_POST['user-agent'] ) ? filter_input( INPUT_POST, 'user-agent', FILTER_SANITIZE_STRING ) : '';
+				$settings['header']['user-agent'] = isset( $_POST['user-agent'] ) ? filter_input( INPUT_POST, 'user-agent', FILTER_UNSAFE_RAW ) : '';
 				break;
 			case 'proxy':
 				$settings['proxy'] = array(
-					'host' => isset( $_POST['proxy-host'] ) ? filter_input( INPUT_POST, 'proxy-host', FILTER_SANITIZE_STRING ) : '',
+					'host' => isset( $_POST['proxy-host'] ) ? filter_input( INPUT_POST, 'proxy-host', FILTER_UNSAFE_RAW ) : '',
 					'port' => isset( $_POST['proxy-port'] ) ? filter_input( INPUT_POST, 'proxy-port', FILTER_SANITIZE_NUMBER_INT ) : '',
-					'user' => isset( $_POST['proxy-user'] ) ? filter_input( INPUT_POST, 'proxy-user', FILTER_SANITIZE_STRING ) : '',
-					'pass' => isset( $_POST['proxy-pass'] ) ? filter_input( INPUT_POST, 'proxy-pass', FILTER_SANITIZE_STRING ) : '',
+					'user' => isset( $_POST['proxy-user'] ) ? filter_input( INPUT_POST, 'proxy-user', FILTER_UNSAFE_RAW ) : '',
+					'pass' => isset( $_POST['proxy-pass'] ) ? filter_input( INPUT_POST, 'proxy-pass', FILTER_UNSAFE_RAW ) : '',
 				);
 				break;
 			default:
@@ -896,7 +896,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	public function ajax() {
 		check_ajax_referer( FEEDZY_NAME, 'security' );
 
-		$post_action = isset( $_POST['_action'] ) ? filter_input( INPUT_POST, '_action', FILTER_SANITIZE_STRING ) : '';
+		$post_action = isset( $_POST['_action'] ) ? filter_input( INPUT_POST, '_action', FILTER_UNSAFE_RAW ) : '';
 		$post_id     = isset( $_POST['id'] ) ? filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT ) : '';
 
 		switch ( $post_action ) {
@@ -1051,7 +1051,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function feedzy_wizard_step_process() {
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
-		$step = ! empty( $_POST['step'] ) ? filter_input( INPUT_POST, 'step', FILTER_SANITIZE_STRING ) : 1;
+		$step = ! empty( $_POST['step'] ) ? filter_input( INPUT_POST, 'step', FILTER_UNSAFE_RAW ) : 1;
 		switch ( $step ) {
 			case 'step_2':
 				$this->setup_wizard_import_feed();
@@ -1076,9 +1076,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	private function setup_wizard_import_feed() {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$feed_url = ! empty( $_POST['feed'] ) ? filter_input( INPUT_POST, 'feed', FILTER_SANITIZE_STRING ) : '';
+		$feed_url = ! empty( $_POST['feed'] ) ? filter_input( INPUT_POST, 'feed', FILTER_UNSAFE_RAW ) : '';
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$integrate_with = ! empty( $_POST['integrate_with'] ) ? filter_input( INPUT_POST, 'integrate_with', FILTER_SANITIZE_STRING ) : '';
+		$integrate_with = ! empty( $_POST['integrate_with'] ) ? filter_input( INPUT_POST, 'integrate_with', FILTER_UNSAFE_RAW ) : '';
 
 		$feed_url = $this->normalize_urls( $feed_url );
 		if ( ! is_array( $feed_url ) ) {
@@ -1114,7 +1114,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	private function setup_wizard_install_plugin() {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$slug = ! empty( $_POST['slug'] ) ? filter_input( INPUT_POST, 'slug', FILTER_SANITIZE_STRING ) : '';
+		$slug = ! empty( $_POST['slug'] ) ? filter_input( INPUT_POST, 'slug', FILTER_UNSAFE_RAW ) : '';
 
 		if ( empty( $slug ) ) {
 			wp_send_json(
@@ -1333,7 +1333,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	private function setup_wizard_create_draft_page( $type = 'shortcode', $return_page_id = false ) {
 		$add_basic_shortcode = ! empty( $_POST['add_basic_shortcode'] ) ? sanitize_text_field( wp_unslash( $_POST['add_basic_shortcode'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$add_basic_shortcode = 'true' === $add_basic_shortcode ? true : false;
-		$basic_shortcode     = ! empty( $_POST['basic_shortcode'] ) ? filter_input( INPUT_POST, 'basic_shortcode', FILTER_SANITIZE_STRING ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$basic_shortcode     = ! empty( $_POST['basic_shortcode'] ) ? filter_input( INPUT_POST, 'basic_shortcode', FILTER_UNSAFE_RAW ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		// Do not create draft page.
 		if ( 'shortcode' === $type && false === $add_basic_shortcode ) {

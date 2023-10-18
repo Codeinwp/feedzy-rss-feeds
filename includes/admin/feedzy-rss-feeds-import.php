@@ -1061,7 +1061,7 @@ class Feedzy_Rss_Feeds_Import {
 	private function get_taxonomies() {
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
 
-		$post_type  = filter_input( INPUT_POST, 'post_type', FILTER_SANITIZE_STRING );
+		$post_type  = filter_input( INPUT_POST, 'post_type', FILTER_UNSAFE_RAW );
 		$taxonomies = get_object_taxonomies(
 			array(
 				'post_type' => $post_type,
@@ -2016,7 +2016,7 @@ class Feedzy_Rss_Feeds_Import {
 	public function add_cron() {
 		$time     = ! empty( $this->free_settings['general']['fz_cron_execution'] ) ? $this->get_cron_execution( $this->free_settings['general']['fz_cron_execution'] ) : time();
 		$schedule = ! empty( $this->free_settings['general']['fz_cron_schedule'] ) ? $this->free_settings['general']['fz_cron_schedule'] : 'hourly';
-		if ( ( isset( $_POST['nonce'] ) && isset( $_POST['tab'] ) ) && ( wp_verify_nonce( filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING ), filter_input( INPUT_POST, 'tab', FILTER_SANITIZE_STRING ) ) ) ) {
+		if ( ( isset( $_POST['nonce'] ) && isset( $_POST['tab'] ) ) && ( wp_verify_nonce( filter_input( INPUT_POST, 'nonce', FILTER_UNSAFE_RAW ), filter_input( INPUT_POST, 'tab', FILTER_UNSAFE_RAW ) ) ) ) {
 			if ( ! empty( $_POST['fz_cron_execution'] ) && ! empty( $_POST['fz_cron_schedule'] ) && ! empty( $_POST['fz_execution_offset'] ) ) {
 				$execution = sanitize_text_field( wp_unslash( $_POST['fz_cron_execution'] ) );
 				$offset    = sanitize_text_field( wp_unslash( $_POST['fz_execution_offset'] ) );
@@ -2196,7 +2196,7 @@ class Feedzy_Rss_Feeds_Import {
 	 * @access  public
 	 */
 	public function save_tab_settings( $settings, $tab ) {
-		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING ), $tab ) ) {
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( filter_input( INPUT_POST, 'nonce', FILTER_UNSAFE_RAW ), $tab ) ) {
 			return;
 		}
 
@@ -2501,7 +2501,7 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		$feedzy_job_id   = filter_input( INPUT_GET, 'feedzy_job_id', FILTER_SANITIZE_NUMBER_INT );
-		$feedzy_job_time = filter_input( INPUT_GET, 'feedzy_job_time', FILTER_SANITIZE_STRING );
+		$feedzy_job_time = filter_input( INPUT_GET, 'feedzy_job_time', FILTER_UNSAFE_RAW );
 
 		if ( is_admin() && $query->is_main_query() && ! empty( $feedzy_job_id ) ) {
 			$meta_query = array(
@@ -2614,8 +2614,8 @@ class Feedzy_Rss_Feeds_Import {
 		global $wpdb;
 
 		// @codingStandardsIgnoreStart
-		$post_type  = isset( $_POST['post_type'] ) ? filter_input( INPUT_POST, 'post_type', FILTER_SANITIZE_STRING ) : '';
-		$search_key = isset( $_POST['search_key'] ) ? filter_input( INPUT_POST, 'search_key', FILTER_SANITIZE_STRING ) : '';
+		$post_type  = isset( $_POST['post_type'] ) ? filter_input( INPUT_POST, 'post_type', FILTER_UNSAFE_RAW ) : '';
+		$search_key = isset( $_POST['search_key'] ) ? filter_input( INPUT_POST, 'search_key', FILTER_UNSAFE_RAW ) : '';
 		// @codingStandardsIgnoreEnd
 
 		$like = '';
@@ -2814,7 +2814,7 @@ class Feedzy_Rss_Feeds_Import {
 	private function wizard_import_feed() {
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
 
-		$post_type   = ! empty( $_POST['post_type'] ) ? filter_input( INPUT_POST, 'post_type', FILTER_SANITIZE_STRING ) : '';
+		$post_type   = ! empty( $_POST['post_type'] ) ? filter_input( INPUT_POST, 'post_type', FILTER_UNSAFE_RAW ) : '';
 		$wizard_data = get_option( 'feedzy_wizard_data', array() );
 		$wizard_data = ! empty( $wizard_data ) ? $wizard_data : array();
 		$wizard_data['post_type'] = $post_type;
