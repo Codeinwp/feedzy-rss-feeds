@@ -161,7 +161,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			);
 		}
 
-		$upsell_screens = array( 'post', 'feedzy-rss_page_feedzy-settings', 'feedzy-rss_page_feedzy-admin-menu-pro-upsell' );
+		$upsell_screens = array( 'feedzy-rss_page_feedzy-settings', 'feedzy-rss_page_feedzy-admin-menu-pro-upsell' );
 		if ( 'feedzy_imports' === $screen->post_type && 'edit' !== $screen->base ) {
 			if ( ! wp_script_is( 'react' ) ) {
 				wp_register_script( 'react', 'https://unpkg.com/react@18/umd/react.production.min.js', array(), $this->version, true );
