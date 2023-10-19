@@ -70,7 +70,6 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 	public function load_dashboard_hooks() {
 		add_filter( 'themeisle_products_deal_priority', array( $this, 'add_priority' ) );
 		add_action( 'admin_notices', array( $this, 'render_notice') );
-		add_action( 'admin_notices', array( $this, 'render_banner' ) );
 		add_action( 'wp_ajax_dismiss_themeisle_sale_notice_feedzy', array( $this, 'disable_notification_ajax' ) );
 	}
 
