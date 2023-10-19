@@ -148,6 +148,16 @@ const ActionModal = () => {
 		return document.querySelector( '.fz-action-popup .fz-action-panel ul' );
 	};
 
+	// Close the popup when click on outside the modal.
+	document.body.addEventListener( 'click', function( e ) {
+		if ( isVisible ) {
+			if ( e.target.closest( '.popover-action-list' ) ) {
+				return;
+			}
+			toggleVisible(false);
+		}
+	} );
+
 	// Click to open action popup.
 	document.querySelectorAll( '[data-action_popup]' ).forEach( actionItem => {
 		actionItem.addEventListener( 'click', ( event ) => {
@@ -239,9 +249,9 @@ const ActionModal = () => {
 											{
 												'item_categories' !== shortCode && (
 													feedzyData.isPro && feedzyData.isAgencyPlan ? (
-														<li onClick={ () => addAction('spinnerchief') }>{__( 'Spin using Spinnerchief', 'feedzy-rss-feeds' )}</li>
+														<li onClick={ () => addAction('spinnerchief') }>{__( 'Spin using SpinnerChief', 'feedzy-rss-feeds' )}</li>
 													) : (
-														<li onClick={ () => addAction('spinnerchief') }>{__( 'Spin using Spinnerchief', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+														<li onClick={ () => addAction('spinnerchief') }>{__( 'Spin using SpinnerChief', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
 													)
 												)
 											}
@@ -257,9 +267,9 @@ const ActionModal = () => {
 											{
 												'item_categories' !== shortCode && (
 													feedzyData.isPro && ( feedzyData.isBusinessPlan || feedzyData.isAgencyPlan ) ? (
-														<li onClick={ () => addAction('chat_gpt_rewrite') }>{__( 'Paraphrase with Chat GPT', 'feedzy-rss-feeds' )}</li>
+														<li onClick={ () => addAction('chat_gpt_rewrite') }>{__( 'Paraphrase with ChatGPT', 'feedzy-rss-feeds' )}</li>
 													) : (
-														<li onClick={ () => addAction('chat_gpt_rewrite') }>{__( 'Paraphrase with Chat GPT', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+														<li onClick={ () => addAction('chat_gpt_rewrite') }>{__( 'Paraphrase with ChatGPT', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
 													)
 												)
 											}

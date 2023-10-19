@@ -385,7 +385,7 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		}
 
 		/**
-		 * Chat GPT rewrite content.
+		 * ChatGPT rewrite content.
 		 *
 		 * @return string
 		 */
