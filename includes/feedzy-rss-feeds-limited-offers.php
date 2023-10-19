@@ -438,4 +438,13 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 		</div>
 		<?php
 	}
+
+	/**
+	 * Load the banner with the dashboard hooks.
+	 *
+	 * @return void
+	 */
+	public function load_banner() {
+		add_action( 'admin_notices', array( $this, 'render_banner' ) );
+	}
 }
