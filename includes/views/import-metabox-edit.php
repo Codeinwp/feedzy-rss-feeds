@@ -748,7 +748,7 @@ global $post;
 								if ( $default_thumbnail_id ) :
 									$btn_label = esc_html__( 'Replace image', 'feedzy-rss-feeds' );
 									?>
-									<div class="fz-form-group feedzy-media-preview">
+									<div class="fz-form-group mb-20 feedzy-media-preview">
 										<?php echo wp_get_attachment_image( $default_thumbnail_id, 'thumbnail' ); ?>
 									</div>
 								<?php endif; ?>
