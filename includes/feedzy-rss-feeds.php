@@ -295,14 +295,13 @@ class Feedzy_Rss_Feeds {
 			);
 		}
 
-		$offer = new Feedzy_Rss_Feeds_Limited_Offers();
-		if ( $offer->is_active() ) {
-			add_action( 'admin_notices', array( $offer, 'render_banner' ) );
-
-			if ( ! feedzy_is_pro() && $offer->can_show_dashboard_banner() ) {
+		if ( ! feedzy_is_pro() ) {
+			$offer = new Feedzy_Rss_Feeds_Limited_Offers();
+			if ( $offer->is_active() && $offer->can_show_dashboard_banner() ) {
 				$offer->load_dashboard_hooks();
 			}
 		}
+
 	}
 
 	/**
