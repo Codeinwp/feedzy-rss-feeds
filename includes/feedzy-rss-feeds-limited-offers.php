@@ -227,8 +227,10 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 		// Do not show this notice on the particular pages because it will interfere with the promotion from big banner.
 		if ( function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
-			if ( $screen->base === 'edit' &&
-				( $screen->post_type === 'feedzy_imports' || $screen->post_type === 'feedzy_categories' ) ) {
+			if (
+					( $screen->base === 'edit' && ( $screen->post_type === 'feedzy_imports' || $screen->post_type === 'feedzy_categories' ) ) ||
+				 'feedzy_page_feedzy-settings' === $screen->id
+			) {
 				return;
 			}
 		}
@@ -329,7 +331,10 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 
 		if ( function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
-			if ( $screen->base === 'edit' && ( $screen->post_type === 'feedzy_imports' || $screen->post_type === 'feedzy_categories' ) ) {
+			if (
+				 ( $screen->base === 'edit' && ( $screen->post_type === 'feedzy_imports' || $screen->post_type === 'feedzy_categories' ) ) ||
+				 'feedzy_page_feedzy-settings' === $screen->id
+			) {
 				// Small hack to supress rendering of other notices in those pages.
 				$products['feedzy'] = -2;
 			}
