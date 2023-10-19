@@ -203,7 +203,7 @@ const ActionModal = () => {
 					<div className="fz-action-body">
 						{ ! isHideMsg && (
 							<div className="fz-action-intro">
-								<p>{ __( 'Feedzy now supports adding and chaining actions into a single tag. Add an action by clicking the Add new button below. You can add multiple actions in each tag.', 'feedzy-rss-feeds' ) }
+								<p>{ __( 'Feedzy now supports adding and chaining actions into a single tag. Add an action by clicking the Add new button below. You can add multiple actions in each tag.', 'feedzy-rss-feeds' ) }<br/>
 								<ExternalLink href="https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation">{ __( 'Learn more about this feature.', 'feedzy-rss-feeds' ) }</ExternalLink></p>
 							</div>
 						) }
