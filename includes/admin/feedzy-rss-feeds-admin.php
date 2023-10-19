@@ -380,7 +380,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			return true;
 		} else {
 			foreach ( $category_meta as $key => $value ) {
-				$value = array_map( 'esc_url', (array) $value );
+				$value = array_map( 'sanitize_url', (array) $value );
 				$value = implode( ',', (array) $value );
 				if ( get_post_meta( $post_id, $key, false ) ) {
 					update_post_meta( $post_id, $key, $value );
