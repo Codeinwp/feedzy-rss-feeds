@@ -288,7 +288,7 @@ const ActionModal = () => {
 													)
 												)
 											}
-											<li className="link-item"><ExternalLink href="https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation">{ __( 'Learn more about this feature.', 'feedzy-rss-feeds' ) }</ExternalLink></li>
+											<li className="link-item"><ExternalLink href="https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#tag-actions">{ __( 'Learn more about this feature.', 'feedzy-rss-feeds' ) }</ExternalLink></li>
 										</ul>
 									</div>
 								)}
