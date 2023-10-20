@@ -148,6 +148,16 @@ const ActionModal = () => {
 		return document.querySelector( '.fz-action-popup .fz-action-panel ul' );
 	};
 
+	// Close the popup when click on outside the modal.
+	document.body.addEventListener( 'click', function( e ) {
+		if ( isVisible ) {
+			if ( e.target.closest( '.popover-action-list' ) ) {
+				return;
+			}
+			toggleVisible(false);
+		}
+	} );
+
 	// Click to open action popup.
 	document.querySelectorAll( '[data-action_popup]' ).forEach( actionItem => {
 		actionItem.addEventListener( 'click', ( event ) => {
@@ -204,7 +214,13 @@ const ActionModal = () => {
 						{ ! isHideMsg && (
 							<div className="fz-action-intro">
 								<p>{ __( 'Feedzy now supports adding and chaining actions into a single tag. Add an action by clicking the Add new button below. You can add multiple actions in each tag.', 'feedzy-rss-feeds' ) }<br/>
-								<ExternalLink href="https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation">{ __( 'Learn more about this feature.', 'feedzy-rss-feeds' ) }</ExternalLink></p>
+								<ExternalLink href="https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#tag-actions">{ __( 'Learn more about this feature.', 'feedzy-rss-feeds' ) }</ExternalLink></p>
+							</div>
+						) }
+
+						{ action.length === 0 && (
+							<div className="fz-action-intro">
+								<p>{ __( 'If no action is needed, continue with using the original tag by clicking on the Save Actions button.', 'feedzy-rss-feeds' ) }</p>
 							</div>
 						) }
 						
@@ -239,9 +255,9 @@ const ActionModal = () => {
 											{
 												'item_categories' !== shortCode && (
 													feedzyData.isPro && feedzyData.isAgencyPlan ? (
-														<li onClick={ () => addAction('spinnerchief') }>{__( 'Spin using Spinnerchief', 'feedzy-rss-feeds' )}</li>
+														<li onClick={ () => addAction('spinnerchief') }>{__( 'Spin using SpinnerChief', 'feedzy-rss-feeds' )}</li>
 													) : (
-														<li onClick={ () => addAction('spinnerchief') }>{__( 'Spin using Spinnerchief', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+														<li onClick={ () => addAction('spinnerchief') }>{__( 'Spin using SpinnerChief', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
 													)
 												)
 											}
@@ -257,9 +273,9 @@ const ActionModal = () => {
 											{
 												'item_categories' !== shortCode && (
 													feedzyData.isPro && ( feedzyData.isBusinessPlan || feedzyData.isAgencyPlan ) ? (
-														<li onClick={ () => addAction('chat_gpt_rewrite') }>{__( 'Paraphrase with Chat GPT', 'feedzy-rss-feeds' )}</li>
+														<li onClick={ () => addAction('chat_gpt_rewrite') }>{__( 'Paraphrase with ChatGPT', 'feedzy-rss-feeds' )}</li>
 													) : (
-														<li onClick={ () => addAction('chat_gpt_rewrite') }>{__( 'Paraphrase with Chat GPT', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+														<li onClick={ () => addAction('chat_gpt_rewrite') }>{__( 'Paraphrase with ChatGPT', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
 													)
 												)
 											}
@@ -272,7 +288,7 @@ const ActionModal = () => {
 													)
 												)
 											}
-											<li className="link-item"><ExternalLink href="https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation">{ __( 'Learn more about this feature.', 'feedzy-rss-feeds' ) }</ExternalLink></li>
+											<li className="link-item"><ExternalLink href="https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#tag-actions">{ __( 'Learn more about this feature.', 'feedzy-rss-feeds' ) }</ExternalLink></li>
 										</ul>
 									</div>
 								)}
