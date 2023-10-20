@@ -78,7 +78,7 @@ const Onboarding = () => {
     });
 
     save.error( ( response ) => {
-      console.warning( response.responseJSON.message );
+      console.warn( response.responseJSON.message );
     });
   }, 1000 );
 

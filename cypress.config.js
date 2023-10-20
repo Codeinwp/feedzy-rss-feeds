@@ -31,7 +31,7 @@ module.exports = defineConfig({
       locked: 7,
       url: 'https://s3.amazonaws.com/verti-utils/sample-feed-import.xml',
       invalidurl: 'test',
-      title: '[#item_date], [#item_custom_guid] [#item_title]',
+      title: '[#item_date], [#item_custom_guid], [#item_title]',
       content: '[#item_content] start:[#item_categories]:end',
       items: '10',
       taxonomy: ['c_feedzy-1', 't_feedzy-1'],

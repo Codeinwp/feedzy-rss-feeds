@@ -516,7 +516,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			'feedzy-admin-menu',
 			__( 'Settings', 'feedzy-rss-feeds' ),
 			__( 'Settings', 'feedzy-rss-feeds' ),
-			'manage_options',
+			apply_filters( 'feedzy_admin_menu_capability', 'publish_posts' ),
 			'feedzy-settings',
 			array(
 				$this,

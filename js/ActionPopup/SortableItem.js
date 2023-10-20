@@ -109,7 +109,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 									type="text"
 									label={__( 'Search', 'feedzy-rss-feeds' )}
 									placeholder={__( 'Enter term', 'feedzy-rss-feeds' )}
-									value={ item.data.search || '' }
+									value={ item.data.search ? unescape(item.data.search.replaceAll('&#039;', '\'')) : '' }
 									onChange={ ( currentValue ) => propRef.onChangeHandler( { 'index': loopIndex, 'search': currentValue ?? '' } ) }
 								/>
 							</BaseControl>
@@ -118,7 +118,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 									type="text"
 									label={__( 'Replace with', 'feedzy-rss-feeds' )}
 									placeholder={__( 'Enter term', 'feedzy-rss-feeds' )}
-									value={ item.data.searchWith || '' }
+									value={ item.data.searchWith ? unescape(item.data.searchWith.replaceAll('&#039;', '\'')) : '' }
 									onChange={ ( currentValue ) => propRef.onChangeHandler( { 'index': loopIndex, 'searchWith': currentValue ?? '' } ) }
 								/>
 							</BaseControl>
