@@ -214,7 +214,7 @@ const ActionModal = () => {
 						{ ! isHideMsg && (
 							<div className="fz-action-intro">
 								<p>{ __( 'Feedzy now supports adding and chaining actions into a single tag. Add an action by clicking the Add new button below. You can add multiple actions in each tag.', 'feedzy-rss-feeds' ) }<br/>
-								<ExternalLink href="https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation">{ __( 'Learn more about this feature.', 'feedzy-rss-feeds' ) }</ExternalLink></p>
+								<ExternalLink href="https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#tag-actions">{ __( 'Learn more about this feature.', 'feedzy-rss-feeds' ) }</ExternalLink></p>
 							</div>
 						) }
 
