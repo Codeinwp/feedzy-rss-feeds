@@ -116,7 +116,7 @@ const ActionModal = () => {
 		});
 
 		save.error( ( response ) => {
-			console.warning( response.responseJSON.message );
+			console.warn( response.responseJSON.message );
 		});
 	};
 
