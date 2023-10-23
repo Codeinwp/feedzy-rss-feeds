@@ -2277,6 +2277,13 @@ li.draggable-item .components-panel__body-toggle.components-button{
 	text-transform: uppercase;
 }
 
+.fz-feedback-modal .components-tooltip > * {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    outline: none;
+}
+
 @media(max-width: 480px) {
 	.feedzy-sale .feedzy-urgency {
 		font-size: 7px;

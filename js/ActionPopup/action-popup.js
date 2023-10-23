@@ -282,9 +282,9 @@ const ActionModal = () => {
 											{
 												'item_categories' !== shortCode && (
 													feedzyData.isPro && ( feedzyData.isBusinessPlan || feedzyData.isAgencyPlan ) ? (
-														<li onClick={ () => addAction('fz_summarize') }>{__( 'Summarize with Feedzy', 'feedzy-rss-feeds' )}</li>
+														<li onClick={ () => addAction('fz_summarize') }>{__( 'Summarize with ChatGPT', 'feedzy-rss-feeds' )}</li>
 													) : (
-														<li onClick={ () => addAction('fz_summarize') }>{__( 'Summarize with Feedzy', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+														<li onClick={ () => addAction('fz_summarize') }>{__( 'Summarize with ChatGPT', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
 													)
 												)
 											}
