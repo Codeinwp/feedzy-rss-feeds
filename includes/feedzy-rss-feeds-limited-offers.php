@@ -42,9 +42,9 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 	 */
 	public $timelines = array(
 		'bf' => array(
-			'start' => '2023-10-10 00:00:00',
+			'start' => '2023-11-20 00:00:00',
 			'end'   => '2023-11-27 23:59:00',
-		), // TODO: Add the correct date.
+		),
 	);
 
 	/**
@@ -93,8 +93,8 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 		$this->offer_metadata = array(
 			'bannerUrl'     => FEEDZY_ABSURL . 'img/black-friday-banner.png',
 			'bannerAlt'     => 'Feedzy Black Friday Sale',
-			'linkDashboard' => tsdk_utmify( 'https://themeisle.com/plugins/feedzy-rss-feeds/blackfriday', 'blackfridayltd23', 'dashboard' ),
-			'linkGlobal'    => tsdk_utmify( 'https://themeisle.com/plugins/feedzy-rss-feeds/blackfriday', 'blackfridayltd23', 'globalnotice' ),
+			'linkDashboard' => tsdk_utmify( 'https://themeisle.com/plugins/feedzy-rss-feeds/blackfriday/', 'blackfridayltd23', 'dashboard' ),
+			'linkGlobal'    => tsdk_utmify( 'https://themeisle.com/plugins/feedzy-rss-feeds/blackfriday/', 'blackfridayltd23', 'globalnotice' ),
 			'urgencyText'   => 'Hurry Up! Only ' . $this->get_remaining_time_for_deal( $this->get_active_deal() ) . ' left',
 		);
 	}
@@ -141,18 +141,18 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 			$diff         = $end_date->diff( $current_date );
 
 			if ( $diff->days > 0 ) {
-				return $diff->format( '%a days' );
+				return $diff->days === 1 ? $diff->format( '%a day' ) : $diff->format( '%a days' );
 			}
 
 			if ( $diff->h > 0 ) {
-				return $diff->format( '%h hours' );
+				return $diff->h === 1 ? $diff->format( '%h hour' ) : $diff->format( '%h hours' );
 			}
 
 			if ( $diff->i > 0 ) {
-				return $diff->format( '%i minutes' );
+				return $diff->i === 1 ? $diff->format( '%i minute' ) : $diff->format( '%i minutes' );
 			}
 
-			return $diff->format( '%s seconds' );
+			return $diff->s === 1 ? $diff->format( '%s second' ) : $diff->format( '%s seconds' );
 		} catch ( Exception $e ) {
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 				error_log( $e->getMessage() ); // phpcs:ignore
@@ -247,12 +247,16 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 			}
 			.themeisle-sale svg {
 				margin-right: 15px;
+				min-width: 24px;
 			}
 			.themeisle-sale a {
 				margin-left: 5px;
 			}
 			.themeisle-sale-error {
 				color: red;
+			}
+			.themeisle-sdk-notice:is([id*="review"]) { /* Do not show the review notice when the sale is active. */
+				display: none;
 			}
 		</style>
 		<div class="themeisle-sale notice notice-info is-dismissible">
@@ -327,7 +331,7 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 	 */
 	public function add_priority( $products ) {
 
-		$products['feedzy'] = 2;
+		$products['feedzy'] = -5;
 
 		if ( function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
