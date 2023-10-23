@@ -2278,7 +2278,7 @@ li.draggable-item .components-panel__body-toggle.components-button{
 }
 
 .fz-feedback-modal .components-tooltip > * {
-    background-color: transparent;
+    background-color: #000;
     border: none;
     box-shadow: none;
     outline: none;
