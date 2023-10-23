@@ -449,6 +449,10 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 	 * @return void
 	 */
 	public function load_banner() {
+		if ( ! $this->is_active() ) {
+			return;
+		}
+
 		add_action( 'admin_notices', array( $this, 'render_banner' ) );
 	}
 }
