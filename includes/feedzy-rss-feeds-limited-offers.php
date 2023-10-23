@@ -331,7 +331,7 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 	 */
 	public function add_priority( $products ) {
 
-		$products['feedzy'] = -5;
+		$products['feedzy'] = 2;
 
 		if ( function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
