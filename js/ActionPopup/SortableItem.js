@@ -191,7 +191,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 			<li className="fz-action-control" data-counter={counter}>
 				<div className="fz-action-event">
 					{feedzyData.isPro && (feedzyData.isBusinessPlan || feedzyData.isAgencyPlan) && !feedzyData.apiLicenseStatus.openaiStatus && (<span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=openai"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> )}
-					<PanelBody title={ __( 'Summarize with Feedzy', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false } className="fz-hide-icon">
+					<PanelBody title={ __( 'Summarize with ChatGPT', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false } className="fz-hide-icon">
 						<UpgradeNotice higherPlanNotice={!feedzyData.isBusinessPlan && !feedzyData.isAgencyPlan}/>
 					</PanelBody>
 				</div>
