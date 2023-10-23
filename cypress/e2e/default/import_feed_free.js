@@ -1,8 +1,8 @@
 describe('Test Free - Import Feed', function() {
-    before(function(){
+    beforeEach(function(){
         // login to WP
-
         cy.visit('wp-login.php');
+        cy.wait( 1000 );
         cy.get('#user_login').clear().type( Cypress.env('login') );
         cy.get('#user_pass').clear().type( Cypress.env('pass') );
         cy.get('#wp-submit').click();
@@ -52,11 +52,9 @@ describe('Test Free - Import Feed', function() {
             cy.get('#feedzy_post_terms').select(feed.taxonomy, {force:true});
         });
 
-        cy.get('[name="feedzy_meta_data[import_post_title]"]').scrollIntoView().clear({force:true}).type( PREFIX + feed.title, {force:true} );
-        cy.get('[name="feedzy_meta_data[import_post_content]"]').scrollIntoView().clear({force:true}).type( PREFIX + feed.fullcontent.content + feed.content, {force:true} );
-
-        // image from URL
-        cy.get('[name="feedzy_meta_data[import_post_featured_img]"]').scrollIntoView().clear({force:true}).type( feed.image.url, {force:true} );
+        cy.get('[name="feedzy_meta_data[import_post_title]"]').clear({force: true}).invoke('val', PREFIX + feed.title).blur({force: true});
+        cy.get('[name="feedzy_meta_data[import_post_content]"]').clear({force: true}).invoke('val', PREFIX + feed.fullcontent.content + feed.content).blur({force: true});
+        cy.get('[name="feedzy_meta_data[import_post_featured_img]"]').clear({force: true}).invoke('val', feed.image.url).blur({force: true});
 
         // check disallowd magic tags
         const tags = feed.tags.disallowed;
@@ -121,7 +119,7 @@ describe('Test Free - Import Feed', function() {
         });
 
         cy.get('[name="feedzy_meta_data[import_post_title]"]').should('have.value', PREFIX + feed.title);
-        cy.get('[name="feedzy_meta_data[import_post_content]"]').should('have.value', PREFIX + feed.fullcontent.content + feed.content);
+        cy.get('[name="feedzy_meta_data[import_post_content]"]').should('have.value', PREFIX + feed.fullcontent.content + feed.content + '\n');
 
         // image from URL
         cy.get('[name="feedzy_meta_data[import_post_featured_img]"]').should('have.value', feed.image.url);

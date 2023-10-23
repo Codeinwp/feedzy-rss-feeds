@@ -259,7 +259,7 @@ function feedzy_custom_tag_escape( $content = '' ) {
 			$content = wp_kses( $content, wp_kses_allowed_html( 'post' ) );
 		}
 	}
-	return $content;
+	return trim( $content );
 }
 
 /**
@@ -532,3 +532,16 @@ function feedzy_current_user_can() {
 	}
 	return false;
 }
+
+add_filter(
+	'user_has_cap',
+	function ( $allcaps, $caps, $args, $user ) {
+		$capability = apply_filters( 'feedzy_admin_menu_capability', 'publish_posts' );
+		if ( ! empty( $allcaps[ $capability ] ) ) {
+			$allcaps['manage_options'] = ! empty( $allcaps[ $capability ] );
+		}
+		return $allcaps;
+	},
+	10,
+	4
+);

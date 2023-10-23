@@ -19,6 +19,10 @@ composer.lock
 package-lock.json
 key.enc
 includes/gutenberg/src
+js/Onboarding/import-onboarding.js
+js/ActionPopup/action-popup.js
+js/ActionPopup/Actions.js
+js/ActionPopup/SortableItem.js
 webpack.config.js
 dist
 cypress
@@ -37,3 +41,5 @@ docker-compose.travis.yml
 .nvmrc
 .releaserc.yml
 docker-compose.ci.yml
+FeedBack/feedback.js
+FeedBack/feedback-form.js

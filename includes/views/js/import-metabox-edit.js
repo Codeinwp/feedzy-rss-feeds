@@ -193,6 +193,12 @@
 							var sel_option = "";
 							if (in_array(index + "_" + i, tax_selected)) {
 								sel_option = "selected";
+								if ( $("#feedzy_post_terms").hasClass('fz-chosen-custom-tag') ) {
+									var removeItem = index + "_" + i;
+									tax_selected = $.grep(tax_selected, function(value) {
+										return value != removeItem;
+									});
+								}
 							}
 							options +=
 								'<option value="' +
@@ -208,6 +214,11 @@
 						options += "</optgroup>";
 					}
 				});
+				if ( tax_selected.length > 0 && $("#feedzy_post_terms").hasClass('fz-chosen-custom-tag') ) {
+					$.each(tax_selected, function (index, customTag) {
+						options += '<option value="' + customTag + '" selected>' + customTag + '</option>';
+					} );
+				}
 			} else {
 				show_terms = false;
 				options = $("#empty_select_tpl").html();
@@ -219,7 +230,11 @@
 	}
 
 	function htmlEntities(str) {
-		return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+		return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+	}
+
+	function escapeSelector(string) {
+		return String(string).replace(/([ !"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~])/g,'\\$1');
 	}
 
 	$(document).ready(function () {
@@ -228,6 +243,7 @@
 		initCustomFieldAutoComplete();
 		feedzyAccordion();
 		feedzyTab();
+		feedzyMediaUploader();
 	});
 
 	function initImportScreen() {
@@ -263,7 +279,7 @@
 			}
 		} );
 
-		$("a.dropdown-item:not(.source)").on("click", append_tag);
+		$("a.dropdown-item:not(.source,[data-action_popup])").on("click", append_tag);
 		$(".add-outside-tags").on("click", append_outside_tag);
 		$("a.dropdown-item.source").on("click", add_source);
 		$( document ).on( 'click', '.btn-remove-fields', remove_row );
@@ -279,6 +295,35 @@
 		$(".feedzy-chosen").chosen({ width: "100%" });
 		$("#feedzy_post_type").on("change", update_taxonomy);
 		$("#feedzy_post_status").trigger("change");
+
+		// Add magic tag support for post taxonomy field.
+		$("#feedzy_post_terms.fz-chosen-custom-tag").on("chosen:no_results", function() {
+			var select = $(this);
+			var search = select.siblings(".chosen-container").find(".chosen-choices .search-field:last input");
+			var text = htmlEntities(search.val());
+    		// dont add if it already exists
+			if (! select.find('option[value=' + escapeSelector(search.val()) + ']').length) {
+				var btn = $('<li class="active-result highlighted">' + text + '</li>');
+				btn.on("mousedown mouseup click", function(e) {
+					var arr = select.val();
+					select.html(select.html() + "<option value='" + text + "'>" + text + "</option>");
+					select.val(arr.concat([text]));
+					select.trigger("chosen:updated").trigger('chosen:close');
+					// search.focus();
+					e.stopImmediatePropagation();
+					return false;
+				});
+				search.on("keydown", function(e) {
+					if (e.which == 13) {
+						btn.click();
+						return false;
+					}
+				});
+				select.siblings(".chosen-container").find(".no-results").replaceWith(btn);
+			} else {
+				select.siblings(".chosen-container").find(".no-results").replaceWith('');
+			}
+		})
 
 		/*
          Form
@@ -436,18 +481,33 @@
 		var mixContent = $( '.fz-textarea-tagify' ).tagify( {
 			mode: 'mix',
 			editTags: false,
-			originalInputValueFormat: function( valuesArr ) {
-				return valuesArr.map( function( item ) {
-					return item.value;
-				} )
-				.join( ', ' );
+			templates: {
+				tag: function( tagData ) {
+					try{
+						var decodeTagData = decodeURIComponent(tagData.value);
+						var isEncoded = typeof tagData.value === "string" && decodeTagData !== tagData.value;
+						var tagLabel = tagData.value;
+						if ( isEncoded ) {
+							decodeTagData = JSON.parse( decodeTagData );
+							decodeTagData = decodeTagData[0] || {};
+							tagLabel = decodeTagData.tag.replaceAll( '_', ' ' );
+							tagData['data-actions'] = tagData.value;
+						}
+						return `
+						<tag title='${tagLabel}' contenteditable='false' spellcheck="false" class='tagify__tag ${isEncoded ? 'fz-content-action' : ''}'>
+							<x title='remove tag' class='tagify__tag__removeBtn'></x>
+							<div>
+								<span class='tagify__tag-text'>${tagLabel}</span>
+								${tagData['data-actions'] ?
+									`<a href="javascript:;" class="tagify__filter-icon" ${this.getAttributes(tagData)}></a>` : ''
+								}
+							</div>
+						</tag>`
+					}
+					catch(err){}
+				}
 			}
 		} );
-
-		if ( mixContent.length ) {
-			mixContent.data('tagify').removeAllTags();
-			mixContent.data('tagify').parseMixTags( htmlEntities( mixContent.text() ) );
-		}
 
 		// Tagify for outside tags with allowed duplicates.
 		$( '.fz-tagify-outside' ).tagify( {
@@ -696,5 +756,47 @@
 		$(".fz-tabs-content .fz-tab-content").hide();
 		$(".fz-tabs-menu a").first().addClass("active");
 		$(".fz-tabs-content .fz-tab-content").first().show();
+	}
+
+	function feedzyMediaUploader() {
+		// on upload button click
+		$( 'body' ).on( 'click', '.feedzy-open-media', function( e ) {
+			e.preventDefault();
+			var button = $( this ),
+			wp_media_uploader = wp.media( {
+				title: feedzy.i10n.media_iframe_title,
+				library : {
+					type : 'image'
+				},
+				button: {
+					text: feedzy.i10n.media_iframe_button
+				},
+				multiple: false
+		} ).on( 'select', function() { // it also has "open" and "close" events
+			var attachment = wp_media_uploader.state().get( 'selection' ).first().toJSON();
+			var attachmentUrl = attachment.url;
+			if ( attachment.sizes.thumbnail ) {
+				attachmentUrl = attachment.sizes.thumbnail.url;
+			}
+			if ( $( '.feedzy-media-preview' ).length ) {
+				$( '.feedzy-media-preview' ).find( 'img' ).attr( 'src', attachmentUrl );
+			} else {
+				$( '<div class="fz-form-group mb-20 feedzy-media-preview"><img src="' + attachmentUrl + '"></div>' ).insertBefore( button.parent() );
+			}
+			button.parent().find( '.feedzy-remove-media' ).addClass( 'is-show' );
+			button.parent().find( 'input:hidden' ).val( attachment.id ).trigger( 'change' );
+			$( '.feedzy-open-media' ).html( feedzy.i10n.action_btn_text_2 );
+		} ).open();
+		});
+
+		// on remove button click
+		$( 'body' ).on( 'click', '.feedzy-remove-media', function( e ) {
+			e.preventDefault();
+			var button = $( this );
+			button.parent().prev( '.feedzy-media-preview' ).remove();
+			button.removeClass( 'is-show' );
+			button.parent().find( 'input:hidden' ).val( '' ).trigger( 'change' );
+			$( '.feedzy-open-media' ).html( feedzy.i10n.action_btn_text_1 );
+		});
 	}
 })(jQuery, feedzy);

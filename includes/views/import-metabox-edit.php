@@ -11,6 +11,8 @@ global $post;
 <?php if ( get_option( 'feedzy_import_tour' ) && ! defined( 'TI_CYPRESS_TESTING' ) ) : ?>
 	<div id="fz-on-boarding"></div>
 <?php endif; ?>
+<div id="fz-feedback-modal"></div>
+<div id="fz-action-popup"></div>
 <div class="feedzy-wrap" id="feedzy-import-form">
 	<div class="feedzy-accordion">
 		<!-- <div> -->
@@ -315,13 +317,23 @@ global $post;
 									<div class="fz-form-group">
 										<label class="form-label"><?php esc_html_e( 'Assigns the post to a Category', 'feedzy-rss-feeds' ); ?></label>
 										<div class="mx-320">
-											<select id="feedzy_post_terms" multiple class="form-control feedzy-chosen"
+											<select id="feedzy_post_terms" multiple class="form-control feedzy-chosen<?php echo feedzy_is_pro() ? ' fz-chosen-custom-tag' : ''; ?>"
 												name="feedzy_meta_data[import_post_term][]">
 											</select>
 										</div>
 										<div class="help-text pt-8">
 											<?php esc_html_e( 'The imported post will be assigned to a taxonomy (eg. "Post Category", "Post Tag" etc.). Leave blank, if unsure.', 'feedzy-rss-feeds' ); ?>
 										</div>
+									</div>
+									<?php if ( ! feedzy_is_pro() ) : ?>
+										<div class="upgrade-alert">
+											<?php
+												echo wp_kses_post( sprintf( __( 'Add more advanced tags, like item categories and custom field, by %1$supgrading to Feedzy Pro%2$s', 'feedzy-rss-feeds' ), '<a href="' . tsdk_utmify( FEEDZY_UPSELL_LINK, 'moreadvanced' ) . '" target="_blank">', '</a>' ) );
+											?>
+										</div>
+									<?php endif; ?>
+									<div class="help-text pt-8">
+										<?php esc_html_e( 'You can use the magic tags, [#item_categories] and any customizable field like [#item_custom_category]', 'feedzy-rss-feeds' ); ?>
 									</div>
 								</div>
 							</div>
@@ -370,15 +382,8 @@ global $post;
 												</div>
 												<div class="help-text">
 													<?php
-														$magic_tags = array(
-															'item_title',
-															'item_author',
-															'item_date',
-														);
-														$magic_tags = apply_filters( 'feedzy_get_service_magic_tags', $magic_tags, 'title' );
-
 														esc_html_e( 'You can add multiple items. Keep in mind that this field is mandatory - without it, a post will not be created.', 'feedzy-rss-feeds' );
-														?>
+													?>
 												</div>
 											</div>
 											<div class="fz-input-group-right">
@@ -448,24 +453,8 @@ global $post;
 												</div>
 												<div class="help-text">
 													<?php
-														$magic_tags = array(
-															'item_description',
-															'item_content',
-															'item_image',
-														);
-														if ( apply_filters( 'feedzy_is_license_of_type', false, 'business' ) ) {
-															$magic_tags = array_merge(
-																$magic_tags,
-																array(
-																	'item_full_content',
-																)
-															);
-															$magic_tags = apply_filters( 'feedzy_get_service_magic_tags', $magic_tags, 'full_content' );
-														}
-														$magic_tags = apply_filters( 'feedzy_get_service_magic_tags', $magic_tags, 'content' );
-
 														esc_html_e( 'You can add more tags and other things that will be added in the Single Post layout. This field is mandatory.', 'feedzy-rss-feeds' );
-														?>
+													?>
 												</div>
 											</div>
 											<div class="fz-input-group-right">
@@ -745,7 +734,35 @@ global $post;
 								</div>
 							</div>
 						</div>
-					</div>		
+					</div>
+					<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
+						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '' ) ); ?>
+						<div class="left">
+							<h4 class="h4"><?php esc_html_e( 'Fallback Image', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
+						</div>
+						<div class="right">
+							<div class="fz-form-group">
+								<label class="form-label"><?php esc_html_e( 'Select an image to be the fallback featured image.', 'feedzy-rss-feeds' ); ?></label>
+								<?php
+								$btn_label = esc_html__( 'Choose image', 'feedzy-rss-feeds' );
+								if ( $default_thumbnail_id ) :
+									$btn_label = esc_html__( 'Replace image', 'feedzy-rss-feeds' );
+									?>
+									<div class="fz-form-group mb-20 feedzy-media-preview">
+										<?php echo wp_get_attachment_image( $default_thumbnail_id, 'thumbnail' ); ?>
+									</div>
+								<?php endif; ?>
+								<div class="fz-cta-group pb-8">
+									<a href="javascript:;" class="feedzy-open-media btn btn-outline-primary"><?php echo esc_html( $btn_label ); ?></a>
+									<a href="javascript:;" class="feedzy-remove-media btn btn-outline-primary <?php echo $default_thumbnail_id ? esc_attr( 'is-show' ) : ''; ?>"><?php esc_html_e( 'Remove', 'feedzy-rss-feeds' ); ?></a>
+									<input type="hidden" name="feedzy_meta_data[default_thumbnail_id]" id="feed-post-default-thumbnail" value="<?php echo esc_attr( $default_thumbnail_id ); ?>">
+								</div>
+								<div class="help-text pt-8">
+									<?php esc_html_e( 'Helpful if you want to set a fallback image for feed items that don\'t have an image. Default it will be considered the one from global settings.', 'feedzy-rss-feeds' ); ?>
+								</div>
+							</div>
+						</div>
+					</div>
 					<?php if ( function_exists( 'icl_get_languages' ) ) : ?>
 						<div class="form-block form-block-two-column">
 							<div class="left">
@@ -1024,6 +1041,11 @@ global $post;
 							</div>
 						</div>
 					<?php endif; ?>
+					<div class="form-block form-block-two-column">
+						<div class="cta-text pt-8">
+							<a href="javascript:void(0)" id="fz-feedback-btn" role="button"><?php esc_html_e( 'Help us improve Feedzy', 'feedzy-rss-feeds' ); ?></a>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

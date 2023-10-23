@@ -7,6 +7,10 @@
 	$show_button = true;
 
 	$help_btn_url = 'https://docs.themeisle.com/category/712-feedzy';
+
+	$offer      = new Feedzy_Rss_Feeds_Limited_Offers();
+	$offer_data = feedzy_is_pro() ? array() : $offer->get_localized_data();
+
 	if ( 'headers' === $active_tab ) {
 		$help_btn_url = 'https://docs.themeisle.com/article/713-how-to-change-user-agent-in-feedzy';
 	} elseif ( 'proxy' === $active_tab ) {
@@ -27,6 +31,14 @@
 		<div class="fz-snackbar-notice error"><p><?php echo wp_kses_post( $this->error ); ?></p></div>
 	<?php } ?>
 	<div class="feedzy-container">
+		<?php if ( ! empty( $offer_data['active'] ) ) { ?>
+			<div class="feedzy-sale">
+				<a href="<?php echo esc_url( $offer_data['linkDashboard'] ); ?>">
+					<img src="<?php echo esc_url( $offer_data['bannerUrl'] ); ?>" alt="<?php echo esc_html( $offer_data['bannerAlt'] ); ?>">
+					<div class="feedzy-urgency"><?php echo esc_html( $offer_data['urgencyText'] ); ?></div>
+				</a>
+			</div>
+		<?php } ?>
 		<div class="feedzy-accordion-item">
 			<div class="feedzy-accordion-item__title">
 				<div class="feedzy-accordion-item__button">
@@ -197,7 +209,7 @@
 										<input type="text" class="form-control" name="user-agent" placeholder="Add the user agent string"
 												value="<?php echo isset( $settings['header']['user-agent'] ) ? esc_attr( $settings['header']['user-agent'] ) : ''; ?>">
 									</div>
-								</div>	
+								</div>
 							</div>
 							<?php
 							break;
@@ -261,7 +273,7 @@
 					<?php
 					wp_nonce_field( $active_tab, 'nonce' );
 					if ( $show_button ) {
-							$disable_button = ! feedzy_is_pro() && in_array( $active_tab, array( 'spinnerchief', 'wordai', 'amazon-product-advertising' ), true ) ? ' disabled' : '';
+							$disable_button = ! feedzy_is_pro() && in_array( $active_tab, array( 'spinnerchief', 'wordai', 'amazon-product-advertising', 'openai' ), true ) ? ' disabled' : '';
 						?>
 						<div class="mb-24">
 							<button type="submit" class="btn btn-primary<?php echo esc_attr( $disable_button ); ?>" id="feedzy-settings-submit" name="feedzy-settings-submit"><?php esc_html_e( 'Save Settings', 'feedzy-rss-feeds' ); ?></button>

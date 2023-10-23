@@ -1399,7 +1399,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 			$index++;
 		}
-
 		return $feed_items;
 	}
 
