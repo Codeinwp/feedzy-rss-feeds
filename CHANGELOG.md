@@ -1,3 +1,7 @@
+##### [Version 4.3.1](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.3.0...v4.3.1) (2023-11-02)
+
+- Enhanced security related to roles of users
+
 #### [Version 4.3.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.2.8...v4.3.0) (2023-10-23)
 
 ### **New Features**
