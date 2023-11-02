@@ -533,15 +533,21 @@ function feedzy_current_user_can() {
 	return false;
 }
 
-add_filter(
-	'user_has_cap',
-	function ( $allcaps, $caps, $args, $user ) {
-		$capability = apply_filters( 'feedzy_admin_menu_capability', 'publish_posts' );
-		if ( ! empty( $allcaps[ $capability ] ) ) {
-			$allcaps['manage_options'] = ! empty( $allcaps[ $capability ] );
-		}
-		return $allcaps;
-	},
-	10,
-	4
-);
+/**
+ * Handle user capability.
+ */
+function feedzy_handle_user_cap() {
+	add_filter(
+		'user_has_cap',
+		function ( $allcaps, $caps, $args, $user ) {
+			$capability = apply_filters( 'feedzy_admin_menu_capability', 'publish_posts' );
+			if ( ! empty( $allcaps[ $capability ] ) ) {
+				$allcaps['manage_options'] = ! empty( $allcaps[ $capability ] );
+			}
+			return $allcaps;
+		},
+		10,
+		4
+	);
+}
+add_action( 'rest_api_init', 'feedzy_handle_user_cap' );
