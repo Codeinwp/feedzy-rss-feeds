@@ -183,7 +183,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			);
 			wp_enqueue_style( 'wp-block-editor' );
 		}
-		if ( ! defined( 'TI_CYPRESS_TESTING' ) && ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type && get_option( 'feedzy_import_tour' ) ) ) {
+		if ( ! defined( 'TI_CYPRESS_TESTING' ) && ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type && feedzy_show_import_tour() ) ) {
 			wp_enqueue_script( $this->plugin_name . '_on_boarding', FEEDZY_ABSURL . 'js/Onboarding/import-onboarding.min.js', array( 'react', 'react-dom', 'wp-editor', 'wp-api', 'lodash' ), $this->version, true );
 		}
 
