@@ -259,24 +259,26 @@ class Feedzy_Rss_Feeds_Import {
 		$args     = apply_filters( 'feedzy_imports_args', $args );
 		register_post_type( 'feedzy_imports', $args );
 
-		// Register setting field.
-		register_setting(
-			'feedzy_import_tour_settings',
+		// Register user meta field.
+		register_meta(
+			'user',
 			'feedzy_import_tour',
 			array(
 				'type'         => 'boolean',
 				'description'  => __( 'Show tour for Feedzy.', 'feedzy-rss-feeds' ),
 				'show_in_rest' => true,
+				'single'       => true,
 				'default'      => true,
 			)
 		);
-		register_setting(
-			'feedzy_import_actions_settings',
+		register_meta(
+			'user',
 			'feedzy_hide_action_message',
 			array(
 				'type'         => 'boolean',
 				'description'  => __( 'Show intro message for Feedzy action popup.', 'feedzy-rss-feeds' ),
 				'show_in_rest' => true,
+				'single'       => true,
 				'default'      => false,
 			)
 		);

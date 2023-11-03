@@ -29,7 +29,7 @@ import {
 
 const ActionModal = () => {
 	// useRef
-	const settingsRef = useRef(null);
+	const userRef = useRef(null);
 	const feedzyImportRef = useRef(null);
 	// State
 	const [ isOpen, setOpen ] = useState(false);
@@ -41,9 +41,9 @@ const ActionModal = () => {
 
 	useEffect( () => {
 		window.wp.api.loadPromise.then( () => {
-			// Fetch settings.
-			settingsRef.current = new window.wp.api.models.Settings();
-			settingsRef.current.fetch();
+			// Fetch user.
+			userRef.current = new window.wp.api.models.User( { id: 'me' } );
+			userRef.current.fetch();
 		});
 	}, []);
 
@@ -104,15 +104,18 @@ const ActionModal = () => {
 		if ( isOpen ) {
 			hideIntroMessage(false);
 		}
-		const model = new window.wp.api.models.Settings({
+		const model = new window.wp.api.models.User({
 			// eslint-disable-next-line camelcase
-			feedzy_hide_action_message: true
+			id: 'me',
+			meta: {
+				feedzy_hide_action_message: true
+			}
 		});
 
 		const save = model.save();
 
 		save.success( () => {
-			settingsRef.current.fetch();
+			userRef.current.fetch();
 		});
 
 		save.error( ( response ) => {
@@ -162,8 +165,8 @@ const ActionModal = () => {
 	document.querySelectorAll( '[data-action_popup]' ).forEach( actionItem => {
 		actionItem.addEventListener( 'click', ( event ) => {
 			event.preventDefault();
-			if ( settingsRef.current ) {
-				if ( ! settingsRef.current.attributes.feedzy_hide_action_message ) {
+			if ( userRef.current ) {
+				if ( ! userRef.current.attributes.meta.feedzy_hide_action_message ) {
 					hideActionIntroMessage();
 				} else {
 					hideIntroMessage(true);
