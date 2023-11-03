@@ -534,20 +534,13 @@ function feedzy_current_user_can() {
 }
 
 /**
- * Handle user capability.
+ * Show import tour.
+ *
+ * @return bool
  */
-function feedzy_handle_user_cap() {
-	add_filter(
-		'user_has_cap',
-		function ( $allcaps, $caps, $args, $user ) {
-			$capability = apply_filters( 'feedzy_admin_menu_capability', 'publish_posts' );
-			if ( ! empty( $allcaps[ $capability ] ) ) {
-				$allcaps['manage_options'] = ! empty( $allcaps[ $capability ] );
-			}
-			return $allcaps;
-		},
-		10,
-		4
-	);
+function feedzy_show_import_tour() {
+	if ( is_user_logged_in() && 'no' === get_option( 'feedzy_import_tour', 'no' ) ) {
+		return get_user_meta( get_current_user_id(), 'feedzy_import_tour', true );
+	}
+	return false;
 }
-add_action( 'rest_api_init', 'feedzy_handle_user_cap' );

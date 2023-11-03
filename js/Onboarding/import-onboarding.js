@@ -26,11 +26,11 @@ const Onboarding = () => {
   const [ isOpen, setOpen ] = useState( true );
   const [ runTour, setRunTour ] = useState( false );
 
-  const settingsRef = useRef( null );
+  const userRef = useRef( null );
 
   useEffect( () => {
     window.wp.api.loadPromise.then( () => {
-      settingsRef.current = new window.wp.api.models.Settings();
+      userRef.current = new window.wp.api.models.User( { id: 'me' } );
     });
   }, []);
 
@@ -66,15 +66,18 @@ const Onboarding = () => {
       return;
     }
 
-    const model = new window.wp.api.models.Settings({
+    const model = new window.wp.api.models.User({
       // eslint-disable-next-line camelcase
-      feedzy_import_tour: false
+      id: 'me',
+      meta: {
+        feedzy_import_tour: false
+      }
     });
 
     const save = model.save();
 
     save.success( () => {
-      settingsRef.current.fetch();
+      userRef.current.fetch();
     });
 
     save.error( ( response ) => {

@@ -8,7 +8,7 @@
 
 global $post;
 ?>
-<?php if ( get_option( 'feedzy_import_tour' ) && ! defined( 'TI_CYPRESS_TESTING' ) ) : ?>
+<?php if ( feedzy_show_import_tour() && ! defined( 'TI_CYPRESS_TESTING' ) ) : ?>
 	<div id="fz-on-boarding"></div>
 <?php endif; ?>
 <div id="fz-feedback-modal"></div>
