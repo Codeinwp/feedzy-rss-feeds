@@ -214,6 +214,7 @@
 						options += "</optgroup>";
 					}
 				});
+				tax_selected = tax_selected.filter( function(item) { return '' !== item; } );
 				if ( tax_selected.length > 0 && $("#feedzy_post_terms").hasClass('fz-chosen-custom-tag') ) {
 					$.each(tax_selected, function (index, customTag) {
 						options += '<option value="' + customTag + '" selected>' + customTag + '</option>';
