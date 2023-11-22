@@ -2122,9 +2122,9 @@ class Feedzy_Rss_Feeds_Import {
 		$plan = intval( $plan );
 		switch ( $type ) {
 			case 'agency':
-				return in_array( $plan, array( 3, 6, 7 ), true );
+				return in_array( $plan, array( 3, 6, 7, 10 ), true );
 			case 'business':
-				return in_array( $plan, array( 2, 3, 5, 6, 7, 8 ), true );
+				return in_array( $plan, array( 2, 3, 5, 6, 7, 8, 10 ), true );
 			case 'pro':
 				return ( $plan > 0 );
 		}
