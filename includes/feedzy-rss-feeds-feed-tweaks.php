@@ -532,3 +532,15 @@ function feedzy_current_user_can() {
 	}
 	return false;
 }
+
+/**
+ * Show import tour.
+ *
+ * @return bool
+ */
+function feedzy_show_import_tour() {
+	if ( is_user_logged_in() && 'no' === get_option( 'feedzy_import_tour', 'no' ) ) {
+		return get_user_meta( get_current_user_id(), 'feedzy_import_tour', true );
+	}
+	return false;
+}

@@ -137,7 +137,7 @@
 	padding: 30px 90px 30px 30px;
 }
 .feedzy-accordion-item .feedzy-accordion__step-number{
-	padding-bottom: 10px;	
+	padding-bottom: 10px;
 }
 .feedzy-accordion-item .feedzy-accordion__step-title{
 	color: #050505;
@@ -2246,4 +2246,52 @@ li.draggable-item .components-panel__body-toggle.components-button{
 }
 .fz-chat-cpt-action .error-message {
     right: 40px !important;
+}
+
+.feedzy-sale {
+	margin-bottom: 20px;
+	display: flex;
+}
+
+.feedzy-sale a {
+	position: relative;
+}
+
+.feedzy-sale img {
+	width: 100%;
+}
+
+.feedzy-sale .feedzy-urgency {
+	position: absolute;
+
+	top: 10%;
+	left: 1.5%;
+
+	color: #FFF;
+	font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+	letter-spacing: 0.3px;
+	text-transform: uppercase;
+}
+
+.fz-feedback-modal .components-tooltip > * {
+    background-color: #000;
+    border: none;
+    box-shadow: none;
+    outline: none;
+}
+
+@media(max-width: 480px) {
+	.feedzy-sale .feedzy-urgency {
+		font-size: 7px;
+	}
+}
+
+@media (min-width: 481px) and (max-width: 1024px) {
+	.feedzy-sale .feedzy-urgency {
+		font-size: 10px;
+	}
 }

@@ -385,12 +385,14 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		}
 
 		/**
-		 * Chat GPT rewrite content.
+		 * ChatGPT rewrite content.
 		 *
 		 * @return string
 		 */
 		private function chat_gpt_rewrite() {
 			$content = call_user_func( array( $this, $this->current_job->tag ) );
+			$content = wp_strip_all_tags( $content );
+			$content = substr( $content, 0, apply_filters( 'feedzy_chat_gpt_content_limit', 3000 ) );
 			$content = str_replace( array( '{content}' ), array( $content ), $this->current_job->data->ChatGPT );
 			if ( ! class_exists( '\Feedzy_Rss_Feeds_Pro_Openai' ) ) {
 				return $content;

@@ -8,7 +8,7 @@
 
 global $post;
 ?>
-<?php if ( get_option( 'feedzy_import_tour' ) && ! defined( 'TI_CYPRESS_TESTING' ) ) : ?>
+<?php if ( feedzy_show_import_tour() && ! defined( 'TI_CYPRESS_TESTING' ) ) : ?>
 	<div id="fz-on-boarding"></div>
 <?php endif; ?>
 <div id="fz-feedback-modal"></div>
@@ -748,7 +748,7 @@ global $post;
 								if ( $default_thumbnail_id ) :
 									$btn_label = esc_html__( 'Replace image', 'feedzy-rss-feeds' );
 									?>
-									<div class="fz-form-group feedzy-media-preview">
+									<div class="fz-form-group mb-20 feedzy-media-preview">
 										<?php echo wp_get_attachment_image( $default_thumbnail_id, 'thumbnail' ); ?>
 									</div>
 								<?php endif; ?>

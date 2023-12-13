@@ -1,9 +1,9 @@
 === RSS Aggregator by Feedzy – Feed to Post, Autoblogging, News & YouTube Video Feeds Aggregator ===
 Contributors: themeisle,codeinwp,hardeepasrani,rozroz
 Tags: rss aggregator, news aggregator, autoblogging, feed to post, rss import
-Requires at least: 5.7
+Requires at least: 6.0
 Requires PHP: 7.2
-Tested up to: 6.3
+Tested up to: 6.4
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -491,6 +491,44 @@ You have to check first if your feed is valid. Please test it here: https://vali
 7. Widget render
 
  == Changelog ==
+
+##### [Version 4.3.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.3.1...v4.3.2) (2023-11-03)
+
+Bug Fixes
+- Enhanced security
+
+
+
+
+##### [Version 4.3.1](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.3.0...v4.3.1) (2023-11-02)
+
+- Enhanced security related to roles of users
+
+
+
+
+#### [Version 4.3.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.2.8...v4.3.0) (2023-10-23)
+
+### **New Features**
+
+- **Paraphrasing using OpenAI / Chat GPT [PRO]:** This feature enables users to utilize OpenAI's Chat GPT for paraphrasing text. It can assist in rephrasing and generating alternative wording for content.
+- **Content summarization support using OpenAI / Chat GPT  [PRO]:** With this feature, users can access support for summarizing longer pieces of content, making it easier to condense and understand the main points of a text.
+- **Added support to create a dynamic category [PRO]:** Feedzy can now create WordPress categories automatically during the import by taking the category name from the RSS XML Feed.
+- **Added individual fallback image setting [PRO]:** This feature allows users to set specific backup images for individual import jobs, not only a general fallback image for all import jobs.
+- **Ability to trim content to a particular amount of characters:** Users can now trim or limit the length of content to a specified number of characters, helping to meet length requirements or constraints.
+- **Integrated Search & Replace in the content of the tag feature:** This integration enables users to search for specific content within tags and replace it with alternative text, streamlining content management.
+- **Added action chain process support:** This feature facilitates the creation of multiple actions for a single Feedzy magic tag. You can now add a tag for the import job and use multiple actions on it (_paraphrase, summarize, trim, etc._).
+
+### **Improvements**
+- Added feedback popup in the import screen
+
+### **Bug Fixes**
+- Fixed compatibility issue PHP 8.1+
+- Fixed compatibility issue with WP version lower than 5.8
+- Fixed categories feed URL sanitization issue
+
+
+
 
 ##### [Version 4.2.8](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.2.7...v4.2.8) (2023-08-03)
 
