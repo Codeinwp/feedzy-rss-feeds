@@ -163,7 +163,10 @@
 													<label class="form-label"><?php esc_html_e( 'First cron execution time', 'feedzy-rss-feeds' ); ?></label>
 													<input type="hidden" name="fz_execution_offset" id="fz-execution-offset" value="<?php echo ! empty( $settings['general']['fz_execution_offset'] ) ? esc_attr( $settings['general']['fz_execution_offset'] ) : ''; ?>">
 													<input type="datetime-local" id="fz-event-execution" name="fz_cron_execution" class="form-control" value="<?php echo ! empty( $settings['general']['fz_cron_execution'] ) ? esc_attr( $settings['general']['fz_cron_execution'] ) : ''; ?>">
-													<div class="help-text pt-8"><?php esc_html_e( 'When past date will be provided or left empty, event will be executed in the next queue.', 'feedzy-rss-feeds' ); ?></div>
+													<div class="help-text pt-8">
+														<?php esc_html_e( 'When past date will be provided, event will be executed in the next queue.', 'feedzy-rss-feeds' ); ?>
+														<a href="<?php echo esc_url( 'https://docs.themeisle.com/article/1820-how-to-set-scheduler-for-import-cron-jobs-in-feedzy' ); ?>" target="_blank"><?php esc_html_e( 'Learn More', 'feedzy-rss-feeds' ); ?></a>
+													</div>
 												</div>
 											</div>
 											<div class="fz-form-col-6">
