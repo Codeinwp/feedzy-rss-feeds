@@ -251,7 +251,7 @@ describe('Test Free - Import Feed', function() {
         // featured image should exist.
         cy.get('.attachment-post-thumbnail.size-post-thumbnail.wp-post-image').should('have.length', 1);
 
-        cy.get('.wp-block-post-author__content .wp-block-post-author__name:contains("wordpress")').should('exist');
+        cy.get('.wp-block-post-author-name .wp-block-post-author-name__link:contains("wordpress")').should('exist');
 
     })
 
