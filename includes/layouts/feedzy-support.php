@@ -16,7 +16,7 @@
 						<?php
 						switch ( $active_tab ) {
 							case 'help':
-								esc_html_e( 'Gettting Started', 'feedzy-rss-feeds' );
+								esc_html_e( 'Getting Started', 'feedzy-rss-feeds' );
 								break;
 							case 'docs':
 								esc_html_e( 'Documentation', 'feedzy-rss-feeds' );
@@ -40,7 +40,7 @@
 					<ul>
 						<li>
 							<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-support&tab=help' ) ); ?>"
-								class="<?php echo 'help' === $active_tab ? 'active' : ''; ?>"><?php esc_html_e( 'Gettting Started', 'feedzy-rss-feeds' ); ?></a>
+								class="<?php echo 'help' === $active_tab ? 'active' : ''; ?>"><?php esc_html_e( 'Getting Started', 'feedzy-rss-feeds' ); ?></a>
 						</li>
 						<li>
 							<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-support&tab=docs' ) ); ?>"
