@@ -205,3 +205,5 @@ if ( FEEDZY_LOCAL_DEBUG ) {
 		}
 	}
 }
+
+add_filter( 'themeisle_sdk_enable_telemetry', '__return_true' );
