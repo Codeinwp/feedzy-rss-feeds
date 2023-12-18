@@ -905,6 +905,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$feed->init();
 
+		if ( ! $feed->get_type() ) {
+			return $feed;
+		}
+
 		$error = $feed->error();
 		// error could be an array, so let's join the different errors.
 		if ( is_array( $error ) ) {
