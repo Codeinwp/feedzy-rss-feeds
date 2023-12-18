@@ -179,6 +179,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					'isBusinessPlan'   => apply_filters( 'feedzy_is_license_of_type', false, 'business' ),
 					'isAgencyPlan'     => apply_filters( 'feedzy_is_license_of_type', false, 'agency' ),
 					'apiLicenseStatus' => $this->api_license_status(),
+					'isHighPrivileges' => current_user_can( 'manage_options' ),
 				)
 			);
 			wp_enqueue_style( 'wp-block-editor' );
@@ -516,7 +517,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			'feedzy-admin-menu',
 			__( 'Settings', 'feedzy-rss-feeds' ),
 			__( 'Settings', 'feedzy-rss-feeds' ),
-			apply_filters( 'feedzy_admin_menu_capability', 'publish_posts' ),
+			'manage_options',
 			'feedzy-settings',
 			array(
 				$this,

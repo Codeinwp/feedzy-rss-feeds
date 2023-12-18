@@ -159,7 +159,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 		return(
 			<li className="fz-action-control fz-chat-cpt-action" data-counter={counter}>
 				<div className="fz-action-event">
-					{feedzyData.isPro && (feedzyData.isBusinessPlan || feedzyData.isAgencyPlan) && !feedzyData.apiLicenseStatus.openaiStatus && (<span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=openai"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> )}
+					{feedzyData.isPro && (feedzyData.isBusinessPlan || feedzyData.isAgencyPlan) && !feedzyData.apiLicenseStatus.openaiStatus && (feedzyData.isHighPrivileges ? <span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=openai"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> : <span className="error-message">{__( 'Invalid API Key, Please contact the administrator', 'feedzy-rss-feeds' )}</span> )}
 					<PanelBody title={ __( 'Paraphrase with ChatGPT', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false }>
 						<PanelRow>
 							<UpgradeNotice higherPlanNotice={!feedzyData.isBusinessPlan && !feedzyData.isAgencyPlan}/>
@@ -190,7 +190,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 		return(
 			<li className="fz-action-control" data-counter={counter}>
 				<div className="fz-action-event">
-					{feedzyData.isPro && (feedzyData.isBusinessPlan || feedzyData.isAgencyPlan) && !feedzyData.apiLicenseStatus.openaiStatus && (<span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=openai"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> )}
+					{feedzyData.isPro && (feedzyData.isBusinessPlan || feedzyData.isAgencyPlan) && !feedzyData.apiLicenseStatus.openaiStatus && (feedzyData.isHighPrivileges ? <span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=openai"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> : <span className="error-message">{__( 'Invalid API Key, Please contact the administrator', 'feedzy-rss-feeds' )}</span> )}
 					<PanelBody title={ __( 'Summarize with ChatGPT', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false } className="fz-hide-icon">
 						<UpgradeNotice higherPlanNotice={!feedzyData.isBusinessPlan && !feedzyData.isAgencyPlan}/>
 					</PanelBody>
@@ -229,7 +229,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 		return(
 			<li className="fz-action-control" data-counter={counter}>
 				<div className="fz-action-event">
-					{(feedzyData.isPro && feedzyData.isAgencyPlan) && !feedzyData.apiLicenseStatus.spinnerChiefStatus && (<span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=spinnerchief"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> )}
+					{(feedzyData.isPro && feedzyData.isAgencyPlan) && !feedzyData.apiLicenseStatus.spinnerChiefStatus && (feedzyData.isHighPrivileges ? <span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=spinnerchief"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> : <span className="error-message">{__( 'Invalid API Key, Please contact the administrator', 'feedzy-rss-feeds' )}</span> )}
 					<PanelBody title={ __( 'Spin using SpinnerChief', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false } className="fz-hide-icon">
 						<UpgradeNotice higherPlanNotice={!feedzyData.isAgencyPlan}/>
 					</PanelBody>
@@ -249,7 +249,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 		return(
 			<li className="fz-action-control" data-counter={counter}>
 				<div className="fz-action-event">
-					{(feedzyData.isPro && feedzyData.isAgencyPlan) && !feedzyData.apiLicenseStatus.wordaiStatus && (<span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=wordai"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> )}
+					{(feedzyData.isPro && feedzyData.isAgencyPlan) && !feedzyData.apiLicenseStatus.wordaiStatus && (feedzyData.isHighPrivileges ? <span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=wordai"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> : <span className="error-message">{__( 'Invalid API Key, Please contact the administrator', 'feedzy-rss-feeds' )}</span> )}
 					<PanelBody title={ __( 'Spin using WordAI', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false } className="fz-hide-icon">
 						<UpgradeNotice higherPlanNotice={!feedzyData.isAgencyPlan}/>
 					</PanelBody>
