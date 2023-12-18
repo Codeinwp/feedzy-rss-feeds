@@ -205,7 +205,7 @@
 								<div class="form-block">
 									<div class="fz-form-switch pb-0">
 										<input type="checkbox" id="feedzy-telemetry" class="fz-switch-toggle" name="feedzy-telemetry"
-										value="1" <?php checked( "yes", $telemetry_enabled ); ?> />
+										value="1" <?php checked( 'yes', $telemetry_enabled ); ?> />
 										<label for="feedzy-telemetry" class="form-label"><?php esc_html_e( 'Enable Telemetry', 'feedzy-rss-feeds' ); ?></label>
 									</div>
 									<div class="fz-form-group">

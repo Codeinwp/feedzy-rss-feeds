@@ -117,9 +117,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		$telemetry_enabled = get_option( 'feedzy_rss_feeds_logger_flag', false );
-		if ( 
-			! defined( 'TI_CYPRESS_TESTING' ) &&
-			! empty( $telemetry_enabled ) && 
+		if ( ! defined( 'TI_CYPRESS_TESTING' ) &&
+			! empty( $telemetry_enabled ) &&
 			(
 				'feedzy_categories' === $screen->post_type ||
 				'feedzy_page_feedzy-settings' === $screen->base ||
@@ -128,7 +127,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		) {
 			wp_enqueue_script( $this->plugin_name . '_telemetry', FEEDZY_ABSURL . 'js/telemetry.js', array(), $this->version, true );
 		}
-		
 
 		if ( 'feedzy_categories' === $screen->post_type ) {
 			wp_enqueue_script(
@@ -626,10 +624,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		update_option( 'feedzy-settings', $settings );
-		if ( ! empty( $settings['general'] )) {
+		if ( ! empty( $settings['general'] ) ) {
 			update_option( 'feedzy_rss_feeds_logger_flag', $settings['general']['feedzy-telemetry'] ? 'yes' : false );
 		}
-		
+
 	}
 
 	/**
