@@ -594,8 +594,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 		$post_tab = isset( $_POST['tab'] ) ? filter_input( INPUT_POST, 'tab', FILTER_UNSAFE_RAW ) : '';
 
-		error_log( print_r( $_POST, true ) );
-
 		$settings = apply_filters( 'feedzy_get_settings', array() );
 		switch ( $post_tab ) {
 			case 'general':
