@@ -7,10 +7,14 @@ const excludedFieldsSlugs = [
     '_key',
     '_pass',
     'username',
-    'post_',
     'auto',
     'nonce',
     'password',
+    'user_ID',
+    'post_author',
+    '_post_status',
+    'default_thumbnail_id',
+    'default-thumbnail-id'
 ];
 
 /**
@@ -26,25 +30,25 @@ window.addEventListener( 'load', function() {
      * Forms to track.
      */
     const envs = [
-        [ 'main-settings', 'form:has(.fz-form-wrap)' ],
-        [ 'categories-settings', 'form:has(#feedzy_category_feeds)'],
-        [ 'import-settings', 'form:has(#feedzy-import-form)'],
+        { pageName: 'main-settings', formSelector: 'form:has(input[value*="feedzy-settings"])', includeFilter: [] },
+        { pageName: 'categories-settings', formSelector: 'form:has(#feedzy_category_feeds)', includeFilter: [ 'feedzy_' ] },
+        { pageName: 'import-settings', formSelector: 'form:has(#feedzy-import-form)', includeFilter: [ 'feedzy_meta'] },
     ]
-        .map( ( [ feature, formSelector ] ) => {
-            return [ feature, document.querySelector( formSelector ) ];
+        .map( env => {
+            env.formSelector = document.querySelector( env.formSelector )
+            return env;
         } )
-        .filter( ( [ feature, formElement ] ) => {
-            return formElement;
+        .filter( env => {
+            return env.formSelector;
         } );
 
     if ( ! envs.length ) {
         return;
     }
-    
-    envs.forEach( ( [ feature, form ] ) => {
-        form.addEventListener( 'submit', function(e) {
-            const formData = new FormData( form );
-            const trackingPayload = {};
+   
+    envs.forEach( env => {
+        env.formSelector.addEventListener( 'submit', function() {
+            const formData = new FormData( env.formSelector );
         
             for ( const [ name, value ] of formData.entries() ) {
                 if ( typeof value === 'undefined' || value === null ) {
@@ -54,19 +58,18 @@ window.addEventListener( 'load', function() {
                 if ( excludedFieldsSlugs.some( ( slug ) => name.includes( slug ) ) ) {
                     continue;
                 }
-        
-                trackingPayload[ name ] = value;
+
+                if ( env.includeFilter.length && ! env.includeFilter.some( ( slug ) => name.includes( slug ) ) ) {
+                    continue;
+                }
+
+                window.tiTrk.with('feedzy').add({
+                    action: 'snapshot',
+                    feature: env.pageName,
+                    featureComponent: name,
+                    featureValue: value,
+                  });
             }
-    
-            if ( ! Object.keys( trackingPayload ).length ) {
-              return;
-            }
-        
-            window.tiTrk.with('feedzy').add( {
-              action: 'snapshot',
-              feature: feature,
-              featureValue: trackingPayload
-            })
 
             window.tiTrk.uploadEvents();
         });

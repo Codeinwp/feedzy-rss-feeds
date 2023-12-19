@@ -130,6 +130,11 @@ const ActionModal = () => {
 		if ( 'function' !== typeof jQuery ) {
 			return;
 		}
+
+		action?.forEach( ( item, index ) => {
+			window?.tiTrk?.with('feedzy').add( { feature: 'import_action', featureValue: item?.id, groupId: item?.tag ?? '' } );
+		});
+		
 		let _action = encodeURIComponent( JSON.stringify( action ) );
 		if ( action.length === 0 ) {
 			setAction([]);
