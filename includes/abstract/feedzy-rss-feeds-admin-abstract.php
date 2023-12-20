@@ -208,15 +208,15 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$final_msg = '';
 
 		if ( $show_error ) {
-			$final_msg = '<div id="message" class="error"><p>' . sprintf( __( 'Sorry, some part of this feed is currently unavailable or does not exist anymore. The detailed error is %s', 'feedzy-rss-feeds' ), '<p style="font-weight: bold">' . $error_msg . '</p>' );
+			$final_msg = '<div id="message" class="error"><p>' . sprintf( __( 'Sorry, some part of this feed is currently unavailable or does not exist anymore. The detailed error is %s', 'feedzy-rss-feeds' ), '<p style="font-weight: bold">' . wp_strip_all_tags( $error_msg ) . '</p>' );
 			if ( ! is_admin() ) {
 				$final_msg .= sprintf( __( '%1$s(Only you are seeing this detailed error because you are the creator of this post. Other users will see the error message as below.)%2$s', 'feedzy-rss-feeds' ), '<small>', '</small>' );
 			}
 			$final_msg .= '</p></div>';
 		} else {
-			error_log( 'Feedzy RSS Feeds - related feed: ' . print_r( $feed_url, true ) . ' - Error message: ' . $error_msg );
+			error_log( 'Feedzy RSS Feeds - related feed: ' . print_r( $feed_url, true ) . ' - Error message: ' . wp_strip_all_tags( $error_msg ) );
 		}
-		return $final_msg;
+		return wp_kses_post( $final_msg );
 	}
 
 	/**
