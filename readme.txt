@@ -492,6 +492,24 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
+##### [Version 4.3.3](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.3.2...v4.3.3) (2023-12-20)
+
+### Improvements
+- Added optional feature usage observer
+- Updated dependencies
+### Bug Fixes
+- Fixed the feed layout in the block that doesn't correspond to the selections
+- Change wording for the first execution time field
+- Fixed post-taxonomy placeholder issue
+- Removed setting page access for non-admin users
+- Sanitized missing setting fields
+- Fixed typo on the support page
+- Fixed authenticated issue
+- Fix multiple charts facade and small google fix
+
+
+
+
 ##### [Version 4.3.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.3.1...v4.3.2) (2023-11-03)
 
 Bug Fixes
