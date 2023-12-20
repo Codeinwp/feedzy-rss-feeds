@@ -107,6 +107,8 @@
 
 					$feedzy_delete_days = isset( $settings['general']['feedzy-delete-days'] ) ? $settings['general']['feedzy-delete-days'] : 0;
 					$default_thumbnail_id = isset( $settings['general']['default-thumbnail-id'] ) ? $settings['general']['default-thumbnail-id'] : 0;
+					$telemetry_enabled = get_option( 'feedzy_rss_feeds_logger_flag', 0 );
+
 					switch ( $active_tab ) {
 						case 'general':
 							?>
@@ -163,7 +165,10 @@
 													<label class="form-label"><?php esc_html_e( 'First cron execution time', 'feedzy-rss-feeds' ); ?></label>
 													<input type="hidden" name="fz_execution_offset" id="fz-execution-offset" value="<?php echo ! empty( $settings['general']['fz_execution_offset'] ) ? esc_attr( $settings['general']['fz_execution_offset'] ) : ''; ?>">
 													<input type="datetime-local" id="fz-event-execution" name="fz_cron_execution" class="form-control" value="<?php echo ! empty( $settings['general']['fz_cron_execution'] ) ? esc_attr( $settings['general']['fz_cron_execution'] ) : ''; ?>">
-													<div class="help-text pt-8"><?php esc_html_e( 'When past date will be provided or left empty, event will be executed in the next queue.', 'feedzy-rss-feeds' ); ?></div>
+													<div class="help-text pt-8">
+														<?php esc_html_e( 'When past date will be provided, event will be executed in the next queue.', 'feedzy-rss-feeds' ); ?>
+														<a href="<?php echo esc_url( 'https://docs.themeisle.com/article/1820-how-to-set-scheduler-for-import-cron-jobs-in-feedzy' ); ?>" target="_blank"><?php esc_html_e( 'Learn More', 'feedzy-rss-feeds' ); ?></a>
+													</div>
 												</div>
 											</div>
 											<div class="fz-form-col-6">
@@ -197,6 +202,16 @@
 										</div>
 									</div>
 								<?php endif; ?>
+								<div class="form-block">
+									<div class="fz-form-switch pb-0">
+										<input type="checkbox" id="feedzy-telemetry" class="fz-switch-toggle" name="feedzy-telemetry"
+										value="1" <?php checked( 'yes', $telemetry_enabled ); ?> />
+										<label for="feedzy-telemetry" class="form-label"><?php esc_html_e( 'Enable Telemetry', 'feedzy-rss-feeds' ); ?></label>
+									</div>
+									<div class="fz-form-group">
+										<div class="help-text pt-8"><?php esc_html_e( 'Send data about plugin settings to measure the usage of the features. The data is private and not shared with third-party entities. Only plugin data is collected without sensitive information.' ); ?></div>
+									</div>
+								</div>
 							</div>
 							<?php
 							break;
