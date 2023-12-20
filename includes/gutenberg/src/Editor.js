@@ -230,6 +230,7 @@ class Editor extends Component {
     }
 
     onChangeFeed(value) {
+        window.tiTrk?.with( 'feedzy' ).set( `feedzy-url-feed` , { feature: 'block-url-feed', featureValue: value } );
         this.props.setAttributes( { feeds: value } );
     }
     onChangeMax(value) {
@@ -242,6 +243,7 @@ class Editor extends Component {
         this.props.setAttributes( { feed_title: ! this.props.attributes.feed_title } );
     }
     onRefresh(value) {
+        window.tiTrk?.with( 'feedzy' ).set( `feedzy-caching` , { feature: 'block-caching-refresh', featureValue: value } );
         this.props.setAttributes( { refresh: value } );
     }
     onSort(value) {
@@ -260,15 +262,18 @@ class Editor extends Component {
         this.props.setAttributes( { title: value } );
     }
     onChangeMeta(value) {
+        window.tiTrk?.with( 'feedzy' ).set( `feedzy-meta` , { feature: 'block-meta-fields', featureValue: value } );
         this.props.setAttributes( { metafields: value } );
     }
     onChangeMultipleMeta(value) {
+        window.tiTrk?.with( 'feedzy' ).set( `feedzy-multiple-meta` , { feature: 'block-multiple-meta-fields', featureValue: value } );
         this.props.setAttributes( { multiple_meta: value } );
     }
     onToggleSummary(value) {
         this.props.setAttributes( { summary: ! this.props.attributes.summary } );
     }
     onToggleLazy(value) {
+        window.tiTrk?.with( 'feedzy' ).set( `feedzy-lazy-loading` , { feature: 'block-lazy-loading-feed', featureValue: value } );
         this.props.setAttributes( { lazy: ! this.props.attributes.lazy } );
     }
     onSummaryLength(value) {
@@ -299,15 +304,19 @@ class Editor extends Component {
         });
     }
     onReferralURL(value) {
+        window.tiTrk?.with( 'feedzy' ).add( { feature: 'block-referral-url' } );
         this.props.setAttributes( { referral_url: value } );
     }
     onColumns(value) {
+        window.tiTrk?.with( 'feedzy' ).set( `feedzy-columns` , { feature: 'block-columns', featureValue: value } );
         this.props.setAttributes( { columns: value } );
     }
     onTemplate(value) {
+        window.tiTrk?.with( 'feedzy' ).set( `feedzy-template` , { feature: 'block-template', featureValue: value } );
         this.props.setAttributes( { template: value } );
     }
     onTogglePrice(value) {
+        window.tiTrk?.with( 'feedzy' ).set( `feedzy-price` , { feature: 'block-price', featureValue: ! this.props.attributes.price } );
         this.props.setAttributes( { price: ! this.props.attributes.price } );
     }
     onKeywordsIncludeOn(value) {
@@ -353,9 +362,11 @@ class Editor extends Component {
         this.props.setAttributes( { className: value } );
     }
     onDryRun(value) {
+        window.tiTrk?.with( 'feedzy' ).add( { feature: 'block-dry-run' } );
         this.props.setAttributes( { _dryrun_: value } );
     }
     onDryRunTags(value) {
+        window.tiTrk?.with( 'feedzy' ).set( `feedzy-dry-run-tags` , { feature: 'block-dry-run-tags', featureValue: value } );
         this.props.setAttributes( { _dry_run_tags_: value } );
     }
 

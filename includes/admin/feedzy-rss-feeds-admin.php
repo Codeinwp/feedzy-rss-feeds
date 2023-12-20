@@ -116,6 +116,18 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			return;
 		}
 
+		$telemetry_enabled = get_option( 'feedzy_rss_feeds_logger_flag', false );
+		if ( ! defined( 'TI_CYPRESS_TESTING' ) &&
+			! empty( $telemetry_enabled ) &&
+			(
+				'feedzy_categories' === $screen->post_type ||
+				'feedzy_page_feedzy-settings' === $screen->base ||
+				'feedzy_imports' === $screen->post_type
+			)
+		) {
+			wp_enqueue_script( $this->plugin_name . '_telemetry', FEEDZY_ABSURL . 'js/telemetry.js', array(), $this->version, true );
+		}
+
 		if ( 'feedzy_categories' === $screen->post_type ) {
 			wp_enqueue_script(
 				$this->plugin_name . '_categories',
@@ -592,6 +604,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				$settings['general']['fz_cron_execution'] = isset( $_POST['fz_cron_execution'] ) ? sanitize_text_field( wp_unslash( $_POST['fz_cron_execution'] ) ) : '';
 				$settings['general']['fz_cron_schedule'] = isset( $_POST['fz_cron_schedule'] ) ? filter_input( INPUT_POST, 'fz_cron_schedule', FILTER_UNSAFE_RAW ) : 'hourly';
 				$settings['general']['fz_execution_offset'] = isset( $_POST['fz_execution_offset'] ) ? filter_input( INPUT_POST, 'fz_execution_offset', FILTER_UNSAFE_RAW ) : '';
+				$settings['general']['feedzy-telemetry'] = isset( $_POST['feedzy-telemetry'] ) ? (int) filter_input( INPUT_POST, 'feedzy-telemetry', FILTER_SANITIZE_NUMBER_INT ) : '';
 				break;
 			case 'headers':
 				$settings['header']['user-agent'] = isset( $_POST['user-agent'] ) ? filter_input( INPUT_POST, 'user-agent', FILTER_UNSAFE_RAW ) : '';
@@ -609,6 +622,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		update_option( 'feedzy-settings', $settings );
+		if ( ! empty( $settings['general'] ) ) {
+			update_option( 'feedzy_rss_feeds_logger_flag', $settings['general']['feedzy-telemetry'] ? 'yes' : false );
+		}
+
 	}
 
 	/**
