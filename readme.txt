@@ -492,6 +492,13 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
+##### [Version 4.3.4](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.3.3...v4.3.4) (2023-12-21)
+
+- Enhanced security
+
+
+
+
 ##### [Version 4.3.3](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.3.2...v4.3.3) (2023-12-20)
 
 ### Improvements
