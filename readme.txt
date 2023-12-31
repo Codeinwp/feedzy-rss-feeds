@@ -482,13 +482,13 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Screenshots ==
 
-1. Add categories
-2. Import settings
-3. General settings
-4. Simple example
-5. Imported feeds
-6. Widget admin
-7. Widget render
+1. Add Categories
+2. Import Settings
+3. General Settings
+4. Action Chain
+5. Feedzy Widget
+6. Gutenberg & Elementor Block
+7. Feedzy Layouts
 
  == Changelog ==
 
