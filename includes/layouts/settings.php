@@ -132,7 +132,7 @@
 												__( 'This image will be used for the <strong>imported posts</strong> if an image is not available in the source XML Feed.', 'feedzy-rss-feeds' ),
 												array(
 													'strong' => true,
-												),
+												)
 											);
 											?>
 											</div>
