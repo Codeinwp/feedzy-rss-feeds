@@ -20,6 +20,7 @@
 		<div class="fz-form-group">
 			<div class="fz-form-switch">
 				<?php
+				$disble_featured_image = '';
 				if ( isset( $this->free_settings['general']['rss-feeds'] ) && 1 === intval( $this->free_settings['general']['rss-feeds'] ) ) {
 					$disble_featured_image = 'checked';
 				}
