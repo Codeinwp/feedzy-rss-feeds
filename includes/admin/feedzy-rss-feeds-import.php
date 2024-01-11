@@ -2204,6 +2204,7 @@ class Feedzy_Rss_Feeds_Import {
 
 		if ( 'misc' === $tab ) {
 			$settings['canonical'] = isset( $_POST['canonical'] ) ? filter_input( INPUT_POST, 'canonical', FILTER_SANITIZE_NUMBER_INT ) : 0;
+			$settings['general']['rss-feeds'] = isset( $_POST['rss-feeds'] ) ? (int) filter_input( INPUT_POST, 'rss-feeds', FILTER_SANITIZE_NUMBER_INT ) : '';
 		}
 
 		return $settings;
