@@ -95,11 +95,6 @@
 
 				<form method="post" action="">
 					<?php
-					$disble_featured_image = '';
-					if ( isset( $settings['general']['rss-feeds'] ) && 1 === intval( $settings['general']['rss-feeds'] ) ) {
-						$disble_featured_image = 'checked';
-					}
-
 					$disble_default_style = 0;
 					if ( isset( $settings['general']['disable-default-style'] ) && 1 === intval( $settings['general']['disable-default-style'] ) ) {
 						$disble_default_style = 1;
@@ -115,13 +110,7 @@
 							<div class="fz-form-wrap">
 								<div class="form-block">
 									<div class="fz-form-group">
-										<div class="fz-form-switch pb-16">
-											<input type="checkbox" id="rss-feeds" class="fz-switch-toggle" name="rss-feeds"
-												value="1" <?php echo esc_html( $disble_featured_image ); ?> />
-											<label for="rss-feeds" class="form-label"><?php echo esc_html_e( 'Do NOT add the featured image to the website\'s RSS feed.', 'feedzy-rss-feeds' ); ?></label>
-										</div>
-									</div>
-									<div class="fz-form-group">
+										<label for="feed-post-default-thumbnail" class="form-label"><?php echo esc_html_e( 'Fallback image for imported posts', 'feedzy-rss-feeds' ); ?></label>
 										<div class="help-text pb-8"><?php esc_html_e( 'Select an image to be the fallback featured image(Feed2Post).', 'feedzy-rss-feeds' ); ?></div>
 										<?php
 										$btn_label = esc_html__( 'Choose image', 'feedzy-rss-feeds' );
@@ -137,7 +126,16 @@
 											<a href="javascript:;" class="feedzy-remove-media btn btn-outline-primary <?php echo $default_thumbnail_id ? esc_attr( 'is-show' ) : ''; ?>"><?php esc_html_e( 'Remove', 'feedzy-rss-feeds' ); ?></a>
 											<input type="hidden" name="default-thumbnail-id" id="feed-post-default-thumbnail" value="<?php echo esc_attr( $default_thumbnail_id ); ?>">
 										</div>
-										<div class="help-text"><?php esc_html_e( 'This image will be used for the Feed Items that don\'t have one.', 'feedzy-rss-feeds' ); ?></div>
+										<div class="help-text">
+											<?php
+											echo wp_kses(
+												__( 'This image will be used for the <strong>imported posts</strong> if an image is not available in the source XML Feed.', 'feedzy-rss-feeds' ),
+												array(
+													'strong' => true,
+												)
+											);
+											?>
+											</div>
 									</div>
 								</div>
 								<div class="form-block">
