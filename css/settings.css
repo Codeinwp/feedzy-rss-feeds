@@ -2295,3 +2295,30 @@ li.draggable-item .components-panel__body-toggle.components-button{
 		font-size: 10px;
 	}
 }
+
+.fz-form-wrap .form-control.fz-tagify-image {
+	line-height: 0;
+}
+.fz-form-wrap .form-control.fz-tagify-image tag {
+	margin-bottom: 0;
+}
+.fz-action-event .components-toggle-control .components-base-control__field{
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+.fz-action-event .components-form-toggle.is-checked .components-form-toggle__track{
+	background: #4268CF;
+}
+.fz-action-event .components-panel__row label{
+	margin-right: 0;
+	font-size: 14px;
+}
+.components-button.fz-new-action.is-secondary:disabled{
+	color: #D9D9D9;
+	outline: 1px solid #D9D9D9;
+}
+.fz-tagify-image tag[title=""] {
+    opacity: 0;
+    height: 0
+}
