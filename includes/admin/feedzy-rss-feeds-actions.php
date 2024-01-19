@@ -400,7 +400,7 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 */
 		private function default_content() {
 			if ( ! method_exists( $this, $this->current_job->tag ) ) {
-				return '';
+				return $this->default_value;
 			}
 			return call_user_func( array( $this, $this->current_job->tag ) );
 		}
@@ -448,7 +448,7 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			if ( ! class_exists( '\Feedzy_Rss_Feeds_Pro_Openai' ) ) {
 				return isset( $this->default_value ) ? $this->default_value : '';
 			}
-			if ( ! $this->current_job->data->generateImgWithChatGPT ) {
+			if ( $this->current_job->data->generateImgWithChatGPT && empty( $this->default_value ) ) {
 				return isset( $this->default_value ) ? $this->default_value : '';
 			}
 			$openai  = new \Feedzy_Rss_Feeds_Pro_Openai();
