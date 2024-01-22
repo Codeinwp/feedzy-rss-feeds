@@ -79,6 +79,20 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		public $post_content = '';
 
 		/**
+		 * Default value.
+		 *
+		 * @var string $default_value
+		 */
+		public $default_value = '';
+
+		/**
+		 * Action type.
+		 *
+		 * @var string $type
+		 */
+		public $type = '';
+
+		/**
 		 * Language code.
 		 *
 		 * @var string $language_code
@@ -205,14 +219,16 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 * @param object $job Post object.
 		 * @param string $language_code Feed language code.
 		 * @param array  $item Feed item.
+		 * @param string $default_value Default value.
 		 * @return string
 		 */
-		public function run_action_job( $post_content, $import_translation_lang, $job, $language_code, $item ) {
+		public function run_action_job( $post_content, $import_translation_lang, $job, $language_code, $item, $default_value = '' ) {
 			$this->item             = $item;
 			$this->job              = $job;
 			$this->language_code    = $language_code;
 			$this->translation_lang = $import_translation_lang;
 			$this->post_content     = $post_content;
+			$this->default_value    = $default_value;
 			$actions                = $this->get_actions();
 
 			if ( ! empty( $actions ) ) {
@@ -227,7 +243,11 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 						$this->current_job = $job;
 						$this->result      = $this->action_process();
 					}
-					$this->post_content = str_replace( $replace_to, $this->result, $this->post_content );
+					if ( 'item_image' === $this->type ) {
+						$this->post_content = str_replace( $replace_to, $this->result, wp_json_encode( $replace_with ) );
+					} else {
+						$this->post_content = str_replace( $replace_to, $this->result, $this->post_content );
+					}
 				}
 			}
 			return $this->post_content;
@@ -256,6 +276,8 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 					return $this->chat_gpt_rewrite();
 				case 'fz_summarize':
 					return $this->summarize_content();
+				case 'fz_image':
+					return $this->generate_image();
 				default:
 					return $this->default_content();
 			}
@@ -301,6 +323,16 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 				return $this->result;
 			}
 			return ! empty( $this->item['item_description'] ) ? $this->item['item_description'] : '';
+		}
+
+		/**
+		 * Get item item_title.
+		 */
+		private function item_title() {
+			if ( ! empty( $this->result ) ) {
+				return $this->result;
+			}
+			return ! empty( $this->item['item_title'] ) ? $this->item['item_title'] : '';
 		}
 
 		/**
@@ -379,7 +411,7 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 */
 		private function default_content() {
 			if ( ! method_exists( $this, $this->current_job->tag ) ) {
-				return '';
+				return $this->default_value;
 			}
 			return call_user_func( array( $this, $this->current_job->tag ) );
 		}
@@ -414,6 +446,24 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			}
 			$openai  = new \Feedzy_Rss_Feeds_Pro_Openai();
 			$content = $openai->call_api( $this->settings, $content, 'summarize', array() );
+			return $content;
+		}
+
+		/**
+		 * Generate item image.
+		 *
+		 * @return string
+		 */
+		private function generate_image() {
+			$content = call_user_func( array( $this, 'item_title' ) );
+			if ( ! class_exists( '\Feedzy_Rss_Feeds_Pro_Openai' ) ) {
+				return isset( $this->default_value ) ? $this->default_value : '';
+			}
+			if ( $this->current_job->data->generateImgWithChatGPT && empty( $this->default_value ) ) {
+				return isset( $this->default_value ) ? $this->default_value : '';
+			}
+			$openai  = new \Feedzy_Rss_Feeds_Pro_Openai();
+			$content = $openai->call_api( $this->settings, $content, 'image', array() );
 			return $content;
 		}
 	}
