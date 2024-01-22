@@ -86,6 +86,13 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		public $default_value = '';
 
 		/**
+		 * Action type.
+		 *
+		 * @var string $type
+		 */
+		public $type = '';
+
+		/**
 		 * Language code.
 		 *
 		 * @var string $language_code
@@ -236,7 +243,11 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 						$this->current_job = $job;
 						$this->result      = $this->action_process();
 					}
-					$this->post_content = str_replace( $replace_to, $this->result, $this->post_content );
+					if ( 'item_image' === $this->type ) {
+						$this->post_content = str_replace( $replace_to, $this->result, wp_json_encode( $replace_with ) );
+					} else {
+						$this->post_content = str_replace( $replace_to, $this->result, wp_json_encode( $replace_with ) );
+					}
 				}
 			}
 			return $this->post_content;

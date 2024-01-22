@@ -1531,11 +1531,9 @@ class Feedzy_Rss_Feeds_Import {
 				$post_content = apply_filters( 'feedzy_invoke_services', $post_content, 'full_content', $full_content, $job );
 			}
 			// Item content action.
-			$content_action = $this->handle_content_actions( $post_content );
-			$import_content = $content_action->get_tags();
+			$content_action = $this->handle_content_actions( $import_content, 'item_content' );
 			// Item content action process.
 			$post_content = $content_action->run_action_job( $import_content, $import_translation_lang, $job, $language_code, $item );
-
 			// Parse custom tags.
 			if ( $this->feedzy_is_business() ) {
 				$post_content = apply_filters( 'feedzy_parse_custom_tags', $post_content, $item_obj );
@@ -1816,10 +1814,8 @@ class Feedzy_Rss_Feeds_Import {
 
 				// Item image action.
 				$import_featured_img = rawurldecode( $import_featured_img );
-				$import_featured_img = str_replace( PHP_EOL, "\r\n", $import_featured_img );
 				$import_featured_img = trim( $import_featured_img );
-				$img_action          = $this->handle_content_actions( $import_featured_img );
-				$import_featured_img = $img_action->get_tags();
+				$img_action          = $this->handle_content_actions( $import_featured_img, 'item_image' );
 				// Item image action process.
 				$image_url = $img_action->run_action_job( $import_featured_img, $import_translation_lang, $job, $language_code, $item, $image_url );
 
@@ -2885,10 +2881,12 @@ class Feedzy_Rss_Feeds_Import {
 	 * Handle item content actions.
 	 *
 	 * @param string $actions Item content actions.
+	 * @param string $type Action type.
 	 * @return object `Feedzy_Rss_Feeds_Actions` class instance.
 	 */
-	public function handle_content_actions( $actions = '' ) {
-		$action_instance = Feedzy_Rss_Feeds_Actions::instance();
+	public function handle_content_actions( $actions = '', $type = '' ) {
+		$action_instance       = Feedzy_Rss_Feeds_Actions::instance();
+		$action_instance->type = $type;
 		$action_instance->set_actions( $actions );
 		$action_instance->set_settings( $this->settings );
 		return $action_instance;
