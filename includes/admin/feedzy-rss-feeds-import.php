@@ -1531,9 +1531,10 @@ class Feedzy_Rss_Feeds_Import {
 				$post_content = apply_filters( 'feedzy_invoke_services', $post_content, 'full_content', $full_content, $job );
 			}
 			// Item content action.
-			$content_action = $this->handle_content_actions( $import_content, 'item_content' );
+			$content_action = $this->handle_content_actions( $post_content, 'item_content' );
+			$post_content   = $content_action->get_tags();
 			// Item content action process.
-			$post_content = $content_action->run_action_job( $import_content, $import_translation_lang, $job, $language_code, $item );
+			$post_content = $content_action->run_action_job( $post_content, $import_translation_lang, $job, $language_code, $item );
 			// Parse custom tags.
 			if ( $this->feedzy_is_business() ) {
 				$post_content = apply_filters( 'feedzy_parse_custom_tags', $post_content, $item_obj );

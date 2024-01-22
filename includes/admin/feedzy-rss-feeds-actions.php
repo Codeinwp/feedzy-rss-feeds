@@ -246,7 +246,7 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 					if ( 'item_image' === $this->type ) {
 						$this->post_content = str_replace( $replace_to, $this->result, wp_json_encode( $replace_with ) );
 					} else {
-						$this->post_content = str_replace( $replace_to, $this->result, wp_json_encode( $replace_with ) );
+						$this->post_content = str_replace( $replace_to, $this->result, $this->post_content );
 					}
 				}
 			}
