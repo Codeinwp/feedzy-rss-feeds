@@ -457,7 +457,7 @@ global $post;
 													?>
 												</div>
 											</div>
-											<div class="fz-input-group-right">
+											<div class="fz-input-group-right fz-content-action-tags">
 													<div class="dropdown">
 														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" aria-haspopup="true"
 															aria-expanded="false">
@@ -491,7 +491,7 @@ global $post;
 											<div class="fz-input-group-left">
 												<div class="fz-group">
 													<input type="text" name="feedzy_meta_data[import_post_featured_img]"
-														placeholder="<?php esc_html_e( 'Add a tag for the featured image', 'feedzy-rss-feeds' ); ?>" class="form-control fz-input-tagify"
+														placeholder="<?php esc_html_e( 'Add a tag for the featured image', 'feedzy-rss-feeds' ); ?>" class="form-control fz-input-tagify fz-tagify-image"
 														value="<?php echo esc_attr( $import_featured_img ); ?>" />
 												</div>
 												<div class="help-text">
@@ -500,7 +500,7 @@ global $post;
 													?>
 												</div>
 											</div>
-											<div class="fz-input-group-right">
+											<div class="fz-input-group-right fz-image-action-tags">
 													<div class="dropdown">
 														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" aria-haspopup="true"
 															aria-expanded="false">
