@@ -493,6 +493,17 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
+#### [Version 4.4.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.3.5...v4.4.0) (2024-01-25)
+
+### New Features
+- Added an ability to generate featured images with OpenAI for imported posts [PRO]
+### Fixes
+- Fixed invalid feed issue when saving multiple feeds as a category
+- Fixed incorrect UTM campaign naming issue
+
+
+
+
 ##### [Version 4.3.5](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.3.4...v4.3.5) (2024-01-12)
 
 ### Fixes
