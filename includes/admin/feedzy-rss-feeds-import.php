@@ -95,7 +95,7 @@ class Feedzy_Rss_Feeds_Import {
 	 * @since       ?
 	 * @access      public
 	 */
-	public function upsell_content( $contentt, $area, $location ) {
+	public function upsell_content( $content, $area, $location ) {
 		if ( ! feedzy_is_pro() ) {
 			$content = '
 			<div class="only-pro-content">
