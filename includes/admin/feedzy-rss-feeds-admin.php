@@ -387,7 +387,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$category_meta['feedzy_category_feed'] = array();
 		if ( isset( $_POST['feedzy_category_feed'] ) ) {
-			$category_meta['feedzy_category_feed'] = wp_strip_all_tags( wp_unslash( $_POST['feedzy_category_feed'] ) );
+			$feedzy_category_feed                  = wp_strip_all_tags( wp_unslash( $_POST['feedzy_category_feed'] ) );
+			$feedzy_category_feed                  = preg_replace( '/\s*,\s*/', ',', $feedzy_category_feed );
+			$category_meta['feedzy_category_feed'] = $feedzy_category_feed;
 		}
 		if ( $post->post_type === 'revision' ) {
 			return true;

@@ -95,14 +95,14 @@ class Feedzy_Rss_Feeds_Import {
 	 * @since       ?
 	 * @access      public
 	 */
-	public function upsell_content( $content ) {
+	public function upsell_content( $content, $area, $location ) {
 		if ( ! feedzy_is_pro() ) {
 			$content = '
 			<div class="only-pro-content">
 				<div class="only-pro-container">
 					<div class="only-pro-inner upgrade-alert">
 						' . __( 'This feature is available in the Pro version.  Unlock more features, by', 'feedzy-rss-feeds' ) . '
-						<a target="_blank" href="' . tsdk_utmify( FEEDZY_UPSELL_LINK, 'upsell-content', 'import' ) . '" title="' . __( 'Buy Now', 'feedzy-rss-feeds' ) . '">' . __( 'upgrading to Feedzy Pro', 'feedzy-rss-feeds' ) . '</a>
+						<a target="_blank" href="' . tsdk_utmify( FEEDZY_UPSELL_LINK, $area, $location ) . '" title="' . __( 'Buy Now', 'feedzy-rss-feeds' ) . '">' . __( 'upgrading to Feedzy Pro', 'feedzy-rss-feeds' ) . '</a>
 					</div>
 				</div>
 			</div>';
@@ -1224,13 +1224,6 @@ class Feedzy_Rss_Feeds_Import {
 		$import_auto_translation  = $this->feedzy_is_agency() && 'yes' === $import_auto_translation ? true : false;
 		$import_translation_lang  = get_post_meta( $job->ID, 'import_auto_translation_lang', true );
 		$max                      = $import_feed_limit;
-		// Used as a new line character in import content.
-		$import_content = rawurldecode( $import_content );
-		$import_content = str_replace( PHP_EOL, "\r\n", $import_content );
-		$import_content = trim( $import_content );
-
-		$action_control = $this->handle_content_actions( $import_content );
-		$import_content = $action_control->get_tags();
 
 		if ( metadata_exists( $import_post_type, $job->ID, 'import_post_status' ) ) {
 			$import_post_status = get_post_meta( $job->ID, 'import_post_status', true );
@@ -1479,6 +1472,11 @@ class Feedzy_Rss_Feeds_Import {
 				$translated_content = apply_filters( 'feedzy_invoke_auto_translate_services', $translated_content, '[#translated_content]', $import_translation_lang, $job, $language_code, $item );
 			}
 
+			// Used as a new line character in import content.
+			$import_content = rawurldecode( $import_content );
+			$import_content = str_replace( PHP_EOL, "\r\n", $import_content );
+			$import_content = trim( $import_content );
+
 			$post_content = str_replace(
 				array(
 					'[#item_description]',
@@ -1532,10 +1530,11 @@ class Feedzy_Rss_Feeds_Import {
 				}
 				$post_content = apply_filters( 'feedzy_invoke_services', $post_content, 'full_content', $full_content, $job );
 			}
-
+			// Item content action.
+			$content_action = $this->handle_content_actions( $post_content, 'item_content' );
+			$post_content   = $content_action->get_tags();
 			// Item content action process.
-			$post_content = $action_control->run_action_job( $post_content, $import_translation_lang, $job, $language_code, $item );
-
+			$post_content = $content_action->run_action_job( $post_content, $import_translation_lang, $job, $language_code, $item );
 			// Parse custom tags.
 			if ( $this->feedzy_is_business() ) {
 				$post_content = apply_filters( 'feedzy_parse_custom_tags', $post_content, $item_obj );
@@ -1635,22 +1634,23 @@ class Feedzy_Rss_Feeds_Import {
 			}
 
 			if ( 'attachment' === $import_post_type ) {
-				$image_url   = '';
-				$img_success = true;
-				$new_post_id = 0;
+				$image_url       = '';
+				$img_success     = true;
+				$new_post_id     = 0;
+				$default_img_tag = ! empty( $import_featured_img ) ? '[#item_image]' : '';
 
 				// image tag
-				if ( strpos( $import_featured_img, '[#item_image]' ) !== false ) {
+				if ( strpos( $default_img_tag, '[#item_image]' ) !== false ) {
 					// image exists in item
 					if ( ! empty( $item['item_img_path'] ) ) {
-						$image_url = str_replace( '[#item_image]', $item['item_img_path'], $import_featured_img );
+						$image_url = str_replace( '[#item_image]', $item['item_img_path'], $default_img_tag );
 					} else {
 						$img_success = false;
 					}
-				} elseif ( strpos( $import_featured_img, '[#item_custom' ) !== false ) {
+				} elseif ( strpos( $default_img_tag, '[#item_custom' ) !== false ) {
 					// custom image tag
 					if ( $this->feedzy_is_business() || $this->feedzy_is_personal() ) {
-						$value = apply_filters( 'feedzy_parse_custom_tags', $import_featured_img, $item_obj );
+						$value = apply_filters( 'feedzy_parse_custom_tags', $default_img_tag, $item_obj );
 					}
 
 					if ( ! empty( $value ) && strpos( $value, '[#item_custom' ) === false ) {
@@ -1659,7 +1659,7 @@ class Feedzy_Rss_Feeds_Import {
 						$img_success = false;
 					}
 				} else {
-					$image_url = $import_featured_img;
+					$image_url = $default_img_tag;
 				}
 
 				if ( ! empty( $image_url ) ) {
@@ -1744,30 +1744,29 @@ class Feedzy_Rss_Feeds_Import {
 
 			do_action( 'feedzy_import_extra', $job, $item_obj, $new_post_id, $import_errors, $import_info );
 
-			if ( ! empty( $import_featured_img ) && 'attachment' !== $import_post_type ) {
+			$default_img_tag = ! empty( $import_featured_img ) ? '[#item_image]' : '';
+			if ( ! empty( $default_img_tag ) && 'attachment' !== $import_post_type ) {
 				$image_url   = '';
 				$img_success = true;
 
 				// image tag
-				if ( strpos( $import_featured_img, '[#item_image]' ) !== false ) {
+				if ( strpos( $default_img_tag, '[#item_image]' ) !== false ) {
 					// image exists in item
 					if ( ! empty( $item['item_img_path'] ) ) {
-						$image_url = str_replace( '[#item_image]', $item['item_img_path'], $import_featured_img );
+						$image_url = str_replace( '[#item_image]', $item['item_img_path'], $default_img_tag );
 					} else {
 						$img_success = false;
 					}
-				} elseif ( strpos( $import_featured_img, '[#item_custom' ) !== false ) {
+				} elseif ( strpos( $default_img_tag, '[#item_custom' ) !== false ) {
 					// custom image tag
 					if ( $this->feedzy_is_business() || $this->feedzy_is_personal() ) {
-						$value = apply_filters( 'feedzy_parse_custom_tags', $import_featured_img, $item_obj );
+						$value = apply_filters( 'feedzy_parse_custom_tags', $default_img_tag, $item_obj );
 					}
 					if ( ! empty( $value ) && strpos( $value, '[#item_custom' ) === false ) {
 						$image_url = $value;
 					} else {
 						$img_success = false;
 					}
-				} else {
-					$image_url = $import_featured_img;
 				}
 
 				// Fetch image from graby.
@@ -1813,6 +1812,13 @@ class Feedzy_Rss_Feeds_Import {
 						do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'error in request = %s', print_r( $response, true ) ), 'error', __FILE__, __LINE__ );
 					}
 				}
+
+				// Item image action.
+				$import_featured_img = rawurldecode( $import_featured_img );
+				$import_featured_img = trim( $import_featured_img );
+				$img_action          = $this->handle_content_actions( $import_featured_img, 'item_image' );
+				// Item image action process.
+				$image_url = $img_action->run_action_job( $import_featured_img, $import_translation_lang, $job, $language_code, $item, $image_url );
 
 				if ( ! empty( $image_url ) ) {
 					if ( 'yes' === $import_item_img_url ) {
@@ -1957,6 +1963,7 @@ class Feedzy_Rss_Feeds_Import {
 			require_once ABSPATH . 'wp-admin' . '/includes/media.php';
 
 			$file_array = array();
+			$file       = trim( $file, chr( 0xC2 ) . chr( 0xA0 ) );
 			$local_file = download_url( $file );
 			if ( is_wp_error( $local_file ) ) {
 				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to download file = %s and postID %d', print_r( $local_file, true ), $post_id ), 'error', __FILE__, __LINE__ );
@@ -2264,8 +2271,8 @@ class Feedzy_Rss_Feeds_Import {
 					$disabled[ str_replace( ':disabled', '', $tag ) ] = $label;
 					continue;
 				}
-				if ( 'import_post_content' === $type ) {
-					if ( in_array( $tag, array( 'item_content', 'item_description', 'item_full_content', 'item_categories' ), true ) ) {
+				if ( in_array( $type, array( 'import_post_content', 'import_post_featured_img' ), true ) ) {
+					if ( in_array( $tag, array( 'item_content', 'item_description', 'item_full_content', 'item_categories', 'item_image' ), true ) ) {
 						$default .= '<a class="dropdown-item" href="#" data-field-name="' . $type . '" data-field-tag="' . $tag . '" data-action_popup="' . $tag . '">' . $label . ' <small>[#' . $tag . ']</small></a>';
 						continue;
 					}
@@ -2875,10 +2882,12 @@ class Feedzy_Rss_Feeds_Import {
 	 * Handle item content actions.
 	 *
 	 * @param string $actions Item content actions.
+	 * @param string $type Action type.
 	 * @return object `Feedzy_Rss_Feeds_Actions` class instance.
 	 */
-	public function handle_content_actions( $actions = '' ) {
-		$action_instance = Feedzy_Rss_Feeds_Actions::instance();
+	public function handle_content_actions( $actions = '', $type = '' ) {
+		$action_instance       = Feedzy_Rss_Feeds_Actions::instance();
+		$action_instance->type = $type;
 		$action_instance->set_actions( $actions );
 		$action_instance->set_settings( $this->settings );
 		return $action_instance;
