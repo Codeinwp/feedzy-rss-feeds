@@ -72,7 +72,7 @@ If you love FEEDZY RSS Aggregator, why not bring your site to the next level wit
 * **Paraphrasing content before import**: Rewrite your content before RSS import with the built-in feature.
 * **Automatically translate the content on import**: Choose to translate the feed into various languages before import.
 * **[Multiple feed templates](https://demo.themeisle.com/feedzy-rss-feeds/)**: choose the best template for each feed, such as standard grid layout, blog layout, online shop layout, or audio playback (soundcloud) playout.
-* **OpenAI (ChatGPT) integration**: Use the OpenAI API feature to paraphrase, summarize, or apply your custom prompt to the imported content.
+* **OpenAI (ChatGPT) integration**: Use the OpenAI API feature to paraphrase, summarize, generate missing featured images, or apply your custom prompt to the imported content.
 * **[WordAI and SpinnerChief integration](https://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy)** to avoid duplicated content.
 * **[Parse and display pricings](https://docs.themeisle.com/article/923-how-price-is-displayed-from-the-feed)** for online shop and product feeds.
 * **[Add affiliate links and referral parameters](https://docs.themeisle.com/article/715-feedzy-how-to-add-affiliate-referrals-to-feed-urls)** for your affiliate business.
@@ -81,7 +81,7 @@ If you love FEEDZY RSS Aggregator, why not bring your site to the next level wit
 
 Unlock all these premium features with [Feedzy PRO!](https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=readme&utm_campaign=feeedzy)
 
-* Still sceptical? Ask your pre-sales questions [here](https://themeisle.com/contact/) and we will get back shortly, or purchase with peace of mind and try it out yourself. We offer **30-day-no-questions-asked money-back guarantee.**
+* Still skeptical? Ask your pre-sales questions [here](https://themeisle.com/contact/), and we will get back to you shortly, or purchase with peace of mind and try it yourself. We offer **30-day-no-questions-asked money-back guarantee.**
 
 ## WE’RE HERE FOR YOU, AND WE TAKE ALL FEEDBACK SERIOUSLY ##
 
