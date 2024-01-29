@@ -250,6 +250,9 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 					}
 				}
 			}
+			if ( empty( $actions ) && 'item_image' === $this->type ) {
+				return $default_value;
+			}
 			return $this->post_content;
 		}
 
