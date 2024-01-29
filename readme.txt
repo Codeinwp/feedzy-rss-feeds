@@ -493,6 +493,15 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
+##### [Version 4.4.1](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.0...v4.4.1) (2024-01-29)
+
+### Fixes
+- Fixed issue with images not importing with the default image tag
+- Updated tested version of the PRO plugin
+
+
+
+
 #### [Version 4.4.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.3.5...v4.4.0) (2024-01-25)
 
 ### New Features
