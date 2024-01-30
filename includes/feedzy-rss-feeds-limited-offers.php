@@ -40,20 +40,32 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 	 *
 	 * @var array[]
 	 */
-	public $timelines = array(
-		'bf' => array(
-			'start' => '2024-11-25 00:00:00',
-			'end'   => '2024-12-3 23:59:00',
-		),
-	);
+	public $announcements = array();
 
 	/**
 	 * LimitedOffers constructor.
 	 */
 	public function __construct() {
+
+		$this->announcements = apply_filters( 'themeisle_sdk_announcements', array() );
+
 		try {
-			if ( $this->is_deal_active( 'bf' ) ) {
-				$this->activate_bff();
+			foreach ( $this->announcements as $announcement => $event_data ) {
+				if ( false !== strpos( $slug, 'black_friday' ) ) {
+					if (
+						empty( $event_data ) ||
+						! is_array( $event_data ) ||
+						empty( $event_data['active'] ) ||
+						empty( $event_data['feedzy_dashboard_url'] ) ||
+						! isset( $event_data['urgency_text'] )
+					) {
+						continue;
+					}
+
+					$this->active = $announcement;
+					$this->prepare_black_friday_assets( $event_data );
+					break;
+				}
 			}
 		} catch ( Exception $e ) {
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
@@ -85,17 +97,17 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 	/**
 	 * Activate the Black Friday deal.
 	 *
+	 * @param array $data Event data.
+	 *
 	 * @return void
 	 */
-	public function activate_bff() {
-		$this->active     = 'bf';
-
+	public function prepare_black_friday_assets( $data ) {
 		$this->offer_metadata = array(
 			'bannerUrl'     => FEEDZY_ABSURL . 'img/black-friday-banner.png',
 			'bannerAlt'     => 'Feedzy Black Friday Sale',
-			'linkDashboard' => tsdk_utmify( 'https://themeisle.com/plugins/feedzy-rss-feeds/blackfriday/', 'bfcm24', 'dashboard' ),
+			'linkDashboard' => esc_url_raw( $data['feedzy_dashboard_url'] ),
 			'linkGlobal'    => '',
-			'urgencyText'   => 'Hurry Up! Only ' . $this->get_remaining_time_for_deal( $this->get_active_deal() ) . ' left',
+			'urgencyText'   => esc_html( $data['urgency_text'] ),
 		);
 	}
 
@@ -109,79 +121,6 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 	}
 
 	/**
-	 * Check if the deal is active with the given slug.
-	 *
-	 * @param string $slug Slug of the deal.
-	 *
-	 * @throws Exception When date is invalid.
-	 */
-	public function is_deal_active( $slug ) {
-
-		if ( empty( $slug ) || ! array_key_exists( $slug, $this->timelines ) ) {
-			return false;
-		}
-
-		return $this->check_date_range( $this->timelines[ $slug ]['start'], $this->timelines[ $slug ]['end'] );
-	}
-
-	/**
-	 * Get the remaining time for the deal in a human readable format.
-	 *
-	 * @param string $slug Slug of the deal.
-	 * @return string Remaining time for the deal.
-	 */
-	public function get_remaining_time_for_deal( $slug ) {
-		if ( empty( $slug ) || ! array_key_exists( $slug, $this->timelines ) ) {
-			return '';
-		}
-
-		try {
-			$end_date     = new DateTime( $this->timelines[ $slug ]['end'], new DateTimeZone( 'GMT' ) );
-			$current_date = new DateTime( 'now', new DateTimeZone( 'GMT' ) );
-			$diff         = $end_date->diff( $current_date );
-
-			if ( $diff->days > 0 ) {
-				return $diff->days === 1 ? $diff->format( '%a day' ) : $diff->format( '%a days' );
-			}
-
-			if ( $diff->h > 0 ) {
-				return $diff->h === 1 ? $diff->format( '%h hour' ) : $diff->format( '%h hours' );
-			}
-
-			if ( $diff->i > 0 ) {
-				return $diff->i === 1 ? $diff->format( '%i minute' ) : $diff->format( '%i minutes' );
-			}
-
-			return $diff->s === 1 ? $diff->format( '%s second' ) : $diff->format( '%s seconds' );
-		} catch ( Exception $e ) {
-			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-				error_log( $e->getMessage() ); // phpcs:ignore
-			}
-		}
-
-		return '';
-	}
-
-	/**
-	 * Check if the current date is in the range of the offer.
-	 *
-	 * @param string $start Start date.
-	 * @param string $end   End date.
-	 *
-	 * @return bool True if the current date is in the range of the offer.
-	 *
-	 * @throws Exception When date is invalid.
-	 */
-	public function check_date_range( $start, $end ) {
-
-		$start_date   = new DateTime( $start, new DateTimeZone( 'GMT' ) );
-		$end_date     = new DateTime( $end, new DateTimeZone( 'GMT' ) );
-		$current_date = new DateTime( 'now', new DateTimeZone( 'GMT' ) );
-
-		return $start_date <= $current_date && $current_date <= $end_date;
-	}
-
-	/**
 	 * Get the localized data for the plugin.
 	 *
 	 * @return array Localized data.
@@ -191,8 +130,6 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 			array(
 				'active'              => $this->is_active(),
 				'dealSlug'            => $this->get_active_deal(),
-				'remainingTime'       => $this->get_remaining_time_for_deal( $this->get_active_deal() ),
-				'urgencyText'         => 'Hurry Up! Only ' . $this->get_remaining_time_for_deal( $this->get_active_deal() ) . ' left',
 			),
 			$this->offer_metadata
 		);
