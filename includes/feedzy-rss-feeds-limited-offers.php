@@ -42,8 +42,8 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 	 */
 	public $timelines = array(
 		'bf' => array(
-			'start' => '2023-11-20 00:00:00',
-			'end'   => '2023-11-27 23:59:00',
+			'start' => '2024-11-25 00:00:00',
+			'end'   => '2024-12-3 23:59:00',
 		),
 	);
 
@@ -93,8 +93,8 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 		$this->offer_metadata = array(
 			'bannerUrl'     => FEEDZY_ABSURL . 'img/black-friday-banner.png',
 			'bannerAlt'     => 'Feedzy Black Friday Sale',
-			'linkDashboard' => tsdk_utmify( 'https://themeisle.com/plugins/feedzy-rss-feeds/blackfriday/', 'blackfridayltd23', 'dashboard' ),
-			'linkGlobal'    => tsdk_utmify( 'https://themeisle.com/plugins/feedzy-rss-feeds/blackfriday/', 'blackfridayltd23', 'globalnotice' ),
+			'linkDashboard' => tsdk_utmify( 'https://themeisle.com/plugins/feedzy-rss-feeds/blackfriday/', 'bfcm24', 'dashboard' ),
+			'linkGlobal'    => '',
 			'urgencyText'   => 'Hurry Up! Only ' . $this->get_remaining_time_for_deal( $this->get_active_deal() ) . ' left',
 		);
 	}

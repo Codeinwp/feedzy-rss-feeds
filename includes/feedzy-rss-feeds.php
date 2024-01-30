@@ -298,9 +298,6 @@ class Feedzy_Rss_Feeds {
 		if ( ! feedzy_is_pro() ) {
 			$offer = new Feedzy_Rss_Feeds_Limited_Offers();
 			$offer->load_banner();
-			if ( $offer->is_active() && $offer->can_show_dashboard_banner() ) {
-				$offer->load_dashboard_hooks();
-			}
 		}
 
 	}
