@@ -51,7 +51,7 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 
 		try {
 			foreach ( $this->announcements as $announcement => $event_data ) {
-				if ( false !== strpos( $slug, 'black_friday' ) ) {
+				if ( false !== strpos( $announcement, 'black_friday' ) ) {
 					if (
 						empty( $event_data ) ||
 						! is_array( $event_data ) ||
