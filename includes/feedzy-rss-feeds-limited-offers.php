@@ -115,7 +115,7 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 			array(
 				'bannerUrl'     => FEEDZY_ABSURL . 'img/black-friday-banner.png',
 				'bannerAlt'     => 'Feedzy Black Friday Sale',
-				'linkDashboard' => esc_url_raw( $data['feedzy_dashboard_url'] ),
+				'bannerStoreUrl' => esc_url_raw( $data['feedzy_dashboard_url'] ),
 				'linkGlobal'    => '',
 				'urgencyText'   => esc_html( $data['urgency_text'] ),
 			)
@@ -319,7 +319,7 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 	 */
 	public function render_banner() {
 
-		if ( empty( $this->assets['linkDashboard'] ) || empty( $this->assets['bannerUrl'] ) ) {
+		if ( empty( $this->assets['bannerStoreUrl'] ) || empty( $this->assets['bannerUrl'] ) ) {
 			return;
 		}
 
@@ -385,7 +385,7 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 			}
 		</style>
 		<div class="themeisle-sale-banner">
-		   <a href="<?php echo esc_url( $this->assets['linkDashboard'] ); ?>" target="_blank" rel="external noreferrer noopener">
+		   <a href="<?php echo esc_url( $this->assets['bannerStoreUrl'] ); ?>" target="_blank" rel="external noreferrer noopener">
 			   <img src="<?php echo esc_url( $this->assets['bannerUrl'] ); ?>" alt="<?php echo esc_attr( ! empty( $this->assets['bannerAlt'] ) ? $this->assets['bannerAlt'] : '' ); ?>">
 			   <div class="themeisle-sale-urgency">
 					 <?php echo esc_html( ! empty( $this->assets['urgencyText'] ) ? $this->assets['urgencyText'] : '' ); ?>
