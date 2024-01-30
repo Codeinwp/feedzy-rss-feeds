@@ -33,7 +33,7 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 	 *
 	 * @var array<string>
 	 */
-	public $offer_metadata = array();
+	public $assets = array();
 
 	/**
 	 * Timeline for the offers.
@@ -48,6 +48,10 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 	public function __construct() {
 
 		$this->announcements = apply_filters( 'themeisle_sdk_announcements', array() );
+
+		if ( empty( $this->announcements ) || ! is_array( $this->announcements ) ) {
+			return;
+		}
 
 		try {
 			foreach ( $this->announcements as $announcement => $event_data ) {
@@ -64,7 +68,6 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 
 					$this->active = $announcement;
 					$this->prepare_black_friday_assets( $event_data );
-					break;
 				}
 			}
 		} catch ( Exception $e ) {
@@ -80,6 +83,11 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 	 * @return void
 	 */
 	public function load_dashboard_hooks() {
+
+		if ( empty( $this->assets['globalNoticeUrl'] ) ) {
+			return;
+		}
+
 		add_filter( 'themeisle_products_deal_priority', array( $this, 'add_priority' ) );
 		add_action( 'admin_notices', array( $this, 'render_notice') );
 		add_action( 'wp_ajax_dismiss_themeisle_sale_notice_feedzy', array( $this, 'disable_notification_ajax' ) );
@@ -102,12 +110,15 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 	 * @return void
 	 */
 	public function prepare_black_friday_assets( $data ) {
-		$this->offer_metadata = array(
-			'bannerUrl'     => FEEDZY_ABSURL . 'img/black-friday-banner.png',
-			'bannerAlt'     => 'Feedzy Black Friday Sale',
-			'linkDashboard' => esc_url_raw( $data['feedzy_dashboard_url'] ),
-			'linkGlobal'    => '',
-			'urgencyText'   => esc_html( $data['urgency_text'] ),
+		$this->assets = array_merge(
+			$this->assets,
+			array(
+				'bannerUrl'     => FEEDZY_ABSURL . 'img/black-friday-banner.png',
+				'bannerAlt'     => 'Feedzy Black Friday Sale',
+				'linkDashboard' => esc_url_raw( $data['feedzy_dashboard_url'] ),
+				'linkGlobal'    => '',
+				'urgencyText'   => esc_html( $data['urgency_text'] ),
+			)
 		);
 	}
 
@@ -131,7 +142,7 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 				'active'              => $this->is_active(),
 				'dealSlug'            => $this->get_active_deal(),
 			),
-			$this->offer_metadata
+			$this->assets
 		);
 	}
 
@@ -211,7 +222,7 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 
 			<span>
 				<?php echo wp_kses_post( $message ); ?>
-				<a href="<?php echo esc_url( ! empty( $this->offer_metadata['linkGlobal'] ) ? $this->offer_metadata['linkGlobal'] : '' ); ?>" target="_blank" rel="external noreferrer noopener">
+				<a href="<?php echo esc_url( ! empty( $this->assets['globalNoticeUrl'] ) ? $this->assets['globalNoticeUrl'] : '' ); ?>" target="_blank" rel="external noreferrer noopener">
 					<?php esc_html_e( 'Learn more', 'feedzy-rss-feeds' ); ?>
 				</a>
 			</span>
@@ -308,6 +319,10 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 	 */
 	public function render_banner() {
 
+		if ( empty( $this->assets['linkDashboard'] ) || empty( $this->assets['bannerUrl'] ) ) {
+			return;
+		}
+
 		if ( ! function_exists( 'get_current_screen' ) ) {
 			return;
 		}
@@ -370,10 +385,10 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 			}
 		</style>
 		<div class="themeisle-sale-banner">
-		   <a href="<?php echo esc_url( ! empty( $this->offer_metadata['linkDashboard'] ) ? $this->offer_metadata['linkDashboard'] : '' ); ?>" target="_blank" rel="external noreferrer noopener">
-			   <img src="<?php echo esc_url( ! empty( $this->offer_metadata['bannerUrl'] ) ? $this->offer_metadata['bannerUrl'] : '' ); ?>" alt="<?php echo esc_attr( ! empty( $this->offer_metadata['bannerAlt'] ) ? $this->offer_metadata['bannerAlt'] : '' ); ?>">
+		   <a href="<?php echo esc_url( $this->assets['linkDashboard'] ); ?>" target="_blank" rel="external noreferrer noopener">
+			   <img src="<?php echo esc_url( $this->assets['bannerUrl'] ); ?>" alt="<?php echo esc_attr( ! empty( $this->assets['bannerAlt'] ) ? $this->assets['bannerAlt'] : '' ); ?>">
 			   <div class="themeisle-sale-urgency">
-					 <?php echo esc_html( ! empty( $this->offer_metadata['urgencyText'] ) ? $this->offer_metadata['urgencyText'] : '' ); ?>
+					 <?php echo esc_html( ! empty( $this->assets['urgencyText'] ) ? $this->assets['urgencyText'] : '' ); ?>
 			   </div>
 		   </a>
 		</div>
