@@ -27,7 +27,7 @@ class Test_Post_Access extends WP_UnitTestCase {
 		return $result;
 	}
 
-	public function test_post_access() {
+	public function test_custom_post_access() {
 		$random_name = $this->get_rand_name();
 		$admin_id     = $this->factory->user->create(
 			array(
