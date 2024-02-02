@@ -1,3 +1,11 @@
+##### [Version 4.4.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.1...v4.4.2) (2024-02-02)
+
+### Fixes
+- Clarified helper text in the taxonomy field
+- Updated support dashboard page with new features
+- Enhanced security
+- Updated dependencies
+
 ##### [Version 4.4.1](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.0...v4.4.1) (2024-01-29)
 
 ### Fixes
