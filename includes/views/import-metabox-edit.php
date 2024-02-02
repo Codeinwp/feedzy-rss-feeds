@@ -322,7 +322,7 @@ global $post;
 											</select>
 										</div>
 										<div class="help-text pt-8">
-											<?php esc_html_e( 'The imported post will be assigned to a taxonomy (eg. "Post Category", "Post Tag" etc.). Leave blank, if unsure.', 'feedzy-rss-feeds' ); ?>
+											<?php esc_html_e( 'The imported post will be assigned to a selected taxonomy. Leave it blank if you don\'t need a taxonomy.', 'feedzy-rss-feeds' ); ?>
 										</div>
 									</div>
 									<?php if ( ! feedzy_is_pro() ) : ?>
@@ -333,7 +333,10 @@ global $post;
 										</div>
 									<?php endif; ?>
 									<div class="help-text pt-8">
-										<?php esc_html_e( 'You can use the magic tags, [#item_categories] and any customizable field like [#item_custom_category]', 'feedzy-rss-feeds' ); ?>
+										<?php
+											// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+											echo wp_kses_post( sprintf( __( 'You can automatically create categories with a magic tag <strong>%1$s</strong> or use custom tag parsing %2$sRead More.%3$s', 'feedzy-rss-feeds' ), '[#item_categories]', '<a href="https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#dynamic-post-taxonomy" target="_blank">', '</a>' ) );
+										?>
 									</div>
 								</div>
 							</div>

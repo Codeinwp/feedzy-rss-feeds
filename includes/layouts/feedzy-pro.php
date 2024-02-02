@@ -113,6 +113,19 @@
             </ul>
             <ul class="fz-pro-features-table-row">
                 <li class="features-info">
+                    <h3 class="h3">OpenAI (ChatGPT) Support <span class="pro-label">Developer & Agency plans</span></h3>
+                    <p>Using the OpenAI API integration, paraphrase, summarize, generate missing featured images, or apply your custom prompt to the imported content.
+                    </p>
+                </li>
+                <li class="free" data-label="Free">
+                    <span class="dashicons dashicons-no-alt"></span>
+                </li>
+                <li class="pro" data-label="Pro">
+                    <span class="dashicons dashicons-saved"></span>
+                </li>
+            </ul>
+            <ul class="fz-pro-features-table-row">
+                <li class="features-info">
                     <h3 class="h3">WordAI & SpinnerChief integration <span class="pro-label">Agency plan</span></h3>
                     <p>WordAi and SpinnerChief can be used to rephrase RSS feeds when they are imported as posts in
                         WordPress.
