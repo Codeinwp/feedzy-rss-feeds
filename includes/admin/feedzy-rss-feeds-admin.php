@@ -266,6 +266,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$supports = array(
 			'title',
 		);
+		$capability = feedzy_current_user_can();
 		$args     = array(
 			'labels'                => $labels,
 			'supports'              => $supports,
@@ -280,6 +281,15 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			'show_in_rest'          => true,
 			'rest_base'             => 'feedzy_categories',
 			'rest_controller_class' => 'WP_REST_Posts_Controller',
+			'map_meta_cap'          => true,
+			'capabilities' => array(
+				'publish_posts'         => $capability,
+				'edit_posts'            => $capability,
+				'edit_others_posts'     => $capability,
+				'delete_posts'          => $capability,
+				'delete_others_posts'   => $capability,
+				'read_private_posts'    => $capability,
+			),
 		);
 		$args     = apply_filters( 'feedzy_post_type_args', $args );
 		register_post_type( 'feedzy_categories', $args );
