@@ -220,7 +220,7 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 * @param string $language_code Feed language code.
 		 * @param array  $item Feed item.
 		 * @param string $default_value Default value.
-		 * @return string
+		 * @return string It can be the modified post content or an image URL.
 		 */
 		public function run_action_job( $post_content, $import_translation_lang, $job, $language_code, $item, $default_value = '' ) {
 			$this->item             = $item;
@@ -244,6 +244,9 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 						$this->result      = $this->action_process();
 					}
 					if ( 'item_image' === $this->type ) {
+						/**
+						 * The result will be an image URL which will be downloaded later.
+						 */
 						$this->post_content = str_replace( $replace_to, $this->result, wp_json_encode( $replace_with ) );
 					} else {
 						$this->post_content = str_replace( $replace_to, $this->result, $this->post_content );
@@ -465,6 +468,12 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			if ( $this->current_job->data->generateImgWithChatGPT && empty( $this->default_value ) ) {
 				return isset( $this->default_value ) ? $this->default_value : '';
 			}
+
+			// If default value is an URL, then return it since it might the image from the feed.
+			if ( filter_var( $this->default_value, FILTER_VALIDATE_URL ) ) {
+				return $this->default_value;
+			}
+
 			$openai  = new \Feedzy_Rss_Feeds_Pro_Openai();
 			$content = $openai->call_api( $this->settings, $content, 'image', array() );
 			return $content;

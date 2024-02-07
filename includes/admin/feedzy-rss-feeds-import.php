@@ -1663,7 +1663,7 @@ class Feedzy_Rss_Feeds_Import {
 				}
 
 				if ( ! empty( $image_url ) ) {
-					$img_success = $this->generate_featured_image( $image_url, 0, $item['item_title'], $import_errors, $import_info, $new_post );
+					$img_success = $this->try_save_featured_image( $image_url, 0, $item['item_title'], $import_errors, $import_info, $new_post );
 					$new_post_id = $img_success;
 				}
 
@@ -1817,7 +1817,8 @@ class Feedzy_Rss_Feeds_Import {
 				$import_featured_img = rawurldecode( $import_featured_img );
 				$import_featured_img = trim( $import_featured_img );
 				$img_action          = $this->handle_content_actions( $import_featured_img, 'item_image' );
-				// Item image action process.
+
+				// Get the image URL.
 				$image_url = $img_action->run_action_job( $import_featured_img, $import_translation_lang, $job, $language_code, $item, $image_url );
 
 				if ( ! empty( $image_url ) ) {
@@ -1826,9 +1827,10 @@ class Feedzy_Rss_Feeds_Import {
 						update_post_meta( $new_post_id, 'feedzy_item_external_url', $image_url );
 					} else {
 						// if import_featured_img is a tag.
-						$img_success = $this->generate_featured_image( $image_url, $new_post_id, $item['item_title'], $import_errors, $import_info );
+						$img_success = $this->try_save_featured_image( $image_url, $new_post_id, $item['item_title'], $import_errors, $import_info );
 					}
 				}
+
 				// Set default thumbnail image.
 				if ( ! $img_success && ! empty( $default_thumbnail ) ) {
 					$img_success = set_post_thumbnail( $new_post_id, $default_thumbnail );
@@ -1936,11 +1938,11 @@ class Feedzy_Rss_Feeds_Import {
 	}
 
 	/**
-	 * Downloads and sets a post featured image if possible.
+	 * Save the image (with download) as a Post Featured image if possible.
 	 *
-	 * @param string  $file The file URL.
+	 * @param string  $image_url The image URL.
 	 * @param integer $post_id The post ID.
-	 * @param string  $desc Description.
+	 * @param string  $post_title Post title.
 	 * @param array   $import_errors Array of import error messages.
 	 * @param array   $import_info Array of import information messages.
 	 *
@@ -1948,23 +1950,32 @@ class Feedzy_Rss_Feeds_Import {
 	 * @since   1.2.0
 	 * @access  private
 	 */
-	private function generate_featured_image( $file, $post_id, $desc, &$import_errors, &$import_info, $post_data = array() ) {
+	private function try_save_featured_image( $image_url, $post_id, $post_title, &$import_errors, &$import_info, $post_data = array() ) {
+
+		// Check if $file is a valid URL.
+		if ( ! filter_var( $image_url, FILTER_VALIDATE_URL ) ) {
+			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'The provided File URL is not a valid URL: %s with postID %d', substr( $image_url, 0, 100 ), $post_id ), 'debug', __FILE__, __LINE__ );
+			return false;
+		}
+
 		if ( ! function_exists( 'post_exists' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/post.php';
 		}
-		// Find existing attachment by item title.
-		$id = post_exists( $desc, '', '', 'attachment' );
 
-		if ( ! $id ) {
-			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Trying to generate featured image for %s and postID %d', $file, $post_id ), 'debug', __FILE__, __LINE__ );
+		$image_attachment_id = post_exists( $post_title, '', '', 'attachment' );
+
+		if ( ! $image_attachment_id ) {
+			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Trying to generate featured image for %s and postID %d', $image_url, $post_id ), 'debug', __FILE__, __LINE__ );
 
 			require_once ABSPATH . 'wp-admin' . '/includes/image.php';
 			require_once ABSPATH . 'wp-admin' . '/includes/file.php';
 			require_once ABSPATH . 'wp-admin' . '/includes/media.php';
 
 			$file_array = array();
-			$file       = trim( $file, chr( 0xC2 ) . chr( 0xA0 ) );
-			$local_file = download_url( $file );
+			$image_url       = trim( $image_url, chr( 0xC2 ) . chr( 0xA0 ) );
+
+			// Download the image on the server.
+			$local_file = download_url( $image_url );
 			if ( is_wp_error( $local_file ) ) {
 				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to download file = %s and postID %d', print_r( $local_file, true ), $post_id ), 'error', __FILE__, __LINE__ );
 
@@ -1991,22 +2002,22 @@ class Feedzy_Rss_Feeds_Import {
 			$file_array['tmp_name'] = $local_file;
 			$file_array['name']     = basename( $local_file );
 
-			$id = media_handle_sideload( $file_array, $post_id, $desc, $post_data );
-			if ( is_wp_error( $id ) ) {
-				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to attach file for postID %d = %s', $post_id, print_r( $id, true ) ), 'error', __FILE__, __LINE__ );
+			$image_attachment_id = media_handle_sideload( $file_array, $post_id, $post_title, $post_data );
+			if ( is_wp_error( $image_attachment_id ) ) {
+				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to attach file for postID %d = %s', $post_id, print_r( $image_attachment_id, true ) ), 'error', __FILE__, __LINE__ );
 				unlink( $file_array['tmp_name'] );
 
 				return false;
 			}
 		} else {
-			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Found an existing attachment(ID: %d) image for %s and postID %d', $id, $file, $post_id ), 'debug', __FILE__, __LINE__ );
+			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Found an existing attachment(ID: %d) image for %s and postID %d', $image_attachment_id, $image_url, $post_id ), 'debug', __FILE__, __LINE__ );
 		}
 
 		if ( ! empty( $post_data ) ) {
-			return $id;
+			return $image_attachment_id;
 		}
 
-		$success = set_post_thumbnail( $post_id, $id );
+		$success = set_post_thumbnail( $post_id, $image_attachment_id );
 		if ( false === $success ) {
 			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to attach file for postID %d for no apparent reason', $post_id ), 'error', __FILE__, __LINE__ );
 		} else {
@@ -2883,7 +2894,7 @@ class Feedzy_Rss_Feeds_Import {
 	 *
 	 * @param string $actions Item content actions.
 	 * @param string $type Action type.
-	 * @return object `Feedzy_Rss_Feeds_Actions` class instance.
+	 * @return Feedzy_Rss_Feeds_Actions Instance of Feedzy_Rss_Feeds_Actions.
 	 */
 	public function handle_content_actions( $actions = '', $type = '' ) {
 		$action_instance       = Feedzy_Rss_Feeds_Actions::instance();
