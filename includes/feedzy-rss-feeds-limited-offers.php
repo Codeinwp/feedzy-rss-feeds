@@ -36,7 +36,7 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 	public $assets = array();
 
 	/**
-	 * Timeline for the offers.
+	 * Announcements.
 	 *
 	 * @var array
 	 */
