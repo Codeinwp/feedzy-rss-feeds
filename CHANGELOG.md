@@ -1,3 +1,50 @@
+##### [Version 4.4.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.1...v4.4.2) (2024-02-02)
+
+### Fixes
+- Clarified helper text in the taxonomy field
+- Updated support dashboard page with new features
+- Enhanced security
+- Updated dependencies
+
+##### [Version 4.4.1](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.0...v4.4.1) (2024-01-29)
+
+### Fixes
+- Fixed issue with images not importing with the default image tag
+- Updated tested version of the PRO plugin
+
+#### [Version 4.4.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.3.5...v4.4.0) (2024-01-25)
+
+### New Features
+- Added an ability to generate featured images with OpenAI for imported posts [PRO]
+### Fixes
+- Fixed invalid feed issue when saving multiple feeds as a category
+- Fixed incorrect UTM campaign naming issue
+
+##### [Version 4.3.5](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.3.4...v4.3.5) (2024-01-12)
+
+### Fixes
+- Separated settings in the General section
+- Enhanced security
+
+##### [Version 4.3.4](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.3.3...v4.3.4) (2023-12-21)
+
+- Enhanced security
+
+##### [Version 4.3.3](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.3.2...v4.3.3) (2023-12-20)
+
+### Improvements
+- Added optional feature usage observer
+- Updated dependencies
+### Bug Fixes
+- Fixed the feed layout in the block that doesn't correspond to the selections
+- Change wording for the first execution time field
+- Fixed post-taxonomy placeholder issue
+- Removed setting page access for non-admin users
+- Sanitized missing setting fields
+- Fixed typo on the support page
+- Fixed authenticated issue
+- Fix multiple charts facade and small google fix
+
 ##### [Version 4.3.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.3.1...v4.3.2) (2023-11-03)
 
 Bug Fixes

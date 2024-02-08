@@ -18,10 +18,10 @@ The Ultimate WordPress RSS aggregator, helping you Curate content, Autoblog, Imp
 
 ## 🔗 HELPFUL LINKS: ##
 
-* Want to see Feedzy in action before installing? [VIEW FEEDZY DEMO](https://demo.themeisle.com/feedzy-rss-feeds/?utm_source=wpadmin&utm_medium=readme&utm_campaign=feeedzy)
+* Want to see Feedzy in action before installing? [VIEW FEEDZY DEMO](https://demo.themeisle.com/feedzy-rss-feeds/?utm_source=wpadmin&utm_medium=readme&utm_campaign=feedzy)
 * Need any help with setup? [CHECK DOCUMENTATION](https://docs.themeisle.com/category/712-feedzy)
 * Don’t like reading? [CHECK YOUTUBE TUTORIALS](https://www.youtube.com/channel/UCAQcBsP3h6p5yXgFap4LEGA/search?query=feedzy)
-* Interested in Feedzy Pro? [KNOW MORE ABOUT FEEDZY PRO](https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=readme&utm_campaign=feeedzy)
+* Interested in Feedzy Pro? [KNOW MORE ABOUT FEEDZY PRO](https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=readme&utm_campaign=feedzy)
 
 With FEEDZY RSS Aggregator, you can sit back, let your site autoblog and always stay fresh with new content, which in return helps improve content marketing, boost your SEO, increase audience engagement, and probably earn more money.
 
@@ -72,15 +72,16 @@ If you love FEEDZY RSS Aggregator, why not bring your site to the next level wit
 * **Paraphrasing content before import**: Rewrite your content before RSS import with the built-in feature.
 * **Automatically translate the content on import**: Choose to translate the feed into various languages before import.
 * **[Multiple feed templates](https://demo.themeisle.com/feedzy-rss-feeds/)**: choose the best template for each feed, such as standard grid layout, blog layout, online shop layout, or audio playback (soundcloud) playout.
+* **OpenAI (ChatGPT) integration**: Use the OpenAI API feature to paraphrase, summarize, generate missing featured images, or apply your custom prompt to the imported content.
 * **[WordAI and SpinnerChief integration](https://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy)** to avoid duplicated content.
 * **[Parse and display pricings](https://docs.themeisle.com/article/923-how-price-is-displayed-from-the-feed)** for online shop and product feeds.
 * **[Add affiliate links and referral parameters](https://docs.themeisle.com/article/715-feedzy-how-to-add-affiliate-referrals-to-feed-urls)** for your affiliate business.
 
 **USE CASE:** Mike, an affiliate marketing expert, is all about maximizing profits. By seamlessly incorporating personalized referral links into his content using the "Add Affiliate Links and Referral Parameters" feature, he simplifies tracking and improves campaign efficiency. The result? Heightened conversions, enhanced earnings, and a stronger affiliate game.
 
-Unlock all these premium features with [Feedzy PRO!](https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=readme&utm_campaign=feeedzy)
+Unlock all these premium features with [Feedzy PRO!](https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=readme&utm_campaign=feedzy)
 
-* Still sceptical? Ask your pre-sales questions [here](https://themeisle.com/contact/) and we will get back shortly, or purchase with peace of mind and try it out yourself. We offer **30-day-no-questions-asked money-back guarantee.**
+* Still skeptical? Ask your pre-sales questions [here](https://themeisle.com/contact/), and we will get back to you shortly, or purchase with peace of mind and try it yourself. We offer **30-day-no-questions-asked money-back guarantee.**
 
 ## WE’RE HERE FOR YOU, AND WE TAKE ALL FEEDBACK SERIOUSLY ##
 
@@ -482,15 +483,80 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Screenshots ==
 
-1. Add categories
-2. Import settings
-3. General settings
-4. Simple example
-5. Imported feeds
-6. Widget admin
-7. Widget render
+1. Add Categories
+2. Import Settings
+3. General Settings
+4. Action Chain
+5. Feedzy Widget
+6. Gutenberg & Elementor Block
+7. Feedzy Layouts
 
  == Changelog ==
+
+##### [Version 4.4.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.1...v4.4.2) (2024-02-02)
+
+### Fixes
+- Clarified helper text in the taxonomy field
+- Updated support dashboard page with new features
+- Enhanced security
+- Updated dependencies
+
+
+
+
+##### [Version 4.4.1](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.0...v4.4.1) (2024-01-29)
+
+### Fixes
+- Fixed issue with images not importing with the default image tag
+- Updated tested version of the PRO plugin
+
+
+
+
+#### [Version 4.4.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.3.5...v4.4.0) (2024-01-25)
+
+### New Features
+- Added an ability to generate featured images with OpenAI for imported posts [PRO]
+### Fixes
+- Fixed invalid feed issue when saving multiple feeds as a category
+- Fixed incorrect UTM campaign naming issue
+
+
+
+
+##### [Version 4.3.5](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.3.4...v4.3.5) (2024-01-12)
+
+### Fixes
+- Separated settings in the General section
+- Enhanced security
+
+
+
+
+##### [Version 4.3.4](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.3.3...v4.3.4) (2023-12-21)
+
+- Enhanced security
+
+
+
+
+##### [Version 4.3.3](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.3.2...v4.3.3) (2023-12-20)
+
+### Improvements
+- Added optional feature usage observer
+- Updated dependencies
+### Bug Fixes
+- Fixed the feed layout in the block that doesn't correspond to the selections
+- Change wording for the first execution time field
+- Fixed post-taxonomy placeholder issue
+- Removed setting page access for non-admin users
+- Sanitized missing setting fields
+- Fixed typo on the support page
+- Fixed authenticated issue
+- Fix multiple charts facade and small google fix
+
+
+
 
 ##### [Version 4.3.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.3.1...v4.3.2) (2023-11-03)
 

@@ -104,7 +104,7 @@ class Feedzy_Rss_Feeds {
 	 */
 	public function init() {
 		self::$plugin_name = 'feedzy-rss-feeds';
-		self::$version     = '4.3.2';
+		self::$version     = '4.4.2';
 		self::$instance->load_dependencies();
 		self::$instance->set_locale();
 		self::$instance->define_admin_hooks();
@@ -241,7 +241,7 @@ class Feedzy_Rss_Feeds {
 
 			$plugin_import = new Feedzy_Rss_Feeds_Import( self::$instance->get_plugin_name(), self::$instance->get_version() );
 			self::$instance->loader->add_action( 'feedzy_upsell_class', $plugin_import, 'upsell_class', 10, 1 );
-			self::$instance->loader->add_action( 'feedzy_upsell_content', $plugin_import, 'upsell_content', 10, 1 );
+			self::$instance->loader->add_action( 'feedzy_upsell_content', $plugin_import, 'upsell_content', 10, 3 );
 			self::$instance->loader->add_action( 'admin_enqueue_scripts', $plugin_import, 'enqueue_styles' );
 			self::$instance->loader->add_action( 'init', $plugin_import, 'register_import_post_type', 9, 1 );
 			self::$instance->loader->add_action( 'add_meta_boxes', $plugin_import, 'add_feedzy_import_metaboxes', 1, 2 );

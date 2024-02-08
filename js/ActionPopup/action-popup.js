@@ -37,7 +37,10 @@ const ActionModal = () => {
 	const [ isVisible, setIsVisible ] = useState( false );
 	const [ action, setAction ] = useState([]);
 	const [ shortCode, setShortCode ] = useState('');
+	const [ fieldName, setFieldName ] = useState('');
 	const [ editModeTag, setEditModeTag ] = useState(null);
+	const [ isDisabledAddNew, setDisabledAddNew ] = useState(false);
+	const [ isLoading, setLoading ] = useState(false);
 
 	useEffect( () => {
 		window.wp.api.loadPromise.then( () => {
@@ -56,7 +59,11 @@ const ActionModal = () => {
 		setAction( () => ([...action.filter((e)=>{return e})]));
 
 	};
-	const openModal = () => setOpen(true);
+
+	const openModal = () => {
+		setLoading(true);
+		setOpen(true);
+	};
 	const toggleVisible = (status) => {
 		if ( status ) {
 			setIsVisible( (state) => !state );
@@ -68,12 +75,15 @@ const ActionModal = () => {
 		setOpen(false);
 		toggleVisible(false);
 		setEditModeTag(null);
+		setDisabledAddNew(false);
 		setAction([]);
+		setLoading(false);
 	};
 	const hideIntroMessage = ( status ) => setHideMeg( status );
 	const removeAction = ( index ) => {
 		delete action[index];
 		setAction( () => ([...action.filter((e)=>{return e})]));
+		setDisabledAddNew(false);
 	};
 
 	const addAction = ( actionId ) => {
@@ -88,7 +98,12 @@ const ActionModal = () => {
 		if ( ['fz_translate', 'fz_paraphrase', 'fz_summarize', 'wordAI', 'spinnerchief'].indexOf( actionId ) > -1 ) {
 			actionData.data[actionId] = true;
 		}
+		if ( ['fz_image'].indexOf( actionId ) > -1 ) {
+			actionData.data['generateImgWithChatGPT'] = true;
+		}
+
 		let newAction = [actionData];
+		setDisabledAddNew(() => 'item_image' === shortCode );
 		setAction(prevState => ([...prevState, ...newAction]));
 		toggleVisible(false);
 	};
@@ -130,13 +145,25 @@ const ActionModal = () => {
 		if ( 'function' !== typeof jQuery ) {
 			return;
 		}
+
+		action?.forEach( ( item, index ) => {
+			window?.tiTrk?.with('feedzy').add( { feature: 'import_action', featureValue: item?.id, groupId: item?.tag ?? '' } );
+		});
+
 		let _action = encodeURIComponent( JSON.stringify( action ) );
 		if ( action.length === 0 ) {
 			setAction([]);
 			_action = encodeURIComponent( JSON.stringify( [ { id: '', tag: shortCode, data: {} } ] ) );
 		}
-		let postContent = jQuery( 'textarea.fz-textarea-tagify' ).data('tagify');
-		if ( null === editModeTag ) {
+
+		let postContent = jQuery( 'import_post_content' === fieldName ? 'textarea.fz-textarea-tagify' : 'input.fz-tagify-image' ).data('tagify');
+
+		if ( 'import_post_featured_img' === fieldName ) {
+			postContent.removeAllTags();
+			postContent.addEmptyTag();
+			postContent.clearPersistedData();
+		}
+		if ( null === editModeTag || 'import_post_featured_img' === fieldName ) {
 			let tagElm = postContent.createTagElem({value: _action})
 			postContent.injectAtCaret(tagElm)
 			let elm = postContent.insertAfterTag(tagElm)
@@ -173,35 +200,49 @@ const ActionModal = () => {
 				}
 			}
 			let tag = event.target.getAttribute( 'data-action_popup' ) || '';
+			let fieldName = event.target.getAttribute( 'data-field-name' ) || '';
 			if ( '' === tag ) {
 				event.target.closest('.dropdown-item').click();
 				return;
 			}
 			setShortCode( tag );
+			setFieldName( fieldName );
 			openModal();
 		} );
 	} );
 
-	// Click to open edit action popup.
-	setTimeout( function() {
-		const editActionElement = document.querySelectorAll( '.fz-content-action .tagify__filter-icon' ) || [];
-		if ( editActionElement.length > 0 ) {
-			editActionElement.forEach( editItem => {
-				editItem.addEventListener( 'click', ( event ) => {
-					if ( event.target.parentNode ) {
-						let editAction = event.target.getAttribute( 'data-actions' ) || '';
-						editAction = JSON.parse( decodeURIComponent( editAction ) );
-						setAction( () => ([...editAction.filter((e)=>{return e.id !== ''})]));
-						let magicTag = editAction[0] || {};
-						let tag = magicTag.tag;
-						setEditModeTag(event.target);
-						document.querySelector( '[data-action_popup="' + tag + '"]' ).click();
-					}
-				} );
-			} );
+	const initEditHooks = () => {
+		if ( isLoading ) {
+			return;
 		}
-	}, 500 );
-
+		// Click to open edit action popup.
+		setTimeout( function() {
+			const editActionElement = document.querySelectorAll( '.fz-content-action .tagify__filter-icon' ) || [];
+			if ( editActionElement.length === 0 ) {
+				initEditHooks();
+				return;
+			}
+			if ( editActionElement.length > 0 ) {
+				editActionElement.forEach( editItem => {
+					editItem.addEventListener( 'click', ( event ) => {
+						if ( event.target.parentNode ) {
+							let editAction = event.target.getAttribute( 'data-actions' ) || '';
+							let fieldId = event.target.getAttribute( 'data-field_id' ) || '';
+							editAction = JSON.parse( decodeURIComponent( editAction ) );
+							setAction( () => ([...editAction.filter((e)=>{return e.id !== ''})]));
+							let magicTag = editAction[0] || {};
+							let tag = magicTag.tag;
+							setEditModeTag(event.target.parentNode);
+							setDisabledAddNew(() => Object.keys(magicTag.data).length && 'item_image' === tag );
+							let actionGroup = document.querySelector( '.' + fieldId );
+							actionGroup.querySelector( '[data-action_popup="' + tag + '"]' ).click();
+						}
+					} );
+				} );
+			}
+		}, 500 );
+	};
+	initEditHooks();
 	return (
 		<Fragment>
 		{ isOpen && (
@@ -231,65 +272,75 @@ const ActionModal = () => {
 
 						<div className="fz-action-btn">
 							<div className="fz-action-relative">
-								<Button isSecondary className="fz-new-action" onClick={ () => { toggleVisible(true) } }>
+								<Button isSecondary className="fz-new-action" onClick={ () => { toggleVisible(true) } } disabled={isDisabledAddNew}>
 									{ __( 'Add new', 'feedzy-rss-feeds' ) } <Icon icon={ plus } />
 								</Button>
 								{ isVisible && (
 									<div className="popover-action-list">
 										<ul>
-											<li onClick={ () => addAction('trim') }>{__( 'Trim Content', 'feedzy-rss-feeds' )}</li>
 											{
-												feedzyData.isPro && feedzyData.isAgencyPlan ? (
-													<li onClick={ () => addAction('fz_translate') }>{__( 'Translate with Feedzy', 'feedzy-rss-feeds' )}</li>
-												) : (
-													<li onClick={ () => addAction('fz_translate') }>{__( 'Translate with Feedzy', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
-												)
-											}
-											<li onClick={ () => addAction('search_replace') }>{__( 'Search / Replace', 'feedzy-rss-feeds' )}</li>
-											{
-												'item_categories' !== shortCode && (
+												'item_image' === shortCode ? ([
 													feedzyData.isPro && ( feedzyData.isBusinessPlan || feedzyData.isAgencyPlan ) ? (
-														<li onClick={ () => addAction('fz_paraphrase') }>{__( 'Paraphrase with Feedzy', 'feedzy-rss-feeds' )}</li>
+														<li onClick={ () => addAction('fz_image') }>{__( 'Generate with ChatGPT', 'feedzy-rss-feeds' )}</li>
 													) : (
-														<li onClick={ () => addAction('fz_paraphrase') }>{__( 'Paraphrase with Feedzy', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+														<li onClick={ () => addAction('fz_image') }>{__( 'Generate with ChatGPT', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+													)]
+												) : ([
+													<li onClick={ () => addAction('trim') }>{__( 'Trim Content', 'feedzy-rss-feeds' )}</li>,
+													(
+														feedzyData.isPro && feedzyData.isAgencyPlan ? (
+															<li onClick={ () => addAction('fz_translate') }>{__( 'Translate with Feedzy', 'feedzy-rss-feeds' )}</li>
+														) : (
+															<li onClick={ () => addAction('fz_translate') }>{__( 'Translate with Feedzy', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+														)
+													),
+													<li onClick={ () => addAction('search_replace') }>{__( 'Search / Replace', 'feedzy-rss-feeds' )}</li>,
+													(
+														'item_categories' !== shortCode && (
+															feedzyData.isPro && ( feedzyData.isBusinessPlan || feedzyData.isAgencyPlan ) ? (
+																<li onClick={ () => addAction('fz_paraphrase') }>{__( 'Paraphrase with Feedzy', 'feedzy-rss-feeds' )}</li>
+															) : (
+																<li onClick={ () => addAction('fz_paraphrase') }>{__( 'Paraphrase with Feedzy', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+															)
+														)
+													),
+													(
+														'item_categories' !== shortCode && (
+															feedzyData.isPro && feedzyData.isAgencyPlan ? (
+																<li onClick={ () => addAction('spinnerchief') }>{__( 'Spin using SpinnerChief', 'feedzy-rss-feeds' )}</li>
+															) : (
+																<li onClick={ () => addAction('spinnerchief') }>{__( 'Spin using SpinnerChief', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+															)
+														)
+													),
+													(
+														'item_categories' !== shortCode && (
+															feedzyData.isPro && feedzyData.isAgencyPlan ? (
+																<li onClick={ () => addAction('wordAI') }>{__( 'Spin using WordAI', 'feedzy-rss-feeds' )}</li>
+															) : (
+																<li onClick={ () => addAction('wordAI') }>{__( 'Spin using WordAI', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+															)
+														)
+													),
+													(
+														'item_categories' !== shortCode && (
+															feedzyData.isPro && ( feedzyData.isBusinessPlan || feedzyData.isAgencyPlan ) ? (
+																<li onClick={ () => addAction('chat_gpt_rewrite') }>{__( 'Paraphrase with ChatGPT', 'feedzy-rss-feeds' )}</li>
+															) : (
+																<li onClick={ () => addAction('chat_gpt_rewrite') }>{__( 'Paraphrase with ChatGPT', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+															)
+														)
+													),
+													(
+														'item_categories' !== shortCode && (
+															feedzyData.isPro && ( feedzyData.isBusinessPlan || feedzyData.isAgencyPlan ) ? (
+																<li onClick={ () => addAction('fz_summarize') }>{__( 'Summarize with ChatGPT', 'feedzy-rss-feeds' )}</li>
+															) : (
+																<li onClick={ () => addAction('fz_summarize') }>{__( 'Summarize with ChatGPT', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+															)
+														)
 													)
-												)
-											}
-											{
-												'item_categories' !== shortCode && (
-													feedzyData.isPro && feedzyData.isAgencyPlan ? (
-														<li onClick={ () => addAction('spinnerchief') }>{__( 'Spin using SpinnerChief', 'feedzy-rss-feeds' )}</li>
-													) : (
-														<li onClick={ () => addAction('spinnerchief') }>{__( 'Spin using SpinnerChief', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
-													)
-												)
-											}
-											{
-												'item_categories' !== shortCode && (
-													feedzyData.isPro && feedzyData.isAgencyPlan ? (
-														<li onClick={ () => addAction('wordAI') }>{__( 'Spin using WordAI', 'feedzy-rss-feeds' )}</li>
-													) : (
-														<li onClick={ () => addAction('wordAI') }>{__( 'Spin using WordAI', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
-													)
-												)
-											}
-											{
-												'item_categories' !== shortCode && (
-													feedzyData.isPro && ( feedzyData.isBusinessPlan || feedzyData.isAgencyPlan ) ? (
-														<li onClick={ () => addAction('chat_gpt_rewrite') }>{__( 'Paraphrase with ChatGPT', 'feedzy-rss-feeds' )}</li>
-													) : (
-														<li onClick={ () => addAction('chat_gpt_rewrite') }>{__( 'Paraphrase with ChatGPT', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
-													)
-												)
-											}
-											{
-												'item_categories' !== shortCode && (
-													feedzyData.isPro && ( feedzyData.isBusinessPlan || feedzyData.isAgencyPlan ) ? (
-														<li onClick={ () => addAction('fz_summarize') }>{__( 'Summarize with ChatGPT', 'feedzy-rss-feeds' )}</li>
-													) : (
-														<li onClick={ () => addAction('fz_summarize') }>{__( 'Summarize with ChatGPT', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
-													)
-												)
+												])
 											}
 											<li className="link-item"><ExternalLink href="https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#tag-actions">{ __( 'Learn more about this feature.', 'feedzy-rss-feeds' ) }</ExternalLink></li>
 										</ul>

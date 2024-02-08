@@ -125,7 +125,7 @@ global $post;
 			<div class="feedzy-accordion-item__content border-top">
 				<div class="fz-form-wrap">
 					<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
-						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '' ) ); ?>
+						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'filter-keyword', 'import' ) ); ?>
 						<div class="left">
 							<h4 class="h4"><?php esc_html_e( 'Filter by Keyword(s)', 'feedzy-rss-feeds' ); ?><?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
 							<div class="form-block-pro-text">
@@ -179,7 +179,7 @@ global $post;
 					</div>
 
 					<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
-						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '' ) ); ?>
+						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'exclude-items', 'import' ) ); ?>
 						<div class="left">
 							<h4 class="h4"><?php esc_html_e( 'Exclude Items', 'feedzy-rss-feeds' ); ?><?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
 						</div>
@@ -222,7 +222,7 @@ global $post;
 					</div>
 
 					<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
-						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '' ) ); ?>
+						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'filter-time-range', 'import' ) ); ?>
 						<div class="left">
 							<h4 class="h4"><?php esc_html_e( 'Filter by Time Range', 'feedzy-rss-feeds' ); ?><?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
 						</div>
@@ -322,7 +322,7 @@ global $post;
 											</select>
 										</div>
 										<div class="help-text pt-8">
-											<?php esc_html_e( 'The imported post will be assigned to a taxonomy (eg. "Post Category", "Post Tag" etc.). Leave blank, if unsure.', 'feedzy-rss-feeds' ); ?>
+											<?php esc_html_e( 'The imported post will be assigned to a selected taxonomy. Leave it blank if you don\'t need a taxonomy.', 'feedzy-rss-feeds' ); ?>
 										</div>
 									</div>
 									<?php if ( ! feedzy_is_pro() ) : ?>
@@ -333,7 +333,10 @@ global $post;
 										</div>
 									<?php endif; ?>
 									<div class="help-text pt-8">
-										<?php esc_html_e( 'You can use the magic tags, [#item_categories] and any customizable field like [#item_custom_category]', 'feedzy-rss-feeds' ); ?>
+										<?php
+											// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+											echo wp_kses_post( sprintf( __( 'You can automatically create categories with a magic tag <strong>%1$s</strong> or use custom tag parsing %2$sRead More.%3$s', 'feedzy-rss-feeds' ), '[#item_categories]', '<a href="https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#dynamic-post-taxonomy" target="_blank">', '</a>' ) );
+										?>
 									</div>
 								</div>
 							</div>
@@ -457,7 +460,7 @@ global $post;
 													?>
 												</div>
 											</div>
-											<div class="fz-input-group-right">
+											<div class="fz-input-group-right fz-content-action-tags">
 													<div class="dropdown">
 														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" aria-haspopup="true"
 															aria-expanded="false">
@@ -491,7 +494,7 @@ global $post;
 											<div class="fz-input-group-left">
 												<div class="fz-group">
 													<input type="text" name="feedzy_meta_data[import_post_featured_img]"
-														placeholder="<?php esc_html_e( 'Add a tag for the featured image', 'feedzy-rss-feeds' ); ?>" class="form-control fz-input-tagify"
+														placeholder="<?php esc_html_e( 'Add a tag for the featured image', 'feedzy-rss-feeds' ); ?>" class="form-control fz-input-tagify fz-tagify-image"
 														value="<?php echo esc_attr( $import_featured_img ); ?>" />
 												</div>
 												<div class="help-text">
@@ -500,7 +503,7 @@ global $post;
 													?>
 												</div>
 											</div>
-											<div class="fz-input-group-right">
+											<div class="fz-input-group-right fz-image-action-tags">
 													<div class="dropdown">
 														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" aria-haspopup="true"
 															aria-expanded="false">
@@ -539,7 +542,7 @@ global $post;
 							</div>
 
 							<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
-								<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '' ) ); ?>
+								<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'post-author', 'import' ) ); ?>
 								<div class="left">
 									<h4 class="h4"><?php esc_html_e( 'Post Author', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
 								</div>
@@ -610,7 +613,7 @@ global $post;
 									<?php if ( ! feedzy_is_pro() ) : ?>
 										<div class="upgrade-alert">
 											<?php
-												echo wp_kses_post( sprintf( __( 'Add more advanced tags, like item price, rating and many more, by %1$supgrading to Feedzy Pro%2$s', 'feedzy-rss-feeds' ), '<a href="' . tsdk_utmify( FEEDZY_UPSELL_LINK, 'upgradealert' ) . '" target="_blank">', '</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>' ) );
+												echo wp_kses_post( sprintf( __( 'Add more advanced tags, like item price, rating and many more, by %1$supgrading to Feedzy Pro%2$s', 'feedzy-rss-feeds' ), '<a href="' . tsdk_utmify( FEEDZY_UPSELL_LINK, 'post-excerpt', 'import' ) . '" target="_blank">', '</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>' ) );
 											?>
 										</div>
 									<?php endif; ?>
@@ -618,7 +621,7 @@ global $post;
 							</div>
 
 							<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
-								<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '' ) ); ?>
+								<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'custom-fields', 'import' ) ); ?>
 								<div class="left">
 									<h4 class="h4"><?php esc_html_e( 'Custom Fields', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
 									<div class="form-block-pro-text">
@@ -686,7 +689,7 @@ global $post;
 			<div class="feedzy-accordion-item__content border-top">
 				<div class="fz-form-wrap">
 					<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
-						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '' ) ); ?>
+						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'auto-delete', 'import' ) ); ?>
 						<div class="left">
 							<h4 class="h4"><?php esc_html_e( 'Auto-Delete', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
 						</div>
@@ -736,7 +739,7 @@ global $post;
 						</div>
 					</div>
 					<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
-						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '' ) ); ?>
+						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'fallback-imaget', 'import' ) ); ?>
 						<div class="left">
 							<h4 class="h4"><?php esc_html_e( 'Fallback Image', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
 						</div>

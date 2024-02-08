@@ -208,15 +208,15 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$final_msg = '';
 
 		if ( $show_error ) {
-			$final_msg = '<div id="message" class="error"><p>' . sprintf( __( 'Sorry, some part of this feed is currently unavailable or does not exist anymore. The detailed error is %s', 'feedzy-rss-feeds' ), '<p style="font-weight: bold">' . $error_msg . '</p>' );
+			$final_msg = '<div id="message" class="error"><p>' . sprintf( __( 'Sorry, some part of this feed is currently unavailable or does not exist anymore. The detailed error is %s', 'feedzy-rss-feeds' ), '<p style="font-weight: bold">' . wp_strip_all_tags( $error_msg ) . '</p>' );
 			if ( ! is_admin() ) {
 				$final_msg .= sprintf( __( '%1$s(Only you are seeing this detailed error because you are the creator of this post. Other users will see the error message as below.)%2$s', 'feedzy-rss-feeds' ), '<small>', '</small>' );
 			}
 			$final_msg .= '</p></div>';
 		} else {
-			error_log( 'Feedzy RSS Feeds - related feed: ' . print_r( $feed_url, true ) . ' - Error message: ' . $error_msg );
+			error_log( 'Feedzy RSS Feeds - related feed: ' . print_r( $feed_url, true ) . ' - Error message: ' . wp_strip_all_tags( $error_msg ) );
 		}
-		return $final_msg;
+		return wp_kses_post( $final_msg );
 	}
 
 	/**
@@ -905,6 +905,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$feed->init();
 
+		if ( ! $feed->get_type() ) {
+			return $feed;
+		}
+
 		$error = $feed->error();
 		// error could be an array, so let's join the different errors.
 		if ( is_array( $error ) ) {
@@ -920,7 +924,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$feed = $this->init_feed( $feed_url, $cache, $sc, false );
 			} elseif ( is_string( $feed_url ) || ( is_array( $feed_url ) && 1 === count( $feed_url ) ) ) {
 				do_action( 'themeisle_log_event', FEEDZY_NAME, 'Trying to use raw data', 'debug', __FILE__, __LINE__ );
-				$data = wp_remote_retrieve_body( wp_remote_get( $feed_url, array( 'user-agent' => $default_agent ) ) );
+				$data = wp_remote_retrieve_body( wp_safe_remote_get( $feed_url, array( 'user-agent' => $default_agent ) ) );
 				$cloned_feed->set_raw_data( $data );
 				$cloned_feed->init();
 				$error_raw = $cloned_feed->error();

@@ -2,7 +2,7 @@
 	<div class="form-block">
 		<div class="upgrade-alert mb-24">
 			<?php
-				echo wp_kses_post( wp_sprintf( __( 'You\'re using Feedzy Lite.  Unlock more powerful features, by <a href="%s" target="_blank">upgrading to Feedzy Pro</a>', 'feedzy-rss-feeds' ), FEEDZY_UPSELL_LINK ) );
+				echo wp_kses_post( wp_sprintf( __( 'You\'re using Feedzy Lite.  Unlock more powerful features, by <a href="%s" target="_blank">upgrading to Feedzy Pro</a>', 'feedzy-rss-feeds' ), tsdk_utmify( FEEDZY_UPSELL_LINK, 'amazonproductadvertising' ) ) );
 			?>
 		</div>
 		<div class="locked-form-block">

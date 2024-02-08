@@ -16,4 +16,20 @@
 			</div>
 		</div>
 	</div>
+	<div class="form-block">
+		<div class="fz-form-group">
+			<div class="fz-form-switch">
+				<?php
+				$disble_featured_image = '';
+				if ( isset( $this->free_settings['general']['rss-feeds'] ) && 1 === intval( $this->free_settings['general']['rss-feeds'] ) ) {
+					$disble_featured_image = 'checked';
+				}
+				?>
+				<input type="checkbox" id="rss-feeds" class="fz-switch-toggle" name="rss-feeds"
+					value="1" <?php echo esc_html( $disble_featured_image ); ?> />
+				<label for="rss-feeds" class="form-label"><?php echo esc_html_e( 'Do NOT add the featured image to the website\'s RSS feed.', 'feedzy-rss-feeds' ); ?></label>
+			</div>
+			<div class="help-text pb-8"><?php esc_html_e( 'This setting controls whether there are featured images available in the RSS XML Feed of your own website.', 'feedzy-rss-feeds' ); ?></div>
+		</div>
+	</div>
 </div>

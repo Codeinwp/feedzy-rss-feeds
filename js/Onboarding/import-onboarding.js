@@ -34,6 +34,25 @@ const Onboarding = () => {
     });
   }, []);
 
+  let telemetryEnabled = false;
+
+  function activateTelemetry() {
+    if ( ! telemetryEnabled ) {
+      return;
+    }
+
+    const model = new window.wp.api.models.Settings({
+      // Update the 'feedzy_rss_feeds_logger_flag' option
+      feedzy_rss_feeds_logger_flag: 'yes'
+    });
+
+    const save = model.save();
+ 
+    save.error( ( response ) => {
+      console.warn( response.responseJSON.message );
+    });
+  }
+
   const steps = [
     {
       target: '#post_title',
@@ -54,6 +73,22 @@ const Onboarding = () => {
     {
       target: '#fz-import-general-settings',
       content: __( 'Customize the importing schedule by cleaning up old imports, remove duplicates or number of imported items per run.', 'feedzy-rss-feeds' ),
+    },
+    {
+      target: '#fz-import-general-settings', // replace with the selector for where you want the button to appear
+      content: (
+        <div>
+          <p>{ __( 'Enable telemetry to help us improve the plugin by sending anonymous usage data. Data is private and not shared third-party entities.', 'feedzy-rss-feeds' ) }</p>
+          <label>
+            <input
+              type="checkbox"
+              onChange={ () => { telemetryEnabled = !telemetryEnabled } }
+            />
+            { __( 'Enable telemetry', 'feedzy-rss-feeds' ) }
+          </label>
+        </div>
+      ),
+      disableBeacon: true,
     }
   ];
 
@@ -131,7 +166,13 @@ const Onboarding = () => {
           next: __( 'Next', 'feedzy-rss-feeds' ),
           skip: __( 'Skip', 'feedzy-rss-feeds' )
         } }
-        callback={ data => skipTour( data.status ) }
+        callback={ data => {
+          if ( 'ready' === data.status ) {
+            activateTelemetry();
+          }
+
+          skipTour( data.status );
+        } }
       />
     </Fragment>
   );
