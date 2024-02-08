@@ -1671,15 +1671,21 @@ class Feedzy_Rss_Feeds_Import {
 				}
 
 				if ( ! empty( $image_url ) ) {
-
+					$img_attachment_id = $this->get_featured_image_by_post_title( $item['item_title'] );
 					// Add the image if the post doesn't have a featured image.
-					if ( ! $this->check_post_feature_image( $item['item_title'] ) ) {
+					if ( ! $img_attachment_id ) {
 						$img_success = $this->try_save_featured_image( $image_url, 0, $item['item_title'], $import_errors, $import_info, $new_post );
-						$new_post_id = $img_success;
 					} else {
-						$img_success = true;
+						$img_success = $img_attachment_id;
+
+						if ( ! empty( $new_post ) ) {
+							$img_success = set_post_thumbnail( 0, $img_attachment_id );
+						}
+
+						// Get attachment ID using the id in $img_success.
 						do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Found an existing attachment for the post with title: %s', $item['item_title'] ), 'debug', __FILE__, __LINE__ );
 					}
+					$new_post_id = $img_success;
 				}
 
 				if ( ! $img_success ) {
@@ -1829,7 +1835,8 @@ class Feedzy_Rss_Feeds_Import {
 				}
 
 				// Add a featured image to the post if it doesn't already have one.
-				if ( ! $this->check_post_feature_image( $item['item_title'] ) ) {
+				$img_attachment_id = $this->get_featured_image_by_post_title( $item['item_title'] );
+				if ( ! $img_attachment_id ) {
 					$import_featured_img = rawurldecode( $import_featured_img );
 					$import_featured_img = trim( $import_featured_img );
 					$img_action          = $this->handle_content_actions( $import_featured_img, 'item_image' );
@@ -1846,7 +1853,7 @@ class Feedzy_Rss_Feeds_Import {
 						}
 					}
 				} else {
-					$img_success = true;
+					$img_success = set_post_thumbnail( $new_post_id, $img_attachment_id );
 					do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Found an existing attachment for the post with title: %s', $item['item_title'] ), 'debug', __FILE__, __LINE__ );
 				}
 
@@ -2010,7 +2017,7 @@ class Feedzy_Rss_Feeds_Import {
 		require_once ABSPATH . 'wp-admin' . '/includes/media.php';
 
 		$file_array = array();
-		$image_url       = trim( $image_url, chr( 0xC2 ) . chr( 0xA0 ) );
+		$image_url  = trim( $image_url, chr( 0xC2 ) . chr( 0xA0 ) );
 
 		// Download the image on the server.
 		$local_file = download_url( $image_url );
