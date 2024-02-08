@@ -1096,7 +1096,12 @@ class Feedzy_Rss_Feeds_Import {
 	private function run_now() {
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
 
-		$job   = get_post( filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT ) );
+		$job = get_post( filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT ) );
+
+		if ( null === $job ) {
+			wp_send_json_error( array( 'msg' => __( 'Could not find the associated Import Settings', 'feedzy-rss-feeds' ) ) );
+		}
+
 		$count = $this->run_job( $job, 100 );
 
 		$msg = $count > 0 ? __( 'Successfully run!', 'feedzy-rss-feeds' ) : __( 'Nothing imported!', 'feedzy-rss-feeds' );
@@ -1194,6 +1199,9 @@ class Feedzy_Rss_Feeds_Import {
 
 	/**
 	 * Runs a specific job.
+	 *
+	 * @param \WP_Post|int $job The job to run.
+	 * @param int          $max The maximum number of items to import.
 	 *
 	 * @return  int
 	 * @since   1.6.1
@@ -1663,8 +1671,15 @@ class Feedzy_Rss_Feeds_Import {
 				}
 
 				if ( ! empty( $image_url ) ) {
-					$img_success = $this->try_save_featured_image( $image_url, 0, $item['item_title'], $import_errors, $import_info, $new_post );
-					$new_post_id = $img_success;
+
+					// Add the image if the post doesn't have a featured image.
+					if ( ! $this->check_post_feature_image( $item['item_title'] ) ) {
+						$img_success = $this->try_save_featured_image( $image_url, 0, $item['item_title'], $import_errors, $import_info, $new_post );
+						$new_post_id = $img_success;
+					} else {
+						$img_success = true;
+						do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Found an existing attachment for the post with title: %s', $item['item_title'] ), 'debug', __FILE__, __LINE__ );
+					}
 				}
 
 				if ( ! $img_success ) {
@@ -1813,22 +1828,26 @@ class Feedzy_Rss_Feeds_Import {
 					}
 				}
 
-				// Item image action.
-				$import_featured_img = rawurldecode( $import_featured_img );
-				$import_featured_img = trim( $import_featured_img );
-				$img_action          = $this->handle_content_actions( $import_featured_img, 'item_image' );
+				// Add a featured image to the post if it doesn't already have one.
+				if ( ! $this->check_post_feature_image( $item['item_title'] ) ) {
+					$import_featured_img = rawurldecode( $import_featured_img );
+					$import_featured_img = trim( $import_featured_img );
+					$img_action          = $this->handle_content_actions( $import_featured_img, 'item_image' );
 
-				// Get the image URL.
-				$image_url = $img_action->run_action_job( $import_featured_img, $import_translation_lang, $job, $language_code, $item, $image_url );
-
-				if ( ! empty( $image_url ) ) {
-					if ( 'yes' === $import_item_img_url ) {
-						// Set external image URL.
-						update_post_meta( $new_post_id, 'feedzy_item_external_url', $image_url );
-					} else {
-						// if import_featured_img is a tag.
-						$img_success = $this->try_save_featured_image( $image_url, $new_post_id, $item['item_title'], $import_errors, $import_info );
+					$featured_image_url = $img_action->run_action_job( $import_featured_img, $import_translation_lang, $job, $language_code, $item, $image_url );
+					if ( ! empty( $featured_image_url ) ) {
+						if ( 'yes' === $import_item_img_url ) {
+							// Set external image URL.
+							update_post_meta( $new_post_id, 'feedzy_item_external_url', $featured_image_url );
+						} else {
+							// if import_featured_img is a tag.
+							$img_success = $this->try_save_featured_image( $featured_image_url, $new_post_id, $item['item_title'], $import_errors, $import_info );
+							$new_post_id = $img_success;
+						}
 					}
+				} else {
+					$img_success = true;
+					do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Found an existing attachment for the post with title: %s', $item['item_title'] ), 'debug', __FILE__, __LINE__ );
 				}
 
 				// Set default thumbnail image.
@@ -1938,6 +1957,32 @@ class Feedzy_Rss_Feeds_Import {
 	}
 
 	/**
+	 * Check if the past has a featured image.
+	 *
+	 * @param string $post_title The post title.
+	 *
+	 * @return bool
+	 */
+	private function check_post_feature_image( $post_title ) {
+		return 0 !== $this->get_featured_image_by_post_title( $post_title );
+	}
+
+	/**
+	 * Get the featured image by post title.
+	 *
+	 * @param string $post_title The post title.
+	 *
+	 * @return int
+	 */
+	private function get_featured_image_by_post_title( $post_title ) {
+		if ( ! function_exists( 'post_exists' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/post.php';
+		}
+
+		return post_exists( $post_title, '', '', 'attachment' );
+	}
+
+	/**
 	 * Save the image (with download) as a Post Featured image if possible.
 	 *
 	 * @param string  $image_url The image URL.
@@ -1946,7 +1991,7 @@ class Feedzy_Rss_Feeds_Import {
 	 * @param array   $import_errors Array of import error messages.
 	 * @param array   $import_info Array of import information messages.
 	 *
-	 * @return bool
+	 * @return bool|int
 	 * @since   1.2.0
 	 * @access  private
 	 */
@@ -1958,59 +2003,49 @@ class Feedzy_Rss_Feeds_Import {
 			return false;
 		}
 
-		if ( ! function_exists( 'post_exists' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/post.php';
+		do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Trying to generate featured image for %s and postID %d', $image_url, $post_id ), 'debug', __FILE__, __LINE__ );
+
+		require_once ABSPATH . 'wp-admin' . '/includes/image.php';
+		require_once ABSPATH . 'wp-admin' . '/includes/file.php';
+		require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+
+		$file_array = array();
+		$image_url       = trim( $image_url, chr( 0xC2 ) . chr( 0xA0 ) );
+
+		// Download the image on the server.
+		$local_file = download_url( $image_url );
+		if ( is_wp_error( $local_file ) ) {
+			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to download file = %s and postID %d', print_r( $local_file, true ), $post_id ), 'error', __FILE__, __LINE__ );
+
+			return false;
 		}
 
-		$image_attachment_id = post_exists( $post_title, '', '', 'attachment' );
-
-		if ( ! $image_attachment_id ) {
-			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Trying to generate featured image for %s and postID %d', $image_url, $post_id ), 'debug', __FILE__, __LINE__ );
-
-			require_once ABSPATH . 'wp-admin' . '/includes/image.php';
-			require_once ABSPATH . 'wp-admin' . '/includes/file.php';
-			require_once ABSPATH . 'wp-admin' . '/includes/media.php';
-
-			$file_array = array();
-			$image_url       = trim( $image_url, chr( 0xC2 ) . chr( 0xA0 ) );
-
-			// Download the image on the server.
-			$local_file = download_url( $image_url );
-			if ( is_wp_error( $local_file ) ) {
-				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to download file = %s and postID %d', print_r( $local_file, true ), $post_id ), 'error', __FILE__, __LINE__ );
+		$type = mime_content_type( $local_file );
+		// the file is downloaded with a .tmp extension
+		// if the URL mentions the extension of the file, the upload succeeds
+		// but if the URL is like https://source.unsplash.com/random, then the upload fails
+		// so let's determine the file's mime type and then rename the .tmp file with that extension
+		if ( in_array( $type, array_values( get_allowed_mime_types() ), true ) ) {
+			$new_local_file = str_replace( '.tmp', str_replace( 'image/', '.', $type ), $local_file );
+			$renamed        = rename( $local_file, $new_local_file );
+			if ( $renamed ) {
+				$local_file = $new_local_file;
+			} else {
+				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to rename file for postID %d', $post_id ), 'error', __FILE__, __LINE__ );
 
 				return false;
 			}
+		}
 
-			$type = mime_content_type( $local_file );
-			// the file is downloaded with a .tmp extension
-			// if the URL mentions the extension of the file, the upload succeeds
-			// but if the URL is like https://source.unsplash.com/random, then the upload fails
-			// so let's determine the file's mime type and then rename the .tmp file with that extension
-			if ( in_array( $type, array_values( get_allowed_mime_types() ), true ) ) {
-				$new_local_file = str_replace( '.tmp', str_replace( 'image/', '.', $type ), $local_file );
-				$renamed        = rename( $local_file, $new_local_file );
-				if ( $renamed ) {
-					$local_file = $new_local_file;
-				} else {
-					do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to rename file for postID %d', $post_id ), 'error', __FILE__, __LINE__ );
+		$file_array['tmp_name'] = $local_file;
+		$file_array['name']     = basename( $local_file );
 
-					return false;
-				}
-			}
+		$image_attachment_id = media_handle_sideload( $file_array, $post_id, $post_title, $post_data );
+		if ( is_wp_error( $image_attachment_id ) ) {
+			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to attach file for postID %d = %s', $post_id, print_r( $image_attachment_id, true ) ), 'error', __FILE__, __LINE__ );
+			unlink( $file_array['tmp_name'] );
 
-			$file_array['tmp_name'] = $local_file;
-			$file_array['name']     = basename( $local_file );
-
-			$image_attachment_id = media_handle_sideload( $file_array, $post_id, $post_title, $post_data );
-			if ( is_wp_error( $image_attachment_id ) ) {
-				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to attach file for postID %d = %s', $post_id, print_r( $image_attachment_id, true ) ), 'error', __FILE__, __LINE__ );
-				unlink( $file_array['tmp_name'] );
-
-				return false;
-			}
-		} else {
-			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Found an existing attachment(ID: %d) image for %s and postID %d', $image_attachment_id, $image_url, $post_id ), 'debug', __FILE__, __LINE__ );
+			return false;
 		}
 
 		if ( ! empty( $post_data ) ) {

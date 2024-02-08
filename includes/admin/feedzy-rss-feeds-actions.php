@@ -456,27 +456,31 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		}
 
 		/**
-		 * Generate item image.
+		 * Generate item image with OpenAI.
 		 *
-		 * @return string
+		 * @return string - The image URL. If the generation is not possible, it will return the default value or an empty string.
 		 */
 		private function generate_image() {
-			$content = call_user_func( array( $this, 'item_title' ) );
 			if ( ! class_exists( '\Feedzy_Rss_Feeds_Pro_Openai' ) ) {
 				return isset( $this->default_value ) ? $this->default_value : '';
 			}
-			if ( $this->current_job->data->generateImgWithChatGPT && empty( $this->default_value ) ) {
+
+			// Skip the image generation as implicit behavior unless it is explicitly requested.
+			if (
+				( ! isset( $this->current_job->data->generateOnlyMissingImages ) || ! empty( $this->current_job->data->generateOnlyMissingImages ) )
+				&& filter_var( $this->default_value, FILTER_VALIDATE_URL )
+			) {
+				// Return default image URL of the feed item.
 				return isset( $this->default_value ) ? $this->default_value : '';
 			}
 
-			// If default value is an URL, then return it since it might the image from the feed.
-			if ( filter_var( $this->default_value, FILTER_VALIDATE_URL ) ) {
-				return $this->default_value;
+			$content = call_user_func( array( $this, 'item_title' ) );
+			if ( empty( $content ) ) {
+				return isset( $this->default_value ) ? $this->default_value : '';
 			}
 
 			$openai  = new \Feedzy_Rss_Feeds_Pro_Openai();
-			$content = $openai->call_api( $this->settings, $content, 'image', array() );
-			return $content;
+			return $openai->call_api( $this->settings, $content, 'image', array() );
 		}
 	}
 }
