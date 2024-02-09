@@ -892,7 +892,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$invalid = $text = null;
 		switch ( $post->post_type ) {
 			case 'feedzy_categories':
-				$text    = __( 'We found the following invalid URLs that we have removed from the list', 'feedzy-rss-feeds' );
+				$text    = __( 'We found the following invalid or unreachable by WordPress SimplePie URLs that we have removed from the list', 'feedzy-rss-feeds' );
 				$invalid = get_post_meta( $post->ID, '__transient_feedzy_category_feed', true );
 				delete_post_meta( $post->ID, '__transient_feedzy_category_feed' );
 				break;
@@ -901,7 +901,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				$invalid_dc_namespace = get_post_meta( $post->ID, '__transient_feedzy_invalid_dc_namespace', true );
 				$invalid_source_errors = get_post_meta( $post->ID, '__transient_feedzy_invalid_source_errors', true );
 				if ( $invalid_source ) {
-					$text = __( 'This source has invalid URLs. Please correct/remove the following', 'feedzy-rss-feeds' );
+					$text = __( 'This source has invalid or unreachable by WordPress SimplePie URLs. Please correct/remove the following', 'feedzy-rss-feeds' );
 					$invalid = $invalid_source;
 					delete_post_meta( $post->ID, '__transient_feedzy_invalid_source' );
 				} elseif ( $invalid_dc_namespace ) {
