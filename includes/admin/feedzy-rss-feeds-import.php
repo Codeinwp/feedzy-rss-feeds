@@ -1020,6 +1020,11 @@ class Feedzy_Rss_Feeds_Import {
 	 * @access  private
 	 */
 	private function import_status() {
+
+		if ( ! feedzy_current_user_can() ) {
+			return wp_send_json_error( array( 'msg' => __( 'You do not have permission to do this.', 'feedzy-rss-feeds' ) ) );
+		}
+
 		global $wpdb;
 
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
@@ -2621,16 +2626,15 @@ class Feedzy_Rss_Feeds_Import {
 	 * Fetch custom field by selected post type.
 	 */
 	public function fetch_custom_fields() {
+		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
 		global $wpdb;
 
-		// @codingStandardsIgnoreStart
-		$post_type  = isset( $_POST['post_type'] ) ? filter_input( INPUT_POST, 'post_type', FILTER_UNSAFE_RAW ) : '';
-		$search_key = isset( $_POST['search_key'] ) ? filter_input( INPUT_POST, 'search_key', FILTER_UNSAFE_RAW ) : '';
-		// @codingStandardsIgnoreEnd
+		$post_type  = isset( $_POST['post_type'] ) ? sanitize_text_field( wp_unslash( $_POST['post_type'] ) ) : '';
+		$search_key = isset( $_POST['search_key'] ) ? sanitize_text_field( wp_unslash( $_POST['search_key'] ) ) : '';
 
 		$like = '';
 		if ( ! empty( $search_key ) ) {
-			$like = " AND $wpdb->postmeta.meta_key LIKE '%$search_key%'";
+			$like = $wpdb->prepare( " AND $wpdb->postmeta.meta_key LIKE %s", '%' . $search_key . '%' );
 		}
 
 		// phpcs:ignore

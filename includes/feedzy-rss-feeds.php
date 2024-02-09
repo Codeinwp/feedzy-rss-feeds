@@ -190,6 +190,7 @@ class Feedzy_Rss_Feeds {
 		self::$instance->loader->add_action( 'admin_init', $plugin_ui, 'register_init' );
 
 		self::$instance->loader->add_action( 'wp_head', $plugin_ui, 'add_feedzy_global_style', 10, 1 );
+		self::$instance->loader->add_action( 'admin_init', self::$instance->admin, 'register_admin_capabilities' );
 		self::$instance->loader->add_action( 'init', self::$instance->admin, 'register_post_type' );
 		self::$instance->loader->add_action( 'save_post', self::$instance->admin, 'save_feedzy_post_type_meta', 1, 2 );
 		self::$instance->loader->add_action( 'feedzy_pre_http_setup', self::$instance->admin, 'pre_http_setup', 10, 1 );

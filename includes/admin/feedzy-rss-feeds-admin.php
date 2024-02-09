@@ -266,7 +266,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$supports = array(
 			'title',
 		);
-		$capability = feedzy_current_user_can();
 		$args     = array(
 			'labels'                => $labels,
 			'supports'              => $supports,
@@ -283,16 +282,33 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			'rest_controller_class' => 'WP_REST_Posts_Controller',
 			'map_meta_cap'          => true,
 			'capabilities' => array(
-				'publish_posts'         => $capability,
-				'edit_posts'            => $capability,
-				'edit_others_posts'     => $capability,
-				'delete_posts'          => $capability,
-				'delete_others_posts'   => $capability,
-				'read_private_posts'    => $capability,
+				'edit_post'          => 'edit_feedzy_category',
+				'read_post'          => 'read_feedzy_category',
+				'delete_post'        => 'delete_feedzy_category',
+				'edit_posts'         => 'edit_feedzy_categories',
+				'edit_others_posts'  => 'edit_others_feedzy_categories',
+				'publish_posts'      => 'publish_feedzy_categories',
+				'read_private_posts' => 'read_private_feedzy_categories',
 			),
 		);
 		$args     = apply_filters( 'feedzy_post_type_args', $args );
 		register_post_type( 'feedzy_categories', $args );
+	}
+
+	/**
+	 * Only allow admin to modify or delete categories.
+	 *
+	 * @return void
+	 */
+	public function register_admin_capabilities() {
+		$admin_role = get_role( 'administrator' );
+		$admin_role->add_cap( 'edit_feedzy_category' );
+		$admin_role->add_cap( 'read_feedzy_category' );
+		$admin_role->add_cap( 'delete_feedzy_category' );
+		$admin_role->add_cap( 'edit_feedzy_categories' );
+		$admin_role->add_cap( 'edit_others_feedzy_categories' );
+		$admin_role->add_cap( 'publish_feedzy_categories' );
+		$admin_role->add_cap( 'read_private_feedzy_categories' );
 	}
 
 	/**
@@ -876,7 +892,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$invalid = $text = null;
 		switch ( $post->post_type ) {
 			case 'feedzy_categories':
-				$text    = __( 'We found the following invalid URLs that we have removed from the list', 'feedzy-rss-feeds' );
+				$text    = __( 'We found the following invalid or unreachable by WordPress SimplePie URLs that we have removed from the list', 'feedzy-rss-feeds' );
 				$invalid = get_post_meta( $post->ID, '__transient_feedzy_category_feed', true );
 				delete_post_meta( $post->ID, '__transient_feedzy_category_feed' );
 				break;
@@ -885,7 +901,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				$invalid_dc_namespace = get_post_meta( $post->ID, '__transient_feedzy_invalid_dc_namespace', true );
 				$invalid_source_errors = get_post_meta( $post->ID, '__transient_feedzy_invalid_source_errors', true );
 				if ( $invalid_source ) {
-					$text = __( 'This source has invalid URLs. Please correct/remove the following', 'feedzy-rss-feeds' );
+					$text = __( 'This source has invalid or unreachable by WordPress SimplePie URLs. Please correct/remove the following', 'feedzy-rss-feeds' );
 					$invalid = $invalid_source;
 					delete_post_meta( $post->ID, '__transient_feedzy_invalid_source' );
 				} elseif ( $invalid_dc_namespace ) {
@@ -1080,6 +1096,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * Setup wizard process.
 	 */
 	public function feedzy_wizard_step_process() {
+		if ( ! feedzy_current_user_can() ) {
+			return wp_send_json( array( 'status' => 0 ) );
+		}
+
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
 		$step = ! empty( $_POST['step'] ) ? filter_input( INPUT_POST, 'step', FILTER_UNSAFE_RAW ) : 1;
 		switch ( $step ) {
