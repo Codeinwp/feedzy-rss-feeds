@@ -1020,6 +1020,11 @@ class Feedzy_Rss_Feeds_Import {
 	 * @access  private
 	 */
 	private function import_status() {
+
+		if ( ! feedzy_current_user_can() ) {
+			return wp_send_json_error( array( 'msg' => __( 'You do not have permission to do this.', 'feedzy-rss-feeds' ) ) );
+		}
+
 		global $wpdb;
 
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );

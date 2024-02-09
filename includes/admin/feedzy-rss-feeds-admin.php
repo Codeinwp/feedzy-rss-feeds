@@ -1080,6 +1080,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * Setup wizard process.
 	 */
 	public function feedzy_wizard_step_process() {
+		if ( ! feedzy_current_user_can() ) {
+			return wp_send_json( array( 'status' => 0 ) );
+		}
+
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
 		$step = ! empty( $_POST['step'] ) ? filter_input( INPUT_POST, 'step', FILTER_UNSAFE_RAW ) : 1;
 		switch ( $step ) {
