@@ -266,7 +266,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$supports = array(
 			'title',
 		);
-		$capability = feedzy_current_user_can();
 		$args     = array(
 			'labels'                => $labels,
 			'supports'              => $supports,
@@ -283,16 +282,33 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			'rest_controller_class' => 'WP_REST_Posts_Controller',
 			'map_meta_cap'          => true,
 			'capabilities' => array(
-				'publish_posts'         => $capability,
-				'edit_posts'            => $capability,
-				'edit_others_posts'     => $capability,
-				'delete_posts'          => $capability,
-				'delete_others_posts'   => $capability,
-				'read_private_posts'    => $capability,
+				'edit_post'          => 'edit_feedzy_category',
+				'read_post'          => 'read_feedzy_category',
+				'delete_post'        => 'delete_feedzy_category',
+				'edit_posts'         => 'edit_feedzy_categories',
+				'edit_others_posts'  => 'edit_others_feedzy_categories',
+				'publish_posts'      => 'publish_feedzy_categories',
+				'read_private_posts' => 'read_private_feedzy_categories',
 			),
 		);
 		$args     = apply_filters( 'feedzy_post_type_args', $args );
 		register_post_type( 'feedzy_categories', $args );
+	}
+
+	/**
+	 * Only allow admin to modify or delete categories.
+	 *
+	 * @return void
+	 */
+	public function register_admin_capabilities() {
+		$admin_role = get_role( 'administrator' );
+		$admin_role->add_cap( 'edit_feedzy_category' );
+		$admin_role->add_cap( 'read_feedzy_category' );
+		$admin_role->add_cap( 'delete_feedzy_category' );
+		$admin_role->add_cap( 'edit_feedzy_categories' );
+		$admin_role->add_cap( 'edit_others_feedzy_categories' );
+		$admin_role->add_cap( 'publish_feedzy_categories' );
+		$admin_role->add_cap( 'read_private_feedzy_categories' );
 	}
 
 	/**
