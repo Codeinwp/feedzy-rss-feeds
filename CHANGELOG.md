@@ -1,3 +1,10 @@
+##### [Version 4.4.3](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.2...v4.4.3) (2024-02-09)
+
+### Fixes
+- Fixes the issue with category creation
+- Enhanced security
+- Updated error message for invalid feed sources
+
 ##### [Version 4.4.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.1...v4.4.2) (2024-02-02)
 
 ### Fixes
