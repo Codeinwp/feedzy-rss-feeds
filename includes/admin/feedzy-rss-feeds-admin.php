@@ -128,6 +128,12 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			wp_enqueue_script( $this->plugin_name . '_telemetry', FEEDZY_ABSURL . 'js/telemetry.js', array(), $this->version, true );
 		}
 
+		if ( 'feedzy_imports' === $screen->post_type && 'edit' === $screen->base ) {
+			if ( ! defined( 'CYPRESS_TESTING' ) ) {
+				$this->register_survey();
+			}
+		}
+
 		if ( 'feedzy_categories' === $screen->post_type ) {
 			wp_enqueue_script(
 				$this->plugin_name . '_categories',
@@ -152,6 +158,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					),
 				)
 			);
+
+			if ( ! defined( 'CYPRESS_TESTING' ) ) {
+				$this->register_survey();
+			}
 		}
 
 		if ( 'feedzy_page_feedzy-settings' === $screen->base ) {
@@ -171,6 +181,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					),
 				)
 			);
+
+			if ( ! defined( 'CYPRESS_TESTING' ) ) {
+				$this->register_survey();
+			}
 		}
 
 		$upsell_screens = array( 'feedzy-rss_page_feedzy-settings', 'feedzy-rss_page_feedzy-admin-menu-pro-upsell' );
@@ -195,6 +209,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				)
 			);
 			wp_enqueue_style( 'wp-block-editor' );
+
+			if ( ! defined( 'CYPRESS_TESTING' ) ) {
+				$this->register_survey();
+			}
 		}
 		if ( ! defined( 'TI_CYPRESS_TESTING' ) && ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type && feedzy_show_import_tour() ) ) {
 			wp_enqueue_script( $this->plugin_name . '_on_boarding', FEEDZY_ABSURL . 'js/Onboarding/import-onboarding.min.js', array( 'react', 'react-dom', 'wp-editor', 'wp-api', 'lodash' ), $this->version, true );
@@ -205,6 +223,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		if ( 'feedzy_page_feedzy-support' === $screen->base || ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type ) ) {
+			if ( ! defined( 'CYPRESS_TESTING' ) ) {
+				$this->register_survey();
+			}
 			wp_enqueue_script( $this->plugin_name . '_feedback', FEEDZY_ABSURL . 'js/FeedBack/feedback.min.js', array( 'react', 'react-dom', 'wp-editor', 'wp-api', 'lodash' ), $this->version, true );
 			wp_enqueue_style( 'wp-block-editor' );
 
@@ -1565,10 +1586,13 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			'spinnerChiefStatus' => false,
 			'wordaiStatus'       => false,
 			'openaiStatus'       => false,
+			'amazonStatus'       => false,
 		);
+
 		if ( ! feedzy_is_pro() ) {
 			return $data;
 		}
+
 		if ( apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) {
 			if ( isset( $pro_options['spinnerchief_licence'] ) && 'yes' === $pro_options['spinnerchief_licence'] ) {
 				$data['spinnerChiefStatus'] = true;
@@ -1577,11 +1601,75 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				$data['wordaiStatus'] = true;
 			}
 		}
+
 		if ( isset( $pro_options['openai_licence'] ) && 'yes' === $pro_options['openai_licence'] ) {
 			if ( apply_filters( 'feedzy_is_license_of_type', false, 'business' ) || apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) {
 				$data['openaiStatus'] = true;
 			}
 		}
+
+		if ( ! empty( $pro_options['amazon_access_key'] ) && ! empty( $pro_options['amazon_secret_key'] ) ) {
+			$data['amazonStatus'] = true;
+		}
 		return $data;
+	}
+
+	/**
+	 * Get the data used for the survey.
+	 *
+	 * @return array
+	 * @see survey.js
+	 */
+	public function get_survery_metadata() {
+
+		$user_id = 'feedzy_';
+		$license = get_option( 'feedzy_rss_feeds_pro_license_data', array() );
+
+		if ( ! empty( $license->key ) ) {
+			$user_id .= $license->key;
+		} else {
+			$user_id .= 'free';
+		}
+
+		$integration_status = $this->api_license_status();
+
+		$days_since_install = round( ( time() - get_option( 'feedzy_rss_feeds_install', 0 ) ) / DAY_IN_SECONDS );
+		$install_category = null;
+		if ( 0 === $days_since_install || 1 === $days_since_install ) {
+			$install_category = 0;
+		} elseif ( 1 < $days_since_install && 8 > $days_since_install ) {
+			$install_category = 7;
+		} elseif ( 8 <= $days_since_install && 31 > $days_since_install ) {
+			$install_category = 30;
+		} elseif ( 30 < $days_since_install && 90 > $days_since_install ) {
+			$install_category = 90;
+		} elseif ( 90 <= $days_since_install ) {
+			$install_category = 91;
+		}
+
+		return array(
+			'userId' => $user_id,
+			'attributes' => array(
+				'free_version' => $this->version,
+				'pro_version' => defined( 'FEEDZY_PRO_VERSION' ) ? FEEDZY_PRO_VERSION : '',
+				'openai' => $integration_status['openaiStatus'] ? 'valid' : 'invalid',
+				'amazon' => $integration_status['amazonStatus'] ? 'valid' : 'invalid',
+				'spinnerchief' => $integration_status['spinnerChiefStatus'] ? 'valid' : 'invalid',
+				'wordai' => $integration_status['wordaiStatus'] ? 'valid' : 'invalid',
+				'plan' => apply_filters( 'product_feedzy_license_plan', 0 ),
+				'days_since_install' => $install_category,
+			),
+		);
+	}
+
+	/**
+	 * Register the survey script.
+	 */
+	public function register_survey() {
+
+		// Register the survey script.
+		wp_register_script( $this->plugin_name . '_survey_formbrick', 'https://unpkg.com/@formbricks/js@^1.5.1/dist/index.umd.js', array(), $this->version, true );
+		wp_enqueue_script( $this->plugin_name . '_survey', FEEDZY_ABSURL . 'js/survey.js', array( $this->plugin_name . '_survey_formbrick' ), $this->version, true );
+		wp_localize_script( $this->plugin_name . '_survey', 'feedzySurveyData', $this->get_survery_metadata() );
 	}
 }
