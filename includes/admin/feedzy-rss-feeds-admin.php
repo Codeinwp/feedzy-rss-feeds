@@ -1628,7 +1628,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! empty( $license->key ) ) {
 			$user_id .= $license->key;
 		} else {
-			$user_id .= 'free';
+			$user_id .= preg_replace( '/[^\w\d]*/', '', get_site_url() ); // Use a normalized version of the site URL as a user ID for free users.
 		}
 
 		$integration_status = $this->api_license_status();
