@@ -7,7 +7,6 @@ window.addEventListener('load', function () {
     window?.formbricks?.init?.({
         environmentId: "clskgehf78eu5podwdrnzciti",
         apiHost: "https://app.formbricks.com",
-        debug: true,
-        ...(window?.feedzySurveyData ?? {})
+        ...(window?.feedzySurveyData ?? {}),
     });
 });    

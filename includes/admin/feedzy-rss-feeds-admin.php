@@ -1615,6 +1615,37 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	}
 
 	/**
+	 * Get the plan category for the product plan ID.
+	 *
+	 * @param object $license_data The license data.
+	 * @return int
+	 */
+	private static function plan_category( $license_data ) {
+
+		if ( ! isset( $license_data->plan ) || ! is_numeric( $license_data->plan ) ) {
+			return 0; // Free
+		}
+
+		$plan = (int) $license_data->plan;
+		$current_category = 0;
+
+		$categories = array(
+			'1' => array(1, 4, 9), // Personal
+			'2' => array(2, 5, 8), // Business/Developer
+			'3' => array(3, 6, 7, 10), // Agency
+		);
+
+		foreach ( $categories as $category => $plans ) {
+			if ( in_array( $plan, $plans, true ) ) {
+				$current_category = (int) $category;
+				break;
+			}
+		}
+
+		return $current_category;
+	}
+
+	/**
 	 * Get the data used for the survey.
 	 *
 	 * @return array
@@ -1623,10 +1654,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	public function get_survery_metadata() {
 
 		$user_id = 'feedzy_';
-		$license = get_option( 'feedzy_rss_feeds_pro_license_data', array() );
+		$license_data = get_option( 'feedzy_rss_feeds_pro_license_data', array() );
 
-		if ( ! empty( $license->key ) ) {
-			$user_id .= $license->key;
+		if ( ! empty( $license_data->key ) ) {
+			$user_id .= $license_data->key;
 		} else {
 			$user_id .= preg_replace( '/[^\w\d]*/', '', get_site_url() ); // Use a normalized version of the site URL as a user ID for free users.
 		}
@@ -1634,7 +1665,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$integration_status = $this->api_license_status();
 
 		$days_since_install = round( ( time() - get_option( 'feedzy_rss_feeds_install', 0 ) ) / DAY_IN_SECONDS );
-		$install_category = null;
+		$install_category = 0;
 		if ( 0 === $days_since_install || 1 === $days_since_install ) {
 			$install_category = 0;
 		} elseif ( 1 < $days_since_install && 8 > $days_since_install ) {
@@ -1656,8 +1687,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				'amazon' => $integration_status['amazonStatus'] ? 'valid' : 'invalid',
 				'spinnerchief' => $integration_status['spinnerChiefStatus'] ? 'valid' : 'invalid',
 				'wordai' => $integration_status['wordaiStatus'] ? 'valid' : 'invalid',
-				'plan' => apply_filters( 'product_feedzy_license_plan', 0 ),
+				'plan' => $this->plan_category( $license_data ),
 				'days_since_install' => $install_category,
+				'license_status' => ! empty( $license_data->license ) ? $license_data->license : 'invalid',
 			),
 		);
 	}
