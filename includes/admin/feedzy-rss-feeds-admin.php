@@ -1627,7 +1627,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		$plan = (int) $license_data->plan;
-		$current_category = 0;
+		$current_category = -1;
 
 		$categories = array(
 			'1' => array(1, 4, 9), // Personal
