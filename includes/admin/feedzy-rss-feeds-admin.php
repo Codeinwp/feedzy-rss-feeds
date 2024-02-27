@@ -1699,9 +1699,13 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			return;
 		}
 
-		// Register the survey script.
-		wp_register_script( $this->plugin_name . '_survey_formbrick', 'https://unpkg.com/@formbricks/js@^1.5.1/dist/index.umd.js', array(), $this->version, true );
-		wp_enqueue_script( $this->plugin_name . '_survey', FEEDZY_ABSURL . 'js/survey.js', array( $this->plugin_name . '_survey_formbrick' ), $this->version, true );
+		$survey_handler = apply_filters( 'themeisle_sdk_dependency_script_handler', 'survey' );
+		if ( empty( $survey_handler ) ) {
+			return;
+		}
+
+		do_action( 'themeisle_sdk_dependency_enqueue_script', 'survey' );
+		wp_enqueue_script( $this->plugin_name . '_survey', FEEDZY_ABSURL . 'js/survey.js', array( $survey_handler ), $this->version, true );
 		wp_localize_script( $this->plugin_name . '_survey', 'feedzySurveyData', $this->get_survery_metadata() );
 	}
 }

@@ -3,8 +3,8 @@
  * 
  * @see https://github.com/formbricks/setup-examples/tree/main/html
  */
-window.addEventListener('load', function () {
-    window?.formbricks?.init?.({
+window.addEventListener('themeisle:survey:loaded', function () {
+    window?.tsdk_formbricks?.init?.({
         environmentId: "clskgehf78eu5podwdrnzciti",
         apiHost: "https://app.formbricks.com",
         ...(window?.feedzySurveyData ?? {}),
