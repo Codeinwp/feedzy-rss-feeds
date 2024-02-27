@@ -33,7 +33,7 @@
 	<div class="feedzy-container">
 		<?php if ( ! empty( $offer_data['active'] ) ) { ?>
 			<div class="feedzy-sale">
-				<a href="<?php echo esc_url( $offer_data['linkDashboard'] ); ?>">
+				<a href="<?php echo esc_url( $offer_data['bannerStoreUrl'] ); ?>">
 					<img src="<?php echo esc_url( $offer_data['bannerUrl'] ); ?>" alt="<?php echo esc_html( $offer_data['bannerAlt'] ); ?>">
 					<div class="feedzy-urgency"><?php echo esc_html( $offer_data['urgencyText'] ); ?></div>
 				</a>
