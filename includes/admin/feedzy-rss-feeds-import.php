@@ -1818,22 +1818,25 @@ class Feedzy_Rss_Feeds_Import {
 					}
 				}
 
-				// Item image action.
-				$import_featured_img = rawurldecode( $import_featured_img );
-				$import_featured_img = trim( $import_featured_img );
-				$img_action          = $this->handle_content_actions( $import_featured_img, 'item_image' );
-				// Item image action process.
-				$image_url = $img_action->run_action_job( $import_featured_img, $import_translation_lang, $job, $language_code, $item, $image_url );
+				if ( 'yes' === $import_item_img_url || ! $this->tryReuseExistingFeaturedImage( $img_success, $item['item_title'], $new_post_id ) ) {
+					// Item image action.
+					$import_featured_img = rawurldecode( $import_featured_img );
+					$import_featured_img = trim( $import_featured_img );
+					$img_action          = $this->handle_content_actions( $import_featured_img, 'item_image' );
+					// Item image action process.
+					$image_url = $img_action->run_action_job( $import_featured_img, $import_translation_lang, $job, $language_code, $item, $image_url );
 
-				if ( ! empty( $image_url ) ) {
-					if ( 'yes' === $import_item_img_url ) {
-						// Set external image URL.
-						update_post_meta( $new_post_id, 'feedzy_item_external_url', $image_url );
-					} else {
-						// if import_featured_img is a tag.
-						$img_success = $this->generate_featured_image( $image_url, $new_post_id, $item['item_title'], $import_errors, $import_info );
+					if ( ! empty( $image_url ) ) {
+						if ( 'yes' === $import_item_img_url ) {
+							// Set external image URL.
+							update_post_meta( $new_post_id, 'feedzy_item_external_url', $image_url );
+						} else {
+							// if import_featured_img is a tag.
+							$img_success = $this->generate_featured_image( $image_url, $new_post_id, $item['item_title'], $import_errors, $import_info );
+						}
 					}
 				}
+
 				// Set default thumbnail image.
 				if ( ! $img_success && ! empty( $default_thumbnail ) ) {
 					$img_success = set_post_thumbnail( $new_post_id, $default_thumbnail );
@@ -1938,6 +1941,30 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		return $feed_items;
+	}
+
+	/**
+	 * Reuses an existing featured image if possible.
+	 *
+	 * @param int|bool $result The result of the operation. It can be a boolean or an attachment ID.
+	 * @param string   $title_feed The title of the feed.
+	 * @param int      $post_id The post ID.
+	 *
+	 * @return bool
+	 */
+	public function tryReuseExistingFeaturedImage( &$result, $title_feed, $post_id = 0 ) {
+		if ( ! function_exists( 'post_exists' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/post.php';
+		}
+		// Find existing attachment by feed title.
+		$attachment_id = post_exists( $title_feed, '', '', 'attachment' );
+
+		if ( ! $attachment_id ) {
+			return false;
+		}
+
+		$result = set_post_thumbnail( $post_id, $attachment_id );
+		return true;
 	}
 
 	/**
