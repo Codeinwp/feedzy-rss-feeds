@@ -1187,13 +1187,20 @@ class Feedzy_Rss_Feeds_Import {
 			'post_status' => 'publish',
 			'numberposts' => 99,
 		);
+
 		$feedzy_imports = get_posts( $args );
 		foreach ( $feedzy_imports as $job ) {
-			$result = $this->run_job( $job, $max );
-			if ( empty( $result ) ) {
-				$this->run_job( $job, $max );
+			try {
+				$result = $this->run_job( $job, $max );
+				if ( empty( $result ) ) {
+					$this->run_job( $job, $max );
+				}
+				do_action( 'feedzy_run_cron_extra', $job );
+			} catch ( Exception $e ) {
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					error_log( '[Feedzy Run Cron][Post title: ' . ( ! empty( $job->post_title ) ? $job->post_title : '' ) . '] Error: ' . $e->getMessage() );
+				}
 			}
-			do_action( 'feedzy_run_cron_extra', $job );
 		}
 	}
 
