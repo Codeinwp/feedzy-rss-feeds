@@ -265,7 +265,7 @@
 		$( '.feedzy-keyword-filter, #feedzy-import-source' ).on('keyup keypress', function(e) {
 			var keyCode = e.keyCode || e.which;
 			var addTagBtn = $( this ).parents( '.fz-input-icon' ).find( '.add-outside-tags' );
-			
+
 			if ( '' === $( this ).val() ) {
 				addTagBtn.attr( 'disabled', true );
 			} else if ( addTagBtn.hasClass( 'fz-plus-btn' ) ) {
@@ -481,8 +481,8 @@
 		// Tagify for normal mix content field.
 		$( '.fz-tagify-image' ).tagify( {
 			mode: 'mix',
-			editTags: false,
-			userInput: false,
+			editTags: true,
+			userInput: true,
 			addTagOn: [],
 			templates: {
 				tag: function(tagData) {
@@ -836,4 +836,4 @@
 			$( '.feedzy-open-media' ).html( feedzy.i10n.action_btn_text_1 );
 		});
 	}
-})(jQuery, feedzy);
+}(jQuery, feedzy));

@@ -499,7 +499,7 @@ global $post;
 												</div>
 												<div class="help-text">
 													<?php
-														esc_html_e( 'You can use the magic tags, your own URL or leave it empty.', 'feedzy-rss-feeds' );
+														esc_html_e( 'You can use the magic tags, or leave it empty.', 'feedzy-rss-feeds' );
 													?>
 												</div>
 											</div>
