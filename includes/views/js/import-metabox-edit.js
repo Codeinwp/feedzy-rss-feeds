@@ -842,11 +842,11 @@
 	 * BUG: When a user select a value for `inc_on` or `exc_on` and then modifies the filter the keywords, the last selected value is not retained.
 	 * Temporary FIX: Store the selected value in the session storage and then re-add it when the form is submitted.
 	 */
-	document.querySelector('[name="feedzy_meta_data[inc_on]"]').addEventListener('change', (event) => {
+	document.querySelector('[name="feedzy_meta_data[inc_on]"]')?.addEventListener('change', (event) => {
 		sessionStorage.setItem('feedzy_meta_data[inc_on]', event.target.selectedIndex);
 	});
 
-	document.querySelector('[name="feedzy_meta_data[exc_on]"]').addEventListener('change', (event) => {
+	document.querySelector('[name="feedzy_meta_data[exc_on]"]')?.addEventListener('change', (event) => {
 		sessionStorage.setItem('feedzy_meta_data[exc_on]', event.target.selectedIndex);
 	});
 	
