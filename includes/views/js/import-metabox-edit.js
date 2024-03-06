@@ -46,7 +46,7 @@
 			return false;
 		}
 
-		outsideWrap.find( '.form-control' ).val('');
+		outsideWrap.find( '.form-control .tag-list' )?.val('');
 		if ( outsideWrap.next( '.tag-list' ).length > 0 ) {
 			outsideWrap.
 			next( '.tag-list' )
