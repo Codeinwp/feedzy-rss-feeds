@@ -1515,8 +1515,14 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		// multiple sources?
 		$is_multiple = is_array( $feed_url );
-		$feed_source = $item->get_feed()->get_title();
-
+		
+		$feed_source      = '';
+		$feed_source_tags = $item->get_item_tags( FEEDZY_FEED_CUSTOM_TAG_NAMESPACE, 'parent-source' );
+		if ( ! empty( $feed_source_tags ) && ! empty( $feed_source_tags[0]['data'] ) ) {
+			$feed_source = $feed_source_tags[0]['data'];
+		} else {
+			$feed_source = $item->get_feed()->get_title();
+		}
 		// author.
 		if ( $item->get_author() && $meta_args['author'] ) {
 			$author      = $item->get_author();
