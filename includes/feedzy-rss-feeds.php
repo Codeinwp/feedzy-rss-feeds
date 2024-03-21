@@ -104,7 +104,7 @@ class Feedzy_Rss_Feeds {
 	 */
 	public function init() {
 		self::$plugin_name = 'feedzy-rss-feeds';
-		self::$version     = '4.4.3';
+		self::$version     = '4.4.4';
 		self::$instance->load_dependencies();
 		self::$instance->set_locale();
 		self::$instance->define_admin_hooks();
@@ -299,9 +299,6 @@ class Feedzy_Rss_Feeds {
 		if ( ! feedzy_is_pro() ) {
 			$offer = new Feedzy_Rss_Feeds_Limited_Offers();
 			$offer->load_banner();
-			if ( $offer->is_active() && $offer->can_show_dashboard_banner() ) {
-				$offer->load_dashboard_hooks();
-			}
 		}
 
 	}

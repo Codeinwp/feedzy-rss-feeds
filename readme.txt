@@ -493,6 +493,17 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
+##### [Version 4.4.4](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.3...v4.4.4) (2024-02-27)
+
+### Fixes
+- Reuse existing generated images before trying to generate new ones on import [PRO]
+- Updated dependencies
+- NPS Survey added
+- Preparation for future BF campaign
+
+
+
+
 ##### [Version 4.4.3](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.2...v4.4.3) (2024-02-09)
 
 ### Fixes

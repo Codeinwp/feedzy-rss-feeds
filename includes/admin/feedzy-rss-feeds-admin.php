@@ -128,6 +128,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			wp_enqueue_script( $this->plugin_name . '_telemetry', FEEDZY_ABSURL . 'js/telemetry.js', array(), $this->version, true );
 		}
 
+		if ( 'feedzy_imports' === $screen->post_type && 'edit' === $screen->base ) {
+			$this->register_survey();
+		}
+
 		if ( 'feedzy_categories' === $screen->post_type ) {
 			wp_enqueue_script(
 				$this->plugin_name . '_categories',
@@ -152,6 +156,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					),
 				)
 			);
+
+			$this->register_survey();
 		}
 
 		if ( 'feedzy_page_feedzy-settings' === $screen->base ) {
@@ -171,6 +177,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					),
 				)
 			);
+
+			$this->register_survey();
 		}
 
 		$upsell_screens = array( 'feedzy-rss_page_feedzy-settings', 'feedzy-rss_page_feedzy-admin-menu-pro-upsell' );
@@ -195,6 +203,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				)
 			);
 			wp_enqueue_style( 'wp-block-editor' );
+
+			$this->register_survey();
 		}
 		if ( ! defined( 'TI_CYPRESS_TESTING' ) && ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type && feedzy_show_import_tour() ) ) {
 			wp_enqueue_script( $this->plugin_name . '_on_boarding', FEEDZY_ABSURL . 'js/Onboarding/import-onboarding.min.js', array( 'react', 'react-dom', 'wp-editor', 'wp-api', 'lodash' ), $this->version, true );
@@ -205,6 +215,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		if ( 'feedzy_page_feedzy-support' === $screen->base || ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type ) ) {
+
+			$this->register_survey();
+
 			wp_enqueue_script( $this->plugin_name . '_feedback', FEEDZY_ABSURL . 'js/FeedBack/feedback.min.js', array( 'react', 'react-dom', 'wp-editor', 'wp-api', 'lodash' ), $this->version, true );
 			wp_enqueue_style( 'wp-block-editor' );
 
@@ -1565,10 +1578,13 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			'spinnerChiefStatus' => false,
 			'wordaiStatus'       => false,
 			'openaiStatus'       => false,
+			'amazonStatus'       => false,
 		);
+
 		if ( ! feedzy_is_pro() ) {
 			return $data;
 		}
+
 		if ( apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) {
 			if ( isset( $pro_options['spinnerchief_licence'] ) && 'yes' === $pro_options['spinnerchief_licence'] ) {
 				$data['spinnerChiefStatus'] = true;
@@ -1577,11 +1593,119 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				$data['wordaiStatus'] = true;
 			}
 		}
+
 		if ( isset( $pro_options['openai_licence'] ) && 'yes' === $pro_options['openai_licence'] ) {
 			if ( apply_filters( 'feedzy_is_license_of_type', false, 'business' ) || apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) {
 				$data['openaiStatus'] = true;
 			}
 		}
+
+		if ( ! empty( $pro_options['amazon_access_key'] ) && ! empty( $pro_options['amazon_secret_key'] ) ) {
+			$data['amazonStatus'] = true;
+		}
 		return $data;
+	}
+
+	/**
+	 * Get the plan category for the product plan ID.
+	 *
+	 * @param object $license_data The license data.
+	 * @return int
+	 */
+	private static function plan_category( $license_data ) {
+
+		if ( ! isset( $license_data->plan ) || ! is_numeric( $license_data->plan ) ) {
+			return 0; // Free
+		}
+
+		$plan = (int) $license_data->plan;
+		$current_category = -1;
+
+		$categories = array(
+			'1' => array(1, 4, 9), // Personal
+			'2' => array(2, 5, 8), // Business/Developer
+			'3' => array(3, 6, 7, 10), // Agency
+		);
+
+		foreach ( $categories as $category => $plans ) {
+			if ( in_array( $plan, $plans, true ) ) {
+				$current_category = (int) $category;
+				break;
+			}
+		}
+
+		return $current_category;
+	}
+
+	/**
+	 * Get the data used for the survey.
+	 *
+	 * @return array
+	 * @see survey.js
+	 */
+	public function get_survery_metadata() {
+
+		$user_id = 'feedzy_';
+		$license_data = get_option( 'feedzy_rss_feeds_pro_license_data', array() );
+
+		if ( ! empty( $license_data->key ) ) {
+			$user_id .= $license_data->key;
+		} else {
+			$user_id .= preg_replace( '/[^\w\d]*/', '', get_site_url() ); // Use a normalized version of the site URL as a user ID for free users.
+		}
+
+		$integration_status = $this->api_license_status();
+
+		$days_since_install = round( ( time() - get_option( 'feedzy_rss_feeds_install', 0 ) ) / DAY_IN_SECONDS );
+		$install_category = 0;
+		if ( 0 === $days_since_install || 1 === $days_since_install ) {
+			$install_category = 0;
+		} elseif ( 1 < $days_since_install && 8 > $days_since_install ) {
+			$install_category = 7;
+		} elseif ( 8 <= $days_since_install && 31 > $days_since_install ) {
+			$install_category = 30;
+		} elseif ( 30 < $days_since_install && 90 > $days_since_install ) {
+			$install_category = 90;
+		} elseif ( 90 <= $days_since_install ) {
+			$install_category = 91;
+		}
+
+		return array(
+			'userId' => $user_id,
+			'attributes' => array(
+				'free_version' => $this->version,
+				'pro_version' => defined( 'FEEDZY_PRO_VERSION' ) ? FEEDZY_PRO_VERSION : '',
+				'openai' => $integration_status['openaiStatus'] ? 'valid' : 'invalid',
+				'amazon' => $integration_status['amazonStatus'] ? 'valid' : 'invalid',
+				'spinnerchief' => $integration_status['spinnerChiefStatus'] ? 'valid' : 'invalid',
+				'wordai' => $integration_status['wordaiStatus'] ? 'valid' : 'invalid',
+				'plan' => $this->plan_category( $license_data ),
+				'days_since_install' => $install_category,
+				'license_status' => ! empty( $license_data->license ) ? $license_data->license : 'invalid',
+			),
+		);
+	}
+
+	/**
+	 * Register the survey script.
+	 *
+	 * It does register if we are in CI environment.
+	 *
+	 * @return void
+	 */
+	public function register_survey() {
+
+		if ( defined( 'CYPRESS_TESTING' ) ) {
+			return;
+		}
+
+		$survey_handler = apply_filters( 'themeisle_sdk_dependency_script_handler', 'survey' );
+		if ( empty( $survey_handler ) ) {
+			return;
+		}
+
+		do_action( 'themeisle_sdk_dependency_enqueue_script', 'survey' );
+		wp_enqueue_script( $this->plugin_name . '_survey', FEEDZY_ABSURL . 'js/survey.js', array( $survey_handler ), $this->version, true );
+		wp_localize_script( $this->plugin_name . '_survey', 'feedzySurveyData', $this->get_survery_metadata() );
 	}
 }
