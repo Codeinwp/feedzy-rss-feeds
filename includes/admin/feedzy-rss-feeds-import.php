@@ -1417,7 +1417,7 @@ class Feedzy_Rss_Feeds_Import {
 			$item_date = $item['item_date_formatted'];
 
 			// Transform any structure like [[{"value":"[#item_title]"}]] to [#item_title].
-			$import_title = preg_replace('/\[\[\{"value":"(\[#[^]]+\])"\}\]\]/', '$1', $import_title);
+			$import_title = preg_replace( '/\[\[\{"value":"(\[#[^]]+\])"\}\]\]/', '$1', $import_title );
 
 			// Get translated item title.
 			$translated_title = '';
