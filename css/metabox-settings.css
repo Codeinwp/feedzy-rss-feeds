@@ -42,16 +42,16 @@
 	.fz-input-group{flex-wrap: wrap;}
 	.fz-input-group .fz-input-group-right{width: 100%; padding-left: 0; padding-top: 8px;}
 	.fz-input-group .fz-input-group-right .btn.dropdown-toggle{width: 100%;}
-	.fz-form-wrap .form-block.form-block-two-column .left{width: 100%; padding-right: 0; padding-bottom: 24px;}
-	.fz-form-wrap .form-block.form-block-two-column .right{width: 100%;}
-	.fz-form-action .left{width: 100%; padding-bottom: 16px;}
-	.fz-form-action .left .btn{width: 100%; display: block; text-align: center;}
-	.fz-form-action .right{width: 100%; flex-direction: column;}
-	.fz-form-action .right .btn + .btn{margin-left: 0; margin-top: 8px;}
+	.fz-form-wrap .form-block.form-block-two-column .fz-left{width: 100%; padding-right: 0; padding-bottom: 24px;}
+	.fz-form-wrap .form-block.form-block-two-column .fz-right{width: 100%;}
+	.fz-form-action .fz-left{width: 100%; padding-bottom: 16px;}
+	.fz-form-action .fz-left .btn{width: 100%; display: block; text-align: center;}
+	.fz-form-action .fz-right{width: 100%; flex-direction: column;}
+	.fz-form-action .fz-right .btn + .btn{margin-left: 0; margin-top: 8px;}
 	.fz-form-row .fz-form-col-6, .fz-form-row .fz-form-col-4, .fz-form-row .fz-form-col-8{width: 100%;}
 	.fz-document-list > ul > li{width: 100%;}
-	.fz-help-improve-box .left{width: 100%;}
-	.fz-help-improve-box .right{width: 100%;}
+	.fz-help-improve-box .fz-left{width: 100%;}
+	.fz-help-improve-box .fz-right{width: 100%;}
 	.fz-tabs-menu ul {flex-wrap: wrap;}
 	.fz-tabs-menu ul li{flex-shrink: 0; width: 50%;}
 	.fz-tabs-menu ul li a{padding: 0px; border: 1px solid transparent;}
