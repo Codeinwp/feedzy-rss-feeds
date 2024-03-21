@@ -468,7 +468,7 @@
 		} );
 
 		// Tagify for normal textbox.
-		$( '.fz-input-tagify:not(.fz-tagify-image)' ).tagify( {
+		$( '.fz-input-tagify:not(.fz-tagify-image):not([name="feedzy_meta_data[import_post_title]"])' ).tagify( {
 			editTags: false,
 			originalInputValueFormat: function( valuesArr ) {
 				return valuesArr.map( function( item ) {
@@ -476,6 +476,11 @@
 				} )
 				.join( ', ' );
 			}
+		} );
+
+		// Tagify the title field.
+		$( '.fz-input-tagify[name="feedzy_meta_data[import_post_title]"]:not(.fz-tagify-image)' ).tagify( {
+			mode: 'mix'
 		} );
 
 		// Tagify for normal mix content field.
