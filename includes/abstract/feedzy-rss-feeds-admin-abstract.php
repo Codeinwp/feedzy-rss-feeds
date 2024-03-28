@@ -679,7 +679,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @param   string $raw Url or list of urls.
 	 *
-	 * @return mixed|void Urls of the feeds.
+	 * @return string|array<string> Urls of the feeds.
 	 */
 	public function normalize_urls( $raw ) {
 		$feeds    = apply_filters( 'feedzy_process_feed_source', $raw );
@@ -1412,12 +1412,12 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @since   3.0.0
 	 * @access  private
 	 *
-	 * @param   array  $sc The shorcode attributes array.
-	 * @param   array  $sizes The sizes array.
-	 * @param   object $item The feed item object.
-	 * @param   string $feed_url The feed url.
-	 * @param   int    $index The item number (may not be the same as the item_index).
-	 * @param   int    $item_index The real index of this items in the feed (maybe be different from $index if filters are used).
+	 * @param   array           $sc The shorcode attributes array.
+	 * @param   array           $sizes The sizes array.
+	 * @param   \SimplePie_Item $item The feed item object.
+	 * @param   string          $feed_url The feed url.
+	 * @param   int             $index The item number (may not be the same as the item_index).
+	 * @param   int             $item_index The real index of this items in the feed (maybe be different from $index if filters are used).
 	 *
 	 * @return array
 	 */
@@ -1515,8 +1515,14 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		// multiple sources?
 		$is_multiple = is_array( $feed_url );
-		$feed_source = $item->get_feed()->get_title();
 
+		$feed_source      = '';
+		$feed_source_tags = $item->get_item_tags( FEEDZY_FEED_CUSTOM_TAG_NAMESPACE, 'parent-source' );
+		if ( ! empty( $feed_source_tags ) && ! empty( $feed_source_tags[0]['data'] ) ) {
+			$feed_source = $feed_source_tags[0]['data'];
+		} else {
+			$feed_source = $item->get_feed()->get_title();
+		}
 		// author.
 		if ( $item->get_author() && $meta_args['author'] ) {
 			$author      = $item->get_author();

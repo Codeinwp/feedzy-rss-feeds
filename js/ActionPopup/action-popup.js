@@ -99,7 +99,7 @@ const ActionModal = () => {
 			actionData.data[actionId] = true;
 		}
 		if ( ['fz_image'].indexOf( actionId ) > -1 ) {
-			actionData.data['generateImgWithChatGPT'] = true;
+			actionData.data['generateOnlyMissingImages'] = true;
 		}
 
 		let newAction = [actionData];

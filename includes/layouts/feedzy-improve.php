@@ -1,10 +1,10 @@
 <div id="fz-feedback-modal"></div>
 <div class="fz-help-improve-wrap">
 	<div class="fz-help-improve-box">
-		<div class="right">
+		<div class="fz-right">
 			<img src="<?php echo esc_url( FEEDZY_ABSURL . 'img/improve-feedzy.png' ); ?>" alt="">
 		</div>
-		<div class="left">
+		<div class="fz-left">
 			<h3 class="h3 pb-16">Answer a few questions to help us improve Feedzy</h3>
 			<p>We're always looking for suggestions to further improve Feedzy.
 			<?php if ( ! feedzy_is_pro() ) { ?>
