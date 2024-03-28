@@ -902,9 +902,9 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 }
 .fz-form-wrap .tagify__tag{
 	position: relative;
-	margin-left: 0;
-	margin-right: 16px;
-	margin-bottom: 16px;
+	margin-left: 2px;
+	margin-right: 2px;
+	margin-bottom: 2px;
 	vertical-align: top;
 }
 .fz-form-wrap .tagify__tag>div{
