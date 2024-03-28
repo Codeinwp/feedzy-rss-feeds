@@ -1422,6 +1422,10 @@ class Feedzy_Rss_Feeds_Import {
 				$translated_title = apply_filters( 'feedzy_invoke_auto_translate_services', $item['item_title'], '[#translated_title]', $import_translation_lang, $job, $language_code, $item );
 			}
 
+			$import_title = rawurldecode( $import_title );
+			$import_title = str_replace( PHP_EOL, "\r\n", $import_title );
+			$import_title = trim( $import_title );
+
 			$post_title = str_replace(
 				array(
 					'[#item_title]',
@@ -1447,6 +1451,10 @@ class Feedzy_Rss_Feeds_Import {
 			if ( $this->feedzy_is_business() ) {
 				$post_title = apply_filters( 'feedzy_parse_custom_tags', $post_title, $item_obj );
 			}
+
+			$title_action = $this->get_actions_runner( $post_title, 'item_title' );
+			$post_title   = $title_action->get_serialized_actions();
+			$post_title   = $title_action->run_action_job( $post_title, $translated_title, $job, $language_code, $item );
 
 			$post_title = apply_filters( 'feedzy_invoke_services', $post_title, 'title', $item['item_title'], $job );
 
@@ -1543,8 +1551,8 @@ class Feedzy_Rss_Feeds_Import {
 				$post_content = apply_filters( 'feedzy_invoke_services', $post_content, 'full_content', $full_content, $job );
 			}
 			// Item content action.
-			$content_action = $this->handle_content_actions( $post_content, 'item_content' );
-			$post_content   = $content_action->get_tags();
+			$content_action = $this->get_actions_runner( $post_content, 'item_content' );
+			$post_content   = $content_action->get_serialized_actions();
 			// Item content action process.
 			$post_content = $content_action->run_action_job( $post_content, $import_translation_lang, $job, $language_code, $item );
 			// Parse custom tags.
@@ -1829,7 +1837,7 @@ class Feedzy_Rss_Feeds_Import {
 					// Item image action.
 					$import_featured_img = rawurldecode( $import_featured_img );
 					$import_featured_img = trim( $import_featured_img );
-					$img_action          = $this->handle_content_actions( $import_featured_img, 'item_image' );
+					$img_action          = $this->get_actions_runner( $import_featured_img, 'item_image' );
 					// Item image action process.
 					$image_url = $img_action->run_action_job( $import_featured_img, $import_translation_lang, $job, $language_code, $item, $image_url );
 
@@ -2310,8 +2318,8 @@ class Feedzy_Rss_Feeds_Import {
 					$disabled[ str_replace( ':disabled', '', $tag ) ] = $label;
 					continue;
 				}
-				if ( in_array( $type, array( 'import_post_content', 'import_post_featured_img' ), true ) ) {
-					if ( in_array( $tag, array( 'item_content', 'item_description', 'item_full_content', 'item_categories', 'item_image' ), true ) ) {
+				if ( in_array( $type, array( 'import_post_content', 'import_post_featured_img', 'import_post_title' ), true ) ) {
+					if ( in_array( $tag, array( 'item_content', 'item_description', 'item_full_content', 'item_categories', 'item_image', 'item_title' ), true ) ) {
 						$default .= '<a class="dropdown-item" href="#" data-field-name="' . $type . '" data-field-tag="' . $tag . '" data-action_popup="' . $tag . '">' . $label . ' <small>[#' . $tag . ']</small></a>';
 						continue;
 					}
@@ -2917,16 +2925,16 @@ class Feedzy_Rss_Feeds_Import {
 	}
 
 	/**
-	 * Handle item content actions.
+	 * Get the content action runner used for processing the chained actions from the tags.
 	 *
 	 * @param string $actions Item content actions.
 	 * @param string $type Action type.
-	 * @return object `Feedzy_Rss_Feeds_Actions` class instance.
+	 * @return Feedzy_Rss_Feeds_Actions The class instance.
 	 */
-	public function handle_content_actions( $actions = '', $type = '' ) {
+	public function get_actions_runner( $actions = '', $type = '' ) {
 		$action_instance       = Feedzy_Rss_Feeds_Actions::instance();
 		$action_instance->type = $type;
-		$action_instance->set_actions( $actions );
+		$action_instance->set_raw_serialized_actions( $actions );
 		$action_instance->set_settings( $this->settings );
 		return $action_instance;
 	}

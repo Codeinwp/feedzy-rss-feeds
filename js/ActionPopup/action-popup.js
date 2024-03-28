@@ -150,26 +150,27 @@ const ActionModal = () => {
 			window?.tiTrk?.with('feedzy').add( { feature: 'import_action', featureValue: item?.id, groupId: item?.tag ?? '' } );
 		});
 
+		// Serialize the action.
 		let _action = encodeURIComponent( JSON.stringify( action ) );
 		if ( action.length === 0 ) {
 			setAction([]);
 			_action = encodeURIComponent( JSON.stringify( [ { id: '', tag: shortCode, data: {} } ] ) );
 		}
-
-		let postContent = jQuery( 'import_post_content' === fieldName ? 'textarea.fz-textarea-tagify' : 'input.fz-tagify-image' ).data('tagify');
+		
+		const inputField = jQuery( `[name="feedzy_meta_data[${fieldName}]"]:is(textarea, input)` ).data('tagify');
 
 		if ( 'import_post_featured_img' === fieldName ) {
-			postContent.removeAllTags();
-			postContent.addEmptyTag();
-			postContent.clearPersistedData();
+			inputField.removeAllTags();
+			inputField.addEmptyTag();
+			inputField.clearPersistedData();
 		}
 		if ( null === editModeTag || 'import_post_featured_img' === fieldName ) {
-			let tagElm = postContent.createTagElem({value: _action})
-			postContent.injectAtCaret(tagElm)
-			let elm = postContent.insertAfterTag(tagElm)
-			postContent.placeCaretAfterNode(elm)
+			let tagElm = inputField.createTagElem({value: _action})
+			inputField.injectAtCaret(tagElm)
+			let elm = inputField.insertAfterTag(tagElm)
+			inputField.placeCaretAfterNode(elm)
 		} else {
-			postContent.replaceTag(editModeTag.closest( '.fz-content-action' ), {value: _action});
+			inputField.replaceTag(editModeTag.closest( '.fz-content-action' ), {value: _action});
 		}
 		closeModal();
 	};
