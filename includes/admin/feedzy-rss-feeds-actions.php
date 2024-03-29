@@ -258,7 +258,7 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 
 					$this->result = null;
 					$jobs_actions = $jobs['job_actions'];
-					$replace_to   = isset( $jobs['serialized_actions'] ) ? $jobs['serialized_action'] : '';
+					$replace_to   = isset( $jobs['serialized_actions'] ) ? $jobs['serialized_actions'] : '';
 					foreach ( $jobs_actions as $job ) {
 						$this->current_job = $job;
 						$this->result      = $this->action_process();
