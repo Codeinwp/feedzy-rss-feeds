@@ -1978,23 +1978,23 @@ class Feedzy_Rss_Feeds_Import {
 	}
 
 	/**
-     * Will retireve the file type of a file by its URL.
-     *
+	 * Will retireve the file type of a file by its URL.
+	 *
 	 * @param string $url The URL of the file.
 	 *
 	 * @return string
 	 */
-    private function get_file_type_by_url( $url ) {
-        $response  = wp_remote_get( $url );
+	private function get_file_type_by_url( $url ) {
+		$response  = wp_remote_get( $url );
 
-        // wp_remote_retrieve_header can return an array if there are multiple headers with the same name
-        $content_type = wp_remote_retrieve_header( $response, 'content-type' );
-        if ( is_array( $content_type ) ) {
-            $content_type = $content_type[0];
-        }
+		// wp_remote_retrieve_header can return an array if there are multiple headers with the same name
+		$content_type = wp_remote_retrieve_header( $response, 'content-type' );
+		if ( is_array( $content_type ) ) {
+			$content_type = $content_type[0];
+		}
 
-        return $content_type;
-    }
+		return $content_type;
+	}
 
 	/**
 	 * Downloads and sets a post featured image if possible.
@@ -2038,10 +2038,10 @@ class Feedzy_Rss_Feeds_Import {
 				return false;
 			}
 
-            $type = $this->get_file_type_by_url( $img_source_url );
-            if ( empty( $type ) && function_exists( 'mime_content_type' ) ) {
-	            $type = mime_content_type( $local_file );
-            }
+			$type = $this->get_file_type_by_url( $img_source_url );
+			if ( empty( $type ) && function_exists( 'mime_content_type' ) ) {
+				$type = mime_content_type( $local_file );
+			}
 			// the file is downloaded with a .tmp extension
 			// if the URL mentions the extension of the file, the upload succeeds
 			// but if the URL is like https://source.unsplash.com/random, then the upload fails
