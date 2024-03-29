@@ -478,6 +478,11 @@
 			}
 		} );
 
+		// Tagify the title field.
+		$( '.fz-input-tagify[name="feedzy_meta_data[import_post_title]"]:not(.fz-tagify-image)' ).tagify( {
+			mode: 'mix'
+		} );
+
 		// Tagify for normal mix content field.
 		$( '.fz-tagify-image' ).tagify( {
 			mode: 'mix',
