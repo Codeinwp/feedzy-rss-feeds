@@ -46,7 +46,7 @@
 			return false;
 		}
 
-		outsideWrap.find( '.form-control' ).val('');
+		outsideWrap.find( '.form-control .tag-list' )?.val('');
 		if ( outsideWrap.next( '.tag-list' ).length > 0 ) {
 			outsideWrap.
 			next( '.tag-list' )
@@ -265,7 +265,7 @@
 		$( '.feedzy-keyword-filter, #feedzy-import-source' ).on('keyup keypress', function(e) {
 			var keyCode = e.keyCode || e.which;
 			var addTagBtn = $( this ).parents( '.fz-input-icon' ).find( '.add-outside-tags' );
-			
+
 			if ( '' === $( this ).val() ) {
 				addTagBtn.attr( 'disabled', true );
 			} else if ( addTagBtn.hasClass( 'fz-plus-btn' ) ) {
@@ -468,7 +468,7 @@
 		} );
 
 		// Tagify for normal textbox.
-		$( '.fz-input-tagify:not(.fz-tagify-image)' ).tagify( {
+		$( '.fz-input-tagify:not(.fz-tagify-image):not([name="feedzy_meta_data[import_post_title]"])' ).tagify( {
 			editTags: false,
 			originalInputValueFormat: function( valuesArr ) {
 				return valuesArr.map( function( item ) {
@@ -478,11 +478,16 @@
 			}
 		} );
 
+		// Tagify the title field.
+		$( '.fz-input-tagify[name="feedzy_meta_data[import_post_title]"]:not(.fz-tagify-image)' ).tagify( {
+			mode: 'mix'
+		} );
+
 		// Tagify for normal mix content field.
 		$( '.fz-tagify-image' ).tagify( {
 			mode: 'mix',
-			editTags: false,
-			userInput: false,
+			editTags: true,
+			userInput: true,
 			addTagOn: [],
 			templates: {
 				tag: function(tagData) {
@@ -836,4 +841,4 @@
 			$( '.feedzy-open-media' ).html( feedzy.i10n.action_btn_text_1 );
 		});
 	}
-})(jQuery, feedzy);
+}(jQuery, feedzy));

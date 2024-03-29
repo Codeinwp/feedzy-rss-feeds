@@ -453,21 +453,25 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		}
 
 		/**
-		 * Generate item image.
+		 * Generate item image using OpenAI.
+		 * Return default value if OpenAI is not available or `Generate only for missing images` option is enabled and feed has image.
 		 *
-		 * @return string
+		 * @return string Image URL to download.
 		 */
 		private function generate_image() {
-			$content = call_user_func( array( $this, 'item_title' ) );
+
 			if ( ! class_exists( '\Feedzy_Rss_Feeds_Pro_Openai' ) ) {
 				return isset( $this->default_value ) ? $this->default_value : '';
 			}
-			if ( $this->current_job->data->generateImgWithChatGPT && empty( $this->default_value ) ) {
+
+			$feed_has_image = false !== filter_var( $this->default_value, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED );
+			if ( ( ! isset( $this->current_job->data->generateOnlyMissingImages ) || ! empty( $this->current_job->data->generateOnlyMissingImages ) ) && $feed_has_image ) {
 				return isset( $this->default_value ) ? $this->default_value : '';
 			}
-			$openai  = new \Feedzy_Rss_Feeds_Pro_Openai();
-			$content = $openai->call_api( $this->settings, $content, 'image', array() );
-			return $content;
+
+			$prompt = call_user_func( array( $this, 'item_title' ) );
+			$openai = new \Feedzy_Rss_Feeds_Pro_Openai();
+			return $openai->call_api( $this->settings, $prompt, 'image', array() );
 		}
 	}
 }

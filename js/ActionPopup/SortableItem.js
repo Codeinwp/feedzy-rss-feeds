@@ -277,9 +277,9 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 							<UpgradeNotice higherPlanNotice={!feedzyData.isBusinessPlan && !feedzyData.isAgencyPlan} utmCampaign="action-generate-image-chatgpt"/>
 							<BaseControl>
 								<ToggleControl
-									checked={ item.data.generateImgWithChatGPT ?? true }
+									checked={ item.data.generateOnlyMissingImages ?? true }
 									label={ __( 'Generate only for missing images', 'feedzy-rss-feeds' ) }
-									onChange={ ( currentValue ) => propRef.onChangeHandler( { 'index': loopIndex, 'generateImgWithChatGPT': currentValue ?? '' } ) }
+									onChange={ ( currentValue ) => propRef.onChangeHandler( { 'index': loopIndex, 'generateOnlyMissingImages': currentValue ?? '' } ) }
 									help={ __( 'Only generate the featured image if it\'s missing in the source XML RSS Feed.', 'feedzy-rss-feeds' ) }
 									disabled={!feedzyData.isPro || !feedzyData.apiLicenseStatus.openaiStatus}
 								/>
