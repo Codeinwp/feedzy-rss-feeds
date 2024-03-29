@@ -493,6 +493,16 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
+##### [Version 4.4.5](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.4...v4.4.5) (2024-03-29)
+
+### Fixes
+- Allow adding content in the title field before the magic tag
+- Updated Internal dependencies
+- Fixed issue with feed's featured image being overwritten by ChatGPT image generation even when present [PRO]
+
+
+
+
 ##### [Version 4.4.4](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.3...v4.4.4) (2024-02-27)
 
 ### Fixes
