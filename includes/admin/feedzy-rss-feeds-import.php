@@ -1416,9 +1416,6 @@ class Feedzy_Rss_Feeds_Import {
 			$item_date = date( get_option( 'date_format' ) . ' at ' . get_option( 'time_format' ), $item['item_date'] );
 			$item_date = $item['item_date_formatted'];
 
-			// Transform any structure like [[{"value":"[#item_title]"}]] to [#item_title].
-			$import_title = preg_replace( '/\[\[\{"value":"(\[#[^]]+\])"\}\]\]/', '$1', $import_title );
-
 			// Get translated item title.
 			$translated_title = '';
 			if ( $import_auto_translation && ( false !== strpos( $import_title, '[#translated_title]' ) || false !== strpos( $post_excerpt, '[#translated_title]' ) ) ) {
