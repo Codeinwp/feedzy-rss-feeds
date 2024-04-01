@@ -1,3 +1,8 @@
+##### [Version 4.4.6](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.5...v4.4.6) (2024-04-01)
+
+### Improvements
+- **Updated internal dependencies**
+
 ##### [Version 4.4.5](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.4...v4.4.5) (2024-03-29)
 
 ### Fixes
