@@ -10,6 +10,8 @@
  */
 class Test_Feedzy_Import extends WP_UnitTestCase {
 
+	private $import_limit = 1;
+
 	/**
 	 * Sets up the test methods.
 	 */
@@ -28,10 +30,10 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 	 * @access  public
 	 * @dataProvider importDataProvider
 	 */
-	public function test_feedzy_imports( $random_name1, $random_name2, $urls, $magic_tags = '[#item_content]', $use_filter = false ) {
+	public function test_feedzy_imports( $random_name1, $random_name2, $urls, $magic_tags = '[#item_content]', $use_filter = false, $type = 'post' ) {
 		do_action( 'init' );
 
-		$num_items = 1;
+		$num_items = $this->import_limit;
 		$user_id       = $this->factory->user->create(
 			array(
 				'role' => 'administrator',
@@ -76,7 +78,7 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 		$_POST['feedzy_post_nonce']                 = wp_create_nonce( 'feedzy_post_nonce' );
 		$_POST['post_type']                      = 'feedzy_imports';
 		$_POST['feedzy_meta_data']['source']                           = $slug;
-		$_POST['feedzy_meta_data']['import_post_type']                 = 'post';
+		$_POST['feedzy_meta_data']['import_post_type']                 = $type;
 		$_POST['feedzy_meta_data']['import_post_term']                 = 'category_' . $category_id;
 		$_POST['feedzy_meta_data']['import_post_status']               = 'publish';
 		$_POST['feedzy_meta_data']['inc_key']                          = '';
@@ -106,7 +108,7 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 		$import_custom_fields = get_post_meta( $p->ID, 'imports_custom_fields', true );
 		$import_feed_limit    = get_post_meta( $p->ID, 'import_feed_limit', true );
 
-		$this->assertEquals( 'post', $import_post_type );
+		$this->assertEquals( $type, $import_post_type );
 		$this->assertEquals( 'category_' . $category_id, $import_post_term );
 		$this->assertEquals( 'publish', $import_post_status );
 		$this->assertEquals( $slug, $source );
@@ -173,6 +175,13 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 		$this->assertGreaterThan( 0, count( $test ), sprintf( 'Problematic URLs: %s', print_r( $urls, true ) ) );
 
 		do_action( 'feedzy_cron', '1' );
+
+		/**
+		 * We bail for non post types as the subsequent tests might not apply.
+		 */
+		if ( $type !== 'post' ) {
+			return;
+		}
 
 		$created = get_posts(
 			array(
@@ -274,6 +283,24 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 		}
 		$this->assertEquals( $item_url, htmlspecialchars( $canonical_url ), 'Canonical URLs are not equal' );
 
+	}
+
+	/**
+	 * Test the attachment import works and the mime type is correct.
+	 */
+	public function test_attachement_import() {
+		$this->test_feedzy_imports( $this->get_rand_name(), $this->get_rand_name(), $this->get_two_rand_feeds(), '[#item_content]', false, 'attachment' );
+		$args = array(
+			'post_type' =>'attachment',
+			'numberposts' => -1,
+			'orderby' => 'date',
+			'order' => 'DESC',
+		);
+		$attachments = get_posts($args);
+		$this->assertEquals( $this->import_limit, count( $attachments ) );
+
+		$this->assertTrue( isset( $attachments[0]->post_mime_type ) );
+		$this->assertTrue( $attachments[0]->post_mime_type === 'image/jpeg' );
 	}
 
 
