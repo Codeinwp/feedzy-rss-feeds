@@ -2038,10 +2038,16 @@ class Feedzy_Rss_Feeds_Import {
 				return false;
 			}
 
-			$type = $this->get_file_type_by_url( $img_source_url );
-			if ( empty( $type ) && function_exists( 'mime_content_type' ) ) {
+			// try first to get the file type using the built-in function if available.
+			if ( function_exists( 'mime_content_type' ) ) {
 				$type = mime_content_type( $local_file );
 			}
+
+			// if the file type is not found, try to get it from the URL.
+			if ( empty( $type ) ) {
+				$type = $this->get_file_type_by_url( $img_source_url );
+			}
+
 			// the file is downloaded with a .tmp extension
 			// if the URL mentions the extension of the file, the upload succeeds
 			// but if the URL is like https://source.unsplash.com/random, then the upload fails
