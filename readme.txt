@@ -3,7 +3,7 @@ Contributors: themeisle,codeinwp,hardeepasrani,rozroz
 Tags: rss aggregator, news aggregator, autoblogging, feed to post, rss import
 Requires at least: 6.0
 Requires PHP: 7.2
-Tested up to: 6.4
+Tested up to: 6.5
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -492,6 +492,24 @@ You have to check first if your feed is valid. Please test it here: https://vali
 7. Feedzy Layouts
 
  == Changelog ==
+
+##### [Version 4.4.6](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.5...v4.4.6) (2024-04-01)
+
+### Improvements
+- **Updated internal dependencies**
+
+
+
+
+##### [Version 4.4.5](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.4...v4.4.5) (2024-03-29)
+
+### Fixes
+- Allow adding content in the title field before the magic tag
+- Updated Internal dependencies
+- Fixed issue with feed's featured image being overwritten by ChatGPT image generation even when present [PRO]
+
+
+
 
 ##### [Version 4.4.4](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.3...v4.4.4) (2024-02-27)
 
