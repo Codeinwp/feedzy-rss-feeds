@@ -2038,6 +2038,7 @@ class Feedzy_Rss_Feeds_Import {
 				return false;
 			}
 
+			$type = '';
 			// try first to get the file type using the built-in function if available.
 			if ( function_exists( 'mime_content_type' ) ) {
 				$type = mime_content_type( $local_file );
