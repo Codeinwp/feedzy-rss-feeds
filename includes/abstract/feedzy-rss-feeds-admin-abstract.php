@@ -194,7 +194,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		// Show the error message only if the user who has created this post (which contains the feed) is logged in.
 		// Or if this is in the dry run window.
 		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
-		$show_error = is_admin() || ( is_user_logged_in() && $post && get_current_user_id() == $post->post_author );
+		$show_error = is_admin() || ( is_user_logged_in() && $post && current_user_can( 'manage_options' ) && get_current_user_id() == $post->post_author );
 		$error_msg  = '';
 
 		if ( is_array( $errors ) ) {
@@ -735,6 +735,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return SimplePie|string|void|WP_Error The feed resource.
 	 */
 	public function fetch_feed( $feed_url, $cache = '12_hours', $sc = '' ) {
+        error_log('fetch_feed');
 		// Load SimplePie if not already.
 		do_action( 'feedzy_pre_http_setup', $feed_url );
 		if ( function_exists( 'feedzy_amazon_get_locale_hosts' ) ) {
@@ -754,6 +755,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$is_amazon_source = ! empty( $amazon_hosts ) && in_array( $url_host, $amazon_hosts, true );
 			}
 			if ( $is_amazon_source ) {
+                error_log('is_amazon_source');
 				$feed = $this->init_amazon_api(
 					$feed_url,
 					isset( $sc['refresh'] ) ? $sc['refresh'] : '12_hours',
@@ -766,6 +768,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 		}
 		// Load SimplePie Instance.
+        error_log('init_feed');
+        error_log(print_r($feed_url,true));
+        error_log($cache);
+        error_log(print_r($sc,true));
 		$feed = $this->init_feed( $feed_url, $cache, $sc ); // Not used as log as #41304 is Opened.
 
 		// Report error when is an error loading the feed.
@@ -903,8 +909,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			);
 		}
 
+        error_log('starting to init');
 		$feed->init();
 
+        error_log('init done');
 		if ( ! $feed->get_type() ) {
 			return $feed;
 		}
@@ -924,7 +932,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$feed = $this->init_feed( $feed_url, $cache, $sc, false );
 			} elseif ( is_string( $feed_url ) || ( is_array( $feed_url ) && 1 === count( $feed_url ) ) ) {
 				do_action( 'themeisle_log_event', FEEDZY_NAME, 'Trying to use raw data', 'debug', __FILE__, __LINE__ );
+                error_log('trying to use raw data');
 				$data = wp_remote_retrieve_body( wp_safe_remote_get( $feed_url, array( 'user-agent' => $default_agent ) ) );
+                error_log('got data');
 				$cloned_feed->set_raw_data( $data );
 				$cloned_feed->init();
 				$error_raw = $cloned_feed->error();
