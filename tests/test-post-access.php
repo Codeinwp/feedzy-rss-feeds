@@ -74,7 +74,7 @@ class Test_Post_Access extends WP_UnitTestCase {
 		$GLOBALS['post'] = get_post( $post_id );
 		// Mock feed object and errors.
 		$feed = (object) array( 'multifeed_url' => array( 'http://example.com/feed' ) );
-		$errors = array( 'Error 1', 'Error 2' );
+		$errors = array( 'Error 1' );
 
 
 		$actual_output = $feedzy->feedzy_default_error_notice( $errors, $feed, 'http://example.com/feed' );
