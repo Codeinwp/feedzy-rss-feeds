@@ -1999,7 +1999,8 @@ class Feedzy_Rss_Feeds_Import {
 
 		if ( ! $id ) {
 
-			if ( filter_var( $img_source_url, FILTER_VALIDATE_URL ) === false ) {
+			// We escape the URL to ensure that valid URLs are passed by the filter.
+			if ( filter_var( esc_url( $img_source_url ), FILTER_VALIDATE_URL ) === false ) {
 				$import_errors[] = 'Invalid Featured Image URL: ' . $img_source_url;
 				return false;
 			}
