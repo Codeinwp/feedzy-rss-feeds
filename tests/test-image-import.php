@@ -15,7 +15,7 @@ class Test_Image_Import extends WP_UnitTestCase {
 	 * Test introduced to cover this issue https://github.com/Codeinwp/feedzy-rss-feeds/issues/917.
 	 * @since 4.4.6
 	 */
-	public function test_image_import() {
+	public function test_image_import_url() {
 		$feedzy = new Feedzy_Rss_Feeds_Import( 'feedzy-rss-feeds', '1.2.0' );
 
 		$reflector = new ReflectionClass( $feedzy );
