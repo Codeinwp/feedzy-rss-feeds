@@ -21,9 +21,9 @@ describe('Test Free - gutenberg', function() {
         cy.get('.edit-post-visual-editor__post-title-wrapper .editor-post-title__input').type(PREFIX);
 
         // insert a feedzy block
-        cy.get('div.edit-post-header__toolbar button.edit-post-header-toolbar__inserter-toggle').click({force:true});
-        cy.get('.edit-post-editor__inserter-panel-content').then(function ($popup) {
-            cy.wrap($popup).find('.components-search-control__input').type('feedzy');
+        cy.get('div.edit-post-header__toolbar button.editor-document-tools__inserter-toggle').click({force:true});
+        cy.get('.editor-inserter-sidebar__content').then(function ($popup) {
+            cy.wrap($popup).find('.components-search-control input.components-input-control__input').type('feedzy');
             cy.wrap($popup).find('.block-editor-block-types-list .editor-block-list-item-feedzy-rss-feeds-feedzy-block').should('have.length', 1);
             cy.wrap($popup).find('.block-editor-block-types-list .editor-block-list-item-feedzy-rss-feeds-feedzy-block').click({force:true});
         });
@@ -62,7 +62,7 @@ describe('Test Free - gutenberg', function() {
             // item options
             cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-advanced-options div.components-base-control.feedzy-meta input.components-text-control__input').type(gutenberg.meta, {force: true});
             cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-advanced-options div.components-base-control.feedzy-multiple-meta input.components-text-control__input').type(gutenberg.multiple_meta, {force: true});
-            /* for pro 
+            /* for pro
             cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-advanced-options div.components-base-control.feedzy-include input.components-text-control__input').type(gutenberg.include);
             cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-advanced-options div.components-base-control.feedzy-ban input.components-text-control__input').type(gutenberg.ban);
             */
@@ -116,7 +116,7 @@ describe('Test Free - gutenberg', function() {
                 // item options
                 cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-advanced-options div.components-base-control.feedzy-meta input.components-text-control__input').should('have.value', gutenberg.meta);
                 cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-advanced-options div.components-base-control.feedzy-multiple-meta input.components-text-control__input').should('have.value', gutenberg.multiple_meta);
-                /* for pro 
+                /* for pro
                 cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-advanced-options div.components-base-control.feedzy-include input.components-text-control__input').should('have.value', gutenberg.include);
                 cy.get('div.edit-post-sidebar div.components-panel__body.feedzy-advanced-options div.components-base-control.feedzy-ban input.components-text-control__input').should('have.value', gutenberg.ban);
                 */
