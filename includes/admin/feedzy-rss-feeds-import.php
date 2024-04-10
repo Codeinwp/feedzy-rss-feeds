@@ -1978,6 +1978,25 @@ class Feedzy_Rss_Feeds_Import {
 	}
 
 	/**
+	 * Will retireve the file type of a file by its URL.
+	 *
+	 * @param string $url The URL of the file.
+	 *
+	 * @return string
+	 */
+	private function get_file_type_by_url( $url ) {
+		$response  = wp_remote_get( $url );
+
+		// wp_remote_retrieve_header can return an array if there are multiple headers with the same name
+		$content_type = wp_remote_retrieve_header( $response, 'content-type' );
+		if ( is_array( $content_type ) ) {
+			$content_type = $content_type[0];
+		}
+
+		return $content_type;
+	}
+
+	/**
 	 * Downloads and sets a post featured image if possible.
 	 *
 	 * @param string  $img_source_url The download source URL for the image.
@@ -1999,7 +2018,8 @@ class Feedzy_Rss_Feeds_Import {
 
 		if ( ! $id ) {
 
-			if ( filter_var( $img_source_url, FILTER_VALIDATE_URL ) === false ) {
+			// We escape the URL to ensure that valid URLs are passed by the filter.
+			if ( filter_var( esc_url( $img_source_url ), FILTER_VALIDATE_URL ) === false ) {
 				$import_errors[] = 'Invalid Featured Image URL: ' . $img_source_url;
 				return false;
 			}
@@ -2019,7 +2039,17 @@ class Feedzy_Rss_Feeds_Import {
 				return false;
 			}
 
-			$type = mime_content_type( $local_file );
+			$type = '';
+			// try first to get the file type using the built-in function if available.
+			if ( function_exists( 'mime_content_type' ) ) {
+				$type = mime_content_type( $local_file );
+			}
+
+			// if the file type is not found, try to get it from the URL.
+			if ( empty( $type ) ) {
+				$type = $this->get_file_type_by_url( $img_source_url );
+			}
+
 			// the file is downloaded with a .tmp extension
 			// if the URL mentions the extension of the file, the upload succeeds
 			// but if the URL is like https://source.unsplash.com/random, then the upload fails

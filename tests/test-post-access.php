@@ -62,4 +62,23 @@ class Test_Post_Access extends WP_UnitTestCase {
 
 	}
 
+	public function test_contributor_user_with_errors() {
+		$feedzy = new Feedzy_Rss_Feeds_Admin('feedzy', 'latest');
+		$contributor_id = $this->factory->user->create(
+			array(
+				'role' => 'contributor',
+			)
+		);
+		wp_set_current_user( $contributor_id );
+		$post_id = $this->factory->post->create( array( 'post_author' => get_current_user_id() ) );
+		$GLOBALS['post'] = get_post( $post_id );
+		// Mock feed object and errors.
+		$feed = (object) array( 'multifeed_url' => array( 'http://example.com/feed' ) );
+		$errors = array( 'Error 1' );
+
+
+		$actual_output = $feedzy->feedzy_default_error_notice( $errors, $feed, 'http://example.com/feed' );
+
+		$this->assertEquals( '', $actual_output );
+	}
 }
