@@ -1,3 +1,10 @@
+##### [Version 4.4.7](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.6...v4.4.7) (2024-04-10)
+
+### Fixes
+- **Updated internal dependencies:** Enhanced performance and security.
+- **Resolved mime_content_type error:** Fixed a bug where an error was generated if the server does not have mime_content_type enabled.
+- **Improved image URL handling:** Addressed an issue with importing images whose URLs contain spaces.
+
 ##### [Version 4.4.6](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.5...v4.4.6) (2024-04-01)
 
 ### Improvements
