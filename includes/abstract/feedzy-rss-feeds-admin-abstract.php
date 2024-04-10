@@ -191,10 +191,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function feedzy_default_error_notice( $errors, $feed, $feed_url ) {
 		global $post;
-		// Show the error message only if the user who has created this post (which contains the feed) is logged in.
+		// Show the error message only if the user who has created this post (which contains the feed) is logged in and the user has admin privileges.
 		// Or if this is in the dry run window.
 		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
-		$show_error = is_admin() || ( is_user_logged_in() && $post && get_current_user_id() == $post->post_author );
+		$show_error = is_admin() || ( is_user_logged_in() && $post && current_user_can( 'manage_options' ) && get_current_user_id() == $post->post_author );
 		$error_msg  = '';
 
 		if ( is_array( $errors ) ) {
