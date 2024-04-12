@@ -154,11 +154,10 @@ describe('Test Free - Import Feed', function() {
 
         cy.get('tr:nth-of-type(1) .row-title').click();
 
+
         // fill up the form
         cy.get('#post_title').clear().type( feed.url );
-        cy.get('#feedzy-import-source').clear().type( feed.url );
-        cy.get('#feedzy-import-source').next('.fz-input-group-append').find('.add-outside-tags').click();
-
+        
         cy.get('button[type="submit"][name="save"]').scrollIntoView().click({force:true});
 
         // check if the import has been setup
