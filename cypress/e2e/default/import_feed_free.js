@@ -149,9 +149,7 @@ describe('Test Free - Import Feed', function() {
 
         // show a notice.
         //cy.get('div.notice.feedzy-error-critical').should('be.visible');
-    })
-
-    it('Update the new import with VALID url', function() {
+    
         cy.visit('/wp-admin/edit.php?post_type=feedzy_imports');
 
         cy.get('tr:nth-of-type(1) .row-title').click();
@@ -182,7 +180,7 @@ describe('Test Free - Import Feed', function() {
         cy.get('#feedzy_post_terms').invoke('show').then( () => {
             cy.get('#feedzy_post_terms option:selected').should('have.length', feed.taxonomy.length);
         });
-
+        
         cy.get('[name="feedzy_meta_data[import_post_title]"]').should('have.value', PREFIX + feed.title);
         cy.get('[name="feedzy_meta_data[import_post_content]"]').should('have.value', PREFIX + feed.fullcontent.content + feed.content + '\n');
 
