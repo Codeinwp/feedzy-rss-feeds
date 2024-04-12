@@ -22,7 +22,72 @@ describe('Test Free - Import Feed', function() {
         cy.get('.fz-tabs-menu li a').should('have.length', settings.tabs);
     })
 
-    it('Create/Verify/Run import', function() {
+    it('Check chained actions insertion for title', function() {
+        // Create a new import.
+        cy.visit('/wp-admin/post-new.php?post_type=feedzy_imports');
+
+        // Fill up the form
+        cy.get('#post_title').clear().type( 'Chained actions: ' + feed.url );
+        cy.get('#feedzy-import-source').clear().type( feed.url );
+        cy.get('#feedzy-import-source').next('.fz-input-group-append').find('.add-outside-tags').click();
+
+        // Open the Map Content tab
+        cy.get('#fz-import-map-content > .feedzy-accordion-item__button').click();
+
+        // Clear the title field.
+        cy.get(':nth-child(4) > .fz-right > .fz-form-group > .fz-input-group > .fz-input-group-left > .fz-group > .tagify > .tagify__input').type('{selectall}{backspace}');
+
+        // Add chained actions for title field.
+        cy.get(':nth-child(4) > .fz-right > .fz-form-group > .fz-input-group > .fz-input-group-right > .dropdown > .btn').click();
+        cy.get(':nth-child(4) > .fz-right > .fz-form-group > .fz-input-group > .fz-input-group-right > .dropdown > .dropdown-menu > [data-field-tag="item_title"] > small').click(); // Select the [#item_title] tag.
+
+        // Add a chained action.
+        cy.get('.fz-action-relative > .components-button').click();
+        cy.get('.popover-action-list > ul > :nth-child(1)').click(); // Select the "Trim content" action.
+
+        // Add another chained action.
+        cy.get('.fz-action-relative > .components-button').click();
+        cy.get('.popover-action-list > ul > :nth-child(3)').click(); // Select the "Search and Replace" action.
+
+        // Save actions.
+        cy.get('.fz-save-action').click();
+
+        // Save the serialized data directly to the input field. (The Tagify lib used for UI does not update the input field based on Cypress click actions).
+        cy.get('.tagify__input > .tagify__tag a').invoke('attr', 'data-actions').then((serializedActions) => {
+            cy.get('[name="feedzy_meta_data[import_post_title]"]').clear({force: true}).invoke('val', '[[{"value": "' + serializedActions + '"}]]' ).blur({force: true});
+        });
+        
+        // Save the import.
+        cy.get('button[type="submit"][name="save"]').scrollIntoView().click({force:true});
+        
+        // Reopen the import.
+        cy.visit('/wp-admin/edit.php?post_type=feedzy_imports');
+        cy.get('tr:nth-of-type(1) .row-title').click();
+        
+        // Open the Map Content tab
+        cy.get('#fz-import-map-content > .feedzy-accordion-item__button').click();
+
+        // Check the saved actions.
+        cy.get('.tagify__input > .tagify__tag').should('be.visible');
+        cy.get('.tagify__input > .tagify__tag a').invoke('attr', 'data-actions').then((serializedActions) => {
+            expect(serializedActions).to.include('item_title');
+            expect(serializedActions).to.include('trim');
+            expect(serializedActions).to.include('search_replace');
+
+            // Check if we have right actions.
+            const actions = JSON.parse(decodeURIComponent(serializedActions));
+
+            expect(actions).to.have.length(2);
+            expect(actions[0].id).to.equal('trim');
+            expect(actions[0].tag).to.equal('item_title');
+
+            expect(actions[1].id).to.equal('search_replace');
+            expect(actions[1].tag).to.equal('item_title');
+        } );
+
+    })
+
+    it('Check the Create/Verify/Run workflow for feed import', function() {
         // 1. CREATE
         cy.visit('/wp-admin/post-new.php?post_type=feedzy_imports');
 
@@ -254,6 +319,4 @@ describe('Test Free - Import Feed', function() {
         cy.get('.wp-block-post-author-name .wp-block-post-author-name__link:contains("wordpress")').should('exist');
 
     })
-
-
 })
