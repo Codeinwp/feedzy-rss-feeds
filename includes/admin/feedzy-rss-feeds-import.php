@@ -1997,6 +1997,55 @@ class Feedzy_Rss_Feeds_Import {
 	}
 
 	/**
+	 * Will escape the provided URL and convert it to ASCII.
+	 *
+	 * @param string $url The URL to convert.
+	 *
+	 * @return string
+	 */
+	private function convert_url_to_ascii( $url ) {
+		$parts = wp_parse_url( $url );
+		if ( empty( $parts ) ) {
+			return esc_url( $url );
+		}
+
+		$scheme = '';
+		if ( isset( $parts['scheme'] ) ) {
+			$scheme = $parts['scheme'] . '://';
+		}
+
+		$host = '';
+		if ( isset( $parts['scheme'] ) ) {
+			$host = idn_to_ascii( $parts['host'], IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46 );
+		}
+
+		$url = $scheme . $host;
+		if ( isset( $parts['port'] ) ) {
+			$url .= ':' . $parts['port'];
+		}
+		if ( isset( $parts['path'] ) ) {
+			$ascii_path = '';
+			$path = $parts['path'];
+			$len = strlen( $path );
+			for ( $i = 0; $i < $len; $i++ ) {
+				if ( preg_match( '/^[A-Za-z0-9\/?=+%_.~-]$/', $path[ $i ] ) ) {
+					$ascii_path .= $path[ $i ];
+				} else {
+					$ascii_path .= rawurlencode( $path[ $i ] );
+				}
+			}
+			$url .= $ascii_path;
+		}
+		if ( isset( $parts['query'] ) ) {
+			$url .= '?' . $parts['query'];
+		}
+		if ( isset( $parts['fragment'] ) ) {
+			$url .= '#' . $parts['fragment'];
+		}
+		return esc_url( $url );
+	}
+
+	/**
 	 * Downloads and sets a post featured image if possible.
 	 *
 	 * @param string  $img_source_url The download source URL for the image.
@@ -2018,8 +2067,10 @@ class Feedzy_Rss_Feeds_Import {
 
 		if ( ! $id ) {
 
-			// We escape the URL to ensure that valid URLs are passed by the filter.
-			if ( filter_var( esc_url( $img_source_url ), FILTER_VALIDATE_URL ) === false ) {
+			// We escape the URL to ensure that valid URLs are passed by the filter. We also convert the URL parts to ASCII.
+			// This is necessary because FILTER_VALIDATE_URL only validates against ASCII URLs.
+			$escaped_url = $this->convert_url_to_ascii( $img_source_url );
+			if ( filter_var( $escaped_url, FILTER_VALIDATE_URL ) === false ) {
 				$import_errors[] = 'Invalid Featured Image URL: ' . $img_source_url;
 				return false;
 			}

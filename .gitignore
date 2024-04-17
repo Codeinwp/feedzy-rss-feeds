@@ -10,3 +10,4 @@ cypress/screenshots/*
 cypress/integration/localhost*
 cypress/fixtures
 cypress.env.json
+.phpunit.result.cache
