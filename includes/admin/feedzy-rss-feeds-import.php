@@ -1101,10 +1101,25 @@ class Feedzy_Rss_Feeds_Import {
 	private function run_now() {
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
 
-		$job   = get_post( filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT ) );
-		$count = $this->run_job( $job, 100 );
+		$count = 0;
+		$msg   = '';
 
-		$msg = $count > 0 ? __( 'Successfully run!', 'feedzy-rss-feeds' ) : __( 'Nothing imported!', 'feedzy-rss-feeds' );
+		try {
+			$job   = get_post( filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT ) );
+			$count = $this->run_job( $job, 100 );
+			$msg   = $count > 0 ? __( 'Successfully run!', 'feedzy-rss-feeds' ) : __( 'Nothing imported!', 'feedzy-rss-feeds' );
+		} catch ( \Throwable $e ) {
+			$msg = __( 'An error occurred while running the job.', 'feedzy-rss-feeds' );
+
+			if ( defined( 'TI_EVENT_REPORTER_ENABLED' ) ) {
+				do_action( 'themeisle_capture_exception', $e );
+			}
+
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				error_log( '[Feedzy Run Now] Error: ' . $e->getMessage() );
+			}
+		}
+
 		$msg .= ' (' . __( 'Refresh this page for the updated status', 'feedzy-rss-feeds' ) . ')';
 
 		wp_send_json_success( array( 'msg' => $msg, 'import_success' => $count > 0 ) );
@@ -1196,9 +1211,13 @@ class Feedzy_Rss_Feeds_Import {
 					$this->run_job( $job, $max );
 				}
 				do_action( 'feedzy_run_cron_extra', $job );
-			} catch ( Exception $e ) {
+			} catch ( \Throwable $e ) {
 				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 					error_log( '[Feedzy Run Cron][Post title: ' . ( ! empty( $job->post_title ) ? $job->post_title : '' ) . '] Error: ' . $e->getMessage() );
+				}
+
+				if ( defined( 'TI_EVENT_REPORTER_ENABLED' ) ) {
+					do_action( 'themeisle_capture_exception', $e );
 				}
 			}
 		}
@@ -2901,58 +2920,68 @@ class Feedzy_Rss_Feeds_Import {
 	private function wizard_import_feed() {
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
 
-		$post_type   = ! empty( $_POST['post_type'] ) ? filter_input( INPUT_POST, 'post_type', FILTER_UNSAFE_RAW ) : '';
-		$wizard_data = get_option( 'feedzy_wizard_data', array() );
-		$wizard_data = ! empty( $wizard_data ) ? $wizard_data : array();
-		$wizard_data['post_type'] = $post_type;
+		try {
+			$post_type   = ! empty( $_POST['post_type'] ) ? filter_input( INPUT_POST, 'post_type', FILTER_UNSAFE_RAW ) : '';
+			$wizard_data = get_option( 'feedzy_wizard_data', array() );
+			$wizard_data = ! empty( $wizard_data ) ? $wizard_data : array();
+			$wizard_data['post_type'] = $post_type;
 
-		$post_title = __( 'Setup Wizard', 'feedzy-rss-feeds' );
-		$job_id     = post_exists( $post_title, '', '', 'feedzy_imports' );
+			$post_title = __( 'Setup Wizard', 'feedzy-rss-feeds' );
+			$job_id     = post_exists( $post_title, '', '', 'feedzy_imports' );
 
-		$response = array(
-			'status' => 0,
-		);
+			$response = array(
+				'status' => 0,
+			);
 
-		// Delete previous meta data.
-		if ( $job_id ) {
-			$meta = get_post_meta( $job_id );
-			foreach ( $meta as $key => $value ) {
-				delete_post_meta( $job_id, $key );
+			// Delete previous meta data.
+			if ( $job_id ) {
+				$meta = get_post_meta( $job_id );
+				foreach ( $meta as $key => $value ) {
+					delete_post_meta( $job_id, $key );
+				}
+			}
+
+			// Create new import job.
+			if ( ! $job_id ) {
+				$job_id = wp_insert_post(
+					array(
+						'post_title' => $post_title,
+						'post_type' => 'feedzy_imports',
+						'post_status' => 'publish',
+					)
+				);
+			}
+
+			if ( ! is_wp_error( $job_id ) ) {
+				update_post_meta( $job_id, 'source', $wizard_data['feed'] );
+				update_post_meta( $job_id, 'import_post_title', '[#item_title]' );
+				update_post_meta( $job_id, 'import_post_date', '[#item_date]' );
+				update_post_meta( $job_id, 'import_post_content', '[#item_content]' );
+				update_post_meta( $job_id, 'import_post_content', '[#item_content]' );
+				update_post_meta( $job_id, 'import_post_type', $post_type );
+				update_post_meta( $job_id, 'import_post_status', 'publish' );
+				update_post_meta( $job_id, 'import_post_featured_img', '[#item_image]' );
+
+				// Update wizard data.
+				update_option( 'feedzy_wizard_data', $wizard_data );
+
+				$job   = get_post( $job_id );
+				$count = $this->run_job( $job, 10 );
+				do_action( 'feedzy_run_cron_extra', $job );
+				$response = array(
+					'status' => $count > 0,
+				);
+			}
+			wp_send_json( $response );
+		} catch ( \Throwable $e ) {
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				error_log( '[Feedzy Wizard Import] Error: ' . $e->getMessage() );
+			}
+
+			if ( defined( 'TI_EVENT_REPORTER_ENABLED' ) ) {
+				do_action( 'themeisle_capture_exception', $e );
 			}
 		}
-
-		// Create new import job.
-		if ( ! $job_id ) {
-			$job_id = wp_insert_post(
-				array(
-					'post_title' => $post_title,
-					'post_type' => 'feedzy_imports',
-					'post_status' => 'publish',
-				)
-			);
-		}
-
-		if ( ! is_wp_error( $job_id ) ) {
-			update_post_meta( $job_id, 'source', $wizard_data['feed'] );
-			update_post_meta( $job_id, 'import_post_title', '[#item_title]' );
-			update_post_meta( $job_id, 'import_post_date', '[#item_date]' );
-			update_post_meta( $job_id, 'import_post_content', '[#item_content]' );
-			update_post_meta( $job_id, 'import_post_content', '[#item_content]' );
-			update_post_meta( $job_id, 'import_post_type', $post_type );
-			update_post_meta( $job_id, 'import_post_status', 'publish' );
-			update_post_meta( $job_id, 'import_post_featured_img', '[#item_image]' );
-
-			// Update wizard data.
-			update_option( 'feedzy_wizard_data', $wizard_data );
-
-			$job   = get_post( $job_id );
-			$count = $this->run_job( $job, 10 );
-			do_action( 'feedzy_run_cron_extra', $job );
-			$response = array(
-				'status' => $count > 0,
-			);
-		}
-		wp_send_json( $response );
 	}
 
 	/**

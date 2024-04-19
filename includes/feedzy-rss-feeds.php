@@ -301,6 +301,32 @@ class Feedzy_Rss_Feeds {
 			$offer->load_banner();
 		}
 
+		// Start Event Reporter if telemetry is enabled.
+		if ( ! defined( 'TI_UNIT_TESTING' ) ) {
+			$telemetry_enabled = get_option( 'feedzy_rss_feeds_logger_flag', false );
+			if ( $telemetry_enabled ) {
+				try {
+					\Sentry\init( array( 'dsn' => '' ) ); // TODO: Add proxy DSN.
+					if ( ! defined( 'TI_EVENT_REPORTER_ENABLED' ) ) {
+						define( 'TI_EVENT_REPORTER_ENABLED', true );
+						add_action(
+							'themeisle_capture_exception', function ( $exception ) {
+								\Sentry\captureException( $exception );
+							}
+						);
+						add_action(
+							'themeisle_capture_message', function ( $message ) {
+								\Sentry\captureMessage( $message );
+							}
+						);
+					}
+				} catch ( Throwable $e ) {
+					if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+						error_log( 'Event Reporter failed to initialize: ' . $e->getMessage() );
+					}
+				}
+			}
+		}
 	}
 
 	/**

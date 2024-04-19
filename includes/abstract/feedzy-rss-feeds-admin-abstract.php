@@ -1374,11 +1374,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @since   3.0.12
 	 * @access  public
 	 *
-	 * @param   array  $feed_items The feed items array.
-	 * @param   array  $sc The short code attributes.
-	 * @param   object $feed The feed object.
-	 * @param   string $feed_url The feed URL source/s.
-	 * @param   array  $sizes Sizes array.
+	 * @param   array      $feed_items The feed items array.
+	 * @param   array      $sc The short code attributes.
+	 * @param   \SimplePie $feed The feed object.
+	 * @param   string     $feed_url The feed URL source/s.
+	 * @param   array      $sizes Sizes array.
 	 *
 	 * @return array
 	 */
