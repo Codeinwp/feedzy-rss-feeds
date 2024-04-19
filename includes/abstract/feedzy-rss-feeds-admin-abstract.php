@@ -1438,7 +1438,13 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 		if ( 'yes' === $sc['thumb'] || 'auto' === $sc['thumb'] ) {
 			$content_thumb = '';
-			if ( ( ! empty( $the_thumbnail ) && 'auto' === $sc['thumb'] ) || 'yes' === $sc['thumb'] ) {
+			if ( (
+					! empty( $the_thumbnail ) &&
+					'auto' === $sc['thumb'] &&
+					! strpos( $the_thumbnail, 'img/feedzy.svg' )
+				) ||
+				'yes' === $sc['thumb']
+			) {
 				if ( ! empty( $the_thumbnail ) ) {
 					$the_thumbnail  = $this->feedzy_image_encode( $the_thumbnail );
 					$content_thumb .= '<span class="fetched" style="background-image:  url(\'' . $the_thumbnail . '\');" title="' . esc_html( $item->get_title() ) . '"></span>';

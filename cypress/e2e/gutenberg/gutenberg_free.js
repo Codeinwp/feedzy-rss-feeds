@@ -207,4 +207,70 @@ describe('Test Free - gutenberg', function() {
         cy.verify_feedzy_frontend(gutenberg.results);
     });
 
+    it('Check if fallback image is hidden on feeds without image when thumnail set to "auto"', function() {
+
+        cy.visit('/wp-admin/post-new.php');
+
+        cy.wait( 1000 );
+        // get rid of that irritating popup
+        cy.get('body').then((body) => {
+            if (body.find('.edit-post-welcome-guide .components-modal__header button').length > 0) {
+              cy.get('.edit-post-welcome-guide .components-modal__header button').click({force:true});
+            }
+        });
+
+        cy.get('.edit-post-visual-editor__post-title-wrapper .editor-post-title__input').type(PREFIX);
+        
+        // Insert a Feedzy block.
+        cy.window().then(window => {
+            // Create a Feedzy block
+            const block = window.wp.blocks.createBlock('feedzy-rss-feeds/feedzy-block', {
+                feeds: 'https://themeisle.com/blog/feed/',
+                max: 2,
+            });
+            window.wp.data.dispatch( 'core/block-editor' ).insertBlock(block)
+        });
+
+        // If we have image displayed, check if the image is not the fallback image.
+        cy.get('body').then((body) => {
+            if (body.find('.feedzy-rss .rss_image').length > 0) {
+                cy.get('.feedzy-rss .rss_image').each(($el) => {
+                const imgContainer = cy.get($el).get('a span');
+                const img = imgContainer.invoke('css', 'background-image');
+            
+                // The URL should not contain 'feedzy.svg' which is the fallback image since fallback is hidden by `thumb: auto`.
+                expect(img).not.to.include('feedzy.svg');
+                });
+            }
+        });
+    });
+
+    it('Check if images are showed on feeds when thumnail is set to "yes"', function() {
+
+        cy.visit('/wp-admin/post-new.php');
+
+        cy.wait( 1000 );
+        // get rid of that irritating popup
+        cy.get('body').then((body) => {
+            if (body.find('.edit-post-welcome-guide .components-modal__header button').length > 0) {
+              cy.get('.edit-post-welcome-guide .components-modal__header button').click({force:true});
+            }
+        });
+
+        cy.get('.edit-post-visual-editor__post-title-wrapper .editor-post-title__input').type(PREFIX);
+        
+        // Insert a Feedzy block.
+        cy.window().then(window => {
+            // Create a Feedzy block
+            const block = window.wp.blocks.createBlock('feedzy-rss-feeds/feedzy-block', {
+                feeds: 'https://themeisle.com/blog/feed/',
+                max: 2,
+                thumb: 'yes',
+            });
+            window.wp.data.dispatch( 'core/block-editor' ).insertBlock(block)
+        });
+
+        cy.get('.feedzy-rss .rss_image').should('have.length', 2);
+    });
+
 })
