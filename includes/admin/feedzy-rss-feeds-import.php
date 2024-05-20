@@ -400,7 +400,7 @@ class Feedzy_Rss_Feeds_Import {
 		$default_thumbnail_id = 0;
 		if ( feedzy_is_pro() ) {
 			$default_thumbnail_id = get_post_meta( $post->ID, 'default_thumbnail_id', true );
-			if ( empty( $default_thumbnail_id ) ) {
+			if ( empty( $default_thumbnail_id ) && '0' !== $default_thumbnail_id ) {
 				$default_thumbnail_id = ! empty( $this->free_settings['general']['default-thumbnail-id'] ) ? (int) $this->free_settings['general']['default-thumbnail-id'] : 0;
 			}
 		}
@@ -525,6 +525,9 @@ class Feedzy_Rss_Feeds_Import {
 					add_post_meta( $post_id, $key, $value );
 				}
 				if ( ! $value ) {
+					if ( 'default_thumbnail_id' === $key && '0' === $value ) {
+						continue;
+					}
 					delete_post_meta( $post_id, $key );
 				}
 			}

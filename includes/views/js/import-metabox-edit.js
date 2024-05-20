@@ -245,6 +245,7 @@
 		feedzyAccordion();
 		feedzyTab();
 		feedzyMediaUploader();
+		initRemoveFallbackImageBtn();
 	});
 
 	function initImportScreen() {
@@ -830,15 +831,23 @@
 			$( '.feedzy-open-media' ).html( feedzy.i10n.action_btn_text_2 );
 		} ).open();
 		});
-
-		// on remove button click
-		$( 'body' ).on( 'click', '.feedzy-remove-media', function( e ) {
-			e.preventDefault();
-			var button = $( this );
-			button.parent().prev( '.feedzy-media-preview' ).remove();
-			button.removeClass( 'is-show' );
-			button.parent().find( 'input:hidden' ).val( '' ).trigger( 'change' );
-			$( '.feedzy-open-media' ).html( feedzy.i10n.action_btn_text_1 );
-		});
 	}
 }(jQuery, feedzy));
+
+/**
+ * Initialize the remove fallback image button from General Feed Settings tab.
+ */
+function initRemoveFallbackImageBtn() {
+	const removeFallbackImage = document.querySelector('.feedzy-remove-media');
+	removeFallbackImage?.addEventListener('click', (e) => {
+		e.preventDefault();
+
+		// Reset the image preview.
+		document.querySelector('.feedzy-media-preview').remove();
+		removeFallbackImage.classList.remove('is-show');
+
+		// Reset the input.
+		document.querySelector('input[name="feedzy_meta_data[default_thumbnail_id]"]').value = '0';
+		document.querySelector('.feedzy-open-media').innerHTML = feedzy.i10n.action_btn_text_1;
+	});
+}
