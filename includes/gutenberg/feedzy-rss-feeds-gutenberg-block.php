@@ -51,7 +51,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 	 */
 	public function feedzy_gutenberg_scripts() {
 		if ( FEEDZY_DISABLE_CACHE_FOR_TESTING ) {
-			$version = filemtime( FEEDZY_ABSPATH . '/includes/gutenberg/build/block.js' );
+			$version = filemtime( FEEDZY_ABSPATH . 'build//includes/gutenberg/block.js' );
 		} else {
 			$version = $this->version;
 		}
@@ -82,7 +82,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 
 		// Enqueue editor block styles
 		wp_enqueue_style( 'feedzy-block-css', FEEDZY_ABSURL . 'css/feedzy-rss-feeds.css', '', $version );
-		wp_enqueue_style( 'feedzy-gutenberg-block-css', FEEDZY_ABSURL . 'includes/gutenberg/build/block.css', '', $version );
+		wp_enqueue_style( 'feedzy-gutenberg-block-css', FEEDZY_ABSURL . 'build/includes/gutenberg/style-block.css', '', $version );
 	}
 
 	/**

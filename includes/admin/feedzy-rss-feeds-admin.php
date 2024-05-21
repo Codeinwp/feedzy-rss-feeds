@@ -189,7 +189,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			if ( ! wp_script_is( 'react-dom' ) ) {
 				wp_register_script( 'react-dom', 'https://unpkg.com/react-dom@18/umd/react-dom.production.min.js', array(), $this->version, true );
 			}
-			wp_enqueue_script( $this->plugin_name . '_action_popup', FEEDZY_ABSURL . 'js/ActionPopup/action-popup.min.js', array( 'react', 'react-dom', 'wp-editor', 'wp-api', 'lodash' ), $this->version, true );
+			wp_enqueue_script( $this->plugin_name . '_action_popup', FEEDZY_ABSURL . 'build/js/ActionPopup/action-popup.min.js', array( 'react', 'react-dom', 'wp-editor', 'wp-api', 'lodash' ), $this->version, true );
 
 			wp_localize_script(
 				$this->plugin_name . '_action_popup',
@@ -207,7 +207,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$this->register_survey();
 		}
 		if ( ! defined( 'TI_CYPRESS_TESTING' ) && ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type && feedzy_show_import_tour() ) ) {
-			wp_enqueue_script( $this->plugin_name . '_on_boarding', FEEDZY_ABSURL . 'js/Onboarding/import-onboarding.min.js', array( 'react', 'react-dom', 'wp-editor', 'wp-api', 'lodash' ), $this->version, true );
+			wp_enqueue_script( $this->plugin_name . '_on_boarding', FEEDZY_ABSURL . 'build/js/Onboarding/import-onboarding.min.js', array( 'react', 'react-dom', 'wp-editor', 'wp-api', 'lodash' ), $this->version, true );
 		}
 
 		if ( ! in_array( $screen->base, $upsell_screens, true ) && strpos( $screen->id, 'feedzy' ) === false ) {
@@ -218,7 +218,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 			$this->register_survey();
 
-			wp_enqueue_script( $this->plugin_name . '_feedback', FEEDZY_ABSURL . 'js/FeedBack/feedback.min.js', array( 'react', 'react-dom', 'wp-editor', 'wp-api', 'lodash' ), $this->version, true );
+			wp_enqueue_script( $this->plugin_name . '_feedback', FEEDZY_ABSURL . 'build/js/FeedBack/feedback.min.js', array( 'react', 'react-dom', 'wp-editor', 'wp-api', 'lodash' ), $this->version, true );
 			wp_enqueue_style( 'wp-block-editor' );
 
 			wp_localize_script(
