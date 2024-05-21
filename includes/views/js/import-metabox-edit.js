@@ -545,14 +545,13 @@
 				}
 			}
 		} );
-		
+
 		$( '.fz-input-tagify[name="feedzy_meta_data[import_post_title]"]:not(.fz-tagify-image)' ).tagify( {
 			mode: 'mix',
 			editTags: false,
 			templates: {
 				tag: function( tagData ) {
 					try{
-						console.log(tagData);
 						var decodeTagData = decodeURIComponent(tagData.value);
 						var isEncoded = typeof tagData.value === "string" && decodeTagData !== tagData.value;
 						var tagLabel = tagData.value;
@@ -574,7 +573,9 @@
 							</div>
 						</tag>`
 					}
-					catch(err){}
+					catch(err){
+						console.error(err);
+					}
 				}
 			}
 		} );
