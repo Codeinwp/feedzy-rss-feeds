@@ -1448,13 +1448,13 @@ class Feedzy_Rss_Feeds_Import {
 				$import_title
 			);
 
+			// Run all the actions stored for the embedded/serialized tags in the title field.
+			$title_action = $this->get_actions_runner( $post_title, 'item_title' );
+			$post_title   = $title_action->run_action_job( $title_action->get_serialized_actions(), $translated_title, $job, $language_code, $item );
+
 			if ( $this->feedzy_is_business() ) {
 				$post_title = apply_filters( 'feedzy_parse_custom_tags', $post_title, $item_obj );
 			}
-
-			$title_action = $this->get_actions_runner( $post_title, 'item_title' );
-			$post_title   = $title_action->get_serialized_actions();
-			$post_title   = $title_action->run_action_job( $post_title, $translated_title, $job, $language_code, $item );
 
 			$post_title = apply_filters( 'feedzy_invoke_services', $post_title, 'title', $item['item_title'], $job );
 
