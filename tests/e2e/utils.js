@@ -1,3 +1,5 @@
+import {expect} from "@wordpress/e2e-test-utils-playwright";
+
 /**
  * WordPress dependencies
  */
@@ -5,7 +7,7 @@ const {RequestUtils } = require( '@wordpress/e2e-test-utils-playwright' )
 
 /**
  * Close the tour modal if it is visible.
- * 
+ *
  * @param {import('playwright').Page} page The page object.
  */
 export async function tryCloseTourModal( page ) {
@@ -16,19 +18,58 @@ export async function tryCloseTourModal( page ) {
 }
 
 /**
+ * Add feeds to the import on Feed Edit page.
+ *
+ * @param {import('playwright').Page} page The page object.
+ * @param {string[]} feedURLs The feed URLs to add in the input.
+ * @returns {Promise<void>} The promise that resolves when the feeds are added.
+ */
+export async function addFeeds( page, feedURLs ) {
+    await page.evaluate( ( urls ) => {
+        document.querySelector( 'input[name="feedzy_meta_data[source]"]' ).value = urls?.join(', ');
+    }, feedURLs );
+}
+
+/**
+ * Run the feed import.
+ *
+ * @param {import('playwright').Page} page The page object.
+ * @returns {Promise<void>} The promise that resolves when the feed is imported.
+ */
+export async function runFeedImport( page ) {
+    await page.waitForSelector('.feedzy-import-status-row');
+
+    await page.getByRole('button', { name: 'Run Now' }).click();
+
+    await expect( page.getByRole('cell', { name: 'Successfully run! (Refresh this page for the updated status)', exact: true }) ).toBeVisible();
+
+    // Reload the page to check the status.
+    await page.reload();
+    await page.waitForSelector('.feedzy-items');
+
+    // We should have some imported posts in the stats.
+    const feedzyCumulative = parseInt(await page.$eval('.feedzy-items a', (element) => element.innerText));
+    expect(feedzyCumulative).toBeGreaterThan(0);
+
+    // Open the dialog with the imported feeds.
+    await page.locator('.feedzy-items a').click();
+    await expect( page.locator('#ui-id-1').locator('li a').count() ).resolves.toBeGreaterThan(0);
+}
+
+/**
  * Delete all feed imports.
- * 
+ *
  * @param {RequestUtils} requestUtils The request utils object.
  */
 export async function deleteAllFeedImports( requestUtils ) {
-	const feeds = await requestUtils.rest( {
+    const feeds = await requestUtils.rest( {
         path: '/wp/v2/feedzy_imports',
         params: {
             per_page: 100,
             status: 'publish,future,draft,pending,private,trash',
         },
     } );
-   
+
     await Promise.all(
         feeds.map( ( post ) =>
             requestUtils.rest( {

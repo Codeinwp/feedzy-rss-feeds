@@ -2,7 +2,6 @@
 .distignore
 .gitignore
 .travis.yml
-.jshintrc
 Gruntfile.js
 grunt
 phpcs.xml
@@ -18,7 +17,7 @@ composer.json
 composer.lock
 package-lock.json
 key.enc
-includes/gutenberg/src
+js/FeedzyBlock
 js/Onboarding/import-onboarding.js
 js/ActionPopup/action-popup.js
 js/ActionPopup/Actions.js
@@ -31,7 +30,6 @@ cypress.env.json.template
 docker-compose.travis.yml
 .github
 .idea
-.babelrc
 .codeclimate.yml
 .csslintrc
 .eslintignore

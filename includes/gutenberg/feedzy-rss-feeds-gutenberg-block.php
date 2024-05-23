@@ -68,7 +68,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		}
 
 		// Enqueue the bundled block JS file
-		wp_enqueue_script( 'feedzy-gutenberg-block-js', FEEDZY_ABSURL . 'includes/gutenberg/build/block.js', $depends, $version, true );
+		wp_enqueue_script( 'feedzy-gutenberg-block-js', FEEDZY_ABSURL . 'js/build/block.js', $depends, $version, true );
 
 		// Pass in REST URL
 		wp_localize_script(
@@ -82,7 +82,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 
 		// Enqueue editor block styles
 		wp_enqueue_style( 'feedzy-block-css', FEEDZY_ABSURL . 'css/feedzy-rss-feeds.css', '', $version );
-		wp_enqueue_style( 'feedzy-gutenberg-block-css', FEEDZY_ABSURL . 'build/includes/gutenberg/style-block.css', '', $version );
+		wp_enqueue_style( 'feedzy-gutenberg-block-css', FEEDZY_ABSURL . 'js/build/style-block.css', '', $version );
 	}
 
 	/**

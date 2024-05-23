@@ -10,3 +10,5 @@ cypress/screenshots/*
 cypress/integration/localhost*
 cypress/fixtures
 cypress.env.json
+js/build
+artifacts
