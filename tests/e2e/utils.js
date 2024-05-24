@@ -31,6 +31,18 @@ export async function addFeeds( page, feedURLs ) {
 }
 
 /**
+ * Add content mapping to the import on Feed Edit page.
+ * @param page The page object.
+ * @param mapping The content mapping to add.
+ * @returns {Promise<void>}
+ */
+export async function addContentMapping( page, mapping ) {
+    await page.evaluate( ( mapping ) => {
+        document.querySelector( 'textarea[name="feedzy_meta_data[import_post_content]"]' ).value = mapping;
+    }, mapping );
+}
+
+/**
  * Run the feed import.
  *
  * @param {import('playwright').Page} page The page object.
@@ -41,7 +53,7 @@ export async function runFeedImport( page ) {
 
     await page.getByRole('button', { name: 'Run Now' }).click();
 
-    await expect( page.getByRole('cell', { name: 'Successfully run! (Refresh this page for the updated status)', exact: true }) ).toBeVisible();
+    await expect( page.getByRole('cell', { name: 'Successfully run! (Refresh this page for the updated status)', exact: true }) ).toBeVisible({ timeout: 10000 });
 
     // Reload the page to check the status.
     await page.reload();
@@ -54,6 +66,7 @@ export async function runFeedImport( page ) {
     // Open the dialog with the imported feeds.
     await page.locator('.feedzy-items a').click();
     await expect( page.locator('#ui-id-1').locator('li a').count() ).resolves.toBeGreaterThan(0);
+    await page.getByRole('button', { name: 'Ok' }).click();
 }
 
 /**

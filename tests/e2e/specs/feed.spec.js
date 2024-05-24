@@ -2,7 +2,7 @@
  * WordPress dependencies
  */
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
-import {tryCloseTourModal, deleteAllFeedImports, addFeeds, runFeedImport} from '../utils';
+import {tryCloseTourModal, deleteAllFeedImports, addFeeds, runFeedImport, addContentMapping} from '../utils';
 
 test.describe( 'Feed Settings', () => {
 
@@ -69,7 +69,8 @@ test.describe( 'Feed Settings', () => {
         await expect( page.locator('#ui-id-1').locator('li a').count() ).resolves.toBe(3);
     });
 
-    test( 'changing Map Content', async({ editor, page }) => {
+    test( 'changing Map Content', async({ editor, page, admin }) => {
+        await admin.createNewPost();
 
         const importName = 'Test Title: changing General Feed Settings';
 
@@ -81,12 +82,17 @@ test.describe( 'Feed Settings', () => {
 
         await page.getByRole('button', { name: 'Step 3 Map content' }).click({ force: true });
 
-        await page.waitForTimeout(1000);
-
-        // await page.waitForTimeout(1000); // Wait for the feed to be added.
+        // Do not import feed content.
+        await addContentMapping( page, '' );
 
         await page.getByRole('button', { name: 'Save & Activate importing' }).click({ force: true });
 
         await runFeedImport( page );
+
+        // Select the first post created by feeds import. We should have no feed content imported (which is usually saved in `core/html` block).
+        await page.getByRole('link', { name: 'Posts', exact: true }).click({ force: true });
+        await page.locator('#the-list tr').first().locator('a.row-title').click({ force: true });
+        const blocks = await editor.getBlocks();
+        expect(blocks).toHaveLength(0); // No content.
     });
 });
