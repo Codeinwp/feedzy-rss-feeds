@@ -57,7 +57,8 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		}
 
 		// Dependent WordPress core libraries.
-		$depends = array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-compose', 'wp-editor', 'wp-api', 'lodash', 'wp-hooks', 'jquery-ui-autocomplete' );
+		$asset_file = include FEEDZY_ABSPATH . '/js/build/block.asset.php';
+		$depends = array_merge( $asset_file['dependencies'], array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-compose', 'wp-editor', 'wp-api', 'lodash', 'wp-hooks', 'jquery-ui-autocomplete' ) );
 
 		// Remove "wp-editor" script for widget block.
 		if ( wp_script_is( 'wp-edit-widgets' ) && wp_use_widgets_block_editor() ) {
@@ -68,6 +69,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		}
 
 		// Enqueue the bundled block JS file
+
 		wp_enqueue_script( 'feedzy-gutenberg-block-js', FEEDZY_ABSURL . 'js/build/block.js', $depends, $version, true );
 
 		// Pass in REST URL
