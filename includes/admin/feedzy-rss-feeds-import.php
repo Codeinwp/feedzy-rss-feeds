@@ -1652,7 +1652,7 @@ class Feedzy_Rss_Feeds_Import {
 				$image_source_url = '';
 				$img_success      = true;
 				$new_post_id      = 0;
-				$default_img_tag  = ! empty( $import_featured_img ) ? '[#item_image]' : '';
+				$default_img_tag  = ! empty( $import_featured_img ) && is_string( $import_featured_img ) ? $import_featured_img : '';
 
 				// image tag
 				if ( strpos( $default_img_tag, '[#item_image]' ) !== false ) {
@@ -1759,7 +1759,7 @@ class Feedzy_Rss_Feeds_Import {
 
 			do_action( 'feedzy_import_extra', $job, $item_obj, $new_post_id, $import_errors, $import_info );
 
-			$default_img_tag = ! empty( $import_featured_img ) ? '[#item_image]' : '';
+			$default_img_tag = ! empty( $import_featured_img ) && is_string( $import_featured_img ) ? $import_featured_img : '';
 			if ( ! empty( $default_img_tag ) && 'attachment' !== $import_post_type ) {
 				$image_source_url   = '';
 				$img_success = true;
