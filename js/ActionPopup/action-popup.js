@@ -50,6 +50,13 @@ const ActionModal = () => {
 		});
 	}, []);
 
+	useEffect(() => {
+		document.addEventListener( 'click', exitModalOnOutsideClick );
+		return () => {
+			document.removeEventListener( 'click', exitModalOnOutsideClick );
+		};
+	}, [isVisible] );
+
 	const handleChange = (args) => {
 		let id = args.index;
 		delete args.index;
@@ -179,14 +186,12 @@ const ActionModal = () => {
 	};
 
 	// Close the popup when click on outside the modal.
-	document.body.addEventListener( 'click', function( e ) {
-		if ( isVisible ) {
-			if ( e.target.closest( '.popover-action-list' ) ) {
-				return;
-			}
-			toggleVisible(false);
+	const exitModalOnOutsideClick = ( e ) => {
+		if ( ! isVisible || ! e.target.closest( '.fz-action-popup' ) ) {
+			return;
 		}
-	} );
+		toggleVisible( false );
+	};
 
 	// Click to open action popup.
 	document.querySelectorAll( '[data-action_popup]' ).forEach( actionItem => {
@@ -267,7 +272,7 @@ const ActionModal = () => {
 								<p>{ __( 'If no action is needed, continue with using the original tag by clicking on the Save Actions button.', 'feedzy-rss-feeds' ) }</p>
 							</div>
 						) }
-						
+
 						{action.length > 0 && ( <Actions data={action} removeCallback={removeAction} onChangeHandler={handleChange} onSortEnd={onSortEnd} useDragHandle lockAxis="y" helperClass="draggable-item" distance={1} lockToContainerEdges={true} lockOffset="0%"/> )}
 
 						<div className="fz-action-btn">
