@@ -54,7 +54,7 @@ describe('Test Free - Import Feed', function() {
 
         cy.get('[name="feedzy_meta_data[import_post_title]"]').clear({force: true}).invoke('val', PREFIX + feed.title).blur({force: true});
         cy.get('[name="feedzy_meta_data[import_post_content]"]').clear({force: true}).invoke('val', PREFIX + feed.fullcontent.content + feed.content).blur({force: true});
-        cy.get('[name="feedzy_meta_data[import_post_featured_img]"]').clear({force: true}).invoke('val', feed.image.url).blur({force: true});
+        cy.get('[name="feedzy_meta_data[import_post_featured_img]"]').clear({force: true}).invoke('val', feed.image.tag).blur({force: true});
 
         // check disallowd magic tags
         const tags = feed.tags.disallowed;
@@ -122,7 +122,7 @@ describe('Test Free - Import Feed', function() {
         cy.get('[name="feedzy_meta_data[import_post_content]"]').should('have.value', PREFIX + feed.fullcontent.content + feed.content + '\n');
 
         // image from URL
-        cy.get('[name="feedzy_meta_data[import_post_featured_img]"]').should('have.value', feed.image.url);
+        cy.get('[name="feedzy_meta_data[import_post_featured_img]"]').should('have.value', feed.image.tag);
 
         // publish
         cy.get('button[type="submit"][name="publish"]').scrollIntoView().click({force:true});
