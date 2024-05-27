@@ -2,12 +2,9 @@
  * WordPress dependencies
  */
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
-import {tryCloseTourModal, deleteAllFeedImports} from '../utils';
+import { tryCloseTourModal, deleteAllFeedImports } from '../utils';
 
 test.describe( 'Upsell', () => {
-
-    const FEED_URL = 'https://s3.amazonaws.com/verti-utils/sample-feed-import.xml';
-
     test.beforeEach( async ( { requestUtils, page } ) => {
         await deleteAllFeedImports( requestUtils );
         await requestUtils.deleteAllPosts();
@@ -21,10 +18,10 @@ test.describe( 'Upsell', () => {
         await expect( bannerLinkElement ).toBeVisible();
 
         const bannerLink = new URL( await bannerLinkElement.getAttribute('href') );
-        expect( bannerLink.host ).toBe('themeisle.com');
-        expect( bannerLink.searchParams.get('utm_source') ).toBe('wpadmin');
-        expect( bannerLink.searchParams.get('utm_medium') ).toBe('import-screen');
-        expect( bannerLink.searchParams.get('utm_content') ).toBe('feedzy-rss-feeds');
+        expect( bannerLink.host ).toBe( 'themeisle.com' );
+        expect( bannerLink.searchParams.get( 'utm_source' ) ).toBe( 'wpadmin');
+        expect( bannerLink.searchParams.get( 'utm_medium' ) ).toBe('import-screen');
+        expect( bannerLink.searchParams.get( 'utm_content' ) ).toBe('feedzy-rss-feeds');
     });
 
     test( 'filters', async({ editor, page }) => {
@@ -38,15 +35,15 @@ test.describe( 'Upsell', () => {
 
         const filterByKeywordAlert = await filtersTab.locator('.upgrade-alert').first();
         let upgradeLink = new URL( await filterByKeywordAlert.locator('a').first().getAttribute('href') );
-        expect( upgradeLink.searchParams.get('utm_campaign') ).toBe('filter-keyword');
+        expect( upgradeLink.searchParams.get( 'utm_campaign' ) ).toBe('filter-keyword');
 
         const excludeItemsAlert = await filtersTab.locator('.upgrade-alert').nth(1);
         upgradeLink = new URL( await excludeItemsAlert.locator('a').first().getAttribute('href') );
-        expect( upgradeLink.searchParams.get('utm_campaign') ).toBe('exclude-items');
+        expect( upgradeLink.searchParams.get( 'utm_campaign' ) ).toBe('exclude-items');
 
         const filterByTimeRangeAlert = await filtersTab.locator('.upgrade-alert').nth(2);
         upgradeLink = new URL( await filterByTimeRangeAlert.locator('a').first().getAttribute('href') );
-        expect( upgradeLink.searchParams.get('utm_campaign') ).toBe('filter-time-range');
+        expect( upgradeLink.searchParams.get( 'utm_campaign' ) ).toBe('filter-time-range');
     } );
 
     test( 'map content', async({ editor, page }) => {
@@ -56,5 +53,21 @@ test.describe( 'Upsell', () => {
         await expect( magicTagsUpsell ).toBeVisible();
         const upgradeLink = new URL( await magicTagsUpsell.getAttribute('href') );
         expect( upgradeLink.searchParams.get('utm_campaign') ).toBe('magictags');
+    } );
+
+    test( 'general settings', async({ editor, page }) => {
+        await page.getByRole('button', { name: 'Step 4 General feed settings' }).click({ force: true });
+
+        await page.locator('#feedzy_delete_days').hover({ force: true });
+        let upgradeAlert = page.locator('#feedzy-import-form').getByRole('link', { name: 'upgrading to Feedzy Pro', exact: true });
+        let upgradeLink = new URL( await upgradeAlert.getAttribute('href') );
+        expect( upgradeLink.searchParams.get('utm_campaign') ).toBe('auto-delete');
+
+        await page.locator('.fz-form-group:has( #feed-post-default-thumbnail )').hover({ force: true });
+        upgradeAlert = page.locator('#feedzy-import-form').getByRole('link', { name: 'upgrading to Feedzy Pro', exact: true })
+        upgradeLink = new URL( await upgradeAlert.getAttribute('href') );
+        expect( upgradeLink.searchParams.get('utm_campaign') ).toBe('fallback-imaget'); // The type is intentional.
+
+        await page.waitForTimeout(1000);
     } );
 });
