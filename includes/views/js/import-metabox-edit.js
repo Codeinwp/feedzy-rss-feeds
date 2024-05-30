@@ -478,11 +478,6 @@
 			}
 		} );
 
-		// Tagify the title field.
-		$( '.fz-input-tagify[name="feedzy_meta_data[import_post_title]"]:not(.fz-tagify-image)' ).tagify( {
-			mode: 'mix'
-		} );
-
 		// Tagify for normal mix content field.
 		$( '.fz-tagify-image' ).tagify( {
 			mode: 'mix',
@@ -547,6 +542,40 @@
 						</tag>`
 					}
 					catch(err){}
+				}
+			}
+		} );
+
+		$( '.fz-input-tagify[name="feedzy_meta_data[import_post_title]"]:not(.fz-tagify-image)' ).tagify( {
+			mode: 'mix',
+			editTags: false,
+			templates: {
+				tag: function( tagData ) {
+					try{
+						var decodeTagData = decodeURIComponent(tagData.value);
+						var isEncoded = typeof tagData.value === "string" && decodeTagData !== tagData.value;
+						var tagLabel = tagData.value;
+						if ( isEncoded ) {
+							decodeTagData = JSON.parse( decodeTagData );
+							decodeTagData = decodeTagData[0] || {};
+							tagLabel = decodeTagData.tag.replaceAll( '_', ' ' );
+							tagData['data-actions'] = tagData.value;
+							tagData['data-field_id'] = 'fz-title-action-tags';
+						}
+						return `
+						<tag title='${tagLabel}' contenteditable='false' spellcheck="false" class='tagify__tag ${isEncoded ? 'fz-content-action' : ''}'>
+							<x title='remove tag' class='tagify__tag__removeBtn'></x>
+							<div>
+								<span class='tagify__tag-text'>${tagLabel}</span>
+								${tagData['data-actions'] ?
+									`<a href="javascript:;" class="tagify__filter-icon" ${this.getAttributes(tagData)}></a>` : ''
+								}
+							</div>
+						</tag>`
+					}
+					catch(err){
+						console.error(err);
+					}
 				}
 			}
 		} );

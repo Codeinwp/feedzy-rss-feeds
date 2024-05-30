@@ -389,7 +389,7 @@ global $post;
 													?>
 												</div>
 											</div>
-											<div class="fz-input-group-right">
+											<div class="fz-input-group-right fz-title-action-tags">
 													<div class="dropdown">
 														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" 	aria-haspopup="true" aria-expanded="false">
 															<?php esc_html_e( 'Insert Tag', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-plus-alt2"></span>
