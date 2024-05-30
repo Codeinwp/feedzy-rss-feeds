@@ -12,6 +12,8 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 
 	private $import_limit = 1;
 
+	private $original_dates = array();
+
 	/**
 	 * Sets up the test methods.
 	 */
@@ -303,6 +305,70 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 		$this->assertTrue( $attachments[0]->post_mime_type === 'image/jpeg' );
 	}
 
+	/**
+	 * Utility method to capture feed dates before import.
+	 *
+	 * @param array $feed_items The feed items.
+	 * @param array $options The options.
+	 * @param mixed $feed The feed.
+	 * @param string $feedURL The feed URL.
+	 * @param int $sizes The sizes.
+	 *
+	 * @return array
+	 */
+	public function mock_feed_dates( $feed_items, $options, $feed, $feedURL, $sizes ) {
+		$formated_date = date( 'Y-m-d H:i:s', $feed_items[0]['item_date'] );
+		$this->original_dates[] = $formated_date;
+		return $feed_items;
+	}
+
+	/**
+	 * Test date import with UTC zero.
+	 */
+	public function test_date_import_with_utc_zero() {
+		update_option( 'gmt_offset', 0 ); // ensure UTC is 0
+
+		add_filter( 'feedzy_get_feed_array', [ $this, 'mock_feed_dates' ], 10, 5 );
+
+		$post = $this->test_feedzy_imports( $this->get_rand_name(), $this->get_rand_name(), $this->get_two_rand_feeds(), '[#item_content]', false, 'post' );
+
+		$imported_date = $post->post_date;
+
+		// check if the date is in the original dates
+		$this->assertTrue( in_array( $imported_date, $this->original_dates, true ) );
+
+		remove_filter( 'feedzy_get_feed_array', [ $this, 'mock_feed_dates' ], 10, 5 );
+	}
+
+	/**
+	 * Test date import with UTC +2.
+	 */
+	public function test_date_import_with_utc_plus_two() {
+		update_option( 'gmt_offset', 2 ); // ensure UTC is +2
+
+		add_filter( 'feedzy_get_feed_array', [ $this, 'mock_feed_dates' ], 10, 5 );
+
+		$post = $this->test_feedzy_imports( $this->get_rand_name(), $this->get_rand_name(), $this->get_two_rand_feeds(), '[#item_content]', false, 'post' );
+
+		$imported_date = $post->post_date;
+
+		// check if the date is not in the original dates
+		$this->assertTrue( ! in_array( $imported_date, $this->original_dates, true ) );
+
+		// shift original dates by 2 hours
+		$shifted_dates = array_map(
+			function( $date ) {
+				return date( 'Y-m-d H:i:s', strtotime( $date . ' +2 hours' ) );
+			},
+			$this->original_dates
+		);
+
+		// check if the imported date is in the shifted dates
+		$this->assertTrue( in_array( $imported_date, $shifted_dates, true ) );
+
+		remove_filter( 'feedzy_get_feed_array', [ $this, 'mock_feed_dates' ], 10, 5 );
+		update_option( 'gmt_offset', 0 ); // reset UTC
+	}
 
 	/**
 	 * Utility method to generate a random 5 char string.

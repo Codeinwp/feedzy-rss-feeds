@@ -1413,7 +1413,7 @@ class Feedzy_Rss_Feeds_Import {
 			}
 
 			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-			$item_date = date( get_option( 'date_format' ) . ' at ' . get_option( 'time_format' ), $item['item_date'] );
+			$item_date = wp_date( get_option( 'date_format' ) . ' at ' . get_option( 'time_format' ), $item['item_date'] );
 			$item_date = $item['item_date_formatted'];
 
 			// Get translated item title.
@@ -1581,9 +1581,9 @@ class Feedzy_Rss_Feeds_Import {
 			}
 
 			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-			$item_date = date( 'Y-m-d H:i:s', $item['item_date'] );
+			$item_date = wp_date( 'Y-m-d H:i:s', $item['item_date'] );
 			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-			$now = date( 'Y-m-d H:i:s' );
+			$now = wp_date( 'Y-m-d H:i:s' );
 			if ( trim( $import_date ) === '' ) {
 				$post_date = $now;
 			}
