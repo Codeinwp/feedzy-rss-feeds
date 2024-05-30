@@ -493,6 +493,23 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
+##### [Version 4.4.9](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.8...v4.4.9) (2024-05-30)
+
+Improvements
+- Allow chained actions for 
+- Added floating widget to the dashboard
+- Made item_date tag to respect and convert to site timezone on import
+- Updated internal dependencies
+
+Fixes
+- Fix  option for default fallback image in Feedzy RSS Block.
+- Fixed issue when images with non-Latin characters in the URL are not imported
+- Fixed issue with fallback image per import job not working [PRO]
+- Fixed usage of custom tag for featured image in the import settings [PRO]
+
+
+
+
 ##### [Version 4.4.8](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.7...v4.4.8) (2024-04-15)
 
 ### Fixes
