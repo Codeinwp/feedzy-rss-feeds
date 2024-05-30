@@ -59,4 +59,23 @@ class Test_Image_Import extends WP_UnitTestCase {
 		$this->assertFalse( $response );
 		$this->assertTrue( empty( $import_errors ) );
 	}
+
+	public function test_import_image_special_characters() {
+		$feedzy = new Feedzy_Rss_Feeds_Import( 'feedzy-rss-feeds', '1.2.0' );
+
+		$reflector = new ReflectionClass( $feedzy );
+		$try_save_featured_image = $reflector->getMethod( 'try_save_featured_image' );
+		$try_save_featured_image->setAccessible( true );
+
+		$import_errors = array();
+		$import_info = array();
+
+		$arguments = array( 'https://example.com/path_to_image/çöp.jpg?itok=ZYU_ihPB', 0, 'Post Title', &$import_errors, &$import_info, array() );
+		$response = $try_save_featured_image->invokeArgs( $feedzy, $arguments );
+
+		// expected response is false because the image does not exist, but the URL is valid so no $import_errors should be set.
+		$this->assertFalse( $response );
+		$this->assertTrue( empty( $import_errors ) );
+
+	}
 }

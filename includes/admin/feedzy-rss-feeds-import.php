@@ -400,7 +400,10 @@ class Feedzy_Rss_Feeds_Import {
 		$default_thumbnail_id = 0;
 		if ( feedzy_is_pro() ) {
 			$default_thumbnail_id = get_post_meta( $post->ID, 'default_thumbnail_id', true );
-			if ( empty( $default_thumbnail_id ) ) {
+			if (
+				empty( $default_thumbnail_id ) &&
+				'0' !== $default_thumbnail_id // Can use the fallback image from Global Settings.
+			) {
 				$default_thumbnail_id = ! empty( $this->free_settings['general']['default-thumbnail-id'] ) ? (int) $this->free_settings['general']['default-thumbnail-id'] : 0;
 			}
 		}
@@ -525,6 +528,9 @@ class Feedzy_Rss_Feeds_Import {
 					add_post_meta( $post_id, $key, $value );
 				}
 				if ( ! $value ) {
+					if ( 'default_thumbnail_id' === $key && '0' === $value ) { // Mark the feed as having no default fallback image (including the global fallback).
+						continue;
+					}
 					delete_post_meta( $post_id, $key );
 				}
 			}
@@ -1413,17 +1419,18 @@ class Feedzy_Rss_Feeds_Import {
 			}
 
 			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-			$item_date = date( get_option( 'date_format' ) . ' at ' . get_option( 'time_format' ), $item['item_date'] );
+			$item_date = wp_date( get_option( 'date_format' ) . ' at ' . get_option( 'time_format' ), $item['item_date'] );
 			$item_date = $item['item_date_formatted'];
-
-			// Transform any structure like [[{"value":"[#item_title]"}]] to [#item_title].
-			$import_title = preg_replace( '/\[\[\{"value":"(\[#[^]]+\])"\}\]\]/', '$1', $import_title );
 
 			// Get translated item title.
 			$translated_title = '';
 			if ( $import_auto_translation && ( false !== strpos( $import_title, '[#translated_title]' ) || false !== strpos( $post_excerpt, '[#translated_title]' ) ) ) {
 				$translated_title = apply_filters( 'feedzy_invoke_auto_translate_services', $item['item_title'], '[#translated_title]', $import_translation_lang, $job, $language_code, $item );
 			}
+
+			$import_title = rawurldecode( $import_title );
+			$import_title = str_replace( PHP_EOL, "\r\n", $import_title );
+			$import_title = trim( $import_title );
 
 			$post_title = str_replace(
 				array(
@@ -1446,6 +1453,10 @@ class Feedzy_Rss_Feeds_Import {
 				),
 				$import_title
 			);
+
+			// Run all the actions stored for the embedded/serialized tags in the title field.
+			$title_action = $this->get_actions_runner( $post_title, 'item_title' );
+			$post_title   = $title_action->run_action_job( $title_action->get_serialized_actions(), $translated_title, $job, $language_code, $item );
 
 			if ( $this->feedzy_is_business() ) {
 				$post_title = apply_filters( 'feedzy_parse_custom_tags', $post_title, $item_obj );
@@ -1546,8 +1557,8 @@ class Feedzy_Rss_Feeds_Import {
 				$post_content = apply_filters( 'feedzy_invoke_services', $post_content, 'full_content', $full_content, $job );
 			}
 			// Item content action.
-			$content_action = $this->handle_content_actions( $post_content, 'item_content' );
-			$post_content   = $content_action->get_tags();
+			$content_action = $this->get_actions_runner( $post_content, 'item_content' );
+			$post_content   = $content_action->get_serialized_actions();
 			// Item content action process.
 			$post_content = $content_action->run_action_job( $post_content, $import_translation_lang, $job, $language_code, $item );
 			// Parse custom tags.
@@ -1576,9 +1587,9 @@ class Feedzy_Rss_Feeds_Import {
 			}
 
 			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-			$item_date = date( 'Y-m-d H:i:s', $item['item_date'] );
+			$item_date = wp_date( 'Y-m-d H:i:s', $item['item_date'] );
 			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-			$now = date( 'Y-m-d H:i:s' );
+			$now = wp_date( 'Y-m-d H:i:s' );
 			if ( trim( $import_date ) === '' ) {
 				$post_date = $now;
 			}
@@ -1652,7 +1663,7 @@ class Feedzy_Rss_Feeds_Import {
 				$image_source_url = '';
 				$img_success      = true;
 				$new_post_id      = 0;
-				$default_img_tag  = ! empty( $import_featured_img ) ? '[#item_image]' : '';
+				$default_img_tag  = ! empty( $import_featured_img ) && is_string( $import_featured_img ) ? $import_featured_img : '';
 
 				// image tag
 				if ( strpos( $default_img_tag, '[#item_image]' ) !== false ) {
@@ -1759,7 +1770,7 @@ class Feedzy_Rss_Feeds_Import {
 
 			do_action( 'feedzy_import_extra', $job, $item_obj, $new_post_id, $import_errors, $import_info );
 
-			$default_img_tag = ! empty( $import_featured_img ) ? '[#item_image]' : '';
+			$default_img_tag = ! empty( $import_featured_img ) && is_string( $import_featured_img ) ? $import_featured_img : '';
 			if ( ! empty( $default_img_tag ) && 'attachment' !== $import_post_type ) {
 				$image_source_url   = '';
 				$img_success = true;
@@ -1832,7 +1843,7 @@ class Feedzy_Rss_Feeds_Import {
 					// Item image action.
 					$import_featured_img = rawurldecode( $import_featured_img );
 					$import_featured_img = trim( $import_featured_img );
-					$img_action          = $this->handle_content_actions( $import_featured_img, 'item_image' );
+					$img_action          = $this->get_actions_runner( $import_featured_img, 'item_image' );
 					// Item image action process.
 					$image_source_url = $img_action->run_action_job( $import_featured_img, $import_translation_lang, $job, $language_code, $item, $image_source_url );
 
@@ -1997,6 +2008,55 @@ class Feedzy_Rss_Feeds_Import {
 	}
 
 	/**
+	 * Will escape the provided URL and convert it to ASCII.
+	 *
+	 * @param string $url The URL to convert.
+	 *
+	 * @return string
+	 */
+	private function convert_url_to_ascii( $url ) {
+		$parts = wp_parse_url( $url );
+		if ( empty( $parts ) ) {
+			return esc_url( $url );
+		}
+
+		$scheme = '';
+		if ( isset( $parts['scheme'] ) ) {
+			$scheme = $parts['scheme'] . '://';
+		}
+
+		$host = '';
+		if ( isset( $parts['scheme'] ) ) {
+			$host = idn_to_ascii( $parts['host'], IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46 );
+		}
+
+		$url = $scheme . $host;
+		if ( isset( $parts['port'] ) ) {
+			$url .= ':' . $parts['port'];
+		}
+		if ( isset( $parts['path'] ) ) {
+			$ascii_path = '';
+			$path = $parts['path'];
+			$len = strlen( $path );
+			for ( $i = 0; $i < $len; $i++ ) {
+				if ( preg_match( '/^[A-Za-z0-9\/?=+%_.~-]$/', $path[ $i ] ) ) {
+					$ascii_path .= $path[ $i ];
+				} else {
+					$ascii_path .= rawurlencode( $path[ $i ] );
+				}
+			}
+			$url .= $ascii_path;
+		}
+		if ( isset( $parts['query'] ) ) {
+			$url .= '?' . $parts['query'];
+		}
+		if ( isset( $parts['fragment'] ) ) {
+			$url .= '#' . $parts['fragment'];
+		}
+		return esc_url( $url );
+	}
+
+	/**
 	 * Downloads and sets a post featured image if possible.
 	 *
 	 * @param string  $img_source_url The download source URL for the image.
@@ -2018,8 +2078,10 @@ class Feedzy_Rss_Feeds_Import {
 
 		if ( ! $id ) {
 
-			// We escape the URL to ensure that valid URLs are passed by the filter.
-			if ( filter_var( esc_url( $img_source_url ), FILTER_VALIDATE_URL ) === false ) {
+			// We escape the URL to ensure that valid URLs are passed by the filter. We also convert the URL parts to ASCII.
+			// This is necessary because FILTER_VALIDATE_URL only validates against ASCII URLs.
+			$escaped_url = $this->convert_url_to_ascii( $img_source_url );
+			if ( filter_var( $escaped_url, FILTER_VALIDATE_URL ) === false ) {
 				$import_errors[] = 'Invalid Featured Image URL: ' . $img_source_url;
 				return false;
 			}
@@ -2349,8 +2411,8 @@ class Feedzy_Rss_Feeds_Import {
 					$disabled[ str_replace( ':disabled', '', $tag ) ] = $label;
 					continue;
 				}
-				if ( in_array( $type, array( 'import_post_content', 'import_post_featured_img' ), true ) ) {
-					if ( in_array( $tag, array( 'item_content', 'item_description', 'item_full_content', 'item_categories', 'item_image' ), true ) ) {
+				if ( in_array( $type, array( 'import_post_content', 'import_post_featured_img', 'import_post_title' ), true ) ) {
+					if ( in_array( $tag, array( 'item_content', 'item_description', 'item_full_content', 'item_categories', 'item_image', 'item_title' ), true ) ) {
 						$default .= '<a class="dropdown-item" href="#" data-field-name="' . $type . '" data-field-tag="' . $tag . '" data-action_popup="' . $tag . '">' . $label . ' <small>[#' . $tag . ']</small></a>';
 						continue;
 					}
@@ -2956,16 +3018,16 @@ class Feedzy_Rss_Feeds_Import {
 	}
 
 	/**
-	 * Handle item content actions.
+	 * Get the content action runner used for processing the chained actions from the tags.
 	 *
 	 * @param string $actions Item content actions.
 	 * @param string $type Action type.
 	 * @return Feedzy_Rss_Feeds_Actions Instance of Feedzy_Rss_Feeds_Actions.
 	 */
-	public function handle_content_actions( $actions = '', $type = '' ) {
+	public function get_actions_runner( $actions = '', $type = '' ) {
 		$action_instance       = Feedzy_Rss_Feeds_Actions::instance();
 		$action_instance->type = $type;
-		$action_instance->set_actions( $actions );
+		$action_instance->set_raw_serialized_actions( $actions );
 		$action_instance->set_settings( $this->settings );
 		return $action_instance;
 	}

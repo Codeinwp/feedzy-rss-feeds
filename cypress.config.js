@@ -84,4 +84,7 @@ module.exports = defineConfig({
     specPattern: 'cypress/e2e/**/*.{js,jsx,ts,tsx}',
     pageLoadTimeout : 300000,
   },
+  blockHosts: [
+    'app.formbricks.com'
+  ],
 })
