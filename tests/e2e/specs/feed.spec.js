@@ -2,7 +2,13 @@
  * WordPress dependencies
  */
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
-import {tryCloseTourModal, deleteAllFeedImports, addFeeds, runFeedImport, addContentMapping} from '../utils';
+import {
+    tryCloseTourModal,
+    deleteAllFeedImports,
+    addFeeds,
+    runFeedImport,
+    addContentMapping
+} from '../utils';
 
 test.describe( 'Feed Settings', () => {
 
@@ -96,7 +102,7 @@ test.describe( 'Feed Settings', () => {
         expect(blocks).toHaveLength(0); // No content.
     });
 
-    test( 'chained action for feed content', async({ editor, page, admin }) => {
+    test( 'chained actions for feed content', async({ editor, page, admin }) => {
         const importName = 'Test Title: changing General Feed Settings';
 
         await page.goto('/wp-admin/post-new.php?post_type=feedzy_imports');
@@ -110,15 +116,15 @@ test.describe( 'Feed Settings', () => {
         await page.getByRole('button', { name: 'Insert Tag' }).nth(2).click({ force: true });
         await page.getByRole('link', { name: 'Item Content [#item_content]' }).click({ force: true });
 
+        // Add the first action.
         await page.getByRole('button', { name: 'Add new' }).click({ force: true });
-
         await page.getByText('Trim Content').click({ force: true });
         await expect( page.getByRole('button', { name: 'Trim Content' }) ).toBeVisible();
         await page.getByRole('button', { name: 'Trim Content' }).click({ force: true });
         await page.getByPlaceholder('45').fill('10');
 
+        // Add the second action.
         await page.getByRole('button', { name: 'Add new' }).click({ force: true });
-
         await page.getByText('Search / Replace').click({ force: true });
         await page.getByRole('button', { name: 'Search and Replace' }).click({ force: true });
         await page.getByLabel('Search').fill('Lorem');
@@ -131,7 +137,71 @@ test.describe( 'Feed Settings', () => {
         await expect( page.getByRole('heading', { name: 'Add actions to this tag' }) ).toBeHidden(); // The modal is closed.
 
         await expect( page.getByTitle('item content').getByRole('link') ).toBeVisible(); // The action tag is added.
+
+        // Save the serialized actions in the input field.
+        const contentItemTagData = await page.locator('tag[title="item content"] .tagify__filter-icon').getAttribute('value');
+        await page.evaluate( (contentItemTagData) => {
+            document.querySelector('[name="feedzy_meta_data[import_post_content]"]').value = `[[{"value": "${contentItemTagData}"}]]`;
+        } , contentItemTagData);
+
+        await page.getByRole('button', { name: 'Save', exact: true }).click({ force: true });
+
+        await page.waitForSelector('#the-list', { timeout: 5000 });
+        const editLink = await page.locator('#the-list .row-actions .edit a').first().getAttribute('href');
+        await page.goto(editLink);
+        await page.getByRole('button', { name: 'Step 3 Map content' }).click({ force: true });
+
         await page.getByTitle('remove tag').click({ force: true });
         await expect( page.getByTitle('item content').getByRole('link') ).toBeHidden();
     });
+
+    test( 'chained actions for feed title ', async({ editor, page, admin }) => {
+        const importName = 'Test Title: changing General Feed Settings';
+
+        await page.goto('/wp-admin/post-new.php?post_type=feedzy_imports');
+        await tryCloseTourModal( page );
+
+        await page.getByPlaceholder('Add a name for your import').fill(importName);
+        await addFeeds( page, [FEED_URL] );
+
+        await page.getByRole('button', { name: 'Step 3 Map content' }).click({ force: true });
+
+        await page.locator('span').filter({ hasText: '[#item_title]' }).clear();
+        await page.getByRole('button', { name: 'Insert Tag' }).first().click({ force: true });
+        await page.getByRole('link', { name: 'Item Title [#item_title]' }).click({ force: true });
+
+        // Add the first action.
+        await page.getByRole('button', { name: 'Add new' }).click({ force: true });
+        await page.getByText('Trim Content').click({ force: true });
+        await expect( page.getByRole('button', { name: 'Trim Content' }) ).toBeVisible();
+        await page.getByRole('button', { name: 'Trim Content' }).click({ force: true });
+        await page.getByPlaceholder('45').fill('10');
+
+        // Add the second action.
+        await page.getByRole('button', { name: 'Add new' }).click({ force: true });
+        await page.getByText('Search / Replace').click({ force: true });
+        await page.getByRole('button', { name: 'Search and Replace' }).click({ force: true });
+        await page.getByLabel('Search').fill('Lorem');
+        await page.getByLabel('Replace with').fill('Ipsum');
+
+        await page.getByRole('button', { name: 'Save Actions' }).click({ force: true });
+
+        await expect( page.getByText('item title', { exact: true }) ).toBeVisible(); // The action tag is added.
+
+        // Save the serialized actions in the input field.
+        const titleItemTagData = await page.locator('tag[title="item title"] .tagify__filter-icon').getAttribute('value');
+        await page.evaluate( (titleItemTagData) => {
+            document.querySelector('[name="feedzy_meta_data[import_post_title]"]').value = `[[{"value": "${titleItemTagData}"}]]`;
+        }, titleItemTagData);
+
+        await page.getByRole('button', { name: 'Save', exact: true }).click({ force: true });
+
+        await page.waitForSelector('#the-list', { timeout: 5000 });
+        const editLink = await page.locator('#the-list .row-actions .edit a').first().getAttribute('href');
+        await page.goto(editLink);
+        await page.getByRole('button', { name: 'Step 3 Map content' }).click({ force: true });
+
+        await page.getByTitle('remove tag').click({ force: true });
+        await expect( page.getByText('item title', { exact: true }) ).toBeHidden();
+    } );
 });
