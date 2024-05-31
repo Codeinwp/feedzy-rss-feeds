@@ -28,7 +28,7 @@
     "cypress:run": "cypress run --browser=chrome",
     "test:e2e": "wp-scripts test-playwright --config tests/e2e/playwright.config.js",
     "test:e2e:debug": "wp-scripts test-playwright --config tests/e2e/playwright.config.js --ui",
-    "env": "wp-env"
+    "wp-env": "wp-env"
   },
   "pot": {
     "reportmsgidbugsto": "https://github.com/Codeinwp/feedzy-rss-feeds/issues",
