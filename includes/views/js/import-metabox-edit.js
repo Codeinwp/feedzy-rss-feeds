@@ -245,6 +245,7 @@
 		feedzyAccordion();
 		feedzyTab();
 		feedzyMediaUploader();
+		initRemoveFallbackImageBtn();
 	});
 
 	function initImportScreen() {
@@ -478,11 +479,6 @@
 			}
 		} );
 
-		// Tagify the title field.
-		$( '.fz-input-tagify[name="feedzy_meta_data[import_post_title]"]:not(.fz-tagify-image)' ).tagify( {
-			mode: 'mix'
-		} );
-
 		// Tagify for normal mix content field.
 		$( '.fz-tagify-image' ).tagify( {
 			mode: 'mix',
@@ -547,6 +543,40 @@
 						</tag>`
 					}
 					catch(err){}
+				}
+			}
+		} );
+
+		$( '.fz-input-tagify[name="feedzy_meta_data[import_post_title]"]:not(.fz-tagify-image)' ).tagify( {
+			mode: 'mix',
+			editTags: false,
+			templates: {
+				tag: function( tagData ) {
+					try{
+						var decodeTagData = decodeURIComponent(tagData.value);
+						var isEncoded = typeof tagData.value === "string" && decodeTagData !== tagData.value;
+						var tagLabel = tagData.value;
+						if ( isEncoded ) {
+							decodeTagData = JSON.parse( decodeTagData );
+							decodeTagData = decodeTagData[0] || {};
+							tagLabel = decodeTagData.tag.replaceAll( '_', ' ' );
+							tagData['data-actions'] = tagData.value;
+							tagData['data-field_id'] = 'fz-title-action-tags';
+						}
+						return `
+						<tag title='${tagLabel}' contenteditable='false' spellcheck="false" class='tagify__tag ${isEncoded ? 'fz-content-action' : ''}'>
+							<x title='remove tag' class='tagify__tag__removeBtn'></x>
+							<div>
+								<span class='tagify__tag-text'>${tagLabel}</span>
+								${tagData['data-actions'] ?
+									`<a href="javascript:;" class="tagify__filter-icon" ${this.getAttributes(tagData)}></a>` : ''
+								}
+							</div>
+						</tag>`
+					}
+					catch(err){
+						console.error(err);
+					}
 				}
 			}
 		} );
@@ -830,15 +860,23 @@
 			$( '.feedzy-open-media' ).html( feedzy.i10n.action_btn_text_2 );
 		} ).open();
 		});
-
-		// on remove button click
-		$( 'body' ).on( 'click', '.feedzy-remove-media', function( e ) {
-			e.preventDefault();
-			var button = $( this );
-			button.parent().prev( '.feedzy-media-preview' ).remove();
-			button.removeClass( 'is-show' );
-			button.parent().find( 'input:hidden' ).val( '' ).trigger( 'change' );
-			$( '.feedzy-open-media' ).html( feedzy.i10n.action_btn_text_1 );
-		});
 	}
 }(jQuery, feedzy));
+
+/**
+ * Initialize the remove fallback image button from General Feed Settings tab.
+ */
+function initRemoveFallbackImageBtn() {
+	const removeFallbackImage = document.querySelector('.feedzy-remove-media');
+	removeFallbackImage?.addEventListener('click', (e) => {
+		e.preventDefault();
+
+		// Reset the image preview.
+		document.querySelector('.feedzy-media-preview').remove();
+		removeFallbackImage.classList.remove('is-show');
+
+		// Reset the input.
+		document.querySelector('input[name="feedzy_meta_data[default_thumbnail_id]"]').value = '0';
+		document.querySelector('.feedzy-open-media').innerHTML = feedzy.i10n.action_btn_text_1;
+	});
+}
