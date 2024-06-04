@@ -16,6 +16,7 @@ test.describe( 'Feed Settings', () => {
     test.beforeEach( async ( { requestUtils } ) => {
         await deleteAllFeedImports( requestUtils );
         await requestUtils.deleteAllPosts();
+        await requestUtils.deleteAllMedia();
     } );
 
     test( 'adding an URL feed', async({ editor, page }) => {
