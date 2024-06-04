@@ -2,7 +2,7 @@
  * WordPress dependencies
  */
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
-import {tryCloseTourModal, deleteAllFeedImports, addFeeds, runFeedImport} from '../utils';
+import {tryCloseTourModal, deleteAllFeedImports, addFeeds, runFeedImport, addFeaturedImage} from '../utils';
 
 test.describe( 'Feed Import', () => {
 
@@ -12,20 +12,6 @@ test.describe( 'Feed Import', () => {
         await deleteAllFeedImports( requestUtils );
 		await requestUtils.deleteAllPosts();
     } );
-
-	test( 'importing feed from URL', async({ editor, page }) => {
-
-		const importName = 'Test Title: importing feed from URL';
-
-		await page.goto('/wp-admin/post-new.php?post_type=feedzy_imports');
-		await tryCloseTourModal( page );
-
-		await page.getByPlaceholder('Add a name for your import').fill(importName);
-		await addFeeds( page, [FEED_URL] );
-		await page.getByRole('button', { name: 'Save & Activate importing' }).click({ force: true });
-
-		await runFeedImport( page );
-	});
 
 	test( 'import feeds with shortcode', async({ editor, page, admin }) => {
 		const shortcode = "[feedzy-rss feeds='https://s3.amazonaws.com/verti-utils/sample-feed.xml' max='11' offset='1' feed_title='yes' refresh='1_hours' meta='yes' multiple_meta='yes' summary='yes' price='yes' mapping='price=im:price' thumb='yes' keywords_title='God, Mendes, Cyrus, Taylor' keywords_ban='Cyrus' template='style1']";
@@ -109,5 +95,41 @@ test.describe( 'Feed Import', () => {
 		await expect( page.locator('.feedzy-rss .rss_item').count() ).resolves.toBeGreaterThan(0);
 		await expect( page.locator('.feedzy-rss .rss_image').count() ).resolves.toBeGreaterThan(0);
 		await expect( page.locator('.feedzy-rss .rss_content').count() ).resolves.toBeGreaterThan(0);
+	});
+
+	test( 'importing feed from URL', async({ editor, page }) => {
+
+		const importName = 'Test Title: importing feed from URL';
+
+		await page.goto('/wp-admin/post-new.php?post_type=feedzy_imports');
+		await tryCloseTourModal( page );
+
+		await page.getByPlaceholder('Add a name for your import').fill(importName);
+		await addFeeds( page, [FEED_URL] );
+		await page.getByRole('button', { name: 'Save & Activate importing' }).click({ force: true });
+
+		await runFeedImport( page );
+	});
+
+	test( 'importing feed from URL with featured image', async({ admin, page }) => {
+		await admin.createNewPost();
+
+		const importName = 'Test Title: importing feed from URL with featured image';
+
+		await page.goto('/wp-admin/post-new.php?post_type=feedzy_imports');
+		await tryCloseTourModal( page );
+
+		await page.getByPlaceholder('Add a name for your import').fill(importName);
+		await addFeeds( page, [FEED_URL] );
+		await addFeaturedImage( page, '[#item_image]' );
+		await page.getByRole('button', { name: 'Save & Activate importing' }).click({ force: true });
+
+		await runFeedImport( page );
+
+		// Select the first post created by feeds import. Check the featured image.
+		await page.getByRole('link', { name: 'Posts', exact: true }).click({ force: true });
+		await page.locator('#the-list tr').first().locator('a.row-title').click({ force: true });
+		await page.getByRole('button', { name: 'Featured image' }).click({ force: true });
+		await expect( page.getByLabel('Edit or replace the image') ).toBeVisible(); // Featured image is added.
 	});
 });

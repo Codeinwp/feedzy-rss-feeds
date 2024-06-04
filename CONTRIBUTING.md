@@ -84,7 +84,9 @@ To fix automatically fixable issues, run `composer format`.
 To run PHPUnit, run `phpunit` or `./vendor/bin/phpunit` if it is not configured globally.
 
 ### E2E Tests
-If the folder `e2e-tests` is present, you can run the E2E tests by following the instructions in the [E2E testing](./e2e-tests/README.md).
+
+Run `npm run wp-env start` to start the WordPress environment for the E2E tests (it use Docker).
+Then run `npm run test:e2e` to run the E2E tests. When debugging or making a test, use `npm run test:e2e:debug` to lunch the UI mode.
 
 ### Next Steps
 

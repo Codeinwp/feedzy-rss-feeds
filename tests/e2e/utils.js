@@ -31,6 +31,19 @@ export async function addFeeds( page, feedURLs ) {
 }
 
 /**
+ * Add tags to the Featured Image on Feed Edit page.
+ *
+ * @param {import('playwright').Page} page The page object.
+ * @param {string} feedTag The tag that import the image from the feed.
+ * @returns {Promise<void>} The promise that resolves when the tags are added.
+ */
+export async function addFeaturedImage( page, feedTag ) {
+    await page.evaluate( ( feedTag ) => {
+        document.querySelector( 'input[name="feedzy_meta_data[import_post_featured_img]"]' ).value = feedTag;
+    }, feedTag );
+}
+
+/**
  * Add content mapping to the import on Feed Edit page.
  * @param page The page object.
  * @param mapping The content mapping to add.
@@ -49,6 +62,7 @@ export async function addContentMapping( page, mapping ) {
  * @returns {Promise<void>} The promise that resolves when the feed is imported.
  */
 export async function runFeedImport( page ) {
+    await page.goto('/wp-admin/edit.php?post_type=feedzy_imports');
     await page.waitForSelector('.feedzy-import-status-row');
 
     await page.getByRole('button', { name: 'Run Now' }).click();

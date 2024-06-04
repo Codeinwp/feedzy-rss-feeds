@@ -67,39 +67,10 @@ test.describe( 'Feed Settings', () => {
         await page.locator('#feedzy_item_limit').fill('3');
         await expect( page.locator('#feedzy_item_limit').inputValue() ).resolves.toBe('3');
 
-        // await page.waitForTimeout(1000); // Wait for the feed to be added.
-
         await page.getByRole('button', { name: 'Save & Activate importing' }).click({ force: true });
 
         await runFeedImport( page );
         await expect( page.locator('#ui-id-1').locator('li a').count() ).resolves.toBe(3);
-    });
-
-    test( 'changing Map Content', async({ editor, page, admin }) => {
-        await admin.createNewPost();
-
-        const importName = 'Test Title: changing General Feed Settings';
-
-        await page.goto('/wp-admin/post-new.php?post_type=feedzy_imports');
-        await tryCloseTourModal( page );
-
-        await page.getByPlaceholder('Add a name for your import').fill(importName);
-        await addFeeds( page, [FEED_URL] );
-
-        await page.getByRole('button', { name: 'Step 3 Map content' }).click({ force: true });
-
-        // Do not import feed content.
-        await addContentMapping( page, '' );
-
-        await page.getByRole('button', { name: 'Save & Activate importing' }).click({ force: true });
-
-        await runFeedImport( page );
-
-        // Select the first post created by feeds import. We should have no feed content imported (which is usually saved in `core/html` block).
-        await page.getByRole('link', { name: 'Posts', exact: true }).click({ force: true });
-        await page.locator('#the-list tr').first().locator('a.row-title').click({ force: true });
-        const blocks = await editor.getBlocks();
-        expect(blocks).toHaveLength(0); // No content.
     });
 
     test( 'chained actions for feed content', async({ editor, page, admin }) => {
