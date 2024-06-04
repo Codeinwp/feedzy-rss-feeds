@@ -47,7 +47,6 @@ test.describe( 'Feed Settings', () => {
     });
 
     test( 'changing General Feed Settings', async({ editor, page }) => {
-
         const importName = 'Test Title: changing General Feed Settings';
 
         await page.goto('/wp-admin/post-new.php?post_type=feedzy_imports');
@@ -74,6 +73,11 @@ test.describe( 'Feed Settings', () => {
     });
 
     test( 'chained actions for feed content', async({ editor, page, admin }) => {
+        await page.setViewportSize({
+            width: 1920,
+            height: 1080,
+        });
+
         const importName = 'Test Title: changing General Feed Settings';
 
         await page.goto('/wp-admin/post-new.php?post_type=feedzy_imports');
@@ -123,10 +127,15 @@ test.describe( 'Feed Settings', () => {
         await page.getByRole('button', { name: 'Step 3 Map content' }).click({ force: true });
 
         await page.getByTitle('remove tag').click({ force: true });
-        await expect( page.getByTitle('item content').getByRole('link') ).toBeHidden();
+        await expect( page.getByText('item content', { exact: true }) ).toBeHidden();
     });
 
     test( 'chained actions for feed title ', async({ editor, page, admin }) => {
+        await page.setViewportSize({
+            width: 1920,
+            height: 1080,
+        });
+
         const importName = 'Test Title: changing General Feed Settings';
 
         await page.goto('/wp-admin/post-new.php?post_type=feedzy_imports');
