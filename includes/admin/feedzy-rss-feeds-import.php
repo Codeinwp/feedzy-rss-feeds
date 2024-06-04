@@ -1775,18 +1775,19 @@ class Feedzy_Rss_Feeds_Import {
 				$img_success = true;
 
 				$feed_img_tag = false === strpos( $import_featured_img, '[[{"value":' ) ? $import_featured_img : '[#item_image]'; // Use feed default image when we are using chained actions.
+
+				// Set the feed image as default value for the image source.
 				if ( strpos( $feed_img_tag, '[#item_image]' ) !== false ) {
-					// image exists in item
-					if ( ! empty( $item['item_img_path'] ) ) {
+					if ( ! empty( $item['item_img_path'] ) ) { // image exists in item
 						$image_source_url = str_replace( '[#item_image]', $item['item_img_path'], $feed_img_tag );
 					} else {
 						$img_success = false;
 					}
-				} elseif ( strpos( $feed_img_tag, '[#item_custom' ) !== false ) {
-					// custom image tag
-					if ( $this->feedzy_is_business() || $this->feedzy_is_personal() ) {
-						$value = apply_filters( 'feedzy_parse_custom_tags', $feed_img_tag, $item_obj );
-					}
+				} elseif (
+					( $this->feedzy_is_business() || $this->feedzy_is_personal() ) && // PRO feature.
+					false !== strpos( $feed_img_tag, '[#item_custom' )
+				) {
+					$value = apply_filters( 'feedzy_parse_custom_tags', $feed_img_tag, $item_obj ); // custom image tag
 					if ( ! empty( $value ) && strpos( $value, '[#item_custom' ) === false ) {
 						$image_source_url = $value;
 					} else {
@@ -1839,7 +1840,7 @@ class Feedzy_Rss_Feeds_Import {
 				}
 
 				if ( 'yes' === $import_item_img_url || ! $this->tryReuseExistingFeaturedImage( $img_success, $item['item_title'], $new_post_id ) ) {
-					// Item image action.
+					// Run chained actions.
 					$import_featured_img = rawurldecode( $import_featured_img );
 					$import_featured_img = trim( $import_featured_img );
 					$img_action          = $this->get_actions_runner( $import_featured_img, 'item_image' );
