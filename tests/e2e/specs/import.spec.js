@@ -2,7 +2,14 @@
  * WordPress dependencies
  */
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
-import {tryCloseTourModal, deleteAllFeedImports, addFeeds, runFeedImport, addFeaturedImage} from '../utils';
+import {
+	tryCloseTourModal,
+	deleteAllFeedImports,
+	addFeeds,
+	runFeedImport,
+	addFeaturedImage,
+	addContentMapping
+} from '../utils';
 
 test.describe( 'Feed Import', () => {
 
@@ -129,6 +136,38 @@ test.describe( 'Feed Import', () => {
 		// Select the first post created by feeds import. Check the featured image.
 		await page.getByRole('link', { name: 'Posts', exact: true }).click({ force: true });
 		await page.locator('#the-list tr').first().locator('a.row-title').click({ force: true });
+		await page.getByRole('button', { name: 'Featured image' }).click({ force: true });
+		await expect( page.getByLabel('Edit or replace the image') ).toBeVisible(); // Featured image is added.
+	});
+
+	test( 'importing feed with chained actions', async({ admin, page }) => {
+		await admin.createNewPost();
+
+		const importName = 'Test Title: importing feed from URL with featured image';
+
+		await page.goto('/wp-admin/post-new.php?post_type=feedzy_imports');
+		await tryCloseTourModal( page );
+
+		await page.getByPlaceholder('Add a name for your import').fill(importName);
+		await addFeeds( page, [FEED_URL] );
+		await addContentMapping( page, '[[{"value":"%5B%7B%22id%22%3A%22trim%22%2C%22tag%22%3A%22item_content%22%2C%22data%22%3A%7B%22trimLength%22%3A%2230%22%7D%7D%5D"}]] '); // Trim the content with 30 words max.
+		await addFeaturedImage( page, '[[{&quot;value&quot;:&quot;%5B%7B%22id%22%3A%22%22%2C%22tag%22%3A%22item_image%22%2C%22data%22%3A%7B%7D%7D%5D&quot;}]]&nbsp;' );
+
+		await page.getByRole('button', { name: 'Save & Activate importing' }).click({ force: true });
+
+		await runFeedImport( page );
+
+		// Select the first post created by feeds import. Check the featured image.
+		await page.getByRole('link', { name: 'Posts', exact: true }).click({ force: true });
+		await page.locator('#the-list tr').first().locator('a.row-title').click({ force: true });
+
+		await expect( page.getByLabel('Add title') ).toBeVisible(); // Post title.
+
+		// Content should be trimmed to 30 words.
+		const content = await page.getByPlaceholder('Write HTML…').inputValue();
+		expect( content ).toContain('<p>');
+		expect( content.split(' ').length ).toBeLessThanOrEqual(30);
+
 		await page.getByRole('button', { name: 'Featured image' }).click({ force: true });
 		await expect( page.getByLabel('Edit or replace the image') ).toBeVisible(); // Featured image is added.
 	});

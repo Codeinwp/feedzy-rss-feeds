@@ -6,8 +6,7 @@ import {
     tryCloseTourModal,
     deleteAllFeedImports,
     addFeeds,
-    runFeedImport,
-    addContentMapping
+    runFeedImport
 } from '../utils';
 
 test.describe( 'Feed Settings', () => {
