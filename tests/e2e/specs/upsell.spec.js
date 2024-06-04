@@ -59,14 +59,12 @@ test.describe( 'Upsell', () => {
         await page.getByRole('button', { name: 'Step 4 General feed settings' }).click({ force: true });
 
         await page.locator('#feedzy_delete_days').hover({ force: true });
-        let upgradeAlert = page.locator('#feedzy-import-form').getByRole('link', { name: 'upgrading to Feedzy Pro', exact: true });
-        let upgradeLink = new URL( await upgradeAlert.getAttribute('href') );
-        expect( upgradeLink.searchParams.get('utm_campaign') ).toBe('auto-delete');
+        let upgradeAlert = page.locator('#feedzy-import-form a[href*="utm_campaign=auto-delete"]');
+        await expect( upgradeAlert ).toBeVisible();
 
         await page.locator('.fz-form-group:has( #feed-post-default-thumbnail )').hover({ force: true });
-        upgradeAlert = page.locator('#feedzy-import-form').getByRole('link', { name: 'upgrading to Feedzy Pro', exact: true })
-        upgradeLink = new URL( await upgradeAlert.getAttribute('href') );
-        expect( upgradeLink.searchParams.get('utm_campaign') ).toBe('fallback-imaget'); // The type is intentional.
+        upgradeAlert = page.locator('#feedzy-import-form a[href*="utm_campaign=fallback-imaget"]'); // The typo is intentional.
+        await expect( upgradeAlert ).toBeVisible();
 
         await page.waitForTimeout(1000);
     } );
