@@ -63,9 +63,7 @@ test.describe( 'Upsell', () => {
         await expect( upgradeAlert ).toBeVisible();
 
         await page.locator('.fz-form-group:has( #feed-post-default-thumbnail )').hover({ force: true });
-        upgradeAlert = page.locator('#feedzy-import-form a[href*="utm_campaign=fallback-imaget"]'); // The typo is intentional.
+        upgradeAlert = page.locator('#feedzy-import-form a[href*="utm_campaign=fallback-image"]');
         await expect( upgradeAlert ).toBeVisible();
-
-        await page.waitForTimeout(1000);
     } );
 });
