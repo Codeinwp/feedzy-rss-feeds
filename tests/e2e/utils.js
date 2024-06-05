@@ -56,6 +56,18 @@ export async function addContentMapping( page, mapping ) {
 }
 
 /**
+ * Set the item limit on the Feed Edit page.
+ * @param {import('playwright').Page} page The page object.
+ * @param {number} limit The limit to set.
+ * @returns {Promise<void>}
+ */
+export async function setItemLimit( page, limit ) {
+    await page.evaluate( ( limit ) => {
+        document.querySelector( 'input[name="feedzy_meta_data[import_feed_limit]"]' ).value = limit;
+    } , limit );
+}
+
+/**
  * Create an empty chained actions.
  * @param {string} defaultFeedTag The default feed tag.
  * @returns {string} The empty chained actions.

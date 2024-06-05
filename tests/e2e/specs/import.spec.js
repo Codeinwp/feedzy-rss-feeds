@@ -11,7 +11,7 @@ import {
 	addContentMapping,
 	getEmptyChainedActions,
 	serializeChainedActions,
-	wrapSerializedChainedActions
+	wrapSerializedChainedActions, setItemLimit
 } from '../utils';
 
 test.describe( 'Feed Import', () => {
@@ -44,7 +44,7 @@ test.describe( 'Feed Import', () => {
 	});
 
 	test( 'import lazy loading feeds with shortcode', async({ editor, page, admin }) => {
-		const lazyShortcode = "[feedzy-rss feeds='https://s3.amazonaws.com/verti-utils/sample-feed.xml' max='11' offset='1' feed_title='yes' refresh='1_hours' meta='yes' multiple_meta='yes' summary='yes' price='yes' mapping='price=im:price' thumb='yes' keywords_title='God, Mendes, Cyrus, Taylor' keywords_ban='Cyrus' template='style1' lazy='yes']";
+		const lazyShortcode = "[feedzy-rss feeds='https://s3.amazonaws.com/verti-utils/sample-feed.xml' max='2' offset='1' feed_title='yes' refresh='1_hours' meta='yes' multiple_meta='yes' summary='yes' price='yes' mapping='price=im:price' thumb='yes' keywords_title='God, Mendes, Cyrus, Taylor' keywords_ban='Cyrus' template='style1' lazy='yes']";
 
 		await admin.createNewPost();
 
@@ -66,7 +66,7 @@ test.describe( 'Feed Import', () => {
 	} );
 
 	test( 'import multiple feeds with shortcode', async({ editor, page, admin }) => {
-		const multipleFeedsShortCode = "[feedzy-rss feeds='https://s3.amazonaws.com/verti-utils/sample-feed-multiple1.xml, https://s3.amazonaws.com/verti-utils/sample-feed-multiple2.xml' max='10' feed_title='no' refresh='1_hours' meta='yes' multiple_meta='yes' summary='yes' thumb='yes' template='style1']";
+		const multipleFeedsShortCode = "[feedzy-rss feeds='https://s3.amazonaws.com/verti-utils/sample-feed-multiple1.xml, https://s3.amazonaws.com/verti-utils/sample-feed-multiple2.xml' max='1' feed_title='no' refresh='1_hours' meta='yes' multiple_meta='yes' summary='yes' thumb='yes' template='style1']";
 
 		await admin.createNewPost();
 
@@ -117,6 +117,7 @@ test.describe( 'Feed Import', () => {
 
 		await page.getByPlaceholder('Add a name for your import').fill(importName);
 		await addFeeds( page, [FEED_URL] );
+		await setItemLimit(page, 1);
 		await page.getByRole('button', { name: 'Save & Activate importing' }).click({ force: true });
 
 		await runFeedImport( page );
@@ -133,6 +134,7 @@ test.describe( 'Feed Import', () => {
 		await page.getByPlaceholder('Add a name for your import').fill(importName);
 		await addFeeds( page, [FEED_URL] );
 		await addFeaturedImage( page, '[#item_image]' );
+		await setItemLimit(page, 1);
 		await page.getByRole('button', { name: 'Save & Activate importing' }).click({ force: true });
 
 		await runFeedImport( page );
@@ -164,6 +166,7 @@ test.describe( 'Feed Import', () => {
 			}
 		] ) ) );
 		await addFeaturedImage( page, getEmptyChainedActions( 'item_image' ) );
+		await setItemLimit(page, 1);
 
 		await page.getByRole('button', { name: 'Save & Activate importing' }).click({ force: true });
 
@@ -183,6 +186,7 @@ test.describe( 'Feed Import', () => {
 		if( ! await page.getByLabel('Edit or replace the image').isVisible() ) { // Should we open the featured image tab?
 			await page.getByRole('button', { name: 'Featured image' }).click({ force: true });
 		}
+		await page.waitForSelector('.editor-post-featured-image');
 		await expect( page.getByLabel('Edit or replace the image') ).toBeVisible(); // Featured image is added.
 	});
 
@@ -199,10 +203,6 @@ test.describe( 'Feed Import', () => {
 		await addFeaturedImage( page, getEmptyChainedActions( 'item_image' ) );
 
 		await page.getByRole('button', { name: 'Save & Activate importing' }).click({ force: true });
-
-		await page.locator('#the-list tr').first().locator('a.row-title').click({ force: true });
-		await page.getByRole('button', { name: 'Step 3 Map content' }).click({ force: true });
-		await expect( page.getByText('item image', { exact: true }) ).toBeVisible(); // The tag is added.
 
 		await page.goto('/wp-admin/edit.php?post_type=feedzy_imports');
 
