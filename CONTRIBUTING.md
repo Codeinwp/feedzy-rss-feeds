@@ -151,6 +151,12 @@ Typically, packages listed in this section would be internal development tools f
 - PHPStan
 - PHPUnit
 
+## JavaScript files
+
+If you are working on the JavaScript files, make sure to run `npm run dev` to watch for changes in the JS files (which also will load the source maps for browser debugging).
+
+Run `npm run build` to check with the production version of the JS files.
+
 ## Committing Work
 
 Remember to commit your changes to your branch relatively frequently, with a meaningful, short summary that explains what the change(s) do.
