@@ -18,14 +18,17 @@
   },
   "scripts": {
     "dev": "wp-scripts start --mode=development",
-    "build": "wp-scripts lint-js ./includes/gutenberg/src/ && wp-scripts build --mode=production --config=webpack.config.js",
-    "lint:js": "wp-scripts lint-js ./includes/gutenberg/src/",
+    "build": "wp-scripts build --config=webpack.config.js",
+    "lint:js": "wp-scripts lint-js ./js --ignore-pattern '**/build/**' --ignore-pattern '**/*.min.js'",
     "release": "semantic-release --debug",
     "cypress:open": "cypress open",
     "up:ci": "export DOCKER_FILE=docker-compose.ci.yml && bash bin/wp-init.sh",
     "down:ci": "export DOCKER_FILE=docker-compose.ci.yml && bash bin/wp-down.sh",
     "dist": "bash bin/dist.sh",
-    "cypress:run": "cypress run --browser=chrome"
+    "cypress:run": "cypress run --browser=chrome",
+    "test:e2e": "wp-scripts test-playwright --config tests/e2e/playwright.config.js",
+    "test:e2e:debug": "wp-scripts test-playwright --config tests/e2e/playwright.config.js --ui",
+    "wp-env": "wp-env"
   },
   "pot": {
     "reportmsgidbugsto": "https://github.com/Codeinwp/feedzy-rss-feeds/issues",
@@ -33,19 +36,21 @@
     "lasttranslator": "Themeisle Translate Team <friends@themeisle.com>"
   },
   "devDependencies": {
+    "@playwright/test": "^1.44.0",
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/exec": "^5.0.0",
     "@semantic-release/git": "^9.0.0",
-    "@wordpress/components": "^13.0.3",
-    "@wordpress/compose": "^3.25.3",
-    "@wordpress/data": "^4.27.3",
-    "@wordpress/dom-ready": "^2.13.2",
-    "@wordpress/element": "^2.20.3",
-    "@wordpress/eslint-plugin": "^9.0.4",
-    "@wordpress/i18n": "^3.20.0",
-    "@wordpress/icons": "^2.10.3",
-    "@wordpress/media-utils": "^1.20.3",
-    "@wordpress/scripts": "^15.0.1",
+    "@wordpress/components": "^27.6.0",
+    "@wordpress/compose": "^6.35.0",
+    "@wordpress/data": "^9.28.0",
+    "@wordpress/dom-ready": "^3.58.0",
+    "@wordpress/e2e-test-utils-playwright": "^0.26.0",
+    "@wordpress/element": "^5.35.0",
+    "@wordpress/env": "^9.10.0",
+    "@wordpress/i18n": "^4.58.0",
+    "@wordpress/icons": "^9.49.0",
+    "@wordpress/media-utils": "^4.49.0",
+    "@wordpress/scripts": "^27.9.0",
     "classnames": "^2.3.2",
     "conventional-changelog-simple-preset": "^1.0.15",
     "cypress": "^13.2.0",
@@ -53,6 +58,7 @@
     "grunt": "^1.4.0",
     "grunt-version": "^2.0.0",
     "grunt-wp-readme-to-markdown": "^2.0.1",
+    "lodash": "^4.17.21",
     "query-string": "^7.0.0",
     "raw-loader": "^4.0.2",
     "replace-in-file": "^6.2.0",
@@ -61,8 +67,17 @@
   },
   "dependencies": {
     "array-move": "^4.0.0",
-    "lodash": "^4.17.21",
-    "react-joyride": "^2.4.0",
+    "react-joyride": "^2.8.2",
     "react-sortable-hoc": "^2.0.0"
+  },
+  "overrides": {
+    "react-sortable-hoc": {
+      "react": "18.3.1",
+      "react-dom": "18.3.1"
+    },
+    "@wordpress/components": {
+      "react": "18.3.1",
+      "react-dom": "18.3.1"
+    }
   }
 }
