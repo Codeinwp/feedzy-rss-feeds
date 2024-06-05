@@ -1,8 +1,7 @@
 const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 
-module.exports = {
+const config = {
     ...defaultConfig,
-    devtool: 'inline-source-map',
     entry: {
         'block': './js/FeedzyBlock/block.js',
         'import-onboarding': './js/Onboarding/import-onboarding.js',
@@ -11,7 +10,15 @@ module.exports = {
     },
     output: {
         ...defaultConfig.output,
-        filename: '[name].min.js',
+        filename: '[name].js',
         path: __dirname + '/js/build'
-    }
+    },
 };
+
+module.exports = (env, argv) => {
+    if (argv.mode === 'development') {
+        config.devtool = 'inline-source-map';
+    }
+
+    return config;
+}

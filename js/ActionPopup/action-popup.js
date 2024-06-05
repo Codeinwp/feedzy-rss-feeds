@@ -42,6 +42,14 @@ const ActionModal = () => {
 	const [ isDisabledAddNew, setDisabledAddNew ] = useState(false);
 	const [ isLoading, setLoading ] = useState(false);
 
+	// Close the popup when click on outside the modal.
+	const exitModalOnOutsideClick = ( e ) => {
+		if ( ! isVisible || ! e.target.closest( '.fz-action-popup' ) ) {
+			return;
+		}
+		toggleVisible( false );
+	};
+
 	useEffect( () => {
 		window.wp.api.loadPromise.then( () => {
 			// Fetch user.
@@ -55,7 +63,7 @@ const ActionModal = () => {
 		return () => {
 			document.removeEventListener( 'click', exitModalOnOutsideClick );
 		};
-	}, [isVisible] );
+	}, [isVisible, exitModalOnOutsideClick] );
 
 	const handleChange = (args) => {
 		let id = args.index;
@@ -163,7 +171,7 @@ const ActionModal = () => {
 			setAction([]);
 			_action = encodeURIComponent( JSON.stringify( [ { id: '', tag: shortCode, data: {} } ] ) );
 		}
-		
+
 		const inputField = jQuery( `[name="feedzy_meta_data[${fieldName}]"]:is(textarea, input)` ).data('tagify');
 
 		if ( 'import_post_featured_img' === fieldName ) {
@@ -184,14 +192,6 @@ const ActionModal = () => {
 
 	const helperContainer = () => {
 		return document.querySelector( '.fz-action-popup .fz-action-panel ul' );
-	};
-
-	// Close the popup when click on outside the modal.
-	const exitModalOnOutsideClick = ( e ) => {
-		if ( ! isVisible || ! e.target.closest( '.fz-action-popup' ) ) {
-			return;
-		}
-		toggleVisible( false );
 	};
 
 	// Click to open action popup.
