@@ -16,7 +16,8 @@ import {
 	Fragment,
 	useEffect,
 	useRef,
-	useState
+	useState,
+	useCallback
 } from '@wordpress/element';
 
 import {
@@ -43,12 +44,12 @@ const ActionModal = () => {
 	const [ isLoading, setLoading ] = useState(false);
 
 	// Close the popup when click on outside the modal.
-	const exitModalOnOutsideClick = ( e ) => {
+	const exitModalOnOutsideClick = useCallback(( e ) => {
 		if ( ! isVisible || ! e.target.closest( '.fz-action-popup' ) ) {
 			return;
 		}
 		toggleVisible( false );
-	};
+	}, [isVisible]);
 
 	useEffect( () => {
 		window.wp.api.loadPromise.then( () => {
