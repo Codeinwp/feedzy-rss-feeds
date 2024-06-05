@@ -171,9 +171,9 @@ export async function getPostsByFeedzy( requestUtils ) {
         params: {
             per_page: 100,
             status: 'publish',
-            meta_key: 'feedzy', // meta key
-            meta_value: 1, // meta value
-            meta_compare: '=', // compare operator
+            meta_key: 'feedzy',
+            meta_value: 1,
+            meta_compare: '=',
         },
     });
 }
