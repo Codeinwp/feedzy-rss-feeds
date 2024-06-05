@@ -35,7 +35,10 @@ jobs:
         run: |
           composer install --no-dev --prefer-dist --no-progress
       - name: Create zip
-        run: npm run dist
+        run: |
+          npm ci
+          npm run build
+          npm run dist
       - name: Retrieve branch name
         id: retrieve-branch-name
         run: echo "::set-output name=branch_name::$(REF=${GITHUB_HEAD_REF:-$GITHUB_REF} && echo ${REF#refs/heads/} | sed 's/\//-/g')"

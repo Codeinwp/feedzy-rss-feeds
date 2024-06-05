@@ -21,7 +21,6 @@ import {
   useState
 } from '@wordpress/element';
 
-
 const Onboarding = () => {
   const [ isOpen, setOpen ] = useState( true );
   const [ runTour, setRunTour ] = useState( false );
@@ -47,7 +46,7 @@ const Onboarding = () => {
     });
 
     const save = model.save();
- 
+
     save.error( ( response ) => {
       console.warn( response.responseJSON.message );
     });
