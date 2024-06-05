@@ -169,7 +169,7 @@ test.describe( 'Feed Import', () => {
 		expect( content ).toContain('<p>');
 		expect( content.split(' ').length ).toBeLessThanOrEqual(30);
 
-		// TODO: Enable this test when the issue is fixed.
+		// TODO: Enable this test for https://github.com/Codeinwp/feedzy-rss-feeds/pull/946 when the PR is merged.
 		// await page.getByRole('button', { name: 'Featured image' }).click({ force: true });
 		// await expect( page.getByLabel('Edit or replace the image') ).toBeVisible(); // Featured image is added.
 	});
