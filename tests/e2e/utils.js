@@ -159,3 +159,21 @@ export async function deleteAllFeedImports( requestUtils ) {
         )
     );
 }
+
+/**
+ * Get post created with Feedzy.
+ * @param {RequestUtils} requestUtils The request utils object.
+ * @returns {Promise<*>}
+ */
+export async function getPostsByFeedzy( requestUtils ) {
+    return await requestUtils.rest({
+        path: '/wp/v2/posts',
+        params: {
+            per_page: 100,
+            status: 'publish',
+            meta_key: 'feedzy', // meta key
+            meta_value: 1, // meta value
+            meta_compare: '=', // compare operator
+        },
+    });
+}

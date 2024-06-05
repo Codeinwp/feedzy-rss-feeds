@@ -11,7 +11,9 @@ import {
 	addContentMapping,
 	getEmptyChainedActions,
 	serializeChainedActions,
-	wrapSerializedChainedActions, setItemLimit
+	wrapSerializedChainedActions,
+	setItemLimit,
+	getPostsByFeedzy
 } from '../utils';
 
 test.describe( 'Feed Import', () => {
@@ -146,7 +148,7 @@ test.describe( 'Feed Import', () => {
 		await expect( page.getByLabel('Edit or replace the image') ).toBeVisible(); // Featured image is added.
 	});
 
-	test( 'importing feed with chained actions', async({ admin, page }) => {
+	test( 'importing feed with chained actions', async({ admin, page, requestUtils }) => {
 		await admin.createNewPost();
 
 		const importName = 'Test Title: importing feed from URL with featured image';
@@ -171,29 +173,18 @@ test.describe( 'Feed Import', () => {
 		await page.getByRole('button', { name: 'Save & Activate importing' }).click({ force: true });
 
 		await runFeedImport( page );
+		const posts = await getPostsByFeedzy( requestUtils );
 
-		// Select the first post created by feeds import. Check the featured image.
-		await page.getByRole('link', { name: 'Posts', exact: true }).click({ force: true });
-		await page.locator('#the-list tr').first().locator('a.row-title').click({ force: true });
-
-		await expect( page.getByLabel('Add title') ).toBeVisible(); // Post title.
-
-		// Content should be trimmed to 30 words.
-		const content = await page.getByPlaceholder('Write HTML…').inputValue();
-		expect( content ).toContain('<p>');
-		expect( content.split(' ').length ).toBeLessThanOrEqual(30);
-
-		if( ! await page.getByLabel('Edit or replace the image').isVisible() ) { // Should we open the featured image tab?
-			await page.getByRole('button', { name: 'Featured image' }).click({ force: true });
+		for ( const post of posts ) {
+			expect( post.featured_media ).toBeGreaterThan(0);
+			expect( post.content.rendered.split(' ').length ).toBeLessThanOrEqual(30);
 		}
-		await page.waitForSelector('.editor-post-featured-image');
-		await expect( page.getByLabel('Edit or replace the image') ).toBeVisible(); // Featured image is added.
 	});
 
-	test( 'importing feed with chained actions for featured image only', async({ admin, page }) => {
+	test( 'image gallery for feeds imported with featured image chained actions', async({ admin, page }) => {
 		await admin.createNewPost();
 
-		const importName = 'Test Title: importing feed with chained actions for featured image only';
+		const importName = 'Test Title: image gallery for feeds imported with featured image chained actions';
 
 		await page.goto('/wp-admin/post-new.php?post_type=feedzy_imports');
 		await tryCloseTourModal( page );
@@ -208,7 +199,7 @@ test.describe( 'Feed Import', () => {
 
 		await runFeedImport( page );
 
-		// Check the gallery.
+		// All the imported image should be available in the media library.
 		await page.goto('/wp-admin/upload.php');
 		await page.waitForSelector('#wp-media-grid');
 		await expect( page.locator('.attachment').count() ).resolves.toBeGreaterThan(0); // We should have some imported images.
