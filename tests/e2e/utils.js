@@ -56,6 +56,33 @@ export async function addContentMapping( page, mapping ) {
 }
 
 /**
+ * Create an empty chained actions.
+ * @param {string} defaultFeedTag The default feed tag.
+ * @returns {string} The empty chained actions.
+ */
+export function getEmptyChainedActions( defaultFeedTag ) {
+    return wrapSerializedChainedActions(serializeChainedActions([ { id: '', tag: defaultFeedTag, data: {} } ] ) );
+}
+
+/**
+ * Serialize the chained actions.
+ * @param {any[]} actions The actions to serialize.
+ * @returns {string} The serialized actions.
+ */
+export function serializeChainedActions( actions ) {
+    return encodeURIComponent( JSON.stringify( actions ) );
+}
+
+/**
+ * Wrap the serialized chained actions to match the format used in the input.
+ * @param {string} actions The serialized actions.
+ * @returns {string} The wrapped actions.
+ */
+export function wrapSerializedChainedActions( actions ) {
+    return `[[{"value":"${actions}"}]]`;
+}
+
+/**
  * Run the feed import.
  *
  * @param {import('playwright').Page} page The page object.

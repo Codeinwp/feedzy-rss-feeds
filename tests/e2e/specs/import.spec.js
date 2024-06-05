@@ -8,7 +8,10 @@ import {
 	addFeeds,
 	runFeedImport,
 	addFeaturedImage,
-	addContentMapping
+	addContentMapping,
+	getEmptyChainedActions,
+	serializeChainedActions,
+	wrapSerializedChainedActions
 } from '../utils';
 
 test.describe( 'Feed Import', () => {
@@ -151,8 +154,16 @@ test.describe( 'Feed Import', () => {
 
 		await page.getByPlaceholder('Add a name for your import').fill(importName);
 		await addFeeds( page, [FEED_URL] );
-		await addContentMapping( page, '[[{"value":"%5B%7B%22id%22%3A%22trim%22%2C%22tag%22%3A%22item_content%22%2C%22data%22%3A%7B%22trimLength%22%3A%2230%22%7D%7D%5D"}]] '); // Trim the content with 30 words max.
-		await addFeaturedImage( page, '[[{&quot;value&quot;:&quot;%5B%7B%22id%22%3A%22%22%2C%22tag%22%3A%22item_image%22%2C%22data%22%3A%7B%7D%7D%5D&quot;}]]&nbsp;' );
+		await addContentMapping( page, wrapSerializedChainedActions( serializeChainedActions( [
+			{
+				"id": "trim",
+				"tag": "item_content",
+				"data": {
+					"trimLength": "30"
+				}
+			}
+		] ) ) );
+		await addFeaturedImage( page, getEmptyChainedActions( 'item_image' ) );
 
 		await page.getByRole('button', { name: 'Save & Activate importing' }).click({ force: true });
 
@@ -169,8 +180,42 @@ test.describe( 'Feed Import', () => {
 		expect( content ).toContain('<p>');
 		expect( content.split(' ').length ).toBeLessThanOrEqual(30);
 
-		// Enable this test for https://github.com/Codeinwp/feedzy-rss-feeds/pull/946 when the PR is merged.
-		// await page.getByRole('button', { name: 'Featured image' }).click({ force: true });
-		// await expect( page.getByLabel('Edit or replace the image') ).toBeVisible(); // Featured image is added.
+		if( ! await page.getByLabel('Edit or replace the image').isVisible() ) { // Should we open the featured image tab?
+			await page.getByRole('button', { name: 'Featured image' }).click({ force: true });
+		}
+		await expect( page.getByLabel('Edit or replace the image') ).toBeVisible(); // Featured image is added.
+	});
+
+	test( 'importing feed with chained actions for featured image only', async({ admin, page }) => {
+		await admin.createNewPost();
+
+		const importName = 'Test Title: importing feed with chained actions for featured image only';
+
+		await page.goto('/wp-admin/post-new.php?post_type=feedzy_imports');
+		await tryCloseTourModal( page );
+
+		await page.getByPlaceholder('Add a name for your import').fill(importName);
+		await addFeeds( page, [FEED_URL] );
+		await addFeaturedImage( page, getEmptyChainedActions( 'item_image' ) );
+
+		await page.getByRole('button', { name: 'Save & Activate importing' }).click({ force: true });
+
+		await page.locator('#the-list tr').first().locator('a.row-title').click({ force: true });
+		await page.getByRole('button', { name: 'Step 3 Map content' }).click({ force: true });
+		await expect( page.getByText('item image', { exact: true }) ).toBeVisible(); // The tag is added.
+
+		await page.goto('/wp-admin/edit.php?post_type=feedzy_imports');
+
+		await runFeedImport( page );
+
+		// Select the first post created by feeds import. Check the featured image.
+		await page.getByRole('link', { name: 'Posts', exact: true }).click({ force: true });
+		await page.locator('#the-list tr').first().locator('a.row-title').click({ force: true });
+		await expect( page.getByLabel('Add title') ).toBeVisible(); // Post title.
+
+		if( ! await page.getByLabel('Edit or replace the image').isVisible() ) { // Should we open the featured image tab?
+			await page.getByRole('button', { name: 'Featured image' }).click({ force: true });
+		}
+		await expect( page.getByLabel('Edit or replace the image') ).toBeVisible(); // Featured image is added.
 	});
 });
