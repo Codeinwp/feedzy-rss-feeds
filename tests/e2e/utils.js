@@ -67,7 +67,18 @@ export async function runFeedImport( page ) {
 
     await page.getByRole('button', { name: 'Run Now' }).click();
 
-    await expect( page.getByRole('cell', { name: 'Successfully run! (Refresh this page for the updated status)', exact: true }) ).toBeVisible({ timeout: 10000 });
+    const runNowResponse = await page.waitForResponse(
+        response => (
+            response.url().includes('/wp-admin/admin-ajax.php')&&
+            response.request().method() === 'POST' &&
+            response.request().postData().includes('action=feedzy&_action=run_now')
+        )
+    );
+
+    expect( runNowResponse ).not.toBeNull();
+    const responseBody = await runNowResponse.json();
+    expect( responseBody.success ).toBe(true);
+    expect( responseBody.data.import_success ).toBe(true);
 
     // Reload the page to check the status.
     await page.reload();
