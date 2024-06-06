@@ -8,7 +8,12 @@ import {
 	addFeeds,
 	runFeedImport,
 	addFeaturedImage,
-	addContentMapping
+	addContentMapping,
+	getEmptyChainedActions,
+	serializeChainedActions,
+	wrapSerializedChainedActions,
+	setItemLimit,
+	getPostsByFeedzy
 } from '../utils';
 
 test.describe( 'Feed Import', () => {
@@ -41,7 +46,7 @@ test.describe( 'Feed Import', () => {
 	});
 
 	test( 'import lazy loading feeds with shortcode', async({ editor, page, admin }) => {
-		const lazyShortcode = "[feedzy-rss feeds='https://s3.amazonaws.com/verti-utils/sample-feed.xml' max='11' offset='1' feed_title='yes' refresh='1_hours' meta='yes' multiple_meta='yes' summary='yes' price='yes' mapping='price=im:price' thumb='yes' keywords_title='God, Mendes, Cyrus, Taylor' keywords_ban='Cyrus' template='style1' lazy='yes']";
+		const lazyShortcode = "[feedzy-rss feeds='https://s3.amazonaws.com/verti-utils/sample-feed.xml' max='2' offset='1' feed_title='yes' refresh='1_hours' meta='yes' multiple_meta='yes' summary='yes' price='yes' mapping='price=im:price' thumb='yes' keywords_title='God, Mendes, Cyrus, Taylor' keywords_ban='Cyrus' template='style1' lazy='yes']";
 
 		await admin.createNewPost();
 
@@ -63,7 +68,7 @@ test.describe( 'Feed Import', () => {
 	} );
 
 	test( 'import multiple feeds with shortcode', async({ editor, page, admin }) => {
-		const multipleFeedsShortCode = "[feedzy-rss feeds='https://s3.amazonaws.com/verti-utils/sample-feed-multiple1.xml, https://s3.amazonaws.com/verti-utils/sample-feed-multiple2.xml' max='10' feed_title='no' refresh='1_hours' meta='yes' multiple_meta='yes' summary='yes' thumb='yes' template='style1']";
+		const multipleFeedsShortCode = "[feedzy-rss feeds='https://s3.amazonaws.com/verti-utils/sample-feed-multiple1.xml, https://s3.amazonaws.com/verti-utils/sample-feed-multiple2.xml' max='1' feed_title='no' refresh='1_hours' meta='yes' multiple_meta='yes' summary='yes' thumb='yes' template='style1']";
 
 		await admin.createNewPost();
 
@@ -114,6 +119,7 @@ test.describe( 'Feed Import', () => {
 
 		await page.getByPlaceholder('Add a name for your import').fill(importName);
 		await addFeeds( page, [FEED_URL] );
+		await setItemLimit(page, 1);
 		await page.getByRole('button', { name: 'Save & Activate importing' }).click({ force: true });
 
 		await runFeedImport( page );
@@ -130,6 +136,7 @@ test.describe( 'Feed Import', () => {
 		await page.getByPlaceholder('Add a name for your import').fill(importName);
 		await addFeeds( page, [FEED_URL] );
 		await addFeaturedImage( page, '[#item_image]' );
+		await setItemLimit(page, 1);
 		await page.getByRole('button', { name: 'Save & Activate importing' }).click({ force: true });
 
 		await runFeedImport( page );
@@ -141,7 +148,7 @@ test.describe( 'Feed Import', () => {
 		await expect( page.getByLabel('Edit or replace the image') ).toBeVisible(); // Featured image is added.
 	});
 
-	test( 'importing feed with chained actions', async({ admin, page }) => {
+	test( 'importing feed with chained actions', async({ admin, page, requestUtils }) => {
 		await admin.createNewPost();
 
 		const importName = 'Test Title: importing feed from URL with featured image';
@@ -151,26 +158,50 @@ test.describe( 'Feed Import', () => {
 
 		await page.getByPlaceholder('Add a name for your import').fill(importName);
 		await addFeeds( page, [FEED_URL] );
-		await addContentMapping( page, '[[{"value":"%5B%7B%22id%22%3A%22trim%22%2C%22tag%22%3A%22item_content%22%2C%22data%22%3A%7B%22trimLength%22%3A%2230%22%7D%7D%5D"}]] '); // Trim the content with 30 words max.
-		await addFeaturedImage( page, '[[{&quot;value&quot;:&quot;%5B%7B%22id%22%3A%22%22%2C%22tag%22%3A%22item_image%22%2C%22data%22%3A%7B%7D%7D%5D&quot;}]]&nbsp;' );
+		await addContentMapping( page, wrapSerializedChainedActions( serializeChainedActions( [
+			{
+				"id": "trim",
+				"tag": "item_content",
+				"data": {
+					"trimLength": "30"
+				}
+			}
+		] ) ) );
+		await addFeaturedImage( page, getEmptyChainedActions( 'item_image' ) );
+		await setItemLimit(page, 1);
 
 		await page.getByRole('button', { name: 'Save & Activate importing' }).click({ force: true });
 
 		await runFeedImport( page );
+		const posts = await getPostsByFeedzy( requestUtils );
 
-		// Select the first post created by feeds import. Check the featured image.
-		await page.getByRole('link', { name: 'Posts', exact: true }).click({ force: true });
-		await page.locator('#the-list tr').first().locator('a.row-title').click({ force: true });
+		for ( const post of posts ) {
+			expect( post.featured_media ).toBeGreaterThan(0);
+			expect( post.content.rendered.split(' ').length ).toBeLessThanOrEqual(30);
+		}
+	});
 
-		await expect( page.getByLabel('Add title') ).toBeVisible(); // Post title.
+	test( 'image gallery for feeds imported with featured image chained actions', async({ admin, page }) => {
+		await admin.createNewPost();
 
-		// Content should be trimmed to 30 words.
-		const content = await page.getByPlaceholder('Write HTML…').inputValue();
-		expect( content ).toContain('<p>');
-		expect( content.split(' ').length ).toBeLessThanOrEqual(30);
+		const importName = 'Test Title: image gallery for feeds imported with featured image chained actions';
 
-		// Enable this test for https://github.com/Codeinwp/feedzy-rss-feeds/pull/946 when the PR is merged.
-		// await page.getByRole('button', { name: 'Featured image' }).click({ force: true });
-		// await expect( page.getByLabel('Edit or replace the image') ).toBeVisible(); // Featured image is added.
+		await page.goto('/wp-admin/post-new.php?post_type=feedzy_imports');
+		await tryCloseTourModal( page );
+
+		await page.getByPlaceholder('Add a name for your import').fill(importName);
+		await addFeeds( page, [FEED_URL] );
+		await addFeaturedImage( page, getEmptyChainedActions( 'item_image' ) );
+
+		await page.getByRole('button', { name: 'Save & Activate importing' }).click({ force: true });
+
+		await page.goto('/wp-admin/edit.php?post_type=feedzy_imports');
+
+		await runFeedImport( page );
+
+		// All the imported image should be available in the media library.
+		await page.goto('/wp-admin/upload.php');
+		await page.waitForSelector('#wp-media-grid');
+		await expect( page.locator('.attachment').count() ).resolves.toBeGreaterThan(0); // We should have some imported images.
 	});
 });

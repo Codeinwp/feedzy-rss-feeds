@@ -56,6 +56,45 @@ export async function addContentMapping( page, mapping ) {
 }
 
 /**
+ * Set the item limit on the Feed Edit page.
+ * @param {import('playwright').Page} page The page object.
+ * @param {number} limit The limit to set.
+ * @returns {Promise<void>}
+ */
+export async function setItemLimit( page, limit ) {
+    await page.evaluate( ( limit ) => {
+        document.querySelector( 'input[name="feedzy_meta_data[import_feed_limit]"]' ).value = limit;
+    } , limit );
+}
+
+/**
+ * Create an empty chained actions.
+ * @param {string} defaultFeedTag The default feed tag.
+ * @returns {string} The empty chained actions.
+ */
+export function getEmptyChainedActions( defaultFeedTag ) {
+    return wrapSerializedChainedActions(serializeChainedActions([ { id: '', tag: defaultFeedTag, data: {} } ] ) );
+}
+
+/**
+ * Serialize the chained actions.
+ * @param {any[]} actions The actions to serialize.
+ * @returns {string} The serialized actions.
+ */
+export function serializeChainedActions( actions ) {
+    return encodeURIComponent( JSON.stringify( actions ) );
+}
+
+/**
+ * Wrap the serialized chained actions to match the format used in the input.
+ * @param {string} actions The serialized actions.
+ * @returns {string} The wrapped actions.
+ */
+export function wrapSerializedChainedActions( actions ) {
+    return `[[{"value":"${actions}"}]]`;
+}
+
+/**
  * Run the feed import.
  *
  * @param {import('playwright').Page} page The page object.
@@ -119,4 +158,22 @@ export async function deleteAllFeedImports( requestUtils ) {
             } )
         )
     );
+}
+
+/**
+ * Get post created with Feedzy.
+ * @param {RequestUtils} requestUtils The request utils object.
+ * @returns {Promise<*>}
+ */
+export async function getPostsByFeedzy( requestUtils ) {
+    return await requestUtils.rest({
+        path: '/wp/v2/posts',
+        params: {
+            per_page: 100,
+            status: 'publish',
+            meta_key: 'feedzy',
+            meta_value: 1,
+            meta_compare: '=',
+        },
+    });
 }
