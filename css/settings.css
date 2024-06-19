@@ -2323,3 +2323,7 @@ li.draggable-item .components-panel__body-toggle.components-button{
     opacity: 0;
     height: 0
 }
+.feedzy-optimole-upsell .pro-label.free-label {
+	color: #4268CF;
+	background: rgba(66, 104, 207, 0.20);
+}
