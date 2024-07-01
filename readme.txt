@@ -498,10 +498,6 @@ You have to check first if your feed is valid. Please test it here: https://vali
 - Fixed image tag being broken in imports
 - Improved onboarding wizard
 - Improved performance of the plugin
-- Fixed image tag being broken in imports
-- Improved onboarding wizard
-- Improved performance of the plugin
-
 
 
 
