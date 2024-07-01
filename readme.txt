@@ -493,6 +493,18 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
+##### [Version 4.4.10](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.9...v4.4.10) (2024-07-01)
+
+- Fixed image tag being broken in imports
+- Improved onboarding wizard
+- Improved performance of the plugin
+- Fixed image tag being broken in imports
+- Improved onboarding wizard
+- Improved performance of the plugin
+
+
+
+
 ##### [Version 4.4.9](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.8...v4.4.9) (2024-05-30)
 
 Improvements
