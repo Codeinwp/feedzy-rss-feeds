@@ -1,3 +1,7 @@
+##### [Version 4.4.11](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.10...v4.4.11) (2024-07-01)
+
+- Updated internal dependencies
+
 ##### [Version 4.4.10](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.9...v4.4.10) (2024-07-01)
 
 - Fixed image tag being broken in imports
