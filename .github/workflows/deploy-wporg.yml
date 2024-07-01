@@ -15,6 +15,7 @@ jobs:
       - name: Build
         run: |
           npm ci
+          npm run build
           composer install --no-dev --prefer-dist --no-progress --no-suggest
       - name: WordPress Plugin Deploy
         uses: 10up/action-wordpress-plugin-deploy@master

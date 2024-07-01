@@ -65,8 +65,7 @@ if ( ! empty( $integrate_with ) ) {
 								<div class="feedzy-accordion-item">
 									<div class="feedzy-accordion-item__title">
 										<div class="feedzy-accordion-item__button">
-											<h2 class="h3 pb-8"><?php esc_html_e( 'How would you like to integrate Feedzy into your website?', 'feedzy-rss-feeds' ); ?></h2>
-											<p class="p"><?php esc_html_e( 'Pro tip: Choose the option that best meets your needs.', 'feedzy-rss-feeds' ); ?></p>
+											<h2 class="h3"><?php esc_html_e( 'How would you like to integrate Feedzy into your website?', 'feedzy-rss-feeds' ); ?></h2>
 										</div>
 									</div>
 									<div class="feedzy-accordion-item__content border-top">
@@ -104,8 +103,7 @@ if ( ! empty( $integrate_with ) ) {
 								<div class="feedzy-accordion-item mb-30" id="feed_source">
 									<div class="feedzy-accordion-item__title">
 										<div class="feedzy-accordion-item__button">
-											<h2 class="h3 pb-8"><?php esc_html_e( 'Add RSS feed URL', 'feedzy-rss-feeds' ); ?></h2>
-											<p class="p"><?php esc_html_e( 'Quick tip: Use demo RSS feed URL which you can customize later', 'feedzy-rss-feeds' ); ?></p>
+											<h2 class="h3"><?php esc_html_e( 'Add RSS feed URL', 'feedzy-rss-feeds' ); ?></h2>
 										</div>
 										<div class="feedzy-accordion-item__button hidden">
 											<h2 class="h3"><?php esc_html_e( 'Feed Source URL', 'feedzy-rss-feeds' ); ?></h2>
@@ -116,7 +114,7 @@ if ( ! empty( $integrate_with ) ) {
 										<div class="fz-form-wrap">
 											<div class="form-block">
 												<div class="fz-error-notice hidden"></div>
-												<div class="fz-row fz-row-center pb-30">
+												<div class="fz-row fz-row-center">
 													<div class="fz-col-md-6">
 														<div class="fz-form-group">
 															<input type="text" id="wizard_feed_source" class="form-control" placeholder="<?php esc_attr_e( 'Paste RSS feed URL here', 'feedzy-rss-feeds' ); ?>" value="<?php echo esc_attr( $feed_source ); ?>" required>
@@ -126,7 +124,6 @@ if ( ! empty( $integrate_with ) ) {
 														<div class="help-text"><?php echo wp_kses_post( sprintf( __( 'No Feed URL? <a href="%s" class="feed-demo-link">Click here</a> to use demo URL', 'feedzy-rss-feeds' ), esc_url( 'https://www.codeinwp.com/feed/' ) ) ); ?> </div>
 													</div>
 												</div>
-												<p class="help-text help-text-primary"><?php echo wp_kses_post( sprintf( __( 'Enable Amazon Product Advertising feeds compatibility to generate affiliate revenue with <a href="%s" target="_blank">Premium version</a>', 'feedzy-rss-feeds' ), tsdk_utmify( FEEDZY_UPSELL_LINK, 'setupWizard' ) ) ); ?></p>
 											</div>
 											<div class="form-block">
 												<button class="btn btn-primary<?php echo empty( $feed_source ) ? ' disabled' : ''; ?>" data-step_number="2">
@@ -147,24 +144,18 @@ if ( ! empty( $integrate_with ) ) {
 								<div class="feedzy-accordion-item mb-30 hidden" id="feed_import">
 									<div class="feedzy-accordion-item__title">
 										<div class="feedzy-accordion-item__button">
-											<h2 class="h2 pb-8"><?php esc_html_e( 'Import RSS feed content as', 'feedzy-rss-feeds' ); ?></h2>
-											<p class="p"><?php esc_html_e( 'Don’t worry! You can always customize this later', 'feedzy-rss-feeds' ); ?></p>
+											<h2 class="h2"><?php esc_html_e( 'Import RSS feed content as', 'feedzy-rss-feeds' ); ?></h2>
 										</div>
 									</div>
 									<div class="feedzy-accordion-item__content border-top">
 										<div class="fz-form-wrap">
 											<div class="form-block">
-												<div class="pb-30">
-													<div class="mx-320">
-														<select name="feedzy[wizard_data][import_post_type]" class="form-control feedzy-chosen">
-															<option value="post"><?php esc_html_e( 'Post', 'feedzy-rss-feeds' ); ?></option>
-															<option value="page"><?php esc_html_e( 'Page', 'feedzy-rss-feeds' ); ?></option>
-														</select>
-													</div>
+												<div class="mx-320">
+													<select name="feedzy[wizard_data][import_post_type]" class="form-control feedzy-chosen">
+														<option value="post"><?php esc_html_e( 'Post', 'feedzy-rss-feeds' ); ?></option>
+														<option value="page"><?php esc_html_e( 'Page', 'feedzy-rss-feeds' ); ?></option>
+													</select>
 												</div>
-												<p class="help-text help-text-primary">
-													<?php echo wp_kses_post( sprintf( __( 'Unlock Content translation in 20+ languages, Paraphrasing, Filters by keywords, and more with <a href="%s" target="_blank">Premium version</a>', 'feedzy-rss-feeds' ), tsdk_utmify( FEEDZY_UPSELL_LINK, 'setupWizard' ) ) ); ?>
-												</p>
 											</div>
 											<div class="form-block">
 												<button class="btn btn-primary fz-wizard-feed-import">
@@ -178,8 +169,7 @@ if ( ! empty( $integrate_with ) ) {
 								<div class="feedzy-accordion-item hidden" id="shortcode">
 									<div class="feedzy-accordion-item__title">
 										<div class="feedzy-accordion-item__button">
-											<h2 class="h2 pb-8"><?php esc_html_e( 'Feed preview and shortcode', 'feedzy-rss-feeds' ); ?></h2>
-											<p class="p"><?php esc_html_e( 'Don’t worry! You can customize every setting later on', 'feedzy-rss-feeds' ); ?></p>
+											<h2 class="h2"><?php esc_html_e( 'Feed preview and shortcode', 'feedzy-rss-feeds' ); ?></h2>
 										</div>
 									</div>
 									<div class="feedzy-accordion-item__content border-top">
@@ -228,8 +218,7 @@ if ( ! empty( $integrate_with ) ) {
 									<div class="feedzy-accordion-item">
 										<div class="feedzy-accordion-item__title">
 											<div class="feedzy-accordion-item__button">
-												<h2 class="h2 pb-8"><?php esc_html_e( 'Extra Features', 'feedzy-rss-feeds' ); ?></h2>
-												<p class="p"><?php esc_html_e( 'We\'re confident you\'ll see the improvements. Otherwise, you can remove it anytime', 'feedzy-rss-feeds' ); ?></p>
+												<h2 class="h2"><?php esc_html_e( 'Extra Features', 'feedzy-rss-feeds' ); ?></h2>
 											</div>
 										</div>
 										<div class="feedzy-accordion-item__content border-top">
@@ -252,12 +241,12 @@ if ( ! empty( $integrate_with ) ) {
 																	<div class="feedzy-accordion__icon"><span class="dashicons dashicons-arrow-down-alt2"></span></div>
 																</button>
 															</div>
-															<div class="feedzy-accordion-item__content">
+															<div class="feedzy-accordion-item__content feedzy-optimole-upsell">
 																<div class="fz-features-list">
 																	<ul>
 																		<li>
 																			<div class="icon">
-																				<img src="<?php echo esc_url( FEEDZY_ABSURL . 'img/boost-logo.png' ); ?>" width="37" height="30" alt="">
+																				<img src="<?php echo esc_url( FEEDZY_ABSURL . 'img/boost-logo.svg' ); ?>" width="37" height="30" alt="">
 																			</div>
 																			<div class="txt">
 																				<div class="h4 pb-4"><?php esc_html_e( 'Boost your website speed', 'feedzy-rss-feeds' ); ?> <span class="pro-label free-label"><?php esc_html_e( 'Free', 'feedzy-rss-feeds' ); ?></span>
@@ -289,8 +278,7 @@ if ( ! empty( $integrate_with ) ) {
 								<div class="feedzy-accordion-item">
 									<div class="feedzy-accordion-item__title">
 										<div class="feedzy-accordion-item__button">
-											<h2 class="h2 pb-8"><?php esc_html_e( 'Updates, tutorials, special offers & more', 'feedzy-rss-feeds' ); ?></h2>
-											<p class="p"><?php esc_html_e( 'Get exclusive access of Feedzy newsletter', 'feedzy-rss-feeds' ); ?></p>
+											<h2 class="h2"><?php esc_html_e( 'Updates, tutorials, special offers & more', 'feedzy-rss-feeds' ); ?></h2>
 										</div>
 									</div>
 									<div class="feedzy-accordion-item__content border-top">
@@ -300,7 +288,7 @@ if ( ! empty( $integrate_with ) ) {
 													<div class="fz-newsletter">
 														<p class="p pb-30"><?php esc_html_e( 'Let us know your email so that we can send you product updates, helpful tutorials, exclusive offers and more useful stuff.', 'feedzy-rss-feeds' ); ?></p>
 														<div class="fz-form-group">
-															<input type="email" id="fz_subscribe_email" class="form-control" placeholder="<?php echo esc_attr( get_bloginfo( 'admin_email' ) ); ?>">
+															<input type="email" id="fz_subscribe_email" class="form-control" placeholder="<?php echo esc_attr( get_bloginfo( 'admin_email' ) ); ?>" value="<?php echo esc_attr( get_bloginfo( 'admin_email' ) ); ?>">
 														</div>
 													</div>
 													<div class="fz-newsletter-img">

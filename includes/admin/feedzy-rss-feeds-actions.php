@@ -170,7 +170,11 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			 *  ]
 			 * ]
 			 */
-			preg_match_all( '/\[\[\{(.*)\}\]\]/U', $this->raw_serialized_actions, $item_magic_tags, PREG_PATTERN_ORDER );
+			$can_process = preg_match_all( '/\[\[\{(.*)\}\]\]/U', $this->raw_serialized_actions, $item_magic_tags, PREG_PATTERN_ORDER );
+			if ( ! $can_process ) {
+				return array();
+			}
+
 			$extract_tags = array();
 			if ( ! empty( $item_magic_tags[0] ) ) {
 				$extract_tags = array_map(
@@ -193,6 +197,10 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 * @return string The serialized actions.
 		 */
 		public function get_serialized_actions() {
+			if ( ! is_array( $this->get_extract_tags() ) ) {
+				return '';
+			}
+
 			$replace_to   = array_column( $this->get_extract_tags(), 'replace_to' );
 			$replace_with = array_column( $this->get_extract_tags(), 'replace_with' );
 			return str_replace( $replace_to, $replace_with, $this->raw_serialized_actions );
@@ -213,6 +221,10 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 * @return array
 		 */
 		public function get_actions() {
+			if ( ! is_array( $this->get_extract_tags() ) ) {
+				return array();
+			}
+
 			$replace_with = array_column( $this->get_extract_tags(), 'replace_with' );
 			$actions      = array_map(
 				function( $serialized_actions ) {
