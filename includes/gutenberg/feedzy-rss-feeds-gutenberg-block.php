@@ -76,8 +76,8 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		);
 
 		// Enqueue editor block styles
-		wp_enqueue_style( 'feedzy-block-css', FEEDZY_ABSURL . 'css/feedzy-rss-feeds.css', '', $version );
-		wp_enqueue_style( 'feedzy-gutenberg-block-css', FEEDZY_ABSURL . 'js/build/style-block.css', '', $version );
+		wp_enqueue_style( 'feedzy-block-css', FEEDZY_ABSURL . 'css/feedzy-rss-feeds.css', array(), $this->version );
+		wp_enqueue_style( 'feedzy-gutenberg-block-css', FEEDZY_ABSURL . 'js/build/style-block.css', array(), $this->version );
 	}
 
 	/**
