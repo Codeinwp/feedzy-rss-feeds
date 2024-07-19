@@ -1243,7 +1243,7 @@ class Feedzy_Rss_Feeds_Import {
 		$import_translation_lang  = get_post_meta( $job->ID, 'import_auto_translation_lang', true );
 		$max                      = $import_feed_limit;
 
-		if ( metadata_exists( $import_post_type, $job->ID, 'import_post_status' ) ) {
+		if ( metadata_exists( 'post', $job->ID, 'import_post_status' ) ) {
 			$import_post_status = get_post_meta( $job->ID, 'import_post_status', true );
 		} else {
 			add_post_meta( $job->ID, 'import_post_status', 'publish' );
