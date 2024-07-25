@@ -493,6 +493,13 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
+##### [Version 4.4.12](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.11...v4.4.12) (2024-07-25)
+
+- Fixed PHP warnings about an undefined variable
+
+
+
+
 ##### [Version 4.4.11](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.10...v4.4.11) (2024-07-01)
 
 - Updated internal dependencies
