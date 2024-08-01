@@ -1485,8 +1485,14 @@ class Feedzy_Rss_Feeds_Import {
 			);
 
 			// Remove WordPress default link rel.
-			if ( isset( $item_link_data['attr']['rel'] ) ) {
-				add_filter( 'wp_targeted_link_rel', '__return_null' );
+			$link_rel = isset( $item_link_data['attr']['rel'] ) ? $item_link_data['attr']['rel'] : '';
+			if ( $link_rel ) {
+				add_filter(
+					'wp_targeted_link_rel',
+					function() use ( $link_rel ) {
+						return $link_rel;
+					}
+				);
 			}
 
 			$item_link_attr = isset( $item_link_data['attr'] ) ? $item_link_data['attr'] : array();
