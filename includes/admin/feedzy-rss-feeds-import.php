@@ -1483,6 +1483,12 @@ class Feedzy_Rss_Feeds_Import {
 				$item,
 				$job
 			);
+
+			// Remove WordPress default link rel.
+			if ( isset( $item_link_data['attr']['rel'] ) ) {
+				add_filter( 'wp_targeted_link_rel', '__return_null' );
+			}
+
 			$item_link_attr = isset( $item_link_data['attr'] ) ? $item_link_data['attr'] : array();
 			$item_link_attr = array_map(
 				function ( $attr, $key ) {
