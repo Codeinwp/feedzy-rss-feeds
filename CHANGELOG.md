@@ -1,3 +1,7 @@
+##### [Version 4.4.13](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.12...v4.4.13) (2024-08-09)
+
+- Added support for a custom filter that allows modifications of the item_url tag for imported posts [#813](https://github.com/Codeinwp/feedzy-rss-feeds/issues/813)
+
 ##### [Version 4.4.12](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.11...v4.4.12) (2024-07-25)
 
 - Fixed PHP warnings about an undefined variable
