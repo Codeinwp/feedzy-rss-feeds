@@ -1470,15 +1470,48 @@ class Feedzy_Rss_Feeds_Import {
 				$item_link_txt = apply_filters( 'feedzy_invoke_auto_translate_services', $item_link_txt, '[#item_url]', $import_translation_lang, $job, $language_code, $item );
 			}
 
-			$item_link = '<a href="' . $item['item_url'] . '" target="_blank" class="feedzy-rss-link-icon">' . $item_link_txt . '</a>';
+			$item_link_data = apply_filters(
+				'feedzy_item_link',
+				array(
+					'text' => $item_link_txt,
+					'attr' => array(
+						'href'   => $item['item_url'],
+						'target' => '_blank',
+						'class'  => 'feedzy-rss-link-icon',
+					),
+				),
+				$item,
+				$job
+			);
+
+			// Remove WordPress default link rel.
+			$link_rel = isset( $item_link_data['attr']['rel'] ) ? $item_link_data['attr']['rel'] : '';
+			if ( $link_rel ) {
+				add_filter(
+					'wp_targeted_link_rel',
+					function() use ( $link_rel ) {
+						return $link_rel;
+					}
+				);
+			}
+
+			$item_link_attr = isset( $item_link_data['attr'] ) ? $item_link_data['attr'] : array();
+			$item_link_attr = array_map(
+				function ( $attr, $key ) {
+					return sprintf( '%1$s="%2$s"', $key, esc_attr( $attr ) );
+				},
+				$item_link_attr,
+				array_keys( $item_link_attr )
+			);
+
+			$item_link_txt = isset( $item_link_data['text'] ) ? $item_link_data['text'] : $item_link_txt;
+			$item_link     = '<a ' . implode( ' ', $item_link_attr ) . '>' . $item_link_txt . '</a>';
 
 			// Rewriter item title from feedzy API.
 			if ( $rewrite_service_endabled && false !== strpos( $post_title, '[#title_feedzy_rewrite]' ) ) {
 				$title_feedzy_rewrite = apply_filters( 'feedzy_invoke_content_rewrite_services', $item['item_title'], '[#title_feedzy_rewrite]', $job, $item );
 				$post_title           = str_replace( '[#title_feedzy_rewrite]', $title_feedzy_rewrite, $post_title );
 			}
-
-			$item_link = '<a href="' . $item['item_url'] . '" target="_blank" class="feedzy-rss-link-icon">' . __( 'Read More', 'feedzy-rss-feeds' ) . '</a>';
 
 			$image_html = '';
 			if ( ! empty( $item['item_img_path'] ) ) {
