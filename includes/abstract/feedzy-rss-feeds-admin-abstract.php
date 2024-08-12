@@ -1740,6 +1740,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		$the_thumbnail = html_entity_decode( $the_thumbnail, ENT_QUOTES, 'UTF-8' );
+
+		if ( isset( $sc['_dryrun_'] ) && 'yes' === $sc['_dryrun_'] ) {
+			return $the_thumbnail;
+		}
+
 		if ( ! defined( 'REST_REQUEST' ) || ! REST_REQUEST ) {
 			$feed_url      = $this->normalize_urls( $sc['feeds'] );
 			$the_thumbnail = ! empty( $the_thumbnail ) ? $the_thumbnail : apply_filters( 'feedzy_default_image', $sc['default'], $feed_url );
