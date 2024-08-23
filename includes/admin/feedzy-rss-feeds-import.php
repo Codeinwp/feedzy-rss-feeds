@@ -1630,7 +1630,7 @@ class Feedzy_Rss_Feeds_Import {
 			$post_date = str_replace( '[#post_date]', $now, $post_date );
 
 			if ( ! defined( 'FEEDZY_ALLOW_UNSAFE_HTML' ) || ! FEEDZY_ALLOW_UNSAFE_HTML ) {
-				$post_content = wp_kses( $post_content, apply_filters( 'feedzy_wp_kses_allowed_html', array() ) );
+				$post_content = wp_kses_post( $post_content );
 
 				if ( ! function_exists( 'use_block_editor_for_post_type' ) ) {
 					require_once ABSPATH . 'wp-admin/includes/post.php';
