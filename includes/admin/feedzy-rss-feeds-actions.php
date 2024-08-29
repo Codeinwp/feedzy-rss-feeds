@@ -313,6 +313,8 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 					return $this->summarize_content();
 				case 'fz_image':
 					return $this->generate_image();
+				case 'modify_links':
+					return $this->modify_links();
 				default:
 					return $this->default_content();
 			}
@@ -504,6 +506,48 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			$prompt = call_user_func( array( $this, 'item_title' ) );
 			$openai = new \Feedzy_Rss_Feeds_Pro_Openai();
 			return $openai->call_api( $this->settings, $prompt, 'image', array() );
+		}
+
+		/**
+		 * Modify links.
+		 *
+		 * @return string Item content.
+		 */
+		private function modify_links() {
+			$content = call_user_func( array( $this, $this->current_job->tag ) );
+			// Returns item content because it has no HTML tags
+			if ( $content === wp_strip_all_tags( $content ) ) {
+				return $content;
+			}
+			// Pro version is required to perform this action.
+			if ( ! feedzy_is_pro() ) {
+				return $content;
+			}
+
+			$dom     = new DOMDocument();
+			libxml_use_internal_errors( true );
+			$dom->loadHTML( $content );
+			$xpath = new DOMXPath( $dom );
+			libxml_clear_errors();
+			// Get all anchors tags.
+			$nodes = $xpath->query( '//a' );
+
+			if ( ! empty( $this->current_job->data->remove_links ) ) {
+				foreach ( $nodes as $node ) {
+					if ( ! empty( $this->current_job->data->remove_links ) ) {
+						// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$node->parentNode->removeChild( $node );
+						continue;
+					}
+					if ( ! empty( $this->current_job->data->target ) ) {
+						$node->setAttribute( 'target', $this->current_job->data->target );
+					}
+					if ( ! empty( $this->current_job->data->follow ) && 'yes' === $this->current_job->data->follow ) {
+						$node->setAttribute( 'rel', 'nofollow' );
+					}
+				}
+			}
+			return $dom->saveHTML();
 		}
 	}
 }
