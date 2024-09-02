@@ -523,29 +523,37 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			if ( ! feedzy_is_pro() ) {
 				return $content;
 			}
+			// converts all special characters to utf-8.
+			$content = mb_convert_encoding( $content, 'HTML-ENTITIES', 'UTF-8' );
 
-			$dom     = new DOMDocument();
+			$dom = new DOMDocument( '1.0', 'utf-8' );
 			libxml_use_internal_errors( true );
-			$dom->loadHTML( $content );
+			$dom->loadHTML( $content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
 			$xpath = new DOMXPath( $dom );
-			libxml_clear_errors();
+			libxml_clear_errors( true );
 			// Get all anchors tags.
 			$nodes = $xpath->query( '//a' );
 
-			if ( ! empty( $this->current_job->data->remove_links ) ) {
-				foreach ( $nodes as $node ) {
-					if ( ! empty( $this->current_job->data->remove_links ) ) {
-						// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-						$node->parentNode->removeChild( $node );
-						continue;
-					}
-					if ( ! empty( $this->current_job->data->target ) ) {
-						$node->setAttribute( 'target', $this->current_job->data->target );
-					}
-					if ( ! empty( $this->current_job->data->follow ) && 'yes' === $this->current_job->data->follow ) {
-						$node->setAttribute( 'rel', 'nofollow' );
-					}
+			foreach ( $nodes as $node ) {
+				if ( ! empty( $this->current_job->data->remove_links ) ) {
+					// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+					$node->parentNode->removeChild( $node );
+					continue;
 				}
+				if ( ! empty( $this->current_job->data->target ) ) {
+					$node->setAttribute( 'target', $this->current_job->data->target );
+				}
+				if ( ! empty( $this->current_job->data->follow ) && 'yes' === $this->current_job->data->follow ) {
+					$node->setAttribute( 'rel', 'nofollow' );
+				}
+			}
+			if ( ! empty( $this->current_job->data->follow ) && 'yes' === $this->current_job->data->follow ) {
+				add_filter(
+					'wp_targeted_link_rel',
+					function() {
+						return 'nofollow';
+					}
+				);
 			}
 			return $dom->saveHTML();
 		}
