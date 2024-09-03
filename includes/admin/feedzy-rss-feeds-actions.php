@@ -530,7 +530,7 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			libxml_use_internal_errors( true );
 			$dom->loadHTML( $content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
 			$xpath = new DOMXPath( $dom );
-			libxml_clear_errors( true );
+			libxml_clear_errors();
 			// Get all anchors tags.
 			$nodes = $xpath->query( '//a' );
 
