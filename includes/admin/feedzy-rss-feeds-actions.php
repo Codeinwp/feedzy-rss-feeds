@@ -457,7 +457,7 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 * @return string
 		 */
 		private function chat_gpt_rewrite() {
-			// Return prompt content if openAI class does not exist.
+			// Return prompt content if openAI class doesn't exist.
 			if ( ! class_exists( '\Feedzy_Rss_Feeds_Pro_Openai' ) ) {
 				return $this->current_job->data->ChatGPT;
 			}
