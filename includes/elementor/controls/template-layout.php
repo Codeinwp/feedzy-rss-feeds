@@ -46,16 +46,17 @@ class Control_Template_Layout extends Base_Data_Control {
 		</div>';
 		}
 		$upsell_notice  = '<div class="fz-upsell-notice">';
-		$upsell_url = add_query_arg(
-			array(
-				'utm_source'   => 'wpadmin',
-				'utm_medium'   => 'elementoreditor',
-				'utm_campaign' => 'amazonproductadvertising',
-				'utm_content'  => 'feedzy-rss-feeds',
-			),
-			FEEDZY_UPSELL_LINK
+
+		$upsell_url = tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'amazonproductadvertising', 'elementoreditor' ), 'query' );
+
+		$upsell_notice .= '<strong>' . __( 'NEW!', 'feedzy-rss-feeds' ) . '</strong>';
+		$upsell_notice .= wp_sprintf(
+			// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+			__( 'Enable Amazon Product Advertising feeds to generate affiliate revenue by %1$s upgrading to Feedzy Pro. %2$s', 'feedzy-rss-feeds' ),
+			'<a target="_blank" href="' . esc_url( $upsell_url ) . '" >',
+			'</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>'
 		);
-		$upsell_notice .= wp_kses_post( wp_sprintf( __( '<strong>NEW! </strong>Enable Amazon Product Advertising feeds to generate affiliate revenue by <a href="%s" target="_blank">upgrading to Feedzy Pro.</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>', 'feedzy-rss-feeds' ), esc_url_raw( $upsell_url ) ) );
+
 		$upsell_notice .= '<div>';
 		wp_localize_script(
 			'feedzy-elementor',

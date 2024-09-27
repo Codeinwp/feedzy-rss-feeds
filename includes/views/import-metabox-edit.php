@@ -30,17 +30,20 @@ global $post;
 					<div class="form-block">
 						<?php if ( ! feedzy_is_pro() ) : ?>
 							<div class="fz-upsell-notice upgrade-alert mb-24">
+								<strong>
+									<?php esc_html_e( 'NEW!', 'feedzy-rss-feeds' ); ?>
+								</strong>
 								<?php
-								$upsell_url = add_query_arg(
-									array(
-										'utm_source'   => 'wpadmin',
-										'utm_medium'   => 'importfeed',
-										'utm_campaign' => 'amazonproductadvertising',
-										'utm_content'  => 'feedzy-rss-feeds',
-									),
-									FEEDZY_UPSELL_LINK
+								$upsell_url = tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'amazonproductadvertising', 'importfeed' ), 'query' );
+
+								echo wp_kses_post(
+									wp_sprintf(
+										// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+										__( 'Enable Amazon Product Advertising feeds to generate affiliate revenue by %1$s upgrading to Feedzy Pro. %2$s', 'feedzy-rss-feeds' ),
+										'<a target="_blank" href="' . esc_url( $upsell_url ) . '" >',
+										'</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>'
+									)
 								);
-								echo wp_kses_post( wp_sprintf( __( '<strong>NEW! </strong>Enable Amazon Product Advertising feeds to generate affiliate revenue by <a href="%s" target="_blank">upgrading to Feedzy Pro.</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>', 'feedzy-rss-feeds' ), esc_url_raw( $upsell_url ) ) );
 								?>
 							</div>
 						<?php endif; ?>
@@ -156,7 +159,16 @@ global $post;
 											</div>
 										</div>
 										<div class="help-text">
-											<?php echo wp_kses_post( sprintf( __( 'You can add multiple keywords at once by separating them with %1$s,%2$s or use the %1$s+%2$s sign to bind multiple keywords. Remember, these words are case sensitive .e.g. NEWS, news, stock+market.', 'feedzy-rss-feeds' ), '<code>', '</code>' ) ); ?>
+											<?php
+											echo wp_kses_post(
+												sprintf(
+													// translators: %1$s: opening code tag, %2$s: closing code tag
+													__( 'You can add multiple keywords at once by separating them with %1$s,%2$s or use the %1$s+%2$s sign to bind multiple keywords. Remember, these words are case sensitive .e.g. NEWS, news, stock+market.', 'feedzy-rss-feeds' ),
+													'<code>',
+													'</code>'
+												)
+											)
+											?>
 										</div>
 									</div>
 									<div class="fz-input-group-right">
@@ -199,7 +211,16 @@ global $post;
 											</div>
 										</div>
 										<div class="help-text">
-											<?php echo wp_kses_post( sprintf( __( 'You can add multiple keywords at once by separating them with %1$s,%2$s or use the %1$s+%2$s sign to bind multiple keywords.', 'feedzy-rss-feeds' ), '<code>', '</code>' ) ); ?>
+											<?php
+											echo wp_kses_post(
+												sprintf(
+													// translators: %1$s: opening code tag, %2$s: closing code tag
+													__( 'You can add multiple keywords at once by separating them with %1$s,%2$s or use the %1$s+%2$s sign to bind multiple keywords.', 'feedzy-rss-feeds' ),
+													'<code>',
+													'</code>'
+												)
+											);
+											?>
 										</div>
 									</div>
 									<div class="fz-input-group-right">
@@ -268,7 +289,16 @@ global $post;
 							esc_html_e( 'Using magic tags, specify what part(s) of the source should form part of the imported post.', 'feedzy-rss-feeds' );
 						?>
 						<?php if ( false === apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) { ?>
-							<?php echo wp_kses_post( sprintf( __( 'The magic tags that are greyed out and disabled, are unavailable for your current license. Unlock all features, by %1$supgrading to Feedzy Pro%2$s', 'feedzy-rss-feeds' ), '<a href="' . tsdk_utmify( FEEDZY_UPSELL_LINK, 'magictags' ) . '" target="_blank" title="' . __( 'upgrading to Feedzy Pro', 'feedzy-rss-feeds' ) . '">', '</a>' ) ); ?>
+							<?php
+								echo wp_kses_post(
+									sprintf(
+										// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+										__( 'The magic tags that are greyed out and disabled, are unavailable for your current license. Unlock all features, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ),
+										'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'magictags' ), 'query' ) ) . '" target="_blank" >',
+										'</a>'
+									)
+								);
+							?>
 						<?php } ?>
 					</p>
 				</div>
@@ -328,15 +358,30 @@ global $post;
 									<?php if ( ! feedzy_is_pro() ) : ?>
 										<div class="upgrade-alert">
 											<?php
-												echo wp_kses_post( sprintf( __( 'Add more advanced tags, like item categories and custom field, by %1$supgrading to Feedzy Pro%2$s', 'feedzy-rss-feeds' ), '<a href="' . tsdk_utmify( FEEDZY_UPSELL_LINK, 'moreadvanced' ) . '" target="_blank">', '</a>' ) );
+												echo wp_kses_post(
+													sprintf(
+														// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+														__( 'Add more advanced tags, like item categories and custom field, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ),
+														'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'moreadvanced' ), 'query' ) ) . '" target="_blank">',
+														'</a>'
+													)
+												);
 											?>
 										</div>
 									<?php endif; ?>
 									<div class="help-text pt-8">
 										<?php
 											// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
-											echo wp_kses_post( sprintf( __( 'You can automatically create categories with a magic tag <strong>%1$s</strong> or use custom tag parsing %2$sRead More.%3$s', 'feedzy-rss-feeds' ), '[#item_categories]', '<a href="https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#dynamic-post-taxonomy" target="_blank">', '</a>' ) );
-										?>
+											echo wp_kses_post(
+												sprintf(
+													// translators: %1$s: magic tag, %2$s: opening anchor tag, %3$s: closing anchor tag
+													__( 'You can automatically create categories with a magic tag %1$s or use custom tag parsing %2$s Read More %3$s .', 'feedzy-rss-feeds' ),
+													'<strong>[#item_categories]</strong>',
+													'<a href="' . esc_url( 'https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#dynamic-post-taxonomy' ) . '" target="_blank">',
+													'</a>'
+												)
+											);
+											?>
 									</div>
 								</div>
 							</div>
@@ -476,7 +521,14 @@ global $post;
 									<?php if ( ! feedzy_is_pro() ) : ?>
 										<div class="upgrade-alert">
 											<?php
-												echo wp_kses_post( sprintf( __( 'Add more advanced tags, like item price, rating and many more, by %1$supgrading to Feedzy Pro%2$s', 'feedzy-rss-feeds' ), '<a href="' . tsdk_utmify( FEEDZY_UPSELL_LINK, 'moreadvanced' ) . '" target="_blank">', '</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>' ) );
+												echo wp_kses_post(
+													sprintf(
+														// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+														__( 'Add more advanced tags, like item price, rating and many more, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ),
+														'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'moreadvanced' ), 'query' ) ) . '" target="_blank">',
+														'</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>'
+													)
+												);
 											?>
 										</div>
 									<?php endif; ?>
@@ -613,7 +665,14 @@ global $post;
 									<?php if ( ! feedzy_is_pro() ) : ?>
 										<div class="upgrade-alert">
 											<?php
-												echo wp_kses_post( sprintf( __( 'Add more advanced tags, like item price, rating and many more, by %1$supgrading to Feedzy Pro%2$s', 'feedzy-rss-feeds' ), '<a href="' . tsdk_utmify( FEEDZY_UPSELL_LINK, 'post-excerpt', 'import' ) . '" target="_blank">', '</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>' ) );
+												echo wp_kses_post(
+													sprintf(
+														// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+														__( 'Add more advanced tags, like item price, rating and many more, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ),
+														'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'post-excerpt', 'import' ), 'query' ) ) . '" target="_blank">',
+														'</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>'
+													)
+												);
 											?>
 										</div>
 									<?php endif; ?>
@@ -667,8 +726,15 @@ global $post;
 									</div>
 									<div class="help-text pt-8">
 										<?php
-											echo wp_kses_post( sprintf( __( 'Check the  %1$sDocumentation%2$s for more details.', 'feedzy-rss-feeds' ), '<a href="https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy" target="_blank">', '</a>' ) );
-										?>
+											echo wp_kses_post(
+												sprintf(
+													// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+													__( 'Check the %1$s Documentation %2$s for more details.', 'feedzy-rss-feeds' ),
+													'<a href="' . esc_url( 'https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy' ) . '" target="_blank">',
+													'</a>'
+												)
+											);
+											?>
 									</div>
 								</div>
 							</div>

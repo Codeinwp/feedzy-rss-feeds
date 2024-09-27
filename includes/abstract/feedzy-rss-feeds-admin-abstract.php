@@ -208,9 +208,13 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$final_msg = '';
 
 		if ( $show_error ) {
-			$final_msg = '<div id="message" class="error"><p>' . sprintf( __( 'Sorry, some part of this feed is currently unavailable or does not exist anymore. The detailed error is %s', 'feedzy-rss-feeds' ), '<p style="font-weight: bold">' . wp_strip_all_tags( $error_msg ) . '</p>' );
+			$final_msg = '<div id="message" class="error"><p>' . sprintf(
+				// translators: %s: Detailed error message.
+				__( 'Sorry, some part of this feed is currently unavailable or does not exist anymore. The detailed error is %s', 'feedzy-rss-feeds' ),
+				'<p style="font-weight: bold">' . wp_strip_all_tags( $error_msg ) . '</p>'
+			);
 			if ( ! is_admin() ) {
-				$final_msg .= sprintf( __( '%1$s(Only you are seeing this detailed error because you are the creator of this post. Other users will see the error message as below.)%2$s', 'feedzy-rss-feeds' ), '<small>', '</small>' );
+				$final_msg .= '<small>(' . __( 'Only you are seeing this detailed error because you are the creator of this post. Other users will see the error message as below.', 'feedzy-rss-feeds' ) . ')</small>';
 			}
 			$final_msg .= '</p></div>';
 		} else {
@@ -989,7 +993,13 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 					$valid_feed_url[] = $url;
 				} else {
 					if ( $echo ) {
-						echo wp_kses_post( sprintf( __( 'Feed URL: %s not valid and removed from fetch.', 'feedzy-rss-feeds' ), '<b>' . esc_url( $url ) . '</b>' ) );
+						echo wp_kses_post(
+							sprintf(
+							// translators: %s: Feed URL.
+								__( 'Feed URL: %s not valid and removed from fetch.', 'feedzy-rss-feeds' ),
+								'<b>' . esc_url( $url ) . '</b>'
+							)
+						);
 					}
 				}
 			}
@@ -1005,7 +1015,13 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$valid_feed_url[] = $feed_url;
 			} else {
 				if ( $echo ) {
-					echo wp_kses_post( sprintf( __( 'Feed URL: %s not valid and removed from fetch.', 'feedzy-rss-feeds' ), '<b>' . esc_url( $feed_url ) . '</b>' ) );
+					echo wp_kses_post(
+						sprintf(
+							// translators: %s: Feed URL.
+							__( 'Feed URL: %s not valid and removed from fetch.', 'feedzy-rss-feeds' ),
+							'<b>' . esc_url( $feed_url ) . '</b>'
+						)
+					);
 				}
 			}
 		}
@@ -1245,7 +1261,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			if ( ! empty( $item['full_content_error'] ) ) {
 				$statuses[] = array(
 					'success' => false,
-					'msg'     => sprintf( __( 'Full content: %s', 'feedzy-rss-feeds' ), $item['full_content_error'] ),
+					'msg'     => sprintf(
+						// translators: %s: Error message for full content extraction.
+						__( 'Full content: %s', 'feedzy-rss-feeds' ),
+						$item['full_content_error']
+					),
 				);
 			} elseif ( isset( $item['item_full_content'] ) ) {
 				if ( ! empty( $item['item_full_content'] ) ) {
