@@ -70,8 +70,9 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 			'feedzy-gutenberg-block-js',
 			'feedzyjs',
 			array(
-				'imagepath' => esc_url( FEEDZY_ABSURL . 'img/' ),
-				'isPro'     => feedzy_is_pro(),
+				'imagepath'  => esc_url( FEEDZY_ABSURL . 'img/' ),
+				'isPro'      => feedzy_is_pro(),
+				'upsellLinkBlockEditor' => esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'keywordsfilter', 'blockeditor' ), 'query' ) ),
 			)
 		);
 

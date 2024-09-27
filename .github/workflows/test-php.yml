@@ -5,7 +5,7 @@ concurrency:
 on:
   push:
     branches-ignore:
-      - 'master'
+      - "master"
 
 jobs:
   phplint:
@@ -15,7 +15,7 @@ jobs:
       - name: Setup PHP version
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: "7.4"
           extensions: simplexml
       - name: Checkout source code
         uses: actions/checkout@v2
@@ -38,7 +38,7 @@ jobs:
 
   phpunit:
     name: PHPUnit
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     services:
       mysql:
         image: mysql:5.7
@@ -51,7 +51,7 @@ jobs:
       - name: Setup PHP version
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: "7.4"
           extensions: simplexml, mysql
           tools: phpunit-polyfills
       - name: Checkout source code

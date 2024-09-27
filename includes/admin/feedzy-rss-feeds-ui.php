@@ -221,7 +221,13 @@ class Feedzy_Rss_Feeds_Ui {
 				<?php if ( ! feedzy_is_pro() ) : ?>
 					<div class="upgrade-alert mb-24">
 						<?php
-							echo wp_kses_post( wp_sprintf( __( 'You\'re using Feedzy Lite.  Unlock more powerful features, by <a href="%s" target="_blank">upgrading to Feedzy Pro</a>', 'feedzy-rss-feeds' ), tsdk_utmify( FEEDZY_UPSELL_LINK, 'post_title', 'import-screen' ) ) );
+							$upgrade_url = tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'post_title', 'import-screen' ), 'query' );
+
+							$content  = __( 'You are using Feedzy Lite.', 'feedzy-rss-feeds' ) . ' ';
+							// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+							$content .= wp_sprintf( __( 'Unlock more powerful features, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ), '<a href="' . esc_url( $upgrade_url ) . '" target="_blank">', '</a>' );
+
+							echo wp_kses_post( $content );
 						?>
 						<button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>
 					</div>
