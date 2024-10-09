@@ -369,7 +369,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			<li>- Translate content</li>
 			<li>- Elementor Templates support</li>
 		</ul>';
-		echo '<a class="button button-primary  " href="' . tsdk_utmify( FEEDZY_UPSELL_LINK, 'metabox', 'new-category' ) . '" target="_blank">View more details</a>';
+		echo '<a class="button button-primary  " href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'metabox', 'new-category' ), 'query' ) ) . '" target="_blank">View more details</a>';
 
 	}
 
@@ -389,10 +389,17 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$output = '
             <input type="hidden" name="feedzy_category_meta_noncename" id="feedzy_category_meta_noncename" value="' . $nonce . '" />
-			<strong>' . sprintf( __( 'Please be aware that multiple feeds, when mashed together, may sometimes not work as expected as explained %1$shere%2$s.', 'feedzy-rss-feeds' ), '<a href="http://simplepie.org/wiki/faq/typical_multifeed_gotchas" target="_blank">', '</a>' ) . '</strong><br/><br/>'
+			<strong>' .
+			sprintf(
+				// translators: %1$s and %2$s are placeholders for HTML anchor tags.
+				__( 'Please be aware that multiple feeds, when mashed together, may sometimes not work as expected as explained %1$s here %2$s.', 'feedzy-rss-feeds' ),
+				'<a href="' . esc_url( 'https://simplepie.org/wiki/faq/typical_multifeed_gotchas' ) . '" target="_blank">',
+				'</a>'
+			)
+			. '</strong><br/><br/>'
 			. $invalid
 			. '<textarea name="feedzy_category_feed" rows="15" class="widefat" placeholder="' . __( 'Place your URL\'s here followed by a comma.', 'feedzy-rss-feeds' ) . '" >' . $feed . '</textarea>
-			<p><a href="https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation#categories" target="_blank">' . __( 'Learn how to organize feeds in Categories', 'feedzy-rss-feeds' ) . '</a></p>
+			<p><a href="' . esc_url( 'https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation#categories' ) . '" target="_blank">' . __( 'Learn how to organize feeds in Categories', 'feedzy-rss-feeds' ) . '</a></p>
         ';
 		echo wp_kses( $output, apply_filters( 'feedzy_wp_kses_allowed_html', array() ) );
 	}
@@ -540,9 +547,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$new_links['doc'] = '<a href="https://docs.themeisle.com/article/658-feedzy-rss-feeds" target="_blank" title="' . __( 'Documentation and examples', 'feedzy-rss-feeds' ) . '">' . __( 'Documentation and examples', 'feedzy-rss-feeds' ) . '</a>';
 
 			if ( ! feedzy_is_pro() ) {
-				$new_links['more_features'] = '<a href="' . tsdk_utmify( FEEDZY_UPSELL_LINK, 'rowmeta', 'plugins' ) . '" target="_blank" title="' . __( 'More Features', 'feedzy-rss-feeds' ) . '">' . __( 'Upgrade to Pro', 'feedzy-rss-feeds' ) . '<i style="width: 17px; height: 17px; margin-left: 4px; color: #ffca54; font-size: 17px; vertical-align: -3px;" class="dashicons dashicons-unlock more-features-icon"></i></a>';
+				$new_links['more_features'] = '<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'rowmeta', 'plugins' ), 'query' ) ) . '" target="_blank" title="' . __( 'More Features', 'feedzy-rss-feeds' ) . '">' . __( 'Upgrade to Pro', 'feedzy-rss-feeds' ) . '<i style="width: 17px; height: 17px; margin-left: 4px; color: #ffca54; font-size: 17px; vertical-align: -3px;" class="dashicons dashicons-unlock more-features-icon"></i></a>';
 			} elseif ( false === apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) {
-				$new_links['more_features'] = '<a href="' . tsdk_utmify( FEEDZY_UPSELL_LINK, 'rowmetamore', 'plugins' ) . '" target="_blank" title="' . __( 'More Features', 'feedzy-rss-feeds' ) . '">' . __( 'Upgrade your license', 'feedzy-rss-feeds' ) . '<i style="width: 17px; height: 17px; margin-left: 4px; color: #ffca54; font-size: 17px; vertical-align: -3px;" class="dashicons dashicons-unlock more-features-icon"></i></a>';
+				$new_links['more_features'] = '<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'rowmetamore', 'plugins' ), 'query' ) ) . '" target="_blank" title="' . __( 'More Features', 'feedzy-rss-feeds' ) . '">' . __( 'Upgrade your license', 'feedzy-rss-feeds' ) . '<i style="width: 17px; height: 17px; margin-left: 4px; color: #ffca54; font-size: 17px; vertical-align: -3px;" class="dashicons dashicons-unlock more-features-icon"></i></a>';
 			}
 			$links = array_merge( $links, $new_links );
 		}

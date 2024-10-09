@@ -29,7 +29,6 @@
         <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
         <exclude name="WordPress.Arrays.ArrayDeclarationSpacing" />
         <exclude name="Squiz.PHP.CommentedOutCode" />
-        <exclude name="WordPress.WP.I18n.MissingTranslatorsComment" />
         <exclude name="WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned" />
         <exclude name="Generic.Formatting.MultipleStatementAlignment.IncorrectWarning" />
         <exclude name="Generic.Formatting.MultipleStatementAlignment.NotSameWarning" />
@@ -45,14 +44,14 @@
 
     </rule>
     <rule ref="WordPress">
-        <exclude name="Generic.Strings.UnnecessaryStringConcat.Found"/>
-        <exclude name="WordPress.PHP.DevelopmentFunctions.error_log_print_r"/>
-        <exclude name="WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_ini_set"/>
-        <exclude name="WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_error_reporting"/>
-        <exclude name="WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting"/>
-        <exclude name="WordPress.PHP.DevelopmentFunctions.error_log_error_log"/>
+        <exclude name="Generic.Strings.UnnecessaryStringConcat.Found" />
+        <exclude name="WordPress.PHP.DevelopmentFunctions.error_log_print_r" />
+        <exclude name="WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_ini_set" />
+        <exclude name="WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_error_reporting" />
+        <exclude name="WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting" />
+        <exclude name="WordPress.PHP.DevelopmentFunctions.error_log_error_log" />
     </rule>
-    <config name="testVersion" value="5.6-"/>
+    <config name="testVersion" value="5.6-" />
     <rule ref="PHPCompatibilityWP">
     </rule>
     <rule ref="Squiz.Commenting.FunctionComment.ScalarTypeHintMissing">
@@ -60,11 +59,11 @@
     </rule>
     <rule ref="WordPress.Security.EscapeOutput">
         <properties>
-            <property name="customAutoEscapedFunctions" type="array" value="tsdk_utmify"/>
+            <property name="customAutoEscapedFunctions" type="array" value="tsdk_utmify" />
         </properties>
     </rule>
-    <arg name="extensions" value="php"/>
-    <arg value="sp"/>
+    <arg name="extensions" value="php" />
+    <arg value="sp" />
     <arg name="basepath" value="./" />
-    <arg name="parallel" value="20"/>
+    <arg name="parallel" value="20" />
 </ruleset>

@@ -47,7 +47,7 @@ const FeedBack = () => {
 			<Modal
 				className={ classnames( 'fz-feedback-modal', { 'no-header': 'submitted' === status }) }
 				overlayClassName="fz-feedback-modal-feedback-modal-overlay"
-				title={ __( 'What\'s one thing you need in Feedzy?', 'feedzy-rss-feeds' ) }
+				title={ __( 'What\'s one thing you need in Feedzy?', 'feedzy-rss-feeds', 'feedzy-rss-feeds' ) }
 				onRequestClose={ closeModal }
 				shouldCloseOnClickOutside={ false }
 				closeButtonLabel={ __( 'Close', 'feedzy-rss-feeds' ) }
