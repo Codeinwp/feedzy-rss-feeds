@@ -2,15 +2,29 @@
 	<div class="form-block">
 		<div class="upgrade-alert mb-24">
 			<?php
-				echo wp_kses_post( wp_sprintf( __( 'You\'re using Feedzy Lite.  Unlock more powerful features, by <a href="%s" target="_blank">upgrading to Feedzy Pro</a>', 'feedzy-rss-feeds' ), tsdk_utmify( FEEDZY_UPSELL_LINK, 'amazonproductadvertising' ) ) );
-			?>
+				$upgrade_url = tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'amazonproductadvertising' ), 'query' );
+
+				$content  = __( 'You are using Feedzy Lite.', 'feedzy-rss-feeds' ) . ' ';
+				$content .= wp_sprintf(
+					// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+					__( 'Unlock more powerful features, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ),
+					'<a href="' . esc_url( $upgrade_url ) . '" target="_blank">',
+					'</a>'
+				);
+				echo wp_kses_post( $content );
+				?>
 		</div>
 		<div class="locked-form-block">
 			<div class="fz-form-group mb-20">
 				<?php
-					// translators: %1$s to available amazon domain.
-					echo wp_kses_post( __( 'Please use this URL structure <strong>amazon.[extension]?keyword=Laptop</strong> or <strong>amazon.com?asin=ASIN_1|ASIN_2</strong> while getting Amazon product information. <br> Here are the available Amazon domains: <strong>com, au, br, ca, fr, de, in, it, jp, mx, nl, pl, sg, sa, es, se, tr, ae, uk</strong>', 'feedzy-rss-feeds' ) );
-				?>
+					echo wp_kses_post(
+						// translators: %1$s to available amazon domain, %2$s example URL with ASIN, %3$s list of available Amazon domains.
+						__( 'Please use this URL structure %1$s or %2$s while getting Amazon product information. <br> Here are the available Amazon domains: %3$s', 'feedzy-rss-feeds' ),
+						'<strong>amazon.[extension]?keyword=Laptop</strong>',
+						'<strong>amazon.com?asin=ASIN_1|ASIN_2</strong>',
+						'<strong>com, au, br, ca, fr, de, in, it, jp, mx, nl, pl, sg, sa, es, se, tr, ae, uk</strong>'
+					);
+					?>
 			</div>
 			<div class="fz-form-row">
 				<div class="fz-form-col-6">

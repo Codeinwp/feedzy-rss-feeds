@@ -478,12 +478,36 @@ add_filter(
  */
 function feedzy_elementor_widget_refresh_options() {
 	$options = array(
-		'1_hours'  => wp_sprintf( __( '%d Hour', 'feedzy-rss-feeds' ), 1 ),
-		'3_hours'  => wp_sprintf( __( '%d Hour', 'feedzy-rss-feeds' ), 3 ),
-		'12_hours' => wp_sprintf( __( '%d Hour', 'feedzy-rss-feeds' ), 12 ),
-		'1_days'   => wp_sprintf( __( '%d Day', 'feedzy-rss-feeds' ), 1 ),
-		'3_days'   => wp_sprintf( __( '%d Days', 'feedzy-rss-feeds' ), 3 ),
-		'15_days'  => wp_sprintf( __( '%d Days', 'feedzy-rss-feeds' ), 15 ),
+		'1_hours'  => wp_sprintf(
+			// Translators: %d represents the number of one hour.
+			__( '%d Hour', 'feedzy-rss-feeds' ),
+			1
+		),
+		'3_hours'  => wp_sprintf(
+			// Translators: %d represents the number of hours.
+			__( '%d Hours', 'feedzy-rss-feeds' ),
+			3
+		),
+		'12_hours' => wp_sprintf(
+			// Translators: %d represents the number of hours.
+			__( '%d Hours', 'feedzy-rss-feeds' ),
+			12
+		),
+		'1_days'   => wp_sprintf(
+			// Translators: %d represents the number of one day.
+			__( '%d Day', 'feedzy-rss-feeds' ),
+			1
+		),
+		'3_days'   => wp_sprintf(
+			// Translators: %d represents the number of days.
+			__( '%d Days', 'feedzy-rss-feeds' ),
+			3
+		),
+		'15_days'  => wp_sprintf(
+			// Translators: %d represents the number of days.
+			__( '%d Days', 'feedzy-rss-feeds' ),
+			15
+		),
 	);
 	return apply_filters( 'feedzy_elementor_widget_refresh_options', $options );
 }

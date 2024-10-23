@@ -161,7 +161,7 @@ function run_feedzy_rss_feeds() {
 				'location'         => 'feedzy-admin-menu',
 				'has_upgrade_menu' => ! feedzy_is_pro(),
 				'upgrade_text'     => esc_html__( 'Upgrade to Pro', 'feedzy-rss-feeds' ),
-				'upgrade_link'     => tsdk_utmify( FEEDZY_UPSELL_LINK, 'aboutUsPage' ),
+				'upgrade_link'     => tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'aboutUsPage' ), 'query' ),
 			);
 		}
 	);
@@ -217,8 +217,8 @@ add_filter(
 			'primary_color'      => '#4268CF',
 			'pages'              => array( 'feedzy_imports', 'edit-feedzy_imports', 'edit-feedzy_categories', 'feedzy_page_feedzy-settings', 'feedzy_page_feedzy-support' ),
 			'has_upgrade_menu'   => ! feedzy_is_pro(),
-			'upgrade_link'       => tsdk_utmify( FEEDZY_UPSELL_LINK, 'floatWidget' ),
-			'documentation_link' => tsdk_utmify( 'https://docs.themeisle.com/collection/1569-feedzy-rss-feeds', 'floatWidget' ),
+			'upgrade_link'       => tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'floatWidget' ), 'query' ),
+			'documentation_link' => tsdk_translate_link( tsdk_utmify( 'https://docs.themeisle.com/collection/1569-feedzy-rss-feeds', 'floatWidget' ), 'query' ),
 			'wizard_link'        => ! feedzy_is_pro() && ! empty( get_option( 'feedzy_fresh_install', false ) ) ? admin_url( 'admin.php?page=feedzy-setup-wizard&tab#step-1' ) : '',
 		);
 	}

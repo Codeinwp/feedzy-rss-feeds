@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-const { __ } = wp.i18n;
+const { __, sprintf } = wp.i18n;
 
 const {
 	apiFetch,
@@ -390,13 +390,13 @@ class Editor extends Component {
 					<Placeholder
 						key="placeholder"
 						icon="rss"
-						label={ __( 'Feedzy RSS Feeds' ) }
+						label={ __( 'Feedzy RSS Feeds', 'feedzy-rss-feeds' ) }
 					>
 					{ ( this.state.loading ) ?
 					(
 						<div key="loading" className="wp-block-embed is-loading">
 							<Spinner />
-							<p>{ __( 'Fetching...' ) }</p>
+							<p>{ __( 'Fetching...', 'feedzy-rss-feeds' ) }</p>
 						</div>
 					):
 					[
@@ -404,7 +404,7 @@ class Editor extends Component {
                         <TextControl
 							type="url"
 							className="feedzy-source"
-							placeholder={ __( 'Enter URL or category of your feed here...' ) }
+							placeholder={ __( 'Enter URL or category of your feed here...', 'feedzy-rss-feeds' ) }
 							onChange={ this.onChangeFeed }
                             onKeyUp={ this.handleKeyUp }
 							value={ this.props.attributes.feeds }
@@ -418,10 +418,25 @@ class Editor extends Component {
 						>
 							{ __( 'Load Feed' ) }
 						</Button>,
-                        <ExternalLink href={ this.getValidateURL() } title={ __( 'Validate Feed ' ) }>{ __( 'Validate ' ) }</ExternalLink>,
-                        ( ! feedzyjs.isPro ) && <div className="fz-source-upgrade-alert"><strong>{__('NEW!')} </strong>{__('Enable Amazon Product Advertising feeds to generate affiliate revenue by ')}<ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=keywordsfilter&utm_content=feedzy-rss-feeds">{__('upgrading to Feedzy Pro.')}</ExternalLink></div>,
-                        ( this.state.error ) && <div>{ __( 'Feed URL is invalid or unreachable by WordPress SimplePie and will NOT display items.') }</div>,
-                        <p>{ __( 'Enter the full URL of the feed source you wish to display here, or the name of a category you\'ve created. Also you can add multiple URLs just separate them with a comma. You can manage your categories feed from') } <a href="edit.php?post_type=feedzy_categories" title={ __( 'feedzy categories ' ) } target="_blank">{ __( 'here ' ) }</a></p>
+                        <ExternalLink href={ this.getValidateURL() } title={ __( 'Validate Feed ', 'feedzy-rss-feeds' ) }>{ __( 'Validate ', 'feedzy-rss-feeds' ) }</ExternalLink>,
+                        ( ! feedzyjs.isPro ) && (
+                            <div className="fz-source-upgrade-alert">
+                                <strong>{ __( 'NEW!', 'feedzy-rss-feeds' ) } </strong>
+                                {
+                                    sprintf(
+                                        // translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+                                        __( 'Enable Amazon Product Advertising feeds to generate affiliate revenue by %1$s upgrading to Feedzy Pro. %2$s', 'feedzy-rss-feeds' ),
+                                        `<a target="_blank" href="${feedzyjs?.upsellLinkBlockEditor}">`,
+                                        '</a>'
+                                    )
+                                }
+                            </div>
+                        ),
+                        ( this.state.error ) && <div>{ __( 'Feed URL is invalid or unreachable by WordPress SimplePie and will NOT display items.', 'feedzy-rss-feeds') }</div>,
+                        <p>
+                            { __( 'Enter the full URL of the feed source you wish to display here, or the name of a category you\'ve created. Also you can add multiple URLs just separate them with a comma. You can manage your categories feed from', 'feedzy-rss-feeds') }
+                            <a href="edit.php?post_type=feedzy_categories" title={ __( 'feedzy categories ', 'feedzy-rss-feeds' ) } target="_blank">{ __( 'here ', 'feedzy-rss-feeds' ) }</a>
+                        </p>
 					] }
 					</Placeholder>
 				</div>
@@ -513,7 +528,7 @@ class Editor extends Component {
 											{ ( feedzyjs.isPro && item['media'] && item['media']['src'] ) && (
 												<audio controls controlsList="nodownload">
 													<source src={ item['media']['src'] }  type={ item['media']['type'] } />
-													{ __( 'Your browser does not support the audio element. But you can check this for the original link: ' ) }
+													{ __( 'Your browser does not support the audio element. But you can check this for the original link: ', 'feedzy-rss-feeds' ) }
 													<a href={ item['media']['src'] } >{ item['media']['src'] }</a>
 												</audio>
 											) }

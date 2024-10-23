@@ -157,7 +157,7 @@
     </div>
 
     <div class="cta">
-        <a href="<?php echo tsdk_utmify(FEEDZY_UPSELL_LINK,'viewall','freevspro') ; ?>" class="btn btn-block btn-primary btn-lg" target="_blank">View
+        <a href="<?php echo esc_url( tsdk_translate_link( tsdk_utmify(FEEDZY_UPSELL_LINK,'viewall','freevspro'), 'query' ) ) ; ?>" class="btn btn-block btn-primary btn-lg" target="_blank">View
             all Premium features</a>
     </div>
 </div>

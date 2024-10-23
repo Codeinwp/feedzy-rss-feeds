@@ -49,7 +49,7 @@ test.describe( 'Upsell', () => {
     test( 'map content', async({ editor, page }) => {
         await page.getByRole('button', { name: 'Step 3 Map content' }).click({ force: true });
 
-        const magicTagsUpsell = page.getByTitle('upgrading to Feedzy Pro');
+        const magicTagsUpsell = page.locator('p').filter({ hasText: 'Using magic tags, specify' }).getByRole('link');
         await expect( magicTagsUpsell ).toBeVisible();
         const upgradeLink = new URL( await magicTagsUpsell.getAttribute('href') );
         expect( upgradeLink.searchParams.get('utm_campaign') ).toBe('magictags');
