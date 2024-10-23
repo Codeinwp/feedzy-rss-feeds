@@ -10,9 +10,15 @@
 			</div>
 			<div class="help-text">
 				<?php
-					// translators: %s to help URL.
-					echo wp_kses_post( sprintf( __( 'Check the <a href="%s" target="_blank">Documentation</a> for more details.', 'feedzy-rss-feeds' ), esc_url( 'https://docs.themeisle.com/article/841-how-to-add-canonical-tags-for-imported-posts' ) ) );
-				?>
+					echo wp_kses_post(
+						sprintf(
+							// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+							__( 'Check the %1$s Documentation %2$s for more details.', 'feedzy-rss-feeds' ),
+							'<a href="' . esc_url( 'https://docs.themeisle.com/article/841-how-to-add-canonical-tags-for-imported-posts' ) . '" target="_blank">',
+							'</a>'
+						)
+					);
+					?>
 			</div>
 		</div>
 	</div>
