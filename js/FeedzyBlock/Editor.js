@@ -26,6 +26,7 @@ const { date } = wp.date;
 import queryString from 'query-string';
 import Inspector from './inspector';
 import { unescapeHTML, filterData, inArray, arrangeMeta, filterCustomPattern } from './utils';
+import { RawHTML } from '@wordpress/element';
 
 class Editor extends Component {
      /*eslint-env es6*/
@@ -422,14 +423,16 @@ class Editor extends Component {
                         ( ! feedzyjs.isPro ) && (
                             <div className="fz-source-upgrade-alert">
                                 <strong>{ __( 'NEW!', 'feedzy-rss-feeds' ) } </strong>
-                                {
-                                    sprintf(
-                                        // translators: %1$s: opening anchor tag, %2$s: closing anchor tag
-                                        __( 'Enable Amazon Product Advertising feeds to generate affiliate revenue by %1$s upgrading to Feedzy Pro. %2$s', 'feedzy-rss-feeds' ),
-                                        `<a target="_blank" href="${feedzyjs?.upsellLinkBlockEditor}">`,
-                                        '</a>'
-                                    )
-                                }
+                                <RawHTML>
+                                    {
+                                        sprintf(
+                                            // translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+                                            __( 'Enable Amazon Product Advertising feeds to generate affiliate revenue by %1$s upgrading to Feedzy Pro. %2$s', 'feedzy-rss-feeds' ),
+                                            `<a target="_blank" href="${feedzyjs?.upsellLinkBlockEditor}">`,
+                                            '</a>'
+                                        )
+                                    }
+                                </RawHTML>
                             </div>
                         ),
                         ( this.state.error ) && <div>{ __( 'Feed URL is invalid or unreachable by WordPress SimplePie and will NOT display items.', 'feedzy-rss-feeds') }</div>,
@@ -486,10 +489,10 @@ class Editor extends Component {
                             }
 
                             let meta_values = new Object();
-                            meta_values['author'] = __( 'by' ) + ' ' + author;
-                            meta_values['date'] = __( 'on' ) + ' ' + unescapeHTML( itemDate );
-                            meta_values['time'] = __( 'at' ) + ' ' + unescapeHTML( itemTime );
-                            meta_values['categories'] = __( 'in' ) + ' ' + unescapeHTML( categories );
+                            meta_values['author'] = __( 'by', 'feedzy-rss-feeds' ) + ' ' + author;
+                            meta_values['date'] = __( 'on', 'feedzy-rss-feeds' ) + ' ' + unescapeHTML( itemDate );
+                            meta_values['time'] = __( 'at', 'feedzy-rss-feeds' ) + ' ' + unescapeHTML( itemTime );
+                            meta_values['categories'] = __( 'in', 'feedzy-rss-feeds' ) + ' ' + unescapeHTML( categories );
 
 							return (
 								<li key={i} style={ { padding: '15px 0 25px' } } className={ `rss_item feedzy-rss-col-${ this.props.attributes.columns }` }>

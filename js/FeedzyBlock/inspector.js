@@ -3,6 +3,7 @@
 /**
  * Block dependencies
  */
+import { RawHTML } from '@wordpress/element';
 import RadioImageControl from './radio-image-control/';
 
 /**
@@ -110,6 +111,7 @@ class Inspector extends Component {
 								{(this.props.attributes.status !== 0 && !feedzyjs.isPro) && [
 									<div className="fz-upgrade-alert">
 										<strong>{ __( 'NEW!', 'feedzy-rss-feeds' ) } </strong>
+										<RawHTML>
 										{
 											sprintf(
 												// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
@@ -118,6 +120,7 @@ class Inspector extends Component {
 												'</a>'
 											)
 										}
+										</RawHTML>
 										<Dashicon icon="no-alt" onClick={(el) => {el.target.parentNode.style.display="none"}}/>
 									</div>
 								]}
