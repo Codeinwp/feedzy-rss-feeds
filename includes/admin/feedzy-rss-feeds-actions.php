@@ -459,16 +459,21 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 * @return string
 		 */
 		private function chat_gpt_rewrite() {
-			$content = call_user_func( array( $this, $this->current_job->tag ) );
-			$content = wp_strip_all_tags( $content );
-			$content = substr( $content, 0, apply_filters( 'feedzy_chat_gpt_content_limit', 3000 ) );
-			$content = str_replace( array( '{content}' ), array( $content ), $this->current_job->data->ChatGPT );
+			// Return prompt content if openAI class doesn't exist.
 			if ( ! class_exists( '\Feedzy_Rss_Feeds_Pro_Openai' ) ) {
-				return $content;
+				return $this->current_job->data->ChatGPT;
 			}
-			$openai  = new \Feedzy_Rss_Feeds_Pro_Openai();
-			$content = $openai->call_api( $this->settings, $content, '', array() );
-			return $content;
+
+			$content         = call_user_func( array( $this, $this->current_job->tag ) );
+			$content         = wp_strip_all_tags( $content );
+			$content         = substr( $content, 0, apply_filters( 'feedzy_chat_gpt_content_limit', 3000 ) );
+			$prompt_content  = $this->current_job->data->ChatGPT;
+			$content         = str_replace( array( '{content}' ), array( $content ), $prompt_content );
+			$openai          = new \Feedzy_Rss_Feeds_Pro_Openai();
+			$rewrite_content = $openai->call_api( $this->settings, $content, '', array() );
+			// Replace prompt content string for specific cases.
+			$rewrite_content = str_replace( explode( '{content}', $prompt_content ), '', $rewrite_content );
+			return $rewrite_content;
 		}
 
 		/**
