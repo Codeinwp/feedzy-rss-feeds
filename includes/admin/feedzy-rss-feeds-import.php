@@ -2532,17 +2532,6 @@ class Feedzy_Rss_Feeds_Import {
 		$default['item_date_feed']  = __( 'Item Date (feed timezone)', 'feedzy-rss-feeds' );
 		$default['item_source']     = __( 'Item Source', 'feedzy-rss-feeds' );
 
-		// disabled tags.
-		if ( ! feedzy_is_pro() ) {
-			$default['title_spinnerchief:disabled'] = __( '🚫 Title from SpinnerChief', 'feedzy-rss-feeds' );
-			$default['title_wordai:disabled']       = __( '🚫 Title from WordAI', 'feedzy-rss-feeds' );
-
-			$default['translated_title:disabled'] = __( '🚫 Translated Title', 'feedzy-rss-feeds' );
-
-			$default['title_feedzy_rewrite:disabled'] = __( '🚫 Paraphrased Title using Feedzy', 'feedzy-rss-feeds' );
-
-		}
-
 		return $default;
 	}
 
