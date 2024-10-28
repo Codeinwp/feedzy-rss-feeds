@@ -69,17 +69,18 @@ class Feedzy_Rss_Feeds_Elementor {
 	public function feedzy_elementor_editor_upsell_notice( $widget ) {
 		if ( 'feedzy-rss-feeds' === $widget->get_name() ) {
 			if ( ! feedzy_is_pro() && \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
-				$upsell_url = add_query_arg(
-					array(
-						'utm_source'   => 'wpadmin',
-						'utm_medium'   => 'elementoreditor',
-						'utm_campaign' => 'amazonproductadvertising',
-						'utm_content'  => 'feedzy-rss-feeds',
-					),
-					FEEDZY_UPSELL_LINK
-				);
+				$upsell_url = tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'amazonproductadvertising', 'elementoreditor' ), 'query' );
 				echo '<div class="fz-el-upsell-notice">';
-				echo wp_kses_post( wp_sprintf( __( '<strong>NEW! </strong>Enable Amazon Product Advertising feeds to generate affiliate revenue by <a href="%s" target="_blank" class="upsell_link">upgrading to Feedzy Pro.</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>', 'feedzy-rss-feeds' ), esc_url_raw( $upsell_url ) ) );
+
+				$upsell_msg  = '<strong>' . __( 'NEW!', 'feedzy-rss-feeds' ) . '</strong>';
+				$upsell_msg .= wp_sprintf(
+					// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+					__( 'Enable Amazon Product Advertising feeds to generate affiliate revenue by %1$s upgrading to Feedzy Pro. %2$s', 'feedzy-rss-feeds' ),
+					'<a target="_blank" class="upsell_link" href="' . esc_url( $upsell_url ) . '" >',
+					'</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>'
+				);
+
+				echo wp_kses_post( $upsell_msg );
 				echo '<script>';
 				echo "jQuery( document ).ready( function() {
 	jQuery( document ).on( 'click', '.fz-el-upsell-notice .remove-alert', function() {

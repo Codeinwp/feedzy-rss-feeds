@@ -30,17 +30,20 @@ global $post;
 					<div class="form-block">
 						<?php if ( ! feedzy_is_pro() ) : ?>
 							<div class="fz-upsell-notice upgrade-alert mb-24">
+								<strong>
+									<?php esc_html_e( 'NEW!', 'feedzy-rss-feeds' ); ?>
+								</strong>
 								<?php
-								$upsell_url = add_query_arg(
-									array(
-										'utm_source'   => 'wpadmin',
-										'utm_medium'   => 'importfeed',
-										'utm_campaign' => 'amazonproductadvertising',
-										'utm_content'  => 'feedzy-rss-feeds',
-									),
-									FEEDZY_UPSELL_LINK
+								$upsell_url = tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'amazonproductadvertising', 'importfeed' ), 'query' );
+
+								echo wp_kses_post(
+									wp_sprintf(
+										// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+										__( 'Enable Amazon Product Advertising feeds to generate affiliate revenue by %1$s upgrading to Feedzy Pro. %2$s', 'feedzy-rss-feeds' ),
+										'<a target="_blank" href="' . esc_url( $upsell_url ) . '" >',
+										'</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>'
+									)
 								);
-								echo wp_kses_post( wp_sprintf( __( '<strong>NEW! </strong>Enable Amazon Product Advertising feeds to generate affiliate revenue by <a href="%s" target="_blank">upgrading to Feedzy Pro.</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>', 'feedzy-rss-feeds' ), esc_url_raw( $upsell_url ) ) );
 								?>
 							</div>
 						<?php endif; ?>
@@ -156,7 +159,16 @@ global $post;
 											</div>
 										</div>
 										<div class="help-text">
-											<?php echo wp_kses_post( sprintf( __( 'You can add multiple keywords at once by separating them with %1$s,%2$s or use the %1$s+%2$s sign to bind multiple keywords. Remember, these words are case sensitive .e.g. NEWS, news, stock+market.', 'feedzy-rss-feeds' ), '<code>', '</code>' ) ); ?>
+											<?php
+											echo wp_kses_post(
+												sprintf(
+													// translators: %1$s: opening code tag, %2$s: closing code tag
+													__( 'You can add multiple keywords at once by separating them with %1$s,%2$s or use the %1$s+%2$s sign to bind multiple keywords. Remember, these words are case sensitive .e.g. NEWS, news, stock+market.', 'feedzy-rss-feeds' ),
+													'<code>',
+													'</code>'
+												)
+											)
+											?>
 										</div>
 									</div>
 									<div class="fz-input-group-right">
@@ -199,7 +211,16 @@ global $post;
 											</div>
 										</div>
 										<div class="help-text">
-											<?php echo wp_kses_post( sprintf( __( 'You can add multiple keywords at once by separating them with %1$s,%2$s or use the %1$s+%2$s sign to bind multiple keywords.', 'feedzy-rss-feeds' ), '<code>', '</code>' ) ); ?>
+											<?php
+											echo wp_kses_post(
+												sprintf(
+													// translators: %1$s: opening code tag, %2$s: closing code tag
+													__( 'You can add multiple keywords at once by separating them with %1$s,%2$s or use the %1$s+%2$s sign to bind multiple keywords.', 'feedzy-rss-feeds' ),
+													'<code>',
+													'</code>'
+												)
+											);
+											?>
 										</div>
 									</div>
 									<div class="fz-input-group-right">
@@ -268,7 +289,16 @@ global $post;
 							esc_html_e( 'Using magic tags, specify what part(s) of the source should form part of the imported post.', 'feedzy-rss-feeds' );
 						?>
 						<?php if ( false === apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) { ?>
-							<?php echo wp_kses_post( sprintf( __( 'The magic tags that are greyed out and disabled, are unavailable for your current license. Unlock all features, by %1$supgrading to Feedzy Pro%2$s', 'feedzy-rss-feeds' ), '<a href="' . tsdk_utmify( FEEDZY_UPSELL_LINK, 'magictags' ) . '" target="_blank" title="' . __( 'upgrading to Feedzy Pro', 'feedzy-rss-feeds' ) . '">', '</a>' ) ); ?>
+							<?php
+								echo wp_kses_post(
+									sprintf(
+										// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+										__( 'The magic tags that are greyed out and disabled, are unavailable for your current license. Unlock all features, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ),
+										'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'magictags' ), 'query' ) ) . '" target="_blank" >',
+										'</a>'
+									)
+								);
+							?>
 						<?php } ?>
 					</p>
 				</div>
@@ -328,15 +358,30 @@ global $post;
 									<?php if ( ! feedzy_is_pro() ) : ?>
 										<div class="upgrade-alert">
 											<?php
-												echo wp_kses_post( sprintf( __( 'Add more advanced tags, like item categories and custom field, by %1$supgrading to Feedzy Pro%2$s', 'feedzy-rss-feeds' ), '<a href="' . tsdk_utmify( FEEDZY_UPSELL_LINK, 'moreadvanced' ) . '" target="_blank">', '</a>' ) );
+												echo wp_kses_post(
+													sprintf(
+														// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+														__( 'Add more advanced tags, like item categories and custom field, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ),
+														'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'moreadvanced' ), 'query' ) ) . '" target="_blank">',
+														'</a>'
+													)
+												);
 											?>
 										</div>
 									<?php endif; ?>
 									<div class="help-text pt-8">
 										<?php
 											// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
-											echo wp_kses_post( sprintf( __( 'You can automatically create categories with a magic tag <strong>%1$s</strong> or use custom tag parsing %2$sRead More.%3$s', 'feedzy-rss-feeds' ), '[#item_categories]', '<a href="https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#dynamic-post-taxonomy" target="_blank">', '</a>' ) );
-										?>
+											echo wp_kses_post(
+												sprintf(
+													// translators: %1$s: magic tag, %2$s: opening anchor tag, %3$s: closing anchor tag
+													__( 'You can automatically create categories with a magic tag %1$s or use custom tag parsing %2$s Read More %3$s .', 'feedzy-rss-feeds' ),
+													'<strong>[#item_categories]</strong>',
+													'<a href="' . esc_url( 'https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#dynamic-post-taxonomy' ) . '" target="_blank">',
+													'</a>'
+												)
+											);
+											?>
 									</div>
 								</div>
 							</div>
@@ -476,7 +521,14 @@ global $post;
 									<?php if ( ! feedzy_is_pro() ) : ?>
 										<div class="upgrade-alert">
 											<?php
-												echo wp_kses_post( sprintf( __( 'Add more advanced tags, like item price, rating and many more, by %1$supgrading to Feedzy Pro%2$s', 'feedzy-rss-feeds' ), '<a href="' . tsdk_utmify( FEEDZY_UPSELL_LINK, 'moreadvanced' ) . '" target="_blank">', '</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>' ) );
+												echo wp_kses_post(
+													sprintf(
+														// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+														__( 'Add more advanced tags, like item price, rating and many more, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ),
+														'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'moreadvanced' ), 'query' ) ) . '" target="_blank">',
+														'</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>'
+													)
+												);
 											?>
 										</div>
 									<?php endif; ?>
@@ -613,7 +665,14 @@ global $post;
 									<?php if ( ! feedzy_is_pro() ) : ?>
 										<div class="upgrade-alert">
 											<?php
-												echo wp_kses_post( sprintf( __( 'Add more advanced tags, like item price, rating and many more, by %1$supgrading to Feedzy Pro%2$s', 'feedzy-rss-feeds' ), '<a href="' . tsdk_utmify( FEEDZY_UPSELL_LINK, 'post-excerpt', 'import' ) . '" target="_blank">', '</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>' ) );
+												echo wp_kses_post(
+													sprintf(
+														// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+														__( 'Add more advanced tags, like item price, rating and many more, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ),
+														'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'post-excerpt', 'import' ), 'query' ) ) . '" target="_blank">',
+														'</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>'
+													)
+												);
 											?>
 										</div>
 									<?php endif; ?>
@@ -667,8 +726,15 @@ global $post;
 									</div>
 									<div class="help-text pt-8">
 										<?php
-											echo wp_kses_post( sprintf( __( 'Check the  %1$sDocumentation%2$s for more details.', 'feedzy-rss-feeds' ), '<a href="https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy" target="_blank">', '</a>' ) );
-										?>
+											echo wp_kses_post(
+												sprintf(
+													// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+													__( 'Check the %1$s Documentation %2$s for more details.', 'feedzy-rss-feeds' ),
+													'<a href="' . esc_url( 'https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy' ) . '" target="_blank">',
+													'</a>'
+												)
+											);
+											?>
 									</div>
 								</div>
 							</div>
@@ -810,240 +876,246 @@ global $post;
 					<?php endif; ?>
 
 					<?php
-					if ( $this->feedzy_is_agency() ) :
-						$target_lang = array(
-							'eng_Latn' => __( 'English', 'feedzy-rss-feeds' ),
-							'ace_Arab' => __( 'Acehnese Arab', 'feedzy-rss-feeds' ),
-							'ace_Latn' => __( 'Acehnese Latin', 'feedzy-rss-feeds' ),
-							'acm_Arab' => __( 'Mesopotamian Arabic', 'feedzy-rss-feeds' ),
-							'acq_Arab' => __( 'Ta’izzi-Adeni Arabic', 'feedzy-rss-feeds' ),
-							'aeb_Arab' => __( 'Tunisian Arabic', 'feedzy-rss-feeds' ),
-							'afr_Latn' => __( 'Afrikaans', 'feedzy-rss-feeds' ),
-							'ajp_Arab' => __( 'South Levantine Arabic', 'feedzy-rss-feeds' ),
-							'aka_Latn' => __( 'Akan', 'feedzy-rss-feeds' ),
-							'amh_Ethi' => __( 'Amharic', 'feedzy-rss-feeds' ),
-							'apc_Arab' => __( 'North Levantine Arabic', 'feedzy-rss-feeds' ),
-							'arb_Arab' => __( 'Modern Standard Arabic', 'feedzy-rss-feeds' ),
-							'arb_Latn' => __( 'Modern Standard Arabic (Romanized)', 'feedzy-rss-feeds' ),
-							'ars_Arab' => __( 'Najdi Arabic', 'feedzy-rss-feeds' ),
-							'ary_Arab' => __( 'Moroccan Arabic', 'feedzy-rss-feeds' ),
-							'arz_Arab' => __( 'Egyptian Arabic', 'feedzy-rss-feeds' ),
-							'asm_Beng' => __( 'Assamese ', 'feedzy-rss-feeds' ),
-							'ast_Latn' => __( 'Asturian', 'feedzy-rss-feeds' ),
-							'awa_Deva' => __( 'Awadhi', 'feedzy-rss-feeds' ),
-							'ayr_Latn' => __( 'Central Aymara', 'feedzy-rss-feeds' ),
-							'azb_Arab' => __( 'South Azerbaijani', 'feedzy-rss-feeds' ),
-							'azj_Latn' => __( 'North Azerbaijani', 'feedzy-rss-feeds' ),
-							'bak_Cyrl' => __( 'Bashkir', 'feedzy-rss-feeds' ),
-							'bam_Latn' => __( 'Bambara', 'feedzy-rss-feeds' ),
-							'ban_Latn' => __( 'Balinese ', 'feedzy-rss-feeds' ),
-							'bel_Cyrl' => __( 'Belarusian', 'feedzy-rss-feeds' ),
-							'bem_Latn' => __( 'Bemba', 'feedzy-rss-feeds' ),
-							'ben_Beng' => __( 'Bengali', 'feedzy-rss-feeds' ),
-							'bho_Deva' => __( 'Bhojpuri', 'feedzy-rss-feeds' ),
-							'bjn_Arab' => __( 'Banjar Arab', 'feedzy-rss-feeds' ),
-							'bjn_Latn' => __( 'Banjar Latn', 'feedzy-rss-feeds' ),
-							'bod_Tibt' => __( 'Standard Tibetan', 'feedzy-rss-feeds' ),
-							'bos_Latn' => __( 'Bosnian', 'feedzy-rss-feeds' ),
-							'bug_Latn' => __( 'Buginese Latn', 'feedzy-rss-feeds' ),
-							'bul_Cyrl' => __( 'Bulgarian', 'feedzy-rss-feeds' ),
-							'cat_Latn' => __( 'Catalan', 'feedzy-rss-feeds' ),
-							'ceb_Latn' => __( 'Cebuano', 'feedzy-rss-feeds' ),
-							'ces_Latn' => __( 'Czech', 'feedzy-rss-feeds' ),
-							'cjk_Latn' => __( 'Chokwe', 'feedzy-rss-feeds' ),
-							'ckb_Arab' => __( 'Central Kurdish', 'feedzy-rss-feeds' ),
-							'crh_Latn' => __( 'Crimean Tatar', 'feedzy-rss-feeds' ),
-							'cym_Latn' => __( 'Welsh', 'feedzy-rss-feeds' ),
-							'dan_Latn' => __( 'Danish', 'feedzy-rss-feeds' ),
-							'deu_Latn' => __( 'German', 'feedzy-rss-feeds' ),
-							'dik_Latn' => __( 'Southwestern Dinka', 'feedzy-rss-feeds' ),
-							'dyu_Latn' => __( 'Dyula', 'feedzy-rss-feeds' ),
-							'dzo_Tibt' => __( 'Dzongkha', 'feedzy-rss-feeds' ),
-							'ell_Grek' => __( 'Greek', 'feedzy-rss-feeds' ),
-							'epo_Latn' => __( 'Esperanto', 'feedzy-rss-feeds' ),
-							'est_Latn' => __( 'Estonian', 'feedzy-rss-feeds' ),
-							'eus_Latn' => __( 'Basque', 'feedzy-rss-feeds' ),
-							'ewe_Latn' => __( 'Ewe', 'feedzy-rss-feeds' ),
-							'fao_Latn' => __( 'Faroese', 'feedzy-rss-feeds' ),
-							'fij_Latn' => __( 'Fijian', 'feedzy-rss-feeds' ),
-							'fin_Latn' => __( 'Finnish', 'feedzy-rss-feeds' ),
-							'fon_Latn' => __( 'Fon', 'feedzy-rss-feeds' ),
-							'fra_Latn' => __( 'French', 'feedzy-rss-feeds' ),
-							'fur_Latn' => __( 'Friulian', 'feedzy-rss-feeds' ),
-							'fuv_Latn' => __( 'Nigerian Fulfulde', 'feedzy-rss-feeds' ),
-							'gla_Latn' => __( 'Scottish Gaelic', 'feedzy-rss-feeds' ),
-							'gle_Latn' => __( 'Irish', 'feedzy-rss-feeds' ),
-							'glg_Latn' => __( 'Galician', 'feedzy-rss-feeds' ),
-							'grn_Latn' => __( 'Guarani', 'feedzy-rss-feeds' ),
-							'guj_Gujr' => __( 'Gujarati', 'feedzy-rss-feeds' ),
-							'hat_Latn' => __( 'Haitian Creole ', 'feedzy-rss-feeds' ),
-							'hau_Latn' => __( 'Hausa', 'feedzy-rss-feeds' ),
-							'heb_Hebr' => __( 'Hebrew', 'feedzy-rss-feeds' ),
-							'hin_Deva' => __( 'Hindi', 'feedzy-rss-feeds' ),
-							'hne_Deva' => __( 'Chhattisgarhi', 'feedzy-rss-feeds' ),
-							'hrv_Latn' => __( 'Croatian', 'feedzy-rss-feeds' ),
-							'hun_Latn' => __( 'Hungarian', 'feedzy-rss-feeds' ),
-							'hye_Armn' => __( 'Armenian', 'feedzy-rss-feeds' ),
-							'ibo_Latn' => __( 'Igbo', 'feedzy-rss-feeds' ),
-							'ilo_Latn' => __( 'Ilocano', 'feedzy-rss-feeds' ),
-							'ind_Latn' => __( 'Indonesian', 'feedzy-rss-feeds' ),
-							'isl_Latn' => __( 'Icelandic', 'feedzy-rss-feeds' ),
-							'ita_Latn' => __( 'Italian', 'feedzy-rss-feeds' ),
-							'jav_Latn' => __( 'Javanese', 'feedzy-rss-feeds' ),
-							'jpn_Jpan' => __( 'Japanese', 'feedzy-rss-feeds' ),
-							'kab_Latn' => __( 'Kabyle', 'feedzy-rss-feeds' ),
-							'kac_Latn' => __( 'Jingpho', 'feedzy-rss-feeds' ),
-							'kam_Latn' => __( 'Kamba', 'feedzy-rss-feeds' ),
-							'kan_Knda' => __( 'Kannada', 'feedzy-rss-feeds' ),
-							'kas_Arab' => __( 'Kashmiri Arab)', 'feedzy-rss-feeds' ),
-							'kas_Deva' => __( 'Kashmiri Devanagari', 'feedzy-rss-feeds' ),
-							'kat_Geor' => __( 'Georgian', 'feedzy-rss-feeds' ),
-							'knc_Arab' => __( 'Central Kanuri Arab', 'feedzy-rss-feeds' ),
-							'knc_Latn' => __( 'Central Kanuri _Latn', 'feedzy-rss-feeds' ),
-							'kaz_Cyrl' => __( 'Kazakh', 'feedzy-rss-feeds' ),
-							'kbp_Latn' => __( 'Kabiyè', 'feedzy-rss-feeds' ),
-							'kea_Latn' => __( 'Kabuverdianu', 'feedzy-rss-feeds' ),
-							'khm_Khmr' => __( 'Khmer', 'feedzy-rss-feeds' ),
-							'kik_Latn' => __( 'Kikuyu', 'feedzy-rss-feeds' ),
-							'kin_Latn' => __( 'Kinyarwanda', 'feedzy-rss-feeds' ),
-							'kir_Cyrl' => __( 'Kyrgyz', 'feedzy-rss-feeds' ),
-							'kmb_Latn' => __( 'Kimbundu', 'feedzy-rss-feeds' ),
-							'kmr_Latn' => __( 'Northern Kurdish', 'feedzy-rss-feeds' ),
-							'kon_Latn' => __( 'Kikongo', 'feedzy-rss-feeds' ),
-							'kor_Hang' => __( 'Korean', 'feedzy-rss-feeds' ),
-							'lao_Laoo' => __( 'Lao', 'feedzy-rss-feeds' ),
-							'lij_Latn' => __( 'Ligurian', 'feedzy-rss-feeds' ),
-							'lim_Latn' => __( 'Limburgish', 'feedzy-rss-feeds' ),
-							'lin_Latn' => __( 'Lingala', 'feedzy-rss-feeds' ),
-							'lit_Latn' => __( 'Lithuanian', 'feedzy-rss-feeds' ),
-							'lmo_Latn' => __( 'Lombard', 'feedzy-rss-feeds' ),
-							'ltg_Latn' => __( 'Latgalian', 'feedzy-rss-feeds' ),
-							'ltz_Latn' => __( 'Luxembourgish', 'feedzy-rss-feeds' ),
-							'lua_Latn' => __( 'Luba-Kasai', 'feedzy-rss-feeds' ),
-							'lug_Latn' => __( 'Ganda', 'feedzy-rss-feeds' ),
-							'luo_Latn' => __( 'Luo', 'feedzy-rss-feeds' ),
-							'lus_Latn' => __( 'Mizo', 'feedzy-rss-feeds' ),
-							'lvs_Latn' => __( 'Standard Latvian', 'feedzy-rss-feeds' ),
-							'mag_Deva' => __( 'Magahi', 'feedzy-rss-feeds' ),
-							'mai_Deva' => __( 'Maithili', 'feedzy-rss-feeds' ),
-							'mal_Mlym' => __( 'Malayalam', 'feedzy-rss-feeds' ),
-							'mar_Deva' => __( 'Marathi', 'feedzy-rss-feeds' ),
-							'min_Arab' => __( 'Minangkabau Arab', 'feedzy-rss-feeds' ),
-							'min_Latn' => __( 'Minangkabau Latn', 'feedzy-rss-feeds' ),
-							'mkd_Cyrl' => __( 'Macedonian', 'feedzy-rss-feeds' ),
-							'plt_Latn' => __( 'Plateau Malagasy', 'feedzy-rss-feeds' ),
-							'mlt_Latn' => __( 'Maltese', 'feedzy-rss-feeds' ),
-							'mni_Beng' => __( 'Meitei', 'feedzy-rss-feeds' ),
-							'khk_Cyrl' => __( 'Halh Mongolian', 'feedzy-rss-feeds' ),
-							'mos_Latn' => __( 'Mossi', 'feedzy-rss-feeds' ),
-							'mri_Latn' => __( 'Maori', 'feedzy-rss-feeds' ),
-							'mya_Mymr' => __( 'Burmese', 'feedzy-rss-feeds' ),
-							'nld_Latn' => __( 'Dutch', 'feedzy-rss-feeds' ),
-							'nno_Latn' => __( 'Norwegian Nynorsk', 'feedzy-rss-feeds' ),
-							'nob_Latn' => __( 'Norwegian Bokmål', 'feedzy-rss-feeds' ),
-							'npi_Deva' => __( 'Nepali', 'feedzy-rss-feeds' ),
-							'nso_Latn' => __( 'Northern Sotho', 'feedzy-rss-feeds' ),
-							'nus_Latn' => __( 'Nuer', 'feedzy-rss-feeds' ),
-							'nya_Latn' => __( 'Nyanja', 'feedzy-rss-feeds' ),
-							'oci_Latn' => __( 'Occitan', 'feedzy-rss-feeds' ),
-							'gaz_Latn' => __( 'West Central Oromo', 'feedzy-rss-feeds' ),
-							'ory_Orya' => __( 'Odia', 'feedzy-rss-feeds' ),
-							'pag_Latn' => __( 'Pangasinan', 'feedzy-rss-feeds' ),
-							'pan_Guru' => __( 'Eastern Panjabi', 'feedzy-rss-feeds' ),
-							'pap_Latn' => __( 'Papiamento', 'feedzy-rss-feeds' ),
-							'pes_Arab' => __( 'Western Persian', 'feedzy-rss-feeds' ),
-							'pol_Latn' => __( 'Polish', 'feedzy-rss-feeds' ),
-							'por_Latn' => __( 'Portuguese', 'feedzy-rss-feeds' ),
-							'prs_Arab' => __( 'Dari', 'feedzy-rss-feeds' ),
-							'pbt_Arab' => __( 'Southern Pashto', 'feedzy-rss-feeds' ),
-							'quy_Latn' => __( 'Ayacucho Quechua', 'feedzy-rss-feeds' ),
-							'ron_Latn' => __( 'Romanian', 'feedzy-rss-feeds' ),
-							'run_Latn' => __( 'Rundi', 'feedzy-rss-feeds' ),
-							'rus_Cyrl' => __( 'Russian', 'feedzy-rss-feeds' ),
-							'sag_Latn' => __( 'Sango', 'feedzy-rss-feeds' ),
-							'san_Deva' => __( 'Sanskrit', 'feedzy-rss-feeds' ),
-							'sat_Olck' => __( 'Santali', 'feedzy-rss-feeds' ),
-							'scn_Latn' => __( 'Sicilian', 'feedzy-rss-feeds' ),
-							'shn_Mymr' => __( 'Shan', 'feedzy-rss-feeds' ),
-							'sin_Sinh' => __( 'Sinhala', 'feedzy-rss-feeds' ),
-							'slk_Latn' => __( 'Slovak', 'feedzy-rss-feeds' ),
-							'slv_Latn' => __( 'Slovenian', 'feedzy-rss-feeds' ),
-							'smo_Latn' => __( 'Samoan', 'feedzy-rss-feeds' ),
-							'sna_Latn' => __( 'Shona', 'feedzy-rss-feeds' ),
-							'snd_Arab' => __( 'Sindhi', 'feedzy-rss-feeds' ),
-							'som_Latn' => __( 'Somali', 'feedzy-rss-feeds' ),
-							'sot_Latn' => __( 'Southern', 'feedzy-rss-feeds' ),
-							'spa_Latn' => __( 'Spanish', 'feedzy-rss-feeds' ),
-							'als_Latn' => __( 'Tosk Albanian', 'feedzy-rss-feeds' ),
-							'srd_Latn' => __( 'Sardinian', 'feedzy-rss-feeds' ),
-							'srp_Cyrl' => __( 'Serbian', 'feedzy-rss-feeds' ),
-							'ssw_Latn' => __( 'Swati', 'feedzy-rss-feeds' ),
-							'sun_Latn' => __( 'Sundanese', 'feedzy-rss-feeds' ),
-							'swe_Latn' => __( 'Swedish', 'feedzy-rss-feeds' ),
-							'swh_Latn' => __( 'Swahili', 'feedzy-rss-feeds' ),
-							'szl_Latn' => __( 'Silesian', 'feedzy-rss-feeds' ),
-							'tam_Taml' => __( 'Tamil', 'feedzy-rss-feeds' ),
-							'tat_Cyrl' => __( 'Tatar', 'feedzy-rss-feeds' ),
-							'tel_Telu' => __( 'Telugu', 'feedzy-rss-feeds' ),
-							'tgk_Cyrl' => __( 'Tajik', 'feedzy-rss-feeds' ),
-							'tgl_Latn' => __( 'Tagalog', 'feedzy-rss-feeds' ),
-							'tha_Thai' => __( 'Thai', 'feedzy-rss-feeds' ),
-							'tir_Ethi' => __( 'Tigrinya', 'feedzy-rss-feeds' ),
-							'taq_Latn' => __( 'Tamasheq Latn', 'feedzy-rss-feeds' ),
-							'taq_Tfng' => __( 'Tamasheq Tfng', 'feedzy-rss-feeds' ),
-							'tpi_Latn' => __( 'Tok Pisin', 'feedzy-rss-feeds' ),
-							'tsn_Latn' => __( 'Tswana', 'feedzy-rss-feeds' ),
-							'tso_Latn' => __( 'Tsonga', 'feedzy-rss-feeds' ),
-							'tuk_Latn' => __( 'Turkmen', 'feedzy-rss-feeds' ),
-							'tum_Latn' => __( 'Tumbuka', 'feedzy-rss-feeds' ),
-							'tur_Latn' => __( 'Turkish ', 'feedzy-rss-feeds' ),
-							'twi_Latn' => __( 'Twi', 'feedzy-rss-feeds' ),
-							'tzm_Tfng' => __( 'Central Atlas Tamazight', 'feedzy-rss-feeds' ),
-							'uig_Arab' => __( 'Uyghur', 'feedzy-rss-feeds' ),
-							'ukr_Cyrl' => __( 'Ukrainian', 'feedzy-rss-feeds' ),
-							'umb_Latn' => __( 'Umbundu', 'feedzy-rss-feeds' ),
-							'urd_Arab' => __( 'Urdu', 'feedzy-rss-feeds' ),
-							'uzn_Latn' => __( 'Northern Uzbek', 'feedzy-rss-feeds' ),
-							'vec_Latn' => __( 'Venetian', 'feedzy-rss-feeds' ),
-							'vie_Latn' => __( 'Vietnamese', 'feedzy-rss-feeds' ),
-							'war_Latn' => __( 'Waray', 'feedzy-rss-feeds' ),
-							'wol_Latn' => __( 'Wolof', 'feedzy-rss-feeds' ),
-							'xho_Latn' => __( 'Xhosa', 'feedzy-rss-feeds' ),
-							'ydd_Hebr' => __( 'Eastern Yiddish', 'feedzy-rss-feeds' ),
-							'yor_Latn' => __( 'Yoruba', 'feedzy-rss-feeds' ),
-							'yue_Hant' => __( 'Yue Chinese', 'feedzy-rss-feeds' ),
-							'zho_Hans' => __( 'Chinese Simplified', 'feedzy-rss-feeds' ),
-							'zho_Hant' => __( 'Chinese Traditional', 'feedzy-rss-feeds' ),
-							'zsm_Latn' => __( 'Standard Malay', 'feedzy-rss-feeds' ),
-							'zul_Latn' => __( 'Zulu', 'feedzy-rss-feeds' ),
-						);
-						$target_lang = apply_filters( 'feedzy_available_automatically_translation_language', $target_lang );
+					$target_lang = array(
+						'eng_Latn' => __( 'English', 'feedzy-rss-feeds' ),
+						'ace_Arab' => __( 'Acehnese Arab', 'feedzy-rss-feeds' ),
+						'ace_Latn' => __( 'Acehnese Latin', 'feedzy-rss-feeds' ),
+						'acm_Arab' => __( 'Mesopotamian Arabic', 'feedzy-rss-feeds' ),
+						'acq_Arab' => __( 'Ta’izzi-Adeni Arabic', 'feedzy-rss-feeds' ),
+						'aeb_Arab' => __( 'Tunisian Arabic', 'feedzy-rss-feeds' ),
+						'afr_Latn' => __( 'Afrikaans', 'feedzy-rss-feeds' ),
+						'ajp_Arab' => __( 'South Levantine Arabic', 'feedzy-rss-feeds' ),
+						'aka_Latn' => __( 'Akan', 'feedzy-rss-feeds' ),
+						'amh_Ethi' => __( 'Amharic', 'feedzy-rss-feeds' ),
+						'apc_Arab' => __( 'North Levantine Arabic', 'feedzy-rss-feeds' ),
+						'arb_Arab' => __( 'Modern Standard Arabic', 'feedzy-rss-feeds' ),
+						'arb_Latn' => __( 'Modern Standard Arabic (Romanized)', 'feedzy-rss-feeds' ),
+						'ars_Arab' => __( 'Najdi Arabic', 'feedzy-rss-feeds' ),
+						'ary_Arab' => __( 'Moroccan Arabic', 'feedzy-rss-feeds' ),
+						'arz_Arab' => __( 'Egyptian Arabic', 'feedzy-rss-feeds' ),
+						'asm_Beng' => __( 'Assamese ', 'feedzy-rss-feeds' ),
+						'ast_Latn' => __( 'Asturian', 'feedzy-rss-feeds' ),
+						'awa_Deva' => __( 'Awadhi', 'feedzy-rss-feeds' ),
+						'ayr_Latn' => __( 'Central Aymara', 'feedzy-rss-feeds' ),
+						'azb_Arab' => __( 'South Azerbaijani', 'feedzy-rss-feeds' ),
+						'azj_Latn' => __( 'North Azerbaijani', 'feedzy-rss-feeds' ),
+						'bak_Cyrl' => __( 'Bashkir', 'feedzy-rss-feeds' ),
+						'bam_Latn' => __( 'Bambara', 'feedzy-rss-feeds' ),
+						'ban_Latn' => __( 'Balinese ', 'feedzy-rss-feeds' ),
+						'bel_Cyrl' => __( 'Belarusian', 'feedzy-rss-feeds' ),
+						'bem_Latn' => __( 'Bemba', 'feedzy-rss-feeds' ),
+						'ben_Beng' => __( 'Bengali', 'feedzy-rss-feeds' ),
+						'bho_Deva' => __( 'Bhojpuri', 'feedzy-rss-feeds' ),
+						'bjn_Arab' => __( 'Banjar Arab', 'feedzy-rss-feeds' ),
+						'bjn_Latn' => __( 'Banjar Latn', 'feedzy-rss-feeds' ),
+						'bod_Tibt' => __( 'Standard Tibetan', 'feedzy-rss-feeds' ),
+						'bos_Latn' => __( 'Bosnian', 'feedzy-rss-feeds' ),
+						'bug_Latn' => __( 'Buginese Latn', 'feedzy-rss-feeds' ),
+						'bul_Cyrl' => __( 'Bulgarian', 'feedzy-rss-feeds' ),
+						'cat_Latn' => __( 'Catalan', 'feedzy-rss-feeds' ),
+						'ceb_Latn' => __( 'Cebuano', 'feedzy-rss-feeds' ),
+						'ces_Latn' => __( 'Czech', 'feedzy-rss-feeds' ),
+						'cjk_Latn' => __( 'Chokwe', 'feedzy-rss-feeds' ),
+						'ckb_Arab' => __( 'Central Kurdish', 'feedzy-rss-feeds' ),
+						'crh_Latn' => __( 'Crimean Tatar', 'feedzy-rss-feeds' ),
+						'cym_Latn' => __( 'Welsh', 'feedzy-rss-feeds' ),
+						'dan_Latn' => __( 'Danish', 'feedzy-rss-feeds' ),
+						'deu_Latn' => __( 'German', 'feedzy-rss-feeds' ),
+						'dik_Latn' => __( 'Southwestern Dinka', 'feedzy-rss-feeds' ),
+						'dyu_Latn' => __( 'Dyula', 'feedzy-rss-feeds' ),
+						'dzo_Tibt' => __( 'Dzongkha', 'feedzy-rss-feeds' ),
+						'ell_Grek' => __( 'Greek', 'feedzy-rss-feeds' ),
+						'epo_Latn' => __( 'Esperanto', 'feedzy-rss-feeds' ),
+						'est_Latn' => __( 'Estonian', 'feedzy-rss-feeds' ),
+						'eus_Latn' => __( 'Basque', 'feedzy-rss-feeds' ),
+						'ewe_Latn' => __( 'Ewe', 'feedzy-rss-feeds' ),
+						'fao_Latn' => __( 'Faroese', 'feedzy-rss-feeds' ),
+						'fij_Latn' => __( 'Fijian', 'feedzy-rss-feeds' ),
+						'fin_Latn' => __( 'Finnish', 'feedzy-rss-feeds' ),
+						'fon_Latn' => __( 'Fon', 'feedzy-rss-feeds' ),
+						'fra_Latn' => __( 'French', 'feedzy-rss-feeds' ),
+						'fur_Latn' => __( 'Friulian', 'feedzy-rss-feeds' ),
+						'fuv_Latn' => __( 'Nigerian Fulfulde', 'feedzy-rss-feeds' ),
+						'gla_Latn' => __( 'Scottish Gaelic', 'feedzy-rss-feeds' ),
+						'gle_Latn' => __( 'Irish', 'feedzy-rss-feeds' ),
+						'glg_Latn' => __( 'Galician', 'feedzy-rss-feeds' ),
+						'grn_Latn' => __( 'Guarani', 'feedzy-rss-feeds' ),
+						'guj_Gujr' => __( 'Gujarati', 'feedzy-rss-feeds' ),
+						'hat_Latn' => __( 'Haitian Creole ', 'feedzy-rss-feeds' ),
+						'hau_Latn' => __( 'Hausa', 'feedzy-rss-feeds' ),
+						'heb_Hebr' => __( 'Hebrew', 'feedzy-rss-feeds' ),
+						'hin_Deva' => __( 'Hindi', 'feedzy-rss-feeds' ),
+						'hne_Deva' => __( 'Chhattisgarhi', 'feedzy-rss-feeds' ),
+						'hrv_Latn' => __( 'Croatian', 'feedzy-rss-feeds' ),
+						'hun_Latn' => __( 'Hungarian', 'feedzy-rss-feeds' ),
+						'hye_Armn' => __( 'Armenian', 'feedzy-rss-feeds' ),
+						'ibo_Latn' => __( 'Igbo', 'feedzy-rss-feeds' ),
+						'ilo_Latn' => __( 'Ilocano', 'feedzy-rss-feeds' ),
+						'ind_Latn' => __( 'Indonesian', 'feedzy-rss-feeds' ),
+						'isl_Latn' => __( 'Icelandic', 'feedzy-rss-feeds' ),
+						'ita_Latn' => __( 'Italian', 'feedzy-rss-feeds' ),
+						'jav_Latn' => __( 'Javanese', 'feedzy-rss-feeds' ),
+						'jpn_Jpan' => __( 'Japanese', 'feedzy-rss-feeds' ),
+						'kab_Latn' => __( 'Kabyle', 'feedzy-rss-feeds' ),
+						'kac_Latn' => __( 'Jingpho', 'feedzy-rss-feeds' ),
+						'kam_Latn' => __( 'Kamba', 'feedzy-rss-feeds' ),
+						'kan_Knda' => __( 'Kannada', 'feedzy-rss-feeds' ),
+						'kas_Arab' => __( 'Kashmiri Arab)', 'feedzy-rss-feeds' ),
+						'kas_Deva' => __( 'Kashmiri Devanagari', 'feedzy-rss-feeds' ),
+						'kat_Geor' => __( 'Georgian', 'feedzy-rss-feeds' ),
+						'knc_Arab' => __( 'Central Kanuri Arab', 'feedzy-rss-feeds' ),
+						'knc_Latn' => __( 'Central Kanuri _Latn', 'feedzy-rss-feeds' ),
+						'kaz_Cyrl' => __( 'Kazakh', 'feedzy-rss-feeds' ),
+						'kbp_Latn' => __( 'Kabiyè', 'feedzy-rss-feeds' ),
+						'kea_Latn' => __( 'Kabuverdianu', 'feedzy-rss-feeds' ),
+						'khm_Khmr' => __( 'Khmer', 'feedzy-rss-feeds' ),
+						'kik_Latn' => __( 'Kikuyu', 'feedzy-rss-feeds' ),
+						'kin_Latn' => __( 'Kinyarwanda', 'feedzy-rss-feeds' ),
+						'kir_Cyrl' => __( 'Kyrgyz', 'feedzy-rss-feeds' ),
+						'kmb_Latn' => __( 'Kimbundu', 'feedzy-rss-feeds' ),
+						'kmr_Latn' => __( 'Northern Kurdish', 'feedzy-rss-feeds' ),
+						'kon_Latn' => __( 'Kikongo', 'feedzy-rss-feeds' ),
+						'kor_Hang' => __( 'Korean', 'feedzy-rss-feeds' ),
+						'lao_Laoo' => __( 'Lao', 'feedzy-rss-feeds' ),
+						'lij_Latn' => __( 'Ligurian', 'feedzy-rss-feeds' ),
+						'lim_Latn' => __( 'Limburgish', 'feedzy-rss-feeds' ),
+						'lin_Latn' => __( 'Lingala', 'feedzy-rss-feeds' ),
+						'lit_Latn' => __( 'Lithuanian', 'feedzy-rss-feeds' ),
+						'lmo_Latn' => __( 'Lombard', 'feedzy-rss-feeds' ),
+						'ltg_Latn' => __( 'Latgalian', 'feedzy-rss-feeds' ),
+						'ltz_Latn' => __( 'Luxembourgish', 'feedzy-rss-feeds' ),
+						'lua_Latn' => __( 'Luba-Kasai', 'feedzy-rss-feeds' ),
+						'lug_Latn' => __( 'Ganda', 'feedzy-rss-feeds' ),
+						'luo_Latn' => __( 'Luo', 'feedzy-rss-feeds' ),
+						'lus_Latn' => __( 'Mizo', 'feedzy-rss-feeds' ),
+						'lvs_Latn' => __( 'Standard Latvian', 'feedzy-rss-feeds' ),
+						'mag_Deva' => __( 'Magahi', 'feedzy-rss-feeds' ),
+						'mai_Deva' => __( 'Maithili', 'feedzy-rss-feeds' ),
+						'mal_Mlym' => __( 'Malayalam', 'feedzy-rss-feeds' ),
+						'mar_Deva' => __( 'Marathi', 'feedzy-rss-feeds' ),
+						'min_Arab' => __( 'Minangkabau Arab', 'feedzy-rss-feeds' ),
+						'min_Latn' => __( 'Minangkabau Latn', 'feedzy-rss-feeds' ),
+						'mkd_Cyrl' => __( 'Macedonian', 'feedzy-rss-feeds' ),
+						'plt_Latn' => __( 'Plateau Malagasy', 'feedzy-rss-feeds' ),
+						'mlt_Latn' => __( 'Maltese', 'feedzy-rss-feeds' ),
+						'mni_Beng' => __( 'Meitei', 'feedzy-rss-feeds' ),
+						'khk_Cyrl' => __( 'Halh Mongolian', 'feedzy-rss-feeds' ),
+						'mos_Latn' => __( 'Mossi', 'feedzy-rss-feeds' ),
+						'mri_Latn' => __( 'Maori', 'feedzy-rss-feeds' ),
+						'mya_Mymr' => __( 'Burmese', 'feedzy-rss-feeds' ),
+						'nld_Latn' => __( 'Dutch', 'feedzy-rss-feeds' ),
+						'nno_Latn' => __( 'Norwegian Nynorsk', 'feedzy-rss-feeds' ),
+						'nob_Latn' => __( 'Norwegian Bokmål', 'feedzy-rss-feeds' ),
+						'npi_Deva' => __( 'Nepali', 'feedzy-rss-feeds' ),
+						'nso_Latn' => __( 'Northern Sotho', 'feedzy-rss-feeds' ),
+						'nus_Latn' => __( 'Nuer', 'feedzy-rss-feeds' ),
+						'nya_Latn' => __( 'Nyanja', 'feedzy-rss-feeds' ),
+						'oci_Latn' => __( 'Occitan', 'feedzy-rss-feeds' ),
+						'gaz_Latn' => __( 'West Central Oromo', 'feedzy-rss-feeds' ),
+						'ory_Orya' => __( 'Odia', 'feedzy-rss-feeds' ),
+						'pag_Latn' => __( 'Pangasinan', 'feedzy-rss-feeds' ),
+						'pan_Guru' => __( 'Eastern Panjabi', 'feedzy-rss-feeds' ),
+						'pap_Latn' => __( 'Papiamento', 'feedzy-rss-feeds' ),
+						'pes_Arab' => __( 'Western Persian', 'feedzy-rss-feeds' ),
+						'pol_Latn' => __( 'Polish', 'feedzy-rss-feeds' ),
+						'por_Latn' => __( 'Portuguese', 'feedzy-rss-feeds' ),
+						'prs_Arab' => __( 'Dari', 'feedzy-rss-feeds' ),
+						'pbt_Arab' => __( 'Southern Pashto', 'feedzy-rss-feeds' ),
+						'quy_Latn' => __( 'Ayacucho Quechua', 'feedzy-rss-feeds' ),
+						'ron_Latn' => __( 'Romanian', 'feedzy-rss-feeds' ),
+						'run_Latn' => __( 'Rundi', 'feedzy-rss-feeds' ),
+						'rus_Cyrl' => __( 'Russian', 'feedzy-rss-feeds' ),
+						'sag_Latn' => __( 'Sango', 'feedzy-rss-feeds' ),
+						'san_Deva' => __( 'Sanskrit', 'feedzy-rss-feeds' ),
+						'sat_Olck' => __( 'Santali', 'feedzy-rss-feeds' ),
+						'scn_Latn' => __( 'Sicilian', 'feedzy-rss-feeds' ),
+						'shn_Mymr' => __( 'Shan', 'feedzy-rss-feeds' ),
+						'sin_Sinh' => __( 'Sinhala', 'feedzy-rss-feeds' ),
+						'slk_Latn' => __( 'Slovak', 'feedzy-rss-feeds' ),
+						'slv_Latn' => __( 'Slovenian', 'feedzy-rss-feeds' ),
+						'smo_Latn' => __( 'Samoan', 'feedzy-rss-feeds' ),
+						'sna_Latn' => __( 'Shona', 'feedzy-rss-feeds' ),
+						'snd_Arab' => __( 'Sindhi', 'feedzy-rss-feeds' ),
+						'som_Latn' => __( 'Somali', 'feedzy-rss-feeds' ),
+						'sot_Latn' => __( 'Southern', 'feedzy-rss-feeds' ),
+						'spa_Latn' => __( 'Spanish', 'feedzy-rss-feeds' ),
+						'als_Latn' => __( 'Tosk Albanian', 'feedzy-rss-feeds' ),
+						'srd_Latn' => __( 'Sardinian', 'feedzy-rss-feeds' ),
+						'srp_Cyrl' => __( 'Serbian', 'feedzy-rss-feeds' ),
+						'ssw_Latn' => __( 'Swati', 'feedzy-rss-feeds' ),
+						'sun_Latn' => __( 'Sundanese', 'feedzy-rss-feeds' ),
+						'swe_Latn' => __( 'Swedish', 'feedzy-rss-feeds' ),
+						'swh_Latn' => __( 'Swahili', 'feedzy-rss-feeds' ),
+						'szl_Latn' => __( 'Silesian', 'feedzy-rss-feeds' ),
+						'tam_Taml' => __( 'Tamil', 'feedzy-rss-feeds' ),
+						'tat_Cyrl' => __( 'Tatar', 'feedzy-rss-feeds' ),
+						'tel_Telu' => __( 'Telugu', 'feedzy-rss-feeds' ),
+						'tgk_Cyrl' => __( 'Tajik', 'feedzy-rss-feeds' ),
+						'tgl_Latn' => __( 'Tagalog', 'feedzy-rss-feeds' ),
+						'tha_Thai' => __( 'Thai', 'feedzy-rss-feeds' ),
+						'tir_Ethi' => __( 'Tigrinya', 'feedzy-rss-feeds' ),
+						'taq_Latn' => __( 'Tamasheq Latn', 'feedzy-rss-feeds' ),
+						'taq_Tfng' => __( 'Tamasheq Tfng', 'feedzy-rss-feeds' ),
+						'tpi_Latn' => __( 'Tok Pisin', 'feedzy-rss-feeds' ),
+						'tsn_Latn' => __( 'Tswana', 'feedzy-rss-feeds' ),
+						'tso_Latn' => __( 'Tsonga', 'feedzy-rss-feeds' ),
+						'tuk_Latn' => __( 'Turkmen', 'feedzy-rss-feeds' ),
+						'tum_Latn' => __( 'Tumbuka', 'feedzy-rss-feeds' ),
+						'tur_Latn' => __( 'Turkish ', 'feedzy-rss-feeds' ),
+						'twi_Latn' => __( 'Twi', 'feedzy-rss-feeds' ),
+						'tzm_Tfng' => __( 'Central Atlas Tamazight', 'feedzy-rss-feeds' ),
+						'uig_Arab' => __( 'Uyghur', 'feedzy-rss-feeds' ),
+						'ukr_Cyrl' => __( 'Ukrainian', 'feedzy-rss-feeds' ),
+						'umb_Latn' => __( 'Umbundu', 'feedzy-rss-feeds' ),
+						'urd_Arab' => __( 'Urdu', 'feedzy-rss-feeds' ),
+						'uzn_Latn' => __( 'Northern Uzbek', 'feedzy-rss-feeds' ),
+						'vec_Latn' => __( 'Venetian', 'feedzy-rss-feeds' ),
+						'vie_Latn' => __( 'Vietnamese', 'feedzy-rss-feeds' ),
+						'war_Latn' => __( 'Waray', 'feedzy-rss-feeds' ),
+						'wol_Latn' => __( 'Wolof', 'feedzy-rss-feeds' ),
+						'xho_Latn' => __( 'Xhosa', 'feedzy-rss-feeds' ),
+						'ydd_Hebr' => __( 'Eastern Yiddish', 'feedzy-rss-feeds' ),
+						'yor_Latn' => __( 'Yoruba', 'feedzy-rss-feeds' ),
+						'yue_Hant' => __( 'Yue Chinese', 'feedzy-rss-feeds' ),
+						'zho_Hans' => __( 'Chinese Simplified', 'feedzy-rss-feeds' ),
+						'zho_Hant' => __( 'Chinese Traditional', 'feedzy-rss-feeds' ),
+						'zsm_Latn' => __( 'Standard Malay', 'feedzy-rss-feeds' ),
+						'zul_Latn' => __( 'Zulu', 'feedzy-rss-feeds' ),
+					);
+					$target_lang = apply_filters( 'feedzy_available_automatically_translation_language', $target_lang );
+					?>
+					<div class="form-block form-block-two-column<?php echo ! $this->feedzy_is_agency() ? ' only-pro' : ''; ?>">
+						<?php
+						if ( ! $this->feedzy_is_agency() ) {
+							echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'automatic-translation', 'import' ) );
+						}
 						?>
-						<div class="form-block form-block-two-column">
-							<div class="fz-left">
-								<h4 class="h4"><?php esc_html_e( 'Enable automatic translation?', 'feedzy-rss-feeds' ); ?></h4>
-									<div class="form-block-pro-text">
-										<?php esc_html_e( 'Enable and select the language to translate the text automatically. Enable this only if you used the Translate magic tags. The default is English', 'feedzy-rss-feeds' ); ?>
-									</div>
+						<div class="fz-left">
+							<h4 class="h4"><?php esc_html_e( 'Enable automatic translation?', 'feedzy-rss-feeds' ); ?><?php echo ! $this->feedzy_is_agency() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
+							<div class="form-block-pro-text">
+								<?php esc_html_e( 'Enable and select the language to translate the text automatically. Enable this only if you used the Translate magic tags. The default is English', 'feedzy-rss-feeds' ); ?>
 							</div>
-							<div class="fz-right">
-								<div class="fz-form-group">
-									<div style="margin-bottom: 5px;">
-										<input id="feedzy-auto-translation" name="feedzy_meta_data[import_auto_translation]" class="fz-switch-toggle" type="checkbox" value="yes" <?php echo esc_attr( $import_auto_translation ); ?>>
-										<label for="feedzy-auto-translation" class="feedzy-inline"></label>
-										<label class="feedzy-inline" style="margin-left: 10px;" for="import_auto_translation"></label>
-									</div>
-									<div>
-										<select id="feedzy_auto_translation_lang" class="form-control feedzy-chosen" name="feedzy_meta_data[import_auto_translation_lang]"<?php echo empty( $import_auto_translation ) ? ' disabled' : ''; ?>>
-											<?php foreach ( $target_lang as $code => $lang ) : ?>
-												<option value="<?php echo esc_attr( $code ); ?>"<?php echo $import_translation_lang === $code ? ' selected' : ''; ?>><?php echo esc_html( $lang ); ?></option>
-											<?php endforeach; ?>
-										</select>
-									</div>
+						</div>
+						<div class="fz-right">
+							<div class="fz-form-group">
+								<div style="margin-bottom: 5px;">
+									<input id="feedzy-auto-translation" name="feedzy_meta_data[import_auto_translation]" class="fz-switch-toggle" type="checkbox" value="yes" <?php echo esc_attr( $import_auto_translation ); ?><?php disabled( true, ! $this->feedzy_is_agency() ); ?>>
+									<label for="feedzy-auto-translation" class="feedzy-inline"></label>
+									<label class="feedzy-inline" style="margin-left: 10px;" for="import_auto_translation"></label>
+								</div>
+								<div>
+									<?php
+									$disabled_auto_translation = ! $this->feedzy_is_agency() || empty( $import_auto_translation );
+									?>
+									<select id="feedzy_auto_translation_lang" class="form-control feedzy-chosen" name="feedzy_meta_data[import_auto_translation_lang]"<?php disabled( true, $disabled_auto_translation ); ?>>
+										<?php foreach ( $target_lang as $code => $lang ) : ?>
+											<option value="<?php echo esc_attr( $code ); ?>"<?php echo $import_translation_lang === $code ? ' selected' : ''; ?>><?php echo esc_html( $lang ); ?></option>
+										<?php endforeach; ?>
+									</select>
 								</div>
 							</div>
 						</div>
-					<?php endif; ?>
+					</div>
 					<div class="form-block form-block-two-column">
 						<div class="cta-text pt-8">
 							<a href="javascript:void(0)" id="fz-feedback-btn" role="button"><?php esc_html_e( 'Help us improve Feedzy', 'feedzy-rss-feeds' ); ?></a>

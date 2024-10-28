@@ -3,6 +3,7 @@
 /**
  * Block dependencies
  */
+import { RawHTML } from '@wordpress/element';
 import RadioImageControl from './radio-image-control/';
 
 /**
@@ -55,9 +56,9 @@ class Inspector extends Component {
 
 	render() {
 		let http_help = '';
-		let refreshFeed = applyFilters('feedzy_widget_refresh_feed', [{ label: __('1 Hour'), value: '1_hours', }, { label: __('2 Hours'), value: '3_hours', }, { label: __('12 Hours'), value: '12_hours', }, { label: __('1 Day'), value: '1_days', }, { label: __('3 Days'), value: '3_days', }, { label: __('15 Days'), value: '15_days', }]);
+		let refreshFeed = applyFilters('feedzy_widget_refresh_feed', [{ label: __('1 Hour', 'feedzy-rss-feeds'), value: '1_hours', }, { label: __('2 Hours', 'feedzy-rss-feeds'), value: '3_hours', }, { label: __('12 Hours', 'feedzy-rss-feeds'), value: '12_hours', }, { label: __('1 Day', 'feedzy-rss-feeds'), value: '1_days', }, { label: __('3 Days', 'feedzy-rss-feeds'), value: '3_days', }, { label: __('15 Days', 'feedzy-rss-feeds'), value: '15_days', }]);
 		if (this.props.attributes.http === 'https') {
-			http_help += __('Please verify that the images exist on HTTPS.');
+			http_help += __('Please verify that the images exist on HTTPS.', 'feedzy-rss-feeds');
 		}
 
 		return (
@@ -73,7 +74,7 @@ class Inspector extends Component {
 						>
 							<span>
 								<Dashicon icon="editor-table" />
-								{__('Content')}
+								{__('Content', 'feedzy-rss-feeds')}
 							</span>
 						</Button>
 						<Button
@@ -85,7 +86,7 @@ class Inspector extends Component {
 						>
 							<span>
 								<Dashicon icon="admin-customizer" />
-								{__('Style')}
+								{__('Style', 'feedzy-rss-feeds')}
 							</span>
 						</Button>
 						<Button
@@ -97,26 +98,35 @@ class Inspector extends Component {
 						>
 							<span>
 								<Dashicon icon="admin-generic" />
-								{__('Advanced')}
+								{__('Advanced', 'feedzy-rss-feeds')}
 							</span>
 						</Button>
 					</PanelBody>
 					{('content' === this.state.tab) && (
 						<Fragment>
 							<PanelBody
-								title={__('Feed Source')}
+								title={__('Feed Source', 'feedzy-rss-feeds')}
 								initialOpen={true}
 							>
 								{(this.props.attributes.status !== 0 && !feedzyjs.isPro) && [
 									<div className="fz-upgrade-alert">
-										<strong>{__('NEW!')} </strong>{__('Enable Amazon Product Advertising feeds to generate affiliate revenue by ')}
-										<ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=amazonproductadvertising&utm_content=feedzy-rss-feeds">{__('upgrading to Feedzy Pro.')}</ExternalLink>
+										<strong>{ __( 'NEW!', 'feedzy-rss-feeds' ) } </strong>
+										<RawHTML>
+										{
+											sprintf(
+												// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+												__( 'Enable Amazon Product Advertising feeds to generate affiliate revenue by %1$s upgrading to Feedzy Pro. %2$s', 'feedzy-rss-feeds' ),
+												`<a target="_blank" href="${feedzyjs?.upsellLinkBlockEditor}">`,
+												'</a>'
+											)
+										}
+										</RawHTML>
 										<Dashicon icon="no-alt" onClick={(el) => {el.target.parentNode.style.display="none"}}/>
 									</div>
 								]}
 								{(this.props.attributes.status !== 0) && [
 									<TextControl
-										label={__('Feed Source')}
+										label={__('Feed Source', 'feedzy-rss-feeds')}
 										className="feedzy-source"
 										value={this.props.attributes.feeds}
 										onChange={this.props.edit.onChangeFeed}
@@ -128,17 +138,17 @@ class Inspector extends Component {
 										onClick={this.props.edit.loadFeed}
 										className="loadFeed"
 									>
-										{__('Load Feed')}
+										{__('Load Feed', 'feedzy-rss-feeds')}
 									</Button>,
 									<TextareaControl
-										label={__('Message to show when feed is empty')}
+										label={__('Message to show when feed is empty', 'feedzy-rss-feeds')}
 										value={this.props.attributes.error_empty}
 										onChange={this.props.edit.onErrorEmpty}
 									/>
 								]}
 								{('fetched' === this.props.state.route) && [
 									<RangeControl
-										label={__('Number of Items')}
+										label={__('Number of Items', 'feedzy-rss-feeds')}
 										value={Number(this.props.attributes.max) || 5}
 										onChange={this.props.edit.onChangeMax}
 										min={1}
@@ -147,27 +157,27 @@ class Inspector extends Component {
 										className="feedzy-max"
 									/>,
 									<SelectControl
-										label={__('Sorting Order')}
+										label={__('Sorting Order', 'feedzy-rss-feeds')}
 										value={this.props.attributes.sort}
 										options={[
 											{
-												label: __('Default'),
+												label: __('Default', 'feedzy-rss-feeds'),
 												value: 'default',
 											},
 											{
-												label: __('Date Descending'),
+												label: __('Date Descending', 'feedzy-rss-feeds'),
 												value: 'date_desc',
 											},
 											{
-												label: __('Date Ascending'),
+												label: __('Date Ascending', 'feedzy-rss-feeds'),
 												value: 'date_asc',
 											},
 											{
-												label: __('Title Descending'),
+												label: __('Title Descending', 'feedzy-rss-feeds'),
 												value: 'title_desc',
 											},
 											{
-												label: __('Title Ascending'),
+												label: __('Title Ascending', 'feedzy-rss-feeds'),
 												value: 'title_asc',
 											},
 										]}
@@ -175,7 +185,7 @@ class Inspector extends Component {
 										className="feedzy-sort"
 									/>,
 									<SelectControl
-										label={__('Feed Caching Time')}
+										label={__('Feed Caching Time', 'feedzy-rss-feeds')}
 										value={this.props.attributes.refresh}
 										options={refreshFeed}
 										onChange={this.props.edit.onRefresh}
@@ -184,17 +194,17 @@ class Inspector extends Component {
 								]}
 							</PanelBody>
 
-							<PanelBody title={__('Item Options')} initialOpen={false} className='feedzy-item-options'>
+							<PanelBody title={__('Item Options', 'feedzy-rss-feeds')} initialOpen={false} className='feedzy-item-options'>
 								<SelectControl
-									label={__('Open Links In')}
+									label={__('Open Links In', 'feedzy-rss-feeds')}
 									value={this.props.attributes.target}
 									options={[
 										{
-											label: __('New Tab'),
+											label: __('New Tab', 'feedzy-rss-feeds'),
 											value: '_blank',
 										},
 										{
-											label: __('Same Tab'),
+											label: __('Same Tab', 'feedzy-rss-feeds'),
 											value: '_self',
 										},
 									]}
@@ -202,15 +212,15 @@ class Inspector extends Component {
 								/>
 
 								<SelectControl
-									label={__('Make this link a "nofollow" link?')}
+									label={__('Make this link a "nofollow" link?', 'feedzy-rss-feeds')}
 									value={this.props.attributes.follow}
 									options={[
 										{
-											label: __('No'),
+											label: __('No', 'feedzy-rss-feeds'),
 											value: 'no',
 										},
 										{
-											label: __('Yes'),
+											label: __('Yes', 'feedzy-rss-feeds'),
 											value: 'yes',
 										},
 									]}
@@ -218,7 +228,7 @@ class Inspector extends Component {
 								/>
 
 								<ToggleControl
-									label={__('Display item Title')}
+									label={__('Display item Title', 'feedzy-rss-feeds')}
 									checked={!!this.props.attributes.itemTitle}
 									onChange={this.props.edit.onToggleItemTitle}
 									className="feedzy-summary"
@@ -226,8 +236,8 @@ class Inspector extends Component {
 
 								{(this.props.attributes.itemTitle) && (
 									<TextControl
-										label={__('Title Character Limit')}
-										help={__('Leave empty to show full title. A value of 0 will remove the title.')}
+										label={__('Title Character Limit', 'feedzy-rss-feeds')}
+										help={__('Leave empty to show full title. A value of 0 will remove the title.', 'feedzy-rss-feeds')}
 										type="number"
 										value={this.props.attributes.title}
 										onChange={this.props.edit.onTitle}
@@ -236,7 +246,7 @@ class Inspector extends Component {
 								)}
 
 								<ToggleControl
-									label={__('Display post description?')}
+									label={__('Display post description?', 'feedzy-rss-feeds')}
 									checked={!!this.props.attributes.summary}
 									onChange={this.props.edit.onToggleSummary}
 									className="feedzy-summary"
@@ -244,8 +254,8 @@ class Inspector extends Component {
 
 								{(this.props.attributes.summary) && (
 									<TextControl
-										label={__('Description Character Limit')}
-										help={__('Leave empty to show full description.')}
+										label={__('Description Character Limit', 'feedzy-rss-feeds')}
+										help={__('Leave empty to show full description.', 'feedzy-rss-feeds')}
 										type="number"
 										value={this.props.attributes.summarylength}
 										onChange={this.props.edit.onSummaryLength}
@@ -258,76 +268,76 @@ class Inspector extends Component {
 							<PanelBody
 								title={
 									[
-										__('Filter items'),
+										__('Filter items', 'feedzy-rss-feeds'),
 										!feedzyjs.isPro && <span className="fz-pro-label">Pro</span>
 									]
 								}
 								initialOpen={false}
 								className={feedzyjs.isPro ? 'feedzy-item-filter' : 'feedzy-item-filter fz-locked'}
 							>
-								{!feedzyjs.isPro && <div className="fz-upsell-notice">{__('Unlock this feature and more advanced options with')} <ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=keywordsfilter&utm_content=feedzy-rss-feeds">{__('Feedzy Pro')}</ExternalLink></div>}
+								{!feedzyjs.isPro && <div className="fz-upsell-notice">{__('Unlock this feature and more advanced options with', 'feedzy-rss-feeds')} <ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=keywordsfilter&utm_content=feedzy-rss-feeds">{__('Feedzy Pro', 'feedzy-rss-feeds')}</ExternalLink></div>}
 								<TextControl
-									label={__('Only display if selected field contains:')}
-									help={__('Use comma(,) and plus(+) keyword')}
+									label={__('Only display if selected field contains:', 'feedzy-rss-feeds')}
+									help={__('Use comma(,) and plus(+) keyword', 'feedzy-rss-feeds')}
 									value={this.props.attributes.keywords_title}
 									onChange={this.props.edit.onKeywordsTitle}
 									className="feedzy-include"
 								/>
 								<SelectControl
-									label={__('Select a field if you want to inc keyword.')}
+									label={__('Select a field if you want to inc keyword.', 'feedzy-rss-feeds')}
 									value={this.props.attributes.keywords_inc_on}
 									options={[
 										{
-											label: __('Title'),
+											label: __('Title', 'feedzy-rss-feeds'),
 											value: 'title',
 										},
 										{
-											label: __('Author'),
+											label: __('Author', 'feedzy-rss-feeds'),
 											value: 'author',
 										},
 										{
-											label: __('Description'),
+											label: __('Description', 'feedzy-rss-feeds'),
 											value: 'description',
 										},
 									]}
 									onChange={this.props.edit.onKeywordsIncludeOn}
 								/>
 								<TextControl
-									label={__('Exclude if selected field contains:')}
-									help={__('Use comma(,) and plus(+) keyword')}
+									label={__('Exclude if selected field contains:', 'feedzy-rss-feeds')}
+									help={__('Use comma(,) and plus(+) keyword', 'feedzy-rss-feeds')}
 									value={this.props.attributes.keywords_ban}
 									onChange={this.props.edit.onKeywordsBan}
 									className="feedzy-ban"
 								/>
 								<SelectControl
-									label={__('Select a field if you want to exc keyword.')}
+									label={__('Select a field if you want to exc keyword.', 'feedzy-rss-feeds')}
 									value={this.props.attributes.keywords_exc_on}
 									options={[
 										{
-											label: __('Title'),
+											label: __('Title', 'feedzy-rss-feeds'),
 											value: 'title',
 										},
 										{
-											label: __('Author'),
+											label: __('Author', 'feedzy-rss-feeds'),
 											value: 'author',
 										},
 										{
-											label: __('Description'),
+											label: __('Description', 'feedzy-rss-feeds'),
 											value: 'description',
 										},
 									]}
 									onChange={this.props.edit.onKeywordsExcludeOn}
 								/>
-								<p className="fz-main-label">{__('Filter feed item by date range.')}</p>
+								<p className="fz-main-label">{__('Filter feed item by date range.', 'feedzy-rss-feeds')}</p>
 								<TextControl
 									type='datetime-local'
-									label={__('From:')}
+									label={__('From:', 'feedzy-rss-feeds')}
 									value={this.props.attributes.from_datetime}
 									onChange={this.props.edit.onFromDateTime}
 								/>
 								<TextControl
 									type='datetime-local'
-									label={__('To:')}
+									label={__('To:', 'feedzy-rss-feeds')}
 									value={this.props.attributes.to_datetime}
 									onChange={this.props.edit.onToDateTime}
 								/>
@@ -338,24 +348,24 @@ class Inspector extends Component {
 					{('fetched' === this.props.state.route && 'style' === this.state.tab) && [
 						<Fragment>
 							<PanelBody
-								title={__('Item Image Options')}
+								title={__('Item Image Options', 'feedzy-rss-feeds')}
 								initialOpen={false}
 								className='feedzy-image-options'
 							>
 								<SelectControl
-									label={__('Display first image if available?')}
+									label={__('Display first image if available?', 'feedzy-rss-feeds')}
 									value={this.props.attributes.thumb}
 									options={[
 										{
-											label: __('Yes (without  a fallback image)'),
+											label: __('Yes (without  a fallback image)', 'feedzy-rss-feeds'),
 											value: 'auto',
 										},
 										{
-											label: __('Yes (with a fallback image)'),
+											label: __('Yes (with a fallback image)', 'feedzy-rss-feeds'),
 											value: 'yes',
 										},
 										{
-											label: __('No'),
+											label: __('No', 'feedzy-rss-feeds'),
 											value: 'no',
 										},
 									]}
@@ -366,7 +376,7 @@ class Inspector extends Component {
 								{(this.props.attributes.thumb !== 'no') && [
 									(this.props.attributes.thumb !== 'auto') && (
 										<div className="feedzy-blocks-base-control">
-											<label className="blocks-base-control__label" for="inspector-media-upload">{__('Fallback image if no image is found.')}</label>
+											<label className="blocks-base-control__label" for="inspector-media-upload">{__('Fallback image if no image is found.', 'feedzy-rss-feeds')}</label>
 											<MediaUpload
 												type="image"
 												id="inspector-media-upload"
@@ -378,7 +388,7 @@ class Inspector extends Component {
 															naturalWidth={this.props.attributes.default.width}
 															naturalHeight={this.props.attributes.default.height}
 														>
-															<img src={this.props.attributes.default.url} alt={__('Featured image')} />
+															<img src={this.props.attributes.default.url} alt={__('Featured image', 'feedzy-rss-feeds')} />
 														</ResponsiveWrapper>,
 														<Button
 															isLarge
@@ -386,7 +396,7 @@ class Inspector extends Component {
 															onClick={() => this.props.setAttributes({ default: undefined })}
 															style={{ marginTop: '10px' }}
 														>
-															{__('Remove Image')}
+															{__('Remove Image', 'feedzy-rss-feeds')}
 														</Button>
 													],
 													<Button
@@ -396,32 +406,32 @@ class Inspector extends Component {
 														style={{ marginTop: '10px' }}
 														className={(this.props.attributes.default === undefined) && 'feedzy_image_upload'}
 													>
-														{__('Upload Image')}
+														{__('Upload Image', 'feedzy-rss-feeds')}
 													</Button>
 												]}
 											/>
 										</div>
 									),
 									<TextControl
-										label={__('Thumbnails dimension.')}
+										label={__('Thumbnails dimension.', 'feedzy-rss-feeds')}
 										type="number"
 										value={this.props.attributes.size}
 										onChange={this.props.edit.onSize}
 									/>,
 									<SelectControl
-										label={__('How should we treat HTTP images?')}
+										label={__('How should we treat HTTP images?', 'feedzy-rss-feeds')}
 										value={this.props.attributes.http}
 										options={[
 											{
-												label: __('Show with HTTP link'),
+												label: __('Show with HTTP link', 'feedzy-rss-feeds'),
 												value: 'auto',
 											},
 											{
-												label: __('Force HTTPS'),
+												label: __('Force HTTPS', 'feedzy-rss-feeds'),
 												value: 'https',
 											},
 											{
-												label: __('Ignore and show the default image instead'),
+												label: __('Ignore and show the default image instead', 'feedzy-rss-feeds'),
 												value: 'default',
 											},
 										]}
@@ -435,18 +445,18 @@ class Inspector extends Component {
 							<PanelBody
 								title={
 									[
-										__('Feed Layout'),
+										__('Feed Layout', 'feedzy-rss-feeds'),
 										!feedzyjs.isPro && <span className="fz-pro-label">Pro</span>
 									]
 								}
 								initialOpen={false}
 								className={feedzyjs.isPro ? 'feedzy-layout' : 'feedzy-layout fz-locked'}
 							>
-								{!feedzyjs.isPro && <div className="fz-upsell-notice">{__('Unlock this feature and more advanced options with')} <ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=layouts&utm_content=feedzy-rss-feeds">{__('Feedzy Pro')}</ExternalLink></div>}
+								{!feedzyjs.isPro && <div className="fz-upsell-notice">{__('Unlock this feature and more advanced options with', 'feedzy-rss-feeds')} <ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=layouts&utm_content=feedzy-rss-feeds">{__('Feedzy Pro', 'feedzy-rss-feeds')}</ExternalLink></div>}
 
 								<RangeControl
-									label={__('Columns')}
-									help={__('How many columns we should use to display the feed items?')}
+									label={__('Columns', 'feedzy-rss-feeds')}
+									help={__('How many columns we should use to display the feed items?', 'feedzy-rss-feeds')}
 									value={this.props.attributes.columns || 1}
 									onChange={this.props.edit.onColumns}
 									min={1}
@@ -456,21 +466,21 @@ class Inspector extends Component {
 								/>
 
 								<RadioImageControl
-									label={__('Template')}
+									label={__('Template', 'feedzy-rss-feeds')}
 									selected={this.props.attributes.template}
 									options={[
 										{
-											label: __('Default'),
+											label: __('Default', 'feedzy-rss-feeds'),
 											src: feedzyjs.imagepath + 'feedzy-default-template.png',
 											value: 'default',
 										},
 										{
-											label: __('Round'),
+											label: __('Round', 'feedzy-rss-feeds'),
 											src: feedzyjs.imagepath + 'feedzy-style1-template.png',
 											value: 'style1',
 										},
 										{
-											label: __('Cards'),
+											label: __('Cards', 'feedzy-rss-feeds'),
 											src: feedzyjs.imagepath + 'feedzy-style2-template.png',
 											value: 'style2',
 										},
@@ -480,16 +490,16 @@ class Inspector extends Component {
 							</PanelBody>
 
 							<PanelBody
-								title={__('Disable default style')}
+								title={__('Disable default style', 'feedzy-rss-feeds')}
 								initialOpen={false}
 								className="feedzy-disable-style"
 							>
 							<ToggleControl
-								label={__('Disable default style?')}
+								label={__('Disable default style?', 'feedzy-rss-feeds')}
 								checked={!!this.props.attributes.disableStyle}
 								onChange={this.props.edit.onToggleDisableStyle}
 								className="feedzy-summary"
-								help={__('If disabled, it will be considered the global setting.')}
+								help={__('If disabled, it will be considered the global setting.', 'feedzy-rss-feeds')}
 							/>
 							</PanelBody>
 						</Fragment>
@@ -497,35 +507,35 @@ class Inspector extends Component {
 					{('fetched' === this.props.state.route && 'advanced' === this.state.tab) && [
 						<Fragment>
 							<PanelBody
-								title={__('Feed Items Custom Options')}
+								title={__('Feed Items Custom Options', 'feedzy-rss-feeds')}
 								className='feedzy-advanced-options'
 								initialOpen={false}
 							>
 								<BaseControl>
 									<TextControl
-										label={feedzyjs.isPro ? __('Should we display additional meta fields out of author, date, time or categories? (comma-separated list, in order of display).') : __('Should we display additional meta fields out of author, date or time? (comma-separated list, in order of display).')}
-										help={__('Leave empty to display all and "no" to display nothing.')}
-										placeholder={feedzyjs.isPro ? __('(eg: author, date, time, tz=local, categories)') : __('(eg: author, date, time, tz=local)')}
+										label={feedzyjs.isPro ? __('Should we display additional meta fields out of author, date, time or categories? (comma-separated list, in order of display).', 'feedzy-rss-feeds') : __('Should we display additional meta fields out of author, date or time? (comma-separated list, in order of display).', 'feedzy-rss-feeds')}
+										help={__('Leave empty to display all and "no" to display nothing.', 'feedzy-rss-feeds')}
+										placeholder={feedzyjs.isPro ? __('(eg: author, date, time, tz=local, categories)', 'feedzy-rss-feeds') : __('(eg: author, date, time, tz=local)', 'feedzy-rss-feeds')}
 										value={this.props.attributes.metafields}
 										onChange={this.props.edit.onChangeMeta}
 										className="feedzy-meta"
 									/>
 									<TextControl
-										label={__('When using multiple sources, should we display additional meta fields? - source (comma-separated list).')}
-										placeholder={__('(eg: source)')}
+										label={__('When using multiple sources, should we display additional meta fields? - source (comma-separated list).', 'feedzy-rss-feeds')}
+										placeholder={__('(eg: source)', 'feedzy-rss-feeds')}
 										value={this.props.attributes.multiple_meta}
 										onChange={this.props.edit.onChangeMultipleMeta}
 										className="feedzy-multiple-meta"
 									/>
 
 									<ExternalLink href="https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed">
-										{__('You can find more info about available meta field values here.')}
+										{__('You can find more info about available meta field values here.', 'feedzy-rss-feeds')}
 									</ExternalLink>
 								</BaseControl>
 
 								<ToggleControl
-									label={__('Display price if available?')}
-									help={(this.props.attributes.price && this.props.attributes.template === 'default') ? __('Choose a different template for this to work.') : null}
+									label={__('Display price if available?', 'feedzy-rss-feeds')}
+									help={(this.props.attributes.price && this.props.attributes.template === 'default') ? __('Choose a different template for this to work.', 'feedzy-rss-feeds') : null}
 									checked={!!this.props.attributes.price}
 									onChange={this.props.edit.onTogglePrice}
 									className={feedzyjs.isPro ? 'feedzy-pro-price' : 'feedzy-pro-price fz-locked'}
@@ -533,7 +543,7 @@ class Inspector extends Component {
 
 								{((this.props.attributes.feedData['channel'] !== null)) && (
 									<ToggleControl
-										label={__('Display feed title?')}
+										label={__('Display feed title?', 'feedzy-rss-feeds')}
 										checked={!!this.props.attributes.feed_title}
 										onChange={this.props.edit.onToggleFeedTitle}
 										className="feedzy-title"
@@ -541,7 +551,7 @@ class Inspector extends Component {
 								)}
 
 								<RangeControl
-									label={__('Ignore first N items')}
+									label={__('Ignore first N items', 'feedzy-rss-feeds')}
 									value={Number(this.props.attributes.offset) || 0}
 									onChange={this.props.edit.onChangeOffset}
 									min={0}
@@ -551,11 +561,11 @@ class Inspector extends Component {
 								/>
 
 								<ToggleControl
-									label={__('Lazy load feed?')}
+									label={__('Lazy load feed?', 'feedzy-rss-feeds')}
 									checked={!!this.props.attributes.lazy}
 									onChange={this.props.edit.onToggleLazy}
 									className="feedzy-lazy"
-									help={__('Only on the front end.')}
+									help={__('Only on the front end.', 'feedzy-rss-feeds')}
 								/>
 
 							</PanelBody>
@@ -563,17 +573,17 @@ class Inspector extends Component {
 							<PanelBody
 								title={
 									[
-										__('Referral URL'),
+										__('Referral URL', 'feedzy-rss-feeds'),
 										!feedzyjs.isPro && <span className="fz-pro-label">Pro</span>
 									]
 								}
 								initialOpen={false}
 								className={feedzyjs.isPro ? 'feedzy-pro-options' : 'feedzy-pro-options fz-locked'}
 							>
-								{!feedzyjs.isPro && <div className="fz-upsell-notice">{__('Unlock this feature and more advanced options with')} <ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=refferal&utm_content=feedzy-rss-feeds">{__('Feedzy Pro')}</ExternalLink></div>}
+								{!feedzyjs.isPro && <div className="fz-upsell-notice">{__('Unlock this feature and more advanced options with', 'feedzy-rss-feeds')} <ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=refferal&utm_content=feedzy-rss-feeds">{__('Feedzy Pro', 'feedzy-rss-feeds')}</ExternalLink></div>}
 								<TextControl
-									label={__('Referral URL parameters.')}
-									help={__('Without ("?")')}
+									label={__('Referral URL parameters.', 'feedzy-rss-feeds')}
+									help={__('Without ("?")', 'feedzy-rss-feeds')}
 									placeholder={_('(eg. promo_code=feedzy_is_awesome)')}
 									value={this.props.attributes.referral_url}
 									onChange={this.props.edit.onReferralURL}
@@ -581,26 +591,26 @@ class Inspector extends Component {
 							</PanelBody>
 
 							<PanelBody
-								title={__('Additional options')}
+								title={__('Additional options', 'feedzy-rss-feeds')}
 								initialOpen={false}
 								className="feedzy-additional-options"
 							>
 								<TextControl
-									label={__('Wrap custom class')}
+									label={__('Wrap custom class', 'feedzy-rss-feeds')}
 									value={this.props.attributes.className}
 									onChange={this.props.edit.onclassName}
 								/>
 
 								<SelectControl
-									label={__('Dry run?')}
+									label={__('Dry run?', 'feedzy-rss-feeds')}
 									value={this.props.attributes._dryrun_}
 									options={[
 										{
-											label: __('No'),
+											label: __('No', 'feedzy-rss-feeds'),
 											value: 'no',
 										},
 										{
-											label: __('Yes'),
+											label: __('Yes', 'feedzy-rss-feeds'),
 											value: 'yes',
 										},
 									]}
@@ -608,7 +618,7 @@ class Inspector extends Component {
 								/>
 
 								<TextControl
-									label={__('Dry run tags')}
+									label={__('Dry run tags', 'feedzy-rss-feeds')}
 									value={this.props.attributes._dry_run_tags_}
 									onChange={this.props.edit.onDryRunTags}
 								/>

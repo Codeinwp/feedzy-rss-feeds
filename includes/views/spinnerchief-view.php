@@ -2,8 +2,15 @@
 	<div class="form-block">
 		<div class="upgrade-alert mb-24">
 			<?php
-				echo wp_kses_post( wp_sprintf( __( 'You\'re using Feedzy Lite.  Unlock more powerful features, by <a href="%s" target="_blank">upgrading to Feedzy Pro</a>', 'feedzy-rss-feeds' ), tsdk_utmify( FEEDZY_UPSELL_LINK, 'spinnerchief' ) ) );
-			?>
+				echo wp_kses_post(
+					wp_sprintf(
+						// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+						__( 'You\'re using Feedzy Lite.  Unlock more powerful features, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ),
+						'<a target="_blank" href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'spinnerchief' ), 'query' ) ) . '">',
+						'</a>'
+					)
+				);
+				?>
 		</div>
 		<div class="locked-form-block">
 			<div class="fz-form-group">
