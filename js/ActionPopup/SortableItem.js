@@ -170,9 +170,8 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 									label={ __( 'Main Prompt', 'feedzy-rss-feeds' ) }
 									help={
 										sprintf(
-											// translators: %1$s is the tag content: {content},  %2$s is the tag content: {content}
-											__( 'You can use %1$s in the textarea such as: "Rephrase my %2$s for better SEO."', 'feedzy-rss-feeds' ), 
-											'{content}', 
+											// translators: %1$s is the tag content: {content}
+											__( 'You can use %1$s in the textarea such as: "Rephrase my %1$s for better SEO."', 'feedzy-rss-feeds' ),
 											'{content}' 
 										)
 									}

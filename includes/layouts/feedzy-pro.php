@@ -122,14 +122,14 @@
                     <h3 class="h3">
                         <?php
                         // translators: %s: OpenAI (ChatGPT)
-                        echo sprintf( esc_html__( '%s Support', 'feedzy-rss-feeds' ), 'OpenAI (ChatGPT)' );
+                        echo sprintf( esc_html__( '%s Support', 'feedzy-rss-feeds' ), __( 'OpenAI (ChatGPT)', 'feedzy-rss-feeds' ) );
                         ?>
                         <span class="pro-label"><?php esc_html_e( 'Answer a few questions to help us improve Feedzy', 'feedzy-rss-feeds' ); ?></span>
                     </h3>
                     <p>
                         <?php
                         /* translators: %s: OpenAI API */
-                        echo sprintf( esc_html__( 'Using the %s integration, paraphrase, summarize, generate missing featured images, or apply your custom prompt to the imported content.', 'feedzy-rss-feeds' ), 'OpenAI API' );
+                        echo sprintf( esc_html__( 'Using the %s integration, paraphrase, summarize, generate missing featured images, or apply your custom prompt to the imported content.', 'feedzy-rss-feeds' ), __( 'OpenAI API', 'feedzy-rss-feeds' ) );
                         ?>
                     </p>
                 </li>
@@ -146,7 +146,7 @@
                         <?php
                         
                         /* translators: %s: WordAI & SpinnerChief */
-                        echo sprintf( esc_html__( '%s integration', 'feedzy-rss-feeds' ), 'WordAI & SpinnerChief' );
+                        echo sprintf( esc_html__( '%s integration', 'feedzy-rss-feeds' ), __( 'WordAI & SpinnerChief', 'feedzy-rss-feeds' ) );
                         ?>
                         <span class="pro-label"><?php esc_html_e( 'Agency plan', 'feedzy-rss-feeds' );?></span>
                     </h3>
@@ -154,7 +154,7 @@
                         <?php
                        
                         /* translators: %1$s: WordAi, %2$s: SpinnerChief */
-                        echo sprintf( esc_html__( '%1$s and %2$s can be used to rephrase RSS feeds when they are imported as posts in WordPress.', 'feedzy-rss-feeds' ), 'WordAi', 'SpinnerChief' );
+                        echo sprintf( esc_html__( '%1$s and %2$s can be used to rephrase RSS feeds when they are imported as posts in WordPress.', 'feedzy-rss-feeds' ), __( 'WordAi', 'feedzy-rss-feeds' ), __( 'SpinnerChief', 'feedzy-rss-feeds' ) );
                         ?>
                     </p>
                 </li>
