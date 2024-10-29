@@ -313,6 +313,8 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 					return $this->summarize_content();
 				case 'fz_image':
 					return $this->generate_image();
+				case 'modify_links':
+					return $this->modify_links();
 				default:
 					return $this->default_content();
 			}
@@ -457,16 +459,21 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 * @return string
 		 */
 		private function chat_gpt_rewrite() {
-			$content = call_user_func( array( $this, $this->current_job->tag ) );
-			$content = wp_strip_all_tags( $content );
-			$content = substr( $content, 0, apply_filters( 'feedzy_chat_gpt_content_limit', 3000 ) );
-			$content = str_replace( array( '{content}' ), array( $content ), $this->current_job->data->ChatGPT );
+			// Return prompt content if openAI class doesn't exist.
 			if ( ! class_exists( '\Feedzy_Rss_Feeds_Pro_Openai' ) ) {
-				return $content;
+				return $this->current_job->data->ChatGPT;
 			}
-			$openai  = new \Feedzy_Rss_Feeds_Pro_Openai();
-			$content = $openai->call_api( $this->settings, $content, '', array() );
-			return $content;
+
+			$content         = call_user_func( array( $this, $this->current_job->tag ) );
+			$content         = wp_strip_all_tags( $content );
+			$content         = substr( $content, 0, apply_filters( 'feedzy_chat_gpt_content_limit', 3000 ) );
+			$prompt_content  = $this->current_job->data->ChatGPT;
+			$content         = str_replace( array( '{content}' ), array( $content ), $prompt_content );
+			$openai          = new \Feedzy_Rss_Feeds_Pro_Openai();
+			$rewrite_content = $openai->call_api( $this->settings, $content, '', array() );
+			// Replace prompt content string for specific cases.
+			$rewrite_content = str_replace( explode( '{content}', $prompt_content ), '', $rewrite_content );
+			return $rewrite_content;
 		}
 
 		/**
@@ -504,6 +511,56 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			$prompt = call_user_func( array( $this, 'item_title' ) );
 			$openai = new \Feedzy_Rss_Feeds_Pro_Openai();
 			return $openai->call_api( $this->settings, $prompt, 'image', array() );
+		}
+
+		/**
+		 * Modify links.
+		 *
+		 * @return string Item content.
+		 */
+		private function modify_links() {
+			$content = call_user_func( array( $this, $this->current_job->tag ) );
+			// Returns item content because it has no HTML tags
+			if ( $content === wp_strip_all_tags( $content ) ) {
+				return $content;
+			}
+			// Pro version is required to perform this action.
+			if ( ! feedzy_is_pro() ) {
+				return $content;
+			}
+			// converts all special characters to utf-8.
+			$content = mb_convert_encoding( $content, 'HTML-ENTITIES', 'UTF-8' );
+
+			$dom = new DOMDocument( '1.0', 'utf-8' );
+			libxml_use_internal_errors( true );
+			$dom->loadHTML( $content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
+			$xpath = new DOMXPath( $dom );
+			libxml_clear_errors();
+			// Get all anchors tags.
+			$nodes = $xpath->query( '//a' );
+
+			foreach ( $nodes as $node ) {
+				if ( ! empty( $this->current_job->data->remove_links ) ) {
+					// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+					$node->parentNode->removeChild( $node );
+					continue;
+				}
+				if ( ! empty( $this->current_job->data->target ) ) {
+					$node->setAttribute( 'target', $this->current_job->data->target );
+				}
+				if ( ! empty( $this->current_job->data->follow ) && 'yes' === $this->current_job->data->follow ) {
+					$node->setAttribute( 'rel', 'nofollow' );
+				}
+			}
+			if ( ! empty( $this->current_job->data->follow ) && 'yes' === $this->current_job->data->follow ) {
+				add_filter(
+					'wp_targeted_link_rel',
+					function() {
+						return 'nofollow';
+					}
+				);
+			}
+			return $dom->saveHTML();
 		}
 	}
 }

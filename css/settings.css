@@ -1719,6 +1719,7 @@ span.error-message .components-external-link .components-visually-hidden{
 	margin-left: auto;
 	padding: 0;
 	height: auto;
+	box-shadow: none !important;
 }
 .fz-action-btn button {
     display: flex;
@@ -1765,7 +1766,7 @@ span.error-message .components-external-link .components-visually-hidden{
 	position: relative;
 }
 .popover-action-list{
-	width: 250px;
+	width: 270px;
 	position: absolute;
 	left: 100%;
 	bottom: 0;
@@ -2020,7 +2021,8 @@ li.draggable-item .components-panel__body-toggle.components-button{
 .fz-action-panel .fz-chat-cpt-action .components-notice {
 	width: 100%;
 }
-.fz-action-panel .fz-chat-cpt-action .components-panel__row {
+.fz-action-panel .fz-chat-cpt-action .components-panel__row,
+.fz-action-panel .fz-modify-links .components-panel__row {
 	display: block;
 }
 .fz-action-panel .fz-upgrade-notice {
@@ -2090,7 +2092,8 @@ li.draggable-item .components-panel__body-toggle.components-button{
 	cursor: not-allowed !important;
 }
 
-.fz-action-panel .fz-chat-cpt-action .fz-notice-wrap {
+.fz-action-panel .fz-chat-cpt-action .fz-notice-wrap,
+.fz-action-panel .fz-modify-links .fz-notice-wrap {
 	padding: 0;
 }
 

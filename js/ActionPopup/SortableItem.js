@@ -1,6 +1,6 @@
 import React from 'react';
 import { SortableElement, sortableHandle } from 'react-sortable-hoc';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { unescape } from 'lodash';
 import {
 	Icon,
@@ -25,7 +25,8 @@ import {
 	Popover,
 	ItemGroup,
 	Item,
-	ToggleControl
+	ToggleControl,
+	SelectControl
 } from '@wordpress/components';
 
 const DragHandle = sortableHandle(() => <Icon icon={dragHandle} size={18} className="components-panel__icon" />);
@@ -168,7 +169,13 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 							<BaseControl>
 								<TextareaControl
 									label={ __( 'Main Prompt', 'feedzy-rss-feeds' ) }
-									help={__( 'You can use {content} in the textarea such as: "Rephrase my {content} for better SEO.".', 'feedzy-rss-feeds' )}
+									help={
+										sprintf(
+											// translators: %1$s is the tag content: {content}
+											__( 'You can use %1$s in the textarea such as: "Rephrase my %1$s for better SEO."', 'feedzy-rss-feeds' ),
+											'{content}' 
+										)
+									}
 									value={ item.data.ChatGPT ? unescape(item.data.ChatGPT.replaceAll('&#039;', '\'')) : '' }
 									onChange={ ( currentValue ) => propRef.onChangeHandler( { 'index': loopIndex, 'ChatGPT': currentValue ?? '' } ) }
 									disabled={!feedzyData.isPro || !feedzyData.apiLicenseStatus.openaiStatus}
@@ -284,6 +291,83 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 									disabled={!feedzyData.isPro || !feedzyData.apiLicenseStatus.openaiStatus}
 								/>
 							</BaseControl>
+						</PanelRow>
+					</PanelBody>
+				</div>
+				<div className="fz-trash-action">
+					<button type="button" onClick={() => { propRef.removeCallback(loopIndex) }}>
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+							<path d="M20 5.0002H14.3C14.3 3.7002 13.3 2.7002 12 2.7002C10.7 2.7002 9.7 3.7002 9.7 5.0002H4V7.0002H5.5V7.3002L7.2 18.4002C7.3 19.4002 8.2 20.1002 9.2 20.1002H14.9C15.9 20.1002 16.7 19.4002 16.9 18.4002L18.6 7.3002V7.0002H20V5.0002ZM16.8 7.0002L15.1 18.1002C15.1 18.2002 15 18.3002 14.8 18.3002H9.1C9 18.3002 8.8 18.2002 8.8 18.1002L7.2 7.0002H16.8Z" fill="black"/>
+						</svg>
+					</button>
+				</div>
+			</li>
+		);
+	}
+
+	if ( 'modify_links' === item.id ) {
+		return(
+			<li className="fz-action-control fz-modify-links" data-counter={counter}>
+				<div className="fz-action-event">
+					<PanelBody title={ __( 'Modify Links', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false }>
+						<PanelRow>
+							<UpgradeNotice higherPlanNotice={false} utmCampaign="action-modify-links"/>
+							<BaseControl className="mb-20">
+								<ToggleControl
+									checked={ item.data.remove_links ?? false }
+									label={ __( 'Remove links from the content?', 'feedzy-rss-feeds' ) }
+									onChange={ ( currentValue ) => propRef.onChangeHandler( { 'index': loopIndex, 'remove_links': currentValue ?? '' } ) }
+									disabled={!feedzyData.isPro}
+								/>
+							</BaseControl>
+							{ true !== item.data.remove_links &&
+								<BaseControl className="mb-20">
+									<SelectControl
+										label={__('Open Links In', 'feedzy-rss-feeds')}
+										value={ item.data.target || '' }
+										options={[
+											{
+												label: __('Default', 'feedzy-rss-feeds'),
+												value: '',
+											},
+											{
+												label: __('New Tab'),
+												value: '_blank',
+											},
+											{
+												label: __('Same Tab'),
+												value: '_self',
+											},
+										]}
+										onChange={ ( currentValue ) => propRef.onChangeHandler( { 'index': loopIndex, 'target': currentValue ?? '' } ) }
+										disabled={!feedzyData.isPro}
+									/>
+								</BaseControl>
+							}
+							{ true !== item.data.remove_links &&
+								<BaseControl>
+									<SelectControl
+										label={__( 'Make this link a "nofollow" link?', 'feedzy-rss-feeds' )}
+										value={ item.data.follow || '' }
+										onChange={ ( currentValue ) => propRef.onChangeHandler( { 'index': loopIndex, 'follow': currentValue ?? '' } ) }
+										options={[
+											{
+												label: __('Default', 'feedzy-rss-feeds'),
+												value: '',
+											},
+											{
+												label: __('No', 'feedzy-rss-feeds'),
+												value: 'no',
+											},
+											{
+												label: __('Yes', 'feedzy-rss-feeds'),
+												value: 'yes',
+											},
+										]}
+										disabled={!feedzyData.isPro}
+									/>
+								</BaseControl>
+							}
 						</PanelRow>
 					</PanelBody>
 				</div>

@@ -92,13 +92,33 @@
 			<div class="feedzy-accordion-item need-help-box">
 				<div class="feedzy-accordion-item__content">
 					<h3 class="h3"><?php esc_html_e( 'Need help with Feedzy?', 'feedzy-rss-feeds' ); ?></h3>
-					<?php if ( ! defined( 'FEEDZY_PRO_VERSION' ) ) : ?>
-					<p><?php echo wp_kses_post( wp_sprintf( __( 'If you didn\'t found an answer in our Knowledge Base, you can always ask for help from our community based forum or <a href="%s" target="_blank">get dedicated support with our premium plans.</a>', 'feedzy-rss-feeds' ), tsdk_utmify( FEEDZY_UPSELL_LINK, 'dedicatedsupport' ) ) ); ?></p>
-					<a href="https://wordpress.org/support/plugin/feedzy-rss-feeds/" class="btn btn-outline-primary" target="_blank"><?php esc_html_e( 'Community Forum', 'feedzy-rss-feeds' ); ?></a>
-					<?php else : ?>
+					<?php
+					if ( ! defined( 'FEEDZY_PRO_VERSION' ) ) {
+						$upsell_link = tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'dedicatedsupport' ) );
+						?>
+					<p>
+						<?php
+						echo wp_kses_post(
+							wp_sprintf(
+								// Translators: %1$s is the opening anchor tag for the upsell link, %2$s is the closing anchor tag.
+								__( 'If you did not found an answer in our Knowledge Base, you can always ask for help from our community based forum or %1$s get dedicated support with our premium plans. %2$s', 'feedzy-rss-feeds' ),
+								'<a target="_blank" href="' . esc_url( $upsell_link ) . '">',
+								'</a>'
+							)
+						);
+						?>
+					</p>
+					<a href="https://wordpress.org/support/plugin/feedzy-rss-feeds/" class="btn btn-outline-primary" target="_blank">
+						<?php esc_html_e( 'Community Forum', 'feedzy-rss-feeds' ); ?>
+					</a>
+						<?php
+					} else {
+						?>
 						<p><?php echo wp_kses_post( wp_sprintf( __( 'If you didn\'t found an answer in our Knowledge Base, our dedicated support team standby to help you.', 'feedzy-rss-feeds' ) ) ); ?></p>
 						<a href="https://store.themeisle.com/contact" class="btn btn-outline-primary" target="_blank"><?php esc_html_e( 'Contact Support', 'feedzy-rss-feeds' ); ?></a>
-					<?php endif; ?>
+						<?php
+					}
+					?>
 				</div>
 			</div>
 		<?php endif; ?>

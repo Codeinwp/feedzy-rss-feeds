@@ -102,7 +102,7 @@ class Feedzy_Rss_Feeds_Import {
 				<div class="only-pro-container">
 					<div class="only-pro-inner upgrade-alert">
 						' . __( 'This feature is available in the Pro version.  Unlock more features, by', 'feedzy-rss-feeds' ) . '
-						<a target="_blank" href="' . tsdk_utmify( FEEDZY_UPSELL_LINK, $area, $location ) . '" title="' . __( 'Buy Now', 'feedzy-rss-feeds' ) . '">' . __( 'upgrading to Feedzy Pro', 'feedzy-rss-feeds' ) . '</a>
+						<a target="_blank" href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, $area, $location ), 'query' ) ) . '" title="' . __( 'Buy Now', 'feedzy-rss-feeds' ) . '">' . __( 'upgrading to Feedzy Pro', 'feedzy-rss-feeds' ) . '</a>
 					</div>
 				</div>
 			</div>';
@@ -708,7 +708,12 @@ class Feedzy_Rss_Feeds_Import {
 					$then = new DateTime();
 					$then = $then->setTimestamp( $last );
 					$in   = $now->diff( $then );
-					$msg  = sprintf( __( 'Ran %1$d hours %2$d minutes ago', 'feedzy-rss-feeds' ), $in->format( '%h' ), $in->format( '%i' ) );
+					$msg  = sprintf(
+						// translators: %1$d: number of hours, %2$d: number of minutes
+						__( 'Ran %1$d hours %2$d minutes ago', 'feedzy-rss-feeds' ),
+						$in->format( '%h' ),
+						$in->format( '%i' )
+					);
 				}
 
 				$msg .= $this->get_last_run_details( $post_id );
@@ -726,7 +731,14 @@ class Feedzy_Rss_Feeds_Import {
 					$then = new DateTime();
 					$then = $then->setTimestamp( $next );
 					$in   = $now->diff( $then );
-					echo wp_kses_post( sprintf( __( 'In %1$d hours %2$d minutes', 'feedzy-rss-feeds' ), $in->format( '%h' ), $in->format( '%i' ) ) );
+					echo wp_kses_post(
+						sprintf(
+							// translators: %1$d: number of hours, %2$d: number of minutes
+							__( 'In %1$d hours %2$d minutes', 'feedzy-rss-feeds' ),
+							$in->format( '%h' ),
+							$in->format( '%i' )
+						)
+					);
 				}
 				break;
 			default:
@@ -1134,15 +1146,45 @@ class Feedzy_Rss_Feeds_Import {
 			'feedzy_default_error',
 			function ( $errors, $feed, $url ) {
 				$errors .=
-					sprintf( __( 'For %1$ssingle feeds%2$s, this could be because of the following reasons:', 'feedzy-rss-feeds' ), '<b>', '</b>' )
+					sprintf(
+						// translators: %1$s and %2$s are opening and closing bold tags respectively.
+						__( 'For %1$ssingle feeds%2$s, this could be because of the following reasons:', 'feedzy-rss-feeds' ),
+						'<b>', '</b>'
+					)
 					. '<ol>'
-					. '<li>' . sprintf( __( '%1$sSource invalid%2$s: Check that your source is valid by clicking the validate button adjacent to the source box.', 'feedzy-rss-feeds' ), '<b>', '</b>' ) . '</li>'
-					. '<li>' . sprintf( __( '%1$sSource unavailable%2$s: Copy the source and paste it on the browser to check that it is available. It could be an intermittent issue.', 'feedzy-rss-feeds' ), '<b>', '</b>' ) . '</li>'
-					. '<li>' . sprintf( __( '%1$sSource inaccessible from server%2$s: Check that your source is accessible from the server (not the browser). It could be an intermittent issue.', 'feedzy-rss-feeds' ), '<b>', '</b>' ) . '</li>'
+					. '<li>'
+					. sprintf(
+						// translators: %1$s and %2$s are opening and closing bold tags respectively.
+						__( '%1$sSource invalid%2$s: Check that your source is valid by clicking the validate button adjacent to the source box.', 'feedzy-rss-feeds' ),
+						'<b>', '</b>'
+					)
+					. '</li>'
+					. '<li>'
+					. sprintf(
+						// translators: %1$s and %2$s are opening and closing bold tags respectively.
+						__( '%1$sSource unavailable%2$s: Copy the source and paste it on the browser to check that it is available. It could be an intermittent issue.', 'feedzy-rss-feeds' ), '<b>', '</b>'
+					)
+					. '</li>'
+					. '<li>'
+					. sprintf(
+						// translators: %1$s and %2$s are opening and closing bold tags respectively.
+						__( '%1$sSource inaccessible from server%2$s: Check that your source is accessible from the server (not the browser). It could be an intermittent issue.', 'feedzy-rss-feeds' ), '<b>', '</b>'
+					)
+					. '</li>'
 					. '</ol>'
-					. sprintf( __( 'For %1$smultiple feeds%2$s (comma-separated or in a Feedzy Category), this could be because of the following reasons:', 'feedzy-rss-feeds' ), '<b>', '</b>' )
+					. sprintf(
+						// translators: %1$s and %2$s are opening and closing bold tags respectively.
+						__( 'For %1$smultiple feeds%2$s (comma-separated or in a Feedzy Category), this could be because of the following reasons:', 'feedzy-rss-feeds' ),
+						'<b>', '</b>'
+					)
 					. '<ol>'
-					. '<li>' . sprintf( __( '%1$sSource invalid%2$s: One or more feeds may be misbehaving. Check each feed individually as mentioned above to weed out the problematic feed.', 'feedzy-rss-feeds' ), '<b>', '</b>' ) . '</li>'
+					. '<li>'
+					. sprintf(
+						// translators: %1$s and %2$s are opening and closing bold tags respectively.
+						__( '%1$sSource invalid%2$s: One or more feeds may be misbehaving. Check each feed individually as mentioned above to weed out the problematic feed.', 'feedzy-rss-feeds' ),
+						'<b>', '</b>'
+					)
+					. '</li>'
 					. '</ol>';
 
 				return $errors;
@@ -1574,7 +1616,11 @@ class Feedzy_Rss_Feeds_Import {
 						if ( empty( $full_content_error ) ) {
 							$full_content_error = __( 'Unknown', 'feedzy-rss-feeds' );
 						}
-						$import_errors[] = sprintf( __( 'Full content is empty. Error: %s', 'feedzy-rss-feeds' ), $full_content_error );
+						$import_errors[] = sprintf(
+							// translators: %s: Error message for empty full content.
+							__( 'Full content is empty. Error: %s', 'feedzy-rss-feeds' ),
+							$full_content_error
+						);
 					}
 
 					$post_content = str_replace(
@@ -1630,7 +1676,7 @@ class Feedzy_Rss_Feeds_Import {
 			$post_date = str_replace( '[#post_date]', $now, $post_date );
 
 			if ( ! defined( 'FEEDZY_ALLOW_UNSAFE_HTML' ) || ! FEEDZY_ALLOW_UNSAFE_HTML ) {
-				$post_content = wp_kses( $post_content, apply_filters( 'feedzy_wp_kses_allowed_html', array() ) );
+				$post_content = wp_kses_post( $post_content );
 
 				if ( ! function_exists( 'use_block_editor_for_post_type' ) ) {
 					require_once ABSPATH . 'wp-admin/includes/post.php';
@@ -1923,7 +1969,12 @@ class Feedzy_Rss_Feeds_Import {
 		update_post_meta( $job->ID, 'imported_items_count', $count );
 
 		if ( $import_image_errors > 0 ) {
-			$import_errors[] = sprintf( __( 'Unable to find an image for %1$d out of %2$d items imported', 'feedzy-rss-feeds' ), $import_image_errors, $count );
+			$import_errors[] = sprintf(
+				// translators: %1$d is the number of items without images, %2$d is the total number of items imported.
+				__( 'Unable to find an image for %1$d out of %2$d items imported', 'feedzy-rss-feeds' ),
+				$import_image_errors,
+				$count
+			);
 		}
 		update_post_meta( $job->ID, 'import_errors', $import_errors );
 
@@ -2480,17 +2531,6 @@ class Feedzy_Rss_Feeds_Import {
 		$default['item_date_local'] = __( 'Item Date (local timezone)', 'feedzy-rss-feeds' );
 		$default['item_date_feed']  = __( 'Item Date (feed timezone)', 'feedzy-rss-feeds' );
 		$default['item_source']     = __( 'Item Source', 'feedzy-rss-feeds' );
-
-		// disabled tags.
-		if ( ! feedzy_is_pro() ) {
-			$default['title_spinnerchief:disabled'] = __( '🚫 Title from SpinnerChief', 'feedzy-rss-feeds' );
-			$default['title_wordai:disabled']       = __( '🚫 Title from WordAI', 'feedzy-rss-feeds' );
-
-			$default['translated_title:disabled'] = __( '🚫 Translated Title', 'feedzy-rss-feeds' );
-
-			$default['title_feedzy_rewrite:disabled'] = __( '🚫 Paraphrased Title using Feedzy', 'feedzy-rss-feeds' );
-
-		}
 
 		return $default;
 	}
