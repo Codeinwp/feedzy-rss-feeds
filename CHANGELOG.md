@@ -1,3 +1,18 @@
+##### [Version 4.4.14](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.13...v4.4.14) (2024-10-29)
+
+New Features
+- New action to modify links.
+
+Improvements
+- Enhanced visibility for automatic translation.
+- Support for all default WP HTML tags in import content.
+- Additional strings available for translation.
+
+Fixes
+- Fixed issue with preview import data.
+- Resolved UI issue with legacy magic tags in post title dropdown.
+- Fixed prompt content text attachment to rephrased text.
+
 ##### [Version 4.4.13](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.12...v4.4.13) (2024-08-09)
 
 - Added support for a custom filter that allows modifications of the item_url tag for imported posts [#813](https://github.com/Codeinwp/feedzy-rss-feeds/issues/813)
