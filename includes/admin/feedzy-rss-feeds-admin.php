@@ -179,6 +179,11 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			);
 
 			$this->register_survey();
+
+			$license_data = get_option( 'feedzy_rss_feeds_pro_license_data', array() );
+			if ( self::plan_category( $license_data ) <= 1 ) {
+				do_action( 'themeisle_sdk_load_banner', 'feedzy' );
+			}
 		}
 
 		$upsell_screens = array( 'feedzy-rss_page_feedzy-settings', 'feedzy-rss_page_feedzy-admin-menu-pro-upsell' );
@@ -1617,7 +1622,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @param object $license_data The license data.
 	 * @return int
 	 */
-	private static function plan_category( $license_data ) {
+	public static function plan_category( $license_data ) {
 
 		if ( ! isset( $license_data->plan ) || ! is_numeric( $license_data->plan ) ) {
 			return 0; // Free

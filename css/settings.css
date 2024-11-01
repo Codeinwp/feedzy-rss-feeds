@@ -113,6 +113,17 @@
 .post-type-feedzy_imports:not(.edit-post) .wrap div#side-sortables{
 	display: none;
 }
+
+.feedzy-banner {
+	margin: 0 auto;
+	display: flex;
+	justify-content: center;
+}
+
+.feedzy-banner:has(.tsdk-banner-cta) {
+	margin-bottom: 20px;
+}
+
 .feedzy-container{
 	max-width: 1224px;
 	margin: 0 auto;
