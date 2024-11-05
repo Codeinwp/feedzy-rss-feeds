@@ -114,14 +114,15 @@
 	display: none;
 }
 
-.feedzy-banner {
+.feedzy-banner:has(.tsdk-banner-cta) {
 	margin: 0 auto;
 	display: flex;
 	justify-content: center;
+	margin-bottom: 20px;
 }
 
-.feedzy-banner:has(.tsdk-banner-cta) {
-	margin-bottom: 20px;
+.feedzy-banner .tsdk-banner-urgency-text {
+	padding: 5px;
 }
 
 .feedzy-container{
