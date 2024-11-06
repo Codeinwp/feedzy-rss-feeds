@@ -211,7 +211,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			return;
 		}
 
-		if ( 'feedzy_page_feedzy-support' === $screen->base || ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type ) ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( 'feedzy_page_feedzy-support' === $screen->base && ( isset( $_GET['tab'] ) && 'improve' === $_GET['tab'] ) || ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type ) ) {
 
 			$this->register_survey();
 
