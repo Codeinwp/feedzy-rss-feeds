@@ -130,6 +130,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 		if ( 'feedzy_imports' === $screen->post_type && 'edit' === $screen->base ) {
 			$this->register_survey();
+			$this->add_banner_anchor();
 		}
 
 		if ( 'feedzy_categories' === $screen->post_type ) {
@@ -158,6 +159,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			);
 
 			$this->register_survey();
+			$this->add_banner_anchor();
 		}
 
 		if ( 'feedzy_page_feedzy-settings' === $screen->base ) {
@@ -1724,6 +1726,16 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		wp_enqueue_script( $this->plugin_name . '_survey', FEEDZY_ABSURL . 'js/survey.js', array( $survey_handler ), $this->version, true );
 		wp_localize_script( $this->plugin_name . '_survey', 'feedzySurveyData', $this->get_survery_metadata() );
 
-		wp_enqueue_script( $this->plugin_name . '_banner', FEEDZY_ABSURL . 'js/banner.js', array(), $this->version, true );
+	}
+
+	/**
+	 * Add banner anchor for promotions.
+	 */
+	public function add_banner_anchor() {
+		add_action(
+			'admin_notices', function() {
+				echo '<div id="tsdk_banner" class="notice feedzy-banner-dashboard"></div>';
+			}, 999
+		);
 	}
 }

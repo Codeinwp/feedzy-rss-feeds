@@ -127,6 +127,12 @@
 
 .feedzy-banner-dashboard:has(.tsdk-banner-cta) {
 	margin: 20px 0;
+
+	/* Remove the properties added by .notice */
+	background: transparent;
+	border: unset;
+	box-shadow: unset;
+	padding: unset;
 }
 
 .feedzy-container{
