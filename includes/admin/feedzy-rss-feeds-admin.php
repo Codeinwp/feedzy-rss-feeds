@@ -179,7 +179,13 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			);
 
 			$this->register_survey();
+		}
 
+		if (
+			'feedzy_page_feedzy-settings' === $screen->base ||
+			'feedzy_categories' === $screen->post_type ||
+			( 'feedzy_imports' === $screen->post_type && 'edit' === $screen->base )
+		) {
 			$license_data = get_option( 'feedzy_rss_feeds_pro_license_data', array() );
 			if ( self::plan_category( $license_data ) <= 1 ) {
 				do_action( 'themeisle_sdk_load_banner', 'feedzy' );
@@ -1717,5 +1723,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		do_action( 'themeisle_sdk_dependency_enqueue_script', 'survey' );
 		wp_enqueue_script( $this->plugin_name . '_survey', FEEDZY_ABSURL . 'js/survey.js', array( $survey_handler ), $this->version, true );
 		wp_localize_script( $this->plugin_name . '_survey', 'feedzySurveyData', $this->get_survery_metadata() );
+
+		wp_enqueue_script( $this->plugin_name . '_banner', FEEDZY_ABSURL . 'js/banner.js', array(), $this->version, true );
 	}
 }
