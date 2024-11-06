@@ -48,7 +48,10 @@ if ( ! class_exists( 'Feedy_Rss_Feeds_Options' ) ) {
 		 *  Init the default values of the options class.
 		 */
 		public function init() {
-			self::$instance->options = get_option( Feedzy_Rss_Feeds::get_plugin_name() );
+			self::$instance->options = get_option( Feedzy_Rss_Feeds::get_plugin_name(), array() );
+			if ( ! is_array( self::$instance->options ) ) {
+				self::$instance->options = array();
+			}
 		}
 
 		/**
