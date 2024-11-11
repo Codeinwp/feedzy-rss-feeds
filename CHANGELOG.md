@@ -1,3 +1,8 @@
+##### [Version 4.4.15](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.14...v4.4.15) (2024-11-11)
+
+- Fixed JavaScript exception and PHP deprecation errors appearing in the console
+- Updated dependencies
+
 ##### [Version 4.4.14](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.13...v4.4.14) (2024-10-29)
 
 New Features
