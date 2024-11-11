@@ -493,19 +493,12 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
-##### [Version 4.4.14](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.13...v4.4.14) (2024-10-29)
+##### [Version 4.4.15](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.14...v4.4.15) (2024-11-11)
 
-New Features
-- New action to modify links.
+- Fixed JavaScript exception and PHP deprecation errors appearing in the console
+- Updated dependencies
 
-Improvements
-- Enhanced visibility for automatic translation.
-- Support for all default WP HTML tags in import content.
-- Additional strings available for translation.
 
-Fixes
-- Fixed issue with preview import data.
-- Resolved UI issue with legacy magic tags in post title dropdown.
-- Fixed prompt content text attachment to rephrased text.
+
 
 [See changelog for all versions](https://github.com/Codeinwp/feedzy-rss-feeds/blob/master/CHANGELOG.md).
