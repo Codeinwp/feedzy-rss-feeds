@@ -113,6 +113,28 @@
 .post-type-feedzy_imports:not(.edit-post) .wrap div#side-sortables{
 	display: none;
 }
+
+.feedzy-banner:has(.tsdk-banner-cta) {
+	margin: 0 auto;
+	display: flex;
+	justify-content: center;
+	margin-bottom: 20px;
+}
+
+.feedzy-banner .tsdk-banner-urgency-text {
+	padding: 5px;
+}
+
+.feedzy-banner-dashboard:has(.tsdk-banner-cta) {
+	margin: 20px 0;
+
+	/* Remove the properties added by .notice */
+	background: transparent;
+	border: unset;
+	box-shadow: unset;
+	padding: unset;
+}
+
 .feedzy-container{
 	max-width: 1224px;
 	margin: 0 auto;

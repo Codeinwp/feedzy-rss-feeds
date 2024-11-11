@@ -295,12 +295,6 @@ class Feedzy_Rss_Feeds {
 				}
 			);
 		}
-
-		if ( ! feedzy_is_pro() ) {
-			$offer = new Feedzy_Rss_Feeds_Limited_Offers();
-			$offer->load_banner();
-		}
-
 	}
 
 	/**

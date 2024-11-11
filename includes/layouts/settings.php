@@ -8,9 +8,6 @@
 
 	$help_btn_url = 'https://docs.themeisle.com/category/712-feedzy';
 
-	$offer      = new Feedzy_Rss_Feeds_Limited_Offers();
-	$offer_data = feedzy_is_pro() ? array() : $offer->get_localized_data();
-
 	if ( 'headers' === $active_tab ) {
 		$help_btn_url = 'https://docs.themeisle.com/article/713-how-to-change-user-agent-in-feedzy';
 	} elseif ( 'proxy' === $active_tab ) {
@@ -30,6 +27,9 @@
 	<?php if ( $this->error ) { ?>
 		<div class="fz-snackbar-notice error"><p><?php echo wp_kses_post( $this->error ); ?></p></div>
 	<?php } ?>
+	
+	<div id="tsdk_banner" class="feedzy-banner"></div>
+	
 	<div class="feedzy-container">
 		<?php if ( ! empty( $offer_data['active'] ) ) { ?>
 			<div class="feedzy-sale">

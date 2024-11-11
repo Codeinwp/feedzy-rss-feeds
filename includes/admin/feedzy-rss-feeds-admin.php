@@ -130,6 +130,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 		if ( 'feedzy_imports' === $screen->post_type && 'edit' === $screen->base ) {
 			$this->register_survey();
+			$this->add_banner_anchor();
 		}
 
 		if ( 'feedzy_categories' === $screen->post_type ) {
@@ -158,6 +159,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			);
 
 			$this->register_survey();
+			$this->add_banner_anchor();
 		}
 
 		if ( 'feedzy_page_feedzy-settings' === $screen->base ) {
@@ -179,6 +181,17 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			);
 
 			$this->register_survey();
+		}
+
+		if (
+			'feedzy_page_feedzy-settings' === $screen->base ||
+			'feedzy_categories' === $screen->post_type ||
+			( 'feedzy_imports' === $screen->post_type && 'edit' === $screen->base )
+		) {
+			$license_data = get_option( 'feedzy_rss_feeds_pro_license_data', array() );
+			if ( self::plan_category( $license_data ) <= 1 ) {
+				do_action( 'themeisle_sdk_load_banner', 'feedzy' );
+			}
 		}
 
 		$upsell_screens = array( 'feedzy-rss_page_feedzy-settings', 'feedzy-rss_page_feedzy-admin-menu-pro-upsell' );
@@ -211,7 +224,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			return;
 		}
 
-		if ( 'feedzy_page_feedzy-support' === $screen->base || ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type ) ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( 'feedzy_page_feedzy-support' === $screen->base && ( isset( $_GET['tab'] ) && 'improve' === $_GET['tab'] ) || ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type ) ) {
 
 			$this->register_survey();
 
@@ -1617,7 +1631,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @param object $license_data The license data.
 	 * @return int
 	 */
-	private static function plan_category( $license_data ) {
+	public static function plan_category( $license_data ) {
 
 		if ( ! isset( $license_data->plan ) || ! is_numeric( $license_data->plan ) ) {
 			return 0; // Free
@@ -1712,5 +1726,17 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		do_action( 'themeisle_sdk_dependency_enqueue_script', 'survey' );
 		wp_enqueue_script( $this->plugin_name . '_survey', FEEDZY_ABSURL . 'js/survey.js', array( $survey_handler ), $this->version, true );
 		wp_localize_script( $this->plugin_name . '_survey', 'feedzySurveyData', $this->get_survery_metadata() );
+
+	}
+
+	/**
+	 * Add banner anchor for promotions.
+	 */
+	public function add_banner_anchor() {
+		add_action(
+			'admin_notices', function() {
+				echo '<div id="tsdk_banner" class="notice feedzy-banner-dashboard"></div>';
+			}, 999
+		);
 	}
 }
