@@ -1594,18 +1594,21 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$date_time = apply_filters( 'feedzy_feed_timestamp', $date_time, $feed_url, $item );
 		if ( $meta_args['date'] && ! empty( $meta_args['date_format'] ) ) {
-			$content_meta_values['date'] = apply_filters( 'feedzy_meta_date', __( 'on', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $meta_args['date_format'], $date_time ) . ' ', $date_time, $feed_url, $item );
+			// translators: %s: the date of the imported content.
+			$content_meta_values['date'] = apply_filters( 'feedzy_meta_date', sprintf( __( 'on %s', 'feedzy-rss-feeds' ), date_i18n( $meta_args['date_format'], $date_time ) ) . ' ', $date_time, $feed_url, $item );
 		}
 
 		if ( $meta_args['time'] && ! empty( $meta_args['time_format'] ) ) {
-			$content_meta_values['time'] = apply_filters( 'feedzy_meta_time', __( 'at', 'feedzy-rss-feeds' ) . ' ' . date_i18n( $meta_args['time_format'], $date_time ) . ' ', $date_time, $feed_url, $item );
+			// translators: %s: the time of the imported content.
+			$content_meta_values['time'] = apply_filters( 'feedzy_meta_time', sprintf( __( 'at %s', 'feedzy-rss-feeds' ), date_i18n( $meta_args['time_format'], $date_time ) ) . ' ', $date_time, $feed_url, $item );
 		}
 
 		// categories.
 		if ( $meta_args['categories'] && has_filter( 'feedzy_retrieve_categories' ) ) {
 			$categories = apply_filters( 'feedzy_retrieve_categories', null, $item );
 			if ( ! empty( $categories ) ) {
-				$content_meta_values['categories'] = apply_filters( 'feedzy_meta_categories', __( 'in', 'feedzy-rss-feeds' ) . ' ' . $categories . ' ', $categories, $feed_url, $item );
+				// translators: %s: the category of the imported content.
+				$content_meta_values['categories'] = apply_filters( 'feedzy_meta_categories', sprintf( __( 'in %s', 'feedzy-rss-feeds' ), $categories ) . ' ', $categories, $feed_url, $item );
 			}
 		}
 
