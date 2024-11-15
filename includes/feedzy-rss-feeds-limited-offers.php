@@ -2,7 +2,7 @@
 /**
  * Utility class for showing limited offers.
  *
- * @link       http://themeisle.com
+ * @link       https://themeisle.com
  * @since      4.2.9
  *
  * @package    feedzy-rss-feeds

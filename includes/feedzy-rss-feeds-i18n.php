@@ -5,7 +5,7 @@
  * Loads and defines the internationalization files for this plugin
  * so that it is ready for translation.
  *
- * @link       http://themeisle.com
+ * @link       https://themeisle.com
  * @since      3.0.0
  *
  * @package    feedzy-rss-feeds

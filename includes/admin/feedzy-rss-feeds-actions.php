@@ -2,7 +2,7 @@
 /**
  * The item content action chain process.
  *
- * @link       http://themeisle.com
+ * @link       https://themeisle.com
  * @since      4.3
  *
  * @package    feedzy-rss-feeds

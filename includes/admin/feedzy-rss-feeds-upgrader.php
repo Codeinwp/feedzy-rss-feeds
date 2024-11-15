@@ -2,7 +2,7 @@
 /**
  * The Options main wrapper class.
  *
- * @link       http://themeisle.com
+ * @link       https://themeisle.com
  * @since      3.0.3
  *
  * @package    feedzy-rss-feeds
