@@ -2,7 +2,7 @@
 /**
  * Fired during plugin activation
  *
- * @link       http://themeisle.com
+ * @link       https://themeisle.com
  * @since      3.0.0
  *
  * @package    feedzy-rss-feeds

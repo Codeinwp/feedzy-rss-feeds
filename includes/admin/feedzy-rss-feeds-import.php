@@ -2,7 +2,7 @@
 /**
  * The admin-specific functionality of the plugin.
  *
- * @link       http://themeisle.com/plugins/feedzy-rss-feed/
+ * @link       https://themeisle.com/plugins/feedzy-rss-feed/
  * @since      1.0.0
  *
  * @package    feedzy-rss-feeds
@@ -230,7 +230,7 @@ class Feedzy_Rss_Feeds_Import {
 			'name'               => __( 'Import Posts', 'feedzy-rss-feeds' ),
 			'singular_name'      => __( 'Import Post', 'feedzy-rss-feeds' ),
 			'add_new'            => __( 'New Import', 'feedzy-rss-feeds' ),
-			'add_new_item'       => false,
+			'add_new_item'       => __( 'New Import', 'feedzy-rss-feeds' ),
 			'edit_item'          => false,
 			'new_item'           => __( 'New Import Post', 'feedzy-rss-feeds' ),
 			'view_item'          => __( 'View Import', 'feedzy-rss-feeds' ),

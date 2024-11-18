@@ -1,6 +1,6 @@
 /**
  * Plugin Name: FEEDZY RSS Feeds
- * Plugin URI: http://themeisle.com/plugins/feedzy-rss-feeds/
+ * Plugin URI: https://themeisle.com/plugins/feedzy-rss-feeds/
  * Author: Themeisle
  *
  * @package feedzy-rss-feeds

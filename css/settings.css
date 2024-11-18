@@ -121,11 +121,16 @@
 	margin-bottom: 20px;
 }
 
-.feedzy-banner .tsdk-banner-urgency-text {
+.feedzy-banner:has(.tsdk-banner-cta) .tsdk-banner-urgency-text {
 	padding: 5px;
 }
 
+.feedzy-banner-dashboard {
+	display: none;
+}
+
 .feedzy-banner-dashboard:has(.tsdk-banner-cta) {
+	display: block;
 	margin: 20px 0;
 
 	/* Remove the properties added by .notice */
