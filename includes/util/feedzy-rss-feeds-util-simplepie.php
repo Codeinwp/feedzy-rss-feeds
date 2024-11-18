@@ -2,7 +2,7 @@
 /**
  * The class that contains a custom implementation of SimplePie.
  *
- * @link       http://themeisle.com
+ * @link       https://themeisle.com
  *
  * @package    feedzy-rss-feeds
  * @subpackage feedzy-rss-feeds/includes/util

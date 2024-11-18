@@ -490,9 +490,12 @@ class Editor extends Component {
 
                             let meta_values = new Object();
                             meta_values['author'] = __( 'by', 'feedzy-rss-feeds' ) + ' ' + author;
-                            meta_values['date'] = __( 'on', 'feedzy-rss-feeds' ) + ' ' + unescapeHTML( itemDate );
-                            meta_values['time'] = __( 'at', 'feedzy-rss-feeds' ) + ' ' + unescapeHTML( itemTime );
-                            meta_values['categories'] = __( 'in', 'feedzy-rss-feeds' ) + ' ' + unescapeHTML( categories );
+                            // translators: %s: the date of the imported content.
+                            meta_values['date'] = sprintf( __( 'on %s', 'feedzy-rss-feeds' ), unescapeHTML( itemDate ) );
+                            // translators: %s: the time of the imported content.
+                            meta_values['time'] = sprintf( __( 'at %s', 'feedzy-rss-feeds' ), unescapeHTML( itemTime ) );
+                            // translators: %s: the category of the imported content.
+                            meta_values['categories'] = sprintf( __( 'in %s', 'feedzy-rss-feeds' ), unescapeHTML( categories ) );
 
 							return (
 								<li key={i} style={ { padding: '15px 0 25px' } } className={ `rss_item feedzy-rss-col-${ this.props.attributes.columns }` }>

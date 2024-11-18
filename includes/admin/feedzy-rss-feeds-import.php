@@ -2,7 +2,7 @@
 /**
  * The admin-specific functionality of the plugin.
  *
- * @link       http://themeisle.com/plugins/feedzy-rss-feed/
+ * @link       https://themeisle.com/plugins/feedzy-rss-feed/
  * @since      1.0.0
  *
  * @package    feedzy-rss-feeds

@@ -1,6 +1,6 @@
 /**
  * Plugin Name: FEEDZY RSS Feeds
- * Plugin URI: http://themeisle.com/plugins/feedzy-rss-feeds/
+ * Plugin URI: https://themeisle.com/plugins/feedzy-rss-feeds/
  * Author: Themeisle
  *
  * @package feedzy-rss-feeds
@@ -92,7 +92,7 @@
 					shortCodeParams = eName + '="' + eValue + '" ';
 				} else {
 					if ( eName === 'feeds' ) {
-						shortCodeParams = eName + '="http://themeisle.com/feed" ';
+						shortCodeParams = eName + '="https://themeisle.com/feed" ';
 					}
 				}
 				shortCode += shortCodeParams;
