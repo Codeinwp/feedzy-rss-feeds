@@ -493,10 +493,9 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
-##### [Version 4.4.15](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.14...v4.4.15) (2024-11-11)
+##### [Version 4.4.16](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.15...v4.4.16) (2024-11-18)
 
-- Fixed JavaScript exception and PHP deprecation errors appearing in the console
-- Updated dependencies
+- Fixed compatibility issue with WordPress 6.7, preventing the New Import button from showing up
 
 
 

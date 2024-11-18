@@ -1,3 +1,7 @@
+##### [Version 4.4.16](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.15...v4.4.16) (2024-11-18)
+
+- Fixed compatibility issue with WordPress 6.7, preventing the New Import button from showing up
+
 ##### [Version 4.4.15](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.14...v4.4.15) (2024-11-11)
 
 - Fixed JavaScript exception and PHP deprecation errors appearing in the console
