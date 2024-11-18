@@ -144,7 +144,7 @@ test.describe( 'Feed Import', () => {
 		// Select the first post created by feeds import. Check the featured image.
 		await page.getByRole('link', { name: 'Posts', exact: true }).click({ force: true });
 		await page.locator('#the-list tr').first().locator('a.row-title').click({ force: true });
-		await expect( page.getByLabel('Edit or replace the image') ).toBeVisible(); // Featured image is added.
+		await expect( page.getByLabel('Edit or replace the featured image') ).toBeVisible(); // Featured image is added.
 	});
 
 	test( 'importing feed with chained actions', async({ admin, page, requestUtils }) => {
