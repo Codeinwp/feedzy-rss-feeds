@@ -58,16 +58,6 @@ class feedzy_wp_widget extends WP_Widget {
 	}
 
 	/**
-	 * The register method for registering this widget class
-	 *
-	 * @since    3.0.0
-	 * @access   public
-	 */
-	public function registerWidget() {
-		register_widget( 'feedzy_wp_widget' );
-	}
-
-	/**
 	 * The widget form creation
 	 *
 	 * @since   3.0.0
