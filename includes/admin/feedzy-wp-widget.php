@@ -37,7 +37,7 @@ class feedzy_wp_widget extends WP_Widget {
 	 * @param   Feedzy_Rss_Feeds_Admin $plugin_admin The Feedzy_Rss_Feeds_Admin object.
 	 */
 	public function __construct( $plugin_admin = null ) {
-		parent::__construct( false, $name = FEEDZY_NAME );
+		parent::__construct( false, $name = __( 'Feedzy RSS Feeds', 'feedzy-rss-feeds' ) );
 		self::$instance = $this;
 
 	}
@@ -55,16 +55,6 @@ class feedzy_wp_widget extends WP_Widget {
 		}
 
 		return self::$instance;
-	}
-
-	/**
-	 * The register method for registering this widget class
-	 *
-	 * @since    3.0.0
-	 * @access   public
-	 */
-	public function registerWidget() {
-		register_widget( 'feedzy_wp_widget' );
 	}
 
 	/**
