@@ -755,24 +755,22 @@ class Feedzy_Rss_Feeds_Import {
 	 * @access  private
 	 */
 	private function get_last_run_details( $post_id ) {
-		$msg           = '';
-		$import_errors = get_post_meta( $post_id, 'import_errors', true );
-		$status        = array(
+		$msg         = '';
+		$import_info = get_post_meta( $post_id, 'import_info', true );
+		$status      = array(
 			'total'      => '-',
 			'items'      => '-',
 			'duplicates' => '-',
 			'cumulative' => '-',
 		);
-		$import_info   = false;
-		if ( $import_errors ) {
-			$import_info = get_post_meta( $post_id, 'import_info', true );
-			$status      = array(
+		if ( $import_info ) {
+			$status = array(
 				'total'      => 0,
 				'items'      => 0,
 				'duplicates' => 0,
 				'cumulative' => 0,
 			);
-			$status      = $this->get_complete_import_status( $post_id );
+			$status = $this->get_complete_import_status( $post_id );
 		}
 
 		// link to the posts listing for this job.
