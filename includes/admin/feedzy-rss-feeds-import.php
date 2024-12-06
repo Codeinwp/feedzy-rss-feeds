@@ -668,10 +668,10 @@ class Feedzy_Rss_Feeds_Import {
 						if ( in_array( $src_path, $amazon_hosts, true ) ) {
 							$src = sprintf( '%s: %s%s%s', __( 'Amazon Product Advertising API', 'feedzy-rss-feeds' ), '<a>', $src, '</a>' );
 						} else {
-							$src = sprintf( '%s: %s%s%s', __( 'Feed Category', 'feedzy-rss-feeds' ), '<a href="' . admin_url( 'edit.php?post_type=feedzy_categories' ) . '" target="_blank">', $src, '</a>' );
+							$src = sprintf( '%s: %s%s%s', __( 'Feed Group', 'feedzy-rss-feeds' ), '<a href="' . admin_url( 'edit.php?post_type=feedzy_categories' ) . '" target="_blank">', $src, '</a>' );
 						}
 					} else {
-						$src = sprintf( '%s: %s%s%s', __( 'Feed Category', 'feedzy-rss-feeds' ), '<a href="' . admin_url( 'edit.php?post_type=feedzy_categories' ) . '" target="_blank">', $src, '</a>' );
+						$src = sprintf( '%s: %s%s%s', __( 'Feed Group', 'feedzy-rss-feeds' ), '<a href="' . admin_url( 'edit.php?post_type=feedzy_categories' ) . '" target="_blank">', $src, '</a>' );
 					}
 				} else {
 					// else link it to the feed but shorten it if it is too long.
@@ -1230,10 +1230,13 @@ class Feedzy_Rss_Feeds_Import {
 			$max = 10;
 		}
 		global $post;
-		$args           = array(
-			'post_type'   => 'feedzy_imports',
-			'post_status' => 'publish',
-			'numberposts' => 99,
+		$args = apply_filters(
+			'feedzy_run_cron_get_posts_args',
+			array(
+				'post_type'   => 'feedzy_imports',
+				'post_status' => 'publish',
+				'numberposts' => 99,
+			)
 		);
 
 		$feedzy_imports = get_posts( $args );

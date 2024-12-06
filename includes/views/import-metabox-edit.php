@@ -81,7 +81,7 @@ global $post;
 									<div class="dropdown">
 										<button type="button" class="btn btn-outline-primary dropdown-toggle" aria-haspopup="true"
 												aria-expanded="false">
-										<?php esc_html_e( 'Use Feed Category', 'feedzy-rss-feeds' ); ?> <span
+										<?php esc_html_e( 'Use Feed Group', 'feedzy-rss-feeds' ); ?> <span
 													class="dashicons dashicons-arrow-down-alt2"></span>
 											</button>
 											<div class="dropdown-menu dropdown-menu-right">
@@ -95,8 +95,8 @@ global $post;
 										} else {
 											?>
 											<div class="no-data p-8">
-												<div class="help-text"><?php esc_html_e( 'You don&#8217;t have any categories, yet.', 'feedzy-rss-feeds' ); ?></div>
-												<div class="cta-text"><a href="<?php echo esc_url( add_query_arg( 'post_type', 'feedzy_categories', admin_url( 'post-new.php' ) ) ); ?>" target="_blank"><?php esc_html_e( 'Add a Category', 'feedzy-rss-feeds' ); ?></a></div>
+												<div class="help-text"><?php esc_html_e( 'You don&#8217;t have any groups, yet.', 'feedzy-rss-feeds' ); ?></div>
+												<div class="cta-text"><a href="<?php echo esc_url( add_query_arg( 'post_type', 'feedzy_categories', admin_url( 'post-new.php' ) ) ); ?>" target="_blank"><?php esc_html_e( 'Add a Group', 'feedzy-rss-feeds' ); ?></a></div>
 											</div>
 											<?php
 										}
@@ -645,7 +645,7 @@ global $post;
 												</div>
 												<div class="help-text">
 													<?php
-														esc_html_e( 'Add magic tags to extract custom elements from your feed. This will work only for single-feeds, not feed categories.', 'feedzy-rss-feeds' );
+														esc_html_e( 'Add magic tags to extract custom elements from your feed. This will work only for single-feeds, not feed groups.', 'feedzy-rss-feeds' );
 													?>
 												</div>
 											</div>
