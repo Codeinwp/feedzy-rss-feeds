@@ -367,10 +367,10 @@ class Feedzy_Rss_Feeds_Import {
 		$import_translation_lang  = get_post_meta( $post->ID, 'import_auto_translation_lang', true );
 		// default values so that post is not created empty.
 		if ( empty( $import_title ) ) {
-			$import_title = '[#item_title]';
+			$import_title = '[[{"value":"%5B%7B%22id%22%3A%22%22%2C%22tag%22%3A%22item_title%22%2C%22data%22%3A%7B%7D%7D%5D"}]]';
 		}
 		if ( empty( $import_content ) ) {
-			$import_content = '[#item_content]';
+			$import_content = '[[{"value":"%5B%7B%22id%22%3A%22%22%2C%22tag%22%3A%22item_content%22%2C%22data%22%3A%7B%7D%7D%5D"}]]';
 		}
 
 		$import_link_author_admin  = get_post_meta( $post->ID, 'import_link_author_admin', true );
