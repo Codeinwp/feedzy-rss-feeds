@@ -90,7 +90,7 @@ test.describe( 'Feed Import', () => {
 
 		// Insert a Feedzy block.
 		await editor.insertBlock({ name: 'feedzy-rss-feeds/feedzy-block' });
-		await page.getByPlaceholder('Enter URL or category of your').fill(FEED_URL);
+		await page.getByPlaceholder('Enter URL or group of your').fill(FEED_URL);
 		await page.getByRole('button', { name: 'Load Feed' }).click();
 
 		await page.waitForSelector('.rss_header');

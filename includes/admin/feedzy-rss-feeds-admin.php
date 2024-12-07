@@ -277,16 +277,16 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function register_post_type() {
 		$labels   = array(
-			'name'               => __( 'Feed Categories', 'feedzy-rss-feeds' ),
-			'singular_name'      => __( 'Feed Category', 'feedzy-rss-feeds' ),
-			'add_new'            => __( 'Add Category', 'feedzy-rss-feeds' ),
-			'add_new_item'       => __( 'Add Category', 'feedzy-rss-feeds' ),
-			'edit_item'          => __( 'Edit Category', 'feedzy-rss-feeds' ),
-			'new_item'           => __( 'New Feed Category', 'feedzy-rss-feeds' ),
-			'view_item'          => __( 'View Category', 'feedzy-rss-feeds' ),
-			'search_items'       => __( 'Search Category', 'feedzy-rss-feeds' ),
-			'not_found'          => __( 'No categories found', 'feedzy-rss-feeds' ),
-			'not_found_in_trash' => __( 'No categories in the trash', 'feedzy-rss-feeds' ),
+			'name'               => __( 'Feed Groups', 'feedzy-rss-feeds' ),
+			'singular_name'      => __( 'Feed Group', 'feedzy-rss-feeds' ),
+			'add_new'            => __( 'Add Group', 'feedzy-rss-feeds' ),
+			'add_new_item'       => __( 'Add Group', 'feedzy-rss-feeds' ),
+			'edit_item'          => __( 'Edit Group', 'feedzy-rss-feeds' ),
+			'new_item'           => __( 'New Feed Group', 'feedzy-rss-feeds' ),
+			'view_item'          => __( 'View Group', 'feedzy-rss-feeds' ),
+			'search_items'       => __( 'Search Group', 'feedzy-rss-feeds' ),
+			'not_found'          => __( 'No groups found', 'feedzy-rss-feeds' ),
+			'not_found_in_trash' => __( 'No groups in the trash', 'feedzy-rss-feeds' ),
 		);
 		$supports = array(
 			'title',
@@ -346,7 +346,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	public function add_feedzy_post_type_metaboxes() {
 		add_meta_box(
 			'feedzy_category_feeds',
-			__( 'Category Feeds', 'feedzy-rss-feeds' ),
+			__( 'Group Feeds', 'feedzy-rss-feeds' ),
 			array(
 				$this,
 				'feedzy_category_feed',
@@ -413,7 +413,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			. '</strong><br/><br/>'
 			. $invalid
 			. '<textarea name="feedzy_category_feed" rows="15" class="widefat" placeholder="' . __( 'Place your URL\'s here followed by a comma.', 'feedzy-rss-feeds' ) . '" >' . $feed . '</textarea>
-			<p><a href="' . esc_url( 'https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation#categories' ) . '" target="_blank">' . __( 'Learn how to organize feeds in Categories', 'feedzy-rss-feeds' ) . '</a></p>
+			<p><a href="' . esc_url( 'https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation#categories' ) . '" target="_blank">' . __( 'Learn how to organize feeds in Groups', 'feedzy-rss-feeds' ) . '</a></p>
         ';
 		echo wp_kses( $output, apply_filters( 'feedzy_wp_kses_allowed_html', array() ) );
 	}
@@ -482,7 +482,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return array
 	 */
 	public function feedzy_category_columns( $columns ) {
-		$columns['title'] = __( 'Category Title', 'feedzy-rss-feeds' );
+		$columns['title'] = __( 'Group Title', 'feedzy-rss-feeds' );
 		if ( $new_columns = $this->array_insert_before( 'date', $columns, 'slug', __( 'Slug', 'feedzy-rss-feeds' ) ) ) {
 			$columns = $new_columns;
 		} else {

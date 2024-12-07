@@ -405,7 +405,7 @@ class Editor extends Component {
                         <TextControl
 							type="url"
 							className="feedzy-source"
-							placeholder={ __( 'Enter URL or category of your feed here...', 'feedzy-rss-feeds' ) }
+							placeholder={ __( 'Enter URL or group of your feed here...', 'feedzy-rss-feeds' ) }
 							onChange={ this.onChangeFeed }
                             onKeyUp={ this.handleKeyUp }
 							value={ this.props.attributes.feeds }
@@ -437,8 +437,8 @@ class Editor extends Component {
                         ),
                         ( this.state.error ) && <div>{ __( 'Feed URL is invalid or unreachable by WordPress SimplePie and will NOT display items.', 'feedzy-rss-feeds') }</div>,
                         <p>
-                            { __( 'Enter the full URL of the feed source you wish to display here, or the name of a category you\'ve created. Also you can add multiple URLs just separate them with a comma. You can manage your categories feed from', 'feedzy-rss-feeds') }
-                            <a href="edit.php?post_type=feedzy_categories" title={ __( 'feedzy categories ', 'feedzy-rss-feeds' ) } target="_blank">{ __( 'here ', 'feedzy-rss-feeds' ) }</a>
+                            { __( 'Enter the full URL of the feed source you wish to display here, or the name of a group you\'ve created. Also you can add multiple URLs just separate them with a comma. You can manage your groups feed from ', 'feedzy-rss-feeds') }
+                            <a href="edit.php?post_type=feedzy_categories" title={ __( 'Feedzy Groups ', 'feedzy-rss-feeds' ) } target="_blank">{ __( 'here ', 'feedzy-rss-feeds' ) }</a>
                         </p>
 					] }
 					</Placeholder>
