@@ -1805,8 +1805,6 @@ class Feedzy_Rss_Feeds_Import {
 			}
 
 			if ( $import_post_term !== 'none' && strpos( $import_post_term, '_' ) > 0 ) {
-				// let's get the slug of the uncategorized category, even if it renamed.
-				$uncategorized    = get_category( 1 );
 				$terms            = explode( ',', $import_post_term );
 				$terms            = array_filter(
 					$terms,
@@ -1820,30 +1818,34 @@ class Feedzy_Rss_Feeds_Import {
 						return $term;
 					}
 				);
+
 				$default_category = (int) get_option( 'default_category' );
+				$has_default      = false;
+
 				foreach ( $terms as $term ) {
 					// this handles both x_2, where 2 is the term id and x is the taxonomy AND x_2_3_4 where 4 is the term id and the taxonomy name is "x 2 3 4".
 					$array    = explode( '_', $term );
 					$term_id  = array_pop( $array );
 					$taxonomy = implode( '_', $array );
 
-					// uncategorized
-					// 1. may be the unmodified category ID 1
-					// 2. may have been recreated ('uncategorized') and may have a different slug in different languages.
-					if ( $default_category === $uncategorized->term_id ) {
-						wp_remove_object_terms(
-							$new_post_id, apply_filters(
-								'feedzy_uncategorized', array(
-									1,
-									'uncategorized',
-									$uncategorized->slug,
-								), $job->ID
-							), 'category'
-						);
+					// If the term is not default, flag it.
+					if ( $default_category === (int) $term_id ) {
+						$has_default = true;
 					}
 
 					$result = wp_set_object_terms( $new_post_id, intval( $term_id ), $taxonomy, true );
 					do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'After creating post in %s/%d, result = %s', $taxonomy, $term_id, print_r( $result, true ) ), 'debug', __FILE__, __LINE__ );
+				}
+
+				// If the default category is not used, remove it.
+				if ( ! $has_default ) {
+					wp_remove_object_terms(
+						$new_post_id, apply_filters(
+							'feedzy_uncategorized', array(
+								$default_category,
+							), $job->ID
+						), 'category'
+					);
 				}
 			}
 
