@@ -66,6 +66,12 @@ const CreditNotice = () => {
 	)
 }
 
+const getCurrentLanguage = () => {
+	// This is for backward compatibility for the previous language control that sit outside the action modal.
+	const langInput = document.getElementById('feedzy_auto_translate_lang');
+	return langInput ? langInput.value : '';
+};
+
 const SortableItem = ({ propRef, loopIndex, item }) => {
 	let counter = loopIndex + 1;
 	if ( 'trim' === item.id ) {
@@ -217,10 +223,24 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 
 	if ( 'fz_translate' === item.id ) {
 		return(
-			<li className="fz-action-control" data-counter={counter}>
+			<li className="fz-action-control fz-translate-action" data-counter={counter}>
 				<div className="fz-action-event">
 					<PanelBody title={ __( 'Translate with Feedzy', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false } className="fz-hide-icon">
-						<UpgradeNotice higherPlanNotice={!feedzyData.isAgencyPlan} utmCampaign="action-translate-feedzy"/>
+						<PanelRow>
+							<UpgradeNotice higherPlanNotice={!feedzyData.isAgencyPlan} utmCampaign="action-translate-feedzy"/>
+							<BaseControl className="mb-20">
+								<SelectControl
+									label={ __('Target Language', 'feedzy-rss-feeds') }
+									value={ item.data.lang || getCurrentLanguage() }
+									options={ Object.entries(window.feedzyData.languageList).map(([key, value]) => ({
+										label: value,
+										value: key,
+									})) }
+									onChange={ ( currentValue ) => propRef.onChangeHandler( { 'index': loopIndex, 'lang': currentValue ?? '' } ) }
+									disabled={!feedzyData.isAgencyPlan}
+								/>
+							</BaseControl>
+						</PanelRow>
 					</PanelBody>
 				</div>
 				<div className="fz-trash-action">

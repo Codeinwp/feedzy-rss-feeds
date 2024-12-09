@@ -321,6 +321,13 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		}
 
 		/**
+		 * Get translation language.
+		 */
+		public function get_translation_lang() {
+			return $this->translation_lang;
+		}
+
+		/**
 		 * Get item content.
 		 */
 		private function item_content() {
@@ -410,6 +417,7 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 */
 		private function translate_content() {
 			$content = call_user_func( array( $this, $this->current_job->tag ) );
+			$this->translation_lang = ! empty( $this->current_job->data->lang ) ? $this->current_job->data->lang : $this->translation_lang;
 			return apply_filters( 'feedzy_invoke_auto_translate_services', $content, '[#translated_content]', $this->translation_lang, $this->job, $this->language_code, $this->item );
 		}
 

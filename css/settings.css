@@ -2049,7 +2049,8 @@ li.draggable-item .components-panel__body-toggle.components-button{
 	width: 100%;
 }
 .fz-action-panel .fz-chat-cpt-action .components-panel__row,
-.fz-action-panel .fz-modify-links .components-panel__row {
+.fz-action-panel .fz-modify-links .components-panel__row,
+	.fz-action-panel .fz-translate-action .components-panel__row {
 	display: block;
 }
 .fz-action-panel .fz-upgrade-notice {
@@ -2120,7 +2121,8 @@ li.draggable-item .components-panel__body-toggle.components-button{
 }
 
 .fz-action-panel .fz-chat-cpt-action .fz-notice-wrap,
-.fz-action-panel .fz-modify-links .fz-notice-wrap {
+.fz-action-panel .fz-modify-links .fz-notice-wrap,
+.fz-action-panel .fz-translate-action .fz-notice-wrap {
 	padding: 0;
 }
 

@@ -1497,8 +1497,9 @@ class Feedzy_Rss_Feeds_Import {
 			);
 
 			// Run all the actions stored for the embedded/serialized tags in the title field.
-			$title_action = $this->get_actions_runner( $post_title, 'item_title' );
-			$post_title   = $title_action->run_action_job( $title_action->get_serialized_actions(), $translated_title, $job, $language_code, $item );
+			$title_action  = $this->get_actions_runner( $post_title, 'item_title' );
+			$post_title    = $title_action->run_action_job( $title_action->get_serialized_actions(), $translated_title, $job, $language_code, $item );
+			$title_lang    = $title_action->get_translation_lang();
 
 			if ( $this->feedzy_is_business() ) {
 				$post_title = apply_filters( 'feedzy_parse_custom_tags', $post_title, $item_obj );
@@ -1508,8 +1509,10 @@ class Feedzy_Rss_Feeds_Import {
 
 			// Get translated item link text.
 			$item_link_txt = __( 'Read More', 'feedzy-rss-feeds' );
-			if ( $import_auto_translation && false !== strpos( $import_content, '[#item_url]' ) ) {
-				$item_link_txt = apply_filters( 'feedzy_invoke_auto_translate_services', $item_link_txt, '[#item_url]', $import_translation_lang, $job, $language_code, $item );
+
+			// Now that we set language in the action, we use title's language for the link.
+			if ( ( $import_auto_translation || $title_lang ) && false !== strpos( $import_content, '[#item_url]' ) ) {
+				$item_link_txt = apply_filters( 'feedzy_invoke_auto_translate_services', $item_link_txt, '[#item_url]', $title_lang, $job, $language_code, $item );
 			}
 
 			$item_link_data = apply_filters(

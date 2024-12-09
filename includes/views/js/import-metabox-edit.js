@@ -428,11 +428,6 @@
 			}
 		});
 
-		// Enable/Disable auto translation.
-		$( document ).on( 'change', '#feedzy-auto-translation', function() {
-		    $( '#feedzy_auto_translation_lang' ).attr( 'disabled', ! $( this ).is( ':checked' ) ).trigger( 'chosen:updated' );
-		} );
-
 		// Click to hide upsell notice.
 		$(document).on("click", ".remove-alert", function (e) {
 			var upSellNotice = $(this).parents( '.upgrade-alert' );
