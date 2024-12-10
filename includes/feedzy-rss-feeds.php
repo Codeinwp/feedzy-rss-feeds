@@ -229,8 +229,13 @@ class Feedzy_Rss_Feeds {
 
 		add_shortcode( 'feedzy-rss', array( self::$instance->admin, 'feedzy_rss' ) );
 
-		$plugin_widget = new feedzy_wp_widget();
-		self::$instance->loader->add_action( 'widgets_init', $plugin_widget, 'registerWidget', 10 );
+		add_action(
+			'widgets_init',
+			function () {
+				register_widget( 'feedzy_wp_widget' );
+			}
+		);
+
 		self::$instance->loader->add_action( 'rest_api_init', self::$instance->admin, 'rest_route', 10 );
 
 		// Wizard screen setup.
