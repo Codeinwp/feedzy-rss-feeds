@@ -1872,6 +1872,8 @@ class Feedzy_Rss_Feeds_Import {
 					} else {
 						$img_success = false;
 					}
+				} elseif ( wp_http_validate_url( $import_featured_img ) ) {
+					$image_source_url = $import_featured_img;
 				}
 
 				// Fetch image from graby.
