@@ -494,9 +494,12 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			if ( ! class_exists( '\Feedzy_Rss_Feeds_Pro_Openai' ) ) {
 				return $content;
 			}
-			$openai  = new \Feedzy_Rss_Feeds_Pro_Openai();
-			$content = $openai->call_api( $this->settings, $content, 'summarize', array() );
-			return $content;
+			if ( isset( $this->current_job->data->fz_summarize ) ) {
+				unset( $this->current_job->data->fz_summarize );
+			}
+			// Summarizes the content using the `Rewrite with AI` action, ensuring backward compatibility.
+			$this->current_job->data->ChatGPT = 'Summarize this article {content} for better SEO.';
+			return $this->chat_gpt_rewrite();
 		}
 
 		/**

@@ -75,6 +75,24 @@ const ActionModal = () => {
 
 	};
 
+	const demoPromptText = (args) => {
+		let id = args.index;
+		let type = args.type;
+		delete args.index;
+		delete args.type;
+		let prevState = action[id].data || {};
+		let updatedState = {...prevState, ...args};
+		if ( 'summarize' === type ) {
+			updatedState['ChatGPT'] = 'Summarize this article {content} for better SEO.';
+		} else if ( 'paraphase' === type ) {
+			updatedState['ChatGPT'] = 'Rephrase my {content} for better SEO.';
+		} else if ( 'change_tone' === type ) {
+			updatedState['ChatGPT'] = 'Change tone of my {content} for a more friendly approach.';
+		}
+		action[id]['data'] = updatedState;
+		setAction( () => ([...action.filter((e)=>{return e})]));
+	};
+
 	const openModal = () => {
 		setLoading(true);
 		setOpen(true);
@@ -241,7 +259,21 @@ const ActionModal = () => {
 							let editAction = event.target.getAttribute( 'data-actions' ) || '';
 							let fieldId = event.target.getAttribute( 'data-field_id' ) || '';
 							editAction = JSON.parse( decodeURIComponent( editAction ) );
-							setAction( () => ([...editAction.filter((e)=>{return e.id !== ''})]));
+							setAction(() => (
+								editAction
+								.filter((e) => e.id !== '')
+								.map((e) => {
+								  	// Replace 'fz_summarize' with 'chat_gpt_rewrite' for backward compatible.
+									if (e.id === 'fz_summarize') {
+										return { 
+											...e, 
+											id: 'chat_gpt_rewrite', 
+											data: { ChatGPT: "Summarize this article {content} for better SEO." } 
+										};
+									}
+									return e;
+								})
+							));
 							let magicTag = editAction[0] || {};
 							let tag = magicTag.tag;
 							setEditModeTag(event.target.parentNode);
@@ -280,7 +312,7 @@ const ActionModal = () => {
 							</div>
 						) }
 
-						{action.length > 0 && ( <Actions data={action} removeCallback={removeAction} onChangeHandler={handleChange} onSortEnd={onSortEnd} useDragHandle lockAxis="y" helperClass="draggable-item" distance={1} lockToContainerEdges={true} lockOffset="0%"/> )}
+						{action.length > 0 && ( <Actions data={action} removeCallback={removeAction} onChangeHandler={handleChange} updatePromptText={demoPromptText} onSortEnd={onSortEnd} useDragHandle lockAxis="y" helperClass="draggable-item" distance={1} lockToContainerEdges={true} lockOffset="0%"/> )}
 
 						<div className="fz-action-btn">
 							<div className="fz-action-relative">
@@ -346,18 +378,9 @@ const ActionModal = () => {
 													(
 														'item_categories' !== shortCode && (
 															feedzyData.isPro && ( feedzyData.isBusinessPlan || feedzyData.isAgencyPlan ) ? (
-																<li key="action-9" onClick={ () => addAction('chat_gpt_rewrite') }>{__( 'Paraphrase with ChatGPT', 'feedzy-rss-feeds' )}</li>
+																<li key="action-9" onClick={ () => addAction('chat_gpt_rewrite') }>{__( 'Rewrite with AI', 'feedzy-rss-feeds' )}</li>
 															) : (
-																<li key="action-9" onClick={ () => addAction('chat_gpt_rewrite') }>{__( 'Paraphrase with ChatGPT', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
-															)
-														)
-													),
-													(
-														'item_categories' !== shortCode && (
-															feedzyData.isPro && ( feedzyData.isBusinessPlan || feedzyData.isAgencyPlan ) ? (
-																<li key="action-10" onClick={ () => addAction('fz_summarize') }>{__( 'Summarize with ChatGPT', 'feedzy-rss-feeds' )}</li>
-															) : (
-																<li key="action-10" onClick={ () => addAction('fz_summarize') }>{__( 'Summarize with ChatGPT', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+																<li key="action-9" onClick={ () => addAction('chat_gpt_rewrite') }>{__( 'Rewrite with AI', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
 															)
 														)
 													)
