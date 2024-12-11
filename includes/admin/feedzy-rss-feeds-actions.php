@@ -472,7 +472,7 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			$openai          = new \Feedzy_Rss_Feeds_Pro_Openai();
 			$rewrite_content = $openai->call_api( $this->settings, $content, '', array() );
 			// Replace prompt content string for specific cases.
-			$rewrite_content = str_replace( explode( '{content}', $prompt_content ), '', $rewrite_content );
+			$rewrite_content = str_replace( explode( '{content}', $prompt_content ), '', trim( $rewrite_content, '"' ) );
 			return $rewrite_content;
 		}
 
