@@ -13,10 +13,22 @@
 		<div class="locked-form-block">
 			<div class="fz-form-group mb-24">
 				<label class="form-label"><?php esc_html_e( 'The OpenAI account API key:', 'feedzy-rss-feeds' ); ?></label>
+				<div class="help-text pb-8">
+				<?php
+					// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+					echo wp_kses_post( sprintf( __( 'Get your OpenAI API key from <a href="%1$s" target="_blank">%2$s</a>', 'feedzy-rss-feeds' ), esc_url( 'https://platform.openai.com/account/api-keys' ), __( 'OpenAI API keys', 'feedzy-rss-feeds' ) ) );
+				?>
+			</div>
 				<input type="password" class="form-control" placeholder="<?php echo esc_attr( __( 'API key', 'feedzy-rss-feeds' ) ); ?>"/>
 			</div>
 			<div class="fz-form-group">
 				<label class="form-label"><?php esc_html_e( 'The OpenAI model:', 'feedzy-rss-feeds' ); ?></label>
+				<div class="help-text pb-8">
+				<?php
+					// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+					echo wp_kses_post( sprintf( __( 'OpenAI API models <a href="%1$s" target="_blank">%2$s</a>', 'feedzy-rss-feeds' ), esc_url( 'https://openai.com/api/pricing/' ), __( 'Pricing', 'feedzy-rss-feeds' ) ) );
+				?>
+				</div>
 				<div class="fz-input-group">
 					<div class="fz-input-group-left">
 						<input type="text" class="form-control" placeholder="<?php echo esc_attr( __( 'Model', 'feedzy-rss-feeds' ) ); ?>"/>

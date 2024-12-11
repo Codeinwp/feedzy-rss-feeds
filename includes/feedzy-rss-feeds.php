@@ -238,6 +238,7 @@ class Feedzy_Rss_Feeds {
 
 			self::$instance->loader->add_filter( 'feedzy_items_limit', $plugin_import, 'items_limit', 10, 2 );
 			self::$instance->loader->add_filter( 'feedzy_settings_tabs', $plugin_import, 'settings_tabs', 10, 1 );
+			self::$instance->loader->add_filter( 'feedzy_integration_tabs', $plugin_import, 'integration_tabs', 10, 1 );
 			self::$instance->loader->add_filter( 'redirect_post_location', $plugin_import, 'redirect_post_location', 10, 2 );
 			self::$instance->loader->add_filter( 'manage_feedzy_imports_posts_columns', $plugin_import, 'feedzy_import_columns' );
 			self::$instance->loader->add_action( 'admin_notices', $plugin_import, 'admin_notices' );
