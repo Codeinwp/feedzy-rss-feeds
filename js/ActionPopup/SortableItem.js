@@ -311,6 +311,13 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 									disabled={!feedzyData.isPro || !feedzyData.apiLicenseStatus.openaiStatus}
 								/>
 							</BaseControl>
+							<BaseControl>
+								<TextareaControl
+									label={ __( 'Additional Prompt', 'feedzy-rss-feeds' ) }
+									value={ item.data.generateImagePrompt ? unescape(item.data.generateImagePrompt.replaceAll('&#039;', '\'')) : '' }
+									onChange={ ( currentValue ) => propRef.onChangeHandler( { 'index': loopIndex, 'generateImagePrompt': currentValue ?? '' } ) }
+								/>
+							</BaseControl>
 						</PanelRow>
 					</PanelBody>
 				</div>
