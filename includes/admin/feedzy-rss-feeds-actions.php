@@ -517,6 +517,9 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			}
 
 			$prompt = call_user_func( array( $this, 'item_title' ) );
+			if ( ! empty( $this->current_job->data->generateImagePrompt ) ) {
+				$prompt .= "\r\n" . $this->current_job->data->generateImagePrompt;
+			}
 			$openai = new \Feedzy_Rss_Feeds_Pro_Openai();
 			return $openai->call_api( $this->settings, $prompt, 'image', array() );
 		}
