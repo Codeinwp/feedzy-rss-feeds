@@ -2391,7 +2391,7 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	public function admin_notices() {
 		$screen  = get_current_screen();
-		$allowed = array( 'edit-feedzy_categories', 'edit-feedzy_imports', 'feedzy-rss_page_feedzy-settings' );
+		$allowed = array( 'edit-feedzy_categories', 'edit-feedzy_imports', 'feedzy-rss_page_feedzy-settings', 'feedzy-rss_page_feedzy-integration' );
 		// only show in the feedzy screens.
 		if ( ! in_array( $screen->id, $allowed, true ) ) {
 			return;
@@ -2514,15 +2514,26 @@ class Feedzy_Rss_Feeds_Import {
 	 * @access  public
 	 */
 	public function settings_tabs( $tabs ) {
-		$tabs['misc']   = __( 'Miscellaneous', 'feedzy-rss-feeds' );
+		$tabs['misc'] = __( 'Miscellaneous', 'feedzy-rss-feeds' );
+
+		return $tabs;
+	}
+
+	/**
+	 * Add integration tab.
+	 *
+	 * @since   3.0.0
+	 * @access  public
+	 */
+	public function integration_tabs( $tabs ) {
 		if ( $this->feedzy_is_business() || $this->feedzy_is_agency() ) {
 			$tabs['openai'] = __( 'OpenAI', 'feedzy-rss-feeds' );
 		}
 		if ( ! feedzy_is_pro() ) {
-			$tabs['wordai']       = sprintf( '%s <span class="pro-label">PRO</span>', __( 'WordAi', 'feedzy-rss-feeds' ) );
+			$tabs['openai'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'OpenAI', 'feedzy-rss-feeds' ) );
 			$tabs['spinnerchief'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'SpinnerChief', 'feedzy-rss-feeds' ) );
 			$tabs['amazon-product-advertising'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'Amazon Product Advertising', 'feedzy-rss-feeds' ) );
-			$tabs['openai'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'OpenAI', 'feedzy-rss-feeds' ) );
+			$tabs['wordai']       = sprintf( '%s <span class="pro-label">PRO</span>', __( 'WordAi', 'feedzy-rss-feeds' ) );
 		}
 
 		return $tabs;

@@ -253,7 +253,7 @@ add_filter(
 			'nice_name'          => 'Feedzy',
 			'logo'               => FEEDZY_ABSURL . 'img/feedzy.svg',
 			'primary_color'      => '#4268CF',
-			'pages'              => array( 'feedzy_imports', 'edit-feedzy_imports', 'edit-feedzy_categories', 'feedzy_page_feedzy-settings', 'feedzy_page_feedzy-support' ),
+			'pages'              => array( 'feedzy_imports', 'edit-feedzy_imports', 'edit-feedzy_categories', 'feedzy_page_feedzy-settings', 'feedzy_page_feedzy-support', 'feedzy_page_feedzy-integration' ),
 			'has_upgrade_menu'   => ! feedzy_is_pro(),
 			'upgrade_link'       => tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'floatWidget' ), 'query' ),
 			'documentation_link' => tsdk_translate_link( tsdk_utmify( 'https://docs.themeisle.com/collection/1569-feedzy-rss-feeds', 'floatWidget' ), 'query' ),
