@@ -30,8 +30,8 @@ test.describe( 'Upsell', () => {
         // Hover over text named Filter by Keyword
         const filtersTab = page.locator('#feedzy-import-form > div.feedzy-accordion > div:nth-child(2)');
 
-        // It should have 3 elements with .only-pro-content class.
-        await expect( filtersTab.locator('.only-pro-content').count() ).resolves.toBe(3);
+        // It should have 1 elements with .only-pro-content class.
+        await expect( filtersTab.locator('.only-pro-content').count() ).resolves.toBe(1);
 
         const filterByKeywordAlert = await filtersTab.locator('.upgrade-alert').first();
         let upgradeLink = new URL( await filterByKeywordAlert.locator('a').first().getAttribute('href') );

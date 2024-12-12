@@ -191,7 +191,7 @@ class Feedzy_Rss_Feeds_Conditions {
 					$condition_value = $condition_value->getTimestamp();
 				} elseif ( isset( $condition['field'] ) && in_array( $condition['field'], array( 'title', 'description', 'fullcontent' ), true ) ) {
 					// Check if the field type is title, description or fullcontent, we compare the length of the string.
-					$value = strlen( $value );
+					$value           = strlen( $value );
 					$condition_value = (int) $condition_value;
 				}
 
@@ -265,11 +265,11 @@ class Feedzy_Rss_Feeds_Conditions {
 				case 'fullcontent':
 					$content = $item->get_item_tags( SIMPLEPIE_NAMESPACE_ATOM_10, 'full-content' );
 					$content = ! empty( $content[0]['data'] ) ? $content[0]['data'] : '';
-					$value = wp_strip_all_tags( $content, true );
+					$value   = wp_strip_all_tags( $content, true );
 					break;
 				case 'author':
 					$author = $item->get_author();
-					$value = $author ? $author->get_name() : '';
+					$value  = $author ? $author->get_name() : '';
 					break;
 				case 'date':
 					$value = strtotime( $item->get_date() );
