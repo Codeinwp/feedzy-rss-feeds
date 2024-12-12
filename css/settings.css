@@ -89,6 +89,7 @@
 .mb-20{margin-bottom: 20px;}
 .mb-30{margin-bottom: 30px;}
 .mb-24{margin-bottom: 24px;}
+.mt-24{margin-top: 24px;}
 .mx-320{
 	max-width: 320px;
 }
@@ -2358,4 +2359,93 @@ li.draggable-item .components-panel__body-toggle.components-button{
 .feedzy-optimole-upsell .pro-label.free-label {
 	color: #4268CF;
 	background: rgba(66, 104, 207, 0.20);
+}
+
+.fz-condition-control {
+	padding: 24px 0;
+}
+
+.fz-conditions .components-disabled {
+	opacity: 0.5;
+}
+
+.fz-condition-control .components-button {
+	width: 100%;
+	margin: 0;
+	padding: 6px 12px;
+	justify-content: center;
+}
+
+.fz-panel-tab {
+	z-index: 999999;
+	margin: 24px 0;
+}
+
+.fz-panel-tab .fz-panel-tab__header {
+	display: flex;
+	background: #fff;
+	border: 1px solid #d5dadf;
+}
+
+.fz-panel-tab .fz-panel-tab__header .fz-panel-tab__header__label {
+	cursor: pointer;
+	flex-basis: 90%;
+	display: flex;
+	align-items: center;
+	padding-left: 15px;
+}
+
+.fz-panel-tab .fz-panel-tab__header .fz-panel-tab__header__label::selection {
+	background: none;
+}
+
+.fz-panel-tab .fz-panel-tab__header .components-button {
+	height: auto;
+	flex-basis: 10%;
+	justify-content: center;
+	padding: 10px 5px;
+	border-left: 1px solid #d5dadf;
+	border-radius: 0;
+}
+
+.fz-panel-tab .fz-panel-tab__header .components-button .dashicon {
+	margin: 2px;
+}
+
+.fz-panel-tab .fz-panel-tab__header:hover {
+	background: #fafafb;
+}
+
+.fz-panel-tab .fz-panel-tab__content {
+	background: #fff;
+	border: 1px solid #d5dadf;
+	border-top: none;
+	padding: 10px 15px;
+}
+
+.fz-panel-tab .fz-panel-tab__content .components-select-control label {
+	overflow: visible;
+	white-space: normal;
+}
+
+.fz-panel-tab .fz-panel-tab__content .components-base-control {
+	margin: 12px 0;
+}
+
+.fz-panel-tab .fz-panel-tab__content .components-base-control .components-dropdown {
+	width: 100%;
+}
+
+.fz-panel-tab .fz-panel-tab__content .components-base-control .components-dropdown .components-button {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+}
+
+.fz-panel-tab .fz-panel-tab__content .components-base-control .components-datetime__time-field-hours-input {
+	min-width: 60px;
+}
+
+.fz-panel-tab .fz-panel-tab__content .components-base-control .components-datetime__timezone {
+	display: inline-block;
 }

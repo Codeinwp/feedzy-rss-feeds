@@ -326,16 +326,6 @@ class Feedzy_Rss_Feeds_Import {
 		$post_types            = get_post_types( '', 'names' );
 		$post_types            = array_diff( $post_types, array( 'feedzy_imports', 'feedzy_categories' ) );
 		$published_status      = array( 'publish', 'draft' );
-		$keyword_filter_fields = array( __( 'Title', 'feedzy-rss-feeds' ) );
-		if ( feedzy_is_pro() ) {
-			$keyword_filter_fields = array_merge(
-				$keyword_filter_fields, array(
-					__( 'Description', 'feedzy-rss-feeds' ),
-					__( 'Author', 'feedzy-rss-feeds' ),
-					__( 'Full Content', 'feedzy-rss-feeds' ),
-				)
-			);
-		}
 		$import_post_type = get_post_meta( $post->ID, 'import_post_type', true );
 		$import_post_term = get_post_meta( $post->ID, 'import_post_term', true );
 		if ( metadata_exists( $import_post_type, $post->ID, 'import_post_status' ) ) {
@@ -364,6 +354,22 @@ class Feedzy_Rss_Feeds_Import {
 		$import_auto_translation  = get_post_meta( $post->ID, 'import_auto_translation', true );
 		$import_auto_translation  = 'yes' === $import_auto_translation ? 'checked' : '';
 		$import_translation_lang  = get_post_meta( $post->ID, 'import_auto_translation_lang', true );
+		$filter_conditions        = get_post_meta( $post->ID, 'filter_conditions', true );
+
+		if ( empty( $filter_conditions ) ) {
+			$filter_conditions = apply_filters(
+				'feedzy_filter_conditions_migration',
+				array(
+					'keywords_inc'    => $inc_key,
+					'keywords_exc'    => $exc_key,
+					'keywords_inc_on' => $inc_on,
+					'keywords_exc_on' => $exc_on,
+					'from_datetime'   => $from_datetime,
+					'to_datetime'     => $to_datetime,
+				)
+			);
+		}
+
 		// default values so that post is not created empty.
 		if ( empty( $import_title ) ) {
 			$import_title = '[[{"value":"%5B%7B%22id%22%3A%22%22%2C%22tag%22%3A%22item_title%22%2C%22data%22%3A%7B%7D%7D%5D"}]]';
@@ -1344,7 +1350,22 @@ class Feedzy_Rss_Feeds_Import {
 		$import_auto_translation  = get_post_meta( $job->ID, 'import_auto_translation', true );
 		$import_auto_translation  = $this->feedzy_is_agency() && 'yes' === $import_auto_translation ? true : false;
 		$import_translation_lang  = get_post_meta( $job->ID, 'import_auto_translation_lang', true );
+		$filter_conditions        = get_post_meta( $job->ID, 'filter_conditions', true );
 		$max                      = $import_feed_limit;
+
+		if ( empty( $filter_conditions ) ) {
+			$filter_conditions = apply_filters(
+				'feedzy_filter_conditions_migration',
+				array(
+					'keywords_inc'    => $inc_key,
+					'keywords_exc'    => $exc_key,
+					'keywords_inc_on' => $inc_on,
+					'keywords_exc_on' => $exc_on,
+					'from_datetime'   => $from_datetime,
+					'to_datetime'     => $to_datetime,
+				)
+			);
+		}
 
 		if ( metadata_exists( 'post', $job->ID, 'import_post_status' ) ) {
 			$import_post_status = get_post_meta( $job->ID, 'import_post_status', true );
@@ -1397,17 +1418,11 @@ class Feedzy_Rss_Feeds_Import {
 				'thumb'           => 'auto',
 				'default'         => '',
 				'size'            => '250',
-				'keywords_inc'    => $inc_key, // this is not keywords_title
-				'keywords_ban'    => $exc_key, // to support old pro that does not support keywords_exc
-				'keywords_exc'    => $exc_key, // this is not keywords_ban
-				'keywords_inc_on' => $inc_on,
-				'keywords_exc_on' => $exc_on,
 				'columns'         => 1,
 				'offset'          => 0,
 				'multiple_meta'   => 'no',
 				'refresh'         => '55_mins',
-				'from_datetime'   => $from_datetime,
-				'to_datetime'     => $to_datetime,
+				'filters'         => $filter_conditions,
 			),
 			$job
 		);
