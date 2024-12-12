@@ -882,22 +882,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$feed->set_useragent( apply_filters( 'http_headers_useragent', $set_server_agent ) );
 		}
 
-		global $feedzy_current_error_reporting;
-		$feedzy_current_error_reporting = error_reporting();
-
-		// to avoid the Warning! Non-numeric value encountered. This can be removed once SimplePie in core is fixed.
-		if ( version_compare( phpversion(), '7.1', '>=' ) ) {
-			error_reporting( E_ALL & ~E_WARNING & ~E_DEPRECATED );
-			// reset the error_reporting back to its original value.
-			add_action(
-				'shutdown',
-				function() {
-					global $feedzy_current_error_reporting;
-					error_reporting( $feedzy_current_error_reporting );
-				}
-			);
-		}
-
 		$feed->init();
 
 		if ( ! $feed->get_type() ) {
