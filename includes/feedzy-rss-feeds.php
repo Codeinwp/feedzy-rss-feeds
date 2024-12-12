@@ -106,7 +106,6 @@ class Feedzy_Rss_Feeds {
 		self::$plugin_name = 'feedzy-rss-feeds';
 		self::$version     = '4.4.16';
 		self::$instance->load_dependencies();
-		self::$instance->set_locale();
 		self::$instance->define_admin_hooks();
 
 	}
@@ -156,25 +155,6 @@ class Feedzy_Rss_Feeds {
 	 */
 	public static function get_version() {
 		return self::$version;
-	}
-
-	/**
-	 * Define the locale for this plugin for internationalization.
-	 *
-	 * Uses the Feedzy_Rss_Feeds_i18n class in order to set the domain and to register the hook
-	 * with WordPress.
-	 *
-	 * @since    3.0.0
-	 * @access   private
-	 */
-	private function set_locale() {
-		/**
-		 * The class responsible for defining internationalization functionality
-		 * of the plugin.
-		 */
-		$plugin_i18n = new Feedzy_Rss_Feeds_i18n();
-		self::$instance->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
-
 	}
 
 	/**
