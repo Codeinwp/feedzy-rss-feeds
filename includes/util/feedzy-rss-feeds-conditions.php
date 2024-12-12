@@ -137,7 +137,7 @@ class Feedzy_Rss_Feeds_Conditions {
 
 		foreach ( $mapping as $key => $operator ) {
 			if ( isset( $conditions[ $key ] ) && ! empty( $conditions[ $key ] ) ) {
-				$field = $key === 'from_datetime' || $key === 'to_datetime' ? 'date' : $conditions[ $key . '_on' ];
+				$field = $key === 'from_datetime' || $key === 'to_datetime' ? 'date' : ( isset( $conditions[ $key . '_on' ] ) ? $conditions[ $key . '_on' ] : '' );
 				if ( ! empty( $field ) ) {
 					array_push(
 						$new_conditions['conditions'], array(
