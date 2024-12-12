@@ -612,17 +612,19 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				'feedzy_settings_page',
 			)
 		);
-		add_submenu_page(
-			'feedzy-admin-menu',
-			__( 'Integration', 'feedzy-rss-feeds' ),
-			__( 'Integration', 'feedzy-rss-feeds' ),
-			'manage_options',
-			'feedzy-integration',
-			array(
-				$this,
-				'feedzy_integration_page',
-			)
-		);
+		if ( apply_filters( 'feedzy_is_license_of_type', false, 'business' ) ) {
+			add_submenu_page(
+				'feedzy-admin-menu',
+				__( 'Integration', 'feedzy-rss-feeds' ),
+				__( 'Integration', 'feedzy-rss-feeds' ),
+				'manage_options',
+				'feedzy-integration',
+				array(
+					$this,
+					'feedzy_integration_page',
+				)
+			);
+		}
 		add_submenu_page(
 			'feedzy-admin-menu',
 			__( 'Support', 'feedzy-rss-feeds' ),
