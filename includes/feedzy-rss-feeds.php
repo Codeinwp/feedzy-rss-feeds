@@ -285,6 +285,8 @@ class Feedzy_Rss_Feeds {
 			$this->loader->add_action( 'elementor/frontend/before_enqueue_styles', $plugin_elementor_widget, 'feedzy_elementor_before_enqueue_scripts' );
 		}
 
+		$plugin_slug = FEEDZY_DIRNAME . '/' . basename( FEEDZY_BASEFILE );
+		$this->loader->add_filter( "plugin_action_links_$plugin_slug", self::$instance->admin, 'plugin_actions', 10, 2 );
 		if ( ! defined( 'TI_UNIT_TESTING' ) ) {
 			add_action(
 				'plugins_loaded',
