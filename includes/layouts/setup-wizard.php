@@ -127,7 +127,7 @@ if ( ! empty( $integrate_with ) ) {
 																sprintf(
 																	// translators: %1$s and %2$s are HTML tags for the link to the demo URL.
 																	__( 'No Feed URL? %1$s Click here %2$s to use demo URL', 'feedzy-rss-feeds' ),
-																	'<a target="_blank" class="feed-demo-link" href="' . esc_url( 'https://www.codeinwp.com/feed/' ) . '" >',
+																	'<a target="_blank" class="feed-demo-link" href="' . esc_url( 'https://wpshout.com/feed/' ) . '" >',
 																	'</a>'
 																)
 															);
