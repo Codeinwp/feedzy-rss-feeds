@@ -32,5 +32,4 @@ class Feedzy_Rss_Feeds_Deactivator {
 	public static function deactivate() {
 		delete_option( 'feedzy-activated' );
 	}
-
 }

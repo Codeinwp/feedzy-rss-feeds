@@ -565,7 +565,6 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 	public function get_strings() {
 		return $this->strings;
 	}
-
 }
 
 $feedzy_lang_class = new Feedzy_Rss_Feeds_Ui_Lang();

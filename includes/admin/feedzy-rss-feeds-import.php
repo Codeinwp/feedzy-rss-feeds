@@ -282,7 +282,6 @@ class Feedzy_Rss_Feeds_Import {
 				'default'      => false,
 			)
 		);
-
 	}
 
 	/**
@@ -720,7 +719,7 @@ class Feedzy_Rss_Feeds_Import {
 				echo( $msg ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 				if ( 'publish' === $post->post_status ) {
-					echo sprintf( '<p><input type="button" class="button button-primary feedzy-run-now" data-id="%d" value="%s"></p>', esc_attr( $post_id ), esc_attr__( 'Run Now', 'feedzy-rss-feeds' ) );
+					printf( '<p><input type="button" class="button button-primary feedzy-run-now" data-id="%d" value="%s"></p>', esc_attr( $post_id ), esc_attr__( 'Run Now', 'feedzy-rss-feeds' ) );
 				}
 
 				break;
@@ -950,7 +949,6 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		return $status;
-
 	}
 
 	/**
@@ -1444,7 +1442,7 @@ class Feedzy_Rss_Feeds_Import {
 			}
 			if ( $is_duplicate ) {
 				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Ignoring %s as it is a duplicate (%s hash).', $item_hash, $use_new_hash ? 'new' : 'old' ), 'warn', __FILE__, __LINE__ );
-				$index ++;
+				++$index;
 				$duplicates[ $item['item_url'] ] = $item['item_title'];
 				continue;
 			}
@@ -1740,7 +1738,7 @@ class Feedzy_Rss_Feeds_Import {
 			// no point creating a post if either the title or the content is null.
 			if ( is_null( $post_title ) || is_null( $post_content ) ) {
 				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'NOT creating a new post as title (%s) or content (%s) is null.', $post_title, $post_content ), 'info', __FILE__, __LINE__ );
-				$index ++;
+				++$index;
 				$import_errors[] = __( 'Title or Content is empty.', 'feedzy-rss-feeds' );
 				continue;
 			}
@@ -1782,7 +1780,7 @@ class Feedzy_Rss_Feeds_Import {
 				}
 
 				if ( ! $img_success ) {
-					$import_image_errors ++;
+					++$import_image_errors;
 				}
 			} else {
 				$new_post_id = wp_insert_post( $new_post, true );
@@ -1804,13 +1802,13 @@ class Feedzy_Rss_Feeds_Import {
 					}
 				}
 				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to create a new post with params %s. Error: %s', print_r( $new_post, true ), $error_reason ), 'error', __FILE__, __LINE__ );
-				$index ++;
+				++$index;
 				continue;
 			}
 			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'created new post with ID %d with post_content %s', $new_post_id, $post_content ), 'debug', __FILE__, __LINE__ );
 			if ( ! in_array( $item_hash, $found_duplicates, true ) ) {
 				$imported_items[] = $item_hash;
-				$count ++;
+				++$count;
 			}
 
 			if ( $import_post_term !== 'none' && strpos( $import_post_term, '_' ) > 0 ) {
@@ -1956,11 +1954,11 @@ class Feedzy_Rss_Feeds_Import {
 				}
 
 				if ( ! $img_success ) {
-					$import_image_errors ++;
+					++$import_image_errors;
 				}
 			}
 
-			$index ++;
+			++$index;
 
 			// indicate that this post was imported by feedzy.
 			update_post_meta( $new_post_id, 'feedzy', 1 );
@@ -2311,7 +2309,6 @@ class Feedzy_Rss_Feeds_Import {
 		if ( false === wp_next_scheduled( 'feedzy_cron' ) ) {
 			echo wp_kses_post( '<div class="notice notice-error"><p>' . __( 'Unable to register cron job. Your feeds might not get updated', 'feedzy-rss-feeds' ) . '</p></div>' );
 		}
-
 	}
 
 	/**

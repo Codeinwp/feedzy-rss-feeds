@@ -54,7 +54,7 @@ $is_pro = feedzy_is_pro();
 				<h3 class="h3"><?php esc_html_e( 'Shortcode', 'feedzy-rss-feeds' ); ?></h3>
 				<p>
 					<?php
-					echo sprintf(
+					printf(
 						/* translators: %s: [feedzy-rss] */
 						esc_html__( 'Display feed items using %s shortcode. The advantage of this approach is that it can be used with any WordPress theme or page builder.', 'feedzy-rss-feeds' ),
 						'[feedzy-rss]'

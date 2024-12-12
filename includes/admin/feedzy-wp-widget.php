@@ -39,7 +39,6 @@ class feedzy_wp_widget extends WP_Widget {
 	public function __construct( $plugin_admin = null ) {
 		parent::__construct( false, $name = __( 'Feedzy RSS Feeds', 'feedzy-rss-feeds' ) );
 		self::$instance = $this;
-
 	}
 
 	/**
@@ -123,7 +122,6 @@ class feedzy_wp_widget extends WP_Widget {
 		$widget_form  = apply_filters( 'feedzy_widget_form_filter', $widget_form, $instance, $this->get_widget_defaults() );
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $widget_form;
-
 	}
 
 	/**
@@ -165,7 +163,6 @@ class feedzy_wp_widget extends WP_Widget {
 			return 'auto';
 		}
 		return $value;
-
 	}
 
 	/**
@@ -195,7 +192,6 @@ class feedzy_wp_widget extends WP_Widget {
 		$instance = apply_filters( 'feedzy_widget_update_filter', $instance, $new_instance );
 
 		return $instance;
-
 	}
 
 	/**
@@ -261,7 +257,5 @@ class feedzy_wp_widget extends WP_Widget {
 		echo feedzy_rss( $feedzy_widget_shortcode_attributes );
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $args['after_widget'];
-
 	}
-
 }

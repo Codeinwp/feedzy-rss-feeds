@@ -37,15 +37,15 @@
   "config": {
     "optimize-autoloader": true,
     "platform": {
-      "php": "5.6"
+      "php": "7.2"
     },
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true
     }
   },
   "require-dev": {
-    "wp-coding-standards/wpcs": "^2.3",
+    "wp-coding-standards/wpcs": "^3.1",
     "dealerdirect/phpcodesniffer-composer-installer": "^1.0.0",
-    "phpcompatibility/phpcompatibility-wp": "*"
+    "phpcompatibility/phpcompatibility-wp": "^2.1"
   }
 }

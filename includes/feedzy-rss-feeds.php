@@ -107,7 +107,6 @@ class Feedzy_Rss_Feeds {
 		self::$version     = '4.4.16';
 		self::$instance->load_dependencies();
 		self::$instance->define_admin_hooks();
-
 	}
 
 	/**
@@ -131,7 +130,6 @@ class Feedzy_Rss_Feeds {
 		self::$instance->loader   = new Feedzy_Rss_Feeds_Loader();
 		self::$instance->upgrader = new Feedzy_Rss_Feeds_Upgrader();
 		self::$instance->admin    = new Feedzy_Rss_Feeds_Admin( self::$instance->get_plugin_name(), self::$instance->get_version() );
-
 	}
 
 	/**
@@ -315,5 +313,4 @@ class Feedzy_Rss_Feeds {
 	public function get_admin() {
 		return self::$instance->admin;
 	}
-
 }

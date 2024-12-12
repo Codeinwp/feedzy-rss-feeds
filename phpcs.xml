@@ -10,35 +10,26 @@
     <exclude-pattern>tests/*</exclude-pattern>
 
     <rule ref="WordPress-Core">
-        <exclude name="Squiz.Commenting.FileComment.SpacingAfterComment" />
-        <exclude name="WordPress.WhiteSpace.PrecisionAlignment.Found" />
-        <exclude name="Generic.Files.LowercasedFilename" />
-        <exclude name="Generic.NamingConventions.UpperCaseConstantName" />
-        <exclude name="Squiz.Commenting.FunctionComment.MissingParamTag" />
-        <exclude name="Squiz.Commenting.InlineComment.InvalidEndChar" />
-        <exclude name="Squiz.Commenting.InlineComment.NotCapital" />
-        <exclude name="Squiz.Commenting.FileComment" />
+        <exclude name="Generic.WhiteSpace" />
+        <exclude name="Universal.WhiteSpace" />
+        <exclude name="WordPress.WhiteSpace" />
+        <exclude name="Generic.Files" />
+        <exclude name="Squiz.Commenting" />
+        <exclude name="Squiz.Functions" />
+        <exclude name="Universal.Operators.StrictComparisons" />
+        <exclude name="PEAR.Functions.FunctionCallSignature" />
+        <exclude name="Universal.NamingConventions" />
+        <exclude name="WordPress.NamingConventions" />
         <exclude name="WordPress.PHP.YodaConditions.NotYoda" />
         <exclude name="Squiz.PHP.DisallowMultipleAssignments" />
-        <exclude name="WordPress.NamingConvention.ValidVariableName.StringNotSnakeCase" />
-        <exclude name="WordPress.NamingConventions.ValidVariableName.NotSnakeCase" />
-        <exclude name="WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid" />
-        <exclude name="WordPress.NamingConventions.ValidVariableName.MemberNotSnakeCase" />
-        <exclude name="WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar" />
-        <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
-        <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
+        <exclude name="WordPress.Files.FileName" />
         <exclude name="WordPress.Arrays.ArrayDeclarationSpacing" />
         <exclude name="Squiz.PHP.CommentedOutCode" />
-        <exclude name="WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned" />
-        <exclude name="Generic.Formatting.MultipleStatementAlignment.IncorrectWarning" />
-        <exclude name="Generic.Formatting.MultipleStatementAlignment.NotSameWarning" />
-        <exclude name="PEAR.Functions.FunctionCallSignature.MultipleArguments" />
-        <exclude name="Generic.Files.LineEndings.InvalidEOLChar" />
-        <exclude name="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase" />
-        <exclude name="WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase" />
-        <exclude name="WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase" />
-        <exclude name="WordPress.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition" />
-        <exclude name="WordPress.CodeAnalysis.AssignmentInCondition.Found" />
+        <exclude name="WordPress.Arrays.MultipleStatementAlignment" />
+        <exclude name="Generic.Formatting" />
+        <exclude name="WordPress.CodeAnalysis" />
+        <exclude name="Generic.CodeAnalysis" />
+        <exclude name="NormalizedArrays.Arrays" />
     </rule>
     <rule ref="WordPress-Docs">
 
@@ -46,27 +37,27 @@
     <rule ref="WordPress">
         <exclude name="Generic.Strings.UnnecessaryStringConcat.Found" />
         <exclude name="WordPress.PHP.DevelopmentFunctions.error_log_print_r" />
+        <exclude name="WordPress.WP.AlternativeFunctions" />
         <exclude name="WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_ini_set" />
         <exclude name="WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_error_reporting" />
         <exclude name="WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting" />
         <exclude name="WordPress.PHP.DevelopmentFunctions.error_log_error_log" />
     </rule>
-    <config name="testVersion" value="5.6-" />
+    <config name="testVersion" value="7.2-" />
     <rule ref="PHPCompatibilityWP">
-    </rule>
-    <rule ref="Squiz.Commenting.FunctionComment.ScalarTypeHintMissing">
-        <severity>0</severity>
     </rule>
     <rule ref="WordPress.Security.EscapeOutput">
         <properties>
             <property name="customAutoEscapedFunctions" type="array" value="tsdk_utmify" />
         </properties>
     </rule>
-    <properties>
-        <property name="text_domain" type="array">
-            <element value="feedzy-rss-feeds" />
-        </property>
-    </properties>
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <property name="text_domain" type="array">
+                <element value="feedzy-rss-feeds" />
+            </property>
+        </properties>
+    </rule>
     <arg name="extensions" value="php" />
     <arg value="sp" />
     <arg name="basepath" value="./" />

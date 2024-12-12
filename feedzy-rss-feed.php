@@ -119,7 +119,7 @@ function run_feedzy_rss_feeds() {
 	define( 'FEEDZY_BASEFILE', __FILE__ );
 	define( 'FEEDZY_ABSURL', plugins_url( '/', __FILE__ ) );
 	define( 'FEEDZY_BASENAME', plugin_basename( __FILE__ ) );
-	define( 'FEEDZY_ABSPATH', dirname( __FILE__ ) );
+	define( 'FEEDZY_ABSPATH', __DIR__ );
 	define( 'FEEDZY_DIRNAME', basename( FEEDZY_ABSPATH ) );
 	define( 'FEEDZY_UPSELL_LINK', 'https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/' );
 	define( 'FEEDZY_SUBSCRIBE_API', 'https://api.themeisle.com/tracking/subscribe' );
@@ -206,7 +206,6 @@ function run_feedzy_rss_feeds() {
 	);
 	define( 'FEEDZY_SURVEY_PRO', 'https://forms.gle/FZXhL3D48KJUhb7q9' );
 	define( 'FEEDZY_SURVEY_FREE', 'https://forms.gle/yQUGSrKEa7XJTGLx8' );
-
 }
 
 /**

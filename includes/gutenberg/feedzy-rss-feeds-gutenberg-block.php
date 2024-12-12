@@ -367,7 +367,6 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );
 		$output = $feedy;
 		return $output;
-
 	}
 
 	/**
@@ -403,5 +402,4 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 			}
 		}
 	}
-
 }
