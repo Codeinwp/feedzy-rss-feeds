@@ -179,7 +179,7 @@ function run_feedzy_rss_feeds() {
 								'discount' => 'LOYALUSER5824',
 								'dvalue'   => 55,
 							), FEEDZY_UPSELL_LINK
-						), 'rop-welcome', 'notice'
+						), 'feedzy-welcome', 'notice'
 					)
 				),
 			);
