@@ -755,15 +755,15 @@ class Feedzy_Rss_Feeds_Import {
 	 * @access  private
 	 */
 	private function get_last_run_details( $post_id ) {
-		$msg    = '';
-		$last   = get_post_meta( $post_id, 'last_run', true );
-		$status = array(
+		$msg         = '';
+		$import_info = get_post_meta( $post_id, 'import_info', true );
+		$status      = array(
 			'total'      => '-',
 			'items'      => '-',
 			'duplicates' => '-',
 			'cumulative' => '-',
 		);
-		if ( $last ) {
+		if ( $import_info ) {
 			$status = array(
 				'total'      => 0,
 				'items'      => 0,
@@ -882,11 +882,11 @@ class Feedzy_Rss_Feeds_Import {
 			__( 'Items that were imported across all runs', 'feedzy-rss-feeds' ),
 			$status['cumulative'],
 			// fifth cell
-			empty( $last ) ? '' : ( ! empty( $errors ) ? 'feedzy-has-popup import-error' : 'import-success' ),
-			empty( $last ) ? '-1' : ( ! empty( $errors ) ? 0 : 1 ),
+			empty( $import_info ) ? '' : ( ! empty( $errors ) ? 'feedzy-has-popup import-error' : 'import-success' ),
+			empty( $import_info ) ? '-1' : ( ! empty( $errors ) ? 0 : 1 ),
 			$post_id,
 			__( 'View the errors', 'feedzy-rss-feeds' ),
-			empty( $last ) ? '-' : ( ! empty( $errors ) ? '<i class="dashicons dashicons-warning"></i>' : '<i class="dashicons dashicons-yes-alt"></i>' ),
+			empty( $import_info ) ? '-' : ( ! empty( $errors ) ? '<i class="dashicons dashicons-warning"></i>' : '<i class="dashicons dashicons-yes-alt"></i>' ),
 			// second row
 			__( 'Found', 'feedzy-rss-feeds' ),
 			__( 'Duplicates', 'feedzy-rss-feeds' ),
@@ -2709,13 +2709,13 @@ class Feedzy_Rss_Feeds_Import {
 					wp_delete_post( $post_id, true );
 				}
 			}
+			delete_post_meta( $id, 'import_errors' );
+			delete_post_meta( $id, 'import_info' );
+			delete_post_meta( $id, 'imported_items' );
+			delete_post_meta( $id, 'imported_items_count' );
 		}
 
 		delete_post_meta( $id, 'imported_items_hash' );
-		delete_post_meta( $id, 'imported_items' );
-		delete_post_meta( $id, 'imported_items_count' );
-		delete_post_meta( $id, 'import_errors' );
-		delete_post_meta( $id, 'import_info' );
 		delete_post_meta( $id, 'last_run' );
 		wp_die();
 	}
