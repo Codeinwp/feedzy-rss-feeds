@@ -148,7 +148,7 @@ function run_feedzy_rss_feeds() {
 			$compatibilities['FeedzyPRO'] = array(
 				'basefile'  => defined( 'FEEDZY_PRO_BASEFILE' ) ? FEEDZY_PRO_BASEFILE : '',
 				'required'  => '2.4',
-				'tested_up' => '2.5',
+				'tested_up' => '3.0',
 			);
 			return $compatibilities;
 		}
