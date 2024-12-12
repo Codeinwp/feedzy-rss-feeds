@@ -147,8 +147,8 @@ function run_feedzy_rss_feeds() {
 		'themeisle_sdk_compatibilities/' . FEEDZY_DIRNAME, function ( $compatibilities ) {
 			$compatibilities['FeedzyPRO'] = array(
 				'basefile'  => defined( 'FEEDZY_PRO_BASEFILE' ) ? FEEDZY_PRO_BASEFILE : '',
-				'required'  => '1.7',
-				'tested_up' => '2.4',
+				'required'  => '2.4',
+				'tested_up' => '2.5',
 			);
 			return $compatibilities;
 		}
