@@ -78,7 +78,9 @@
 					if ( $fields ) {
 
 						foreach ( $fields as $field ) {
-							echo wp_kses( $field['content'], apply_filters( 'feedzy_wp_kses_allowed_html', array() ) );
+							if ( ! empty( $field['content'] ) ) {
+								echo wp_kses( $field['content'], apply_filters( 'feedzy_wp_kses_allowed_html', array() ) );
+							}
 							if ( isset( $field['ajax'] ) && $field['ajax'] ) {
 								$show_button = false;
 							}
