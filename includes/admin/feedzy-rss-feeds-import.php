@@ -1742,6 +1742,7 @@ class Feedzy_Rss_Feeds_Import {
 				$image_source_url = '';
 				$img_success      = true;
 				$new_post_id      = 0;
+				$img_title        = $item['item_title'];
 				$feed_img_tag  = ! empty( $import_featured_img ) && is_string( $import_featured_img ) ? $import_featured_img : '';
 
 				// image tag
@@ -1765,10 +1766,11 @@ class Feedzy_Rss_Feeds_Import {
 					}
 				} else {
 					$image_source_url = $feed_img_tag;
+					$img_title        = pathinfo( basename( $image_source_url ), PATHINFO_FILENAME );
 				}
 
 				if ( ! empty( $image_source_url ) ) {
-					$img_success = $this->try_save_featured_image( $image_source_url, 0, $item['item_title'], $import_errors, $import_info, $new_post );
+					$img_success = $this->try_save_featured_image( $image_source_url, 0, $img_title, $import_errors, $import_info, $new_post );
 					$new_post_id = $img_success;
 				}
 
@@ -1850,8 +1852,9 @@ class Feedzy_Rss_Feeds_Import {
 			do_action( 'feedzy_import_extra', $job, $item_obj, $new_post_id, $import_errors, $import_info );
 
 			if ( ! empty( $import_featured_img ) && 'attachment' !== $import_post_type ) {
-				$image_source_url   = '';
-				$img_success = true;
+				$image_source_url = '';
+				$img_success      = true;
+				$img_title        = $item['item_title'];
 
 				$feed_img_tag = false === strpos( $import_featured_img, '[[{"value":' ) ? $import_featured_img : '[#item_image]'; // Use feed default image when we are using chained actions.
 
@@ -1874,6 +1877,7 @@ class Feedzy_Rss_Feeds_Import {
 					}
 				} elseif ( wp_http_validate_url( $import_featured_img ) ) {
 					$image_source_url = $import_featured_img;
+					$img_title        = pathinfo( basename( $image_source_url ), PATHINFO_FILENAME );
 				}
 
 				// Fetch image from graby.
@@ -1920,7 +1924,7 @@ class Feedzy_Rss_Feeds_Import {
 					}
 				}
 
-				if ( 'yes' === $import_item_img_url || ! $this->tryReuseExistingFeaturedImage( $img_success, $item['item_title'], $new_post_id ) ) {
+				if ( 'yes' === $import_item_img_url || ! $this->tryReuseExistingFeaturedImage( $img_success, $img_title, $new_post_id ) ) {
 					// Run chained actions.
 					$import_featured_img = rawurldecode( $import_featured_img );
 					$import_featured_img = trim( $import_featured_img );
@@ -1934,7 +1938,7 @@ class Feedzy_Rss_Feeds_Import {
 							update_post_meta( $new_post_id, 'feedzy_item_external_url', $image_source_url );
 						} else {
 							// if import_featured_img is a tag.
-							$img_success = $this->try_save_featured_image( $image_source_url, $new_post_id, $item['item_title'], $import_errors, $import_info );
+							$img_success = $this->try_save_featured_image( $image_source_url, $new_post_id, $img_title, $import_errors, $import_info );
 						}
 					}
 				}
