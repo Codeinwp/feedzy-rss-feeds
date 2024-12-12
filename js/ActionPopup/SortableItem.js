@@ -165,13 +165,49 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 	}
 
 	if ( 'chat_gpt_rewrite' === item.id ) {
+		let defaultProvider = 'openai';
+		let providerLicenseStatus = false;
+		if ( feedzyData.apiLicenseStatus.openaiStatus ) {
+			defaultProvider = 'openai';
+		} else if ( feedzyData.apiLicenseStatus.openRouterStatus ) {
+			defaultProvider = 'openrouter';
+		}
+
+		let selectedProvider = item.data.aiProvider || defaultProvider;
+		if ( 'openai' === selectedProvider ) {
+			providerLicenseStatus = feedzyData.apiLicenseStatus.openaiStatus;
+		} else if ( 'openrouter' === selectedProvider ) {
+			providerLicenseStatus = feedzyData.apiLicenseStatus.openRouterStatus;
+		}
 		return(
 			<li className="fz-action-control fz-chat-cpt-action" data-counter={counter}>
 				<div className="fz-action-event">
-					{feedzyData.isPro && (feedzyData.isBusinessPlan || feedzyData.isAgencyPlan) && !feedzyData.apiLicenseStatus.openaiStatus && (feedzyData.isHighPrivileges ? <span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-integration&tab=openai"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> : <span className="error-message">{__( 'Invalid API Key, Please contact the administrator', 'feedzy-rss-feeds' )}</span> )}
+					{feedzyData.isPro && (feedzyData.isBusinessPlan || feedzyData.isAgencyPlan) && !providerLicenseStatus && (feedzyData.isHighPrivileges ? <span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href={`admin.php?page=feedzy-integration&tab=${item.data.aiProvider || defaultProvider}`}><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> : <span className="error-message">{__( 'Invalid API Key, Please contact the administrator', 'feedzy-rss-feeds' )}</span> )}
 					<PanelBody title={ __( 'Rewrite with AI', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false }>
 						<PanelRow>
 							<UpgradeNotice higherPlanNotice={!feedzyData.isBusinessPlan && !feedzyData.isAgencyPlan} utmCampaign="action-paraphrase-chatgpt"/>
+							<BaseControl
+								__nextHasNoMarginBottom
+								className="mb-20"
+							>
+								<SelectControl
+									__nextHasNoMarginBottom
+									label={__('Choose an AI Provider', 'feedzy-rss-feeds')}
+									value={ selectedProvider }
+									options={[
+										{
+											label: __('OpenAI', 'feedzy-rss-feeds'),
+											value: 'openai'
+										},
+										{
+											label: __('OpenRouter', 'feedzy-rss-feeds'),
+											value: 'openrouter'
+										},
+									]}
+									onChange={ ( currentValue ) => propRef.onChangeHandler( { 'index': loopIndex, 'aiProvider': currentValue ?? '' } ) }
+									disabled={!feedzyData.isPro}
+								/>
+							</BaseControl>
 							<BaseControl
 								__nextHasNoMarginBottom
 							>
@@ -187,12 +223,27 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 									}
 									value={ item.data.ChatGPT ? unescape(item.data.ChatGPT.replaceAll('&#039;', '\'')) : '' }
 									onChange={ ( currentValue ) => propRef.onChangeHandler( { 'index': loopIndex, 'ChatGPT': currentValue ?? '' } ) }
-									disabled={!feedzyData.isPro || !feedzyData.apiLicenseStatus.openaiStatus}
+									disabled={!feedzyData.isPro || !providerLicenseStatus}
 								/>
 								<div className="fz-prompt-button">
-									<Button variant="secondary" onClick={ () => propRef.updatePromptText( { 'index': loopIndex, 'type': 'summarize' } ) }>{ __( 'Summarize', 'feedzy-rss-feeds' ) }</Button>
-									<Button variant="secondary" onClick={ () => propRef.updatePromptText( { 'index': loopIndex, 'type': 'paraphase' } ) }>{ __( 'Paraphase', 'feedzy-rss-feeds' ) }</Button>
-									<Button variant="secondary" onClick={ () => propRef.updatePromptText( { 'index': loopIndex, 'type': 'change_tone' } ) }>{ __( 'Change tone', 'feedzy-rss-feeds' ) }</Button>
+									<Button
+										variant="secondary"
+										onClick={ () => propRef.updatePromptText( { 'index': loopIndex, 'type': 'summarize' } ) }
+										disabled={!feedzyData.isPro || !providerLicenseStatus}
+										>{ __( 'Summarize', 'feedzy-rss-feeds' ) }
+									</Button>
+									<Button
+										variant="secondary"
+										onClick={ () => propRef.updatePromptText( { 'index': loopIndex, 'type': 'paraphase' } ) }
+										disabled={!feedzyData.isPro || !providerLicenseStatus}
+									>{ __( 'Paraphase', 'feedzy-rss-feeds' ) }
+									</Button>
+									<Button
+										variant="secondary"
+										onClick={ () => propRef.updatePromptText( { 'index': loopIndex, 'type': 'change_tone' } ) }
+										disabled={!feedzyData.isPro || !providerLicenseStatus}
+										>{ __( 'Change tone', 'feedzy-rss-feeds' ) }
+									</Button>
 								</div>
 							</BaseControl>
 						</PanelRow>

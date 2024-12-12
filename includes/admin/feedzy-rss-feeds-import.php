@@ -2527,10 +2527,12 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	public function integration_tabs( $tabs ) {
 		if ( $this->feedzy_is_business() || $this->feedzy_is_agency() ) {
-			$tabs['openai'] = __( 'OpenAI', 'feedzy-rss-feeds' );
+			$tabs['openai']      = __( 'OpenAI', 'feedzy-rss-feeds' );
+			$tabs['openrouter'] = __( 'OpenRouter', 'feedzy-rss-feeds' );
 		}
 		if ( ! feedzy_is_pro() ) {
 			$tabs['openai'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'OpenAI', 'feedzy-rss-feeds' ) );
+			$tabs['openrouter'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'OpenRouter', 'feedzy-rss-feeds' ) );
 			$tabs['spinnerchief'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'SpinnerChief', 'feedzy-rss-feeds' ) );
 			$tabs['amazon-product-advertising'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'Amazon Product Advertising', 'feedzy-rss-feeds' ) );
 			$tabs['wordai']       = sprintf( '%s <span class="pro-label">PRO</span>', __( 'WordAi', 'feedzy-rss-feeds' ) );
@@ -2576,6 +2578,7 @@ class Feedzy_Rss_Feeds_Import {
 			case 'spinnerchief':
 			case 'amazon-product-advertising':
 			case 'openai':
+			case 'openrouter':
 				if ( ! feedzy_is_pro() ) {
 					$file = FEEDZY_ABSPATH . '/includes/views/' . $name . '-view.php';
 				} else {

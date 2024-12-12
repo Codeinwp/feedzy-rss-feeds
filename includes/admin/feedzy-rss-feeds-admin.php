@@ -1639,6 +1639,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			'wordaiStatus'       => false,
 			'openaiStatus'       => false,
 			'amazonStatus'       => false,
+			'openRouterStatus'   => false,
 		);
 
 		if ( ! feedzy_is_pro() ) {
@@ -1657,6 +1658,12 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( isset( $pro_options['openai_licence'] ) && 'yes' === $pro_options['openai_licence'] ) {
 			if ( apply_filters( 'feedzy_is_license_of_type', false, 'business' ) || apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) {
 				$data['openaiStatus'] = true;
+			}
+		}
+
+		if ( isset( $pro_options['openrouter_licence'] ) && 'yes' === $pro_options['openrouter_licence'] ) {
+			if ( apply_filters( 'feedzy_is_license_of_type', false, 'business' ) || apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) {
+				$data['openRouterStatus'] = true;
 			}
 		}
 
