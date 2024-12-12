@@ -1727,6 +1727,7 @@ class Feedzy_Rss_Feeds_Import {
 					'post_date'    => $post_date,
 					'post_status'  => $import_post_status,
 					'post_excerpt' => $item_post_excerpt,
+					'post_author'  => $job->post_author,
 				),
 				$item_obj,
 				$post_title,
