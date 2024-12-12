@@ -236,6 +236,10 @@ class Feedzy_Rss_Feeds_Conditions {
 			return $continue;
 		}
 
+		if ( ! isset( $attrs['filters'] ) || empty( $attrs['filters'] ) ) {
+			return $continue;
+		}
+
 		$filters = json_decode( $attrs['filters'], true );
 
 		if ( ! is_array( $filters ) ) {
