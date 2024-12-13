@@ -374,10 +374,9 @@ global $post;
 									<?php endif; ?>
 									<div class="help-text pt-8">
 										<?php
-											// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
 											echo wp_kses_post(
 												sprintf(
-													// translators: %1$s: magic tag, %2$s: opening anchor tag, %3$s: closing anchor tag
+													// translators: %1$s: magic tag, %2$s: opening anchor tag, %3$s: closing anchor tag.
 													__( 'You can automatically create categories with a magic tag %1$s or use custom tag parsing %2$s Read More %3$s .', 'feedzy-rss-feeds' ),
 													'<strong>[#item_categories]</strong>',
 													'<a href="' . esc_url( 'https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#dynamic-post-taxonomy' ) . '" target="_blank">',
