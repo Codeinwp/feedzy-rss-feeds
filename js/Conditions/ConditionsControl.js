@@ -124,7 +124,7 @@ const ConditionsControl = ({
     return (
         <div className="fz-condition-control">
             <SelectControl
-                label={ __( 'Show If', 'feedzy-rss-feeds' ) }
+                label={ __( 'Include If', 'feedzy-rss-feeds' ) }
                 value={ conditions.match }
                 options={ [
                     {
