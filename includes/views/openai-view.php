@@ -15,7 +15,7 @@
 				<label class="form-label"><?php esc_html_e( 'The OpenAI account API key:', 'feedzy-rss-feeds' ); ?></label>
 				<div class="help-text pb-8">
 				<?php
-					// translators: %1$s: openrouter key document url, %2$s: link text.
+					// translators: %1$s: OpenAI key document url, %2$s: link text.
 					echo wp_kses_post( sprintf( __( 'Get your OpenAI API key from <a href="%1$s" target="_blank">%2$s</a>', 'feedzy-rss-feeds' ), esc_url( 'https://platform.openai.com/account/api-keys' ), __( 'OpenAI API keys', 'feedzy-rss-feeds' ) ) );
 				?>
 			</div>
@@ -25,7 +25,7 @@
 				<label class="form-label"><?php esc_html_e( 'The OpenAI model:', 'feedzy-rss-feeds' ); ?></label>
 				<div class="help-text pb-8">
 				<?php
-					// translators: %1$s: openrouter pricing url, %2$s: link text.
+					// translators: %1$s: OpenAI pricing url, %2$s: link text.
 					echo wp_kses_post( sprintf( __( 'OpenAI API models <a href="%1$s" target="_blank">%2$s</a>', 'feedzy-rss-feeds' ), esc_url( 'https://openai.com/api/pricing/' ), __( 'Pricing', 'feedzy-rss-feeds' ) ) );
 				?>
 				</div>
