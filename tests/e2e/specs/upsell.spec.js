@@ -35,15 +35,7 @@ test.describe( 'Upsell', () => {
 
         const filterByKeywordAlert = await filtersTab.locator('.upgrade-alert').first();
         let upgradeLink = new URL( await filterByKeywordAlert.locator('a').first().getAttribute('href') );
-        expect( upgradeLink.searchParams.get( 'utm_campaign' ) ).toBe('filter-keyword');
-
-        const excludeItemsAlert = await filtersTab.locator('.upgrade-alert').nth(1);
-        upgradeLink = new URL( await excludeItemsAlert.locator('a').first().getAttribute('href') );
-        expect( upgradeLink.searchParams.get( 'utm_campaign' ) ).toBe('exclude-items');
-
-        const filterByTimeRangeAlert = await filtersTab.locator('.upgrade-alert').nth(2);
-        upgradeLink = new URL( await filterByTimeRangeAlert.locator('a').first().getAttribute('href') );
-        expect( upgradeLink.searchParams.get( 'utm_campaign' ) ).toBe('filter-time-range');
+        expect( upgradeLink.searchParams.get( 'utm_campaign' ) ).toBe('filters');
     } );
 
     test( 'map content', async({ editor, page }) => {
