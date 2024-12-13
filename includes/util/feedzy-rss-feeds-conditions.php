@@ -116,6 +116,18 @@ class Feedzy_Rss_Feeds_Conditions {
 			return '';
 		}
 
+		// In shortcodes and blocks, sometimes only the keywords are set, and the fields are not set.
+		$default_field_mappings = array(
+			'keywords_title' => 'keywords_inc_on',
+			'keywords_ban'   => 'keywords_exc_on',
+		);
+
+		foreach ( $default_field_mappings as $old_key => $new_key ) {
+			if ( isset( $conditions[ $old_key ] ) && ( ! isset( $conditions[ $new_key ] ) || empty( $conditions[ $new_key ] ) ) ) {
+				$conditions[ $new_key ] = 'title';
+			}
+		}
+
 		foreach ( array( 'keywords_title' => 'keywords_inc', 'keywords_ban' => 'keywords_exc' ) as $old_key => $new_key ) {
 			if ( isset( $conditions[ $old_key ] ) ) {
 				$conditions[ $new_key ] = $conditions[ $old_key ];
