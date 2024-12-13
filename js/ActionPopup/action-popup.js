@@ -212,13 +212,13 @@ const ActionModal = () => {
 				}
 			}
 			let tag = event.target.getAttribute( 'data-action_popup' ) || '';
-			let fieldName = event.target.getAttribute( 'data-field-name' ) || '';
+			let dataFieldName = event.target.getAttribute( 'data-field-name' ) || '';
 			if ( '' === tag ) {
 				event.target.closest('.dropdown-item').click();
 				return;
 			}
 			setShortCode( tag );
-			setFieldName( fieldName );
+			setFieldName( dataFieldName );
 			openModal();
 		} );
 	} );
