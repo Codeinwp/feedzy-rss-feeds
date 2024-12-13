@@ -835,6 +835,56 @@ global $post;
 							</div>
 						</div>
 					</div>
+					<?php if ( feedzy_is_pro() ) : ?>
+						<div class="form-block form-block-two-column">
+						<div class="fz-left">
+							<h4 class="h4"><?php esc_html_e( 'Schedule Import Job', 'feedzy-rss-feeds' ); ?></h4>
+						</div>
+						<div class="fz-right">
+							<div class="fz-form-row">
+								<div class="fz-form-col-6">
+									<div class="fz-form-group">
+										<label class="form-label"><?php esc_html_e( 'First cron execution time', 'feedzy-rss-feeds' ); ?></label>
+										<input type="hidden" name="feedzy_meta_data[fz_execution_offset]" id="fz-execution-offset" value="<?php echo ! empty( $import_schedule['fz_execution_offset'] ) ? esc_attr( $import_schedule['fz_execution_offset'] ) : ''; ?>">
+										<input type="datetime-local" id="fz-event-execution" name="feedzy_meta_data[fz_cron_execution]" class="form-control" value="<?php echo ! empty( $import_schedule['fz_cron_execution'] ) ? esc_attr( $import_schedule['fz_cron_execution'] ) : ''; ?>">
+										<div class="help-text pt-8">
+											<?php esc_html_e( 'When past date will be provided, event will be executed in the next queue.', 'feedzy-rss-feeds' ); ?>
+											<a href="<?php echo esc_url( 'https://docs.themeisle.com/article/1820-how-to-set-scheduler-for-import-cron-jobs-in-feedzy' ); ?>" target="_blank"><?php esc_html_e( 'Learn More', 'feedzy-rss-feeds' ); ?></a>
+										</div>
+									</div>
+								</div>
+								<div class="fz-form-col-6">
+									<div class="fz-form-group">
+										<label class="form-label"><?php esc_html_e( 'Schedule', 'feedzy-rss-feeds' ); ?></label>
+										<?php
+										$save_schedule = ! empty( $import_schedule['fz_cron_schedule'] ) ? $import_schedule['fz_cron_schedule'] : '';
+
+										$schedules = wp_get_schedules();
+										if ( isset( $schedules['hourly'] ) ) {
+											$hourly = $schedules['hourly'];
+											unset( $schedules['hourly'] );
+											$schedules = array_merge( array( 'hourly' => $hourly ), $schedules );
+										}
+										?>
+										<select id="fz-event-schedule" class="form-control fz-select-control" name="feedzy_meta_data[fz_cron_schedule]">
+											<?php
+											$duplicate_schedule = array();
+											foreach ( $schedules as $slug => $schedule ) :
+												if ( empty( $schedule['interval'] ) || in_array( $schedule['interval'], $duplicate_schedule, true ) ) {
+													continue;
+												}
+												$duplicate_schedule[] = $schedule['interval'];
+												?>
+												<option value="<?php echo esc_attr( $slug ); ?>"<?php selected( $save_schedule, $slug ); ?>><?php echo esc_html( $schedule['display'] ); ?> (<?php echo esc_html( $slug ); ?>)</option>
+											<?php endforeach; ?>
+										</select>
+										<div class="help-text pt-8"><?php esc_html_e( 'After first execution repeat.', 'feedzy-rss-feeds' ); ?></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<?php endif; ?>
 					<?php if ( function_exists( 'icl_get_languages' ) ) : ?>
 						<div class="form-block form-block-two-column">
 							<div class="fz-left">
