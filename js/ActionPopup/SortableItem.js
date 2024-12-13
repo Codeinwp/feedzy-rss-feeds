@@ -351,11 +351,11 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 												value: '',
 											},
 											{
-												label: __('New Tab'),
+												label: __('New Tab', 'feedzy-rss-feeds'),
 												value: '_blank',
 											},
 											{
-												label: __('Same Tab'),
+												label: __('Same Tab', 'feedzy-rss-feeds'),
 												value: '_self',
 											},
 										]}
