@@ -835,18 +835,20 @@ global $post;
 							</div>
 						</div>
 					</div>
-					<?php if ( feedzy_is_pro() ) : ?>
-						<div class="form-block form-block-two-column">
+					<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
+						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'fallback-image', 'import' ) ); ?>
 						<div class="fz-left">
-							<h4 class="h4"><?php esc_html_e( 'Schedule Import Job', 'feedzy-rss-feeds' ); ?></h4>
+							<h4 class="h4"><?php esc_html_e( 'Schedule Import Job', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
 						</div>
 						<div class="fz-right">
 							<div class="fz-form-row">
 								<div class="fz-form-col-6">
 									<div class="fz-form-group">
 										<label class="form-label"><?php esc_html_e( 'First cron execution time', 'feedzy-rss-feeds' ); ?></label>
-										<input type="hidden" name="feedzy_meta_data[fz_execution_offset]" id="fz-execution-offset" value="<?php echo ! empty( $import_schedule['fz_execution_offset'] ) ? esc_attr( $import_schedule['fz_execution_offset'] ) : ''; ?>">
-										<input type="datetime-local" id="fz-event-execution" name="feedzy_meta_data[fz_cron_execution]" class="form-control" value="<?php echo ! empty( $import_schedule['fz_cron_execution'] ) ? esc_attr( $import_schedule['fz_cron_execution'] ) : ''; ?>">
+										<?php if ( feedzy_is_pro() ) : ?>
+											<input type="hidden" name="feedzy_meta_data[fz_execution_offset]" id="fz-execution-offset" value="<?php echo ! empty( $import_schedule['fz_execution_offset'] ) ? esc_attr( $import_schedule['fz_execution_offset'] ) : ''; ?>">
+										<?php endif; ?>
+										<input type="datetime-local" id="fz-event-execution" name="feedzy_meta_data[fz_cron_execution]" class="form-control" value="<?php echo ! empty( $import_schedule['fz_cron_execution'] ) ? esc_attr( $import_schedule['fz_cron_execution'] ) : ''; ?>"<?php disabled( true, ! feedzy_is_pro() ); ?>>
 										<div class="help-text pt-8">
 											<?php esc_html_e( 'When past date will be provided, event will be executed in the next queue.', 'feedzy-rss-feeds' ); ?>
 											<a href="<?php echo esc_url( 'https://docs.themeisle.com/article/1820-how-to-set-scheduler-for-import-cron-jobs-in-feedzy' ); ?>" target="_blank"><?php esc_html_e( 'Learn More', 'feedzy-rss-feeds' ); ?></a>
@@ -856,18 +858,16 @@ global $post;
 								<div class="fz-form-col-6">
 									<div class="fz-form-group">
 										<label class="form-label"><?php esc_html_e( 'Schedule', 'feedzy-rss-feeds' ); ?></label>
-										<?php
-										$save_schedule = ! empty( $import_schedule['fz_cron_schedule'] ) ? $import_schedule['fz_cron_schedule'] : '';
-
-										$schedules = wp_get_schedules();
-										if ( isset( $schedules['hourly'] ) ) {
-											$hourly = $schedules['hourly'];
-											unset( $schedules['hourly'] );
-											$schedules = array_merge( array( 'hourly' => $hourly ), $schedules );
-										}
-										?>
-										<select id="fz-event-schedule" class="form-control fz-select-control" name="feedzy_meta_data[fz_cron_schedule]">
+										<select id="fz-event-schedule" class="form-control fz-select-control" name="feedzy_meta_data[fz_cron_schedule]"<?php disabled( true, ! feedzy_is_pro() ); ?>>
 											<?php
+											$save_schedule = ! empty( $import_schedule['fz_cron_schedule'] ) ? $import_schedule['fz_cron_schedule'] : '';
+
+											$schedules = wp_get_schedules();
+											if ( isset( $schedules['hourly'] ) ) {
+												$hourly = $schedules['hourly'];
+												unset( $schedules['hourly'] );
+												$schedules = array_merge( array( 'hourly' => $hourly ), $schedules );
+											}
 											$duplicate_schedule = array();
 											foreach ( $schedules as $slug => $schedule ) :
 												if ( empty( $schedule['interval'] ) || in_array( $schedule['interval'], $duplicate_schedule, true ) ) {
@@ -884,7 +884,6 @@ global $post;
 							</div>
 						</div>
 					</div>
-					<?php endif; ?>
 					<?php if ( function_exists( 'icl_get_languages' ) ) : ?>
 						<div class="form-block form-block-two-column">
 							<div class="fz-left">
