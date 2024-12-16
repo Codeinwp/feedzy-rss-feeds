@@ -891,10 +891,11 @@ global $post;
 	<div class="fz-form-action">
 		<div class="fz-left">
 			<?php
+            if ( feedzy_is_pro() ) {
 				$clone_url = wp_nonce_url(
 					add_query_arg(
 						array(
-							'action' => 'feedzy_clone_import_job',
+							'action'        => 'feedzy_clone_import_job',
 							'feedzy_job_id' => $post->ID,
 						),
 						'admin.php'
@@ -903,7 +904,9 @@ global $post;
 					'clone_import'
 				);
 				?>
-			<a href="<?php echo esc_url( $clone_url ); ?>" class="btn btn-ghost"><?php esc_html_e( 'Clone Import', 'feedzy-rss-feeds' ); ?></a>
+                <a href="<?php echo esc_url( $clone_url ); ?>"
+                   class="btn btn-ghost"><?php esc_html_e( 'Clone Import', 'feedzy-rss-feeds' ); ?></a>
+			<?php } ?>
 		</div>
 		<div class="fz-right">
 			<button type="button" id="preflight" name="check" class="btn btn-ghost" value="Check"

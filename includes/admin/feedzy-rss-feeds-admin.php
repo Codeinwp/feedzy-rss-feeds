@@ -264,6 +264,239 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 		return $actions;
 	}
+
+	public static function get_no_of_imports() {
+		$args  = array(
+			'post_type'      => 'feedzy_imports',
+			'posts_per_page' => 100,
+			'post_status'    => [ 'any', 'trash' ],
+			'fields'         => 'ids',
+		);
+		$query = new WP_Query( $args );
+
+		return $query->found_posts;
+	}
+
+	public function handle_legacy() {
+		//We can increment this when we reach a new legacy milestone.
+
+		$current_legacy_version = (int) get_option( 'feedzy_legacyv5', 0 );
+
+		if ( $current_legacy_version === 0 ) {
+			$current_legacy_version = self::get_no_of_imports() > 1 ? 1 : - 1;
+			update_option( 'feedzy_legacyv5', $current_legacy_version );
+		}
+		if ( function_exists( 'get_current_screen' ) && get_current_screen()->post_type === 'feedzy_imports' && get_current_screen()->action === 'add' && ! feedzy_is_pro() && $current_legacy_version === - 1 && self::get_no_of_imports() >= 1 ) {
+			wp_redirect( 'edit.php?post_type=feedzy_imports' );
+			die();
+		}
+		if ( $current_legacy_version === - 1 && ! feedzy_is_pro() && self::get_no_of_imports() >= 1 ) {
+			add_action( 'admin_head', function () {
+				?>
+                <script type="text/javascript">
+                    jQuery(function () {
+                        jQuery('a[href*="post-new.php?post_type=feedzy_imports"]').addClass('feedzy-import-limit')
+                    });
+                </script>
+				<?php
+			} );
+		}
+	}
+    function add_modals(){
+		    ?>
+            <script type="text/javascript">
+                jQuery(function () {
+                    jQuery('a.feedzy-clone-disabled').on('click', function (event) {
+                        openModal('#feedzy-clone-modal');
+                        event.preventDefault();
+                    });
+                    jQuery('a.feedzy-edit-disabled').on('click', function (event) {
+                        openModal('#feedzy-renew-edit');
+                        event.preventDefault();
+                    });
+                    jQuery('a.feedzy-import-limit').on('click', function (event) {
+                        openModal('#feedzy-add-new-import');
+                        event.preventDefault();
+                    });
+
+                    // Function to open the modal
+                    function openModal(modal) {
+                        jQuery(modal).show();
+                    }
+
+                    // Function to close the modal
+                    function closeModal(e) {
+                        jQuery('.feedzy-modal')
+                            .hide();
+                    }
+
+                    // Close modal when close button or overlay is clicked
+                    jQuery('.close-modal').on('click', function () {
+                        closeModal();
+                    });
+
+                    // Close modal when Esc key is pressed
+                    jQuery(document).on('keyup', function (e) {
+                        if (e.key === "Escape") closeModal();
+                    });
+                });
+            </script>
+            <div id="feedzy-add-new-import" class="wp-core-ui feedzy-modal" style="display:none;">
+                <div class="modal-content">
+                    <button type="button" class="notice-dismiss close-modal">
+                        <span class="screen-reader-text"><?php esc_html_e( 'Dismiss this dialog', 'feedzy-rss-feeds' ); ?></span>
+                    </button>
+                    <div class="modal-header">
+                        <h2>
+                            <span class="dashicons dashicons-lock"></span> <?php esc_html_e( 'Upgrade to Use Unlimited Imports', 'feedzy-rss-feeds' ); ?>
+                        </h2>
+                    </div>
+                    <div class="modal-body">
+                        <p><?php esc_html_e( 'We’re sorry, but your current plan supports only one import setup. Upgrade to unlock unlimited import configurations and make the most of Feedzy’s powerful features!', 'feedzy-rss-feeds' ); ?></p>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="button-container"><a
+                                    href="<?php echo esc_url( tsdk_utmify( tsdk_translate_link( FEEDZY_UPSELL_LINK ), 'add-new-import' ) ); ?>"
+                                    target="_blank" rel="noopener "
+                                    class="button button-primary button-large"><?php esc_html_e( 'Upgrade to PRO', 'feedzy-rss-feeds' ); ?>
+                                <span aria-hidden="true" class="dashicons dashicons-external"></span></a></div>
+                    </div>
+                </div>
+            </div>
+        <?php
+	    $license_key      = 	apply_filters( 'product_feedzy_license_key', '');
+	    $renew_license_url = tsdk_utmify( tsdk_translate_link(  FEEDZY_UPSELL_LINK ), 'renew' );
+	    if ( ! empty( $license_key ) ) {
+		    $renew_license_url = tsdk_utmify( 'https://store.themeisle.com/?edd_license_key=' . $license_key . '&download_id=6306666', 'feedzy_renew_link' );
+	    }
+
+	    ?>
+            <div id="feedzy-renew-edit" class="wp-core-ui feedzy-modal" style="display:none;">
+                <div class="modal-content">
+                    <button type="button" class="notice-dismiss close-modal">
+                        <span class="screen-reader-text"><?php esc_html_e( 'Dismiss this dialog', 'feedzy-rss-feeds' ); ?></span>
+                    </button>
+                    <div class="modal-header">
+                        <h2>
+                           <span class="dashicons dashicons-lock"></span> <?php esc_html_e( 'Alert!', 'feedzy-rss-feeds'  ); ?>
+                        </h2>
+                    </div>
+                    <div class="modal-body">
+                        <p><?php esc_html_e( 'In order to edit premium import setups, benefit from updates and support for Feedzy Premium plugin, please renew your license code or activate it.', 'feedzy-rss-feeds'  ); ?></p>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="button-container">
+                            <a href="<?php echo esc_url( $renew_license_url ); ?>" target="_blank" rel="noopener "
+                               class="button button-primary button-large"><?php esc_html_e( 'Renew License', 'feedzy-rss-feeds'  ); ?><span
+                                        aria-hidden="true" class="dashicons dashicons-external"></span></a>
+                            <a href="<?php echo esc_url( admin_url( 'options-general.php#feedzy_rss_feeds_pro_license' ) ); ?>" target="_blank"
+                               rel="noopener "
+                               class="button button-secondary button-large"><?php esc_html_e( 'Activate License', 'feedzy-rss-feeds'  ); ?></a>
+                           </div>
+                    </div>
+                </div>
+            </div>
+            <div id="feedzy-clone-modal" class="wp-core-ui feedzy-modal" style="display:none;">
+                <div class="modal-content">
+                    <button type="button" class="notice-dismiss close-modal">
+                        <span class="screen-reader-text"><?php esc_html_e( 'Dismiss this dialog', 'feedzy-rss-feeds' ); ?></span>
+                    </button>
+                    <div class="modal-header">
+                        <h2>
+                            <span class="dashicons dashicons-lock"></span> <?php esc_html_e( 'Cloning import setups is a PRO feature', 'feedzy-rss-feeds' ); ?>
+                        </h2>
+                    </div>
+                    <div class="modal-body">
+                        <p><?php esc_html_e( 'We\'re sorry, cloning import setups is not available on your plan. Upgrade to the Pro plan to unlock this feature and streamline your import setup process.', 'feedzy-rss-feeds' ); ?></p>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="button-container"><a
+                                    href="<?php echo esc_url( tsdk_utmify( tsdk_translate_link( FEEDZY_UPSELL_LINK ), 'clone' ) ); ?>"
+                                    target="_blank" rel="noopener "
+                                    class="button button-primary button-large"><?php esc_html_e( 'Upgrade to PRO', 'feedzy-rss-feeds' ); ?>
+                                <span aria-hidden="true" class="dashicons dashicons-external"></span></a></div>
+                    </div>
+                </div>
+            </div>
+            <style>
+
+                .feedzy-import-limit{
+                    opacity:0.7;
+                }
+                .feedzy-quick-link{
+                    opacity:0.7;
+                }
+                .feedzy-quick-link .dashicons{
+
+                    font-size: 13px;
+                    width: 13px;
+                    height: 15px;
+                    vertical-align: middle;
+                }
+                .feedzy-modal {
+                    position: fixed;
+                    z-index: 100000;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+
+                    overflow-x: hidden;
+                    overflow-y: auto;
+                    background: rgba(0, 0, 0, 0.7);
+                }
+
+                .feedzy-modal .modal-content {
+                    position: relative;
+                    background: #fff;
+                    padding: 20px;
+                    border-radius: 3px;
+                    max-width: 500px;
+                    width: auto;
+                    margin: 6.75rem auto;
+                }
+
+                .feedzy-modal .modal-body {
+                    text-align: center;
+                }
+
+                .feedzy-modal .modal-header {
+                    padding-bottom: 10px;
+                    margin-bottom: 10px;
+                    position: relative;
+                }
+
+                .feedzy-modal .modal-header .dashicons {
+                    font-size: 1.3em;
+                    line-height: inherit;
+                }
+
+                .feedzy-modal .modal-header h2 {
+                    text-align: center;
+                }
+
+                .feedzy-modal .close-modal {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                }
+
+                .feedzy-modal .modal-footer .dashicons {
+
+                    vertical-align: middle;
+                    font-size: initial;
+                }
+
+                .feedzy-modal .modal-footer {
+                    padding-top: 10px;
+                    margin-top: 10px;
+                    text-align: center;
+                }
+
+            </style>
+
+		    <?php
+    }
 	/**
 	 * Register the JavaScript for the admin area.
 	 *

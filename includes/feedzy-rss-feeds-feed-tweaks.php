@@ -205,6 +205,11 @@ function feedzy_is_new() {
 	return feedzy_options()->get_var( 'is_new' ) === 'yes' && ! feedzy_is_pro();
 }
 
+function feedzy_is_legacyv5( ) {
+	$legacy = (int) get_option( 'feedzy_legacyv5', 0 );
+
+	return $legacy === 1;
+}
 /**
  * Check if the user is pro or not.
  *
@@ -212,10 +217,7 @@ function feedzy_is_new() {
  */
 function feedzy_is_pro( $check_license = true ) {
 
-	static $status = null;
-	if ( $status === null ) {
-		$status = apply_filters( 'product_feedzy_license_status', false ) === 'valid';
-	}
+	$status = apply_filters( 'product_feedzy_license_status', false ) === 'valid';
 	if ( ! $check_license ) {
 		$status = true;
 	}

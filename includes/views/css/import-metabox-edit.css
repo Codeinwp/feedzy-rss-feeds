@@ -95,8 +95,11 @@ input.feedzy-toggle-round + label:after {
 	-webkit-transition: margin 0.4s;
 	transition: margin 0.4s;
 }
+span.feedzy-spinner:not(.is-active) {
+    display: none;
+}
 span.feedzy-spinner {
-    float: none !important;
+	float: none !important;
 }
 #TB_ajaxContent ul {
 	list-style: decimal;

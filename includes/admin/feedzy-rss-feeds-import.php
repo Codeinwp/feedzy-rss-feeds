@@ -2665,6 +2665,41 @@ class Feedzy_Rss_Feeds_Import {
 				$post->ID,
 				esc_html( __( 'Purge &amp; Reset', 'feedzy-rss-feeds' ) )
 			);
+			if ( feedzy_is_pro() ) {
+
+				$actions['feedzy_clone'] =
+					sprintf(
+						'<a href="%1$s" class="feedzy-clone" >%2$s</a>',
+						wp_nonce_url(
+							add_query_arg(
+								array(
+									'action'        => 'feedzy_clone_import_job',
+									'feedzy_job_id' => $post->ID,
+								),
+								'admin.php'
+							),
+							FEEDZY_BASENAME,
+							'clone_import'
+						),
+						esc_html( __( 'Clone', 'feedzy-rss-feeds' ) )
+					);
+			} else {
+				$actions['feedzy_clone_no'] =
+					sprintf(
+						'<a href="#" class="feedzy-quick-link feedzy-clone-disabled" >%1$s<span class="dashicons dashicons-lock"></span></a>',
+						esc_html( __( 'Clone', 'feedzy-rss-feeds' ) )
+					);
+				if ( ! feedzy_is_legacyv5() || feedzy_is_pro( false ) ) {
+					static $is_not_first = false;
+					if ( $is_not_first ) {
+						$actions['edit'] = sprintf(
+							'<a href="#" class="feedzy-quick-link  feedzy-edit-disabled" >%1$s<span class="dashicons dashicons-lock"></span></a>',
+							esc_html( __( 'Edit', 'feedzy-rss-feeds' ) )
+						);
+					}
+					$is_not_first = true;
+				}
+			}
 		} elseif ( 1 === intval( get_post_meta( $post->ID, 'feedzy', true ) ) ) {
 			// show an unclickable action that mentions that it is imported by us
 			// so that users are aware
