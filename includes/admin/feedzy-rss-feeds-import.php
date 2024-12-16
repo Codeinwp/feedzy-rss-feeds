@@ -2380,7 +2380,7 @@ class Feedzy_Rss_Feeds_Import {
 		if ( empty( $offset ) && ! empty( $this->free_settings['general']['fz_execution_offset'] ) ) {
 			$offset = $this->free_settings['general']['fz_execution_offset'];
 		}
-		$execution = strtotime( $execution ) ? strtotime( $execution ) + ( HOUR_IN_SECONDS * $offset ) : time() + ( HOUR_IN_SECONDS * $offset );
+		$execution = strtotime( $execution ) ? strtotime( $execution ) + ( HOUR_IN_SECONDS * (int) $offset ) : time() + ( HOUR_IN_SECONDS * (int) $offset );
 		return $execution;
 	}
 
