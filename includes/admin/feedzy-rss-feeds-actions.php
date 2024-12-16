@@ -398,7 +398,14 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 */
 		private function search_replace() {
 			$content = call_user_func( array( $this, $this->current_job->tag ) );
-			return str_replace( $this->current_job->data->search, $this->current_job->data->searchWith, $content );
+			$search  = $this->current_job->data->search;
+			$replace = $this->current_job->data->searchWith;
+
+			if ( preg_match( '/^\/.*\/[imsxuADU]*$/', $search ) ) {
+				return preg_replace( $search, $replace, $content );
+			}
+
+			return str_replace( $search, $replace, $content );
 		}
 
 		/**
