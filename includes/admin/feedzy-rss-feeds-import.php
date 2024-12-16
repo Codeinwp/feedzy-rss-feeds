@@ -2339,6 +2339,7 @@ class Feedzy_Rss_Feeds_Import {
 				'post_type'   => 'feedzy_imports',
 				'post_status' => 'publish',
 				'numberposts' => 99,
+				'fields'      => 'ids',
 				// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 				'meta_query'  => array(
 					'relation' => 'AND',
@@ -2355,14 +2356,14 @@ class Feedzy_Rss_Feeds_Import {
 		);
 
 		if ( ! empty( $import_job_crons ) ) {
-			foreach ( $import_job_crons as $import_job_cron ) {
-				$fz_cron_execution   = get_post_meta( $import_job_cron->ID, 'fz_cron_execution', true );
-				$fz_cron_schedule    = get_post_meta( $import_job_cron->ID, 'fz_cron_schedule', true );
-				$fz_execution_offset = get_post_meta( $import_job_cron->ID, 'fz_execution_offset', true );
+			foreach ( $import_job_crons as $job_id ) {
+				$fz_cron_execution   = get_post_meta( $job_id, 'fz_cron_execution', true );
+				$fz_cron_schedule    = get_post_meta( $job_id, 'fz_cron_schedule', true );
+				$fz_execution_offset = get_post_meta( $job_id, 'fz_execution_offset', true );
 				$time                = $this->get_cron_execution( $fz_cron_execution, $fz_execution_offset );
 
-				if ( false === wp_next_scheduled( 'feedzy_cron', array( 100, $import_job_cron->ID ) ) ) {
-					wp_schedule_event( $time, $fz_cron_schedule, 'feedzy_cron', array( 100, $import_job_cron->ID ) );
+				if ( false === wp_next_scheduled( 'feedzy_cron', array( 100, $job_id ) ) ) {
+					wp_schedule_event( $time, $fz_cron_schedule, 'feedzy_cron', array( 100, $job_id ) );
 				}
 			}
 		}
