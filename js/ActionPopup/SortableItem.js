@@ -358,6 +358,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 									label={ __( 'Additional Prompt', 'feedzy-rss-feeds' ) }
 									value={ item.data.generateImagePrompt ? unescape(item.data.generateImagePrompt.replaceAll('&#039;', '\'')) : '' }
 									onChange={ ( currentValue ) => propRef.onChangeHandler( { 'index': loopIndex, 'generateImagePrompt': currentValue ?? '' } ) }
+									help={ __( 'Add specific instructions to customize the image generation. By default, images are based on the item’s title and content. Use this field to guide the style of the image, for example: Realistic, artistic, comic-style, etc.', 'feedzy-rss-feeds' ) }
 								/>
 							</BaseControl>
 						</PanelRow>
