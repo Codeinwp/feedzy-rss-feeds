@@ -665,21 +665,37 @@ global $post;
 							<div class="fz-form-group">
 								<label class="form-label"><?php esc_html_e( 'Select an image to be the fallback featured image.', 'feedzy-rss-feeds' ); ?></label>
 								<?php
-								$btn_label = esc_html__( 'Choose image', 'feedzy-rss-feeds' );
-								if ( $default_thumbnail_id ) :
+								$btn_label            = esc_html__( 'Choose image', 'feedzy-rss-feeds' );
+								$default_thumbnail_id = ! empty( $default_thumbnail_id ) ? explode( ',', (string) $default_thumbnail_id ) : array();
+								if ( ! empty( $default_thumbnail_id ) ) :
 									$btn_label = esc_html__( 'Replace image', 'feedzy-rss-feeds' );
 									?>
 									<div class="fz-form-group mb-20 feedzy-media-preview">
-										<?php echo wp_get_attachment_image( $default_thumbnail_id, 'thumbnail' ); ?>
+										<?php
+										if ( count( $default_thumbnail_id ) > 1 ) {
+											?>
+											<a href="javascript:;" class="btn btn-outline-primary feedzy-images-selected">
+												<?php
+													// translators: %d select images count.
+													echo esc_html( sprintf( __( '(%d) images selected', 'feedzy-rss-feeds' ), count( $default_thumbnail_id ) ) );
+												?>
+											</a>
+											<?php
+										} else {
+											echo wp_get_attachment_image( reset( $default_thumbnail_id ), 'thumbnail' );
+										}
+										?>
 									</div>
 								<?php endif; ?>
 								<div class="fz-cta-group pb-8">
 									<a href="javascript:;" class="feedzy-open-media btn btn-outline-primary"><?php echo esc_html( $btn_label ); ?></a>
-									<a href="javascript:;" class="feedzy-remove-media btn btn-outline-primary <?php echo $default_thumbnail_id ? esc_attr( 'is-show' ) : ''; ?>"><?php esc_html_e( 'Remove', 'feedzy-rss-feeds' ); ?></a>
-									<input type="hidden" name="feedzy_meta_data[default_thumbnail_id]" id="feed-post-default-thumbnail" value="<?php echo esc_attr( $default_thumbnail_id ); ?>">
+									<a href="javascript:;" class="feedzy-remove-media btn btn-outline-primary <?php echo ! empty( $default_thumbnail_id ) ? esc_attr( 'is-show' ) : ''; ?>"><?php esc_html_e( 'Remove', 'feedzy-rss-feeds' ); ?></a>
+									<input type="hidden" name="feedzy_meta_data[default_thumbnail_id]" id="feed-post-default-thumbnail" value="<?php echo esc_attr( implode( ',', $default_thumbnail_id ) ); ?>">
 								</div>
 								<div class="help-text pt-8">
-									<?php esc_html_e( 'Helpful if you want to set a fallback image for feed items that don\'t have an image. Default it will be considered the one from global settings.', 'feedzy-rss-feeds' ); ?>
+									<?php esc_html_e( 'Helpful for setting a fallback image for feed items without an image. By default, the fallback image from the global settings will be used. If multiple fallback images are selected, one of them will be randomly assigned to each post without an image during the import process.', 'feedzy-rss-feeds' ); ?>
+									<br>
+									<strong><i><?php esc_html_e( 'By default, the fallback image from the global settings will be used.', 'feedzy-rss-feeds' ); ?><i></strong>
 								</div>
 							</div>
 						</div>
