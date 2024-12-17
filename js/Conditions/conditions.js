@@ -1,8 +1,6 @@
 /**
  * WordPress dependencies.
  */
-import { Disabled } from '@wordpress/components';
-
 import domReady from '@wordpress/dom-ready';
 
 import {
@@ -34,28 +32,25 @@ const App = () => {
     } );
 
     useEffect( () => {
+        if ( ! feedzyData.isPro ) {
+            setConditions( dummyConditions );
+            return
+        }
+
         const field = document.getElementById( 'feed-post-filters-conditions' );
         if ( field && field.value ) {
             const parsedConditions = JSON.parse( field.value );
-            console.log( parsedConditions && parsedConditions.conditions ? parsedConditions : { conditions: [], match: 'all' } )
             setConditions( parsedConditions && parsedConditions.conditions ? parsedConditions : { conditions: [], match: 'all' } );
         }
     }, [] );
 
     useEffect( () => {
+        if ( ! feedzyData.isPro ) {
+            return
+        }
+
         document.getElementById( 'feed-post-filters-conditions' ).value = JSON.stringify( conditions );
     }, [ conditions ] );
-
-    if ( ! feedzyData.isPro ) {
-        return (
-            <Disabled>
-                <ConditionsControl
-                    conditions={ dummyConditions }
-                    setConditions={ setConditions }
-                />
-            </Disabled>
-        );
-    }
 
     return (
         <ConditionsControl
