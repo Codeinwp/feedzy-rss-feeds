@@ -113,6 +113,8 @@ const ConditionsControl = ({
             if ( field.unsupportedOperators?.includes( conditionsCopy[index].operator ) ) {
                 conditionsCopy[index].operator = Object.keys( window?.feedzyConditionsData?.operators ).filter( key => ! field.unsupportedOperators?.includes( key ) )[0];
             }
+
+            conditionsCopy[index].value = '';
         }
 
         setConditions( {
@@ -128,11 +130,11 @@ const ConditionsControl = ({
                 value={ conditions.match }
                 options={ [
                     {
-                        label: __( 'All', 'feedzy-rss-feeds' ),
+                        label: __( 'All conditions are true', 'feedzy-rss-feeds' ),
                         value: 'all'
                     },
                     {
-                        label: __( 'Any', 'feedzy-rss-feeds' ),
+                        label: __( 'Any condition is true', 'feedzy-rss-feeds' ),
                         value: 'any'
                     }
                 ] }
@@ -148,6 +150,7 @@ const ConditionsControl = ({
                         key={ index }
                         label={ `${ field?.label } ${ window.feedzyConditionsData.operators[condition.operator] } ${ condition?.value || '' }` }
                         onDelete={ () => removeCondition( index ) }
+                        initialOpen={ index === 0 }
                     >
                         <SelectControl
                             label={ __( 'Field', 'feedzy-rss-feeds' ) }

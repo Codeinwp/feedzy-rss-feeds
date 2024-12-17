@@ -10,9 +10,10 @@ import { useState } from '@wordpress/element';
 const PanelTab = ({
 	label,
 	onDelete,
+	initialOpen = false,
 	children
 }) => {
-	const [ isOpen, setOpen ] = useState( false );
+	const [ isOpen, setOpen ] = useState( initialOpen );
 
 	return (
 		<div className="fz-panel-tab">
