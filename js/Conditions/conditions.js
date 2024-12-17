@@ -16,6 +16,17 @@ import {
  */
 import ConditionsControl from './ConditionsControl';
 
+const dummyConditions = {
+    match: 'all',
+    conditions: [
+        {
+            field: 'title',
+            operator: 'contains',
+            value: 'Sports'
+        }
+    ]
+};
+
 const App = () => {
     const [ conditions, setConditions ] = useState( {
         conditions: [],
@@ -39,7 +50,7 @@ const App = () => {
         return (
             <Disabled>
                 <ConditionsControl
-                    conditions={ conditions }
+                    conditions={ dummyConditions }
                     setConditions={ setConditions }
                 />
             </Disabled>
