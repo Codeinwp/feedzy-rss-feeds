@@ -694,8 +694,6 @@ global $post;
 								</div>
 								<div class="help-text pt-8">
 									<?php esc_html_e( 'Helpful for setting a fallback image for feed items without an image. By default, the fallback image from the global settings will be used. If multiple fallback images are selected, one of them will be randomly assigned to each post without an image during the import process.', 'feedzy-rss-feeds' ); ?>
-									<br>
-									<strong><i><?php esc_html_e( 'By default, the fallback image from the global settings will be used.', 'feedzy-rss-feeds' ); ?><i></strong>
 								</div>
 							</div>
 						</div>
