@@ -344,4 +344,52 @@ class Feedzy_Rss_Feeds_Conditions {
 		}
 		return false;
 	}
+
+	/**
+	 * Convert a filter string to JSON.
+	 *
+	 * This function converts a filter string to a JSON object.
+	 *
+	 * @param string $filter_str The filter string to convert.
+	 *
+	 * @return string The JSON object.
+	 */
+	public function convert_filter_string_to_json( $filter_str ) {
+		// Split into segments by semicolon.
+		$segments     = explode( ';', $filter_str );
+		$filter_array = array( 'conditions' => array() );
+
+		foreach ( $segments as $segment ) {
+			$segment = trim( $segment );
+
+			// Check if this segment defines 'match'.
+			if ( strpos( $segment, 'match=' ) === 0 ) {
+				// Extract match value.
+				list( , $match_val ) = explode( '=', $segment, 2 );
+				$filter_array['match'] = trim( $match_val );
+			} elseif ( strpos( $segment, 'condition=' ) === 0 ) {
+				// Check if this segment defines a 'condition'.
+				// Remove "condition=" prefix.
+				$condition_str = substr( $segment, strlen( 'condition=' ) );
+				$pairs         = explode( ',', $condition_str );
+				$condition     = array();
+
+				// Each pair is in the form key:value.
+				foreach ( $pairs as $pair ) {
+					$pair = trim( $pair );
+					if ( strpos( $pair, ':' ) !== false ) {
+						list( $key, $val ) = explode( ':', $pair, 2 );
+						$condition[ trim( $key ) ] = trim( $val );
+					}
+				}
+
+				if ( ! empty( $condition ) ) {
+					$filter_array['conditions'][] = $condition;
+				}
+			}
+		}
+
+		// Encode the final array as JSON.
+		return json_encode( $filter_array );
+	}
 }
