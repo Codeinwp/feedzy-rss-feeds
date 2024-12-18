@@ -603,6 +603,26 @@ global $post;
 								</div>
 								<div class="fz-right">
 									<div class="fz-form-group">
+										<label class="form-label"><?php esc_html_e( 'The post author for the imported posts.', 'feedzy-rss-feeds' ); ?></label>
+										<div class="mx-320">
+											<select id="feedzy_post_author" class="form-control feedzy-chosen fz-chosen-custom-tag" name="feedzy_meta_data[import_post_author]">
+												<?php
+												foreach ( $authors_array as $_author ) {
+													?>
+												<option value="<?php echo esc_attr( $_author ); ?>" <?php selected( $import_post_author, $_author ); ?>>
+													<?php echo esc_html( $_author ); ?></option>
+													<?php
+												}
+												?>
+											</select>
+										</div>
+										<div class="help-text pt-8 pb-8">
+											<?php
+												esc_html_e( 'Select the author to assign to the imported posts. By default, this will be set to your current account. Note that this choice is independent of the options below, which control how the source author details are displayed.', 'feedzy-rss-feeds' );
+											?>
+										</div>
+									</div>
+									<div class="fz-form-group">
 										<div class="fz-form-switch">
 											<input id="feedzy-toggle_author_admin" name="feedzy_meta_data[import_link_author_admin]"
 												class="fz-switch-toggle" type="checkbox" value="yes"
