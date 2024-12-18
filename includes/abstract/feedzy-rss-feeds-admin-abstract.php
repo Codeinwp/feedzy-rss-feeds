@@ -442,7 +442,12 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 		}
 
-		$sc['filters'] = apply_filters( 'feedzy_filter_conditions_migration', $sc );
+		// If the user is explicitly using filters attribute, then use it and ignore old filters.
+		if ( isset( $sc['filters'] ) && ! empty( $sc['filters'] ) && feedzy_is_pro() ) {
+			$sc['filters'] = apply_filters( 'feedzy_filter_conditions_attribute', $sc['filters'] );
+		} else {
+			$sc['filters'] = apply_filters( 'feedzy_filter_conditions_migration', $sc );
+		}
 
 		$sc = array_diff_key(
 			$sc,
@@ -505,7 +510,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$sc       = $this->get_short_code_attributes( $atts );
 		$feed_url = $this->normalize_urls( $sc['feeds'] );
 
-		$sc['filters'] = apply_filters( 'feedzy_filter_conditions_migration', $sc );
+		if ( isset( $sc['filters'] ) && ! empty( $sc['filters'] ) && feedzy_is_pro() ) {
+			$sc['filters'] = apply_filters( 'feedzy_filter_conditions_attribute', $sc['filters'] );
+		} else {
+			$sc['filters'] = apply_filters( 'feedzy_filter_conditions_migration', $sc );
+		}
 
 		$sc = array_diff_key(
 			$sc,
@@ -614,6 +623,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'to_datetime'     => '',
 				// Disable default style.
 				'disable_default_style' => 'no',
+				'filters'         => '',
 			),
 			$atts,
 			'feedzy_default'

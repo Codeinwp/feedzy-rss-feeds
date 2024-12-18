@@ -268,6 +268,7 @@ class Feedzy_Rss_Feeds {
 
 			$plugin_conditions = new Feedzy_Rss_Feeds_Conditions();
 			$this->loader->add_action( 'feedzy_filter_conditions_migration', $plugin_conditions, 'migrate_conditions' );
+			$this->loader->add_action( 'feedzy_filter_conditions_attribute', $plugin_conditions, 'convert_filter_string_to_json' );
 			$this->loader->add_action( 'feedzy_item_keyword', $plugin_conditions, 'evaluate_conditions', 10, 5 );
 		}
 
