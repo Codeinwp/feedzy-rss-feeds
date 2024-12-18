@@ -338,7 +338,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 			<li className="fz-action-control fz-chat-cpt-action" data-counter={counter}>
 				<div className="fz-action-event">
 					{feedzyData.isPro && (feedzyData.isBusinessPlan || feedzyData.isAgencyPlan) && !feedzyData.apiLicenseStatus.openaiStatus && (feedzyData.isHighPrivileges ? <span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-integration&tab=openai"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> : <span className="error-message">{__( 'Invalid API Key, Please contact the administrator', 'feedzy-rss-feeds' )}</span> )}
-					<PanelBody title={ __( 'Generate Image with ChatGPT', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false }>
+					<PanelBody title={ __( 'Generate Image with OpenAI', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false }>
 						<PanelRow>
 							<UpgradeNotice higherPlanNotice={!feedzyData.isBusinessPlan && !feedzyData.isAgencyPlan} utmCampaign="action-generate-image-chatgpt"/>
 							<BaseControl>

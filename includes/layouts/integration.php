@@ -45,6 +45,12 @@
 							case 'wordai':
 								esc_html_e( 'WordAI', 'feedzy-rss-feeds' );
 								break;
+							case 'openai':
+								esc_html_e( 'OpenAI', 'feedzy-rss-feeds' );
+								break;
+							case 'openrouter':
+								esc_html_e( 'OpenRouter', 'feedzy-rss-feeds' );
+								break;
 							default:
 								echo esc_html( ucwords( str_replace( array( '-', '_' ), ' ', $active_tab ) ) );
 								break;
