@@ -269,7 +269,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$args  = array(
 			'post_type'      => 'feedzy_imports',
 			'posts_per_page' => 100,
-			'post_status'    => [ 'any', 'trash' ],
+			'post_status'    => array( 'any', 'trash' ),
 			'fields'         => 'ids',
 		);
 		$query = new WP_Query( $args );
@@ -302,7 +302,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			} );
 		}
 	}
-    function add_modals(){
+    function add_modals() {
 		    ?>
             <script type="text/javascript">
                 jQuery(function () {
@@ -1066,23 +1066,29 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 		if ( get_option( 'feedzy-activated' ) ) {
 			delete_option( 'feedzy-activated' );
+			$reference_key     = get_option('feedzy_reference_key', '');
 			if ( ! headers_sent() ) {
-				$redirect_url = array(
-					'page' => 'feedzy-support',
-					'tab'  => 'help#shortcode',
+				$redirect_url = add_query_arg(
+					array(
+						'page' => 'feedzy-support',
+						'tab'  => 'help#shortcode',
+					),
+					admin_url( 'admin.php' )
 				);
-				if ( ! feedzy_is_pro() && ! empty( get_option( 'feedzy_fresh_install', false ) ) ) {
-					$redirect_url = array(
-						'page' => 'feedzy-setup-wizard',
-						'tab'  => '#step-1',
+				if ( str_starts_with( $reference_key, 'i-' ) ) {
+					$redirect_url = admin_url( 'post-new.php?post_type=feedzy_imports' );
+				} elseif ( str_starts_with( $reference_key, 'e-' ) ) {
+					return;
+				} elseif ( ! feedzy_is_pro() && ! empty( get_option( 'feedzy_fresh_install', false ) ) ) {
+					$redirect_url = add_query_arg(
+						array(
+							'page' => 'feedzy-setup-wizard',
+							'tab'  => '#step-1',
+						),
+						admin_url( 'admin.php' )
 					);
 				}
-				wp_safe_redirect(
-					add_query_arg(
-						$redirect_url,
-						admin_url( 'admin.php' )
-					)
-				);
+				wp_safe_redirect( $redirect_url );
 				exit();
 			}
 		}
@@ -1806,7 +1812,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Hide setup wizard menu.
 	 */
-	public function feedzy_hide_wizard_menu() { ?>
+	public function feedzy_hide_wizard_menu() {
+    ?>
 		<style>
 			.toplevel_page_feedzy-admin-menu ul.wp-submenu li:nth-child(6) {
 				display: none;
