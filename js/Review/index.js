@@ -1,7 +1,10 @@
 /**
  * WordPress dependencies.
  */
-import { __ } from '@wordpress/i18n';
+import {
+    __,
+    sprintf
+} from '@wordpress/i18n';
 
 import apiFetch from '@wordpress/api-fetch';
 
@@ -48,8 +51,32 @@ const App = () => {
             shouldCloseOnClickOutside={ false }
             onRequestClose={ closeModal }
         >
-            <p>{ __( 'You\'ve successfully imported', 'feedzy-rss-feeds' ) }<strong>{ __( ' more than 100 posts', 'feedzy-rss-feeds' ) }</strong>{ __( ' using Feedzy!', 'feedzy-rss-feeds' ) }</p>
-            <p>{ __( 'If you\'re enjoying Feedzy, we\'d be thrilled if you could leave us a', 'feedzy-rss-feeds' ) } <strong>{ __( '5-star review', 'feedzy-rss-feeds' ) }</strong> (<span style={{ color: 'gold' }}>★★★★★</span>) { __( 'on WordPress.org. Your support helps us grow and deliver even better features.', 'feedzy-rss-feeds' ) }</p>
+            <p
+                dangerouslySetInnerHTML={{
+                    __html: sprintf(
+                    __(
+                        "You've successfully imported %1$s more than 100 posts %2$s using Feedzy!",
+                        'feedzy-rss-feeds'
+                    ),
+                    '<strong>', // %1$s
+                    '</strong>' // %2$s
+                    ),
+                }}
+            />
+
+            <p
+                dangerouslySetInnerHTML={{
+                    __html: sprintf(
+                    __(
+                        "If you're enjoying Feedzy, we'd be thrilled if you could leave us a %1$s5-star review%2$s (%3$s) on WordPress.org. Your support helps us grow and deliver even better features.",
+                        'feedzy-rss-feeds'
+                    ),
+                    '<strong>', // %1$s
+                    '</strong>', // %2$s
+                    '<span style="color:gold;">★★★★★</span>' // %3$s
+                    ),
+                }}
+            />
 
             <div className="buttons-wrap" style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
                 <Button
