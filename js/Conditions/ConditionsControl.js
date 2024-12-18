@@ -1,4 +1,9 @@
 /**
+ * External dependencies.
+ */
+import classNames from 'classnames';
+
+/**
  * WordPress dependencies.
  */
 import { __ } from '@wordpress/i18n';
@@ -124,7 +129,7 @@ const ConditionsControl = ({
     };
 
     return (
-        <div className="fz-condition-control">
+        <div className={ classNames('fz-condition-control', { 'is-upsell': ! window.feedzyData.isPro }) }>
             <SelectControl
                 label={ __( 'Include If', 'feedzy-rss-feeds' ) }
                 value={ conditions.match }
