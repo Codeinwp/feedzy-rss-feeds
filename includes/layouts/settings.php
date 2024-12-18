@@ -167,7 +167,7 @@
 									</div>
 								</div>
 								<div class="form-block <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
-									<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'filter-keyword', 'import' ) ); ?>
+									<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'auto-categories', 'settings' ) ); ?>
 									<div class="fz-form-group">
 										<label class="form-label"><?php esc_html_e( 'Auto Categories Mapping', 'feedzy-rss-feeds' ); ?></label>
 										<table class="fz-auto-cat">
