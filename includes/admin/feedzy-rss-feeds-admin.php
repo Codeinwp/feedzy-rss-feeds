@@ -626,7 +626,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	public function render_upsell_rn() {
 		echo '<strong>Get access to more features.</strong>';
 		echo '<ul>
-			<li>- Remove branding label</li>
 			<li>- Auto add referral parameters to links</li>
 			<li>- Full Text Import</li>
 			<li>- Parahrase content</li>
@@ -871,6 +870,30 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			);
 			add_action( "load-$hook", array( $this, 'feedzy_load_setup_wizard_page' ) );
 			add_action( 'adminmenu', array( $this, 'feedzy_hide_wizard_menu' ) );
+		}
+		if ( ! defined( 'REVIVE_NETWORK_VERSION' ) ) {
+			$rss_to_social = __( 'RSS to Social', 'feedzy-rss-feeds' ) . '<span id="feedzy-rn-menu" class="dashicons dashicons-external" style="font-size:initial;"></span>';
+			add_action(
+				'admin_footer',
+				function () {
+					?>
+                    <script type="text/javascript">
+                        jQuery(document).ready(function ($) {
+                            $('#feedzy-rn-menu').parent().attr('target', '_blank');
+                        });
+                    </script>
+					<?php
+				}
+			);
+
+			global $submenu;
+			if ( isset( $submenu['feedzy-admin-menu'] ) ) {
+				$submenu['feedzy-admin-menu'][2] = array(
+					$rss_to_social,
+					'manage_options',
+					tsdk_utmify( 'https://revive.social/plugins/revive-network', 'feedzy-menu' ),
+				);
+			}
 		}
 	}
 
