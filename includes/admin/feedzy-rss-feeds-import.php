@@ -1026,9 +1026,26 @@ class Feedzy_Rss_Feeds_Import {
 			case 'wizard_import_feed':
 				$this->wizard_import_feed();
 				break;
+			case 'remove_upsell_notice':
+				$this->remove_import_upsell();
+				break;
 		}
 	}
+    /**
+     * AJAX called method to remove import upsell notice.
+     *
+     * @since   3.4.1
+     * @access  public
+     */
+    public function remove_import_upsell() {
+	    if ( ! is_user_logged_in() ) {
+		    return;
+	    }
+        $user_id = get_current_user_id();
+        update_user_meta( $user_id, 'feedzy_import_upsell_notice', 'dismissed' );
 
+        wp_send_json_success();
+    }
 	/**
 	 * AJAX called method to update post status.
 	 *

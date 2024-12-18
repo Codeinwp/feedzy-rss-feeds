@@ -28,25 +28,7 @@ global $post;
 			<div class="feedzy-accordion-item__content border-top">
 				<div class="fz-form-wrap">
 					<div class="form-block">
-						<?php if ( ! feedzy_is_pro() ) : ?>
-							<div class="fz-upsell-notice upgrade-alert mb-24">
-								<strong>
-									<?php esc_html_e( 'NEW!', 'feedzy-rss-feeds' ); ?>
-								</strong>
-								<?php
-								$upsell_url = tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'amazonproductadvertising', 'importfeed' ), 'query' );
 
-								echo wp_kses_post(
-									wp_sprintf(
-										// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
-										__( 'Enable Amazon Product Advertising feeds to generate affiliate revenue by %1$s upgrading to Feedzy Pro. %2$s', 'feedzy-rss-feeds' ),
-										'<a target="_blank" href="' . esc_url( $upsell_url ) . '" >',
-										'</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>'
-									)
-								);
-								?>
-							</div>
-						<?php endif; ?>
 						<label class="form-label"><?php esc_html_e( 'RSS Feed sources ', 'feedzy-rss-feeds' ); ?></label>
 						<?php echo wp_kses_post( $invalid_source_msg ); ?>
 						<input type="hidden" name="post_title" value="<?php echo $post ? esc_attr( $post->post_title ) : ''; ?>">
@@ -120,11 +102,11 @@ global $post;
 		</div>
 		<!-- Sources configuration Step End -->
 		<!-- Filters Step Start -->
-		<div class="feedzy-accordion-item">
+		<div class="feedzy-accordion-item <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
 			<div class="feedzy-accordion-item__title" id="fz-import-filters">
 				<button type="button" class="feedzy-accordion-item__button">
 					<div class="feedzy-accordion__step-number help-text"><?php esc_html_e( 'Step 2', 'feedzy-rss-feeds' ); ?></div>
-					<div class="feedzy-accordion__step-title h2"><?php esc_html_e( 'Filters', 'feedzy-rss-feeds' ); ?></div>
+					<div class="feedzy-accordion__step-title h2"><?php esc_html_e( 'Filters', 'feedzy-rss-feeds' ); ?><?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></div>
 					<div class="feedzy-accordion__icon"><span class="dashicons dashicons-arrow-down-alt2"></span></div>
 				</button>
 			</div>
@@ -291,18 +273,6 @@ global $post;
 						<?php
 							esc_html_e( 'Using magic tags, specify what part(s) of the source should form part of the imported post.', 'feedzy-rss-feeds' );
 						?>
-						<?php if ( false === apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) { ?>
-							<?php
-								echo wp_kses_post(
-									sprintf(
-										// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
-										__( 'The magic tags that are greyed out and disabled, are unavailable for your current license. Unlock all features, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ),
-										'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'magictags' ), 'query' ) ) . '" target="_blank" >',
-										'</a>'
-									)
-								);
-							?>
-						<?php } ?>
 					</p>
 				</div>
 				<div class="fz-tabs-menu">
@@ -365,7 +335,7 @@ global $post;
 													sprintf(
 														// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
 														__( 'Add more advanced tags, like item categories and custom field, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ),
-														'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'moreadvanced' ), 'query' ) ) . '" target="_blank">',
+														'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'moreadvanced' ) ) ) . '" target="_blank">',
 														'</a>'
 													)
 												);
@@ -521,7 +491,7 @@ global $post;
 											</div>
 										</div>
 									</div>
-									<?php if ( ! feedzy_is_pro() ) : ?>
+									<?php if ( ! feedzy_is_pro() && ! Feedzy_Rss_Feeds_Ui::had_dismissed_notice() ) : ?>
 										<div class="upgrade-alert">
 											<?php
 												echo wp_kses_post(
@@ -687,7 +657,6 @@ global $post;
 								<div class="fz-left">
 									<h4 class="h4"><?php esc_html_e( 'Custom Fields', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
 									<div class="form-block-pro-text">
-									<?php esc_html_e( 'This feature is only for Pro users.', 'feedzy-rss-feeds' ); ?><br>
 										<a href="https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy" target="_blank"><?php esc_html_e( 'Learn More', 'feedzy-rss-feeds' ); ?></a>
 									</div>
 								</div>

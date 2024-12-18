@@ -31,19 +31,7 @@ $html_parts = Feedzy_Rss_Feeds_Ui_Lang::get_form_elements();
 		foreach ( $html_parts as $item => $section ) {
 			$output .= '<div class="container feedzy_' . $item . '">';
 			$output .= '<h5>' . $section['title'] . '</h5>';
-			if ( ! feedzy_is_pro() && 'section_feed' === $item ) {
-				$upsell_url = tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'amazonproductadvertising', 'classiceditorshortcode' ), 'query' );
 
-				$output .= '<div class="upgrade-alert">';
-				$output .= '<strong>' . __( 'NEW!', 'feedzy-rss-feeds' ) . '</strong>';
-				$output .= wp_sprintf(
-					// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
-					__( 'Enable Amazon Product Advertising feeds to generate affiliate revenue by %1$s upgrading to Feedzy Pro. %2$s', 'feedzy-rss-feeds' ),
-					'<a target="_blank" href="' . esc_url( $upsell_url ) . '" >',
-					'</a>'
-				);
-				$output .= '</div>';
-			}
 			if ( isset( $section['description'] ) ) {
 				$output .= '<p>' . $section['description'] . '</p>';
 			}

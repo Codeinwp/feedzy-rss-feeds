@@ -287,8 +287,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			update_option( 'feedzy_legacyv5', $current_legacy_version );
 		}
 		if ( function_exists( 'get_current_screen' ) && get_current_screen()->post_type === 'feedzy_imports' && get_current_screen()->action === 'add' && ! feedzy_is_pro() && $current_legacy_version === - 1 && self::get_no_of_imports() >= 1 ) {
-			wp_redirect( 'edit.php?post_type=feedzy_imports' );
-			die();
+			wp_safe_redirect( 'edit.php?post_type=feedzy_imports' );
+			exit();
 		}
 		if ( $current_legacy_version === - 1 && ! feedzy_is_pro() && self::get_no_of_imports() >= 1 ) {
 			add_action( 'admin_head', function () {
@@ -302,7 +302,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			} );
 		}
 	}
-    function add_modals() {
+    /**
+     * Add modals for the plugin.
+     */
+    public function add_modals() {
 		    ?>
             <script type="text/javascript">
                 jQuery(function () {
@@ -492,7 +495,14 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
                     margin-top: 10px;
                     text-align: center;
                 }
-
+                #toplevel_page_feedzy-admin-menu span.tsdk-upg-menu-item{
+                    color:#fff;
+                }
+                #toplevel_page_feedzy-admin-menu a:has(span.tsdk-upg-menu-item){
+                    background-color:#00A32A!important;
+                    margin-bottom:-7px;
+                    color:#fff!important;
+                }
             </style>
 
 		    <?php
@@ -888,7 +898,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 			global $submenu;
 			if ( isset( $submenu['feedzy-admin-menu'] ) ) {
-				$submenu['feedzy-admin-menu'][2] = array(
+				$submenu['feedzy-admin-menu'][2] = array( // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 					$rss_to_social,
 					'manage_options',
 					tsdk_utmify( 'https://revive.social/plugins/revive-network', 'feedzy-menu' ),

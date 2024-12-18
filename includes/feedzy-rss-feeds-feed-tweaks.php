@@ -295,6 +295,14 @@ function feedzy_filter_custom_pattern( $keyword = '' ) {
 }
 
 /**
+ * Get the plugin install time.
+ *
+ * @return int
+ */
+function feedzy_install_time(): int {
+	return ( new ThemeisleSDK\Product( FEEDZY_BASEFILE ) )->get_install_time();
+}
+/**
  * Feedzy CSS.
  *
  * @param string $css Inline CSS.
