@@ -570,7 +570,7 @@ function feedzy_show_import_tour() {
 
 /**
  * Show review notice.
- * 
+ *
  * @return bool
  */
 function feedzy_show_review_notice() {
@@ -591,7 +591,7 @@ function feedzy_show_review_notice() {
 		'post_type'      => 'feedzy_imports',
 		'post_status'    => 'publish',
 		'posts_per_page' => 1,
-		'meta_query'     => array(
+		'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			array(
 				'key'     => 'imported_items_count',
 				'value'   => 100,
