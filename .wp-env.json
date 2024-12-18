@@ -1,6 +1,10 @@
 {
 	"core": null,
 	"plugins": [ "." ],
+	"lifecycleScripts": {
+		"afterStart": "wp-env run tests-cli wp option update feedzy_legacyv5 1"
+
+	},
 	"env": {
 		"tests": {
 			"config": {

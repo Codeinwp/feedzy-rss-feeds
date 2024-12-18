@@ -41,3 +41,5 @@ docker-compose.travis.yml
 docker-compose.ci.yml
 FeedBack/feedback.js
 FeedBack/feedback-form.js
+.wp-env.json
+artifacts
