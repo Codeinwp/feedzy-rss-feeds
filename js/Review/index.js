@@ -54,6 +54,7 @@ const App = () => {
             <p
                 dangerouslySetInnerHTML={{
                     __html: sprintf(
+                    // translators: %1$s is an opening strong tag, %2$s is a closing strong tag.
                     __(
                         "You've successfully imported %1$s more than 100 posts %2$s using Feedzy!",
                         'feedzy-rss-feeds'
@@ -67,6 +68,7 @@ const App = () => {
             <p
                 dangerouslySetInnerHTML={{
                     __html: sprintf(
+                    // translators: %1$s is an opening strong tag, %2$s is a closing strong tag, %3$s is for the 5-star rating stars.
                     __(
                         "If you're enjoying Feedzy, we'd be thrilled if you could leave us a %1$s5-star review%2$s (%3$s) on WordPress.org. Your support helps us grow and deliver even better features.",
                         'feedzy-rss-feeds'
