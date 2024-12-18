@@ -1556,10 +1556,10 @@ class Feedzy_Rss_Feeds_Import {
 			$duplicate_tag_value = array();
 			if ( 'yes' === $import_remove_duplicates && ! $is_duplicate ) {
 				if ( ! empty( $mark_duplicate_tag ) ) {
-					$mark_duplicate_tag = explode( ',', $mark_duplicate_tag );
+					$mark_duplicate_tag  = explode( ',', $mark_duplicate_tag );
+					$mark_duplicate_tag  = array_map( 'trim', $mark_duplicate_tag );
 					$duplicate_tag_value = array_map(
 						function ( $tag ) use ( $item_obj, $item ) {
-							$tag = trim( $tag );
 							if ( str_contains( $tag, 'item_custom' ) && $this->feedzy_is_business() ) {
 								$tag = apply_filters( 'feedzy_parse_custom_tags', "[#$tag]", $item_obj );
 							} elseif ( isset( $item[ $tag ] ) ) {
@@ -1574,8 +1574,10 @@ class Feedzy_Rss_Feeds_Import {
 				if ( ! empty( $duplicate_tag_value ) ) {
 					$duplicate_tag_value = implode( ' ', $duplicate_tag_value );
 					$duplicate_tag_value = substr( sanitize_key( wp_strip_all_tags( $duplicate_tag_value ) ), 0, apply_filters( 'feedzy_mark_duplicate_content_limit', 256 ) );
+					$mark_duplicate_tag  = md5( implode( '', $mark_duplicate_tag ) );
 				} else {
 					$duplicate_tag_value = esc_url_raw( $item['item_url'] );
+					$mark_duplicate_tag  = 'item_url';
 				}
 
 				$is_duplicate_post = $this->is_duplicate_post( $import_post_type, 'feedzy_' . $mark_duplicate_tag, $duplicate_tag_value );
