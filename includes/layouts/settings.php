@@ -108,6 +108,17 @@
 
 					$feedzy_delete_days = isset( $settings['general']['feedzy-delete-days'] ) ? $settings['general']['feedzy-delete-days'] : 0;
 					$default_thumbnail_id = isset( $settings['general']['default-thumbnail-id'] ) ? $settings['general']['default-thumbnail-id'] : 0;
+					$mapped_categories = isset( $settings['general']['auto-categories'] ) ? $settings['general']['auto-categories'] : array(
+						array(
+							'keywords' => '',
+							'category' => '',
+						),
+					);
+					$categories = get_categories(
+						array(
+							'hide_empty' => false,
+						)
+					);
 					$telemetry_enabled = get_option( 'feedzy_rss_feeds_logger_flag', 0 );
 
 					switch ( $active_tab ) {
@@ -153,6 +164,47 @@
 									</div>
 									<div class="fz-form-group">
 										<div class="help-text pt-8"><?php esc_html_e( 'This setting will be used to inherit the current theme style instead of the default style. If disabled, it will be considered the individual widget/block/shortcode setting.', 'feedzy-rss-feeds' ); ?></div>
+									</div>
+								</div>
+								<div class="form-block <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
+									<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'filter-keyword', 'import' ) ); ?>
+									<div class="fz-form-group">
+										<label class="form-label"><?php esc_html_e( 'Auto Categories Mapping', 'feedzy-rss-feeds' ); ?></label>
+										<table class="fz-auto-cat">
+											<tbody>
+												<?php foreach ( $mapped_categories as $index => $category_mapping ) : ?>
+												<tr>
+													<td class="fz-auto-cat-col-8">
+														<input type="text" name="auto-categories[<?php echo esc_attr( $index ); ?>][keywords]" class="form-control" placeholder="<?php esc_attr_e( 'Values separated by commas', 'feedzy-rss-feeds' ); ?>" value="<?php echo esc_attr( $category_mapping['keywords'] ); ?>"/>
+													</td>
+													<td class="fz-auto-cat-col-4">
+														<select name="auto-categories[<?php echo esc_attr( $index ); ?>][category]" class="form-control fz-select-control">
+															<option value=""><?php esc_html_e( 'Select a category', 'feedzy-rss-feeds' ); ?></option>
+															<?php
+															foreach ( $categories as $category ) {
+																$selected = $category->term_id == $category_mapping['category'] ? 'selected' : '';
+																echo '<option value="' . esc_attr( $category->term_id ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $category->name ) . '</option>';
+															}
+															?>
+														</select>
+														<button type="button" class="btn btn-outline-primary<?php echo $index === 0 ? ' disabled' : ''; ?>" <?php echo $index === 0 ? 'disabled' : ''; ?>><?php esc_html_e( 'Delete', 'feedzy-rss-feeds' ); ?></button>
+													</td>
+												</tr>
+												<?php endforeach; ?>
+											</tbody>
+										</table>
+										<div class="fz-auto-cat-actions">
+											<button type="button"class="btn btn-outline-primary"><?php esc_html_e( 'Add New', 'feedzy-rss-feeds' ); ?></button>
+										</div>
+										<div class="help-text pt-8">
+											<?php
+											printf(
+												// translators: %s is a placeholder for the auto categories tag.
+												esc_html__( 'Automatically assign categories to your posts based on their titles. You need to add %s tag to the category field of your import to support this feature.', 'feedzy-rss-feeds' ),
+												'<strong>[#auto_categories]</strong>'
+											);
+											?>
+										</div>
 									</div>
 								</div>
 								<?php if ( feedzy_is_pro() ) : ?>

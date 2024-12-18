@@ -122,4 +122,59 @@ jQuery( function( $ ) {
     );
   });
   snackbarNotice();
+
+  const initializeAutoCatActions = () => {
+    const elements = {
+      table: document.querySelector( '.fz-auto-cat' ),
+      tbody: document.querySelector( '.fz-auto-cat tbody' ),
+      addBtn: document.querySelector( '.fz-auto-cat-actions button' )
+    };
+
+    if ( ! Object.values( elements ).every( Boolean ) ) {
+      return;
+    }
+
+    const rows = elements.tbody.querySelectorAll( 'tr' );
+    let rowIndex = rows.length - 1;
+
+    const getNewRow = ( index ) => {
+      const row = rows[0].cloneNode( true );
+      const input = row.querySelector( 'input' );
+      const select = row.querySelector( 'select' );
+      const deleteBtn = row.querySelector( 'button' );
+
+      if ( input ) {
+        input.value = '';
+        input.name = `auto-categories[${index}][keywords]`;
+      }
+
+      if ( select ) {
+        select.name = `auto-categories[${index}][category]`;
+      }
+
+      if ( deleteBtn ) {
+        deleteBtn.classList.remove( 'disabled' );
+        deleteBtn.removeAttribute( 'disabled' );
+      }
+
+      return row;
+    };
+
+    elements.tbody.addEventListener( 'click', ( e ) => {
+      if ( e.target.matches( 'button:not(.disabled)' ) ) {
+        e.target.closest( 'tr' )?.remove();
+      }
+    } );
+
+    elements.addBtn.addEventListener( 'click', ( e ) => {
+      e.preventDefault();
+      if ( rows.length > 0 ) {
+        const newRow = getNewRow( ++rowIndex );
+        elements.tbody.appendChild( newRow );
+      }
+    } );
+  };
+
+
+  initializeAutoCatActions();
 });

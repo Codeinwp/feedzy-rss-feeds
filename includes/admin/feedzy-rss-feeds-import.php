@@ -403,6 +403,10 @@ class Feedzy_Rss_Feeds_Import {
 			$import_content = '[[{"value":"%5B%7B%22id%22%3A%22%22%2C%22tag%22%3A%22item_content%22%2C%22data%22%3A%7B%7D%7D%5D"}]]';
 		}
 
+		if ( feedzy_is_pro() && empty( $import_post_term ) ) {
+			$import_post_term = '[#auto_categories]';
+		}
+
 		$import_link_author_admin  = get_post_meta( $post->ID, 'import_link_author_admin', true );
 		$import_link_author_public = get_post_meta( $post->ID, 'import_link_author_public', true );
 
@@ -1934,6 +1938,7 @@ class Feedzy_Rss_Feeds_Import {
 
 			if ( $import_post_term !== 'none' && strpos( $import_post_term, '_' ) > 0 ) {
 				$terms            = explode( ',', $import_post_term );
+				$terms            = apply_filters( 'feedzy_import_terms', $terms, $item );
 				$terms            = array_filter(
 					$terms,
 					function( $term ) {
@@ -1941,6 +1946,9 @@ class Feedzy_Rss_Feeds_Import {
 							return;
 						}
 						if ( false !== strpos( $term, '[#item_' ) ) {
+							return;
+						}
+						if ( false !== strpos( $term, '[#auto_categories]' ) ) {
 							return;
 						}
 						return $term;
@@ -3291,10 +3299,9 @@ class Feedzy_Rss_Feeds_Import {
 
 		if ( ! is_wp_error( $job_id ) ) {
 			update_post_meta( $job_id, 'source', $wizard_data['feed'] );
-			update_post_meta( $job_id, 'import_post_title', '[#item_title]' );
+			update_post_meta( $job_id, 'import_post_title', '[[{"value":"%5B%7B%22id%22%3A%22%22%2C%22tag%22%3A%22item_title%22%2C%22data%22%3A%7B%7D%7D%5D"}]]' );
 			update_post_meta( $job_id, 'import_post_date', '[#item_date]' );
-			update_post_meta( $job_id, 'import_post_content', '[#item_content]' );
-			update_post_meta( $job_id, 'import_post_content', '[#item_content]' );
+			update_post_meta( $job_id, 'import_post_content', '[[{"value":"%5B%7B%22id%22%3A%22%22%2C%22tag%22%3A%22item_content%22%2C%22data%22%3A%7B%7D%7D%5D"}]]' );
 			update_post_meta( $job_id, 'import_post_type', $post_type );
 			update_post_meta( $job_id, 'import_post_status', 'publish' );
 			update_post_meta( $job_id, 'import_post_featured_img', '[#item_image]' );
