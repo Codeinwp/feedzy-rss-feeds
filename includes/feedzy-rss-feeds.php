@@ -231,7 +231,7 @@ class Feedzy_Rss_Feeds {
 			self::$instance->loader->add_action( 'admin_enqueue_scripts', $plugin_import, 'enqueue_styles' );
 			self::$instance->loader->add_action( 'init', $plugin_import, 'register_import_post_type', 9, 1 );
 			self::$instance->loader->add_action( 'add_meta_boxes', $plugin_import, 'add_feedzy_import_metaboxes', 1, 2 );
-			self::$instance->loader->add_action( 'feedzy_cron', $plugin_import, 'run_cron' );
+			self::$instance->loader->add_action( 'feedzy_cron', $plugin_import, 'run_cron', 10, 2 );
 			self::$instance->loader->add_action( 'save_post_feedzy_imports', $plugin_import, 'save_feedzy_import_feed_meta', 1, 2 );
 			self::$instance->loader->add_action( 'wp_ajax_feedzy', $plugin_import, 'ajax' );
 			self::$instance->loader->add_action( 'manage_feedzy_imports_posts_custom_column', $plugin_import, 'manage_feedzy_import_columns', 10, 2 );
