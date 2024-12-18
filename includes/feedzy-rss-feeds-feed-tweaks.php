@@ -148,7 +148,6 @@ function feedzy_el_display_external_post_image( $html, $settings, $image_size_ke
 
 	}
 	return $html;
-
 }
 add_filter( 'elementor/image_size/get_attachment_image_html', 'feedzy_el_display_external_post_image', 10, 4 );
 

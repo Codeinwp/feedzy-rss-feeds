@@ -113,6 +113,12 @@ const ActionModal = () => {
 		if ( ['fz_translate', 'fz_paraphrase', 'fz_summarize', 'wordAI', 'spinnerchief'].indexOf( actionId ) > -1 ) {
 			actionData.data[actionId] = true;
 		}
+
+		if ( ['fz_translate'].indexOf( actionId ) > -1 ) {
+			const langInput = document.getElementById('feedzy_auto_translate_lang');
+			actionData.data['lang'] = langInput ? langInput.value : 'eng_Latn';
+		}
+
 		if ( ['fz_image'].indexOf( actionId ) > -1 ) {
 			actionData.data['generateOnlyMissingImages'] = true;
 		}
@@ -206,13 +212,13 @@ const ActionModal = () => {
 				}
 			}
 			let tag = event.target.getAttribute( 'data-action_popup' ) || '';
-			let fieldName = event.target.getAttribute( 'data-field-name' ) || '';
+			let dataFieldName = event.target.getAttribute( 'data-field-name' ) || '';
 			if ( '' === tag ) {
 				event.target.closest('.dropdown-item').click();
 				return;
 			}
 			setShortCode( tag );
-			setFieldName( fieldName );
+			setFieldName( dataFieldName );
 			openModal();
 		} );
 	} );

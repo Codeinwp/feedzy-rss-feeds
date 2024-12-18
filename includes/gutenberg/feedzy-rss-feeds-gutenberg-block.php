@@ -65,6 +65,8 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		// Enqueue the bundled block JS file
 		wp_enqueue_script( 'feedzy-gutenberg-block-js', FEEDZY_ABSURL . 'js/build/block.js', $depends, $asset_file['version'], true );
 
+		wp_set_script_translations( 'feedzy-gutenberg-block-js', 'feedzy-rss-feeds' );
+
 		// Pass in REST URL
 		wp_localize_script(
 			'feedzy-gutenberg-block-js',
@@ -367,7 +369,6 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );
 		$output = $feedy;
 		return $output;
-
 	}
 
 	/**
@@ -403,5 +404,4 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 			}
 		}
 	}
-
 }

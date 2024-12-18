@@ -8,16 +8,22 @@
 
 	$help_btn_url = 'https://docs.themeisle.com/category/712-feedzy';
 
-	if ( 'headers' === $active_tab ) {
+	if ( 'general' === $active_tab ) {
+		$help_btn_url = 'https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation#general';
+	} elseif ( 'headers' === $active_tab ) {
 		$help_btn_url = 'https://docs.themeisle.com/article/713-how-to-change-user-agent-in-feedzy';
 	} elseif ( 'proxy' === $active_tab ) {
 		$help_btn_url = 'https://docs.themeisle.com/article/714-how-to-use-proxy-settings-in-feezy';
 	} elseif ( 'misc' === $active_tab ) {
 		$help_btn_url = 'https://docs.themeisle.com/article/841-how-to-add-canonical-tags-for-imported-posts';
+	} elseif ( 'openai' === $active_tab ) {
+		$help_btn_url = 'https://docs.themeisle.com/article/1962-how-to-paraphrase-using-chatgpt-in-feed-to-post';
 	} elseif ( 'wordai' === $active_tab ) {
 		$help_btn_url = 'https://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy#wordai';
 	} elseif ( 'spinnerchief' === $active_tab ) {
 		$help_btn_url = 'https://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy#spinner';
+	} elseif ( 'amazon-product-advertising' === $active_tab ) {
+		$help_btn_url = 'https://docs.themeisle.com/article/1745-how-to-display-amazon-products-using-feedzy';
 	}
 	?>
 	<?php if ( $this->notice ) { ?>
@@ -207,7 +213,7 @@
 										<label for="feedzy-telemetry" class="form-label"><?php esc_html_e( 'Enable Telemetry', 'feedzy-rss-feeds' ); ?></label>
 									</div>
 									<div class="fz-form-group">
-										<div class="help-text pt-8"><?php esc_html_e( 'Send data about plugin settings to measure the usage of the features. The data is private and not shared with third-party entities. Only plugin data is collected without sensitive information.' ); ?></div>
+										<div class="help-text pt-8"><?php esc_html_e( 'Send data about plugin settings to measure the usage of the features. The data is private and not shared with third-party entities. Only plugin data is collected without sensitive information.', 'feedzy-rss-feeds' ); ?></div>
 									</div>
 								</div>
 							</div>
