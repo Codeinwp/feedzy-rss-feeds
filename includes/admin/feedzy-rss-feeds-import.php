@@ -573,7 +573,7 @@ class Feedzy_Rss_Feeds_Import {
 				add_action( 'save_post_feedzy_imports', array( $this, 'save_feedzy_import_feed_meta' ), 1, 2 );
 			}
 			// Clear the import job cron schedule if it exists.
-			wp_clear_scheduled_hook( 'feedzy_cron', array( 100, $post_id ) );
+			Feedzy_Rss_Feeds_Util_Scheduler::clear_scheduled_hook( 'feedzy_cron', array( 100, $post_id ) );
 			do_action( 'feedzy_save_fields', $post_id, $post );
 		}
 
@@ -754,9 +754,9 @@ class Feedzy_Rss_Feeds_Import {
 
 				break;
 			case 'feedzy-next_run':
-				$next = wp_next_scheduled( 'feedzy_cron', array( 100, $post_id ) );
+				$next = Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'feedzy_cron', array( 100, $post_id ) );
 				if ( ! $next ) {
-					$next = wp_next_scheduled( 'feedzy_cron' );
+					$next = Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'feedzy_cron' );
 				}
 				if ( $next ) {
 					$now  = new DateTime();
@@ -2326,11 +2326,11 @@ class Feedzy_Rss_Feeds_Import {
 				$offset    = sanitize_text_field( wp_unslash( $_POST['fz_execution_offset'] ) );
 				$time      = $this->get_cron_execution( $execution, $offset );
 				$schedule  = sanitize_text_field( wp_unslash( $_POST['fz_cron_schedule'] ) );
-				wp_clear_scheduled_hook( 'feedzy_cron' );
+				Feedzy_Rss_Feeds_Util_Scheduler::clear_scheduled_hook( 'feedzy_cron' );
 			}
 		}
-		if ( false === wp_next_scheduled( 'feedzy_cron' ) ) {
-			wp_schedule_event( $time, $schedule, 'feedzy_cron' );
+		if ( false === Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'feedzy_cron' ) ) {
+			Feedzy_Rss_Feeds_Util_Scheduler::schedule_event( $time, $schedule, 'feedzy_cron' );
 		}
 
 		// Register import jobs based cron jobs.
@@ -2362,8 +2362,8 @@ class Feedzy_Rss_Feeds_Import {
 				$fz_execution_offset = get_post_meta( $job_id, 'fz_execution_offset', true );
 				$time                = $this->get_cron_execution( $fz_cron_execution, $fz_execution_offset );
 
-				if ( false === wp_next_scheduled( 'feedzy_cron', array( 100, $job_id ) ) ) {
-					wp_schedule_event( $time, $fz_cron_schedule, 'feedzy_cron', array( 100, $job_id ) );
+				if ( false === Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'feedzy_cron', array( 100, $job_id ) ) ) {
+					Feedzy_Rss_Feeds_Util_Scheduler::schedule_event( $time, $fz_cron_schedule, 'feedzy_cron', array( 100, $job_id ) );
 				}
 			}
 		}
@@ -2401,7 +2401,7 @@ class Feedzy_Rss_Feeds_Import {
 			echo wp_kses_post( '<div class="notice notice-error feedzy-error-critical is-dismissible"><p>' . __( 'WP Cron is disabled. Your feeds would not get updated. Please contact your hosting provider or system administrator', 'feedzy-rss-feeds' ) . '</p></div>' );
 		}
 
-		if ( false === wp_next_scheduled( 'feedzy_cron' ) ) {
+		if ( false === Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'feedzy_cron' ) ) {
 			echo wp_kses_post( '<div class="notice notice-error"><p>' . __( 'Unable to register cron job. Your feeds might not get updated', 'feedzy-rss-feeds' ) . '</p></div>' );
 		}
 	}
