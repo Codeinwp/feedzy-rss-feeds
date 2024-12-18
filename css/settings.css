@@ -2365,6 +2365,10 @@ li.draggable-item .components-panel__body-toggle.components-button{
 	padding: 24px 0;
 }
 
+.fz-condition-control.is-upsell {
+	opacity: 0.6;
+}
+
 .fz-condition-control .components-button {
 	width: 100%;
 	margin: 0;
