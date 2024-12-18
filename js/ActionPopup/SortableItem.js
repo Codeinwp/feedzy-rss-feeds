@@ -222,7 +222,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 										)
 									}
 									value={ item.data.ChatGPT ? unescape(item.data.ChatGPT.replaceAll('&#039;', '\'')) : '' }
-									onChange={ ( currentValue ) => propRef.onChangeHandler( { 'index': loopIndex, 'ChatGPT': currentValue ?? '' } ) }
+									onChange={ ( currentValue ) => propRef.onChangeHandler( { 'index': loopIndex, 'ChatGPT': currentValue ?? '', aiProvider: selectedProvider } ) }
 									disabled={!feedzyData.isPro || !providerLicenseStatus}
 								/>
 								<div className="fz-prompt-button">
