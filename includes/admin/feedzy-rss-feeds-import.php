@@ -1563,7 +1563,7 @@ class Feedzy_Rss_Feeds_Import {
 							if ( str_contains( $tag, 'item_custom' ) && $this->feedzy_is_business() ) {
 								$tag = apply_filters( 'feedzy_parse_custom_tags', "[#$tag]", $item_obj );
 							} elseif ( isset( $item[ $tag ] ) ) {
-								$tag = isset( $item[ $tag ] ) ? $item[ $tag ] : '';
+								$tag = isset( $item[ $tag ] ) ? is_object( $item[ $tag ] ) ? wp_json_encode( $item[ $tag ] ) : $item[ $tag ] : '';
 							}
 							return $tag;
 						},
