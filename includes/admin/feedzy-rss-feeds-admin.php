@@ -283,7 +283,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$current_legacy_version = (int) get_option( 'feedzy_legacyv5', 0 );
 
 		if ( $current_legacy_version === 0 ) {
-			$current_legacy_version = self::get_no_of_imports() > 1 ? 1 : - 1;
+			$current_legacy_version = self::get_no_of_imports() > 0 ? 1 : - 1;
 			update_option( 'feedzy_legacyv5', $current_legacy_version );
 		}
 		if ( function_exists( 'get_current_screen' ) && get_current_screen()->post_type === 'feedzy_imports' && get_current_screen()->action === 'add' && ! feedzy_is_pro() && $current_legacy_version === - 1 && self::get_no_of_imports() >= 1 ) {

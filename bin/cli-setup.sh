@@ -15,6 +15,8 @@ wp  --allow-root config set TI_CYPRESS_TESTING true --raw
 wp  --allow-root term create category c_feedzy-1
 wp  --allow-root term create post_tag t_feedzy-1
 
+wp --allow-root option update feedzy_legacyv5 1
+
 # debugging
 wp  --allow-root config set WP_DEBUG true --raw
 wp  --allow-root config set WP_DEBUG_LOG true --raw
