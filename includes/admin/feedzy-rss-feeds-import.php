@@ -1553,18 +1553,27 @@ class Feedzy_Rss_Feeds_Import {
 			$is_duplicate                     = $use_new_hash ? in_array( $item_hash, $imported_items_new, true ) : in_array( $item_hash, $imported_items_old, true );
 			$items_found[ $item['item_url'] ] = $item['item_title'];
 
-			$duplicate_tag_value = '';
+			$duplicate_tag_value = array();
 			if ( 'yes' === $import_remove_duplicates && ! $is_duplicate ) {
 				if ( ! empty( $mark_duplicate_tag ) ) {
-					if ( str_contains( $mark_duplicate_tag, 'item_custom' ) && $this->feedzy_is_business() ) {
-						$duplicate_tag_value = apply_filters( 'feedzy_parse_custom_tags', "[#$mark_duplicate_tag]", $item_obj );
-					} elseif ( isset( $item[ $mark_duplicate_tag ] ) && 'item_url' !== $mark_duplicate_tag ) {
-						$duplicate_tag_value = isset( $item[ $mark_duplicate_tag ] ) ? $item[ $mark_duplicate_tag ] : '';
-					}
+					$mark_duplicate_tag = explode( ',', $mark_duplicate_tag );
+					$duplicate_tag_value = array_map(
+						function ( $tag ) use ( $item_obj, $item ) {
+							$tag = trim( $tag );
+							if ( str_contains( $tag, 'item_custom' ) && $this->feedzy_is_business() ) {
+								$tag = apply_filters( 'feedzy_parse_custom_tags', "[#$tag]", $item_obj );
+							} elseif ( isset( $item[ $tag ] ) ) {
+								$tag = isset( $item[ $tag ] ) ? $item[ $tag ] : '';
+							}
+							return $tag;
+						},
+						$mark_duplicate_tag
+					);
 				}
 
 				if ( ! empty( $duplicate_tag_value ) ) {
-					$duplicate_tag_value = substr( sanitize_key( wp_strip_all_tags( $duplicate_tag_value ) ), 0, 256 );
+					$duplicate_tag_value = implode( ' ', $duplicate_tag_value );
+					$duplicate_tag_value = substr( sanitize_key( wp_strip_all_tags( $duplicate_tag_value ) ), 0, apply_filters( 'feedzy_mark_duplicate_content_limit', 256 ) );
 				} else {
 					$duplicate_tag_value = esc_url_raw( $item['item_url'] );
 				}
