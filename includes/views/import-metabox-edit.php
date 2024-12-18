@@ -762,14 +762,15 @@ global $post;
 						</div>
 					</div>
 
-					<div class="form-block form-block-two-column">
+					<div class="form-block form-block-two-column <?php echo feedzy_is_legacyv5() ? '' : esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
+					    <?php echo feedzy_is_legacyv5() ? '' : wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'count', 'import' ) ); ?>
 						<div class="fz-left">
-							<h4 class="h4"><?php esc_html_e( 'Items Count', 'feedzy-rss-feeds' ); ?></h4>
+							<h4 class="h4"><?php esc_html_e( 'Items Count', 'feedzy-rss-feeds' ); ?><?php echo ! feedzy_is_pro() && ! feedzy_is_legacyv5() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
 						</div>
 						<div class="fz-right">
 							<div class="fz-form-group">
 								<label class="form-label"><?php esc_html_e( 'How many feed items to import from the source?', 'feedzy-rss-feeds' ); ?></label>
-								<input type="number" min="0" max="9999" id="feedzy_item_limit" name="feedzy_meta_data[import_feed_limit]" class="form-control" value="<?php echo esc_attr( (int) $import_feed_limit ); ?>" />
+								<input type="number" min="0" max="9999" id="feedzy_item_limit" name="feedzy_meta_data[import_feed_limit<?php echo! feedzy_is_pro() && ! feedzy_is_legacyv5() ?   'locked' : ''; ?>]" class="form-control" value="<?php echo esc_attr( (int) $import_feed_limit ); ?>" />
 								<div class="help-text pt-8">
 									<?php echo wp_kses_post( sprintf( __( 'If you choose a high number, please check that your configuration can support it or your imports may fail.', 'feedzy-rss-feeds' ), '<b>', '</b>' ) ); ?>
 								</div>
@@ -807,20 +808,19 @@ global $post;
 					<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
 						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'schedule-import-job', 'import' ) ); ?>
 						<div class="fz-left">
-							<h4 class="h4"><?php esc_html_e( 'Schedule Import Job', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
+							<h4 class="h4"><?php esc_html_e( 'Schedule Import', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
 						</div>
 						<div class="fz-right">
 							<div class="fz-form-row">
 								<div class="fz-form-col-6">
 									<div class="fz-form-group">
-										<label class="form-label"><?php esc_html_e( 'First cron execution time', 'feedzy-rss-feeds' ); ?></label>
+										<label class="form-label"><?php esc_html_e( 'First date/time to run the import', 'feedzy-rss-feeds' ); ?></label>
 										<?php if ( feedzy_is_pro() ) : ?>
 											<input type="hidden" name="feedzy_meta_data[fz_execution_offset]" id="fz-execution-offset" value="<?php echo ! empty( $import_schedule['fz_execution_offset'] ) ? esc_attr( $import_schedule['fz_execution_offset'] ) : ''; ?>">
 										<?php endif; ?>
 										<input type="datetime-local" id="fz-event-execution" name="feedzy_meta_data[fz_cron_execution]" class="form-control" value="<?php echo ! empty( $import_schedule['fz_cron_execution'] ) ? esc_attr( $import_schedule['fz_cron_execution'] ) : ''; ?>"<?php disabled( true, ! feedzy_is_pro() ); ?>>
 										<div class="help-text pt-8">
-											<?php esc_html_e( 'When past date will be provided, event will be executed in the next queue.', 'feedzy-rss-feeds' ); ?>
-											<a href="<?php echo esc_url( 'https://docs.themeisle.com/article/1820-how-to-set-scheduler-for-import-cron-jobs-in-feedzy' ); ?>" target="_blank"><?php esc_html_e( 'Learn More', 'feedzy-rss-feeds' ); ?></a>
+											<?php esc_html_e( 'Set the date and time when Feedzy should first run the import.', 'feedzy-rss-feeds' ); ?>
 										</div>
 									</div>
 								</div>
@@ -832,10 +832,10 @@ global $post;
 											$save_schedule = ! empty( $import_schedule['fz_cron_schedule'] ) ? $import_schedule['fz_cron_schedule'] : '';
 
 											$schedules = wp_get_schedules();
-											if ( isset( $schedules['hourly'] ) ) {
-												$hourly = $schedules['hourly'];
-												unset( $schedules['hourly'] );
-												$schedules = array_merge( array( 'hourly' => $hourly ), $schedules );
+											if ( isset( $schedules['daily'] ) ) {
+												$daily = $schedules['daily'];
+												unset( $schedules['daily'] );
+												$schedules = array_merge( array( 'daily' => $daily ), $schedules );
 											}
 											$duplicate_schedule = array();
 											foreach ( $schedules as $slug => $schedule ) :
@@ -844,10 +844,10 @@ global $post;
 												}
 												$duplicate_schedule[] = $schedule['interval'];
 												?>
-												<option value="<?php echo esc_attr( $slug ); ?>"<?php selected( $save_schedule, $slug ); ?>><?php echo esc_html( $schedule['display'] ); ?> (<?php echo esc_html( $slug ); ?>)</option>
+												<option data-slug="<?php echo esc_html( $slug ); ?>" value="<?php echo esc_attr( $slug ); ?>"<?php selected( $save_schedule, $slug ); ?>><?php echo esc_html( $schedule['display'] ); ?></option>
 											<?php endforeach; ?>
 										</select>
-										<div class="help-text pt-8"><?php esc_html_e( 'After first execution repeat.', 'feedzy-rss-feeds' ); ?></div>
+										<div class="help-text pt-8"><?php esc_html_e( 'How often Feedzy will run the import.', 'feedzy-rss-feeds' ); ?></div>
 									</div>
 								</div>
 							</div>
