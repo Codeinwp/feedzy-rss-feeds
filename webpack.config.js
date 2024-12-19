@@ -7,6 +7,7 @@ const config = {
         'import-onboarding': './js/Onboarding/import-onboarding.js',
         'feedback': './js/FeedBack/feedback.js',
         'action-popup': './js/ActionPopup/action-popup.js',
+        'conditions': './js/Conditions/conditions.js',
     },
     output: {
         ...defaultConfig.output,
