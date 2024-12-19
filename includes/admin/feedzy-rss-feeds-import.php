@@ -364,6 +364,7 @@ class Feedzy_Rss_Feeds_Import {
 		$import_auto_translation  = get_post_meta( $post->ID, 'import_auto_translation', true );
 		$import_auto_translation  = 'yes' === $import_auto_translation ? 'checked' : '';
 		$import_translation_lang  = get_post_meta( $post->ID, 'import_auto_translation_lang', true );
+		$mark_duplicate_tag       = get_post_meta( $post->ID, 'mark_duplicate_tag', true );
 		// default values so that post is not created empty.
 		if ( empty( $import_title ) ) {
 			$import_title = '[[{"value":"%5B%7B%22id%22%3A%22%22%2C%22tag%22%3A%22item_title%22%2C%22data%22%3A%7B%7D%7D%5D"}]]';
@@ -1344,6 +1345,8 @@ class Feedzy_Rss_Feeds_Import {
 		$import_auto_translation  = get_post_meta( $job->ID, 'import_auto_translation', true );
 		$import_auto_translation  = $this->feedzy_is_agency() && 'yes' === $import_auto_translation ? true : false;
 		$import_translation_lang  = get_post_meta( $job->ID, 'import_auto_translation_lang', true );
+		$mark_duplicate_tag       = get_post_meta( $job->ID, 'mark_duplicate_tag', true );
+		$mark_duplicate_tag       = feedzy_is_pro() && ! empty( $mark_duplicate_tag ) ? preg_replace( '/[\[\]#]/', '', $mark_duplicate_tag ) : '';
 		$max                      = $import_feed_limit;
 
 		if ( metadata_exists( 'post', $job->ID, 'import_post_status' ) ) {
@@ -1491,11 +1494,36 @@ class Feedzy_Rss_Feeds_Import {
 			$is_duplicate                     = $use_new_hash ? in_array( $item_hash, $imported_items_new, true ) : in_array( $item_hash, $imported_items_old, true );
 			$items_found[ $item['item_url'] ] = $item['item_title'];
 
+			$duplicate_tag_value = array();
 			if ( 'yes' === $import_remove_duplicates && ! $is_duplicate ) {
-				$is_duplicate_post = $this->is_duplicate_post( $import_post_type, 'feedzy_item_url', esc_url_raw( $item['item_url'] ) );
+				if ( ! empty( $mark_duplicate_tag ) ) {
+					$mark_duplicate_tag  = explode( ',', $mark_duplicate_tag );
+					$mark_duplicate_tag  = array_map( 'trim', $mark_duplicate_tag );
+					$duplicate_tag_value = array_map(
+						function ( $tag ) use ( $item_obj, $item ) {
+							if ( str_contains( $tag, 'item_custom' ) && $this->feedzy_is_business() ) {
+								$tag = apply_filters( 'feedzy_parse_custom_tags', "[#$tag]", $item_obj );
+							} elseif ( isset( $item[ $tag ] ) ) {
+								$tag = isset( $item[ $tag ] ) ? is_object( $item[ $tag ] ) ? wp_json_encode( $item[ $tag ] ) : $item[ $tag ] : '';
+							}
+							return $tag;
+						},
+						$mark_duplicate_tag
+					);
+				}
+				if ( ! empty( $duplicate_tag_value ) ) {
+					$duplicate_tag_value = implode( ' ', $duplicate_tag_value );
+					$duplicate_tag_value = substr( sanitize_key( wp_strip_all_tags( $duplicate_tag_value ) ), 0, apply_filters( 'feedzy_mark_duplicate_content_limit', 256 ) );
+					$mark_duplicate_tag  = md5( implode( '', $mark_duplicate_tag ) );
+				} else {
+					$duplicate_tag_value = esc_url_raw( $item['item_url'] );
+					$mark_duplicate_tag  = 'item_url';
+				}
+
+				$is_duplicate_post = $this->is_duplicate_post( $import_post_type, 'feedzy_' . $mark_duplicate_tag, $duplicate_tag_value );
 				if ( ! empty( $is_duplicate_post ) ) {
 					foreach ( $is_duplicate_post as $p ) {
-						$found_duplicates[] = get_post_meta( $p, 'feedzy_item_url', true );
+						$found_duplicates[] = get_post_meta( $p, 'feedzy_' . $mark_duplicate_tag, true );
 						wp_delete_post( $p, true );
 					}
 				}
@@ -2025,6 +2053,11 @@ class Feedzy_Rss_Feeds_Import {
 			update_post_meta( $new_post_id, 'feedzy_item_url', esc_url_raw( $item['item_url'] ) );
 			update_post_meta( $new_post_id, 'feedzy_job', $job->ID );
 			update_post_meta( $new_post_id, 'feedzy_item_author', sanitize_text_field( $author ) );
+
+			// Verify that the `$mark_duplicate_tag` does not match `'item_url'` to ensure the condition applies only when a different tag is specified.
+			if ( $mark_duplicate_tag && 'item_url' !== $mark_duplicate_tag ) {
+				update_post_meta( $new_post_id, 'feedzy_' . $mark_duplicate_tag, $duplicate_tag_value );
+			}
 
 			// we can use this to associate the items that were imported in a particular run.
 			update_post_meta( $new_post_id, 'feedzy_job_time', $last_run );
