@@ -998,12 +998,13 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				$auto_categories = isset( $_POST['auto-categories'] ) ? filter_input( INPUT_POST, 'auto-categories', FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY ) : array();
 
 				$auto_categories = array_filter( $auto_categories, function( $item ) {
-					if ( ! empty( $item['keywords'] ) && is_numeric( $item['category'] ) ) {
-						$item['keywords'] = sanitize_text_field( $item['keywords'] );
-						return true;
-					}
-					return false;
-				} );
+					return ! empty( $item['keywords'] ) && is_numeric( $item['category'] );
+				});
+
+				$auto_categories = array_map(function( $item ) {
+					$item['keywords'] = sanitize_text_field( $item['keywords'] );
+					return $item;
+				}, $auto_categories );
 
 				$auto_categories = array_values( $auto_categories );
 

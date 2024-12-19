@@ -199,7 +199,7 @@
 										<div class="help-text pt-8">
 											<?php
 											printf(
-												// translators: %s is a placeholder for the auto categories tag.
+												// translators: %s is a placeholder for the auto categories tag, like [#auto_categories].
 												esc_html__( 'Automatically assign categories to your posts based on their titles. You need to add %s tag to the category field of your import to support this feature.', 'feedzy-rss-feeds' ),
 												'<strong>[#auto_categories]</strong>'
 											);
