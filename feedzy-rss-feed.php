@@ -265,6 +265,11 @@ function feedzy_import_job_logs( $name, $msg, $type ) {
 		return;
 	}
 	global $themeisle_log_event;
+
+	if ( ! empty( $themeisle_log_event ) && count( $themeisle_log_event ) >= 200 ) {
+		return;
+	}
+
 	$themeisle_log_event[] = $msg;
 }
 add_action( 'themeisle_log_event', 'feedzy_import_job_logs', 20, 3 );
