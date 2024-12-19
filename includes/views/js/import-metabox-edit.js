@@ -434,6 +434,14 @@
 			upSellNotice.fadeOut( 500,
 				function() {
 					upSellNotice.remove();
+					jQuery.post(
+						ajaxurl,
+						{
+							security: feedzy.ajax.security,
+							action: "feedzy",
+							_action: "remove_upsell_notice"
+						}
+					);
 				}
 			);
 		});
