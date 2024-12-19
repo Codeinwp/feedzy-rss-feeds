@@ -92,6 +92,8 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 		$_POST['feedzy_meta_data']['import_feed_limit']         = $num_items;
 		$_POST['custom_vars_key']                                    = array();
 		$_POST['custom_vars_value']                                  = array();
+		$_POST['feedzy_meta_data']['import_remove_duplicates']       = 'yes';
+		$_POST['feedzy_meta_data']['mark_duplicate_tag']             = '[#item_author]';
 
 		do_action( 'save_post_feedzy_imports', $p->ID, $p );
 		$this->assertEquals( $p->post_title, $random_name2 );
@@ -109,6 +111,8 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 		$import_featured_img  = get_post_meta( $p->ID, 'import_post_featured_img', true );
 		$import_custom_fields = get_post_meta( $p->ID, 'imports_custom_fields', true );
 		$import_feed_limit    = get_post_meta( $p->ID, 'import_feed_limit', true );
+		$remove_duplicates    = get_post_meta( $p->ID, 'import_remove_duplicates', true );
+		$mark_duplicate_tag   = get_post_meta( $p->ID, 'mark_duplicate_tag', true );
 
 		$this->assertEquals( $type, $import_post_type );
 		$this->assertEquals( 'category_' . $category_id, $import_post_term );
@@ -122,6 +126,8 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 		$this->assertEquals( '[#item_image]', $import_featured_img );
 		$this->assertEquals( '', $import_custom_fields );
 		$this->assertEquals( $num_items, $import_feed_limit );
+		$this->assertEquals( 'yes', $remove_duplicates );
+		$this->assertEquals( '[#item_author]', $mark_duplicate_tag );
 
 		$feed_src = str_replace( PHP_EOL, '', $urls );
 
@@ -231,6 +237,9 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 		$this->assertEquals( $category_id, $categories[0] );
 		$this->assertEquals( 1, get_post_meta( $created[0]->ID, 'feedzy', true ) );
 		$this->assertNotEmpty( get_post_meta( $created[0]->ID, 'feedzy_item_url', true ) );
+
+		// Check found duplicates items.
+		$this->assertNotEmpty( get_post_meta( $created[0]->ID, 'feedzy_' . md5( 'item_author' ), true ) );
 
 		// Check Post Delete
 		$this->assertNotEquals( false, wp_delete_post( $p->ID ) );
