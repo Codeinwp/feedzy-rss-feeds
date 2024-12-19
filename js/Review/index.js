@@ -24,7 +24,6 @@ const App = () => {
     const [ isOpen, setOpen ] = useState( true );
 
     const closeModal = async () => {
-        console.log( 'closeModal' );
         try {
             await apiFetch({
                 path: '/wp/v2/settings',
@@ -46,7 +45,7 @@ const App = () => {
 
     return (
         <Modal
-            title={ __( 'Congrats, You\'ve Reached an Impressive Milestone! 🎉', 'feedzy-rss-feeds' ) }
+            title={ __( 'Congrats, You\'ve Reached an Impressive Milestone!', 'feedzy-rss-feeds' ) + ' 🎉' }
             size="medium"
             shouldCloseOnClickOutside={ false }
             onRequestClose={ closeModal }
@@ -54,13 +53,14 @@ const App = () => {
             <p
                 dangerouslySetInnerHTML={{
                     __html: sprintf(
-                    // translators: %1$s is an opening strong tag, %2$s is a closing strong tag.
+                    // translators: %1$s is an opening strong tag, %2$s is a closing strong tag, %3$s is the number of posts imported.
                     __(
-                        "You've successfully imported %1$s more than 100 posts %2$s using Feedzy!",
+                        "You've successfully imported %1$s more than %3$s posts %2$s using Feedzy!",
                         'feedzy-rss-feeds'
                     ),
                     '<strong>', // %1$s
-                    '</strong>' // %2$s
+                    '</strong>', // %2$s
+                    100 // %3$s
                     ),
                 }}
             />
@@ -99,6 +99,6 @@ domReady( () => {
     const modalContainer = document.createElement( 'div' );
     modalContainer.id = 'fz-review-modal';
     document.body.appendChild( modalContainer );
-	const root = createRoot( document.getElementById( 'fz-review-modal' ) );
-	root.render( <App /> );
+    const root = createRoot( document.getElementById( 'fz-review-modal' ) );
+    root.render( <App /> );
 });
