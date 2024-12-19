@@ -138,6 +138,3 @@ span.feedzy-spinner {
 .feedzy-errors-dialog + .ui-widget-content button.feedzy-clear-logs {
 	margin-left: 0;
 }
-.feedzy-error.feedzy-api-error .notice-success {
-	color: #3c434a;
-}
