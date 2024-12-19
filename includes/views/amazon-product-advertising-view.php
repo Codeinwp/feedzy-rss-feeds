@@ -65,9 +65,6 @@
 						<input type="text" class="form-control" name="amazon_partner_tag" placeholder="<?php echo esc_attr( __( 'Partner Tag (store/tracking id)', 'feedzy-rss-feeds' ) ); ?>"/>
 						<div class="help-text"><?php esc_html_e( 'API Status: Invalid | Last check: Never', 'feedzy-rss-feeds' ); ?></div>
 					</div>
-					<div class="fz-input-group-right">
-						<button type="button" class="btn btn-outline-primary disabled" ><?php echo esc_html_x( 'Validate connection', 'Check and save action button', 'feedzy-rss-feeds' ); ?></button>
-					</div>
 				</div>
 			</div>
 		</div>
