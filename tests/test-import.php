@@ -32,7 +32,7 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 	 * @access  public
 	 * @dataProvider importDataProvider
 	 */
-	public function test_feedzy_imports( $random_name1, $random_name2, $urls, $magic_tags = '[#item_content]', $use_filter = false, $type = 'post' ) {
+	public function test_feedzy_imports( $random_name1, $random_name2, $urls, $magic_tags = '[#item_content]', $use_filter = false, $type = 'post', $check_duplicate = false ) {
 		do_action( 'init' );
 
 		$num_items = $this->import_limit;
@@ -92,8 +92,11 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 		$_POST['feedzy_meta_data']['import_feed_limit']         = $num_items;
 		$_POST['custom_vars_key']                                    = array();
 		$_POST['custom_vars_value']                                  = array();
-		$_POST['feedzy_meta_data']['import_remove_duplicates']       = 'yes';
-		$_POST['feedzy_meta_data']['mark_duplicate_tag']             = '[#item_author]';
+
+		if ( $check_duplicate ) {
+			$_POST['feedzy_meta_data']['import_remove_duplicates'] = 'yes';
+			$_POST['feedzy_meta_data']['mark_duplicate_tag']       = '[#item_author]';
+		}
 
 		do_action( 'save_post_feedzy_imports', $p->ID, $p );
 		$this->assertEquals( $p->post_title, $random_name2 );
@@ -111,8 +114,11 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 		$import_featured_img  = get_post_meta( $p->ID, 'import_post_featured_img', true );
 		$import_custom_fields = get_post_meta( $p->ID, 'imports_custom_fields', true );
 		$import_feed_limit    = get_post_meta( $p->ID, 'import_feed_limit', true );
-		$remove_duplicates    = get_post_meta( $p->ID, 'import_remove_duplicates', true );
-		$mark_duplicate_tag   = get_post_meta( $p->ID, 'mark_duplicate_tag', true );
+
+		if ( $check_duplicate ) {
+			$remove_duplicates  = get_post_meta( $p->ID, 'import_remove_duplicates', true );
+			$mark_duplicate_tag = get_post_meta( $p->ID, 'mark_duplicate_tag', true );
+		}
 
 		$this->assertEquals( $type, $import_post_type );
 		$this->assertEquals( 'category_' . $category_id, $import_post_term );
@@ -126,8 +132,11 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 		$this->assertEquals( '[#item_image]', $import_featured_img );
 		$this->assertEquals( '', $import_custom_fields );
 		$this->assertEquals( $num_items, $import_feed_limit );
-		$this->assertEquals( 'yes', $remove_duplicates );
-		$this->assertEquals( '[#item_author]', $mark_duplicate_tag );
+
+		if ( $check_duplicate ) {
+			$this->assertEquals( 'yes', $remove_duplicates );
+			$this->assertEquals( '[#item_author]', $mark_duplicate_tag );
+		}
 
 		$feed_src = str_replace( PHP_EOL, '', $urls );
 
@@ -239,7 +248,9 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 		$this->assertNotEmpty( get_post_meta( $created[0]->ID, 'feedzy_item_url', true ) );
 
 		// Check found duplicates items.
-		$this->assertNotEmpty( get_post_meta( $created[0]->ID, 'feedzy_' . md5( 'item_author' ), true ) );
+		if ( $check_duplicate ) {
+			$this->assertNotEmpty( get_post_meta( $created[0]->ID, 'feedzy_' . md5( 'item_author' ), true ) );
+		}
 
 		// Check Post Delete
 		$this->assertNotEquals( false, wp_delete_post( $p->ID ) );
@@ -377,6 +388,19 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 
 		remove_filter( 'feedzy_get_feed_array', [ $this, 'mock_feed_dates' ], 10, 5 );
 		update_option( 'gmt_offset', 0 ); // reset UTC
+	}
+
+	/**
+	 * Test check duplicate.
+	 */
+	public function test_check_duplicate() {
+		define( 'FEEDZY_PRO_ABSPATH', '' );
+		$function = new ReflectionFunction( 'feedzy_is_pro' );
+		$function->invokeArgs( array( false ) );
+
+		$post = $this->test_feedzy_imports( $this->get_rand_name(), $this->get_rand_name(), $this->get_two_rand_feeds(), '[#item_content]', false, 'post', true );
+
+		$this->assertNotEmpty( $post );
 	}
 
 	/**
