@@ -401,11 +401,11 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			$search  = $this->current_job->data->search;
 			$replace = $this->current_job->data->searchWith;
 
-			if ( preg_match( '/^\/.*\/[imsxuADU]*$/', $search ) ) {
-				return preg_replace( $search, $replace, $content );
+			if ( ! preg_match( '/^\/.*\/[imsxuADU]*$/', $search ) ) {
+				$search = '/' . $search . '/i';
 			}
 
-			return str_replace( $search, $replace, $content );
+			return preg_replace( $search, $replace, $content );
 		}
 
 		/**
