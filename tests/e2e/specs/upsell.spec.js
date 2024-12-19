@@ -65,5 +65,9 @@ test.describe( 'Upsell', () => {
         await page.locator('.fz-form-group:has( #feed-post-default-thumbnail )').hover({ force: true });
         upgradeAlert = page.locator('#feedzy-import-form a[href*="utm_campaign=fallback-image"]');
         await expect( upgradeAlert ).toBeVisible();
+
+        await page.locator('.fz-form-group:has( #feedzy_mark_duplicate )').hover({ force: true });
+        upgradeAlert = page.locator('#feedzy-import-form a[href*="utm_campaign=remove-duplicates"]');
+        await expect( upgradeAlert ).toBeVisible();
     } );
 });
