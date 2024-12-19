@@ -1397,7 +1397,7 @@ class Feedzy_Rss_Feeds_Import {
 		$filter_conditions        = get_post_meta( $job->ID, 'filter_conditions', true );
 		$import_post_author       = get_post_meta( $job->ID, 'import_post_author', true );
 		$mark_duplicate_tag       = get_post_meta( $job->ID, 'mark_duplicate_tag', true );
-		$mark_duplicate_tag       = ( defined( 'TI_UNIT_TESTING' ) || feedzy_is_pro() ) && ! empty( $mark_duplicate_tag ) ? preg_replace( '/[\[\]#]/', '', $mark_duplicate_tag ) : '';
+		$mark_duplicate_tag       = feedzy_is_pro() && ! empty( $mark_duplicate_tag ) ? preg_replace( '/[\[\]#]/', '', $mark_duplicate_tag ) : '';
 		$max                      = $import_feed_limit;
 
 		if ( empty( $filter_conditions ) ) {
@@ -2118,7 +2118,7 @@ class Feedzy_Rss_Feeds_Import {
 			update_post_meta( $new_post_id, 'feedzy_item_author', sanitize_text_field( $author ) );
 
 			// Verify that the `$mark_duplicate_tag` does not match `'item_url'` to ensure the condition applies only when a different tag is specified.
-			if ( 'item_url' !== $mark_duplicate_tag ) {
+			if ( $mark_duplicate_tag && 'item_url' !== $mark_duplicate_tag ) {
 				update_post_meta( $new_post_id, 'feedzy_' . $mark_duplicate_tag, $duplicate_tag_value );
 			}
 
