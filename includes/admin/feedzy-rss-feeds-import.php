@@ -161,6 +161,9 @@ class Feedzy_Rss_Feeds_Import {
 						'media_iframe_button' => __( 'Set default image', 'feedzy-rss-feeds' ),
 						'action_btn_text_1'   => __( 'Choose image', 'feedzy-rss-feeds' ),
 						'action_btn_text_2'   => __( 'Replace image', 'feedzy-rss-feeds' ),
+						'clearLogButton'      => __( 'Clear Log', 'feedzy-rss-feeds' ),
+						'okButton'            => __( 'Ok', 'feedzy-rss-feeds' ),
+						'removeErrorLogsMsg'  => __( 'Removed all error logs.', 'feedzy-rss-feeds' ),
 					),
 				)
 			);
@@ -869,7 +872,7 @@ class Feedzy_Rss_Feeds_Import {
 		$errors = $this->get_import_errors( $post_id );
 		// popup for errors found.
 		if ( ! empty( $errors ) ) {
-			$msg .= '<div class="feedzy-errors-found-' . $post_id . ' feedzy-dialog" title="' . __( 'Errors', 'feedzy-rss-feeds' ) . '">' . $errors . '</div>';
+			$msg .= '<div class="feedzy-errors-found-' . $post_id . ' feedzy-errors-dialog" title="' . __( 'Errors', 'feedzy-rss-feeds' ) . '" data-id="' . $post_id . '">' . $errors . '</div>';
 		}
 
 		// remember, cypress will work off the data-value attributes.
@@ -1068,6 +1071,9 @@ class Feedzy_Rss_Feeds_Import {
 				break;
 			case 'wizard_import_feed':
 				$this->wizard_import_feed();
+				break;
+			case 'clear_error_logs':
+				$this->clear_error_logs();
 				break;
 		}
 	}
@@ -1321,6 +1327,7 @@ class Feedzy_Rss_Feeds_Import {
 	 * @access  private
 	 */
 	private function run_job( $job, $max ) {
+		global $themeisle_log_event;
 		$source                   = get_post_meta( $job->ID, 'source', true );
 		$inc_key                  = get_post_meta( $job->ID, 'inc_key', true );
 		$exc_key                  = get_post_meta( $job->ID, 'exc_key', true );
@@ -2046,6 +2053,10 @@ class Feedzy_Rss_Feeds_Import {
 				$import_image_errors,
 				$count
 			);
+		}
+
+		if ( ! empty( $themeisle_log_event ) ) {
+			$import_errors = array_merge( $themeisle_log_event, $import_errors );
 		}
 		update_post_meta( $job->ID, 'import_errors', $import_errors );
 
@@ -3208,5 +3219,21 @@ class Feedzy_Rss_Feeds_Import {
 		$action_instance->set_raw_serialized_actions( $actions );
 		$action_instance->set_settings( $this->settings );
 		return $action_instance;
+	}
+
+	/**
+	 * Clear error logs.
+	 */
+	private function clear_error_logs() {
+		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
+		$id = ! empty( $_POST['id'] ) ? (int) $_POST['id'] : 0;
+		if ( $id ) {
+			delete_post_meta( $id, 'import_errors' );
+		}
+		wp_send_json(
+			array(
+				'status' => 1,
+			)
+		);
 	}
 }
