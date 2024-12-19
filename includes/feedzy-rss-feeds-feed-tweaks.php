@@ -567,3 +567,41 @@ function feedzy_show_import_tour() {
 	}
 	return false;
 }
+
+/**
+ * Show review notice.
+ *
+ * @return bool
+ */
+function feedzy_show_review_notice() {
+	$has_dismissed = get_option( 'feedzy_review_notice', 'no' );
+
+	if ( 'yes' === $has_dismissed ) {
+		return false;
+	}
+
+	$install_date = get_option( 'feedzy_rss_feeds_install', 0 );
+	$days_since   = ( time() - $install_date ) / DAY_IN_SECONDS;
+
+	if ( $days_since < 7 ) {
+		return false;
+	}
+
+	$args = array(
+		'post_type'      => 'feedzy_imports',
+		'post_status'    => 'publish',
+		'posts_per_page' => 1,
+		'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+			array(
+				'key'     => 'imported_items_count',
+				'value'   => 100,
+				'type'    => 'numeric',
+				'compare' => '>='
+			)
+		)
+	);
+
+	$imported_posts = new WP_Query( $args );
+
+	return $imported_posts->have_posts();
+}
