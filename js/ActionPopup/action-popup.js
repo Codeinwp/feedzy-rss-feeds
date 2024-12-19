@@ -325,9 +325,9 @@ const ActionModal = () => {
 											{
 												'item_image' === shortCode ? ([
 													feedzyData.isPro && ( feedzyData.isBusinessPlan || feedzyData.isAgencyPlan ) ? (
-														<li key="action-1" onClick={ () => addAction('fz_image') }>{__( 'Generate with ChatGPT', 'feedzy-rss-feeds' )}</li>
+														<li key="action-1" onClick={ () => addAction('fz_image') }>{__( 'Generate with OpenAI', 'feedzy-rss-feeds' )}</li>
 													) : (
-														<li key="action-1" onClick={ () => addAction('fz_image') }>{__( 'Generate with ChatGPT', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+														<li key="action-1" onClick={ () => addAction('fz_image') }>{__( 'Generate with OpenAI', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
 													)]
 												) : ([
 													<li key="action-2" onClick={ () => addAction('trim') }>{__( 'Trim Content', 'feedzy-rss-feeds' )}</li>,
