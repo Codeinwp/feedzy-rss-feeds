@@ -117,7 +117,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 								<TextControl
 									type="text"
 									label={__( 'Search', 'feedzy-rss-feeds' )}
-									placeholder={__( 'Enter term', 'feedzy-rss-feeds' )}
+									placeholder={__( 'Enter term or regex', 'feedzy-rss-feeds' )}
 									value={ item.data.search ? unescape(item.data.search.replaceAll('&#039;', '\'')) : '' }
 									onChange={ ( currentValue ) => propRef.onChangeHandler( { 'index': loopIndex, 'search': currentValue ?? '' } ) }
 								/>
