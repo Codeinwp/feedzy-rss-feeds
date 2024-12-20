@@ -7,8 +7,13 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
-// phpcs:ignore WordPress.Security.NonceVerification
-$page_title = isset( $_GET['page'] ) && 'feedzy-support' === $_GET['page'] ? __( 'Support', 'feedzy-rss-feeds' ) : __( 'Settings', 'feedzy-rss-feeds' );
+// phpcs:disable WordPress.Security.NonceVerification
+$page_title = __( 'Settings', 'feedzy-rss-feeds' );
+if ( isset( $_GET['page'] ) && 'feedzy-support' === $_GET['page'] ) {
+	$page_title = __( 'Support', 'feedzy-rss-feeds' );
+} elseif ( isset( $_GET['page'] ) && 'feedzy-integration' === $_GET['page'] ) {
+	$page_title = __( 'Integration', 'feedzy-rss-feeds' );
+}
 ?>
 <div class="feedzy-header">
 	<div class="feedzy-container">

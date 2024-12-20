@@ -21,6 +21,7 @@ js/FeedzyBlock
 js/Onboarding/
 js/ActionPopup/
 js/FeedBack/
+js/Review/
 webpack.config.js
 dist
 cypress

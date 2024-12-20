@@ -162,8 +162,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$this->add_banner_anchor();
 		}
 
-		if ( 'feedzy_page_feedzy-settings' === $screen->base ) {
-			if ( ! did_action( 'wp_enqueue_media' ) ) {
+		if ( 'feedzy_page_feedzy-settings' === $screen->base || 'feedzy_page_feedzy-integration' === $screen->base ) {
+			if ( ! did_action( 'wp_enqueue_media' ) && 'feedzy_page_feedzy-settings' === $screen->base ) {
 				wp_enqueue_media();
 			}
 			wp_enqueue_script( $this->plugin_name . '_setting', FEEDZY_ABSURL . 'js/feedzy-setting.js', array( 'jquery' ), $this->version, true );
@@ -245,6 +245,12 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			);
 
 			wp_set_script_translations( $this->plugin_name . '_feedback', 'feedzy-rss-feeds' );
+		}
+
+		if ( 'feedzy_imports' === $screen->post_type && 'edit' === $screen->base && feedzy_show_review_notice() ) {
+			$asset_file = include FEEDZY_ABSPATH . '/build/review/index.asset.php';
+			wp_enqueue_script( $this->plugin_name . '_review', FEEDZY_ABSURL . 'build/review/index.js', $asset_file['dependencies'], $asset_file['version'], true );
+			wp_set_script_translations( $this->plugin_name . '_review', 'feedzy-rss-feeds' );
 		}
 
 		wp_enqueue_style( $this->plugin_name . '-settings', FEEDZY_ABSURL . 'css/settings.css', array(), $this->version );
@@ -856,6 +862,17 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		);
 		add_submenu_page(
 			'feedzy-admin-menu',
+			__( 'Integration', 'feedzy-rss-feeds' ),
+			__( 'Integration', 'feedzy-rss-feeds' ),
+			'manage_options',
+			'feedzy-integration',
+			array(
+				$this,
+				'feedzy_integration_page',
+			)
+		);
+		add_submenu_page(
+			'feedzy-admin-menu',
 			__( 'Support', 'feedzy-rss-feeds' ),
 			__( 'Support', 'feedzy-rss-feeds' ) . '<span class="dashicons dashicons-editor-help more-features-icon" style="width: 17px; height: 17px; margin-left: 4px; color: #ffca54; font-size: 17px; vertical-align: -3px;"></span>',
 			'manage_options',
@@ -920,6 +937,21 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$settings = apply_filters( 'feedzy_get_settings', array() );
 		include FEEDZY_ABSPATH . '/includes/layouts/settings.php';
+	}
+
+	/**
+	 * Method to register the integration page.
+	 *
+	 * @access  public
+	 */
+	public function feedzy_integration_page() {
+		if ( isset( $_POST['feedzy-integration-submit'] ) && isset( $_POST['tab'] ) && wp_verify_nonce( filter_input( INPUT_POST, 'nonce', FILTER_UNSAFE_RAW ), filter_input( INPUT_POST, 'tab', FILTER_UNSAFE_RAW ) ) ) {
+			$this->save_settings();
+			$this->notice = __( 'Your settings were saved.', 'feedzy-rss-feeds' );
+		}
+
+		$settings = apply_filters( 'feedzy_get_settings', array() );
+		include FEEDZY_ABSPATH . '/includes/layouts/integration.php';
 	}
 
 	/**
@@ -1896,6 +1928,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			'wordaiStatus'       => false,
 			'openaiStatus'       => false,
 			'amazonStatus'       => false,
+			'openRouterStatus'   => false,
 		);
 
 		if ( ! feedzy_is_pro() ) {
@@ -1914,6 +1947,12 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( isset( $pro_options['openai_licence'] ) && 'yes' === $pro_options['openai_licence'] ) {
 			if ( apply_filters( 'feedzy_is_license_of_type', false, 'business' ) || apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) {
 				$data['openaiStatus'] = true;
+			}
+		}
+
+		if ( isset( $pro_options['openrouter_licence'] ) && 'yes' === $pro_options['openrouter_licence'] ) {
+			if ( apply_filters( 'feedzy_is_license_of_type', false, 'business' ) || apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) {
+				$data['openRouterStatus'] = true;
 			}
 		}
 
@@ -2250,5 +2289,20 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$target_lang = apply_filters( 'feedzy_available_automatically_translation_language', $target_lang );
 
 		return $target_lang;
+	}
+
+	/**
+	 * Register settings.
+	 */
+	public function register_settings() {
+		register_setting(
+			'feedzy',
+			'feedzy_review_notice',
+			array(
+				'type'         => 'string',
+				'default'      => 'no',
+				'show_in_rest' => true
+			)
+		);
 	}
 }

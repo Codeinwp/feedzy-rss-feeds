@@ -202,6 +202,7 @@ class Feedzy_Rss_Feeds {
 		self::$instance->loader->add_filter( 'post_row_actions', self::$instance->admin, 'add_feedzy_category_actions', 10, 2 );
 		self::$instance->loader->add_filter( 'admin_footer', self::$instance->admin, 'handle_upgrade_submenu' );
 		self::$instance->loader->add_action( 'current_screen', self::$instance->admin, 'handle_legacy' );
+		self::$instance->loader->add_action( 'init', self::$instance->admin, 'register_settings' );
 
 		// do not load this with the loader as this will need a corresponding remove_filter also.
 		add_filter( 'update_post_metadata', array( self::$instance->admin, 'validate_category_feeds' ), 10, 5 );
@@ -240,6 +241,7 @@ class Feedzy_Rss_Feeds {
 
 			self::$instance->loader->add_filter( 'feedzy_items_limit', $plugin_import, 'items_limit', 10, 2 );
 			self::$instance->loader->add_filter( 'feedzy_settings_tabs', $plugin_import, 'settings_tabs', 10, 1 );
+			self::$instance->loader->add_filter( 'feedzy_integration_tabs', $plugin_import, 'integration_tabs', 10, 1 );
 			self::$instance->loader->add_filter( 'redirect_post_location', $plugin_import, 'redirect_post_location', 10, 2 );
 			self::$instance->loader->add_filter( 'manage_feedzy_imports_posts_columns', $plugin_import, 'feedzy_import_columns' );
 			self::$instance->loader->add_action( 'admin_notices', $plugin_import, 'admin_notices' );

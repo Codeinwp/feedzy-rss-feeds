@@ -327,6 +327,34 @@
 			}
 		})
 
+		// Add magic tag support for post taxonomy field.
+		$("#feedzy_post_author.fz-chosen-custom-tag").on("chosen:no_results", function() {
+			var select = $(this);
+			var search = select.siblings(".chosen-container").find(".chosen-search-input");
+			var text = htmlEntities(search.val().replace(/\s+/g, ''));
+			// dont add if it already exists
+			if (! select.find('option[value=' + escapeSelector(search.val().replace(/\s+/g, '')) + ']').length) {
+				var btn = $('<li class="active-result highlighted">' + text + '</li>');
+				btn.on("mousedown mouseup click", function(e) {
+					var arr = select.val() || [];
+					select.append("<option value='" + text + "' selected>" + text + "</option>");
+					select.trigger("chosen:updated").trigger('chosen:close');
+					e.stopImmediatePropagation();
+					return false;
+				});
+				search.on("keydown", function(e) {
+					if (e.which == 13) {
+						btn.click();
+						return false;
+					}
+				});
+				select.siblings(".chosen-container").find(".no-results").replaceWith(btn);
+				select.siblings(".chosen-container").find(".chosen-results").append('<li class="helper-text">' + feedzy.i10n.author_helper + '</li>');
+			} else {
+				select.siblings(".chosen-container").find(".no-results").replaceWith('');
+			}
+		})
+
 		/*
          Form
          */

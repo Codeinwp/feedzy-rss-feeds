@@ -161,6 +161,7 @@ class Feedzy_Rss_Feeds_Import {
 						'media_iframe_button' => __( 'Set default image', 'feedzy-rss-feeds' ),
 						'action_btn_text_1'   => __( 'Choose image', 'feedzy-rss-feeds' ),
 						'action_btn_text_2'   => __( 'Replace image', 'feedzy-rss-feeds' ),
+						'author_helper'       => __( 'If the author you are looking for isn\'t found, you can input the author username.', 'feedzy-rss-feeds' ),
 					),
 				)
 			);
@@ -326,6 +327,11 @@ class Feedzy_Rss_Feeds_Import {
 		$post_types            = get_post_types( '', 'names' );
 		$post_types            = array_diff( $post_types, array( 'feedzy_imports', 'feedzy_categories' ) );
 		$published_status      = array( 'publish', 'draft' );
+		$authors = get_users( array( 'number' => 100 ) );
+		$authors_array = array();
+		foreach ( $authors as $author ) {
+			$authors_array[] = $author->user_login;
+		}
 		$keyword_filter_fields = array( __( 'Title', 'feedzy-rss-feeds' ) );
 		if ( feedzy_is_pro() ) {
 			$keyword_filter_fields = array_merge(
@@ -364,6 +370,21 @@ class Feedzy_Rss_Feeds_Import {
 		$import_auto_translation  = get_post_meta( $post->ID, 'import_auto_translation', true );
 		$import_auto_translation  = 'yes' === $import_auto_translation ? 'checked' : '';
 		$import_translation_lang  = get_post_meta( $post->ID, 'import_auto_translation_lang', true );
+		$import_post_author       = get_post_meta( $post->ID, 'import_post_author', true );
+
+		/**
+		 * This code snippet retrieves the post author for backward compatibility for existing imports as well as for any new imports.
+		 * It checks if the $import_post_author variable is not empty, otherwise it defaults to the current post's author.
+		 */
+		$import_post_author = ! empty( $import_post_author ) ? $import_post_author : $post->post_author;
+		$author = get_user_by( 'ID', $import_post_author );
+		if ( $author ) {
+			$import_post_author = $author->user_login;
+			if ( ! in_array( $import_post_author, $authors_array, true ) ) {
+				$authors_array[] = $import_post_author;
+			}
+		}
+
 		// default values so that post is not created empty.
 		if ( empty( $import_title ) ) {
 			$import_title = '[[{"value":"%5B%7B%22id%22%3A%22%22%2C%22tag%22%3A%22item_title%22%2C%22data%22%3A%7B%7D%7D%5D"}]]';
@@ -537,6 +558,17 @@ class Feedzy_Rss_Feeds_Import {
 			$data_meta['import_auto_translation'] = isset( $data_meta['import_auto_translation'] ) ? $data_meta['import_auto_translation'] : 'no';
 			// Check feeds external image URL checkbox checked OR not.
 			$data_meta['import_use_external_image'] = isset( $data_meta['import_use_external_image'] ) ? $data_meta['import_use_external_image'] : 'no';
+
+			// $data_meta['feedzy_post_author'] should be the author username. We convert it to the author ID.
+			if ( ! empty( $data_meta['import_post_author'] ) ) {
+				$author = get_user_by( 'login', $data_meta['import_post_author'] );
+				if ( $author ) {
+					$data_meta['import_post_author'] = $author->ID;
+				} else {
+					$data_meta['import_post_author'] = '';
+				}
+			}
+
 			foreach ( $data_meta as $key => $value ) {
 				$value = is_array( $value ) ? implode( ',', $value ) : implode( ',', (array) $value );
 				if ( 'source' === $key ) {
@@ -1361,6 +1393,7 @@ class Feedzy_Rss_Feeds_Import {
 		$import_auto_translation  = get_post_meta( $job->ID, 'import_auto_translation', true );
 		$import_auto_translation  = $this->feedzy_is_agency() && 'yes' === $import_auto_translation ? true : false;
 		$import_translation_lang  = get_post_meta( $job->ID, 'import_auto_translation_lang', true );
+		$import_post_author       = get_post_meta( $job->ID, 'import_post_author', true );
 		$max                      = $import_feed_limit;
 
 		if ( metadata_exists( 'post', $job->ID, 'import_post_status' ) ) {
@@ -1793,6 +1826,8 @@ class Feedzy_Rss_Feeds_Import {
 				$item_post_excerpt = apply_filters( 'feedzy_parse_custom_tags', $item_post_excerpt, $item_obj );
 			}
 
+			$post_author = ! empty( $import_post_author ) ? $import_post_author : $job->post_author;
+
 			$new_post = apply_filters(
 				'feedzy_insert_post_args',
 				array(
@@ -1802,7 +1837,7 @@ class Feedzy_Rss_Feeds_Import {
 					'post_date'    => $post_date,
 					'post_status'  => $import_post_status,
 					'post_excerpt' => $item_post_excerpt,
-					'post_author'  => $job->post_author,
+					'post_author'  => $post_author,
 				),
 				$item_obj,
 				$post_title,
@@ -1889,8 +1924,6 @@ class Feedzy_Rss_Feeds_Import {
 			}
 
 			if ( $import_post_term !== 'none' && strpos( $import_post_term, '_' ) > 0 ) {
-				// let's get the slug of the uncategorized category, even if it renamed.
-				$uncategorized    = get_category( 1 );
 				$terms            = explode( ',', $import_post_term );
 				$terms            = array_filter(
 					$terms,
@@ -1904,30 +1937,34 @@ class Feedzy_Rss_Feeds_Import {
 						return $term;
 					}
 				);
+
 				$default_category = (int) get_option( 'default_category' );
+				$has_default      = false;
+
 				foreach ( $terms as $term ) {
 					// this handles both x_2, where 2 is the term id and x is the taxonomy AND x_2_3_4 where 4 is the term id and the taxonomy name is "x 2 3 4".
 					$array    = explode( '_', $term );
 					$term_id  = array_pop( $array );
 					$taxonomy = implode( '_', $array );
 
-					// uncategorized
-					// 1. may be the unmodified category ID 1
-					// 2. may have been recreated ('uncategorized') and may have a different slug in different languages.
-					if ( $default_category === $uncategorized->term_id ) {
-						wp_remove_object_terms(
-							$new_post_id, apply_filters(
-								'feedzy_uncategorized', array(
-									1,
-									'uncategorized',
-									$uncategorized->slug,
-								), $job->ID
-							), 'category'
-						);
+					// If the term is not default, flag it.
+					if ( $default_category === (int) $term_id ) {
+						$has_default = true;
 					}
 
 					$result = wp_set_object_terms( $new_post_id, intval( $term_id ), $taxonomy, true );
 					do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'After creating post in %s/%d, result = %s', $taxonomy, $term_id, print_r( $result, true ) ), 'debug', __FILE__, __LINE__ );
+				}
+
+				// If the default category is not used, remove it.
+				if ( ! $has_default ) {
+					wp_remove_object_terms(
+						$new_post_id, apply_filters(
+							'feedzy_uncategorized', array(
+								$default_category,
+							), $job->ID
+						), 'category'
+					);
 				}
 			}
 
@@ -2408,7 +2445,7 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	public function admin_notices() {
 		$screen  = get_current_screen();
-		$allowed = array( 'edit-feedzy_categories', 'edit-feedzy_imports', 'feedzy-rss_page_feedzy-settings' );
+		$allowed = array( 'edit-feedzy_categories', 'edit-feedzy_imports', 'feedzy-rss_page_feedzy-settings', 'feedzy-rss_page_feedzy-integration' );
 		// only show in the feedzy screens.
 		if ( ! in_array( $screen->id, $allowed, true ) ) {
 			return;
@@ -2531,15 +2568,30 @@ class Feedzy_Rss_Feeds_Import {
 	 * @access  public
 	 */
 	public function settings_tabs( $tabs ) {
-		$tabs['misc']   = __( 'Miscellaneous', 'feedzy-rss-feeds' );
+		$tabs['misc'] = __( 'Miscellaneous', 'feedzy-rss-feeds' );
+
+		return $tabs;
+	}
+
+	/**
+	 * Add integration tab.
+	 *
+	 * @since   3.0.0
+	 * @access  public
+	 */
+	public function integration_tabs( $tabs ) {
 		if ( $this->feedzy_is_business() || $this->feedzy_is_agency() ) {
-			$tabs['openai'] = __( 'OpenAI', 'feedzy-rss-feeds' );
+			$tabs['openai']     = __( 'OpenAI', 'feedzy-rss-feeds' );
+			$tabs['openrouter'] = __( 'OpenRouter', 'feedzy-rss-feeds' );
 		}
-		if ( ! feedzy_is_pro() ) {
-			$tabs['wordai']       = sprintf( '%s <span class="pro-label">PRO</span>', __( 'WordAi', 'feedzy-rss-feeds' ) );
+		if ( ! feedzy_is_pro() || ! apply_filters( 'feedzy_is_license_of_type', false, 'business' ) ) {
+			$tabs['openai'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'OpenAI', 'feedzy-rss-feeds' ) );
+			if ( ! isset( $tabs['openrouter'] ) ) {
+				$tabs['openrouter'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'OpenRouter', 'feedzy-rss-feeds' ) );
+			}
 			$tabs['spinnerchief'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'SpinnerChief', 'feedzy-rss-feeds' ) );
 			$tabs['amazon-product-advertising'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'Amazon Product Advertising', 'feedzy-rss-feeds' ) );
-			$tabs['openai'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'OpenAI', 'feedzy-rss-feeds' ) );
+			$tabs['wordai']       = sprintf( '%s <span class="pro-label">PRO</span>', __( 'WordAi', 'feedzy-rss-feeds' ) );
 		}
 
 		return $tabs;
@@ -2582,7 +2634,8 @@ class Feedzy_Rss_Feeds_Import {
 			case 'spinnerchief':
 			case 'amazon-product-advertising':
 			case 'openai':
-				if ( ! feedzy_is_pro() ) {
+			case 'openrouter':
+				if ( ! feedzy_is_pro() || ! apply_filters( 'feedzy_is_license_of_type', false, 'business' ) ) {
 					$file = FEEDZY_ABSPATH . '/includes/views/' . $name . '-view.php';
 				} else {
 					$file = apply_filters( 'feedzy_render_view', $file, $name );

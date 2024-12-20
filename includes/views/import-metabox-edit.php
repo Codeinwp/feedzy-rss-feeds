@@ -344,10 +344,9 @@ global $post;
 									<?php endif; ?>
 									<div class="help-text pt-8">
 										<?php
-											// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
 											echo wp_kses_post(
 												sprintf(
-													// translators: %1$s: magic tag, %2$s: opening anchor tag, %3$s: closing anchor tag
+													// translators: %1$s: magic tag, %2$s: opening anchor tag, %3$s: closing anchor tag.
 													__( 'You can automatically create categories with a magic tag %1$s or use custom tag parsing %2$s Read More %3$s .', 'feedzy-rss-feeds' ),
 													'<strong>[#item_categories]</strong>',
 													'<a href="' . esc_url( 'https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#dynamic-post-taxonomy' ) . '" target="_blank">',
@@ -572,6 +571,26 @@ global $post;
 									<h4 class="h4"><?php esc_html_e( 'Post Author', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
 								</div>
 								<div class="fz-right">
+									<div class="fz-form-group">
+										<label class="form-label"><?php esc_html_e( 'The post author for the imported posts.', 'feedzy-rss-feeds' ); ?></label>
+										<div class="mx-320">
+											<select id="feedzy_post_author" class="form-control feedzy-chosen fz-chosen-custom-tag" name="feedzy_meta_data[import_post_author]">
+												<?php
+												foreach ( $authors_array as $_author ) {
+													?>
+												<option value="<?php echo esc_attr( $_author ); ?>" <?php selected( $import_post_author, $_author ); ?>>
+													<?php echo esc_html( $_author ); ?></option>
+													<?php
+												}
+												?>
+											</select>
+										</div>
+										<div class="help-text pt-8 pb-8">
+											<?php
+												esc_html_e( 'Select the author to assign to the imported posts. By default, this will be set to your current account. Note that this choice is independent of the options below, which control how the source author details are displayed.', 'feedzy-rss-feeds' );
+											?>
+										</div>
+									</div>
 									<div class="fz-form-group">
 										<div class="fz-form-switch">
 											<input id="feedzy-toggle_author_admin" name="feedzy_meta_data[import_link_author_admin]"
