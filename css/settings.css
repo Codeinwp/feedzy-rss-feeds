@@ -615,6 +615,15 @@ fieldset[disabled] .form-control {
 	background: #D0D4D7;
 }
 
+.fz-form-wrap .chosen-container .chosen-results li.helper-text {
+	display: block;
+	background: white;
+	cursor: help;
+	font-size: 12px;
+	text-align: center;
+	color: #757575;
+}
+
 .date-range-group{
 	display: flex;
 	align-items: flex-end;
@@ -2448,4 +2457,12 @@ li.draggable-item .components-panel__body-toggle.components-button{
 
 .fz-panel-tab .fz-panel-tab__content .components-base-control .components-datetime__timezone {
 	display: inline-block;
+}
+.fz-prompt-button {
+	gap: 7px;
+	display: flex;
+	margin-top: 10px;
+}
+.fz-prompt-button button.components-button {
+	height: 28px;
 }

@@ -165,15 +165,54 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 	}
 
 	if ( 'chat_gpt_rewrite' === item.id ) {
+		let defaultProvider = 'openai';
+		let providerLicenseStatus = false;
+		if ( feedzyData.apiLicenseStatus.openaiStatus ) {
+			defaultProvider = 'openai';
+		} else if ( feedzyData.apiLicenseStatus.openRouterStatus ) {
+			defaultProvider = 'openrouter';
+		}
+
+		let selectedProvider = item.data.aiProvider || defaultProvider;
+		if ( 'openai' === selectedProvider ) {
+			providerLicenseStatus = feedzyData.apiLicenseStatus.openaiStatus;
+		} else if ( 'openrouter' === selectedProvider ) {
+			providerLicenseStatus = feedzyData.apiLicenseStatus.openRouterStatus;
+		}
 		return(
 			<li className="fz-action-control fz-chat-cpt-action" data-counter={counter}>
 				<div className="fz-action-event">
-					{feedzyData.isPro && (feedzyData.isBusinessPlan || feedzyData.isAgencyPlan) && !feedzyData.apiLicenseStatus.openaiStatus && (feedzyData.isHighPrivileges ? <span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=openai"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> : <span className="error-message">{__( 'Invalid API Key, Please contact the administrator', 'feedzy-rss-feeds' )}</span> )}
-					<PanelBody title={ __( 'Paraphrase with ChatGPT', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false }>
+					{feedzyData.isPro && (feedzyData.isBusinessPlan || feedzyData.isAgencyPlan) && !providerLicenseStatus && (feedzyData.isHighPrivileges ? <span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href={`admin.php?page=feedzy-integration&tab=${item.data.aiProvider || defaultProvider}`}><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> : <span className="error-message">{__( 'Invalid API Key, Please contact the administrator', 'feedzy-rss-feeds' )}</span> )}
+					<PanelBody title={ __( 'Rewrite with AI', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false }>
 						<PanelRow>
 							<UpgradeNotice higherPlanNotice={!feedzyData.isBusinessPlan && !feedzyData.isAgencyPlan} utmCampaign="action-paraphrase-chatgpt"/>
-							<BaseControl>
+							<BaseControl
+								__nextHasNoMarginBottom
+								className="mb-20"
+							>
+								<SelectControl
+									__nextHasNoMarginBottom
+									label={__('Choose an AI Provider', 'feedzy-rss-feeds')}
+									value={ selectedProvider }
+									options={[
+										{
+											label: __('OpenAI', 'feedzy-rss-feeds'),
+											value: 'openai'
+										},
+										{
+											label: __('OpenRouter', 'feedzy-rss-feeds'),
+											value: 'openrouter'
+										},
+									]}
+									onChange={ ( currentValue ) => propRef.onChangeHandler( { 'index': loopIndex, 'aiProvider': currentValue ?? '' } ) }
+									disabled={!feedzyData.isPro}
+								/>
+							</BaseControl>
+							<BaseControl
+								__nextHasNoMarginBottom
+							>
 								<TextareaControl
+									__nextHasNoMarginBottom
 									label={ __( 'Main Prompt', 'feedzy-rss-feeds' ) }
 									help={
 										sprintf(
@@ -183,31 +222,31 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 										)
 									}
 									value={ item.data.ChatGPT ? unescape(item.data.ChatGPT.replaceAll('&#039;', '\'')) : '' }
-									onChange={ ( currentValue ) => propRef.onChangeHandler( { 'index': loopIndex, 'ChatGPT': currentValue ?? '' } ) }
-									disabled={!feedzyData.isPro || !feedzyData.apiLicenseStatus.openaiStatus}
+									onChange={ ( currentValue ) => propRef.onChangeHandler( { 'index': loopIndex, 'ChatGPT': currentValue ?? '', aiProvider: selectedProvider } ) }
+									disabled={!feedzyData.isPro || !providerLicenseStatus}
 								/>
+								<div className="fz-prompt-button">
+									<Button
+										variant="secondary"
+										onClick={ () => propRef.updatePromptText( { 'index': loopIndex, 'type': 'summarize' } ) }
+										disabled={!feedzyData.isPro || !providerLicenseStatus}
+										>{ __( 'Summarize', 'feedzy-rss-feeds' ) }
+									</Button>
+									<Button
+										variant="secondary"
+										onClick={ () => propRef.updatePromptText( { 'index': loopIndex, 'type': 'paraphase' } ) }
+										disabled={!feedzyData.isPro || !providerLicenseStatus}
+									>{ __( 'Paraphase', 'feedzy-rss-feeds' ) }
+									</Button>
+									<Button
+										variant="secondary"
+										onClick={ () => propRef.updatePromptText( { 'index': loopIndex, 'type': 'change_tone' } ) }
+										disabled={!feedzyData.isPro || !providerLicenseStatus}
+										>{ __( 'Change tone', 'feedzy-rss-feeds' ) }
+									</Button>
+								</div>
 							</BaseControl>
 						</PanelRow>
-					</PanelBody>
-				</div>
-				<div className="fz-trash-action">
-					<button type="button" onClick={() => { propRef.removeCallback(loopIndex) }}>
-						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-							<path d="M20 5.0002H14.3C14.3 3.7002 13.3 2.7002 12 2.7002C10.7 2.7002 9.7 3.7002 9.7 5.0002H4V7.0002H5.5V7.3002L7.2 18.4002C7.3 19.4002 8.2 20.1002 9.2 20.1002H14.9C15.9 20.1002 16.7 19.4002 16.9 18.4002L18.6 7.3002V7.0002H20V5.0002ZM16.8 7.0002L15.1 18.1002C15.1 18.2002 15 18.3002 14.8 18.3002H9.1C9 18.3002 8.8 18.2002 8.8 18.1002L7.2 7.0002H16.8Z" fill="black"/>
-						</svg>
-					</button>
-				</div>
-			</li>
-		);
-	}
-
-	if ( 'fz_summarize' === item.id ) {
-		return(
-			<li className="fz-action-control" data-counter={counter}>
-				<div className="fz-action-event">
-					{feedzyData.isPro && (feedzyData.isBusinessPlan || feedzyData.isAgencyPlan) && !feedzyData.apiLicenseStatus.openaiStatus && (feedzyData.isHighPrivileges ? <span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=openai"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> : <span className="error-message">{__( 'Invalid API Key, Please contact the administrator', 'feedzy-rss-feeds' )}</span> )}
-					<PanelBody title={ __( 'Summarize with ChatGPT', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false } className="fz-hide-icon">
-						<UpgradeNotice higherPlanNotice={!feedzyData.isBusinessPlan && !feedzyData.isAgencyPlan} utmCampaign="action-summarize-chatgpt"/>
 					</PanelBody>
 				</div>
 				<div className="fz-trash-action">
@@ -258,7 +297,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 		return(
 			<li className="fz-action-control" data-counter={counter}>
 				<div className="fz-action-event">
-					{(feedzyData.isPro && feedzyData.isAgencyPlan) && !feedzyData.apiLicenseStatus.spinnerChiefStatus && (feedzyData.isHighPrivileges ? <span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=spinnerchief"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> : <span className="error-message">{__( 'Invalid API Key, Please contact the administrator', 'feedzy-rss-feeds' )}</span> )}
+					{(feedzyData.isPro && feedzyData.isAgencyPlan) && !feedzyData.apiLicenseStatus.spinnerChiefStatus && (feedzyData.isHighPrivileges ? <span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-integration&tab=spinnerchief"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> : <span className="error-message">{__( 'Invalid API Key, Please contact the administrator', 'feedzy-rss-feeds' )}</span> )}
 					<PanelBody title={ __( 'Spin using SpinnerChief', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false } className="fz-hide-icon">
 						<UpgradeNotice higherPlanNotice={!feedzyData.isAgencyPlan} utmCampaign="action-spinnerchief"/>
 					</PanelBody>
@@ -278,7 +317,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 		return(
 			<li className="fz-action-control" data-counter={counter}>
 				<div className="fz-action-event">
-					{(feedzyData.isPro && feedzyData.isAgencyPlan) && !feedzyData.apiLicenseStatus.wordaiStatus && (feedzyData.isHighPrivileges ? <span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=wordai"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> : <span className="error-message">{__( 'Invalid API Key, Please contact the administrator', 'feedzy-rss-feeds' )}</span> )}
+					{(feedzyData.isPro && feedzyData.isAgencyPlan) && !feedzyData.apiLicenseStatus.wordaiStatus && (feedzyData.isHighPrivileges ? <span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-integration&tab=wordai"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> : <span className="error-message">{__( 'Invalid API Key, Please contact the administrator', 'feedzy-rss-feeds' )}</span> )}
 					<PanelBody title={ __( 'Spin using WordAI', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false } className="fz-hide-icon">
 						<UpgradeNotice higherPlanNotice={!feedzyData.isAgencyPlan} utmCampaign="action-wordai"/>
 					</PanelBody>
@@ -298,8 +337,8 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 		return(
 			<li className="fz-action-control fz-chat-cpt-action" data-counter={counter}>
 				<div className="fz-action-event">
-					{feedzyData.isPro && (feedzyData.isBusinessPlan || feedzyData.isAgencyPlan) && !feedzyData.apiLicenseStatus.openaiStatus && (feedzyData.isHighPrivileges ? <span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-settings&tab=openai"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> : <span className="error-message">{__( 'Invalid API Key, Please contact the administrator', 'feedzy-rss-feeds' )}</span> )}
-					<PanelBody title={ __( 'Generate Image with ChatGPT', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false }>
+					{feedzyData.isPro && (feedzyData.isBusinessPlan || feedzyData.isAgencyPlan) && !feedzyData.apiLicenseStatus.openaiStatus && (feedzyData.isHighPrivileges ? <span className="error-message">{__( 'Invalid API Key', 'feedzy-rss-feeds' )} <ExternalLink href="admin.php?page=feedzy-integration&tab=openai"><Icon icon={external} size={16} fill="#F00"/></ExternalLink></span> : <span className="error-message">{__( 'Invalid API Key, Please contact the administrator', 'feedzy-rss-feeds' )}</span> )}
+					<PanelBody title={ __( 'Generate Image with OpenAI', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false }>
 						<PanelRow>
 							<UpgradeNotice higherPlanNotice={!feedzyData.isBusinessPlan && !feedzyData.isAgencyPlan} utmCampaign="action-generate-image-chatgpt"/>
 							<BaseControl>
@@ -308,6 +347,18 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 									label={ __( 'Generate only for missing images', 'feedzy-rss-feeds' ) }
 									onChange={ ( currentValue ) => propRef.onChangeHandler( { 'index': loopIndex, 'generateOnlyMissingImages': currentValue ?? '' } ) }
 									help={ __( 'Only generate the featured image if it\'s missing in the source XML RSS Feed.', 'feedzy-rss-feeds' ) }
+									disabled={!feedzyData.isPro || !feedzyData.apiLicenseStatus.openaiStatus}
+								/>
+							</BaseControl>
+							<BaseControl
+								__nextHasNoMarginBottom
+							>
+								<TextareaControl
+									__nextHasNoMarginBottom
+									label={ __( 'Additional Prompt', 'feedzy-rss-feeds' ) }
+									value={ item.data.generateImagePrompt ? unescape(item.data.generateImagePrompt.replaceAll('&#039;', '\'')) : '' }
+									onChange={ ( currentValue ) => propRef.onChangeHandler( { 'index': loopIndex, 'generateImagePrompt': currentValue ?? '' } ) }
+									help={ __( 'Add specific instructions to customize the image generation. By default, images are based on the item’s title and content. Use this field to guide the style of the image, for example: Realistic, artistic, comic-style, etc.', 'feedzy-rss-feeds' ) }
 									disabled={!feedzyData.isPro || !feedzyData.apiLicenseStatus.openaiStatus}
 								/>
 							</BaseControl>

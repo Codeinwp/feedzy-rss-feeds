@@ -161,7 +161,7 @@ add_filter( 'elementor/image_size/get_attachment_image_html', 'feedzy_el_display
  * @param int|false        $thumbnail_id  Post thumbnail ID or false if the post does not exist.
  * @return bool
  */
-function enable_external_url_support( $has_thumbnail, $post, $thumbnail_id ) {
+function feedzy_enable_external_url_support( $has_thumbnail, $post, $thumbnail_id ) {
 	$post_id = get_the_ID();
 	if ( $post && is_object( $post ) ) {
 		$post_id = $post->ID;
@@ -175,7 +175,28 @@ function enable_external_url_support( $has_thumbnail, $post, $thumbnail_id ) {
 	}
 	return $has_thumbnail;
 }
-add_filter( 'has_post_thumbnail', 'enable_external_url_support', 10, 3 );
+add_filter( 'has_post_thumbnail', 'feedzy_enable_external_url_support', 10, 3 );
+
+/**
+ * Filters the attachment image source.
+ *
+ * @param array|false  $image         Either array with src, width & height, icon src, or false.
+ * @param int          $attachment_id Image attachment ID.
+ * @param string|int[] $size          Size of image. Image size or array of width and height values (in that order).
+ * @param bool         $icon          Whether the image should be treated as an icon.
+ * @return array|false
+ */
+function feedzy_get_attachment_image_src( $image, $attachment_id, $size, $icon ) {
+	if ( 0 === $attachment_id ) {
+		$external_url = get_post_meta( get_the_ID(), 'feedzy_item_external_url', true );
+		if ( $external_url ) {
+			$image = array( $external_url, 0, 0, false );
+		}
+	}
+	return $image;
+}
+
+add_filter( 'wp_get_attachment_image_src', 'feedzy_get_attachment_image_src', 10, 4 );
 
 /**
  * Boostrap the plugin view.
@@ -566,4 +587,42 @@ function feedzy_show_import_tour() {
 		return get_user_meta( get_current_user_id(), 'feedzy_import_tour', true );
 	}
 	return false;
+}
+
+/**
+ * Show review notice.
+ *
+ * @return bool
+ */
+function feedzy_show_review_notice() {
+	$has_dismissed = get_option( 'feedzy_review_notice', 'no' );
+
+	if ( 'yes' === $has_dismissed ) {
+		return false;
+	}
+
+	$install_date = get_option( 'feedzy_rss_feeds_install', 0 );
+	$days_since   = ( time() - $install_date ) / DAY_IN_SECONDS;
+
+	if ( $days_since < 7 ) {
+		return false;
+	}
+
+	$args = array(
+		'post_type'      => 'feedzy_imports',
+		'post_status'    => 'publish',
+		'posts_per_page' => 1,
+		'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+			array(
+				'key'     => 'imported_items_count',
+				'value'   => 100,
+				'type'    => 'numeric',
+				'compare' => '>='
+			)
+		)
+	);
+
+	$imported_posts = new WP_Query( $args );
+
+	return $imported_posts->have_posts();
 }
