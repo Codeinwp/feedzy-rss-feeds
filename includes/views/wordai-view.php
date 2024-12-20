@@ -2,7 +2,7 @@
 	<div class="form-block">
 		<div class="upgrade-alert mb-24">
 			<?php
-				$upgrade_url = tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'wordai' ), 'query' );
+				$upgrade_url = tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'wordai' ) );
 
 				$content  = __( 'You are using Feedzy Lite.', 'feedzy-rss-feeds' ) . ' ';
 				// translators: %1$s: opening anchor tag, %2$s: closing anchor tag

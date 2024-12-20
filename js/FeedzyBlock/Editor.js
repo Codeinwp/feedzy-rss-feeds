@@ -420,21 +420,7 @@ class Editor extends Component {
 							{ __( 'Load Feed', 'feedzy-rss-feeds' ) }
 						</Button>,
                         <ExternalLink href={ this.getValidateURL() } title={ __( 'Validate Feed', 'feedzy-rss-feeds' ) }>{ __( 'Validate', 'feedzy-rss-feeds' ) }</ExternalLink>,
-                        ( ! feedzyjs.isPro ) && (
-                            <div className="fz-source-upgrade-alert">
-                                <strong>{ __( 'NEW!', 'feedzy-rss-feeds' ) } </strong>
-                                <RawHTML>
-                                    {
-                                        sprintf(
-                                            // translators: %1$s: opening anchor tag, %2$s: closing anchor tag
-                                            __( 'Enable Amazon Product Advertising feeds to generate affiliate revenue by %1$s upgrading to Feedzy Pro. %2$s', 'feedzy-rss-feeds' ),
-                                            `<a target="_blank" href="${feedzyjs?.upsellLinkBlockEditor}">`,
-                                            '</a>'
-                                        )
-                                    }
-                                </RawHTML>
-                            </div>
-                        ),
+                        
                         ( this.state.error ) && <div>{ __( 'Feed URL is invalid or unreachable by WordPress SimplePie and will NOT display items.', 'feedzy-rss-feeds') }</div>,
                         <p>
                             { __( 'Enter the full URL of the feed source you wish to display here, or the name of a group you\'ve created. Also you can add multiple URLs just separate them with a comma. You can manage your groups feed from', 'feedzy-rss-feeds') }

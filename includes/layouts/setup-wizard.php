@@ -269,7 +269,7 @@ if ( ! empty( $integrate_with ) ) {
 																							// translators: %1$s is the percentage improvement, %2$s and %3$s are HTML tags for the link to the Optimole website.
 																							__( 'Improve your website speed and images by %1$s with %2$s Optimole %3$s', 'feedzy-rss-feeds' ),
 																							'80%',
-																							'<a target="_blank" href="' . esc_url( tsdk_translate_link( tsdk_utmify( 'https://optimole.com/pricing/', 'setupWizard' ), 'query' ) ) . '">',
+																							'<a target="_blank" href="' . esc_url( tsdk_translate_link( tsdk_utmify( 'https://optimole.com/pricing/', 'setupWizard' ) ) ) . '">',
 																							'</a>'
 																						)
 																					);
