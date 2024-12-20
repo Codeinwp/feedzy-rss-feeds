@@ -59,7 +59,6 @@ class Feedzy_Rss_Feeds_Ui {
 		$this->plugin_name = $plugin_name;
 		$this->version     = $version;
 		$this->loader      = $loader;
-
 	}
 
 	/**

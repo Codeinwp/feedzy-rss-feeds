@@ -59,7 +59,7 @@ const Onboarding = () => {
     },
     {
       target: '.fz-input-group-left .fz-input-icon',
-      content: __( 'Add here your RSS feed URL which Feedzy will use to fetch the content from. You can use Feedzy\'s Feed categories too.', 'feedzy-rss-feeds' ),
+      content: __( 'Add here your RSS feed URL which Feedzy will use to fetch the content from. You can use Feedzy\'s Feed Groups too.', 'feedzy-rss-feeds' ),
     },
     {
       target: '#fz-import-filters',

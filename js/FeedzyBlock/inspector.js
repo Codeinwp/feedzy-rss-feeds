@@ -357,7 +357,7 @@ class Inspector extends Component {
 									value={this.props.attributes.thumb}
 									options={[
 										{
-											label: __('Yes (without  a fallback image)', 'feedzy-rss-feeds'),
+											label: __('Yes (without a fallback image)', 'feedzy-rss-feeds'),
 											value: 'auto',
 										},
 										{

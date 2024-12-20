@@ -723,7 +723,6 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 			return 'auto';
 		}
 		return $value;
-
 	}
 
 	/**
