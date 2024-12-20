@@ -1554,9 +1554,10 @@ class Feedzy_Rss_Feeds_Import {
 			$items_found[ $item['item_url'] ] = $item['item_title'];
 
 			$duplicate_tag_value = array();
+			$mark_duplicate_key  = 'item_url';
 			if ( 'yes' === $import_remove_duplicates && ! $is_duplicate ) {
 				if ( ! empty( $mark_duplicate_tag ) ) {
-					$mark_duplicate_tag  = explode( ',', $mark_duplicate_tag );
+					$mark_duplicate_tag  = is_string( $mark_duplicate_tag ) ? explode( ',', $mark_duplicate_tag ) : $mark_duplicate_tag;
 					$mark_duplicate_tag  = array_map( 'trim', $mark_duplicate_tag );
 					$duplicate_tag_value = array_map(
 						function ( $tag ) use ( $item_obj, $item ) {
@@ -1573,16 +1574,15 @@ class Feedzy_Rss_Feeds_Import {
 				if ( ! empty( $duplicate_tag_value ) ) {
 					$duplicate_tag_value = implode( ' ', $duplicate_tag_value );
 					$duplicate_tag_value = substr( sanitize_key( wp_strip_all_tags( $duplicate_tag_value ) ), 0, apply_filters( 'feedzy_mark_duplicate_content_limit', 256 ) );
-					$mark_duplicate_tag  = md5( implode( '', $mark_duplicate_tag ) );
+					$mark_duplicate_key  = 'mark_duplicate';
 				} else {
 					$duplicate_tag_value = esc_url_raw( $item['item_url'] );
-					$mark_duplicate_tag  = 'item_url';
 				}
-
-				$is_duplicate_post = $this->is_duplicate_post( $import_post_type, 'feedzy_' . $mark_duplicate_tag, $duplicate_tag_value );
+				$is_duplicate_post = $this->is_duplicate_post( $import_post_type, 'feedzy_' . $mark_duplicate_key, $duplicate_tag_value );
 				if ( ! empty( $is_duplicate_post ) ) {
 					foreach ( $is_duplicate_post as $p ) {
-						$found_duplicates[] = get_post_meta( $p, 'feedzy_' . $mark_duplicate_tag, true );
+						$found_duplicates[ $item_hash ]  = get_post_meta( $p, 'feedzy_' . $mark_duplicate_key, true );
+						$duplicates[ $item['item_url'] ] = $item['item_title'];
 						wp_delete_post( $p, true );
 					}
 				}
@@ -2117,9 +2117,9 @@ class Feedzy_Rss_Feeds_Import {
 			update_post_meta( $new_post_id, 'feedzy_job', $job->ID );
 			update_post_meta( $new_post_id, 'feedzy_item_author', sanitize_text_field( $author ) );
 
-			// Verify that the `$mark_duplicate_tag` does not match `'item_url'` to ensure the condition applies only when a different tag is specified.
-			if ( $mark_duplicate_tag && 'item_url' !== $mark_duplicate_tag ) {
-				update_post_meta( $new_post_id, 'feedzy_' . $mark_duplicate_tag, $duplicate_tag_value );
+			// Verify that the `$mark_duplicate_key` does not match `'item_url'` to ensure the condition applies only when a different tag is specified.
+			if ( $mark_duplicate_key && 'item_url' !== $mark_duplicate_key ) {
+				update_post_meta( $new_post_id, 'feedzy_' . $mark_duplicate_key, $duplicate_tag_value );
 			}
 
 			// we can use this to associate the items that were imported in a particular run.

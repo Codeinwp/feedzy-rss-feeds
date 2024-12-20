@@ -249,7 +249,7 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 
 		// Check found duplicates items.
 		if ( $check_duplicate ) {
-			$this->assertNotEmpty( get_post_meta( $created[0]->ID, 'feedzy_' . md5( 'item_author' ), true ) );
+			$this->assertNotEmpty( get_post_meta( $created[0]->ID, 'feedzy_mark_duplicate', true ) );
 		}
 
 		// Check Post Delete
