@@ -497,7 +497,7 @@ global $post;
 													sprintf(
 														// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
 														__( 'Add more advanced tags, like item price, rating and many more, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ),
-														'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'moreadvanced' ), 'query' ) ) . '" target="_blank">',
+														'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'moreadvanced' ) ) ) . '" target="_blank">',
 														'</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>'
 													)
 												);
@@ -661,7 +661,7 @@ global $post;
 													sprintf(
 														// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
 														__( 'Add more advanced tags, like item price, rating and many more, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ),
-														'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'post-excerpt', 'import' ), 'query' ) ) . '" target="_blank">',
+														'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'post-excerpt', 'import' ) ) ) . '" target="_blank">',
 														'</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>'
 													)
 												);
