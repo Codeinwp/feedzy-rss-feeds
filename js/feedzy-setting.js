@@ -64,7 +64,7 @@ jQuery( function( $ ) {
   $( ':input' ).change(function () {         
     unsaved = true;
   });
-  $( '#feedzy-settings-submit, #check_wordai_api, #check_spinnerchief_api, #check_aws_api, #check_openai_api' ).on( 'click', function() {
+  $( '#feedzy-settings-submit, #check_wordai_api, #check_spinnerchief_api, #check_aws_api, #check_openai_api, #check_openrouter_api' ).on( 'click', function() {
     unsaved = false;
   } );
   window.addEventListener( 'beforeunload', function( e ) {

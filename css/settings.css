@@ -2368,3 +2368,11 @@ li.draggable-item .components-panel__body-toggle.components-button{
 	color: #4268CF;
 	background: rgba(66, 104, 207, 0.20);
 }
+.fz-prompt-button {
+	gap: 7px;
+	display: flex;
+	margin-top: 10px;
+}
+.fz-prompt-button button.components-button {
+	height: 28px;
+}
