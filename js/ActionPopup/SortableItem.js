@@ -114,6 +114,27 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 					<PanelBody title={ __( 'Search and Replace', 'feedzy-rss-feeds' ) } icon={ DragHandle } initialOpen={ false }>
 						<PanelRow>
 							<BaseControl>
+								<SelectControl
+									label={ __( 'Type', 'feedzy-rss-feeds' ) }
+									value={ item.data.mode || 'text' }
+									options={[
+										{
+											label: __( 'Text', 'feedzy-rss-feeds' ),
+											value: 'text',
+										},
+										{
+											label: __( 'Regex', 'feedzy-rss-feeds' ),
+											value: 'regex',
+										},
+										{
+											label: __( 'Wildcard', 'feedzy-rss-feeds' ),
+											value: 'wildcard',
+										}
+									]}
+									onChange={ ( currentValue ) => propRef.onChangeHandler( { 'index': loopIndex, 'mode': currentValue ?? 'text' } ) }
+								/>
+							</BaseControl>
+							<BaseControl>
 								<TextControl
 									type="text"
 									label={__( 'Search', 'feedzy-rss-feeds' )}

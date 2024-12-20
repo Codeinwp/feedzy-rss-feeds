@@ -400,12 +400,22 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			$content = call_user_func( array( $this, $this->current_job->tag ) );
 			$search  = $this->current_job->data->search;
 			$replace = $this->current_job->data->searchWith;
+			$mode    = isset( $this->current_job->data->mode ) ? $this->current_job->data->mode : 'text';
 
-			if ( ! preg_match( '/^\/.*\/[imsxuADU]*$/', $search ) ) {
-				$search = '/' . $search . '/i';
+			switch ( $mode ) {
+				case 'wildcard':
+					$pattern = preg_quote( $search, '/' );
+					$pattern = str_replace( '\\*', '.*', $pattern );
+					return preg_replace( '/' . $pattern . '/i', $replace, $content );
+				case 'regex':
+					if ( ! preg_match( '/^\/.\/[imsxuADU]$/', $search ) ) {
+						$pattern = '/' . $search . '/i';
+					}
+
+					return preg_replace( $pattern, $replace, $content );
+				default:
+					return str_replace( $search, $replace, $content );
 			}
-
-			return preg_replace( $search, $replace, $content );
 		}
 
 		/**
