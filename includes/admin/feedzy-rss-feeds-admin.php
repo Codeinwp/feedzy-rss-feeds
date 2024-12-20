@@ -212,6 +212,27 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					'languageList'     => $this->get_lang_list(),
 				)
 			);
+
+			$asset_file = include FEEDZY_ABSPATH . '/build/conditions/index.asset.php';
+			wp_enqueue_script( $this->plugin_name . '_conditions', FEEDZY_ABSURL . 'build/conditions/index.js', array_merge( $asset_file['dependencies'], array( 'wp-editor', 'wp-api' ) ), $asset_file['version'], true );
+
+			// Add wp_localize_script to pass variables to the JS file with a filter over the data.
+			wp_localize_script(
+				$this->plugin_name . '_conditions',
+				'feedzyConditionsData',
+				apply_filters(
+					'feedzy_conditions_data',
+					array(
+						'isPro'            => feedzy_is_pro(),
+						'isBusinessPlan'   => apply_filters( 'feedzy_is_license_of_type', false, 'business' ),
+						'isAgencyPlan'     => apply_filters( 'feedzy_is_license_of_type', false, 'agency' ),
+						'apiLicenseStatus' => $this->api_license_status(),
+						'isHighPrivileges' => current_user_can( 'manage_options' ),
+						'operators'        => Feedzy_Rss_Feeds_Conditions::get_operators(),
+					)
+				)
+			);
+
 			wp_enqueue_style( 'wp-block-editor' );
 
 			$this->register_survey();

@@ -18,6 +18,7 @@ composer.lock
 package-lock.json
 key.enc
 js/FeedzyBlock
+js/Conditions/
 js/Onboarding/
 js/ActionPopup/
 js/FeedBack/

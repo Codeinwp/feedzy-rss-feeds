@@ -327,21 +327,13 @@ class Feedzy_Rss_Feeds_Import {
 		$post_types            = get_post_types( '', 'names' );
 		$post_types            = array_diff( $post_types, array( 'feedzy_imports', 'feedzy_categories' ) );
 		$published_status      = array( 'publish', 'draft' );
-		$authors = get_users( array( 'number' => 100 ) );
+
+    	$authors = get_users( array( 'number' => 100 ) );
 		$authors_array = array();
 		foreach ( $authors as $author ) {
 			$authors_array[] = $author->user_login;
 		}
-		$keyword_filter_fields = array( __( 'Title', 'feedzy-rss-feeds' ) );
-		if ( feedzy_is_pro() ) {
-			$keyword_filter_fields = array_merge(
-				$keyword_filter_fields, array(
-					__( 'Description', 'feedzy-rss-feeds' ),
-					__( 'Author', 'feedzy-rss-feeds' ),
-					__( 'Full Content', 'feedzy-rss-feeds' ),
-				)
-			);
-		}
+
 		$import_post_type = get_post_meta( $post->ID, 'import_post_type', true );
 		$import_post_term = get_post_meta( $post->ID, 'import_post_term', true );
 		if ( metadata_exists( $import_post_type, $post->ID, 'import_post_status' ) ) {
@@ -371,6 +363,21 @@ class Feedzy_Rss_Feeds_Import {
 		$import_auto_translation  = 'yes' === $import_auto_translation ? 'checked' : '';
 		$import_translation_lang  = get_post_meta( $post->ID, 'import_auto_translation_lang', true );
 		$import_post_author       = get_post_meta( $post->ID, 'import_post_author', true );
+		$filter_conditions        = get_post_meta( $post->ID, 'filter_conditions', true );
+
+		if ( empty( $filter_conditions ) ) {
+			$filter_conditions = apply_filters(
+				'feedzy_filter_conditions_migration',
+				array(
+					'keywords_inc'    => $inc_key,
+					'keywords_exc'    => $exc_key,
+					'keywords_inc_on' => $inc_on,
+					'keywords_exc_on' => $exc_on,
+					'from_datetime'   => $from_datetime,
+					'to_datetime'     => $to_datetime,
+				)
+			);
+		}
 
 		/**
 		 * This code snippet retrieves the post author for backward compatibility for existing imports as well as for any new imports.
@@ -558,6 +565,10 @@ class Feedzy_Rss_Feeds_Import {
 			$data_meta['import_auto_translation'] = isset( $data_meta['import_auto_translation'] ) ? $data_meta['import_auto_translation'] : 'no';
 			// Check feeds external image URL checkbox checked OR not.
 			$data_meta['import_use_external_image'] = isset( $data_meta['import_use_external_image'] ) ? $data_meta['import_use_external_image'] : 'no';
+			// If it is filter_conditions we want to escape it.
+			if ( isset( $data_meta['filter_conditions'] ) ) {
+				$data_meta['filter_conditions'] = wp_slash( $data_meta['filter_conditions'] );
+			}
 
 			// $data_meta['feedzy_post_author'] should be the author username. We convert it to the author ID.
 			if ( ! empty( $data_meta['import_post_author'] ) ) {
@@ -1291,7 +1302,6 @@ class Feedzy_Rss_Feeds_Import {
 		wp_send_json_success( array( 'output' => do_shortcode( $shortcode ) ) );
 	}
 
-
 	/**
 	 * The Cron Job.
 	 *
@@ -1376,8 +1386,23 @@ class Feedzy_Rss_Feeds_Import {
 		$import_auto_translation  = get_post_meta( $job->ID, 'import_auto_translation', true );
 		$import_auto_translation  = $this->feedzy_is_agency() && 'yes' === $import_auto_translation ? true : false;
 		$import_translation_lang  = get_post_meta( $job->ID, 'import_auto_translation_lang', true );
+		$filter_conditions        = get_post_meta( $job->ID, 'filter_conditions', true );
 		$import_post_author       = get_post_meta( $job->ID, 'import_post_author', true );
 		$max                      = $import_feed_limit;
+
+		if ( empty( $filter_conditions ) ) {
+			$filter_conditions = apply_filters(
+				'feedzy_filter_conditions_migration',
+				array(
+					'keywords_inc'    => $inc_key,
+					'keywords_exc'    => $exc_key,
+					'keywords_inc_on' => $inc_on,
+					'keywords_exc_on' => $exc_on,
+					'from_datetime'   => $from_datetime,
+					'to_datetime'     => $to_datetime,
+				)
+			);
+		}
 
 		if ( metadata_exists( 'post', $job->ID, 'import_post_status' ) ) {
 			$import_post_status = get_post_meta( $job->ID, 'import_post_status', true );
@@ -1430,17 +1455,11 @@ class Feedzy_Rss_Feeds_Import {
 				'thumb'           => 'auto',
 				'default'         => '',
 				'size'            => '250',
-				'keywords_inc'    => $inc_key, // this is not keywords_title
-				'keywords_ban'    => $exc_key, // to support old pro that does not support keywords_exc
-				'keywords_exc'    => $exc_key, // this is not keywords_ban
-				'keywords_inc_on' => $inc_on,
-				'keywords_exc_on' => $exc_on,
 				'columns'         => 1,
 				'offset'          => 0,
 				'multiple_meta'   => 'no',
 				'refresh'         => '55_mins',
-				'from_datetime'   => $from_datetime,
-				'to_datetime'     => $to_datetime,
+				'filters'         => $filter_conditions,
 			),
 			$job
 		);
@@ -2504,7 +2523,6 @@ class Feedzy_Rss_Feeds_Import {
 
 		return $default;
 	}
-
 
 	/**
 	 * Method for updating settings page via AJAX.

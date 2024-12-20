@@ -30,20 +30,12 @@ test.describe( 'Upsell', () => {
         // Hover over text named Filter by Keyword
         const filtersTab = page.locator('#feedzy-import-form > div.feedzy-accordion > div:nth-child(2)');
 
-        // It should have 3 elements with .only-pro-content class.
-        await expect( filtersTab.locator('.only-pro-content').count() ).resolves.toBe(3);
+        // It should have 1 elements with .only-pro-content class.
+        await expect( filtersTab.locator('.only-pro-content').count() ).resolves.toBe(1);
 
         const filterByKeywordAlert = await filtersTab.locator('.upgrade-alert').first();
         let upgradeLink = new URL( await filterByKeywordAlert.locator('a').first().getAttribute('href') );
-        expect( upgradeLink.searchParams.get( 'utm_campaign' ) ).toBe('filter-keyword');
-
-        const excludeItemsAlert = await filtersTab.locator('.upgrade-alert').nth(1);
-        upgradeLink = new URL( await excludeItemsAlert.locator('a').first().getAttribute('href') );
-        expect( upgradeLink.searchParams.get( 'utm_campaign' ) ).toBe('exclude-items');
-
-        const filterByTimeRangeAlert = await filtersTab.locator('.upgrade-alert').nth(2);
-        upgradeLink = new URL( await filterByTimeRangeAlert.locator('a').first().getAttribute('href') );
-        expect( upgradeLink.searchParams.get( 'utm_campaign' ) ).toBe('filter-time-range');
+        expect( upgradeLink.searchParams.get( 'utm_campaign' ) ).toBe('filters');
     } );
 
     test( 'map content', async({ editor, page }) => {

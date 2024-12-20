@@ -302,78 +302,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	}
 
 	/**
-	 * Check title for keywords
-	 *
-	 * @since   3.0.0
-	 * @access  public
-	 *
-	 * @param   boolean $continue A boolean to stop the script.
-	 * @param   array   $sc The shortcode attributes.
-	 * @param   object  $item The feed item.
-	 * @param   string  $feed_url The feed URL.
-	 *
-	 * @return  boolean
-	 */
-	public function feedzy_feed_item_keywords_title( $continue, $sc, $item, $feed_url ) {
-		if ( feedzy_is_new() && ! feedzy_is_pro() ) {
-			return true;
-		}
-
-		$inc_on = ! empty( $sc['keywords_inc_on'] ) ? $sc['keywords_inc_on'] : 'title';
-		$exc_on = ! empty( $sc['keywords_exc_on'] ) ? $sc['keywords_exc_on'] : 'title';
-
-		if ( isset( $sc['keywords_inc'] ) && ! empty( $sc['keywords_inc'] ) ) {
-			$keywords = $sc['keywords_inc'];
-			if ( ! empty( $keywords ) ) {
-				$continue = false;
-				if ( ! empty( $inc_on ) ) {
-					$continue = $this->feedzy_feed_item_keywords_by( $item, $inc_on, $keywords, $sc );
-				} elseif ( preg_match( "/^$keywords.*$/i", $item->get_title() ) || preg_match( "/^$keywords.*$/i", $item->get_description() ) ) {
-						$continue = true;
-				}
-			}
-		} elseif ( isset( $sc['keywords_title'] ) && ! empty( $sc['keywords_title'] ) ) {
-			$keywords = $sc['keywords_title'];
-			if ( ! empty( $keywords ) ) {
-				$continue = false;
-				if ( ! empty( $inc_on ) ) {
-					$continue = $this->feedzy_feed_item_keywords_by( $item, $inc_on, $keywords, $sc );
-				} elseif ( preg_match( "/^$keywords.*$/i", $item->get_title() ) ) {
-						$continue = true;
-				}
-			}
-		}
-
-		if ( isset( $sc['keywords_exc'] ) && ! empty( $sc['keywords_exc'] ) ) {
-			$keywords = $sc['keywords_exc'];
-			if ( ! empty( $keywords ) ) {
-				if ( ! empty( $exc_on ) ) {
-					$exc_item = $this->feedzy_feed_item_keywords_by( $item, $exc_on, $keywords, $sc );
-					if ( $exc_item ) {
-						$continue = false;
-					}
-				} elseif ( ! preg_match( "/^$keywords.*$/i", $item->get_title() ) || ! preg_match( "/^$keywords.*$/i", $item->get_description() ) ) {
-						$continue = false;
-				}
-			}
-		} elseif ( isset( $sc['keywords_ban'] ) && ! empty( $sc['keywords_ban'] ) ) {
-			$keywords = $sc['keywords_ban'];
-			if ( ! empty( $keywords ) ) {
-				if ( ! empty( $exc_on ) ) {
-					$keywords_ban = $this->feedzy_feed_item_keywords_by( $item, $exc_on, $keywords, $sc );
-					if ( $keywords_ban ) {
-						$continue = false;
-					}
-				} elseif ( preg_match( "/^$keywords.*$/i", $item->get_title() ) ) {
-						$continue = false;
-				}
-			}
-		}
-
-		return $continue;
-	}
-
-	/**
 	 * Include cover picture (medium) to rss feed enclosure
 	 * and media:content
 	 *
@@ -514,6 +442,27 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 		}
 
+		// If the user is explicitly using filters attribute, then use it and ignore old filters.
+		if ( isset( $sc['filters'] ) && ! empty( $sc['filters'] ) && feedzy_is_pro() ) {
+			$sc['filters'] = apply_filters( 'feedzy_filter_conditions_attribute', $sc['filters'] );
+		} else {
+			$sc['filters'] = apply_filters( 'feedzy_filter_conditions_migration', $sc );
+		}
+
+		$sc = array_diff_key(
+			$sc,
+			array(
+				'keywords_title'  => '',
+				'keywords_inc'    => '',
+				'keywords_inc_on' => '',
+				'keywords_exc'    => '',
+				'keywords_exc_on' => '',
+				'keywords_ban'    => '',
+				'from_datetime'   => '',
+				'to_datetime'     => '',
+			)
+		);
+
 		$feed = $this->fetch_feed( $feed_url, $cache, $sc );
 		if ( is_string( $feed ) ) {
 			return $feed;
@@ -560,6 +509,27 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$atts     = $data['args'];
 		$sc       = $this->get_short_code_attributes( $atts );
 		$feed_url = $this->normalize_urls( $sc['feeds'] );
+
+		if ( isset( $sc['filters'] ) && ! empty( $sc['filters'] ) && feedzy_is_pro() ) {
+			$sc['filters'] = apply_filters( 'feedzy_filter_conditions_attribute', $sc['filters'] );
+		} else {
+			$sc['filters'] = apply_filters( 'feedzy_filter_conditions_migration', $sc );
+		}
+
+		$sc = array_diff_key(
+			$sc,
+			array(
+				'keywords_title'  => '',
+				'keywords_inc'    => '',
+				'keywords_inc_on' => '',
+				'keywords_exc'    => '',
+				'keywords_exc_on' => '',
+				'keywords_ban'    => '',
+				'from_datetime'   => '',
+				'to_datetime'     => '',
+			)
+		);
+
 		$feed     = $this->fetch_feed( $feed_url, $sc['refresh'], $sc );
 		if ( is_string( $feed ) ) {
 			return $feed;
@@ -653,6 +623,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'to_datetime'     => '',
 				// Disable default style.
 				'disable_default_style' => 'no',
+				'filters'         => '',
 			),
 			$atts,
 			'feedzy_default'
@@ -1086,30 +1057,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		if ( empty( $sc['size'] ) || ! ctype_digit( (string) $sc['size'] ) ) {
 			$sc['size'] = '150';
-		}
-		if ( ! empty( $sc['keywords_title'] ) ) {
-			if ( is_array( $sc['keywords_title'] ) ) {
-				$sc['keywords_title'] = implode( ',', $sc['keywords_title'] );
-			}
-			$sc['keywords_title'] = feedzy_filter_custom_pattern( $sc['keywords_title'] );
-		}
-		if ( ! empty( $sc['keywords_inc'] ) ) {
-			if ( is_array( $sc['keywords_inc'] ) ) {
-				$sc['keywords_inc'] = implode( ',', $sc['keywords_inc'] );
-			}
-			$sc['keywords_inc'] = feedzy_filter_custom_pattern( $sc['keywords_inc'] );
-		}
-		if ( ! empty( $sc['keywords_ban'] ) ) {
-			if ( is_array( $sc['keywords_ban'] ) ) {
-				$sc['keywords_ban'] = implode( ',', $sc['keywords_ban'] );
-			}
-			$sc['keywords_ban'] = feedzy_filter_custom_pattern( $sc['keywords_ban'] );
-		}
-		if ( ! empty( $sc['keywords_exc'] ) ) {
-			if ( is_array( $sc['keywords_exc'] ) ) {
-				$sc['keywords_exc'] = implode( ',', $sc['keywords_exc'] );
-			}
-			$sc['keywords_exc'] = feedzy_filter_custom_pattern( $sc['keywords_exc'] );
 		}
 		if ( empty( $sc['summarylength'] ) || ! is_numeric( $sc['summarylength'] ) ) {
 			$sc['summarylength'] = '';
@@ -1935,60 +1882,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Keyword filter in multiple fields.
-	 *
-	 * @param object $item The feed item.
-	 * @param string $filter_by Filter by.
-	 * @param string $keywords Keywords.
-	 *
-	 * @return bool
-	 */
-	public function feedzy_feed_item_keywords_by( $item, $filter_by = '', $keywords = '', $sc = array() ) {
-		$is_valid = false;
-
-		if ( empty( $filter_by ) ) {
-			return $is_valid;
-		}
-
-		if ( 'title' === $filter_by ) {
-			$item_title = wp_strip_all_tags( $item->get_title(), true );
-			if ( ! empty( $item_title ) && preg_match( "/^$keywords.*$/i", $item_title ) ) {
-				$is_valid = true;
-			}
-		} elseif ( 'description' === $filter_by ) {
-			$description = wp_strip_all_tags( $item->get_content(), true );
-			if ( ! empty( $description ) && preg_match( "/^$keywords.*$/i", $description ) ) {
-				$is_valid = true;
-			}
-		} elseif ( 'author' === $filter_by ) {
-			$author = $item->get_author();
-			$author_name = '';
-			if ( $author ) {
-				$author_name = $author->get_name();
-			}
-			if ( ! empty( $author_name ) && preg_match( "/^$keywords.*$/i", $author_name ) ) {
-				$is_valid = true;
-			}
-		} elseif ( 'fullcontent' === $filter_by ) {
-			$content = $item->get_item_tags( SIMPLEPIE_NAMESPACE_ATOM_10, 'full-content' );
-			$content = ! empty( $content[0]['data'] ) ? $content[0]['data'] : '';
-			$content = wp_strip_all_tags( $content, true );
-			if ( ! empty( $content ) && preg_match( "/^$keywords.*$/i", $content ) ) {
-				$is_valid = true;
-			}
-		}
-
-		// Date filter.
-		if ( $is_valid && ( ! empty( $sc['from_datetime'] ) && ! empty( $sc['to_datetime'] ) ) ) {
-			$from_datetime = strtotime( $sc['from_datetime'] );
-			$to_datetime = strtotime( $sc['to_datetime'] );
-			$item_date = strtotime( $item->get_date() );
-			$is_valid = ( ( $from_datetime <= $item_date ) && ( $item_date <= $to_datetime ) );
-		}
-		return $is_valid;
 	}
 
 	/**
