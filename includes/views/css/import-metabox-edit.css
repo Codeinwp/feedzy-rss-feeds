@@ -68,7 +68,9 @@ input.feedzy-toggle-round:checked + label:after {
 input.feedzy-toggle-round:checked + label{
 	border-color: #f6f7f7;
 }
-
+.feedzy-dialog:not(.feedzy-dialog-content){
+	display:none;
+}
 
 input.feedzy-toggle-round + label:before,
 input.feedzy-toggle-round + label:after {

@@ -732,7 +732,11 @@ class Feedzy_Rss_Feeds_Import {
 							$src = sprintf( '%s: %s%s%s', __( 'Feed Group', 'feedzy-rss-feeds' ), '<a href="' . admin_url( 'edit.php?post_type=feedzy_categories' ) . '" target="_blank">', $src, '</a>' );
 						}
 					} else {
-						$src = sprintf( '%s: %s%s%s', __( 'Feed Group', 'feedzy-rss-feeds' ), '<a href="' . admin_url( 'edit.php?post_type=feedzy_categories' ) . '" target="_blank">', $src, '</a>' );
+						if ( empty( $src ) ) {
+							$src = __( 'No Source Configured', 'feedzy-rss-feeds' );
+						} else {
+							$src = sprintf( '%s: %s%s%s', __( 'Feed Group', 'feedzy-rss-feeds' ), '<a href="' . admin_url( 'edit.php?post_type=feedzy_categories' ) . '" target="_blank">', $src, '</a>' );
+						}
 					}
 				} else {
 					// else link it to the feed but shorten it if it is too long.
@@ -791,28 +795,7 @@ class Feedzy_Rss_Feeds_Import {
 					$next = Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'feedzy_cron' );
 				}
 				if ( $next ) {
-					$now  = new DateTime();
-					$then = new DateTime();
-					$then = $then->setTimestamp( $next );
-					$in   = $now->diff( $then );
-
-					$time_string = array();
-					// Add days if they exist.
-					if ( $in->d > 0 ) {
-						// translators: %1$s days.
-						$time_string[] = sprintf( __( '%1$d days', 'feedzy-rss-feeds' ), $in->d );
-					}
-					// Add hours if they exist.
-					if ( $in->h > 0 ) {
-						// translators: %1$s hours.
-						$time_string[] = sprintf( __( '%1$d hours', 'feedzy-rss-feeds' ), $in->h );
-					}
-					// Add minutes if they exist.
-					if ( $in->i > 0 ) {
-						// translators: %1$s minutes.
-						$time_string[] = sprintf( __( '%1$d minutes', 'feedzy-rss-feeds' ), $in->i );
-					}
-					echo wp_kses_post( join( ' ', $time_string ) );
+					echo wp_kses_post( human_time_diff( $next, time() ) );
 				}
 				break;
 			default:
@@ -882,7 +865,7 @@ class Feedzy_Rss_Feeds_Import {
 
 		// popup for items found.
 		if ( is_array( $status['items'] ) ) {
-			$msg .= '<div class="feedzy-items-found-' . $post_id . ' feedzy-dialog" title="' . __( 'Items found', 'feedzy-rss-feeds' ) . '"><ol>';
+			$msg .= '<div class="feedzy-items-found-' . $post_id . ' feedzy-dialog"  title="' . __( 'Items found', 'feedzy-rss-feeds' ) . '"><ol>';
 			foreach ( $status['items'] as $url => $title ) {
 				$msg .= sprintf( '<li><p><a href="%s" target="_blank">%s</a></p></li>', esc_url( $url ), esc_html( $title ) );
 			}
@@ -2373,7 +2356,7 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	public function add_cron() {
 		$time     = ! empty( $this->free_settings['general']['fz_cron_execution'] ) ? $this->get_cron_execution( $this->free_settings['general']['fz_cron_execution'] ) : time();
-		$schedule = ! empty( $this->free_settings['general']['fz_cron_schedule'] ) ? $this->free_settings['general']['fz_cron_schedule'] : 'hourly';
+		$schedule = ! empty( $this->free_settings['general']['fz_cron_schedule'] ) ? $this->free_settings['general']['fz_cron_schedule'] : ( feedzy_is_legacyv5() ? 'hourly' : 'daily' );
 		if ( ( isset( $_POST['nonce'] ) && isset( $_POST['tab'] ) ) && ( wp_verify_nonce( filter_input( INPUT_POST, 'nonce', FILTER_UNSAFE_RAW ), filter_input( INPUT_POST, 'tab', FILTER_UNSAFE_RAW ) ) ) ) {
 			if ( ! empty( $_POST['fz_cron_execution'] ) && ! empty( $_POST['fz_cron_schedule'] ) && ! empty( $_POST['fz_execution_offset'] ) ) {
 				$execution = sanitize_text_field( wp_unslash( $_POST['fz_cron_execution'] ) );

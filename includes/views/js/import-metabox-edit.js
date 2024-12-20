@@ -672,6 +672,9 @@
 			modal: true,
 			autoOpen: false,
 			height: 400,
+			classes: {
+				"ui-dialog-content": "feedzy-dialog-content",
+			},
 			width: 500,
 			buttons: {
 				Ok: function () {
