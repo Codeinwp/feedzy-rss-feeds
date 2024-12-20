@@ -711,6 +711,9 @@
 			e.preventDefault();
 			var element = $(this);
 			var deleteImportedPosts = confirm(feedzy.i10n.delete_post_message);
+			if (!deleteImportedPosts) {
+				return;
+			}
 			showSpinner(element);
 			$.ajax({
 				url: ajaxurl,
