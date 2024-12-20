@@ -651,6 +651,14 @@
 				tagList.find( 'input:text' ).val( '' );
 			}
 		} );
+
+		$( document ).on( 'change', 'input#remove-duplicates', function() {
+			if ( $(this).is(':checked') ) {
+				$('input#feedzy_mark_duplicate').attr( 'disabled', false );
+			} else {
+				$('input#feedzy_mark_duplicate').attr( 'disabled', true );
+			}
+		} );
 	}
 
 	function initSummary() {
