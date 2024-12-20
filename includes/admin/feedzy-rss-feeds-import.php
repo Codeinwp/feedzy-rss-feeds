@@ -731,12 +731,10 @@ class Feedzy_Rss_Feeds_Import {
 						} else {
 							$src = sprintf( '%s: %s%s%s', __( 'Feed Group', 'feedzy-rss-feeds' ), '<a href="' . admin_url( 'edit.php?post_type=feedzy_categories' ) . '" target="_blank">', $src, '</a>' );
 						}
-					} else {
-						if ( empty( $src ) ) {
+					} elseif ( empty( $src ) ) {
 							$src = __( 'No Source Configured', 'feedzy-rss-feeds' );
 						} else {
 							$src = sprintf( '%s: %s%s%s', __( 'Feed Group', 'feedzy-rss-feeds' ), '<a href="' . admin_url( 'edit.php?post_type=feedzy_categories' ) . '" target="_blank">', $src, '</a>' );
-						}
 					}
 				} else {
 					// else link it to the feed but shorten it if it is too long.

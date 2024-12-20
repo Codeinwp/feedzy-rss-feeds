@@ -915,11 +915,14 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 			global $submenu;
 			if ( isset( $submenu['feedzy-admin-menu'] ) ) {
-				$submenu['feedzy-admin-menu'][2] = array( // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-					$rss_to_social,
-					'manage_options',
-					tsdk_utmify( 'https://revive.social/plugins/revive-network', 'feedzy-menu' ),
-				);
+
+				array_splice($submenu['feedzy-admin-menu'], 4, 0, array(
+					array(
+						$rss_to_social,
+						'manage_options',
+						tsdk_utmify('https://revive.social/plugins/revive-network', 'feedzy-menu'),
+					)
+				));
 			}
 		}
 	}
