@@ -328,7 +328,7 @@ class Feedzy_Rss_Feeds_Import {
 		$post_types            = array_diff( $post_types, array( 'feedzy_imports', 'feedzy_categories' ) );
 		$published_status      = array( 'publish', 'draft' );
 
-    $authors = get_users( array( 'number' => 100 ) );
+    	$authors = get_users( array( 'number' => 100 ) );
 		$authors_array = array();
 		foreach ( $authors as $author ) {
 			$authors_array[] = $author->user_login;
@@ -377,6 +377,7 @@ class Feedzy_Rss_Feeds_Import {
 					'to_datetime'     => $to_datetime,
 				)
 			);
+		}
 
 		/**
 		 * This code snippet retrieves the post author for backward compatibility for existing imports as well as for any new imports.
@@ -1296,7 +1297,6 @@ class Feedzy_Rss_Feeds_Import {
 
 		wp_send_json_success( array( 'output' => do_shortcode( $shortcode ) ) );
 	}
-
 
 	/**
 	 * The Cron Job.
@@ -2519,7 +2519,6 @@ class Feedzy_Rss_Feeds_Import {
 
 		return $default;
 	}
-
 
 	/**
 	 * Method for updating settings page via AJAX.
