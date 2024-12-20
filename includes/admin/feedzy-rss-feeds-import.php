@@ -1023,6 +1023,9 @@ class Feedzy_Rss_Feeds_Import {
 		if ( $items ) {
 			$status['cumulative'] = count( $items );
 		}
+		if ( ! empty( $status['duplicates'] ) ) {
+			$status['total'] = absint( $status['total'] - count( $status['duplicates'] ) );
+		}
 
 		return $status;
 	}
