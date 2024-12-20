@@ -398,7 +398,24 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 */
 		private function search_replace() {
 			$content = call_user_func( array( $this, $this->current_job->tag ) );
-			return str_replace( $this->current_job->data->search, $this->current_job->data->searchWith, $content );
+			$search  = $this->current_job->data->search;
+			$replace = $this->current_job->data->searchWith;
+			$mode    = isset( $this->current_job->data->mode ) ? $this->current_job->data->mode : 'text';
+
+			switch ( $mode ) {
+				case 'wildcard':
+					$pattern = preg_quote( $search, '/' );
+					$pattern = str_replace( '\\*', '.*', $pattern );
+					return preg_replace( '/' . $pattern . '/i', $replace, $content );
+				case 'regex':
+					if ( ! preg_match( '/^\/.\/[imsxuADU]$/', $search ) ) {
+						$pattern = '/' . $search . '/i';
+					}
+
+					return preg_replace( $pattern, $replace, $content );
+				default:
+					return str_replace( $search, $replace, $content );
+			}
 		}
 
 		/**
