@@ -7,44 +7,35 @@ import {
 	BaseControl,
 	Button,
 	DateTimePicker,
-	Dropdown
+	Dropdown,
 } from '@wordpress/components';
 
-import {
-	format,
-	__experimentalGetSettings
-} from '@wordpress/date';
+// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+import { format, __experimentalGetSettings } from '@wordpress/date';
 
-const DateTimeControl = ({
-	label,
-	value,
-	onChange
-}) => {
+const DateTimeControl = ({ index, label, value, onChange }) => {
 	const settings = __experimentalGetSettings();
 
 	return (
-		<BaseControl
-			label={ label }
-		>
+		<BaseControl label={label} id={`date-time-control-${index}`}>
 			<Dropdown
 				position="bottom left"
-				renderToggle={ ({ onToggle, isOpen }) => (
+				renderToggle={({ onToggle, isOpen }) => (
 					<>
 						<Button
-							onClick={ onToggle }
+							onClick={onToggle}
 							variant="secondary"
-							aria-expanded={ isOpen }
+							aria-expanded={isOpen}
 						>
-							{ value ? format( settings.formats.datetime, value ) : __( 'Select Date', 'feedzy-rss-feeds' ) }
+							{value
+								? format(settings.formats.datetime, value)
+								: __('Select Date', 'feedzy-rss-feeds')}
 						</Button>
 					</>
-				) }
-				renderContent={ () => (
-					<DateTimePicker
-						currentDate={ value }
-						onChange={ onChange }
-					/>
-				) }
+				)}
+				renderContent={() => (
+					<DateTimePicker currentDate={value} onChange={onChange} />
+				)}
 			/>
 		</BaseControl>
 	);
