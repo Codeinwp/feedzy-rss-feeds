@@ -1437,10 +1437,10 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		// Get default thumbnail ID.
-		$default_thumbnail = ! empty( $this->free_settings['general']['default-thumbnail-id'] ) ? (int) $this->free_settings['general']['default-thumbnail-id'] : 0;
+		$global_fallback_thumbnail = ! empty( $this->free_settings['general']['default-thumbnail-id'] ) ? (int) $this->free_settings['general']['default-thumbnail-id'] : 0;
 		if ( feedzy_is_pro() ) {
 			$default_thumbnail = get_post_meta( $job->ID, 'default_thumbnail_id', true );
-			$default_thumbnail = ! empty( $default_thumbnail ) ? explode( ',', (string) $default_thumbnail ) : array();
+			$default_thumbnail = ! empty( $default_thumbnail ) ? explode( ',', (string) $default_thumbnail ) : $global_fallback_thumbnail;
 		}
 
 		// Note: this implementation will only work if only one of the fields is allowed to provide
