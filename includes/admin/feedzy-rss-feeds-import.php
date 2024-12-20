@@ -2080,10 +2080,12 @@ class Feedzy_Rss_Feeds_Import {
 				// Set default thumbnail image.
 				if ( ! $img_success && ! empty( $default_thumbnail ) ) {
 					if ( is_array( $default_thumbnail ) ) {
-						shuffle( $default_thumbnail );
-						$default_thumbnail = reset( $default_thumbnail );
+						$random_key           = array_rand( $default_thumbnail );
+						$default_thumbnail_id = isset( $default_thumbnail[ $random_key ] ) ? $default_thumbnail[ $random_key ] : 0;
+					} else {
+						$default_thumbnail_id = $default_thumbnail;
 					}
-					$img_success = set_post_thumbnail( $new_post_id, $default_thumbnail );
+					$img_success = set_post_thumbnail( $new_post_id, $default_thumbnail_id );
 				}
 
 				if ( ! $img_success ) {

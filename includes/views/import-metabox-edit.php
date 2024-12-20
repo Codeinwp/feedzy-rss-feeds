@@ -693,7 +693,7 @@ global $post;
 									<input type="hidden" name="feedzy_meta_data[default_thumbnail_id]" id="feed-post-default-thumbnail" value="<?php echo esc_attr( implode( ',', $default_thumbnail_id ) ); ?>">
 								</div>
 								<div class="help-text pt-8">
-									<?php esc_html_e( 'Helpful for setting a fallback image for feed items without an image. By default, the fallback image from the global settings will be used. If multiple fallback images are selected, one of them will be randomly assigned to each post without an image during the import process.', 'feedzy-rss-feeds' ); ?>
+									<?php esc_html_e( 'Helpful for setting a fallback image for feed items without an image. If multiple fallback images are selected, one of them will be randomly assigned to each post without an image during the import process.', 'feedzy-rss-feeds' ); ?>
 								</div>
 							</div>
 						</div>
