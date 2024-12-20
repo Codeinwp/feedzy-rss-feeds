@@ -365,7 +365,7 @@ class Feedzy_Rss_Feeds_Import {
 		$import_auto_translation  = get_post_meta( $post->ID, 'import_auto_translation', true );
 		$import_auto_translation  = 'yes' === $import_auto_translation ? 'checked' : '';
 		$import_translation_lang  = get_post_meta( $post->ID, 'import_auto_translation_lang', true );
-
+		$mark_duplicate_tag       = get_post_meta( $post->ID, 'mark_duplicate_tag', true );
 		$import_post_author       = get_post_meta( $post->ID, 'import_post_author', true );
 		$filter_conditions        = get_post_meta( $post->ID, 'filter_conditions', true );
 
