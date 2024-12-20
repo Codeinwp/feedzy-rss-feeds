@@ -145,5 +145,12 @@ class Test_Feedzy_Conditions extends WP_UnitTestCase {
             'value'    => '/test/',
         );
         $this->assertTrue( $this->conditions->is_condition_met( $condition, 'this is a test' ) );
+
+
+        $condition = array(
+            'operator' => 'regex',
+            'value'    => '\band\b',
+        );
+        $this->assertTrue( $this->conditions->is_condition_met( $condition, 'matt and tommy' ) );
     }
 }

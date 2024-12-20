@@ -219,11 +219,10 @@ class Feedzy_Rss_Feeds_Conditions {
 				}
 				break;
 			case self::OPERATOR_REGEX:
-				$regex_pattern = $condition_value;
 				if ( ! preg_match( '/^\/.*\/[imsxuADU]*$/', $condition_value ) ) {
-					$regex_pattern = '/' . $condition_value . '/i';
+					$condition_value = '/' . $condition_value . '/i';
 				}
-				return preg_match( $regex_pattern, $value ) === 1;
+				return preg_match( $condition_value, $value ) === 1;
 			default:
 				// Default is self::OPERATOR_HAS_VALUE
 				return ! empty( $value );

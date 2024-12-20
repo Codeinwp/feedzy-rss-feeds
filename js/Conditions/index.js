@@ -36,27 +36,11 @@ const App = () => {
 		const field = document.getElementById('feed-post-filters-conditions');
 		if (field && field.value) {
 			const parsedConditions = JSON.parse(field.value);
-			if (parsedConditions && parsedConditions.conditions) {
-				parsedConditions.conditions = parsedConditions.conditions.map(
-					(condition) => {
-						// We do all these schananigans to make sure we JS doesn't confuse regex for special characters.
-						if (typeof condition.value === 'string') {
-							condition.value = condition.value
-								.replace(/\u0008/g, '\\b')
-								.replace(/\u000C/g, '\\f')
-								.replace(/\n/g, '\\n')
-								.replace(/\r/g, '\\r')
-								.replace(/\t/g, '\\t');
-						}
-						return condition;
-					}
-				);
-				setConditions(parsedConditions);
-			} else {
-				setConditions({ conditions: [], match: 'all' });
-			}
-		} else {
-			setConditions({ conditions: [], match: 'all' });
+			setConditions(
+				parsedConditions && parsedConditions.conditions
+					? parsedConditions
+					: { conditions: [], match: 'all' }
+			);
 		}
 	}, []);
 
