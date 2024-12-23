@@ -558,6 +558,8 @@ global $post;
 															</div>
 															<div class="fz-form-group">
 																<input type="text" name="custom_vars_value[]" placeholder="<?php esc_html_e( 'Value', 'feedzy-rss-feeds' ); ?>" class="form-control" value="<?php echo esc_attr( $custom_field_value ); ?>" />
+																<span class="fz-action-icon<?php echo empty( $custom_field_value ) ? ' disabled' : ''; ?>"></span>
+																<input type="hidden" name="custom_vars_action[]" value="<?php echo isset( $custom_fields_actions[ $custom_field_key ] ) ? esc_attr( $custom_fields_actions[ $custom_field_key ] ) : ''; ?>">
 															</div>
 															<div class="remove-group">
 																<button type="button" class="btn-remove-fields">
