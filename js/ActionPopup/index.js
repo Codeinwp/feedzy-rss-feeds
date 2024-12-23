@@ -41,6 +41,7 @@ const ActionModal = () => {
 	const [ editModeTag, setEditModeTag ] = useState(null);
 	const [ isDisabledAddNew, setDisabledAddNew ] = useState(false);
 	const [ isLoading, setLoading ] = useState(false);
+	const [ currentCustomRow, setcurrentCustomRow ] = useState(null);
 
 	// Close the popup when click on outside the modal.
 	const exitModalOnOutsideClick = useCallback(( e ) => {
@@ -111,6 +112,7 @@ const ActionModal = () => {
 		setDisabledAddNew(false);
 		setAction([]);
 		setLoading(false);
+		setcurrentCustomRow(null);
 	};
 	const hideIntroMessage = ( status ) => setHideMeg( status );
 	const removeAction = ( index ) => {
@@ -195,6 +197,13 @@ const ActionModal = () => {
 			setAction([]);
 			_action = encodeURIComponent( JSON.stringify( [ { id: '', tag: shortCode, data: {} } ] ) );
 		}
+		if ( 'import_custom_field' === fieldName ) {
+			if ( currentCustomRow ) {
+				currentCustomRow.value = _action;
+			}
+			closeModal();
+			return;
+		}
 
 		const inputField = jQuery( `[name="feedzy_meta_data[${fieldName}]"]:is(textarea, input)` ).data('tagify');
 
@@ -241,6 +250,38 @@ const ActionModal = () => {
 		} );
 	} );
 
+	// Init custom field actions.
+	const initCustomFieldActions = () => {
+		const customFieldElement = document.querySelectorAll( '.custom_fields .fz-action-icon' ) || [];
+		if ( customFieldElement.length === 0 ) {
+			return;
+		}
+		customFieldElement.forEach( actionButton => {
+			actionButton.addEventListener( 'click', ( event ) => {
+				event.preventDefault();
+				if ( userRef.current ) {
+					if ( ! userRef.current.attributes.meta.feedzy_hide_action_message ) {
+						hideActionIntroMessage();
+					} else {
+						hideIntroMessage(true);
+					}
+				}
+
+				let editAction = event?.target?.nextElementSibling?.value || '';
+				if ( editAction ) {
+					editAction = JSON.parse( decodeURIComponent( editAction ) );
+					setAction( () => ([...editAction.filter((e)=>{return e.id !== ''})]));
+				}
+				setShortCode( 'custom_field' );
+				setFieldName( 'import_custom_field' );
+				setcurrentCustomRow( event?.target?.nextElementSibling );
+				openModal();
+			} );
+		} );
+	};
+	// Attach click event to the newly added custom field row.
+	document.addEventListener( 'feedzy_new_row_added', initCustomFieldActions );
+
 	const initEditHooks = () => {
 		if ( isLoading ) {
 			return;
@@ -249,6 +290,7 @@ const ActionModal = () => {
 		setTimeout( function() {
 			const editActionElement = document.querySelectorAll( '.fz-content-action .tagify__filter-icon' ) || [];
 			if ( editActionElement.length === 0 ) {
+				initCustomFieldActions();
 				initEditHooks();
 				return;
 			}
@@ -284,6 +326,7 @@ const ActionModal = () => {
 					} );
 				} );
 			}
+			initCustomFieldActions();
 		}, 500 );
 	};
 	initEditHooks();
