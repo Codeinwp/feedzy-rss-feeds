@@ -2466,3 +2466,31 @@ li.draggable-item .components-panel__body-toggle.components-button{
 .fz-prompt-button button.components-button {
 	height: 28px;
 }
+.fz-license-section button#check_ti_license:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+.fz-license-section button#check_ti_license .dashicons-update {
+	display: none;
+}
+.fz-license-section button#check_ti_license.fz-checking .dashicons-update {
+	-webkit-animation:spin 2s linear infinite;
+    -moz-animation:spin 2s linear infinite;
+    animation:spin 2s linear infinite;
+    display: inline-block;
+}
+.fz-license-section .help-text:has(.dashicons-dismiss) {
+	color: #F00;
+}
+.fz-license-section .help-text:has(.dashicons-yes) {
+	color: #6eb77a;
+}
+@-webkit-keyframes spin { 
+    100% { -webkit-transform: rotate(360deg); } 
+}
+@keyframes spin { 
+    100% { 
+        -webkit-transform: rotate(360deg); 
+        transform:rotate(360deg); 
+    } 
+}
