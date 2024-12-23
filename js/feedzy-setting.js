@@ -64,7 +64,7 @@ jQuery( function( $ ) {
   $( ':input' ).change(function () {         
     unsaved = true;
   });
-  $( '#feedzy-settings-submit, #check_wordai_api, #check_spinnerchief_api, #check_aws_api, #check_openai_api, #check_openrouter_api' ).on( 'click', function() {
+  $( '#feedzy-settings-submit, #check_wordai_api, #check_spinnerchief_api, #check_aws_api, #check_openai_api, #check_openrouter_api, #check_ti_license' ).on( 'click', function() {
     unsaved = false;
   } );
   window.addEventListener( 'beforeunload', function( e ) {
@@ -78,5 +78,48 @@ jQuery( function( $ ) {
   $( document ).on( 'change', '#fz-event-execution', function() {
       $( '#fz-execution-offset' ).val( new Date().getTimezoneOffset() / 60 );
   } );
+
+  // License key.
+  jQuery('.fz-license-section #license_key').on( 'input', function() {
+    var licenseKey = jQuery(this).val();
+    if ( licenseKey !== '' ) {
+      jQuery( '#check_ti_license' ).removeAttr( 'disabled' );
+    } else {
+      jQuery( '#check_ti_license' ).attr( 'disabled', true );
+    }
+    jQuery('.fz-license-section input[name="license_key"]').val( licenseKey );
+  } );
+
+  jQuery('.fz-license-section #check_ti_license').on('click', function (e) {
+    e.preventDefault();
+    var _this = jQuery(this);
+    _this
+    .attr('disabled', true)
+    .addClass( 'fz-checking' );
+
+    _this
+    .parents( '.fz-license-section' )
+    .find( '.feedzy-api-error' )
+    .remove();
+
+    const LicenseData = _this
+    .parent( '.fz-input-group-btn' )
+    .find( 'input' )
+    .serialize();
+
+    jQuery.post( ajaxurl, LicenseData,
+      function (response) {
+        if ( ! response.success ) {
+          jQuery( '<p class="feedzy-api-error">' + response.message + '</p>' ).insertAfter( jQuery( '.fz-license-section' ).find( '.help-text' ) );
+          _this
+          .removeAttr('disabled')
+          .removeClass( 'fz-checking' );
+        } else {
+          window.location.reload();
+        }
+      },
+      'json'
+    );
+  });
   snackbarNotice();
 });

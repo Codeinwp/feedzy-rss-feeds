@@ -114,6 +114,7 @@
 						case 'general':
 							?>
 							<div class="fz-form-wrap">
+								<?php do_action( 'feedzy_general_setting_before' ); ?>	
 								<div class="form-block">
 									<div class="fz-form-group">
 										<label for="feed-post-default-thumbnail" class="form-label"><?php echo esc_html_e( 'Fallback image for imported posts', 'feedzy-rss-feeds' ); ?></label>
