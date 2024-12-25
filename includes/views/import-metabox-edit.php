@@ -621,6 +621,25 @@ global $post;
 						</div>
 					</div>
 
+					<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
+						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'delete-featured-image', 'import' ) ); ?>
+						<div class="fz-left"><h4 class="h4"><?php esc_html_e( 'Delete image', 'feedzy-rss-feeds' ); ?><?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
+						</div>
+						<div class="fz-right">
+							<div class="fz-form-group">
+								<div class="fz-form-switch">
+									<input id="delete-attached-media" name="feedzy_meta_data[import_feed_delete_media]"
+									class="fz-switch-toggle" type="checkbox" value="yes"
+									<?php echo esc_attr( $import_feed_delete_media ); ?>>
+									<label class="feedzy-inline form-label" for="delete-attached-media"><?php esc_html_e( 'Delete attached featured image', 'feedzy-rss-feeds' ); ?></label>
+								</div>
+							</div>
+							<div class="help-text">
+								<?php echo wp_sprintf( esc_html__( 'Helpful if you want to delete attached featured image when posts are automatically deleted.', 'feedzy-rss-feeds' ) ); ?>
+							</div>
+						</div>
+					</div>
+
 					<div class="form-block form-block-two-column">
 						<div class="fz-left">
 							<h4 class="h4"><?php esc_html_e( 'Remove Duplicates', 'feedzy-rss-feeds' ); ?></h4>

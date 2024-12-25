@@ -427,6 +427,13 @@ class Feedzy_Rss_Feeds_Import {
 		if ( empty( $import_feed_delete_days ) ) {
 			$import_feed_delete_days = ! empty( $this->free_settings['general']['feedzy-delete-days'] ) ? (int) $this->free_settings['general']['feedzy-delete-days'] : 0;
 		}
+
+		$import_feed_delete_media = get_post_meta( $post->ID, 'import_feed_delete_media', true );
+		if ( empty( $import_feed_delete_media ) ) {
+			$import_feed_delete_media = ! empty( $this->free_settings['general']['feedzy-delete-media'] ) ? 'yes' : 'no';
+		}
+		$import_feed_delete_media = 'yes' === $import_feed_delete_media ? 'checked' : '';
+
 		$default_thumbnail_id = 0;
 		if ( feedzy_is_pro() ) {
 			$default_thumbnail_id = get_post_meta( $post->ID, 'default_thumbnail_id', true );
@@ -568,10 +575,14 @@ class Feedzy_Rss_Feeds_Import {
 			$data_meta['import_auto_translation'] = isset( $data_meta['import_auto_translation'] ) ? $data_meta['import_auto_translation'] : 'no';
 			// Check feeds external image URL checkbox checked OR not.
 			$data_meta['import_use_external_image'] = isset( $data_meta['import_use_external_image'] ) ? $data_meta['import_use_external_image'] : 'no';
+
 			// If it is filter_conditions we want to escape it.
 			if ( isset( $data_meta['filter_conditions'] ) ) {
 				$data_meta['filter_conditions'] = wp_slash( $data_meta['filter_conditions'] );
 			}
+
+			// Check feeds remove attached media checkbox checked OR not.
+			$data_meta['import_feed_delete_media'] = isset( $data_meta['import_feed_delete_media'] ) ? $data_meta['import_feed_delete_media'] : 'no';
 
 			// $data_meta['feedzy_post_author'] should be the author username. We convert it to the author ID.
 			if ( ! empty( $data_meta['import_post_author'] ) ) {
