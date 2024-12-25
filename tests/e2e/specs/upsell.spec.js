@@ -43,7 +43,7 @@ test.describe( 'Upsell', () => {
         await expect( upgradeAlert ).toBeVisible();
 
         await page.locator('#delete-attached-media').hover({ force: true });
-        let upgradeAlert = page.locator('#feedzy-import-form a[href*="utm_campaign=delete-featured-image"]');
+        upgradeAlert = page.locator('#feedzy-import-form a[href*="utm_campaign=delete-featured-image"]');
         await expect( upgradeAlert ).toBeVisible();
     } );
 });
