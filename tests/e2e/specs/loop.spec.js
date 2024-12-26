@@ -53,9 +53,7 @@ test.describe('Feedzy Loop', () => {
 		const snackbar = await page.getByTestId('snackbar');
 		const snackbarText = await snackbar.textContent();
 		expect(snackbarText).toContain('Post published.');
-	});
 
-	test('visit Feedzy Loop Page', async ({ editor, page }) => {
 		await page.goto('/wp-admin/edit.php');
 
 		await page.hover('a.row-title');
