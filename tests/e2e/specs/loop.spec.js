@@ -56,7 +56,8 @@ test.describe('Feedzy Loop', () => {
 
 		await page.goto('/wp-admin/edit.php');
 
-		await page.hover('a.row-title');
+		const postTitle = await page.locator('a.row-title').first();
+		await postTitle.hover();
 		await page.getByLabel('View “Feedzy Loop Test”').click();
 
 		await page.waitForTimeout(5000);
