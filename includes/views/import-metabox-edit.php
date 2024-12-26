@@ -605,7 +605,7 @@ global $post;
 			</div>
 			<div class="feedzy-accordion-item__content border-top">
 				<div class="fz-form-wrap">
-					<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
+					<div class="feedzy-auto-delete form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
 						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'auto-delete', 'import' ) ); ?>
 						<div class="fz-left">
 							<h4 class="h4"><?php esc_html_e( 'Auto-Delete', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>

@@ -2488,6 +2488,10 @@ li.draggable-item .components-panel__body-toggle.components-button{
 .fz-license-section .help-text:has(.dashicons-yes) {
 	color: #6eb77a;
 }
+.feedzy-accordion-item__content .form-block.feedzy-auto-delete {
+	border-bottom: 0;
+    padding: 24px 0 0;
+}
 @-webkit-keyframes spin { 
     100% { -webkit-transform: rotate(360deg); } 
 }
