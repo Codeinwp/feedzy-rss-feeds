@@ -16,7 +16,7 @@ import { useSelect } from '@wordpress/data';
 
 import { addFilter } from '@wordpress/hooks';
 
-const defaultImage = window.feedzyloopjs.defaultImage;
+const defaultImage = window.feedzyData.defaultImage;
 
 const withFeedzyLoopImage = createHigherOrderComponent((BlockEdit) => {
 	return (props) => {

@@ -55,6 +55,36 @@
 				}
 			}
 		},
+		"conditions": {
+			"type": "object",
+			"properties": {
+				"match": {
+					"type": "string",
+					"enum": [ "all", "any" ],
+					"default": "all"
+				},
+				"conditions": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"field": {
+								"type": "string",
+								"default": "title"
+							},
+							"operator": {
+								"type": "string",
+								"default": "contains"
+							},
+							"value": {
+								"type": "string",
+								"default": ""
+							}
+						}
+					}
+				}
+			}
+		},
         "innerBlocksContent": {
             "type": "string",
             "default": ""

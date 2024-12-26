@@ -69,10 +69,22 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		// Pass in REST URL
 		wp_localize_script(
 			'feedzy-rss-feeds-loop-editor-script',
-			'feedzyloopjs',
+			'feedzyData',
 			array(
 				'defaultImage' => esc_url( FEEDZY_ABSURL . 'img/feedzy.svg' ),
 				'isPro'        => feedzy_is_pro(),
+			)
+		);
+
+		wp_localize_script(
+			'feedzy-rss-feeds-loop-editor-script',
+			'feedzyConditionsData',
+			apply_filters(
+				'feedzy_conditions_data',
+				array(
+					'isPro'            => feedzy_is_pro(),
+					'operators'        => Feedzy_Rss_Feeds_Conditions::get_operators(),
+				)
 			)
 		);
 	}
@@ -113,7 +125,8 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			'refresh' => '12_hours',
 		);
 
-		$query = isset( $attributes['query'] ) ? wp_parse_args( $attributes['query'], $default_query ) : $default_query;
+		$query   = isset( $attributes['query'] ) ? wp_parse_args( $attributes['query'], $default_query ) : $default_query;
+		$filters = isset( $attributes['conditions'] ) ? $attributes['conditions'] : array();
 
 		$options = array(
 			'max'           => $query['max'],
@@ -129,6 +142,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			'multiple_meta' => 'no',
 			'summary'       => 'yes',
 			'summarylength' => '',
+			'filters'       => wp_json_encode( $filters ),
 		);
 
 		$sizes = array(

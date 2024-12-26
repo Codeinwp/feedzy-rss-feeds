@@ -31,6 +31,7 @@ import ServerSideRender from '@wordpress/server-side-render';
  * Internal dependencies.
  */
 import Placeholder from './placeholder';
+import ConditionsControl from '../Conditions/ConditionsControl';
 
 const Edit = ({ attributes, setAttributes, clientId }) => {
 	const blockProps = useBlockProps();
@@ -214,6 +215,33 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 						}
 					/>
 				</PanelBody>
+
+				<PanelBody
+					title={[
+						__('Filter items', 'feedzy-rss-feeds'),
+						!feedzyData.isPro && (
+							<span className="fz-pro-label">Pro</span>
+						),
+					]}
+					initialOpen={false}
+					className={
+						feedzyData.isPro
+							? 'feedzy-item-filter'
+							: 'feedzy-item-filter fz-locked'
+					}
+				>
+					<ConditionsControl
+						conditions={
+							attributes?.conditions || {
+								conditions: [],
+								match: 'all',
+							}
+						}
+						setConditions={(conditions) => {
+							setAttributes({ conditions });
+						}}
+					/>
+				</PanelBody>
 			</InspectorControls>
 
 			<div {...blockProps}>
@@ -244,7 +272,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 								[
 									'core/image',
 									{
-										url: window.feedzyloopjs.defaultImage,
+										url: window.feedzyData.defaultImage,
 										alt: '{{feedzy_title}}',
 										href: '{{feedzy_url}}',
 									},
