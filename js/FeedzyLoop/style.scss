@@ -1,0 +1,9 @@
+.wp-block-feedzy-rss-feeds-loop {
+    display: grid;
+
+    @for $i from 2 through 5 {
+        &.feedzy-loop-columns-#{$i} {
+            grid-template-columns: repeat(#{$i}, 1fr);
+        }
+    }
+}
