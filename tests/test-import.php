@@ -394,9 +394,12 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 	 * Test check duplicate.
 	 */
 	public function test_check_duplicate() {
-		define( 'FEEDZY_PRO_ABSPATH', '' );
-		$function = new ReflectionFunction( 'feedzy_is_pro' );
-		$function->invokeArgs( array( false ) );
+		add_filter(
+			'product_feedzy_license_status',
+			function () {
+				return 'valid';
+			}
+		);
 
 		$post = $this->test_feedzy_imports( $this->get_rand_name(), $this->get_rand_name(), $this->get_two_rand_feeds(), '[#item_content]', false, 'post', true );
 
