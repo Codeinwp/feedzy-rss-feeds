@@ -802,9 +802,9 @@ class Feedzy_Rss_Feeds_Import {
 
 				break;
 			case 'feedzy-next_run':
-				$next = Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'feedzy_cron', array( 100, $post_id ) );
+				$next = Feedzy_Rss_Feeds_Util_Scheduler::get_next( 'feedzy_cron', array( 100, $post_id ) );
 				if ( ! $next ) {
-					$next = Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'feedzy_cron' );
+					$next = Feedzy_Rss_Feeds_Util_Scheduler::get_next( 'feedzy_cron' );
 				}
 				if ( $next ) {
 					echo wp_kses_post( human_time_diff( $next, time() ) );
