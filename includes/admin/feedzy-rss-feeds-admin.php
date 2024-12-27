@@ -1835,24 +1835,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			return $post_content;
 		}
 
-		$feed_url        = $wizard_data['feed'];
-		$feedzy_rest_url = get_rest_url( null, 'feedzy/v' . FEEDZY_REST_VERSION . '/feed/' );
-		$response        = wp_remote_post(
-			$feedzy_rest_url,
-			array(
-				'timeout' => 100,
-				'body'    => array(
-					'url' => array( $feed_url ),
-				),
-			)
-		);
-		if ( ! is_wp_error( $response ) ) {
-			$data         = wp_remote_retrieve_body( $response );
-			$data         = json_decode( $data );
-			$data->feeds  = $feed_url;
-			$data         = wp_json_encode( $data );
-			$post_content = '<!-- wp:feedzy-rss-feeds/feedzy-block ' . $data . ' /-->';
-		}
+		$feed_url     = $wizard_data['feed'];
+		$post_content = '<!-- wp:feedzy-rss-feeds/loop {"feed":{"type":"url","source":["' . esc_url( $feed_url ) . '"]}} --><!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30","right":"var:preset|spacing|30"},"margin":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30"}}},"layout":{"type":"constrained"}} --><div class="wp-block-group" style="margin-top:var(--wp--preset--spacing--30);margin-bottom:var(--wp--preset--spacing--30);padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)"><!-- wp:image --><figure class="wp-block-image"><a href="{{feedzy_url}}"><img src="' . esc_url( FEEDZY_ABSURL . 'img/feedzy.svg' ) . '" alt="{{feedzy_title}}"/></a></figure><!-- /wp:image --><!-- wp:paragraph --><p><a href="{{feedzy_url}}">{{feedzy_title}}</a></p><!-- /wp:paragraph --><!-- wp:paragraph {"fontSize":"medium"} --><p class="has-medium-font-size">{{feedzy_meta}}</p><!-- /wp:paragraph --><!-- wp:paragraph {"fontSize":"small"} --><p class="has-small-font-size">{{feedzy_description}}</p><!-- /wp:paragraph --></div><!-- /wp:group --><!-- /wp:feedzy-rss-feeds/loop -->';
 		return $post_content;
 	}
 

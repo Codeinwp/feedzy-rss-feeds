@@ -281,7 +281,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 									'core/paragraph',
 									{
 										content:
-											'<a href="http://{{feedzy_url}}">{{feedzy_title}}</a>',
+											'<a href="{{feedzy_url}}">{{feedzy_title}}</a>',
 									},
 								],
 								[
