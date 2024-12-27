@@ -166,7 +166,7 @@ class Feedzy_Rss_Feeds_Import {
 						'okButton'            => __( 'Ok', 'feedzy-rss-feeds' ),
 						'removeErrorLogsMsg'  => __( 'Removed all error logs.', 'feedzy-rss-feeds' ),
 						'importButton'        => sprintf(
-							'<a href="#" id="mpg_import" class="page-title-action fz-export-import-btn%1$s"><span class="dashicons %2$s"></span>%3$s</a>',
+							'<a href="#" class="page-title-action fz-export-import-btn%1$s"><span class="dashicons %2$s"></span>%3$s</a>',
 							! feedzy_is_pro() ? ' only-pro' : '',
 							feedzy_is_pro() ? 'dashicons-upload' : 'dashicons-lock',
 							esc_html__( 'Import Job', 'feedzy-rss-feeds' )
