@@ -43,3 +43,33 @@ test.describe( 'Upsell', () => {
         await expect( upgradeAlert ).toBeVisible();
     } );
 });
+
+test.describe( 'List Page Upsell', () => {
+    test.beforeEach( async ( { requestUtils, page } ) => {
+        await page.goto('/wp-admin/edit.php?post_type=feedzy_imports');
+    } );
+
+    test('Import/Export', async ({ editor, page }) => {
+        // Locate and click the "Import Job" link
+        const importButton = page.getByRole('link', { name: 'Import Job', exact: true });
+        await expect(importButton).toBeVisible();
+        await importButton.click();
+
+        // Wait for the popup to become visible
+        const upsellPopup = page.locator('#fz_import_export_upsell');
+        await expect(upsellPopup).toBeVisible();
+
+        // Locate and check the "Upgrade to PRO" link inside the popup
+        const upgradeToProLink = upsellPopup.locator('a', { hasText: 'Upgrade to PRO' });
+        await expect(upgradeToProLink).toBeVisible();
+
+        // Get the URL from the "Upgrade to PRO" link
+        const upsellLink = new URL(await upgradeToProLink.getAttribute('href'));
+
+        // Validate the URL parameters
+        expect(upsellLink.host).toBe('themeisle.com');
+        expect(upsellLink.searchParams.get('utm_source')).toBe('wpadmin');
+        expect(upsellLink.searchParams.get('utm_medium')).toBe('edit');
+        expect(upsellLink.searchParams.get('utm_content')).toBe('feedzy-rss-feeds');
+    });
+});
