@@ -245,6 +245,35 @@ if ( FEEDZY_LOCAL_DEBUG ) {
 	}
 }
 
+/**
+ * Store import job errors in metadata.
+ *
+ * @param string $name Name.
+ * @param string $msg  Error message.
+ * @param string $type  Error type.
+ *
+ * @return void
+ */
+function feedzy_import_job_logs( $name, $msg, $type ) {
+	if ( ! in_array( $type, apply_filters( 'feedzy_allowed_store_log_types', array( 'error' ) ), true ) ) {
+		return;
+	}
+	if ( ! wp_doing_ajax() || wp_doing_cron() ) {
+		return;
+	}
+	if ( apply_filters( 'feedzy_skip_store_error_logs', false ) ) {
+		return;
+	}
+	global $themeisle_log_event;
+
+	if ( ! empty( $themeisle_log_event ) && count( $themeisle_log_event ) >= 200 ) {
+		return;
+	}
+
+	$themeisle_log_event[] = $msg;
+}
+add_action( 'themeisle_log_event', 'feedzy_import_job_logs', 20, 3 );
+
 add_filter( 'themeisle_sdk_enable_telemetry', '__return_true' );
 
 add_filter(
@@ -255,8 +284,8 @@ add_filter(
 			'primary_color'      => '#4268CF',
 			'pages'              => array( 'feedzy_imports', 'edit-feedzy_imports', 'edit-feedzy_categories', 'feedzy_page_feedzy-settings', 'feedzy_page_feedzy-support', 'feedzy_page_feedzy-integration' ),
 			'has_upgrade_menu'   => ! feedzy_is_pro(),
-			'upgrade_link'       => tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'floatWidget' ), 'query' ),
-			'documentation_link' => tsdk_translate_link( tsdk_utmify( 'https://docs.themeisle.com/collection/1569-feedzy-rss-feeds', 'floatWidget' ), 'query' ),
+			'upgrade_link'       => tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'floatWidget' ) ),
+			'documentation_link' => tsdk_translate_link( tsdk_utmify( 'https://docs.themeisle.com/collection/1569-feedzy-rss-feeds', 'floatWidget' ) ),
 			'wizard_link'        => ! feedzy_is_pro() && ! empty( get_option( 'feedzy_fresh_install', false ) ) ? admin_url( 'admin.php?page=feedzy-setup-wizard&tab#step-1' ) : '',
 		);
 	}

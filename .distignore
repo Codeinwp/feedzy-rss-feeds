@@ -40,3 +40,5 @@ docker-compose.travis.yml
 .nvmrc
 .releaserc.yml
 docker-compose.ci.yml
+.wp-env.json
+artifacts

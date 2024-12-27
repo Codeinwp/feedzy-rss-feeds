@@ -23,10 +23,11 @@
 }
 
 input.feedzy-toggle-round + label {
-	width: 60px;
-	height: 22px;
+	width: 2rem;
+	height: 1rem;
+	border: 1px solid #5555559c;
 	border-radius: 22px;
-	background-color: #ddd;
+	background-color: #f1f1f1;
 }
 
 input.feedzy-toggle-round + label:before,
@@ -48,26 +49,27 @@ input.feedzy-toggle-round + label:before {
 }
 
 input.feedzy-toggle-round + label:after {
-	width: 23px;
-	height: 23px;
+	width: 0.75rem;
+	height: 0.75rem;
 	border-radius: 100%;
-	background-color: #fff;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+	background-color: #f6f7f7;
 	-webkit-transition: margin 0.4s;
 	transition: margin 0.4s;
 }
 
 input.feedzy-toggle-round:checked + label:before {
-	background-color: #44cf6c;
+	background-color:#2271b1;
 }
 
 input.feedzy-toggle-round:checked + label:after {
-	margin-left: 36px;
+	margin-left: 16px;
+	background: #f1f1f1;
 }
-
-input.feedzy-toggle-round + label {
-	padding: 2px;
-	background-color: #ddd;
+input.feedzy-toggle-round:checked + label{
+	border-color: #f6f7f7;
+}
+.feedzy-dialog:not(.feedzy-dialog-content){
+	display:none;
 }
 
 input.feedzy-toggle-round + label:before,
@@ -90,13 +92,16 @@ input.feedzy-toggle-round + label:before {
 
 input.feedzy-toggle-round + label:after {
 	border-radius: 100%;
-	background-color: #fff;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+	background-color:#5555559c;
 	-webkit-transition: margin 0.4s;
 	transition: margin 0.4s;
+	margin-top:1px;
+}
+span.feedzy-spinner:not(.is-active) {
+    display: none;
 }
 span.feedzy-spinner {
-    float: none !important;
+	float: none !important;
 }
 #TB_ajaxContent ul {
 	list-style: decimal;
@@ -125,4 +130,11 @@ span.feedzy-spinner {
 
 #TB_ajaxContent div.dry_run span i.fail {
 	color: #ca4a1f;
+}
+
+.feedzy-errors-dialog + .ui-widget-content .ui-dialog-buttonset {
+	width: 100%;
+}
+.feedzy-errors-dialog + .ui-widget-content button.feedzy-clear-logs {
+	margin-left: 0;
 }
