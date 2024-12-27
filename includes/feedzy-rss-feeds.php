@@ -190,7 +190,6 @@ class Feedzy_Rss_Feeds {
 		self::$instance->loader->add_filter( 'feedzy_item_attributes', self::$instance->admin, 'feedzy_classes_item', 99, 5 );
 		self::$instance->loader->add_filter( 'feedzy_register_options', self::$instance->admin, 'register_options' );
 		self::$instance->loader->add_filter( 'feedzy_summary_input', self::$instance->admin, 'feedzy_summary_input_filter', 9, 3 );
-		self::$instance->loader->add_filter( 'feedzy_item_keyword', self::$instance->admin, 'feedzy_feed_item_keywords_title', 9, 4 );
 		self::$instance->loader->add_filter( 'feedzy_get_feed_array', self::$instance->admin, 'get_feed_array', 10, 5 );
 		self::$instance->loader->add_filter( 'feedzy_process_feed_source', self::$instance->admin, 'process_feed_source', 10, 1 );
 		self::$instance->loader->add_filter( 'feedzy_get_feed_url', self::$instance->admin, 'get_feed_url', 10, 1 );
@@ -268,6 +267,11 @@ class Feedzy_Rss_Feeds {
 			$this->loader->add_action( 'elementor/widgets/register', $plugin_elementor_widget, 'feedzy_elementor_widgets_registered' );
 			$this->loader->add_action( 'elementor/controls/register', $plugin_elementor_widget, 'feedzy_elementor_register_datetime_local_control' );
 			$this->loader->add_action( 'elementor/frontend/before_enqueue_styles', $plugin_elementor_widget, 'feedzy_elementor_before_enqueue_scripts' );
+
+			$plugin_conditions = new Feedzy_Rss_Feeds_Conditions();
+			$this->loader->add_action( 'feedzy_filter_conditions_migration', $plugin_conditions, 'migrate_conditions' );
+			$this->loader->add_action( 'feedzy_filter_conditions_attribute', $plugin_conditions, 'convert_filter_string_to_json' );
+			$this->loader->add_action( 'feedzy_item_keyword', $plugin_conditions, 'evaluate_conditions', 10, 5 );
 		}
 
 		$plugin_slug = FEEDZY_DIRNAME . '/' . basename( FEEDZY_BASEFILE );

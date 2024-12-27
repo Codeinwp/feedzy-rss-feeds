@@ -30,7 +30,8 @@
   },
   "scripts": {
     "format": "phpcbf --standard=phpcs.xml --report-summary --report-source",
-    "lint": "phpcs --standard=phpcs.xml"
+    "lint": "phpcs --standard=phpcs.xml",
+    "test": "phpunit"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
@@ -46,6 +47,7 @@
   "require-dev": {
     "wp-coding-standards/wpcs": "^3.1",
     "dealerdirect/phpcodesniffer-composer-installer": "^1.0.0",
-    "phpcompatibility/phpcompatibility-wp": "^2.1"
+    "phpcompatibility/phpcompatibility-wp": "^2.1",
+    "yoast/phpunit-polyfills": "^3.0"
   }
 }
