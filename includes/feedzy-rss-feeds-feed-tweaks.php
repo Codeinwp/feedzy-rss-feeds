@@ -231,13 +231,13 @@ function feedzy_is_legacyv5( ) {
 
 	return $legacy === 1;
 }
+
 /**
  * Check if the user is pro or not.
  *
  * @return bool If the users is pro or not
  */
 function feedzy_is_pro( $check_license = true ) {
-
 	$status = apply_filters( 'product_feedzy_license_status', false ) === 'valid';
 	if ( ! $check_license ) {
 		$status = true;
