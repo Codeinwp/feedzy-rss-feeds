@@ -102,7 +102,7 @@ class Feedzy_Rss_Feeds_Import {
 				<div class="only-pro-container">
 					<div class="only-pro-inner upgrade-alert">
 						' . __( 'This feature is available in the Pro version.  Unlock more features, by', 'feedzy-rss-feeds' ) . '
-						<a target="_blank" href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, $area, $location ), 'query' ) ) . '" title="' . __( 'Buy Now', 'feedzy-rss-feeds' ) . '">' . __( 'upgrading to Feedzy Pro', 'feedzy-rss-feeds' ) . '</a>
+						<a target="_blank" href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, $area, $location ) ) ) . '" title="' . __( 'Buy Now', 'feedzy-rss-feeds' ) . '">' . __( 'upgrading to Feedzy Pro', 'feedzy-rss-feeds' ) . '</a>
 					</div>
 				</div>
 			</div>';
@@ -742,8 +742,10 @@ class Feedzy_Rss_Feeds_Import {
 						} else {
 							$src = sprintf( '%s: %s%s%s', __( 'Feed Group', 'feedzy-rss-feeds' ), '<a href="' . admin_url( 'edit.php?post_type=feedzy_categories' ) . '" target="_blank">', $src, '</a>' );
 						}
-					} else {
-						$src = sprintf( '%s: %s%s%s', __( 'Feed Group', 'feedzy-rss-feeds' ), '<a href="' . admin_url( 'edit.php?post_type=feedzy_categories' ) . '" target="_blank">', $src, '</a>' );
+					} elseif ( empty( $src ) ) {
+							$src = __( 'No Source Configured', 'feedzy-rss-feeds' );
+						} else {
+							$src = sprintf( '%s: %s%s%s', __( 'Feed Group', 'feedzy-rss-feeds' ), '<a href="' . admin_url( 'edit.php?post_type=feedzy_categories' ) . '" target="_blank">', $src, '</a>' );
 					}
 				} else {
 					// else link it to the feed but shorten it if it is too long.
@@ -802,28 +804,7 @@ class Feedzy_Rss_Feeds_Import {
 					$next = Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'feedzy_cron' );
 				}
 				if ( $next ) {
-					$now  = new DateTime();
-					$then = new DateTime();
-					$then = $then->setTimestamp( $next );
-					$in   = $now->diff( $then );
-
-					$time_string = array();
-					// Add days if they exist.
-					if ( $in->d > 0 ) {
-						// translators: %1$s days.
-						$time_string[] = sprintf( __( '%1$d days', 'feedzy-rss-feeds' ), $in->d );
-					}
-					// Add hours if they exist.
-					if ( $in->h > 0 ) {
-						// translators: %1$s hours.
-						$time_string[] = sprintf( __( '%1$d hours', 'feedzy-rss-feeds' ), $in->h );
-					}
-					// Add minutes if they exist.
-					if ( $in->i > 0 ) {
-						// translators: %1$s minutes.
-						$time_string[] = sprintf( __( '%1$d minutes', 'feedzy-rss-feeds' ), $in->i );
-					}
-					echo wp_kses_post( join( ' ', $time_string ) );
+					echo wp_kses_post( human_time_diff( $next, time() ) );
 				}
 				break;
 			default:
@@ -893,7 +874,7 @@ class Feedzy_Rss_Feeds_Import {
 
 		// popup for items found.
 		if ( is_array( $status['items'] ) ) {
-			$msg .= '<div class="feedzy-items-found-' . $post_id . ' feedzy-dialog" title="' . __( 'Items found', 'feedzy-rss-feeds' ) . '"><ol>';
+			$msg .= '<div class="feedzy-items-found-' . $post_id . ' feedzy-dialog"  title="' . __( 'Items found', 'feedzy-rss-feeds' ) . '"><ol>';
 			foreach ( $status['items'] as $url => $title ) {
 				$msg .= sprintf( '<li><p><a href="%s" target="_blank">%s</a></p></li>', esc_url( $url ), esc_html( $title ) );
 			}
@@ -1112,9 +1093,26 @@ class Feedzy_Rss_Feeds_Import {
 			case 'wizard_import_feed':
 				$this->wizard_import_feed();
 				break;
+			case 'remove_upsell_notice':
+				$this->remove_import_upsell();
+				break;
 		}
 	}
+    /**
+     * AJAX called method to remove import upsell notice.
+     *
+     * @since   3.4.1
+     * @access  public
+     */
+    public function remove_import_upsell() {
+	    if ( ! is_user_logged_in() ) {
+		    return;
+	    }
+        $user_id = get_current_user_id();
+        update_user_meta( $user_id, 'feedzy_import_upsell_notice', 'dismissed' );
 
+        wp_send_json_success();
+    }
 	/**
 	 * AJAX called method to update post status.
 	 *
@@ -2375,7 +2373,7 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	public function add_cron() {
 		$time     = ! empty( $this->free_settings['general']['fz_cron_execution'] ) ? $this->get_cron_execution( $this->free_settings['general']['fz_cron_execution'] ) : time();
-		$schedule = ! empty( $this->free_settings['general']['fz_cron_schedule'] ) ? $this->free_settings['general']['fz_cron_schedule'] : 'hourly';
+		$schedule = ! empty( $this->free_settings['general']['fz_cron_schedule'] ) ? $this->free_settings['general']['fz_cron_schedule'] : ( feedzy_is_legacyv5() ? 'hourly' : 'daily' );
 		if ( ( isset( $_POST['nonce'] ) && isset( $_POST['tab'] ) ) && ( wp_verify_nonce( filter_input( INPUT_POST, 'nonce', FILTER_UNSAFE_RAW ), filter_input( INPUT_POST, 'tab', FILTER_UNSAFE_RAW ) ) ) ) {
 			if ( ! empty( $_POST['fz_cron_execution'] ) && ! empty( $_POST['fz_cron_schedule'] ) && ! empty( $_POST['fz_execution_offset'] ) ) {
 				$execution = sanitize_text_field( wp_unslash( $_POST['fz_cron_execution'] ) );
@@ -2831,6 +2829,41 @@ class Feedzy_Rss_Feeds_Import {
 				$post->ID,
 				esc_html( __( 'Purge &amp; Reset', 'feedzy-rss-feeds' ) )
 			);
+			if ( feedzy_is_pro() ) {
+
+				$actions['feedzy_clone'] =
+					sprintf(
+						'<a href="%1$s" class="feedzy-clone" >%2$s</a>',
+						wp_nonce_url(
+							add_query_arg(
+								array(
+									'action'        => 'feedzy_clone_import_job',
+									'feedzy_job_id' => $post->ID,
+								),
+								'admin.php'
+							),
+							FEEDZY_BASENAME,
+							'clone_import'
+						),
+						esc_html( __( 'Clone', 'feedzy-rss-feeds' ) )
+					);
+			} else {
+				$actions['feedzy_clone_no'] =
+					sprintf(
+						'<a href="#" class="feedzy-quick-link feedzy-clone-disabled" >%1$s<span class="dashicons dashicons-lock"></span></a>',
+						esc_html( __( 'Clone', 'feedzy-rss-feeds' ) )
+					);
+				if ( ! feedzy_is_legacyv5() || feedzy_is_pro( false ) ) {
+					static $is_not_first = false;
+					if ( $is_not_first ) {
+						$actions['edit'] = sprintf(
+							'<a href="#" class="feedzy-quick-link  feedzy-edit-disabled" >%1$s<span class="dashicons dashicons-lock"></span></a>',
+							esc_html( __( 'Edit', 'feedzy-rss-feeds' ) )
+						);
+					}
+					$is_not_first = true;
+				}
+			}
 		} elseif ( 1 === intval( get_post_meta( $post->ID, 'feedzy', true ) ) ) {
 			// show an unclickable action that mentions that it is imported by us
 			// so that users are aware

@@ -155,6 +155,9 @@
 .feedzy-accordion-item__title{
 	position: relative;
 }
+.feedzy-accordion-item.only-pro{
+	opacity: 0.5;
+}
 .feedzy-accordion-item .feedzy-accordion-item__button{
 	width: 100%;
 	position: relative;

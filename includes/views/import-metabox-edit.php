@@ -28,25 +28,7 @@ global $post;
 			<div class="feedzy-accordion-item__content border-top">
 				<div class="fz-form-wrap">
 					<div class="form-block">
-						<?php if ( ! feedzy_is_pro() ) : ?>
-							<div class="fz-upsell-notice upgrade-alert mb-24">
-								<strong>
-									<?php esc_html_e( 'NEW!', 'feedzy-rss-feeds' ); ?>
-								</strong>
-								<?php
-								$upsell_url = tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'amazonproductadvertising', 'importfeed' ), 'query' );
 
-								echo wp_kses_post(
-									wp_sprintf(
-										// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
-										__( 'Enable Amazon Product Advertising feeds to generate affiliate revenue by %1$s upgrading to Feedzy Pro. %2$s', 'feedzy-rss-feeds' ),
-										'<a target="_blank" href="' . esc_url( $upsell_url ) . '" >',
-										'</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>'
-									)
-								);
-								?>
-							</div>
-						<?php endif; ?>
 						<label class="form-label"><?php esc_html_e( 'RSS Feed sources ', 'feedzy-rss-feeds' ); ?></label>
 						<?php echo wp_kses_post( $invalid_source_msg ); ?>
 						<input type="hidden" name="post_title" value="<?php echo $post ? esc_attr( $post->post_title ) : ''; ?>">
@@ -120,11 +102,11 @@ global $post;
 		</div>
 		<!-- Sources configuration Step End -->
 		<!-- Filters Step Start -->
-		<div class="feedzy-accordion-item">
+		<div class="feedzy-accordion-item <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
 			<div class="feedzy-accordion-item__title" id="fz-import-filters">
 				<button type="button" class="feedzy-accordion-item__button">
 					<div class="feedzy-accordion__step-number help-text"><?php esc_html_e( 'Step 2', 'feedzy-rss-feeds' ); ?></div>
-					<div class="feedzy-accordion__step-title h2"><?php esc_html_e( 'Filters', 'feedzy-rss-feeds' ); ?></div>
+					<div class="feedzy-accordion__step-title h2"><?php esc_html_e( 'Filters', 'feedzy-rss-feeds' ); ?><?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></div>
 					<div class="feedzy-accordion__icon"><span class="dashicons dashicons-arrow-down-alt2"></span></div>
 				</button>
 			</div>
@@ -151,18 +133,6 @@ global $post;
 						<?php
 							esc_html_e( 'Using magic tags, specify what part(s) of the source should form part of the imported post.', 'feedzy-rss-feeds' );
 						?>
-						<?php if ( false === apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) { ?>
-							<?php
-								echo wp_kses_post(
-									sprintf(
-										// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
-										__( 'The magic tags that are greyed out and disabled, are unavailable for your current license. Unlock all features, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ),
-										'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'magictags' ), 'query' ) ) . '" target="_blank" >',
-										'</a>'
-									)
-								);
-							?>
-						<?php } ?>
 					</p>
 				</div>
 				<div class="fz-tabs-menu">
@@ -225,7 +195,7 @@ global $post;
 													sprintf(
 														// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
 														__( 'Add more advanced tags, like item categories and custom field, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ),
-														'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'moreadvanced' ), 'query' ) ) . '" target="_blank">',
+														'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'moreadvanced' ) ) ) . '" target="_blank">',
 														'</a>'
 													)
 												);
@@ -380,14 +350,14 @@ global $post;
 											</div>
 										</div>
 									</div>
-									<?php if ( ! feedzy_is_pro() ) : ?>
+									<?php if ( ! feedzy_is_pro() && ! Feedzy_Rss_Feeds_Ui::had_dismissed_notice() ) : ?>
 										<div class="upgrade-alert">
 											<?php
 												echo wp_kses_post(
 													sprintf(
 														// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
 														__( 'Add more advanced tags, like item price, rating and many more, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ),
-														'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'moreadvanced' ), 'query' ) ) . '" target="_blank">',
+														'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'moreadvanced' ) ) ) . '" target="_blank">',
 														'</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>'
 													)
 												);
@@ -551,7 +521,7 @@ global $post;
 													sprintf(
 														// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
 														__( 'Add more advanced tags, like item price, rating and many more, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ),
-														'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'post-excerpt', 'import' ), 'query' ) ) . '" target="_blank">',
+														'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'post-excerpt', 'import' ) ) ) . '" target="_blank">',
 														'</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>'
 													)
 												);
@@ -566,7 +536,6 @@ global $post;
 								<div class="fz-left">
 									<h4 class="h4"><?php esc_html_e( 'Custom Fields', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
 									<div class="form-block-pro-text">
-									<?php esc_html_e( 'This feature is only for Pro users.', 'feedzy-rss-feeds' ); ?><br>
 										<a href="https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy" target="_blank"><?php esc_html_e( 'Learn More', 'feedzy-rss-feeds' ); ?></a>
 									</div>
 								</div>
@@ -672,14 +641,15 @@ global $post;
 						</div>
 					</div>
 
-					<div class="form-block form-block-two-column">
+					<div class="form-block form-block-two-column <?php echo feedzy_is_legacyv5() ? '' : esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
+					    <?php echo feedzy_is_legacyv5() ? '' : wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'count', 'import' ) ); ?>
 						<div class="fz-left">
-							<h4 class="h4"><?php esc_html_e( 'Items Count', 'feedzy-rss-feeds' ); ?></h4>
+							<h4 class="h4"><?php esc_html_e( 'Items Count', 'feedzy-rss-feeds' ); ?><?php echo ! feedzy_is_pro() && ! feedzy_is_legacyv5() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
 						</div>
 						<div class="fz-right">
 							<div class="fz-form-group">
 								<label class="form-label"><?php esc_html_e( 'How many feed items to import from the source?', 'feedzy-rss-feeds' ); ?></label>
-								<input type="number" min="0" max="9999" id="feedzy_item_limit" name="feedzy_meta_data[import_feed_limit]" class="form-control" value="<?php echo esc_attr( (int) $import_feed_limit ); ?>" />
+								<input type="number" min="0" max="9999" id="feedzy_item_limit" name="feedzy_meta_data[import_feed_limit<?php echo! feedzy_is_pro() && ! feedzy_is_legacyv5() ?   'locked' : ''; ?>]" class="form-control" value="<?php echo esc_attr( (int) $import_feed_limit ); ?>" />
 								<div class="help-text pt-8">
 									<?php echo wp_kses_post( sprintf( __( 'If you choose a high number, please check that your configuration can support it or your imports may fail.', 'feedzy-rss-feeds' ), '<b>', '</b>' ) ); ?>
 								</div>
@@ -717,20 +687,19 @@ global $post;
 					<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
 						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'schedule-import-job', 'import' ) ); ?>
 						<div class="fz-left">
-							<h4 class="h4"><?php esc_html_e( 'Schedule Import Job', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
+							<h4 class="h4"><?php esc_html_e( 'Schedule Import', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
 						</div>
 						<div class="fz-right">
 							<div class="fz-form-row">
 								<div class="fz-form-col-6">
 									<div class="fz-form-group">
-										<label class="form-label"><?php esc_html_e( 'First cron execution time', 'feedzy-rss-feeds' ); ?></label>
+										<label class="form-label"><?php esc_html_e( 'First date/time to run the import', 'feedzy-rss-feeds' ); ?></label>
 										<?php if ( feedzy_is_pro() ) : ?>
 											<input type="hidden" name="feedzy_meta_data[fz_execution_offset]" id="fz-execution-offset" value="<?php echo ! empty( $import_schedule['fz_execution_offset'] ) ? esc_attr( $import_schedule['fz_execution_offset'] ) : ''; ?>">
 										<?php endif; ?>
 										<input type="datetime-local" id="fz-event-execution" name="feedzy_meta_data[fz_cron_execution]" class="form-control" value="<?php echo ! empty( $import_schedule['fz_cron_execution'] ) ? esc_attr( $import_schedule['fz_cron_execution'] ) : ''; ?>"<?php disabled( true, ! feedzy_is_pro() ); ?>>
 										<div class="help-text pt-8">
-											<?php esc_html_e( 'When past date will be provided, event will be executed in the next queue.', 'feedzy-rss-feeds' ); ?>
-											<a href="<?php echo esc_url( 'https://docs.themeisle.com/article/1820-how-to-set-scheduler-for-import-cron-jobs-in-feedzy' ); ?>" target="_blank"><?php esc_html_e( 'Learn More', 'feedzy-rss-feeds' ); ?></a>
+											<?php esc_html_e( 'Set the date and time when Feedzy should first run the import.', 'feedzy-rss-feeds' ); ?>
 										</div>
 									</div>
 								</div>
@@ -742,10 +711,10 @@ global $post;
 											$save_schedule = ! empty( $import_schedule['fz_cron_schedule'] ) ? $import_schedule['fz_cron_schedule'] : '';
 
 											$schedules = wp_get_schedules();
-											if ( isset( $schedules['hourly'] ) ) {
-												$hourly = $schedules['hourly'];
-												unset( $schedules['hourly'] );
-												$schedules = array_merge( array( 'hourly' => $hourly ), $schedules );
+											if ( isset( $schedules['daily'] ) ) {
+												$daily = $schedules['daily'];
+												unset( $schedules['daily'] );
+												$schedules = array_merge( array( 'daily' => $daily ), $schedules );
 											}
 											$duplicate_schedule = array();
 											foreach ( $schedules as $slug => $schedule ) :
@@ -754,10 +723,10 @@ global $post;
 												}
 												$duplicate_schedule[] = $schedule['interval'];
 												?>
-												<option value="<?php echo esc_attr( $slug ); ?>"<?php selected( $save_schedule, $slug ); ?>><?php echo esc_html( $schedule['display'] ); ?> (<?php echo esc_html( $slug ); ?>)</option>
+												<option data-slug="<?php echo esc_html( $slug ); ?>" value="<?php echo esc_attr( $slug ); ?>"<?php selected( $save_schedule, $slug ); ?>><?php echo esc_html( $schedule['display'] ); ?></option>
 											<?php endforeach; ?>
 										</select>
-										<div class="help-text pt-8"><?php esc_html_e( 'After first execution repeat.', 'feedzy-rss-feeds' ); ?></div>
+										<div class="help-text pt-8"><?php esc_html_e( 'How often Feedzy will run the import.', 'feedzy-rss-feeds' ); ?></div>
 									</div>
 								</div>
 							</div>
@@ -819,10 +788,11 @@ global $post;
 	<div class="fz-form-action">
 		<div class="fz-left">
 			<?php
+            if ( feedzy_is_pro() ) {
 				$clone_url = wp_nonce_url(
 					add_query_arg(
 						array(
-							'action' => 'feedzy_clone_import_job',
+							'action'        => 'feedzy_clone_import_job',
 							'feedzy_job_id' => $post->ID,
 						),
 						'admin.php'
@@ -831,7 +801,9 @@ global $post;
 					'clone_import'
 				);
 				?>
-			<a href="<?php echo esc_url( $clone_url ); ?>" class="btn btn-ghost"><?php esc_html_e( 'Clone Import', 'feedzy-rss-feeds' ); ?></a>
+                <a href="<?php echo esc_url( $clone_url ); ?>"
+                   class="btn btn-ghost"><?php esc_html_e( 'Clone Import', 'feedzy-rss-feeds' ); ?></a>
+			<?php } ?>
 		</div>
 		<div class="fz-right">
 			<button type="button" id="preflight" name="check" class="btn btn-ghost" value="Check"

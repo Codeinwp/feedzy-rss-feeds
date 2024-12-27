@@ -108,22 +108,7 @@ class Inspector extends Component {
 								title={__('Feed Source', 'feedzy-rss-feeds')}
 								initialOpen={true}
 							>
-								{(this.props.attributes.status !== 0 && !feedzyjs.isPro) && [
-									<div className="fz-upgrade-alert">
-										<strong>{ __( 'NEW!', 'feedzy-rss-feeds' ) } </strong>
-										<RawHTML>
-										{
-											sprintf(
-												// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
-												__( 'Enable Amazon Product Advertising feeds to generate affiliate revenue by %1$s upgrading to Feedzy Pro. %2$s', 'feedzy-rss-feeds' ),
-												`<a target="_blank" href="${feedzyjs?.upsellLinkBlockEditor}">`,
-												'</a>'
-											)
-										}
-										</RawHTML>
-										<Dashicon icon="no-alt" onClick={(el) => {el.target.parentNode.style.display="none"}}/>
-									</div>
-								]}
+
 								{(this.props.attributes.status !== 0) && [
 									<TextControl
 										label={__('Feed Source', 'feedzy-rss-feeds')}

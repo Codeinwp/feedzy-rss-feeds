@@ -462,6 +462,14 @@
 			upSellNotice.fadeOut( 500,
 				function() {
 					upSellNotice.remove();
+					jQuery.post(
+						ajaxurl,
+						{
+							security: feedzy.ajax.security,
+							action: "feedzy",
+							_action: "remove_upsell_notice"
+						}
+					);
 				}
 			);
 		});
@@ -664,6 +672,9 @@
 			modal: true,
 			autoOpen: false,
 			height: 400,
+			classes: {
+				"ui-dialog-content": "feedzy-dialog-content",
+			},
 			width: 500,
 			buttons: {
 				Ok: function () {
@@ -731,6 +742,9 @@
 			e.preventDefault();
 			var element = $(this);
 			var deleteImportedPosts = confirm(feedzy.i10n.delete_post_message);
+			if (!deleteImportedPosts) {
+				return;
+			}
 			showSpinner(element);
 			$.ajax({
 				url: ajaxurl,

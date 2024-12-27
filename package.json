@@ -33,6 +33,7 @@
     "lint:js": "wp-scripts lint-js ./js",
     "release": "semantic-release --debug",
     "dist": "bash bin/dist.sh",
+    "grunt": "grunt",
     "test:e2e": "wp-scripts test-playwright --config tests/e2e/playwright.config.js",
     "test:e2e:debug": "wp-scripts test-playwright --config tests/e2e/playwright.config.js --ui",
     "wp-env": "wp-env"
