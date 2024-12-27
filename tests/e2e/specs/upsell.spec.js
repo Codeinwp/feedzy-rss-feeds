@@ -51,7 +51,7 @@ test.describe( 'List Page Upsell', () => {
 
     test('Import/Export', async ({ editor, page }) => {
         // Locate and click the "Import Job" link
-        const importButton = page.getByRole('link', { name: 'Import Job', exact: true });
+        const importButton = page.locator('.fz-export-import-btn');
         await expect(importButton).toBeVisible();
         await importButton.click();
 
