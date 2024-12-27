@@ -676,11 +676,59 @@
 				"ui-dialog-content": "feedzy-dialog-content",
 			},
 			width: 500,
-			buttons: {
-				Ok: function () {
-					$(this).dialog("close");
+			buttons:[
+				{
+					text: feedzy.i10n.okButton,
+					click: function () {
+						$(this).dialog('close');
+					}
+				}
+			]
+		});
+
+		// Error logs popup.
+		$(".feedzy-errors-dialog").dialog({
+			modal: true,
+			autoOpen: false,
+			height: 400,
+			width: 500,
+			buttons:[
+				{
+					text: feedzy.i10n.clearLogButton,
+					class: 'button button-primary feedzy-clear-logs',
+					click: function (event) {
+						var clearButton = $(event.target);
+						var dialogBox = $(this);
+						$('<span class="feedzy-spinner spinner is-active"></span>').insertAfter(clearButton);
+						clearButton.attr('disabled', true);
+						$.post(
+							ajaxurl,
+							{
+								security: feedzy.ajax.security,
+								id: $(this).attr('data-id'),
+								action: 'feedzy',
+								_action: 'clear_error_logs',
+							},
+							function () {
+								clearButton
+								.next('.feedzy-spinner')
+								.remove();
+
+								dialogBox
+								.find('.feedzy-error.feedzy-api-error')
+								.html('<div class="notice notice-success"><p>' + feedzy.i10n.removeErrorLogsMsg + '</p></div>')
+							}
+						);
+					}
 				},
-			},
+				{
+					text: feedzy.i10n.okButton,
+					class: 'alignright',
+					click: function () {
+						$(this).dialog('close');
+					}
+				}
+			]
 		});
 
 		$(".feedzy-dialog-open").on("click", function (e) {

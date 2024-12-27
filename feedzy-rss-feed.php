@@ -245,6 +245,35 @@ if ( FEEDZY_LOCAL_DEBUG ) {
 	}
 }
 
+/**
+ * Store import job errors in metadata.
+ *
+ * @param string $name Name.
+ * @param string $msg  Error message.
+ * @param string $type  Error type.
+ *
+ * @return void
+ */
+function feedzy_import_job_logs( $name, $msg, $type ) {
+	if ( ! in_array( $type, apply_filters( 'feedzy_allowed_store_log_types', array( 'error' ) ), true ) ) {
+		return;
+	}
+	if ( ! wp_doing_ajax() || wp_doing_cron() ) {
+		return;
+	}
+	if ( apply_filters( 'feedzy_skip_store_error_logs', false ) ) {
+		return;
+	}
+	global $themeisle_log_event;
+
+	if ( ! empty( $themeisle_log_event ) && count( $themeisle_log_event ) >= 200 ) {
+		return;
+	}
+
+	$themeisle_log_event[] = $msg;
+}
+add_action( 'themeisle_log_event', 'feedzy_import_job_logs', 20, 3 );
+
 add_filter( 'themeisle_sdk_enable_telemetry', '__return_true' );
 
 add_filter(
