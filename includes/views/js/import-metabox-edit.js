@@ -96,6 +96,7 @@
 		$(".custom_fields").append(html_row);
 		$(".btn.btn-remove-fields").on("click", remove_row);
 		initCustomFieldAutoComplete();
+		document.dispatchEvent(new Event('feedzy_new_row_added'));
 		return false;
 	}
 
@@ -659,6 +660,79 @@
 				tagList.find( 'input:text' ).val( '' );
 			}
 		} );
+
+		$( document ).on( 'change', 'input#remove-duplicates', function() {
+			if ( $(this).is(':checked') ) {
+				$('input#feedzy_mark_duplicate').attr( 'disabled', false );
+			} else {
+				$('input#feedzy_mark_duplicate').attr( 'disabled', true );
+			}
+		} );
+
+		$(document).on( 'input', 'input[name="custom_vars_value[]"]', function () {
+			$(this)
+			.next('.fz-action-icon')
+			.toggleClass( 'disabled', $(this).val() === '' );
+
+			$(this)
+			.parent( '.fz-form-group' )
+			.find( 'input:hidden' )
+			.attr( 'disabled', $(this).val() === '' );
+		} );
+
+    // Append import button.
+		$( feedzy.i10n.importButton ).insertAfter( $( '.page-title-action', document ) );
+		$( $( '.page-title-action', document ) ).wrapAll( '<div class="fz-header-action"></div>' );
+
+		// Create dialog box
+		$( '#fz_import_export_upsell' ).dialog( {
+			title: '',
+			dialogClass: 'wp-dialog',
+			autoOpen: false,
+			draggable: false,
+			width: 'auto',
+			modal: true,
+			resizable: false,
+			closeOnEscape: true,
+			position: {
+				my: "center",
+				at: "center",
+				of: window
+			},
+			open: function( event, ui ) {
+				$(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
+				$(".ui-dialog-titlebar", ui.dialog | ui).hide();
+			},
+			create: function() {
+				// style fix for WordPress admin
+				$( '.ui-dialog-titlebar-close' ).addClass( 'ui-button' );
+			},
+		} );
+
+		$( '.fz-export-import-btn.only-pro, .fz-export-btn-pro' ).on( 'click', function( e ) {
+            e.preventDefault();
+            $( '#fz_import_export_upsell' ).dialog( 'open' );
+        });
+
+        $( '#fz_import_export_upsell' ).on( 'click', '.close-modal', function ( e ) {
+        	e.preventDefault();
+            $( '#fz_import_export_upsell' ).dialog( 'close' );
+        } );
+
+        $(document).on( 'click', '.fz-export-import-btn:not(.only-pro)', function( e ) {
+            e.preventDefault();
+            if ( $('.fz-import-field').length === 0 ) {
+	            var importField = $( '#fz_import_field_section' ).html();
+	            $( importField ).insertAfter( $( this ).parents( 'div.wrap' ).find( '.wp-header-end' ) );
+	        }
+            $('.fz-import-field').toggleClass('hidden');
+        });
+
+		let url = new URL(window.location.href);
+		if (url.searchParams.has('imported')) {
+			url.searchParams.delete('imported');
+			history.replaceState(history.state, '', url.href);
+		}
 	}
 
 	function initSummary() {
@@ -928,23 +1002,60 @@
 				button: {
 					text: feedzy.i10n.media_iframe_button
 				},
-				multiple: false
-		} ).on( 'select', function() { // it also has "open" and "close" events
-			var attachment = wp_media_uploader.state().get( 'selection' ).first().toJSON();
-			var attachmentUrl = attachment.url;
-			if ( attachment.sizes.thumbnail ) {
-				attachmentUrl = attachment.sizes.thumbnail.url;
-			}
-			if ( $( '.feedzy-media-preview' ).length ) {
-				$( '.feedzy-media-preview' ).find( 'img' ).attr( 'src', attachmentUrl );
-			} else {
-				$( '<div class="fz-form-group mb-20 feedzy-media-preview"><img src="' + attachmentUrl + '"></div>' ).insertBefore( button.parent() );
-			}
-			button.parent().find( '.feedzy-remove-media' ).addClass( 'is-show' );
-			button.parent().find( 'input:hidden' ).val( attachment.id ).trigger( 'change' );
-			$( '.feedzy-open-media' ).html( feedzy.i10n.action_btn_text_2 );
-		} ).open();
+				multiple: true
+			} ).on( 'select', function() { // it also has "open" and "close" events
+				var selectedAttachments = wp_media_uploader.state().get( 'selection' );
+				var countSelected = selectedAttachments?.toJSON()?.length;
+				button.parents( '.fz-form-group' ).find( '.feedzy-media-preview' ).remove();
+				// Display image preview when a single image is selected.
+				if ( 1 === countSelected ) {
+					var attachment = selectedAttachments.first().toJSON();
+					var attachmentUrl = attachment.url;
+					if ( attachment.sizes.thumbnail ) {
+						attachmentUrl = attachment.sizes.thumbnail.url;
+					}
+					if ( $( '.feedzy-media-preview' ).length ) {
+						$( '.feedzy-media-preview' ).find( 'img' ).attr( 'src', attachmentUrl );
+					} else {
+						$( '<div class="fz-form-group mb-20 feedzy-media-preview"><img src="' + attachmentUrl + '"></div>' ).insertBefore( button.parent() );
+					}
+				} else {
+					$( '<div class="fz-form-group mb-20 feedzy-media-preview"><a href="javascript:;" class="btn btn-outline-primary feedzy-images-selected">' + feedzy.i10n.action_btn_text_3.replace( '%d', countSelected ) + '</a></div>' ).insertBefore( button.parent() );
+				}
+				// Get all selected attachment ids.
+				var ids = selectedAttachments.map( function( attachment ) {
+					return attachment.id;
+				} ).join( ',' );
+
+				button.parent().find( '.feedzy-remove-media' ).addClass( 'is-show' );
+				button.parent().find( 'input:hidden' ).val( ids ).trigger( 'change' );
+				$( '.feedzy-open-media' ).html( feedzy.i10n.action_btn_text_2 );
+			} );
+
+			wp_media_uploader.on(' open', function() {
+				var selectedVal = button.parent().find( 'input:hidden' ).val();
+				if ( '' === selectedVal ) {
+					return;
+				}
+				var selection = wp_media_uploader.state().get('selection');
+
+				selectedVal.split(',').forEach(function( id ) {
+					var attachment = wp.media.attachment( id );
+					attachment.fetch();
+					selection.add(attachment ? [attachment] : []);
+				});
+			} );
+
+			wp_media_uploader.open();
 		});
+
+		$(document).on( 'click', '.feedzy-images-selected', function( e ) {
+			$(this)
+			.parents( '.fz-form-group' )
+			.find( '.feedzy-open-media' )
+			.trigger( 'click' );
+			e.preventDefault();
+		} );
 	}
 }(jQuery, feedzy));
 
