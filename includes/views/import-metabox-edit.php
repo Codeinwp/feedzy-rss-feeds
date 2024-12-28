@@ -215,6 +215,20 @@ global $post;
 											);
 											?>
 									</div>
+									<div class="help-text pt-8">
+										<?php
+											// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+											echo wp_kses_post(
+												sprintf(
+													// translators: %1$s: magic tag, %2$s: opening anchor tag, %3$s: closing anchor tag
+													__( 'You can automatically assign categories with a magic tag %1$s by the keywords used in title. Configure it %2$s here%3$s .', 'feedzy-rss-feeds' ),
+													'<strong>[#auto_categories]</strong>',
+													'<a href="' . esc_url( get_admin_url( null, 'admin.php?page=feedzy-settings' ) ) . '" target="_blank">',
+													'</a>'
+												)
+											);
+											?>
+									</div>
 								</div>
 							</div>
 
