@@ -6,6 +6,7 @@ import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 test.describe('Feedzy Loop', () => {
 	const FEED_URL =
 		'https://s3.amazonaws.com/verti-utils/sample-feed-import.xml';
+	const POST_TITLE = `Feedzy Loop Test ${Math.floor(Math.random() * 1000)}`;
 
 	test('add Feedzy Loop Block', async ({ editor, page }) => {
 		await page.goto('/wp-admin/post-new.php');
@@ -21,7 +22,7 @@ test.describe('Feedzy Loop', () => {
 		}
 
 		await page.getByLabel('Add title').click();
-		await page.keyboard.type('Feedzy Loop Test');
+		await page.keyboard.type(POST_TITLE);
 
 		await page.getByLabel('Toggle block inserter').click();
 
@@ -38,6 +39,8 @@ test.describe('Feedzy Loop', () => {
 
 		await page.getByRole('button', { name: 'Save', exact: true }).click();
 		await page.waitForTimeout(1000);
+
+		await page.getByLabel('Display curated RSS content').click();
 
 		await page
 			.getByRole('button', { name: 'Publish', exact: true })
@@ -58,7 +61,7 @@ test.describe('Feedzy Loop', () => {
 
 		const postTitle = await page.locator('a.row-title').first();
 		await postTitle.hover();
-		await page.getByLabel('View “Feedzy Loop Test”').click();
+		await page.getByLabel('View “' + POST_TITLE + '”').click();
 
 		await page.waitForTimeout(5000);
 
