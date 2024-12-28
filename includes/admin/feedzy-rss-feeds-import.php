@@ -167,6 +167,12 @@ class Feedzy_Rss_Feeds_Import {
 						'removeErrorLogsMsg'  => __( 'Removed all error logs.', 'feedzy-rss-feeds' ),
 						// translators: %d select images count.
 						'action_btn_text_3'   => __( '(%d) images selected', 'feedzy-rss-feeds' ),
+						'importButton'        => sprintf(
+							'<a href="#" class="page-title-action fz-export-import-btn%1$s"><span class="dashicons %2$s"></span>%3$s</a>',
+							! feedzy_is_pro() ? ' only-pro' : '',
+							feedzy_is_pro() ? 'dashicons-upload' : 'dashicons-lock',
+							esc_html__( 'Import Job', 'feedzy-rss-feeds' )
+						),
 					),
 				)
 			);
@@ -403,6 +409,10 @@ class Feedzy_Rss_Feeds_Import {
 		}
 		if ( empty( $import_content ) ) {
 			$import_content = '[[{"value":"%5B%7B%22id%22%3A%22%22%2C%22tag%22%3A%22item_content%22%2C%22data%22%3A%7B%7D%7D%5D"}]]';
+		}
+
+		if ( feedzy_is_pro() && empty( $import_post_term ) ) {
+			$import_post_term = '[#auto_categories]';
 		}
 
 		$import_link_author_admin  = get_post_meta( $post->ID, 'import_link_author_admin', true );
@@ -1940,6 +1950,7 @@ class Feedzy_Rss_Feeds_Import {
 
 			if ( $import_post_term !== 'none' && strpos( $import_post_term, '_' ) > 0 ) {
 				$terms            = explode( ',', $import_post_term );
+				$terms            = apply_filters( 'feedzy_import_terms', $terms, $item );
 				$terms            = array_filter(
 					$terms,
 					function( $term ) {
@@ -1947,6 +1958,9 @@ class Feedzy_Rss_Feeds_Import {
 							return;
 						}
 						if ( false !== strpos( $term, '[#item_' ) ) {
+							return;
+						}
+						if ( false !== strpos( $term, '[#auto_categories]' ) ) {
 							return;
 						}
 						return $term;
@@ -2483,6 +2497,11 @@ class Feedzy_Rss_Feeds_Import {
 		if ( false === Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'feedzy_cron' ) ) {
 			echo wp_kses_post( '<div class="notice notice-error"><p>' . __( 'Unable to register cron job. Your feeds might not get updated', 'feedzy-rss-feeds' ) . '</p></div>' );
 		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( ! empty( $_GET['imported'] ) ) {
+			echo wp_kses_post( '<div class="notice notice-success is-dismissible"><p>' . __( 'Successfully imported.', 'feedzy-rss-feeds' ) . '</p></div>' );
+		}
 	}
 
 	/**
@@ -2850,12 +2869,12 @@ class Feedzy_Rss_Feeds_Import {
 			unset( $actions['inline hide-if-no-js'] );
 
 			$actions['feedzy_purge'] = sprintf(
-				'<a href="#" class="feedzy-purge" data-id="%d">%2$s</a><span class="feedzy-spinner spinner"></span>',
+				'<a href="#" class="feedzy-purge" data-id="%d">%2$s</a>',
 				$post->ID,
 				esc_html( __( 'Purge &amp; Reset', 'feedzy-rss-feeds' ) )
 			);
-			if ( feedzy_is_pro() ) {
 
+			if ( feedzy_is_pro() ) {
 				$actions['feedzy_clone'] =
 					sprintf(
 						'<a href="%1$s" class="feedzy-clone" >%2$s</a>',
@@ -2889,6 +2908,25 @@ class Feedzy_Rss_Feeds_Import {
 					$is_not_first = true;
 				}
 			}
+			// Export action.
+			$export_action = sprintf(
+				'<a href="%s" class="%s"style="%s">%s</a>',
+				feedzy_is_pro() ? esc_url(
+					add_query_arg(
+						array(
+							'action'   => 'fz_export_job',
+							'_wpnonce' => wp_create_nonce( 'fz_export_job' ),
+							'id'       => $post->ID,
+						),
+						admin_url( 'admin.php' )
+					)
+				) : '#',
+				feedzy_is_pro() ? 'fz-export-btn' : 'fz-export-btn-pro',
+				! feedzy_is_pro() ? 'opacity:0.5;' : '',
+				( ! feedzy_is_pro() ? '<span style="font-size: 13px;line-height: 1.5em;width: 13px;height: 13px;" class="dashicons dashicons-lock"></span>' : '' ) . esc_html__( 'Export', 'feedzy-rss-feeds' )
+			);
+
+			$actions['export'] = $export_action;
 		} elseif ( 1 === intval( get_post_meta( $post->ID, 'feedzy', true ) ) ) {
 			// show an unclickable action that mentions that it is imported by us
 			// so that users are aware
@@ -3303,10 +3341,9 @@ class Feedzy_Rss_Feeds_Import {
 
 		if ( ! is_wp_error( $job_id ) ) {
 			update_post_meta( $job_id, 'source', $wizard_data['feed'] );
-			update_post_meta( $job_id, 'import_post_title', '[#item_title]' );
+			update_post_meta( $job_id, 'import_post_title', '[[{"value":"%5B%7B%22id%22%3A%22%22%2C%22tag%22%3A%22item_title%22%2C%22data%22%3A%7B%7D%7D%5D"}]]' );
 			update_post_meta( $job_id, 'import_post_date', '[#item_date]' );
-			update_post_meta( $job_id, 'import_post_content', '[#item_content]' );
-			update_post_meta( $job_id, 'import_post_content', '[#item_content]' );
+			update_post_meta( $job_id, 'import_post_content', '[[{"value":"%5B%7B%22id%22%3A%22%22%2C%22tag%22%3A%22item_content%22%2C%22data%22%3A%7B%7D%7D%5D"}]]' );
 			update_post_meta( $job_id, 'import_post_type', $post_type );
 			update_post_meta( $job_id, 'import_post_status', 'publish' );
 			update_post_meta( $job_id, 'import_post_featured_img', '[#item_image]' );
@@ -3353,5 +3390,52 @@ class Feedzy_Rss_Feeds_Import {
 				'status' => 1,
 			)
 		);
+	}
+
+	/**
+	 * Load edit screen.
+	 */
+	public function load_edit_screen() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( empty( $_GET['post_type'] ) || 'feedzy_imports' !== $_GET['post_type'] ) {
+			return;
+		}
+		add_action( 'admin_footer', array( $this, 'add_import_export_section' ) );
+	}
+
+	/**
+	 * Add import export section.
+	 */
+	public function add_import_export_section() {
+		if ( ! feedzy_is_pro() ) :
+			?>
+		<div id="fz_import_export_upsell" class="hidden" style="max-width:450px">
+			<div class="modal-content">
+				<span class="notice-dismiss close-modal">
+					<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this dialog', 'feedzy-rss-feeds' ); ?></span>
+				</span>
+				<div class="modal-header">
+					<h2><span class="dashicons dashicons-lock"></span> <?php esc_html_e( 'Import/Export is a PRO feature', 'feedzy-rss-feeds' ); ?></h2>
+				</div>
+				<div class="modal-body">
+					<p><?php esc_html_e( 'We\'re sorry, import/export is not available on your plan. Please upgrade to the Pro plan to unlock all these features.', 'feedzy-rss-feeds' ); ?></p>
+				</div>
+				<div class="modal-footer">
+					<div class="button-container"><a href="<?php echo esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'importExport' ) ) ); ?>" target="_blank" rel="noopener " class="button button-primary button-large"><?php esc_html_e( 'Upgrade to PRO', 'feedzy-rss-feeds' ); ?><span aria-hidden="true" class="dashicons dashicons-external"></span></a></div>
+				</div>
+			</div>
+		</div>
+		<?php endif; ?>
+		<script type="template/text" id="fz_import_field_section">
+			<div class="fz-import-field hidden">
+				<form method="post" enctype="multipart/form-data" action="<?php echo esc_url( add_query_arg( array( 'action' => 'fz_import_job' ), admin_url( 'admin.php' ) ) ); ?>">
+					<h4> <?php esc_html_e( 'Choose the inport job .json file to import.', 'feedzy-rss-feeds' ); ?></h4>
+					<?php wp_nonce_field( 'fz_import_job' ); ?>
+					<input type="file" accept=".json" name="fz_import" required>
+					<button type="submit" class="button button-primary"><?php esc_html_e( 'Import', 'feedzy-rss-feeds' ); ?></button>
+				</form>
+			</div>
+		</script>
+		<?php
 	}
 }

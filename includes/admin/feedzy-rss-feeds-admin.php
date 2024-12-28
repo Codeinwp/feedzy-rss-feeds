@@ -995,12 +995,26 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$settings = apply_filters( 'feedzy_get_settings', array() );
 		switch ( $post_tab ) {
 			case 'general':
+				$auto_categories = isset( $_POST['auto-categories'] ) ? filter_input( INPUT_POST, 'auto-categories', FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY ) : array();
+
+				$auto_categories = array_filter( $auto_categories, function( $item ) {
+					return ! empty( $item['keywords'] ) && is_numeric( $item['category'] );
+				});
+
+				$auto_categories = array_map(function( $item ) {
+					$item['keywords'] = sanitize_text_field( $item['keywords'] );
+					return $item;
+				}, $auto_categories );
+
+				$auto_categories = array_values( $auto_categories );
+
 				$settings['general']['disable-default-style'] = isset( $_POST['disable-default-style'] ) ? (int) filter_input( INPUT_POST, 'disable-default-style', FILTER_SANITIZE_NUMBER_INT ) : '';
 				$settings['general']['feedzy-delete-days'] = isset( $_POST['feedzy-delete-days'] ) ? (int) filter_input( INPUT_POST, 'feedzy-delete-days', FILTER_SANITIZE_NUMBER_INT ) : '';
 				$settings['general']['default-thumbnail-id'] = isset( $_POST['default-thumbnail-id'] ) ? (int) filter_input( INPUT_POST, 'default-thumbnail-id', FILTER_SANITIZE_NUMBER_INT ) : 0;
 				$settings['general']['fz_cron_execution'] = isset( $_POST['fz_cron_execution'] ) ? sanitize_text_field( wp_unslash( $_POST['fz_cron_execution'] ) ) : '';
 				$settings['general']['fz_cron_schedule'] = isset( $_POST['fz_cron_schedule'] ) ? filter_input( INPUT_POST, 'fz_cron_schedule', FILTER_UNSAFE_RAW ) : 'hourly';
 				$settings['general']['fz_execution_offset'] = isset( $_POST['fz_execution_offset'] ) ? filter_input( INPUT_POST, 'fz_execution_offset', FILTER_UNSAFE_RAW ) : '';
+				$settings['general']['auto-categories'] = $auto_categories;
 				$settings['general']['feedzy-telemetry'] = isset( $_POST['feedzy-telemetry'] ) ? (int) filter_input( INPUT_POST, 'feedzy-telemetry', FILTER_SANITIZE_NUMBER_INT ) : '';
 				break;
 			case 'headers':
