@@ -85,7 +85,7 @@ class Feedzy_Rss_Feeds_Util_Scheduler {
 	 * @param string $group Filter to only actions assigned to a specific group.
 	 * @return int|null The date and time for the next occurrence, or null if there is no pending, scheduled action for the given hook.
 	 */
-	public static function get_next( $hook, $args = null, $group = '' ) {
+	public static function get_next( $hook, $args = array(), $group = '' ) {
 		if ( function_exists( 'as_next_scheduled_action' ) ) {
 			$next_timestamp = as_next_scheduled_action( $hook, $args, $group );
 			if ( is_numeric( $next_timestamp ) ) {
