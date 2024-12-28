@@ -428,8 +428,9 @@ class Feedzy_Rss_Feeds_Import {
 		// maybe more options are required from pro?
 		$pro_options = apply_filters( 'feedzy_metabox_options', array(), $post->ID );
 
-		$import_custom_fields = get_post_meta( $post->ID, 'imports_custom_fields', true );
-		$import_feed_limit    = get_post_meta( $post->ID, 'import_feed_limit', true );
+		$import_custom_fields  = get_post_meta( $post->ID, 'imports_custom_fields', true );
+		$custom_fields_actions = get_post_meta( $post->ID, 'imports_custom_field_actions', true );
+		$import_feed_limit     = get_post_meta( $post->ID, 'import_feed_limit', true );
 		if ( empty( $import_feed_limit ) ) {
 			$import_feed_limit = 10;
 		}
@@ -1991,7 +1992,11 @@ class Feedzy_Rss_Feeds_Import {
 				}
 			}
 
-			do_action( 'feedzy_import_extra', $job, $item_obj, $new_post_id, $import_errors, $import_info );
+			do_action( 'feedzy_import_extra', $job, $item_obj, $new_post_id, $import_errors, $import_info, array(
+				'translation_lang' => $import_translation_lang,
+				'language_code'    => $language_code,
+				'item'             => $item,
+			) );
 
 			if ( ! empty( $import_featured_img ) && 'attachment' !== $import_post_type ) {
 				$image_source_url = '';

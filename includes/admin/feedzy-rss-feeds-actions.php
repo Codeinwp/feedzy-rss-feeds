@@ -597,5 +597,15 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			}
 			return $dom->saveHTML();
 		}
+
+		/**
+		 * Get custom field value.
+		 */
+		private function custom_field() {
+			if ( ! empty( $this->result ) ) {
+				return $this->result;
+			}
+			return $this->default_value;
+		}
 	}
 }

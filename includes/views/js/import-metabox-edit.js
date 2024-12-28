@@ -96,6 +96,7 @@
 		$(".custom_fields").append(html_row);
 		$(".btn.btn-remove-fields").on("click", remove_row);
 		initCustomFieldAutoComplete();
+		document.dispatchEvent(new Event('feedzy_new_row_added'));
 		return false;
 	}
 
@@ -659,7 +660,19 @@
 				tagList.find( 'input:text' ).val( '' );
 			}
 		} );
-		// Append import button.
+
+		$(document).on( 'input', 'input[name="custom_vars_value[]"]', function () {
+			$(this)
+			.next('.fz-action-icon')
+			.toggleClass( 'disabled', $(this).val() === '' );
+
+			$(this)
+			.parent( '.fz-form-group' )
+			.find( 'input:hidden' )
+			.attr( 'disabled', $(this).val() === '' );
+		} );
+
+    // Append import button.
 		$( feedzy.i10n.importButton ).insertAfter( $( '.page-title-action', document ) );
 		$( $( '.page-title-action', document ) ).wrapAll( '<div class="fz-header-action"></div>' );
 
