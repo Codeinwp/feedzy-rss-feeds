@@ -661,6 +661,14 @@
 			}
 		} );
 
+		$( document ).on( 'change', 'input#remove-duplicates', function() {
+			if ( $(this).is(':checked') ) {
+				$('input#feedzy_mark_duplicate').attr( 'disabled', false );
+			} else {
+				$('input#feedzy_mark_duplicate').attr( 'disabled', true );
+			}
+		} );
+
 		$(document).on( 'input', 'input[name="custom_vars_value[]"]', function () {
 			$(this)
 			.next('.fz-action-icon')

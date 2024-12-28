@@ -657,8 +657,23 @@ global $post;
 						</div>
 					</div>
 
-					<div class="form-block form-block-two-column <?php echo feedzy_is_legacyv5() ? '' : esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
-					    <?php echo feedzy_is_legacyv5() ? '' : wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'count', 'import' ) ); ?>
+					<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
+						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'remove-duplicates', 'import' ) ); ?>
+						<div class="fz-left">
+							<h4 class="h4"><?php esc_html_e( 'Mark Duplicates By', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
+						</div>
+						<div class="fz-right">
+							<div class="fz-form-group">
+								<label class="form-label"><?php esc_html_e( 'Mark the duplicate items using the magic tag value', 'feedzy-rss-feeds' ); ?></label>
+								<input type="text" id="feedzy_mark_duplicate" name="feedzy_meta_data[mark_duplicate_tag]" class="form-control" value="<?php echo esc_attr( $mark_duplicate_tag ); ?>"<?php disabled( true, 'checked' !== $import_remove_duplicates ); ?> />
+								<div class="help-text pt-8">
+									<?php esc_html_e( 'Helpful if you want to identify and remove duplicate items. Enter a magic tag to mark duplicates based on its value, e.g: [#item_title], [#item_content], [#item_url] etc.', 'feedzy-rss-feeds' ); ?>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-block form-block-two-column">
 						<div class="fz-left">
 							<h4 class="h4"><?php esc_html_e( 'Items Count', 'feedzy-rss-feeds' ); ?><?php echo ! feedzy_is_pro() && ! feedzy_is_legacyv5() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
 						</div>
