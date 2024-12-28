@@ -1,12 +1,18 @@
+/* eslint-disable @wordpress/no-unsafe-wp-apis */
 /**
  * WordPress dependencies.
  */
 import { __ } from '@wordpress/i18n';
 
-import { serialize } from '@wordpress/blocks';
+import {
+	store as blocksStore,
+	createBlocksFromInnerBlocksTemplate,
+	serialize,
+} from '@wordpress/blocks';
 
 import {
 	store as blockEditorStore,
+	__experimentalBlockVariationPicker as BlockVariationPicker,
 	useBlockProps,
 	BlockControls,
 	InnerBlocks,
@@ -21,7 +27,7 @@ import {
 	ToolbarGroup,
 } from '@wordpress/components';
 
-import { useSelect } from '@wordpress/data';
+import { useDispatch, useSelect } from '@wordpress/data';
 
 import { useState } from '@wordpress/element';
 
@@ -30,13 +36,18 @@ import ServerSideRender from '@wordpress/server-side-render';
 /**
  * Internal dependencies.
  */
+import metadata from './block.json';
 import Placeholder from './placeholder';
 import ConditionsControl from '../Conditions/ConditionsControl';
+
+const { name } = metadata;
 
 const Edit = ({ attributes, setAttributes, clientId }) => {
 	const blockProps = useBlockProps();
 
 	const [isEditing, setIsEditing] = useState(!attributes?.feed?.source);
+
+	const { replaceInnerBlocks, selectBlock } = useDispatch(blockEditorStore);
 
 	const isSelected = useSelect(
 		(select) => {
@@ -59,6 +70,21 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 		},
 		[clientId]
 	);
+
+	const hasInnerBlocks = useSelect(
+		(select) => 0 < select(blockEditorStore).getBlocks(clientId).length,
+		[clientId]
+	);
+
+	const variations = useSelect((select) => {
+		const { getBlockVariations } = select(blocksStore);
+		return getBlockVariations(name, 'block');
+	}, []);
+
+	const defaultVariation = useSelect((select) => {
+		const { getDefaultBlockVariation } = select(blocksStore);
+		return getDefaultBlockVariation(name, 'block');
+	}, []);
 
 	const onSaveFeed = () => {
 		setIsEditing(false);
@@ -245,63 +271,26 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 			</InspectorControls>
 
 			<div {...blockProps}>
-				<InnerBlocks
-					template={[
-						[
-							'core/group',
-							{
-								layout: {
-									type: 'constrained',
-								},
-								style: {
-									spacing: {
-										padding: {
-											top: 'var:preset|spacing|30',
-											bottom: 'var:preset|spacing|30',
-											left: 'var:preset|spacing|30',
-											right: 'var:preset|spacing|30',
-										},
-										margin: {
-											top: 'var:preset|spacing|30',
-											bottom: 'var:preset|spacing|30',
-										},
-									},
-								},
-							},
-							[
-								[
-									'core/image',
-									{
-										url: window.feedzyData.defaultImage,
-										alt: '{{feedzy_title}}',
-										href: '{{feedzy_url}}',
-									},
-								],
-								[
-									'core/paragraph',
-									{
-										content:
-											'<a href="{{feedzy_url}}">{{feedzy_title}}</a>',
-									},
-								],
-								[
-									'core/paragraph',
-									{
-										content: '{{feedzy_meta}}',
-										fontSize: 'medium',
-									},
-								],
-								[
-									'core/paragraph',
-									{
-										content: '{{feedzy_description}}',
-										fontSize: 'small',
-									},
-								],
-							],
-						],
-					]}
-				/>
+				{hasInnerBlocks ? (
+					<InnerBlocks />
+				) : (
+					<BlockVariationPicker
+						variations={variations}
+						onSelect={(nextVariation = defaultVariation) => {
+							if (nextVariation) {
+								setAttributes(nextVariation.attributes);
+								replaceInnerBlocks(
+									clientId,
+									createBlocksFromInnerBlocksTemplate(
+										nextVariation.innerBlocks
+									),
+									true
+								);
+							}
+							selectBlock(clientId);
+						}}
+					/>
+				)}
 			</div>
 		</>
 	);

@@ -71,6 +71,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			'feedzy-rss-feeds-loop-editor-script',
 			'feedzyData',
 			array(
+				'imagepath'    => esc_url( FEEDZY_ABSURL . 'img/' ),
 				'defaultImage' => esc_url( FEEDZY_ABSURL . 'img/feedzy.svg' ),
 				'isPro'        => feedzy_is_pro(),
 			)
