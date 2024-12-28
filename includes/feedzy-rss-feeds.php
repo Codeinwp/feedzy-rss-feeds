@@ -260,6 +260,7 @@ class Feedzy_Rss_Feeds {
 			self::$instance->loader->add_filter( 'feedzy_magic_tags_post_excerpt', $plugin_import, 'magic_tags_post_excerpt', 11 );
 			self::$instance->loader->add_action( 'admin_action_feedzy_clone_import_job', $plugin_import, 'feedzy_clone_import_job' );
 			self::$instance->loader->add_action( 'admin_notices', $plugin_import, 'feedzy_import_clone_success_notice' );
+			self::$instance->loader->add_action( 'load-edit.php', $plugin_import, 'load_edit_screen' );
 			// Remove elementor feature.
 			self::$instance->loader->add_action( 'elementor/experiments/feature-registered', self::$instance->admin, 'feedzy_remove_elementor_feature', 10, 2 );
 			// Remove widget.
