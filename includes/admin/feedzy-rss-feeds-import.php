@@ -165,6 +165,8 @@ class Feedzy_Rss_Feeds_Import {
 						'clearLogButton'      => __( 'Clear Log', 'feedzy-rss-feeds' ),
 						'okButton'            => __( 'Ok', 'feedzy-rss-feeds' ),
 						'removeErrorLogsMsg'  => __( 'Removed all error logs.', 'feedzy-rss-feeds' ),
+						// translators: %d select images count.
+						'action_btn_text_3'   => __( '(%d) images selected', 'feedzy-rss-feeds' ),
 						'importButton'        => sprintf(
 							'<a href="#" class="page-title-action fz-export-import-btn%1$s"><span class="dashicons %2$s"></span>%3$s</a>',
 							! feedzy_is_pro() ? ' only-pro' : '',
@@ -523,6 +525,9 @@ class Feedzy_Rss_Feeds_Import {
 				} else {
 					if ( 'import_post_content' === $key ) {
 						$val = feedzy_custom_tag_escape( $val );
+					} elseif ( 'default_thumbnail_id' === $key && ! empty( $val ) ) {
+						$val = explode( ',', $val );
+						$val = array_map( 'intval', $val );
 					} else {
 						$val = wp_kses( $val, apply_filters( 'feedzy_wp_kses_allowed_html', array() ) );
 					}
@@ -1443,9 +1448,10 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		// Get default thumbnail ID.
-		$default_thumbnail = ! empty( $this->free_settings['general']['default-thumbnail-id'] ) ? (int) $this->free_settings['general']['default-thumbnail-id'] : 0;
+		$global_fallback_thumbnail = ! empty( $this->free_settings['general']['default-thumbnail-id'] ) ? (int) $this->free_settings['general']['default-thumbnail-id'] : 0;
 		if ( feedzy_is_pro() ) {
 			$default_thumbnail = get_post_meta( $job->ID, 'default_thumbnail_id', true );
+			$default_thumbnail = ! empty( $default_thumbnail ) ? explode( ',', (string) $default_thumbnail ) : $global_fallback_thumbnail;
 		}
 
 		// Note: this implementation will only work if only one of the fields is allowed to provide
@@ -2092,7 +2098,13 @@ class Feedzy_Rss_Feeds_Import {
 
 				// Set default thumbnail image.
 				if ( ! $img_success && ! empty( $default_thumbnail ) ) {
-					$img_success = set_post_thumbnail( $new_post_id, $default_thumbnail );
+					if ( is_array( $default_thumbnail ) ) {
+						$random_key           = array_rand( $default_thumbnail );
+						$default_thumbnail_id = isset( $default_thumbnail[ $random_key ] ) ? $default_thumbnail[ $random_key ] : 0;
+					} else {
+						$default_thumbnail_id = $default_thumbnail;
+					}
+					$img_success = set_post_thumbnail( $new_post_id, $default_thumbnail_id );
 				}
 
 				if ( ! $img_success ) {
