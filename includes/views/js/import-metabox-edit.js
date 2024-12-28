@@ -667,6 +667,60 @@
 				$('input#feedzy_mark_duplicate').attr( 'disabled', true );
 			}
 		} );
+
+    // Append import button.
+		$( feedzy.i10n.importButton ).insertAfter( $( '.page-title-action', document ) );
+		$( $( '.page-title-action', document ) ).wrapAll( '<div class="fz-header-action"></div>' );
+
+		// Create dialog box
+		$( '#fz_import_export_upsell' ).dialog( {
+			title: '',
+			dialogClass: 'wp-dialog',
+			autoOpen: false,
+			draggable: false,
+			width: 'auto',
+			modal: true,
+			resizable: false,
+			closeOnEscape: true,
+			position: {
+				my: "center",
+				at: "center",
+				of: window
+			},
+			open: function( event, ui ) {
+				$(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
+				$(".ui-dialog-titlebar", ui.dialog | ui).hide();
+			},
+			create: function() {
+				// style fix for WordPress admin
+				$( '.ui-dialog-titlebar-close' ).addClass( 'ui-button' );
+			},
+		} );
+
+		$( '.fz-export-import-btn.only-pro, .fz-export-btn-pro' ).on( 'click', function( e ) {
+            e.preventDefault();
+            $( '#fz_import_export_upsell' ).dialog( 'open' );
+        });
+
+        $( '#fz_import_export_upsell' ).on( 'click', '.close-modal', function ( e ) {
+        	e.preventDefault();
+            $( '#fz_import_export_upsell' ).dialog( 'close' );
+        } );
+
+        $(document).on( 'click', '.fz-export-import-btn:not(.only-pro)', function( e ) {
+            e.preventDefault();
+            if ( $('.fz-import-field').length === 0 ) {
+	            var importField = $( '#fz_import_field_section' ).html();
+	            $( importField ).insertAfter( $( this ).parents( 'div.wrap' ).find( '.wp-header-end' ) );
+	        }
+            $('.fz-import-field').toggleClass('hidden');
+        });
+
+		let url = new URL(window.location.href);
+		if (url.searchParams.has('imported')) {
+			url.searchParams.delete('imported');
+			history.replaceState(history.state, '', url.href);
+		}
 	}
 
 	function initSummary() {
