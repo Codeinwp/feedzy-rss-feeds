@@ -105,6 +105,10 @@
 					if ( isset( $settings['general']['disable-default-style'] ) && 1 === intval( $settings['general']['disable-default-style'] ) ) {
 						$disble_default_style = 1;
 					}
+					$delete_media = 0;
+					if ( isset( $settings['general']['feedzy-delete-media'] ) && 1 === intval( $settings['general']['feedzy-delete-media'] ) ) {
+						$delete_media = 1;
+					}
 
 					$feedzy_delete_days = isset( $settings['general']['feedzy-delete-days'] ) ? $settings['general']['feedzy-delete-days'] : 0;
 					$default_thumbnail_id = isset( $settings['general']['default-thumbnail-id'] ) ? $settings['general']['default-thumbnail-id'] : 0;
@@ -213,6 +217,16 @@
 											<label class="form-label"><?php esc_html_e( 'Delete the posts created from all feeds, after a number of days', 'feedzy-rss-feeds' ); ?></label>
 											<input type="number" min="0" max="9999" id="feedzy_delete_days" name="feedzy-delete-days" class="form-control" value="<?php echo esc_attr( $feedzy_delete_days ); ?>"/>
 											<div class="help-text pt-8"><?php esc_html_e( 'Helpful if you want to remove stale or old items automatically. If you choose 0, it will be considered the individual import setting.', 'feedzy-rss-feeds' ); ?></div>
+										</div>
+									</div>
+									<div class="form-block">
+										<div class="fz-form-switch pb-0">
+											<input type="checkbox" id="feedzy-delete-media" class="fz-switch-toggle" name="feedzy-delete-media"
+											value="1" <?php checked( 1, $delete_media ); ?> />
+											<label for="feedzy-delete-media" class="form-label"><?php esc_html_e( 'Delete attached featured image', 'feedzy-rss-feeds' ); ?></label>
+										</div>
+										<div class="fz-form-group">
+											<div class="help-text pt-8"><?php esc_html_e( 'Helpful if you want to delete attached featured image when posts are automatically deleted.', 'feedzy-rss-feeds' ); ?></div>
 										</div>
 									</div>
 									<div class="form-block">

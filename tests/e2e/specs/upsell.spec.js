@@ -42,6 +42,10 @@ test.describe( 'Upsell', () => {
         upgradeAlert = page.locator('#feedzy-import-form a[href*="utm_campaign=schedule-import-job"]');
         await expect( upgradeAlert ).toBeVisible();
 
+        await page.locator('#delete-attached-media').hover({ force: true });
+        upgradeAlert = page.locator('#feedzy-import-form a[href*="utm_campaign=delete-featured-image"]');
+        await expect( upgradeAlert ).toBeVisible();
+
         await page.locator('.fz-form-group:has( #feedzy_mark_duplicate )').hover({ force: true });
         upgradeAlert = page.locator('#feedzy-import-form a[href*="utm_campaign=remove-duplicates"]');
         await expect( upgradeAlert ).toBeVisible();
