@@ -100,18 +100,17 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	public function render_callback( $attributes, $content ) {
 		$content    = empty( $content ) ? ( $attributes['innerBlocksContent'] ?? '' ) : $content;
 		$is_preview = isset( $attributes['innerBlocksContent'] ) && ! empty( $attributes['innerBlocksContent'] );
+		$feed_urls      = array();
 
 		if ( isset( $attributes['feed']['type'] ) && 'group' === $attributes['feed']['type'] && isset( $attributes['feed']['source'] ) && is_numeric( $attributes['feed']['source'] ) ) {
 			$group = $attributes['feed']['source'];
 			$value = get_post_meta( $group, 'feedzy_category_feed', true );
 			$value = trim( $value );
-			$value = !empty( $value ) ? explode( ',', $value ) : array();
-			$feed_urls = ( count( $value ) === 1 ) ? esc_url( $value[0] ) : $value;
+			$feed_urls = !empty( $value ) ? explode( ',', $value ) : array();
 		}
 
 		if ( isset( $attributes['feed']['type'] ) && 'url' === $attributes['feed']['type'] && isset( $attributes['feed']['source'] ) && is_array( $attributes['feed']['source'] ) ) {
-			$value = $attributes['feed']['source'];
-			$feed_urls = ( count( $value ) === 1 ) ? esc_url( $value[0] ) : $value;
+			$feed_urls = $attributes['feed']['source'];
 		}
 
 		if ( empty( $feed_urls ) ) {
@@ -130,6 +129,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		$filters = isset( $attributes['conditions'] ) ? $attributes['conditions'] : array();
 
 		$options = array(
+			'feeds'         => implode( ',', $feed_urls ),
 			'max'           => $query['max'],
 			'sort'		    => $query['sort'],
 			'offset'        => 0,
@@ -157,8 +157,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			return '<div>' . esc_html__( 'An error occurred while fetching the feed.', 'feedzy-rss-feeds' ) . '</div>';
 		}
 
-		$sizes      = apply_filters( 'feedzy_thumb_sizes', $sizes, $feed_urls );
-		$feed_items = apply_filters( 'feedzy_get_feed_array', array(), $options, $feed, $feed_urls, $sizes );
+		$feed_items = apply_filters( 'feedzy_get_feed_array', array(), $options, $feed, implode( ',', $feed_urls ), $sizes );
 		$loop       = '';
 
 		foreach ($feed_items as $key => $item) {

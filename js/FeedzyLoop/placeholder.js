@@ -74,65 +74,101 @@ const BlockPlaceholder = ({ attributes, setAttributes, onSaveFeed }) => {
 					</ToggleGroupControl>
 
 					{'url' === attributes?.feed?.type && (
-						<TextControl
-							label={__('Feed URLs', 'feedzy-rss-feeds')}
-							placeholder={__(
-								'Enter feed URLs separated by commas.',
-								'feedzy-rss-feeds'
-							)}
-							value={
-								Array.isArray(attributes?.feed?.source)
-									? attributes.feed.source.join(', ')
-									: ''
-							}
-							onChange={(value) =>
-								onChangeFeed({
-									type: 'source',
-									value: value
-										.split(',')
-										.map((item) => item.trim()),
-								})
-							}
-						/>
+						<>
+							<TextControl
+								label={__('Feed URLs', 'feedzy-rss-feeds')}
+								placeholder={__(
+									'Enter feed URLs separated by commas.',
+									'feedzy-rss-feeds'
+								)}
+								value={
+									Array.isArray(attributes?.feed?.source)
+										? attributes.feed.source.join(', ')
+										: ''
+								}
+								onChange={(value) =>
+									onChangeFeed({
+										type: 'source',
+										value: value
+											.split(',')
+											.map((item) => item.trim()),
+									})
+								}
+							/>
+							<p>
+								{__(
+									'Enter the full URL of the feed source you wish to display here. Also you can add multiple URLs separated with a comma.',
+									'feedzy-rss-feeds'
+								)}
+							</p>
+						</>
 					)}
 
 					{'group' === attributes?.feed?.type && (
-						<SelectControl
-							label={__('Feed Group', 'feedzy-rss-feeds')}
-							options={[
-								{
-									label: __(
-										'Select a group',
+						<>
+							<SelectControl
+								label={__('Feed Group', 'feedzy-rss-feeds')}
+								options={[
+									{
+										label: __(
+											'Select a group',
+											'feedzy-rss-feeds'
+										),
+										value: '',
+										disabled: true,
+									},
+									...categories.map((category) => ({
+										label: category?.title?.rendered,
+										value: category.id,
+									})),
+								]}
+								value={attributes?.feed?.source ?? ''}
+								onChange={(value) =>
+									onChangeFeed({
+										type: 'source',
+										value: parseInt(value, 10),
+									})
+								}
+							/>
+							<p>
+								{__(
+									'You can manage your groups feed from',
+									'feedzy-rss-feeds'
+								)}{' '}
+								<a
+									href="edit.php?post_type=feedzy_categories"
+									title={__(
+										'Feedzy Groups',
 										'feedzy-rss-feeds'
-									),
-									value: '',
-									disabled: true,
-								},
-								...categories.map((category) => ({
-									label: category?.title?.rendered,
-									value: category.id,
-								})),
-							]}
-							value={attributes?.feed?.source ?? ''}
-							onChange={(value) =>
-								onChangeFeed({
-									type: 'source',
-									value: parseInt(value, 10),
-								})
-							}
-						/>
+									)}
+									target="_blank"
+								>
+									{__('here', 'feedzy-rss-feeds')}
+								</a>
+							</p>
+						</>
 					)}
 
-					<Button
-						variant="primary"
-						onClick={onSaveFeed}
-						disabled={
-							!attributes?.feed?.source ||
-							attributes?.feed?.source.length === 0
-						}
-					>
-						{__('Save', 'feedzy-rss-feeds')}
-					</Button>
+					<div>
+						<Button
+							variant="primary"
+							onClick={onSaveFeed}
+							disabled={
+								!attributes?.feed?.source ||
+								attributes?.feed?.source.length === 0
+							}
+						>
+							{__('Save', 'feedzy-rss-feeds')}
+						</Button>
+
+						<Button
+							variant="link"
+							href="https://validator.w3.org/feed/"
+							target="_blank"
+						>
+							{__('Validate', 'feedzy-rss-feeds')}
+						</Button>
+					</div>
 				</>
 			)}
 		</Placeholder>
