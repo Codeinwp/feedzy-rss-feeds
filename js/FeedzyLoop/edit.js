@@ -46,6 +46,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 	const blockProps = useBlockProps();
 
 	const [isEditing, setIsEditing] = useState(!attributes?.feed?.source);
+	const [isPreviewing, setIsPreviewing] = useState(false);
 
 	const { replaceInnerBlocks, selectBlock } = useDispatch(blockEditorStore);
 
@@ -108,33 +109,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 		});
 	};
 
-	if (isEditing) {
-		return (
-			<div {...blockProps}>
-				<Placeholder
-					attributes={attributes}
-					setAttributes={setAttributes}
-					onSaveFeed={onSaveFeed}
-				/>
-			</div>
-		);
-	}
-
-	if (!isSelected && innerBlocksContent) {
-		return (
-			<div {...blockProps}>
-				<ServerSideRender
-					block="feedzy-rss-feeds/loop"
-					attributes={{
-						...attributes,
-						innerBlocksContent,
-					}}
-				/>
-			</div>
-		);
-	}
-
-	return (
+	const Controls = () => (
 		<>
 			<BlockControls>
 				<ToolbarGroup>
@@ -143,6 +118,16 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 						title={__('Edit Feed', 'feedzy-rss-feeds')}
 						onClick={() => setIsEditing(true)}
 					/>
+				</ToolbarGroup>
+
+				<ToolbarGroup>
+					<ToolbarButton
+						onClick={() => setIsPreviewing(!isPreviewing)}
+					>
+						{isPreviewing
+							? __('Hide Preview', 'feedzy-rss-feeds')
+							: __('Show Preview', 'feedzy-rss-feeds')}
+					</ToolbarButton>
 				</ToolbarGroup>
 			</BlockControls>
 
@@ -269,6 +254,42 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 					/>
 				</PanelBody>
 			</InspectorControls>
+		</>
+	);
+
+	if (isEditing) {
+		return (
+			<div {...blockProps}>
+				<Placeholder
+					attributes={attributes}
+					setAttributes={setAttributes}
+					onSaveFeed={onSaveFeed}
+				/>
+			</div>
+		);
+	}
+
+	if ((!isSelected || isPreviewing) && innerBlocksContent) {
+		return (
+			<>
+				<Controls />
+
+				<div {...blockProps}>
+					<ServerSideRender
+						block="feedzy-rss-feeds/loop"
+						attributes={{
+							...attributes,
+							innerBlocksContent,
+						}}
+					/>
+				</div>
+			</>
+		);
+	}
+
+	return (
+		<>
+			<Controls />
 
 			<div {...blockProps}>
 				{hasInnerBlocks ? (
