@@ -7,6 +7,7 @@ import { BlockControls, InspectorControls } from '@wordpress/block-editor';
 
 import {
 	Button,
+	ExternalLink,
 	PanelBody,
 	RangeControl,
 	SelectControl,
@@ -89,6 +90,13 @@ const Controls = ({
 					min={1}
 					max={20}
 				/>
+
+				<ExternalLink
+					href="https://docs.themeisle.com/article/2217-feedzy-loop#magic_tags"
+					target="_blank"
+				>
+					{__('Feedzy Loop Documentation', 'feedzy-rss-feeds')}
+				</ExternalLink>
 
 				<SelectControl
 					label={__('Sorting Order', 'feedzy-rss-feeds')}
