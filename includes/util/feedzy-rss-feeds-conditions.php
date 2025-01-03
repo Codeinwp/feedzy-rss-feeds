@@ -177,7 +177,7 @@ class Feedzy_Rss_Feeds_Conditions {
 	 */
 	public function is_condition_met( $condition, $value ): bool {
 		$operator        = $condition['operator'];
-		$condition_value = trim( $condition['value'] );
+		$condition_value = trim( $condition['value'] ?? '' );
 		$value           = trim( $value );
 
 		switch ( $operator ) {

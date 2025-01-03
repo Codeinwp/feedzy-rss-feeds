@@ -18,7 +18,7 @@ const { registerBlockType } = wp.blocks;
  * Register block
  */
 export default registerBlockType('feedzy-rss-feeds/feedzy-block', {
-	title: __('Feedzy RSS Feeds', 'feedzy-rss-feeds'),
+	title: __('Feedzy RSS Feeds (Classic)', 'feedzy-rss-feeds'),
 	category: 'common',
 	icon: 'rss',
 	keywords: [

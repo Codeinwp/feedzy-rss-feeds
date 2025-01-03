@@ -1,0 +1,122 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "feedzy-rss-feeds/loop",
+    "version": "1.0.0",
+    "title": "Feedzy Loop",
+    "category": "common",
+    "icon": "rss",
+    "keywords": [
+        "rss",
+        "feed",
+        "feedzy"
+    ],
+    "description": "Display curated RSS content in a dynamic, customizable loop directly in the Block Editor—no coding required.",
+	"attributes": {
+		"feed": {
+			"type": "object",
+			"properties": {
+				"type": {
+					"type": "string",
+					"enum": [ "url", "group" ],
+					"default": "url"
+				},
+				"source": {
+					"type": [ "number", "array" ],
+					"default": ""
+				}
+			}
+		},
+		"query": {
+			"type": "object",
+			"properties": {
+				"max": {
+					"type": "number",
+					"default": 5
+				},
+				"sort": {
+					"type": "string",
+					"enum": [ "default", "date_desc", "date_asc", "title_desc", "title_asc" ],
+					"default": "default"
+				},
+				"refresh": {
+					"type": "string",
+					"enum": [ "1_hours", "3_hours", "12_hours", "1_days", "3_days", "15_days" ],
+					"default": "12_hours"
+				}
+			}
+		},
+		"layout": {
+			"type": "object",
+			"properties": {
+				"columnCount": {
+					"type": "number",
+					"default": 1
+				}
+			}
+		},
+		"conditions": {
+			"type": "object",
+			"properties": {
+				"match": {
+					"type": "string",
+					"enum": [ "all", "any" ],
+					"default": "all"
+				},
+				"conditions": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"field": {
+								"type": "string",
+								"default": "title"
+							},
+							"operator": {
+								"type": "string",
+								"default": "contains"
+							},
+							"value": {
+								"type": "string",
+								"default": ""
+							}
+						}
+					}
+				}
+			}
+		},
+        "innerBlocksContent": {
+            "type": "string",
+            "default": ""
+        }
+	},
+    "supports": {
+		"align": [ "wide", "full" ],
+		"anchor": true,
+		"ariaLabel": true,
+		"html": true,
+		"color": {
+			"gradients": true,
+			"heading": true,
+			"button": true,
+			"link": true
+		},
+		"shadow": true,
+		"spacing": {
+			"margin": [ "top", "bottom" ],
+			"padding": true,
+			"blockGap": true
+		},
+		"dimensions": {
+			"minHeight": true
+		},  
+		"typography": { 
+			"fontSize": true,
+			"lineHeight": true
+		} 
+	},
+    "editorScript": "file:./index.js",
+    "editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+    "textdomain": "feedzy-rss-block"
+}   
