@@ -139,7 +139,8 @@ span.feedzy-spinner {
 	margin-left: 0;
 }
 
-.wp-core-ui .fz-export-import-btn {
+.wp-core-ui .fz-export-import-btn,
+.wp-core-ui .feedzy-import-limit{
 	display: inline-flex !important;
 	align-items: center;
 }

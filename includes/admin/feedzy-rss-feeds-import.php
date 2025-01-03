@@ -171,7 +171,7 @@ class Feedzy_Rss_Feeds_Import {
 							'<a href="#" class="page-title-action fz-export-import-btn%1$s"><span class="dashicons %2$s"></span>%3$s</a>',
 							! feedzy_is_pro() ? ' only-pro' : '',
 							feedzy_is_pro() ? 'dashicons-upload' : 'dashicons-lock',
-							esc_html__( 'Import Job', 'feedzy-rss-feeds' )
+							esc_html__( 'Upload Import', 'feedzy-rss-feeds' )
 						),
 					),
 				)
@@ -3467,10 +3467,10 @@ class Feedzy_Rss_Feeds_Import {
 					<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this dialog', 'feedzy-rss-feeds' ); ?></span>
 				</span>
 				<div class="modal-header">
-					<h2><span class="dashicons dashicons-lock"></span> <?php esc_html_e( 'Import/Export is a PRO feature', 'feedzy-rss-feeds' ); ?></h2>
+					<h2><span class="dashicons dashicons-lock"></span> <?php esc_html_e( 'Upload/Export is a PRO feature', 'feedzy-rss-feeds' ); ?></h2>
 				</div>
 				<div class="modal-body">
-					<p><?php esc_html_e( 'We\'re sorry, import/export is not available on your plan. Please upgrade to the Pro plan to unlock all these features.', 'feedzy-rss-feeds' ); ?></p>
+					<p><?php esc_html_e( 'We\'re sorry, upload/export of import configuration is not available on your plan. Please upgrade to the Pro plan to unlock all these features.', 'feedzy-rss-feeds' ); ?></p>
 				</div>
 				<div class="modal-footer">
 					<div class="button-container"><a href="<?php echo esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'importExport' ) ) ); ?>" target="_blank" rel="noopener " class="button button-primary button-large"><?php esc_html_e( 'Upgrade to PRO', 'feedzy-rss-feeds' ); ?><span aria-hidden="true" class="dashicons dashicons-external"></span></a></div>

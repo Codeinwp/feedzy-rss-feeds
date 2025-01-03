@@ -322,7 +322,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				?>
                 <script type="text/javascript">
                     jQuery(function () {
-                        jQuery('a[href*="post-new.php?post_type=feedzy_imports"]').addClass('feedzy-import-limit')
+                        jQuery('a[href*="post-new.php?post_type=feedzy_imports"]').addClass('feedzy-import-limit').prepend('<span class="dashicons dashicons-lock"></span> ');
                     });
                 </script>
 				<?php
@@ -450,7 +450,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
             </div>
             <style>
 
-                .feedzy-import-limit{
+                .feedzy-import-limit, .page-title-action.only-pro{
                     opacity:0.7;
                 }
                 .feedzy-quick-link{

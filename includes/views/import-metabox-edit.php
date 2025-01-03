@@ -112,7 +112,7 @@ global $post;
 			</div>
 			<div class="feedzy-accordion-item__content border-top">
 				<div class="fz-form-wrap">
-					<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'filters', 'import' ) ); ?>
+
 					<input type="hidden" name="feedzy_meta_data[filter_conditions]" id="feed-post-filters-conditions" value="<?php echo esc_attr( $filter_conditions ); ?>">
 					<div class="fz-conditions" id="fz-conditions"></div>
 				</div>
@@ -679,14 +679,14 @@ global $post;
 					<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
 						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'remove-duplicates', 'import' ) ); ?>
 						<div class="fz-left">
-							<h4 class="h4"><?php esc_html_e( 'Mark Duplicates By', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
+							<h4 class="h4"><?php esc_html_e( 'Duplication Key', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
 						</div>
 						<div class="fz-right">
 							<div class="fz-form-group">
-								<label class="form-label"><?php esc_html_e( 'Mark the duplicate items using the magic tag value', 'feedzy-rss-feeds' ); ?></label>
+								<label class="form-label"><?php esc_html_e( 'Set a custom duplication key to identify unique feed items', 'feedzy-rss-feeds' ); ?></label>
 								<input type="text" id="feedzy_mark_duplicate" name="feedzy_meta_data[mark_duplicate_tag]" class="form-control" value="<?php echo esc_attr( $mark_duplicate_tag ); ?>"<?php disabled( true, 'checked' !== $import_remove_duplicates ); ?> />
 								<div class="help-text pt-8">
-									<?php esc_html_e( 'Helpful if you want to identify and remove duplicate items. Enter a magic tag to mark duplicates based on its value, e.g: [#item_title], [#item_content], [#item_url] etc.', 'feedzy-rss-feeds' ); ?>
+									<?php esc_html_e( 'Define a custom duplication key for identifying unique feed items when importing content. By default, items are considered unique based on their title and URL. Enter one or multiple magic tags.', 'feedzy-rss-feeds' ); ?>
 								</div>
 							</div>
 						</div>
