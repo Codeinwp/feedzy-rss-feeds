@@ -48,7 +48,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 	public function __construct() {
 		$this->strings = array(
 			'popup_url'     => wp_nonce_url( 'admin-ajax.php', 'feedzy_ajax_token', 'feedzy_request_form_token' ),
-			'pro_url'       => tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'shortcode' ), 'query' ),
+			'pro_url'       => tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'shortcode' ) ),
 			'plugin_label'  => __( 'Feedzy Lite', 'feedzy-rss-feeds' ),
 			'plugin_title'  => __( 'Insert Feedzy RSS Feeds Shortcode', 'feedzy-rss-feeds' ),
 			'image_button'  => __( 'Use Image', 'feedzy-rss-feeds' ),
@@ -454,7 +454,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 			),
 			'section_pro'   => array(
 				'title'       => __( 'PRO Options', 'feedzy-rss-feeds' ),
-				'description' => __( 'Get access to more options and customizations with full version of Feedzy RSS Feeds . Use existing templates or extend them and make them your own.', 'feedzy-rss-feeds' ) . '<br/>' . '<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'sectionpro' ), 'query' ) ) . '" target="_blank"><small>' . __( 'See more features of Feedzy RSS Feeds PRO', 'feedzy-rss-feeds' ) . '</small></a>',
+				'description' => __( 'Get access to more options and customizations with full version of Feedzy RSS Feeds . Use existing templates or extend them and make them your own.', 'feedzy-rss-feeds' ) . '<br/>' . '<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'sectionpro' ) ) ) . '" target="_blank"><small>' . __( 'See more features of Feedzy RSS Feeds PRO', 'feedzy-rss-feeds' ) . '</small></a>',
 				'elements'    => array(
 					'price'        => array(
 						'label'    => sprintf(
@@ -565,7 +565,6 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 	public function get_strings() {
 		return $this->strings;
 	}
-
 }
 
 $feedzy_lang_class = new Feedzy_Rss_Feeds_Ui_Lang();

@@ -129,7 +129,7 @@ export async function runFeedImport( page ) {
 
     // Open the dialog with the imported feeds.
     await page.locator('.feedzy-items a').click();
-    await expect( page.locator('#ui-id-1').locator('li a').count() ).resolves.toBeGreaterThan(0);
+    await expect( page.locator('#ui-id-2').locator('li a').count() ).resolves.toBeGreaterThan(0);
     await page.getByRole('button', { name: 'Ok' }).click();
 }
 

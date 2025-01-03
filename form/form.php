@@ -21,7 +21,7 @@ $html_parts = Feedzy_Rss_Feeds_Ui_Lang::get_form_elements();
 	<meta http-equiv="cache-control" content="no-cache"/>
 	<meta http-equiv="expires" content="0"/>
 	<meta http-equiv="pragma" content="no-cache"/>
-	<?php echo sprintf( '<link rel="stylesheet" href="%s" type="text/css" media="all"/>', esc_url( FEEDZY_ABSURL . 'css/form.css?h=' . gmdate( 'dmYHis' ) ) ); //phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet ?>
+	<?php printf( '<link rel="stylesheet" href="%s" type="text/css" media="all"/>', esc_url( FEEDZY_ABSURL . 'css/form.css?h=' . gmdate( 'dmYHis' ) ) ); //phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet ?>
 </head>
 <body>
 <div class="feedzy-popup-form container">
@@ -31,19 +31,7 @@ $html_parts = Feedzy_Rss_Feeds_Ui_Lang::get_form_elements();
 		foreach ( $html_parts as $item => $section ) {
 			$output .= '<div class="container feedzy_' . $item . '">';
 			$output .= '<h5>' . $section['title'] . '</h5>';
-			if ( ! feedzy_is_pro() && 'section_feed' === $item ) {
-				$upsell_url = tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'amazonproductadvertising', 'classiceditorshortcode' ), 'query' );
 
-				$output .= '<div class="upgrade-alert">';
-				$output .= '<strong>' . __( 'NEW!', 'feedzy-rss-feeds' ) . '</strong>';
-				$output .= wp_sprintf(
-					// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
-					__( 'Enable Amazon Product Advertising feeds to generate affiliate revenue by %1$s upgrading to Feedzy Pro. %2$s', 'feedzy-rss-feeds' ),
-					'<a target="_blank" href="' . esc_url( $upsell_url ) . '" >',
-					'</a>'
-				);
-				$output .= '</div>';
-			}
 			if ( isset( $section['description'] ) ) {
 				$output .= '<p>' . $section['description'] . '</p>';
 			}

@@ -2,7 +2,7 @@
 	<div class="form-block">
 		<div class="upgrade-alert mb-24">
 			<?php
-				$upgrade_url = tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'wordai' ), 'query' );
+				$upgrade_url = tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'wordai' ) );
 
 				$content  = __( 'You are using Feedzy Lite.', 'feedzy-rss-feeds' ) . ' ';
 				// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
@@ -22,11 +22,6 @@
 					<div class="fz-input-group-left">
 						<input type="password" id="wordai_pass" class="form-control" placeholder="<?php echo esc_attr( __( 'WordAI API key', 'feedzy-rss-feeds' ) ); ?>"/>
 						<div class="help-text"><?php esc_html_e( 'API Status: Invalid | Last check: Never', 'feedzy-rss-feeds' ); ?></div>
-					</div>
-					<div class="fz-input-group-right">
-						<div class="fz-input-group-btn">
-							<button id="check_wordai_api" type="button" class="btn btn-outline-primary disabled"><?php esc_html_e( 'Validate connection', 'feedzy-rss-feeds' ); ?></button>
-						</div>
 					</div>
 				</div>
 			</div>

@@ -127,7 +127,7 @@ if ( ! empty( $integrate_with ) ) {
 																sprintf(
 																	// translators: %1$s and %2$s are HTML tags for the link to the demo URL.
 																	__( 'No Feed URL? %1$s Click here %2$s to use demo URL', 'feedzy-rss-feeds' ),
-																	'<a target="_blank" class="feed-demo-link" href="' . esc_url( 'https://www.codeinwp.com/feed/' ) . '" >',
+																	'<a target="_blank" class="feed-demo-link" href="' . esc_url( 'https://wpshout.com/feed/' ) . '" >',
 																	'</a>'
 																)
 															);
@@ -269,7 +269,7 @@ if ( ! empty( $integrate_with ) ) {
 																							// translators: %1$s is the percentage improvement, %2$s and %3$s are HTML tags for the link to the Optimole website.
 																							__( 'Improve your website speed and images by %1$s with %2$s Optimole %3$s', 'feedzy-rss-feeds' ),
 																							'80%',
-																							'<a target="_blank" href="' . esc_url( tsdk_translate_link( tsdk_utmify( 'https://optimole.com/pricing/', 'setupWizard' ), 'query' ) ) . '">',
+																							'<a target="_blank" href="' . esc_url( tsdk_translate_link( tsdk_utmify( 'https://optimole.com/pricing/', 'setupWizard' ) ) ) . '">',
 																							'</a>'
 																						)
 																					);

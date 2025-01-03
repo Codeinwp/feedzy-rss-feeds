@@ -2,7 +2,7 @@
 /**
  * WordPress unit test plugin.
  *
- * @package     feedzy-rss-feeds-pro
+ * @package     feedzy-rss-feeds
  * @subpackage  Tests
  * @copyright   Copyright (c) 2024, Bogdan Preda
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License

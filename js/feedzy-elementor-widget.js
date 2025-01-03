@@ -1,4 +1,5 @@
 window.addEventListener( 'elementor/init', function() {
+
 	/**
 	 * Handle select layout template
 	 */
@@ -68,6 +69,14 @@ window.addEventListener( 'elementor/init', function() {
 				upSellNotice.fadeOut( 500,
 					function() {
 						upSellNotice.remove();
+						jQuery.post(
+							ajaxurl,
+							{
+								security: FeedzyElementorEditor.security,
+								action: "feedzy",
+								_action: "remove_upsell_notice"
+							}
+						);
 					}
 				);
 			} );

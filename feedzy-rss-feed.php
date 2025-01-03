@@ -119,7 +119,7 @@ function run_feedzy_rss_feeds() {
 	define( 'FEEDZY_BASEFILE', __FILE__ );
 	define( 'FEEDZY_ABSURL', plugins_url( '/', __FILE__ ) );
 	define( 'FEEDZY_BASENAME', plugin_basename( __FILE__ ) );
-	define( 'FEEDZY_ABSPATH', dirname( __FILE__ ) );
+	define( 'FEEDZY_ABSPATH', __DIR__ );
 	define( 'FEEDZY_DIRNAME', basename( FEEDZY_ABSPATH ) );
 	define( 'FEEDZY_UPSELL_LINK', 'https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/' );
 	define( 'FEEDZY_SUBSCRIBE_API', 'https://api.themeisle.com/tracking/subscribe' );
@@ -147,8 +147,8 @@ function run_feedzy_rss_feeds() {
 		'themeisle_sdk_compatibilities/' . FEEDZY_DIRNAME, function ( $compatibilities ) {
 			$compatibilities['FeedzyPRO'] = array(
 				'basefile'  => defined( 'FEEDZY_PRO_BASEFILE' ) ? FEEDZY_PRO_BASEFILE : '',
-				'required'  => '1.7',
-				'tested_up' => '2.4',
+				'required'  => '2.4',
+				'tested_up' => '3.0',
 			);
 			return $compatibilities;
 		}
@@ -161,13 +161,51 @@ function run_feedzy_rss_feeds() {
 				'location'         => 'feedzy-admin-menu',
 				'has_upgrade_menu' => ! feedzy_is_pro(),
 				'upgrade_text'     => esc_html__( 'Upgrade to Pro', 'feedzy-rss-feeds' ),
-				'upgrade_link'     => tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'aboutUsPage' ), 'query' ),
+				'upgrade_link'     => tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'aboutUsPage' ) ),
+			);
+		}
+	);
+	add_filter(
+		'feedzy_rss_feeds_welcome_metadata',
+		function () {
+			return array(
+				'is_enabled' => ! defined( 'FEEDZY_PRO_ABSPATH' ),
+				'pro_name'   => 'Feedzy PRO',
+				'logo'       => FEEDZY_ABSURL . 'img/feedzy.svg',
+				'cta_link'   => tsdk_translate_link(
+					tsdk_utmify(
+						add_query_arg(
+							array(
+								'discount' => 'LOYALUSER5824',
+								'dvalue'   => 55,
+							), FEEDZY_UPSELL_LINK
+						), 'feedzy-welcome', 'notice'
+					)
+				),
+			);
+		}
+	);
+	add_filter(
+		'feedzy_rss_feeds_welcome_upsell_message', function () {
+			return sprintf(
+			/* translators: 1: opening <p> tag, 2: opening <b> tag, 3: closing </b> tag, 4: product name, 5: pro product name, 6: opening <a> tag with cta link, 7: closing </a> tag, 8: discount percentage */
+				__(
+					'%1$sYou\'ve been using %2$s%4$s%3$s for 7 days now and we appreciate your loyalty! We also want to make sure you\'re getting the most out of our product. That\'s why we\'re offering you a special deal - upgrade to %2$s%5$s%3$s in the next 5 days and receive a discount of %2$sup to %8$s%%%3$s. %6$sUpgrade now%7$s and unlock all the amazing features of %2$s%5$s%3$s!',
+					'feedzy-rss-feeds'
+				),
+				'<p>',
+				'<b>',
+				'</b>',
+				'{product}',
+				'{pro_product}',
+				'<a href="{cta_link}" target="_blank">',
+				'</a>',
+				'55'
 			);
 		}
 	);
 	define( 'FEEDZY_SURVEY_PRO', 'https://forms.gle/FZXhL3D48KJUhb7q9' );
 	define( 'FEEDZY_SURVEY_FREE', 'https://forms.gle/yQUGSrKEa7XJTGLx8' );
-
 }
 
 /**
@@ -207,6 +245,35 @@ if ( FEEDZY_LOCAL_DEBUG ) {
 	}
 }
 
+/**
+ * Store import job errors in metadata.
+ *
+ * @param string $name Name.
+ * @param string $msg  Error message.
+ * @param string $type  Error type.
+ *
+ * @return void
+ */
+function feedzy_import_job_logs( $name, $msg, $type ) {
+	if ( ! in_array( $type, apply_filters( 'feedzy_allowed_store_log_types', array( 'error' ) ), true ) ) {
+		return;
+	}
+	if ( ! wp_doing_ajax() || wp_doing_cron() ) {
+		return;
+	}
+	if ( apply_filters( 'feedzy_skip_store_error_logs', false ) ) {
+		return;
+	}
+	global $themeisle_log_event;
+
+	if ( ! empty( $themeisle_log_event ) && count( $themeisle_log_event ) >= 200 ) {
+		return;
+	}
+
+	$themeisle_log_event[] = $msg;
+}
+add_action( 'themeisle_log_event', 'feedzy_import_job_logs', 20, 3 );
+
 add_filter( 'themeisle_sdk_enable_telemetry', '__return_true' );
 
 add_filter(
@@ -215,10 +282,10 @@ add_filter(
 			'nice_name'          => 'Feedzy',
 			'logo'               => FEEDZY_ABSURL . 'img/feedzy.svg',
 			'primary_color'      => '#4268CF',
-			'pages'              => array( 'feedzy_imports', 'edit-feedzy_imports', 'edit-feedzy_categories', 'feedzy_page_feedzy-settings', 'feedzy_page_feedzy-support' ),
+			'pages'              => array( 'feedzy_imports', 'edit-feedzy_imports', 'edit-feedzy_categories', 'feedzy_page_feedzy-settings', 'feedzy_page_feedzy-support', 'feedzy_page_feedzy-integration' ),
 			'has_upgrade_menu'   => ! feedzy_is_pro(),
-			'upgrade_link'       => tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'floatWidget' ), 'query' ),
-			'documentation_link' => tsdk_translate_link( tsdk_utmify( 'https://docs.themeisle.com/collection/1569-feedzy-rss-feeds', 'floatWidget' ), 'query' ),
+			'upgrade_link'       => tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'floatWidget' ) ),
+			'documentation_link' => tsdk_translate_link( tsdk_utmify( 'https://docs.themeisle.com/collection/1569-feedzy-rss-feeds', 'floatWidget' ) ),
 			'wizard_link'        => ! feedzy_is_pro() && ! empty( get_option( 'feedzy_fresh_install', false ) ) ? admin_url( 'admin.php?page=feedzy-setup-wizard&tab#step-1' ) : '',
 		);
 	}

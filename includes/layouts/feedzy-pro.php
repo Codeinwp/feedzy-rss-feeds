@@ -186,7 +186,7 @@
     </div>
 
     <div class="cta">
-        <a href="<?php echo esc_url( tsdk_translate_link( tsdk_utmify(FEEDZY_UPSELL_LINK,'viewall','freevspro'), 'query' ) ) ; ?>" class="btn btn-block btn-primary btn-lg" target="_blank">
+        <a href="<?php echo esc_url( tsdk_translate_link( tsdk_utmify(FEEDZY_UPSELL_LINK,'viewall','freevspro') ) ) ; ?>" class="btn btn-block btn-primary btn-lg" target="_blank">
             <?php esc_html_e( 'View all Premium features', 'feedzy-rss-feeds' ); ?>
         </a>
     </div>

@@ -575,7 +575,7 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 						wp_sprintf(
 							// translators: %1$s: opening anchor tag, %2$s: closing anchor tag.
 							__( 'Unlock this feature and more advanced options with %1$s Feedzy Pro %1$s.', 'feedzy-rss-feeds' ),
-							'<a target="_blank" href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'refferal', 'widget-area' ), 'query' ) ) . '">',
+							'<a target="_blank" href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'refferal', 'widget-area' ) ) ) . '">',
 							'</a>'
 						)
 						: ''
@@ -723,7 +723,6 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 			return 'auto';
 		}
 		return $value;
-
 	}
 
 	/**

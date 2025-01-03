@@ -51,7 +51,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 	 */
 	public function feedzy_gutenberg_scripts() {
 		// Dependent WordPress core libraries.
-		$asset_file = include FEEDZY_ABSPATH . '/js/build/block.asset.php';
+		$asset_file = include FEEDZY_ABSPATH . '/build/block/index.asset.php';
 		$depends = array_merge( $asset_file['dependencies'], array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-compose', 'wp-editor', 'wp-api', 'lodash', 'wp-hooks', 'jquery-ui-autocomplete' ) );
 
 		// Remove "wp-editor" script for widget block.
@@ -63,7 +63,9 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		}
 
 		// Enqueue the bundled block JS file
-		wp_enqueue_script( 'feedzy-gutenberg-block-js', FEEDZY_ABSURL . 'js/build/block.js', $depends, $asset_file['version'], true );
+		wp_enqueue_script( 'feedzy-gutenberg-block-js', FEEDZY_ABSURL . 'build/block/index.js', $depends, $asset_file['version'], true );
+
+		wp_set_script_translations( 'feedzy-gutenberg-block-js', 'feedzy-rss-feeds' );
 
 		// Pass in REST URL
 		wp_localize_script(
@@ -72,13 +74,13 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 			array(
 				'imagepath'  => esc_url( FEEDZY_ABSURL . 'img/' ),
 				'isPro'      => feedzy_is_pro(),
-				'upsellLinkBlockEditor' => esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'keywordsfilter', 'blockeditor' ), 'query' ) ),
+				'upsellLinkBlockEditor' => esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'keywordsfilter', 'blockeditor' ) ) ),
 			)
 		);
 
 		// Enqueue editor block styles
 		wp_enqueue_style( 'feedzy-block-css', FEEDZY_ABSURL . 'css/feedzy-rss-feeds.css', array(), $this->version );
-		wp_enqueue_style( 'feedzy-gutenberg-block-css', FEEDZY_ABSURL . 'js/build/style-block.css', array(), $this->version );
+		wp_enqueue_style( 'feedzy-gutenberg-block-css', FEEDZY_ABSURL . 'build/block/style-index.css', array(), $this->version );
 	}
 
 	/**
@@ -367,7 +369,6 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );
 		$output = $feedy;
 		return $output;
-
 	}
 
 	/**
@@ -403,5 +404,4 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 			}
 		}
 	}
-
 }

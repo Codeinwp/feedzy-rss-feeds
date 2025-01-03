@@ -34,7 +34,7 @@ const FeedBack = () => {
 
 	document.querySelectorAll( '[role="button"]' ).forEach((button) => {
 		button.addEventListener('keydown', (evt) => { 
-			if(evt.keyCode == 13 || evt.keyCode == 32) {
+			if(evt.keyCode === 13 || evt.keyCode === 32) {
 				button.click();
 			}
 		});

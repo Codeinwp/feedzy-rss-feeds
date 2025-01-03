@@ -321,6 +321,13 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		}
 
 		/**
+		 * Get translation language.
+		 */
+		public function get_translation_lang() {
+			return $this->translation_lang;
+		}
+
+		/**
 		 * Get item content.
 		 */
 		private function item_content() {
@@ -391,7 +398,24 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 */
 		private function search_replace() {
 			$content = call_user_func( array( $this, $this->current_job->tag ) );
-			return str_replace( $this->current_job->data->search, $this->current_job->data->searchWith, $content );
+			$search  = $this->current_job->data->search;
+			$replace = $this->current_job->data->searchWith;
+			$mode    = isset( $this->current_job->data->mode ) ? $this->current_job->data->mode : 'text';
+
+			switch ( $mode ) {
+				case 'wildcard':
+					$pattern = preg_quote( $search, '/' );
+					$pattern = str_replace( '\\*', '.*', $pattern );
+					return preg_replace( '/' . $pattern . '/i', $replace, $content );
+				case 'regex':
+					if ( ! preg_match( '/^\/.\/[imsxuADU]$/', $search ) ) {
+						$pattern = '/' . $search . '/i';
+					}
+
+					return preg_replace( $pattern, $replace, $content );
+				default:
+					return str_replace( $search, $replace, $content );
+			}
 		}
 
 		/**
@@ -410,6 +434,7 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 */
 		private function translate_content() {
 			$content = call_user_func( array( $this, $this->current_job->tag ) );
+			$this->translation_lang = ! empty( $this->current_job->data->lang ) ? $this->current_job->data->lang : $this->translation_lang;
 			return apply_filters( 'feedzy_invoke_auto_translate_services', $content, '[#translated_content]', $this->translation_lang, $this->job, $this->language_code, $this->item );
 		}
 
@@ -464,15 +489,19 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 				return $this->current_job->data->ChatGPT;
 			}
 
-			$content         = call_user_func( array( $this, $this->current_job->tag ) );
-			$content         = wp_strip_all_tags( $content );
-			$content         = substr( $content, 0, apply_filters( 'feedzy_chat_gpt_content_limit', 3000 ) );
-			$prompt_content  = $this->current_job->data->ChatGPT;
+			$content        = call_user_func( array( $this, $this->current_job->tag ) );
+			$content        = wp_strip_all_tags( $content );
+			$content        = substr( $content, 0, apply_filters( 'feedzy_chat_gpt_content_limit', 3000 ) );
+			$prompt_content = $this->current_job->data->ChatGPT;
+			$ai_provider    = 'openai';
+			if ( isset( $this->current_job->data ) && isset( $this->current_job->data->aiProvider ) ) {
+				$ai_provider = $this->current_job->data->aiProvider;
+			}
 			$content         = str_replace( array( '{content}' ), array( $content ), $prompt_content );
 			$openai          = new \Feedzy_Rss_Feeds_Pro_Openai();
-			$rewrite_content = $openai->call_api( $this->settings, $content, '', array() );
+			$rewrite_content = $openai->call_api( $this->settings, $content, '', array( 'ai_provider' => $ai_provider ) );
 			// Replace prompt content string for specific cases.
-			$rewrite_content = str_replace( explode( '{content}', $prompt_content ), '', $rewrite_content );
+			$rewrite_content = str_replace( explode( '{content}', $prompt_content ), '', trim( $rewrite_content, '"' ) );
 			return $rewrite_content;
 		}
 
@@ -486,9 +515,12 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			if ( ! class_exists( '\Feedzy_Rss_Feeds_Pro_Openai' ) ) {
 				return $content;
 			}
-			$openai  = new \Feedzy_Rss_Feeds_Pro_Openai();
-			$content = $openai->call_api( $this->settings, $content, 'summarize', array() );
-			return $content;
+			if ( isset( $this->current_job->data->fz_summarize ) ) {
+				unset( $this->current_job->data->fz_summarize );
+			}
+			// Summarizes the content using the `Rewrite with AI` action, ensuring backward compatibility.
+			$this->current_job->data->ChatGPT = 'Summarize this article {content} for better SEO.';
+			return $this->chat_gpt_rewrite();
 		}
 
 		/**
@@ -509,6 +541,9 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			}
 
 			$prompt = call_user_func( array( $this, 'item_title' ) );
+			if ( ! empty( $this->current_job->data->generateImagePrompt ) ) {
+				$prompt .= "\r\n" . $this->current_job->data->generateImagePrompt;
+			}
 			$openai = new \Feedzy_Rss_Feeds_Pro_Openai();
 			return $openai->call_api( $this->settings, $prompt, 'image', array() );
 		}
@@ -561,6 +596,16 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 				);
 			}
 			return $dom->saveHTML();
+		}
+
+		/**
+		 * Get custom field value.
+		 */
+		private function custom_field() {
+			if ( ! empty( $this->result ) ) {
+				return $this->result;
+			}
+			return $this->default_value;
 		}
 	}
 }
