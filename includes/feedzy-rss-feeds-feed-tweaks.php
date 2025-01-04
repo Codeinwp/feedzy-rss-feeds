@@ -151,6 +151,21 @@ function feedzy_el_display_external_post_image( $html, $settings, $image_size_ke
 }
 add_filter( 'elementor/image_size/get_attachment_image_html', 'feedzy_el_display_external_post_image', 10, 4 );
 
+
+
+/**
+ * Generates an upgrade link for the Feedzy plugin.
+ *
+ * This function creates a URL for the Feedzy upsell link with UTM parameters.
+ *
+ * @param string $area     The area where the link is used.
+ * @param string $location Optional. The specific page location. Default is null.
+ *
+ * @return string The translated and UTM-ified upgrade link.
+ */
+function feedzy_upgrade_link($area, $location = null) {
+	return tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, $area, $location ));
+}
 /**
  * Filters whether a post has a post thumbnail.
  *

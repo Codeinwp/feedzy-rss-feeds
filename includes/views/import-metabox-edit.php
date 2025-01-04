@@ -115,6 +115,7 @@ global $post;
 
 					<input type="hidden" name="feedzy_meta_data[filter_conditions]" id="feed-post-filters-conditions" value="<?php echo esc_attr( $filter_conditions ); ?>">
 					<div class="fz-conditions" id="fz-conditions"></div>
+                    <div class="fdz-upgrade-link"><span class="dashicons dashicons-lock"></span> <a href="<?php echo esc_url(feedzy_upgrade_link('filters', 'import')); ?>"><?php _e( 'Upgrade to Unlock Advanced Filtering', 'feedzy-rss-feeds'); ?> </a></div>
 				</div>
 			</div>
 		</div>
@@ -528,20 +529,6 @@ global $post;
 											</div>
 										</div>
 									</div>
-									<?php if ( ! feedzy_is_pro() ) : ?>
-										<div class="upgrade-alert">
-											<?php
-												echo wp_kses_post(
-													sprintf(
-														// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
-														__( 'Add more advanced tags, like item price, rating and many more, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ),
-														'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'post-excerpt', 'import' ) ) ) . '" target="_blank">',
-														'</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>'
-													)
-												);
-											?>
-										</div>
-									<?php endif; ?>
 								</div>
 							</div>
 
@@ -621,7 +608,43 @@ global $post;
 			</div>
 			<div class="feedzy-accordion-item__content border-top">
 				<div class="fz-form-wrap">
-					<div class="feedzy-auto-delete form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
+
+                    <div class="form-block form-block-two-column no-border">
+                        <div class="fz-left">
+                            <h4 class="h4"><?php esc_html_e( 'Remove Duplicates', 'feedzy-rss-feeds' ); ?></h4>
+                        </div>
+                        <div class="fz-right">
+                            <div class="fz-form-group">
+                                <div class="fz-form-switch">
+                                    <input id="remove-duplicates" name="feedzy_meta_data[import_remove_duplicates]"
+                                           class="fz-switch-toggle" type="checkbox" value="yes"
+										<?php echo esc_attr( $import_remove_duplicates ); ?>>
+                                    <label class="feedzy-inline form-label" for="remove-duplicates"><?php esc_html_e( 'Remove Duplicate Items', 'feedzy-rss-feeds' ); ?></label>
+                                </div>
+                            </div>
+                            <div class="help-text">
+								<?php echo wp_sprintf( esc_html__( 'To understand how duplicates will be removed, check out our', 'feedzy-rss-feeds' ) ); ?>
+                                <a href="<?php echo esc_url( 'https://docs.themeisle.com/article/638-how-to-eliminate-duplicate-feed-item' ); ?>" target="_blank"><?php esc_html_e( 'Documentation.', 'feedzy-rss-feeds' ); ?></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
+						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'remove-duplicates', 'import' ) ); ?>
+                        <div class="fz-left">
+                            <h4 class="h4"><?php esc_html_e( 'Duplication Key', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
+                        </div>
+                        <div class="fz-right">
+                            <div class="fz-form-group">
+                                <label class="form-label"><?php esc_html_e( 'Set a custom duplication key to identify unique feed items', 'feedzy-rss-feeds' ); ?></label>
+                                <input type="text" id="feedzy_mark_duplicate" name="feedzy_meta_data[mark_duplicate_tag]" class="form-control" value="<?php echo esc_attr( $mark_duplicate_tag ); ?>"<?php disabled( true, 'checked' !== $import_remove_duplicates ); ?> />
+                                <div class="help-text pt-8">
+									<?php esc_html_e( 'Define a custom duplication key for identifying unique feed items when importing content. By default, items are considered unique based on their title and URL. Enter one or multiple magic tags.', 'feedzy-rss-feeds' ); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
 						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'auto-delete', 'import' ) ); ?>
 						<div class="fz-left">
 							<h4 class="h4"><?php esc_html_e( 'Auto-Delete', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
@@ -637,7 +660,7 @@ global $post;
 						</div>
 					</div>
 
-					<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
+					<div class="form-block form-block-two-column no-border <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
 						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'delete-featured-image', 'import' ) ); ?>
 						<div class="fz-left"><h4 class="h4"><?php esc_html_e( 'Delete image', 'feedzy-rss-feeds' ); ?><?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
 						</div>
@@ -656,44 +679,53 @@ global $post;
 						</div>
 					</div>
 
-					<div class="form-block form-block-two-column">
-						<div class="fz-left">
-							<h4 class="h4"><?php esc_html_e( 'Remove Duplicates', 'feedzy-rss-feeds' ); ?></h4>
-						</div>
-						<div class="fz-right">
-							<div class="fz-form-group">
-								<div class="fz-form-switch">
-									<input id="remove-duplicates" name="feedzy_meta_data[import_remove_duplicates]"
-									class="fz-switch-toggle" type="checkbox" value="yes"
-									<?php echo esc_attr( $import_remove_duplicates ); ?>>
-									<label class="feedzy-inline form-label" for="remove-duplicates"><?php esc_html_e( 'Remove Duplicate Items', 'feedzy-rss-feeds' ); ?></label>
-								</div>
-							</div>
-							<div class="help-text">
-								<?php echo wp_sprintf( esc_html__( 'To understand how duplicates will be removed, check out our', 'feedzy-rss-feeds' ) ); ?>
-									<a href="<?php echo esc_url( 'https://docs.themeisle.com/article/638-how-to-eliminate-duplicate-feed-item' ); ?>" target="_blank"><?php esc_html_e( 'Documentation.', 'feedzy-rss-feeds' ); ?></a>
-							</div>
-						</div>
-					</div>
+                    <div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
+						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'fallback-image', 'import' ) ); ?>
+                        <div class="fz-left">
+                            <h4 class="h4"><?php esc_html_e( 'Fallback Image', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
+                        </div>
+                        <div class="fz-right">
+                            <div class="fz-form-group">
+                                <label class="form-label"><?php esc_html_e( 'Select an image to be the fallback featured image.', 'feedzy-rss-feeds' ); ?></label>
+								<?php
+								$btn_label            = esc_html__( 'Choose image', 'feedzy-rss-feeds' );
+								$default_thumbnail_id = ! empty( $default_thumbnail_id ) ? explode( ',', (string) $default_thumbnail_id ) : array();
+								if ( ! empty( $default_thumbnail_id ) ) :
+									$btn_label = esc_html__( 'Replace image', 'feedzy-rss-feeds' );
+									?>
+                                    <div class="fz-form-group mb-20 feedzy-media-preview">
+										<?php
+										if ( count( $default_thumbnail_id ) > 1 ) {
+											?>
+                                            <a href="javascript:;" class="btn btn-outline-primary feedzy-images-selected">
+												<?php
+												// translators: %d select images count.
+												echo esc_html( sprintf( __( '(%d) images selected', 'feedzy-rss-feeds' ), count( $default_thumbnail_id ) ) );
+												?>
+                                            </a>
+											<?php
+										} else {
+											echo wp_get_attachment_image( reset( $default_thumbnail_id ), 'thumbnail' );
+										}
+										?>
+                                    </div>
+								<?php endif; ?>
+                                <div class="fz-cta-group pb-8">
+                                    <a href="javascript:;" class="feedzy-open-media btn btn-outline-primary"><?php echo esc_html( $btn_label ); ?></a>
+                                    <a href="javascript:;" class="feedzy-remove-media btn btn-outline-primary <?php echo ! empty( $default_thumbnail_id ) ? esc_attr( 'is-show' ) : ''; ?>"><?php esc_html_e( 'Remove', 'feedzy-rss-feeds' ); ?></a>
+                                    <input type="hidden" name="feedzy_meta_data[default_thumbnail_id]" id="feed-post-default-thumbnail" value="<?php echo esc_attr( implode( ',', $default_thumbnail_id ) ); ?>">
+                                </div>
+                                <div class="help-text pt-8">
+									<?php esc_html_e( 'Helpful for setting a fallback image for feed items without an image. If multiple fallback images are selected, one of them will be randomly assigned to each post without an image during the import process.', 'feedzy-rss-feeds' ); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-					<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
-						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'remove-duplicates', 'import' ) ); ?>
-						<div class="fz-left">
-							<h4 class="h4"><?php esc_html_e( 'Duplication Key', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
-						</div>
-						<div class="fz-right">
-							<div class="fz-form-group">
-								<label class="form-label"><?php esc_html_e( 'Set a custom duplication key to identify unique feed items', 'feedzy-rss-feeds' ); ?></label>
-								<input type="text" id="feedzy_mark_duplicate" name="feedzy_meta_data[mark_duplicate_tag]" class="form-control" value="<?php echo esc_attr( $mark_duplicate_tag ); ?>"<?php disabled( true, 'checked' !== $import_remove_duplicates ); ?> />
-								<div class="help-text pt-8">
-									<?php esc_html_e( 'Define a custom duplication key for identifying unique feed items when importing content. By default, items are considered unique based on their title and URL. Enter one or multiple magic tags.', 'feedzy-rss-feeds' ); ?>
-								</div>
-							</div>
-						</div>
-					</div>
+					<div class="form-block form-block-two-column no-border <?php echo ! feedzy_is_pro() && ! feedzy_is_legacyv5() ? esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ) : ''; ?>">
 
-					<div class="form-block form-block-two-column">
-						<div class="fz-left">
+						<?php echo ! feedzy_is_pro() && ! feedzy_is_legacyv5() ? wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'item-count', 'import' ) ) : ''; ?>
+                        <div class="fz-left">
 							<h4 class="h4"><?php esc_html_e( 'Items Count', 'feedzy-rss-feeds' ); ?><?php echo ! feedzy_is_pro() && ! feedzy_is_legacyv5() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
 						</div>
 						<div class="fz-right">
@@ -706,48 +738,7 @@ global $post;
 							</div>
 						</div>
 					</div>
-					<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
-						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'fallback-image', 'import' ) ); ?>
-						<div class="fz-left">
-							<h4 class="h4"><?php esc_html_e( 'Fallback Image', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
-						</div>
-						<div class="fz-right">
-							<div class="fz-form-group">
-								<label class="form-label"><?php esc_html_e( 'Select an image to be the fallback featured image.', 'feedzy-rss-feeds' ); ?></label>
-								<?php
-								$btn_label            = esc_html__( 'Choose image', 'feedzy-rss-feeds' );
-								$default_thumbnail_id = ! empty( $default_thumbnail_id ) ? explode( ',', (string) $default_thumbnail_id ) : array();
-								if ( ! empty( $default_thumbnail_id ) ) :
-									$btn_label = esc_html__( 'Replace image', 'feedzy-rss-feeds' );
-									?>
-									<div class="fz-form-group mb-20 feedzy-media-preview">
-										<?php
-										if ( count( $default_thumbnail_id ) > 1 ) {
-											?>
-											<a href="javascript:;" class="btn btn-outline-primary feedzy-images-selected">
-												<?php
-													// translators: %d select images count.
-													echo esc_html( sprintf( __( '(%d) images selected', 'feedzy-rss-feeds' ), count( $default_thumbnail_id ) ) );
-												?>
-											</a>
-											<?php
-										} else {
-											echo wp_get_attachment_image( reset( $default_thumbnail_id ), 'thumbnail' );
-										}
-										?>
-									</div>
-								<?php endif; ?>
-								<div class="fz-cta-group pb-8">
-									<a href="javascript:;" class="feedzy-open-media btn btn-outline-primary"><?php echo esc_html( $btn_label ); ?></a>
-									<a href="javascript:;" class="feedzy-remove-media btn btn-outline-primary <?php echo ! empty( $default_thumbnail_id ) ? esc_attr( 'is-show' ) : ''; ?>"><?php esc_html_e( 'Remove', 'feedzy-rss-feeds' ); ?></a>
-									<input type="hidden" name="feedzy_meta_data[default_thumbnail_id]" id="feed-post-default-thumbnail" value="<?php echo esc_attr( implode( ',', $default_thumbnail_id ) ); ?>">
-								</div>
-								<div class="help-text pt-8">
-									<?php esc_html_e( 'Helpful for setting a fallback image for feed items without an image. If multiple fallback images are selected, one of them will be randomly assigned to each post without an image during the import process.', 'feedzy-rss-feeds' ); ?>
-								</div>
-							</div>
-						</div>
-					</div>
+
 					<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
 						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'schedule-import-job', 'import' ) ); ?>
 						<div class="fz-left">

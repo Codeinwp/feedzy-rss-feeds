@@ -100,15 +100,15 @@
 
 .pro-label{
 	display: inline-block;
-	padding: 5px 10px;
+	padding: 3px 4px;
 	background: #4268CF;
 	border-radius: 2px;
 	text-transform: uppercase;
 	font-weight: bold;
-	font-size: 13px;
-	line-height: 14px;
+	font-size: 0.55rem;
+	line-height: 0.6rem;
 	color: #ffffff;
-	vertical-align: middle;
+	vertical-align: super;
 }
 
 .post-type-feedzy_imports:not(.edit-post) .wrap div#side-sortables{
@@ -154,6 +154,18 @@
 }
 .feedzy-accordion-item__title{
 	position: relative;
+}
+.fdz-upgrade-link{
+	width: 100%;
+	text-align: right;
+	line-height:normal;
+	margin-bottom:10px;
+}
+.fz-form-wrap .form-block.no-border{
+	border-bottom: 0px;
+}
+.form-block.only-pro > div:not(.only-pro-content) {
+	opacity: 0.4;
 }
 .feedzy-accordion-item.only-pro{
 	opacity: 0.5;
@@ -1109,12 +1121,11 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 /* FZ tab style end */
 
 .upgrade-alert{
-	padding: 20px 50px 20px 20px;
+	padding: 10px 10px 10px 10px;
 	background: #4268CF;
 	text-align: center;
-	font-weight: 500;
-	font-size: 16px;
-	line-height: 19px;
+	font-size: 14px;
+	line-height:  20px;
 	color: #FFFFFF;
 	position: relative;
 }
