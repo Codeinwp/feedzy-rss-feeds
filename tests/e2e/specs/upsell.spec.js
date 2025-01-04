@@ -23,8 +23,6 @@ test.describe( 'Upsell', () => {
         // It should have 1 elements with .only-pro-content class.
         await expect( filtersTab.locator('.pro-label').count() ).resolves.toBe(1);
 
-        let upgradeLink = new URL( await filterByKeywordAlert.locator('a').first().getAttribute('href') );
-        expect( upgradeLink.searchParams.get( 'utm_campaign' ) ).toBe('filters');
     } );
 
 

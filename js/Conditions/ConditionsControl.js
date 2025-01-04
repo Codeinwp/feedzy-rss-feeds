@@ -126,13 +126,13 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 				options={[
 					{
 						label: __(
-							'All conditions are true',
+							'All conditions are met',
 							'feedzy-rss-feeds'
 						),
 						value: 'all',
 					},
 					{
-						label: __('Any condition is true', 'feedzy-rss-feeds'),
+						label: __('Any condition is met', 'feedzy-rss-feeds'),
 						value: 'any',
 					},
 				]}
