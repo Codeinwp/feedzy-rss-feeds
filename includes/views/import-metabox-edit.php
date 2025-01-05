@@ -116,7 +116,7 @@ global $post;
 					<input type="hidden" name="feedzy_meta_data[filter_conditions]" id="feed-post-filters-conditions" value="<?php echo esc_attr( $filter_conditions ); ?>">
 					<div class="fz-conditions" id="fz-conditions"></div>
 					<?php if ( ! feedzy_is_pro() ) : ?>
-                    <div class="fdz-upgrade-link"><span class="dashicons dashicons-lock"></span> <a href="<?php echo esc_url(feedzy_upgrade_link('filters', 'import')); ?>"><?php _e( 'Upgrade to Unlock Advanced Filtering', 'feedzy-rss-feeds'); ?> </a></div>
+                    <div class="fdz-upgrade-link"><span class="dashicons dashicons-lock"></span> <a href="<?php echo esc_url(feedzy_upgrade_link('filters', 'import')); ?>"><?php __( 'Upgrade to Unlock Advanced Filtering', 'feedzy-rss-feeds'); ?> </a></div>
 					<?php endif; ?>
 				</div>
 			</div>
