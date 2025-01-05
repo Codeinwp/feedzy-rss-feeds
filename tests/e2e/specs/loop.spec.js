@@ -32,12 +32,16 @@ test.describe('Feedzy Loop', () => {
 
 		await page.getByRole('option', { name: ' Feedzy Loop' }).click();
 		await page.waitForTimeout(1000);
-		await page.getByLabel('Feed URL').click();
 
-		await page.getByPlaceholder('Enter feed URLs separated by').click();
+		await page.getByPlaceholder('Enter URLs or select a').click();
 		await page.keyboard.type(FEED_URL);
 
-		await page.getByRole('button', { name: 'Save', exact: true }).click();
+		// Click outside the input to trigger state change
+		await page.getByRole('tab', { name: 'Settings' }).click();
+
+		await page
+			.getByRole('button', { name: 'Load Feed', exact: true })
+			.click();
 		await page.waitForTimeout(1000);
 
 		await page.getByLabel('Display curated RSS content').click();
