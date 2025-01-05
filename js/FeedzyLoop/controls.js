@@ -170,18 +170,37 @@ const Controls = ({
 				]}
 				initialOpen={false}
 				key="filters"
-				className={
-					window.feedzyData.isPro
-						? 'feedzy-item-filter'
-						: 'feedzy-item-filter fz-locked'
-				}
+				className="feedzy-item-filter"
 			>
+				{!window.feedzyData.isPro && (
+					<div className="fz-upsell-notice">
+						{__(
+							'Unlock this feature and more advanced options with',
+							'feedzy-rss-feeds'
+						)}{' '}
+						<ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=keywordsfilter&utm_content=feedzy-rss-feeds">
+							{__('Feedzy Pro', 'feedzy-rss-feeds')}
+						</ExternalLink>
+					</div>
+				)}
+
 				<ConditionsControl
 					conditions={
-						attributes?.conditions || {
-							conditions: [],
-							match: 'all',
-						}
+						window.feedzyData.isPro
+							? attributes?.conditions || {
+									conditions: [],
+									match: 'all',
+								}
+							: {
+									match: 'all',
+									conditions: [
+										{
+											field: 'title',
+											operator: 'contains',
+											value: 'Sports',
+										},
+									],
+								}
 					}
 					setConditions={(conditions) => {
 						setAttributes({ conditions });

@@ -5,7 +5,6 @@
         }
 
         p {
-            margin: 0;
             width: 100%;
         }
     }
@@ -100,4 +99,113 @@
             }
         }
     }
+}
+
+.fz-url-category-input {
+    position: relative;
+    display: flex;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+input[type="text"].fz-input-field {
+    flex: 1;
+    height: 32px;
+    padding: 6px 8px;
+    font-size: 13px;
+    border: 1px solid #757575;
+    border-right: none;
+    border-radius: 2px 0 0 2px;
+    margin: 0;
+    background-color: #fff;
+    color: #1e1e1e;
+    box-sizing: border-box;
+}
+
+input[type="text"].fz-input-field:focus {
+    outline: none;
+    border-color: #007cba;
+    box-shadow: 0 0 0 1px #007cba;
+}
+
+input[type="text"].fz-input-field:disabled {
+    background-color: #fff;
+    cursor: default;
+    color: #1e1e1e;
+}
+
+.fz-buttons-container {
+    display: flex;
+    border: 1px solid #757575;
+    border-radius: 0 2px 2px 0;
+    background: #fff;
+    height: 32px;
+    box-sizing: border-box;
+}
+
+.fz-clear-button,
+.fz-dropdown-button {
+    width: 32px;
+    height: 30px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #1e1e1e;
+}
+
+.fz-clear-button {
+    border-right: 1px solid #757575;
+}
+
+.fz-clear-button:hover,
+.fz-dropdown-button:hover {
+    background-color: #f0f0f0;
+}
+
+.fz-clear-button:focus,
+.fz-dropdown-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 1px #007cba;
+}
+
+.fz-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 4px;
+    background-color: #fff;
+    border: 1px solid #757575;
+    border-radius: 2px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.fz-dropdown-item {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 13px;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #1e1e1e;
+}
+
+.fz-dropdown-item:hover {
+    background-color: #f0f0f0;
+}
+
+.fz-dropdown-item.fz-selected {
+    background-color: #f0f7ff;
+    color: #007cba;
+}
+
+.fz-dropdown-item:focus {
+    outline: none;
+    background-color: #f0f7ff;
+    color: #007cba;
 }

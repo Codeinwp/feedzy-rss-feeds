@@ -15,6 +15,11 @@ import {
 	InnerBlocks,
 } from '@wordpress/block-editor';
 
+import {
+	Placeholder as BlockEditorPlaceholder,
+	Spinner,
+} from '@wordpress/components';
+
 import { useDispatch, useSelect } from '@wordpress/data';
 
 import { useState } from '@wordpress/element';
@@ -30,13 +35,20 @@ import Controls from './controls';
 
 const { name } = metadata;
 
+const LoadingResponsePlaceholder = () => (
+	<BlockEditorPlaceholder>
+		<Spinner />
+	</BlockEditorPlaceholder>
+);
+
 const Edit = ({ attributes, setAttributes, clientId }) => {
 	const blockProps = useBlockProps();
 
 	const [isEditing, setIsEditing] = useState(!attributes?.feed?.source);
 	const [isPreviewing, setIsPreviewing] = useState(false);
 
-	const { replaceInnerBlocks, selectBlock } = useDispatch(blockEditorStore);
+	const { clearSelectedBlock, replaceInnerBlocks, selectBlock } =
+		useDispatch(blockEditorStore);
 
 	const isSelected = useSelect(
 		(select) => {
@@ -130,6 +142,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 							...attributes,
 							innerBlocksContent,
 						}}
+						LoadingResponsePlaceholder={LoadingResponsePlaceholder}
 					/>
 				</div>
 			</>
@@ -165,8 +178,8 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 									),
 									true
 								);
+								clearSelectedBlock();
 							}
-							selectBlock(clientId);
 						}}
 					/>
 				)}

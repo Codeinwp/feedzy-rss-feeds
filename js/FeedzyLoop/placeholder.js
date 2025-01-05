@@ -5,18 +5,20 @@
 import { __ } from '@wordpress/i18n';
 
 import {
-	__experimentalToggleGroupControl as ToggleGroupControl,
-	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
+	BaseControl,
 	Button,
 	Placeholder,
-	SelectControl,
 	Spinner,
-	TextControl,
 } from '@wordpress/components';
 
 import { useSelect } from '@wordpress/data';
 
 import { store as coreStore } from '@wordpress/core-data';
+
+/**
+ * Internal dependencies.
+ */
+import FeedControl from './components/FeedControl';
 
 const BlockPlaceholder = ({ attributes, setAttributes, onSaveFeed }) => {
 	const { categories, isLoading } = useSelect((select) => {
@@ -30,15 +32,6 @@ const BlockPlaceholder = ({ attributes, setAttributes, onSaveFeed }) => {
 			]),
 		};
 	}, []);
-
-	const onChangeFeed = ({ type, value }) => {
-		setAttributes({
-			feed: {
-				...attributes.feed,
-				[type]: value,
-			},
-		});
-	};
 
 	return (
 		<Placeholder
@@ -55,99 +48,35 @@ const BlockPlaceholder = ({ attributes, setAttributes, onSaveFeed }) => {
 
 			{!isLoading && (
 				<>
-					<ToggleGroupControl
-						isBlock
+					<BaseControl
 						label={__('Feed Source', 'feedzy-rss-feeds')}
-						value={attributes?.feed?.type}
-						onChange={(value) =>
-							onChangeFeed({ type: 'type', value })
-						}
+						id="feed-source-control"
 					>
-						<ToggleGroupControlOption
-							label={__('Feed URL', 'feedzy-rss-feeds')}
-							value="url"
+						<FeedControl
+							value={attributes?.feed}
+							options={[
+								...categories.map((category) => ({
+									label: category?.title?.rendered,
+									value: category.id,
+								})),
+							]}
+							onChange={(value) => setAttributes({ feed: value })}
 						/>
-						<ToggleGroupControlOption
-							label={__('Feed Group', 'feedzy-rss-feeds')}
-							value="group"
-						/>
-					</ToggleGroupControl>
 
-					{'url' === attributes?.feed?.type && (
-						<>
-							<TextControl
-								label={__('Feed URLs', 'feedzy-rss-feeds')}
-								placeholder={__(
-									'Enter feed URLs separated by commas.',
-									'feedzy-rss-feeds'
-								)}
-								value={
-									Array.isArray(attributes?.feed?.source)
-										? attributes.feed.source.join(', ')
-										: ''
-								}
-								onChange={(value) =>
-									onChangeFeed({
-										type: 'source',
-										value: value
-											.split(',')
-											.map((item) => item.trim()),
-									})
-								}
-							/>
-							<p>
-								{__(
-									'Enter the full URL of the feed source you wish to display here. Also you can add multiple URLs separated with a comma.',
-									'feedzy-rss-feeds'
-								)}
-							</p>
-						</>
-					)}
-
-					{'group' === attributes?.feed?.type && (
-						<>
-							<SelectControl
-								label={__('Feed Group', 'feedzy-rss-feeds')}
-								options={[
-									{
-										label: __(
-											'Select a group',
-											'feedzy-rss-feeds'
-										),
-										value: '',
-										disabled: true,
-									},
-									...categories.map((category) => ({
-										label: category?.title?.rendered,
-										value: category.id,
-									})),
-								]}
-								value={attributes?.feed?.source ?? ''}
-								onChange={(value) =>
-									onChangeFeed({
-										type: 'source',
-										value: parseInt(value, 10),
-									})
-								}
-							/>
-							<p>
-								{__(
-									'You can manage your groups feed from',
-									'feedzy-rss-feeds'
-								)}{' '}
-								<a
-									href="edit.php?post_type=feedzy_categories"
-									title={__(
-										'Feedzy Groups',
-										'feedzy-rss-feeds'
-									)}
-									target="_blank"
-								>
-									{__('here', 'feedzy-rss-feeds')}
-								</a>
-							</p>
-						</>
-					)}
+						<p>
+							{__(
+								'Enter the full URL of the feed source you wish to display here, or select a Feed Group. Also you can add multiple URLs separated with a comma. You can manage your feed groups from',
+								'feedzy-rss-feeds'
+							)}{' '}
+							<a
+								href="edit.php?post_type=feedzy_categories"
+								title={__('Feedzy Groups', 'feedzy-rss-feeds')}
+								target="_blank"
+							>
+								{__('here', 'feedzy-rss-feeds')}
+							</a>
+						</p>
+					</BaseControl>
 
 					<div>
 						<Button
@@ -158,7 +87,7 @@ const BlockPlaceholder = ({ attributes, setAttributes, onSaveFeed }) => {
 								attributes?.feed?.source.length === 0
 							}
 						>
-							{__('Save', 'feedzy-rss-feeds')}
+							{__('Load Feed', 'feedzy-rss-feeds')}
 						</Button>
 
 						<Button

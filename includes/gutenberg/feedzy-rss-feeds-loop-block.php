@@ -182,7 +182,17 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	 */
 	public function apply_magic_tags( $content, $item ) {
 		$pattern = '/\{\{feedzy_([^}]+)\}\}/';
-		$content = str_replace( FEEDZY_ABSURL . 'img/feedzy.svg', '{{feedzy_image}}', $content );
+		$content = str_replace(
+			array(
+				FEEDZY_ABSURL . 'img/feedzy.svg',
+				'http://{{feedzy_url}}'
+			),
+			array(
+				'{{feedzy_image}}',
+				'{{feedzy_url}}'
+			),
+			$content
+		);
 
 		return preg_replace_callback( $pattern, function( $matches ) use ( $item ) {
 			return isset( $matches[1] ) ? $this->get_value( $matches[1], $item ) : '';
@@ -210,8 +220,11 @@ class Feedzy_Rss_Feeds_Loop_Block {
 				$item_date = isset( $item['item_date'] ) ? wp_date( get_option( 'time_format' ), $item['item_date'] ) : '';
 				return $item_date;
 			case 'datetime':
-				$item_date = isset( $item['item_date'] ) ? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $item['item_date'] ) : '';
-				return $item_date;
+				$item_date = isset( $item['item_date'] ) ? wp_date( get_option( 'date_format' ), $item['item_date'] ) : '';
+				$item_time = isset( $item['item_date'] ) ? wp_date( get_option( 'time_format' ), $item['item_date'] ) : '';
+				/* translators: 1: date, 2: time */
+				$datetime = sprintf( __( '%1$s at %2$s', 'feedzy-rss-feeds' ), $item_date, $item_time );
+				return $datetime;
 			case 'author':
 				if ( isset( $item['item_author'] ) && is_string( $item['item_author'] ) ) {
 					return $item['item_author'];
