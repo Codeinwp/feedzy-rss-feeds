@@ -47,7 +47,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 	const [isEditing, setIsEditing] = useState(!attributes?.feed?.source);
 	const [isPreviewing, setIsPreviewing] = useState(false);
 
-	const { clearSelectedBlock, replaceInnerBlocks, selectBlock } =
+	const { clearSelectedBlock, replaceInnerBlocks } =
 		useDispatch(blockEditorStore);
 
 	const isSelected = useSelect(

@@ -37,7 +37,7 @@ const withFeedzyLoopImage = createHigherOrderComponent((BlockEdit) => {
 			<>
 				<BlockEdit {...props} />
 
-				{isLoopChild && defaultImage !== props.attributes.url && (
+				{isLoopChild && (
 					<BlockControls>
 						<ToolbarGroup>
 							<ToolbarButton

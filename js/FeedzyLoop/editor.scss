@@ -209,3 +209,23 @@ input[type="text"].fz-input-field:disabled {
     background-color: #f0f7ff;
     color: #007cba;
 }
+
+.fz-pattern-selector {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 48px;
+
+    @media (max-width: 782px) {
+        grid-template-columns: auto;
+    }
+
+    .fz-pattern {
+        cursor: pointer;
+        margin-bottom: 8px;
+    }
+
+    .block-editor-block-preview__container {
+        border-radius: 4px;
+        outline: 1px solid #0000001a;
+    }
+}
