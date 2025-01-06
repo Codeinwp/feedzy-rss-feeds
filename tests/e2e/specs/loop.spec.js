@@ -36,9 +36,6 @@ test.describe('Feedzy Loop', () => {
 		await page.getByPlaceholder('Enter URLs or select a').click();
 		await page.keyboard.type(FEED_URL);
 
-		// Click outside the input to trigger state change
-		await page.getByRole('tab', { name: 'Settings' }).click();
-
 		await page
 			.getByRole('button', { name: 'Load Feed', exact: true })
 			.click();

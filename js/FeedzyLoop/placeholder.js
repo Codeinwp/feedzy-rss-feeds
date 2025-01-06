@@ -81,11 +81,14 @@ const BlockPlaceholder = ({ attributes, setAttributes, onSaveFeed }) => {
 					<div>
 						<Button
 							variant="primary"
-							onClick={onSaveFeed}
-							disabled={
-								!attributes?.feed?.source ||
-								attributes?.feed?.source.length === 0
-							}
+							onClick={() => {
+								if (
+									attributes?.feed?.source &&
+									attributes?.feed?.source.length > 0
+								) {
+									onSaveFeed();
+								}
+							}}
 						>
 							{__('Load Feed', 'feedzy-rss-feeds')}
 						</Button>
