@@ -63,7 +63,7 @@
     "@wordpress/media-utils": "^4.49.0",
     "@wordpress/scripts": "^27.9.0",
     "classnames": "^2.3.2",
-    "conventional-changelog-simple-preset": "^1.0.15",
+    "conventional-changelog-simple-preset": "^1.0.24",
     "dayjs": "^1.10.4",
     "eslint": "^8.57.1",
     "grunt": "^1.4.0",
