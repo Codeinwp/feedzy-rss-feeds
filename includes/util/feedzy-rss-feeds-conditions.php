@@ -292,7 +292,7 @@ class Feedzy_Rss_Feeds_Conditions {
 				case 'featured_image':
 					$instance = Feedzy_Rss_Feeds::instance();
 					$admin    = $instance->get_admin();
-					$image    = $admin->feedzy_retrieve_image( $item );
+					$image    = $admin->feedzy_retrieve_image( $item, $attrs );
 					$value    = $image;
 					break;
 				default:
