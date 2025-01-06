@@ -285,6 +285,7 @@ class Feedzy_Rss_Feeds {
 				function () {
 					if ( function_exists( 'register_block_type' ) ) {
 						Feedzy_Rss_Feeds_Gutenberg_Block::get_instance();
+						Feedzy_Rss_Feeds_Loop_Block::get_instance();
 					}
 				}
 			);
