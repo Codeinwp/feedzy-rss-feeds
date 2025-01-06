@@ -35,7 +35,7 @@ Layout For Document Page of Feedzy RSS Feeds
 					<p>
 						<?php
 						// translators: %s is the shortcode [feedzy-rss]
-						echo sprintf( esc_html__( 'Learn how to display feed items using the %s shortcode in a few easy steps.', 'feedzy-rss-feeds' ), '[feedzy-rss]' );
+						printf( esc_html__( 'Learn how to display feed items using the %s shortcode in a few easy steps.', 'feedzy-rss-feeds' ), '[feedzy-rss]' );
 						?>
 					</p>
 					<div class="cta">
@@ -55,7 +55,7 @@ Layout For Document Page of Feedzy RSS Feeds
 						<?php
 
 						// translators: %1$s and %2$s are the service names (WordAi and SpinnerChief)
-						echo sprintf( esc_html__( 'Learn how to use %1$s and %2$s to rephrase RSS feeds content.', 'feedzy-rss-feeds' ), 'WordAi', 'SpinnerChief' );
+						printf( esc_html__( 'Learn how to use %1$s and %2$s to rephrase RSS feeds content.', 'feedzy-rss-feeds' ), 'WordAi', 'SpinnerChief' );
 						?>
 					</p>
 					<div class="cta">

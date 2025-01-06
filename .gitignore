@@ -12,4 +12,6 @@ cypress/fixtures
 cypress.env.json
 .phpunit.result.cache
 js/build
+/build
 artifacts
+.DS_Store

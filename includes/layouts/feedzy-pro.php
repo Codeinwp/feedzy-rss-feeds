@@ -37,9 +37,9 @@
             </ul>
             <ul class="fz-pro-features-table-row">
                 <li class="features-info">
-                    <h3 class="h3"><?php esc_html_e( 'Filter by Keyword(s) or Time Range', 'feedzy-rss-feeds' ); ?></h3>
+                    <h3 class="h3"><?php esc_html_e( 'Advanced Filtering', 'feedzy-rss-feeds' ); ?></h3>
                     <p>
-                        <?php esc_html_e( 'With this feature you can filter feed items, and Display or Exclude items if the title or content contains specific keyword(s). Additionally you can select a date range to import items within the selected date.', 'feedzy-rss-feeds' ); ?>
+                        <?php esc_html_e( 'With robust filtering options, you can include items matching any condition, filter by fields like title, description, or custom fields, and use operators like contains, equals, or regex for precise control.', 'feedzy-rss-feeds' ); ?>
                     </p>
                 </li>
                 <li class="free" data-label="Free">
@@ -121,15 +121,14 @@
                 <li class="features-info">
                     <h3 class="h3">
                         <?php
-                        // translators: %s: OpenAI (ChatGPT)
-                        echo sprintf( esc_html__( '%s Support', 'feedzy-rss-feeds' ), __( 'OpenAI (ChatGPT)', 'feedzy-rss-feeds' ) );
+                        echo esc_html__( 'AI Support', 'feedzy-rss-feeds' );
                         ?>
-                        <span class="pro-label"><?php esc_html_e( 'Answer a few questions to help us improve Feedzy', 'feedzy-rss-feeds' ); ?></span>
+                        <span class="pro-label"><?php esc_html_e( 'Developer & Agency plans', 'feedzy-rss-feeds' ); ?></span>
                     </h3>
                     <p>
                         <?php
-                        /* translators: %s: OpenAI API */
-                        echo sprintf( esc_html__( 'Using the %s integration, paraphrase, summarize, generate missing featured images, or apply your custom prompt to the imported content.', 'feedzy-rss-feeds' ), __( 'OpenAI API', 'feedzy-rss-feeds' ) );
+                        /* translators: %s: OpenAI (ChatGPT) or OpenRouter */
+                        echo sprintf( esc_html__( 'Using the %s integration, paraphrase, summarize, generate missing featured images, or apply your custom prompt to the imported content.', 'feedzy-rss-feeds' ), __( 'OpenAI (ChatGPT) or OpenRouter', 'feedzy-rss-feeds' ) );
                         ?>
                     </p>
                 </li>
@@ -186,7 +185,7 @@
     </div>
 
     <div class="cta">
-        <a href="<?php echo esc_url( tsdk_translate_link( tsdk_utmify(FEEDZY_UPSELL_LINK,'viewall','freevspro'), 'query' ) ) ; ?>" class="btn btn-block btn-primary btn-lg" target="_blank">
+        <a href="<?php echo esc_url( tsdk_translate_link( tsdk_utmify(FEEDZY_UPSELL_LINK,'viewall','freevspro') ) ) ; ?>" class="btn btn-block btn-primary btn-lg" target="_blank">
             <?php esc_html_e( 'View all Premium features', 'feedzy-rss-feeds' ); ?>
         </a>
     </div>

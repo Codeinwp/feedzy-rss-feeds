@@ -54,14 +54,16 @@
 	float: none;
 }
 .feedzy_page_feedzy-settings #wpcontent,
-.feedzy_page_feedzy-support #wpcontent{
+.feedzy_page_feedzy-support #wpcontent,
+.feedzy_page_feedzy-integration #wpcontent{
 	padding-left: 0;
 }
 .feedzy_page_feedzy-settings .feedzy-header,
-.feedzy_page_feedzy-support .feedzy-header{
+.feedzy_page_feedzy-support .feedzy-header,
+.feedzy_page_feedzy-integration .feedzy-header{
 	margin-bottom: 40px;
 }
-.feedzy-api-error,
+
 .feedzy-error-critical {
 	color: #ff0000;
 }

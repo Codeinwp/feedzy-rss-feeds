@@ -1,0 +1,52 @@
+{
+    "root": true,
+    "env": {
+      "browser": true
+    },
+    "extends": "plugin:@wordpress/eslint-plugin/recommended",
+    "parserOptions": {
+      "ecmaFeatures": {
+        "jsx": true
+      },
+      "ecmaVersion": "latest"
+    },
+    "ignorePatterns": ["**/vendor/**", "**/build/**", "**/*.min.js", "**/node_modules/**"],
+    "rules": {
+      "@wordpress/i18n-text-domain": ["error", {
+        "allowedTextDomain": ["feedzy-rss-feeds"]
+      }],
+      "@wordpress/i18n-no-flanking-whitespace": "error",
+      "@wordpress/data-no-store-string-literals": "error",
+      "@wordpress/wp-global-usage": "error",
+      "prettier/prettier": "warn",
+      "import/no-extraneous-dependencies": "warn",
+      "prefer-const": "warn",
+      "dot-notation": "warn",
+      "react/jsx-key": "warn",
+      "jsx-a11y/no-static-element-interactions": "warn",
+      "no-undef": "warn",
+      "object-shorthand": "warn",
+      "no-else-return": "warn",
+      "jsx-a11y/click-events-have-key-events": "warn",
+      "jsx-a11y/anchor-is-valid": "warn",
+      "camelcase": "warn",
+      "jsdoc/check-line-alignment": "warn",
+      "jsdoc/check-alignment": "warn",
+      "jsx-a11y/label-has-associated-control": "warn",
+      "react/no-unknown-property": "warn",
+      "@wordpress/no-unused-vars-before-return": "warn",
+      "jsdoc/empty-tags": "warn",
+      "no-lonely-if": "warn",
+      "no-var": "warn",
+      "no-unused-vars": "warn",
+      "no-console": "warn",
+      "jsx-a11y/alt-text": "warn",
+      "react/no-deprecated": "warn",
+      "jsx-a11y/no-noninteractive-element-interactions": "warn",
+      "jsx-a11y/no-autofocus": "warn",
+      "no-nested-ternary": "warn",
+      "jsdoc/require-param": "warn",
+      "jsdoc/require-returns-description": "warn",
+      "jsdoc/require-returns-type": "warn"
+    }
+  }

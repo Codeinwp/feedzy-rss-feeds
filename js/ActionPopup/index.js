@@ -41,6 +41,7 @@ const ActionModal = () => {
 	const [ editModeTag, setEditModeTag ] = useState(null);
 	const [ isDisabledAddNew, setDisabledAddNew ] = useState(false);
 	const [ isLoading, setLoading ] = useState(false);
+	const [ currentCustomRow, setcurrentCustomRow ] = useState(null);
 
 	// Close the popup when click on outside the modal.
 	const exitModalOnOutsideClick = useCallback(( e ) => {
@@ -75,6 +76,24 @@ const ActionModal = () => {
 
 	};
 
+	const demoPromptText = (args) => {
+		let id = args.index;
+		let type = args.type;
+		delete args.index;
+		delete args.type;
+		let prevState = action[id].data || {};
+		let updatedState = {...prevState, ...args};
+		if ( 'summarize' === type ) {
+			updatedState['ChatGPT'] = 'Summarize this article {content} for better SEO.';
+		} else if ( 'paraphase' === type ) {
+			updatedState['ChatGPT'] = 'Rephrase my {content} for better SEO.';
+		} else if ( 'change_tone' === type ) {
+			updatedState['ChatGPT'] = 'Change tone of my {content} for a more friendly approach.';
+		}
+		action[id]['data'] = updatedState;
+		setAction( () => ([...action.filter((e)=>{return e})]));
+	};
+
 	const openModal = () => {
 		setLoading(true);
 		setOpen(true);
@@ -93,6 +112,7 @@ const ActionModal = () => {
 		setDisabledAddNew(false);
 		setAction([]);
 		setLoading(false);
+		setcurrentCustomRow(null);
 	};
 	const hideIntroMessage = ( status ) => setHideMeg( status );
 	const removeAction = ( index ) => {
@@ -113,6 +133,12 @@ const ActionModal = () => {
 		if ( ['fz_translate', 'fz_paraphrase', 'fz_summarize', 'wordAI', 'spinnerchief'].indexOf( actionId ) > -1 ) {
 			actionData.data[actionId] = true;
 		}
+
+		if ( ['fz_translate'].indexOf( actionId ) > -1 ) {
+			const langInput = document.getElementById('feedzy_auto_translate_lang');
+			actionData.data['lang'] = langInput ? langInput.value : 'eng_Latn';
+		}
+
 		if ( ['fz_image'].indexOf( actionId ) > -1 ) {
 			actionData.data['generateOnlyMissingImages'] = true;
 		}
@@ -171,6 +197,13 @@ const ActionModal = () => {
 			setAction([]);
 			_action = encodeURIComponent( JSON.stringify( [ { id: '', tag: shortCode, data: {} } ] ) );
 		}
+		if ( 'import_custom_field' === fieldName ) {
+			if ( currentCustomRow ) {
+				currentCustomRow.value = _action;
+			}
+			closeModal();
+			return;
+		}
 
 		const inputField = jQuery( `[name="feedzy_meta_data[${fieldName}]"]:is(textarea, input)` ).data('tagify');
 
@@ -206,16 +239,48 @@ const ActionModal = () => {
 				}
 			}
 			let tag = event.target.getAttribute( 'data-action_popup' ) || '';
-			let fieldName = event.target.getAttribute( 'data-field-name' ) || '';
+			let dataFieldName = event.target.getAttribute( 'data-field-name' ) || '';
 			if ( '' === tag ) {
 				event.target.closest('.dropdown-item').click();
 				return;
 			}
 			setShortCode( tag );
-			setFieldName( fieldName );
+			setFieldName( dataFieldName );
 			openModal();
 		} );
 	} );
+
+	// Init custom field actions.
+	const initCustomFieldActions = () => {
+		const customFieldElement = document.querySelectorAll( '.custom_fields .fz-action-icon' ) || [];
+		if ( customFieldElement.length === 0 ) {
+			return;
+		}
+		customFieldElement.forEach( actionButton => {
+			actionButton.addEventListener( 'click', ( event ) => {
+				event.preventDefault();
+				if ( userRef.current ) {
+					if ( ! userRef.current.attributes.meta.feedzy_hide_action_message ) {
+						hideActionIntroMessage();
+					} else {
+						hideIntroMessage(true);
+					}
+				}
+
+				let editAction = event?.target?.nextElementSibling?.value || '';
+				if ( editAction ) {
+					editAction = JSON.parse( decodeURIComponent( editAction ) );
+					setAction( () => ([...editAction.filter((e)=>{return e.id !== ''})]));
+				}
+				setShortCode( 'custom_field' );
+				setFieldName( 'import_custom_field' );
+				setcurrentCustomRow( event?.target?.nextElementSibling );
+				openModal();
+			} );
+		} );
+	};
+	// Attach click event to the newly added custom field row.
+	document.addEventListener( 'feedzy_new_row_added', initCustomFieldActions );
 
 	const initEditHooks = () => {
 		if ( isLoading ) {
@@ -225,6 +290,7 @@ const ActionModal = () => {
 		setTimeout( function() {
 			const editActionElement = document.querySelectorAll( '.fz-content-action .tagify__filter-icon' ) || [];
 			if ( editActionElement.length === 0 ) {
+				initCustomFieldActions();
 				initEditHooks();
 				return;
 			}
@@ -235,7 +301,21 @@ const ActionModal = () => {
 							let editAction = event.target.getAttribute( 'data-actions' ) || '';
 							let fieldId = event.target.getAttribute( 'data-field_id' ) || '';
 							editAction = JSON.parse( decodeURIComponent( editAction ) );
-							setAction( () => ([...editAction.filter((e)=>{return e.id !== ''})]));
+							setAction(() => (
+								editAction
+								.filter((e) => e.id !== '')
+								.map((e) => {
+								  	// Replace 'fz_summarize' with 'chat_gpt_rewrite' for backward compatible.
+									if (e.id === 'fz_summarize') {
+										return { 
+											...e, 
+											id: 'chat_gpt_rewrite', 
+											data: { ChatGPT: "Summarize this article {content} for better SEO." } 
+										};
+									}
+									return e;
+								})
+							));
 							let magicTag = editAction[0] || {};
 							let tag = magicTag.tag;
 							setEditModeTag(event.target.parentNode);
@@ -246,6 +326,7 @@ const ActionModal = () => {
 					} );
 				} );
 			}
+			initCustomFieldActions();
 		}, 500 );
 	};
 	initEditHooks();
@@ -274,7 +355,7 @@ const ActionModal = () => {
 							</div>
 						) }
 
-						{action.length > 0 && ( <Actions data={action} removeCallback={removeAction} onChangeHandler={handleChange} onSortEnd={onSortEnd} useDragHandle lockAxis="y" helperClass="draggable-item" distance={1} lockToContainerEdges={true} lockOffset="0%"/> )}
+						{action.length > 0 && ( <Actions data={action} removeCallback={removeAction} onChangeHandler={handleChange} updatePromptText={demoPromptText} onSortEnd={onSortEnd} useDragHandle lockAxis="y" helperClass="draggable-item" distance={1} lockToContainerEdges={true} lockOffset="0%"/> )}
 
 						<div className="fz-action-btn">
 							<div className="fz-action-relative">
@@ -287,9 +368,9 @@ const ActionModal = () => {
 											{
 												'item_image' === shortCode ? ([
 													feedzyData.isPro && ( feedzyData.isBusinessPlan || feedzyData.isAgencyPlan ) ? (
-														<li key="action-1" onClick={ () => addAction('fz_image') }>{__( 'Generate with ChatGPT', 'feedzy-rss-feeds' )}</li>
+														<li key="action-1" onClick={ () => addAction('fz_image') }>{__( 'Generate with OpenAI', 'feedzy-rss-feeds' )}</li>
 													) : (
-														<li key="action-1" onClick={ () => addAction('fz_image') }>{__( 'Generate with ChatGPT', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+														<li key="action-1" onClick={ () => addAction('fz_image') }>{__( 'Generate with OpenAI', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
 													)]
 												) : ([
 													<li key="action-2" onClick={ () => addAction('trim') }>{__( 'Trim Content', 'feedzy-rss-feeds' )}</li>,
@@ -340,18 +421,9 @@ const ActionModal = () => {
 													(
 														'item_categories' !== shortCode && (
 															feedzyData.isPro && ( feedzyData.isBusinessPlan || feedzyData.isAgencyPlan ) ? (
-																<li key="action-9" onClick={ () => addAction('chat_gpt_rewrite') }>{__( 'Paraphrase with ChatGPT', 'feedzy-rss-feeds' )}</li>
+																<li key="action-9" onClick={ () => addAction('chat_gpt_rewrite') }>{__( 'Rewrite with AI', 'feedzy-rss-feeds' )}</li>
 															) : (
-																<li key="action-9" onClick={ () => addAction('chat_gpt_rewrite') }>{__( 'Paraphrase with ChatGPT', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
-															)
-														)
-													),
-													(
-														'item_categories' !== shortCode && (
-															feedzyData.isPro && ( feedzyData.isBusinessPlan || feedzyData.isAgencyPlan ) ? (
-																<li key="action-10" onClick={ () => addAction('fz_summarize') }>{__( 'Summarize with ChatGPT', 'feedzy-rss-feeds' )}</li>
-															) : (
-																<li key="action-10" onClick={ () => addAction('fz_summarize') }>{__( 'Summarize with ChatGPT', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+																<li key="action-9" onClick={ () => addAction('chat_gpt_rewrite') }>{__( 'Rewrite with AI', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
 															)
 														)
 													)

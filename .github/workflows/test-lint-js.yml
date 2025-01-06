@@ -1,31 +1,27 @@
-name: NPM Tests
+name: Check JS files and build
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
   cancel-in-progress: true
 on:
   push:
     branches-ignore:
-      - 'master'
-      - 'dependabot/**'
+      - "master"
+      - "dependabot/**"
 
 jobs:
   npm:
     runs-on: ubuntu-latest
-    env:
-      CYPRESS_INSTALL_BINARY: 0
-    strategy:
-      matrix:
-        node-version: [18.x]
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Setup node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: "18"
+          cache: "npm"
       - name: Install Dependencies
         run: npm install
       - name: Run JS check
-        run: npm run lint:js || true # Remove `|| true` when working on https://github.com/Codeinwp/feedzy-rss-feeds/issues/948
-      - name: Build source
+        run: npm run lint:js
+      - name: Check if we can build the project
         run: npm run build

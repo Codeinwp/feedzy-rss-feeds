@@ -1,1 +1,0 @@
-grant all privileges on *.* to 'wordpress'@'%' identified by 'wordpress';

@@ -397,7 +397,7 @@ class Editor extends Component {
 					(
 						<div key="loading" className="wp-block-embed is-loading">
 							<Spinner />
-							<p>{ __( 'Fetching...', 'feedzy-rss-feeds' ) }</p>
+							<p>{ __( 'Fetching…', 'feedzy-rss-feeds' ) }</p>
 						</div>
 					):
 					[
@@ -405,7 +405,7 @@ class Editor extends Component {
                         <TextControl
 							type="url"
 							className="feedzy-source"
-							placeholder={ __( 'Enter URL or category of your feed here...', 'feedzy-rss-feeds' ) }
+							placeholder={ __( 'Enter URL or group of your feed here…', 'feedzy-rss-feeds' ) }
 							onChange={ this.onChangeFeed }
                             onKeyUp={ this.handleKeyUp }
 							value={ this.props.attributes.feeds }
@@ -417,28 +417,15 @@ class Editor extends Component {
 							type="submit"
 							onClick={ this.loadFeed }
 						>
-							{ __( 'Load Feed' ) }
+							{ __( 'Load Feed', 'feedzy-rss-feeds' ) }
 						</Button>,
-                        <ExternalLink href={ this.getValidateURL() } title={ __( 'Validate Feed ', 'feedzy-rss-feeds' ) }>{ __( 'Validate ', 'feedzy-rss-feeds' ) }</ExternalLink>,
-                        ( ! feedzyjs.isPro ) && (
-                            <div className="fz-source-upgrade-alert">
-                                <strong>{ __( 'NEW!', 'feedzy-rss-feeds' ) } </strong>
-                                <RawHTML>
-                                    {
-                                        sprintf(
-                                            // translators: %1$s: opening anchor tag, %2$s: closing anchor tag
-                                            __( 'Enable Amazon Product Advertising feeds to generate affiliate revenue by %1$s upgrading to Feedzy Pro. %2$s', 'feedzy-rss-feeds' ),
-                                            `<a target="_blank" href="${feedzyjs?.upsellLinkBlockEditor}">`,
-                                            '</a>'
-                                        )
-                                    }
-                                </RawHTML>
-                            </div>
-                        ),
+                        <ExternalLink href={ this.getValidateURL() } title={ __( 'Validate Feed', 'feedzy-rss-feeds' ) }>{ __( 'Validate', 'feedzy-rss-feeds' ) }</ExternalLink>,
+                        
                         ( this.state.error ) && <div>{ __( 'Feed URL is invalid or unreachable by WordPress SimplePie and will NOT display items.', 'feedzy-rss-feeds') }</div>,
                         <p>
-                            { __( 'Enter the full URL of the feed source you wish to display here, or the name of a category you\'ve created. Also you can add multiple URLs just separate them with a comma. You can manage your categories feed from', 'feedzy-rss-feeds') }
-                            <a href="edit.php?post_type=feedzy_categories" title={ __( 'feedzy categories ', 'feedzy-rss-feeds' ) } target="_blank">{ __( 'here ', 'feedzy-rss-feeds' ) }</a>
+                            { __( 'Enter the full URL of the feed source you wish to display here, or the name of a group you\'ve created. Also you can add multiple URLs just separate them with a comma. You can manage your groups feed from', 'feedzy-rss-feeds') }
+                            {' '}
+                            <a href="edit.php?post_type=feedzy_categories" title={ __( 'Feedzy Groups', 'feedzy-rss-feeds' ) } target="_blank">{ __( 'here', 'feedzy-rss-feeds' ) }</a>
                         </p>
 					] }
 					</Placeholder>
@@ -534,7 +521,8 @@ class Editor extends Component {
 											{ ( feedzyjs.isPro && item['media'] && item['media']['src'] ) && (
 												<audio controls controlsList="nodownload">
 													<source src={ item['media']['src'] }  type={ item['media']['type'] } />
-													{ __( 'Your browser does not support the audio element. But you can check this for the original link: ', 'feedzy-rss-feeds' ) }
+													{ __( 'Your browser does not support the audio element. But you can check this for the original link:', 'feedzy-rss-feeds' ) }
+                                                    { ' ' }
 													<a href={ item['media']['src'] } >{ item['media']['src'] }</a>
 												</audio>
 											) }

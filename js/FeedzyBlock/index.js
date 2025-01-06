@@ -4,7 +4,7 @@
  * Block dependencies
  */
 import './style.scss';
-import blockAttributes from './attributes';
+import blockAttributes from './attributes.js';
 import Editor from './Editor.js';
 
 /**
@@ -17,14 +17,14 @@ const { registerBlockType } = wp.blocks;
 /**
  * Register block
  */
-export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
-	title: __( 'Feedzy RSS Feeds' ),
+export default registerBlockType('feedzy-rss-feeds/feedzy-block', {
+	title: __('Feedzy RSS Feeds (Classic)', 'feedzy-rss-feeds'),
 	category: 'common',
 	icon: 'rss',
 	keywords: [
-		__( 'Feedzy RSS Feeds' ),
-		__( 'RSS' ),
-		__( 'Feeds' ),
+		__('Feedzy RSS Feeds', 'feedzy-rss-feeds'),
+		__('RSS', 'feedzy-rss-feeds'),
+		__('Feeds', 'feedzy-rss-feeds'),
 	],
 	supports: {
 		html: false,
@@ -32,7 +32,7 @@ export default registerBlockType( 'feedzy-rss-feeds/feedzy-block', {
 	attributes: blockAttributes,
 	edit: Editor,
 	save() {
-			// Rendering in PHP
-			return null;
+		// Rendering in PHP
+		return null;
 	},
 });

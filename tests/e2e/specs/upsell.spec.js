@@ -13,16 +13,6 @@ test.describe( 'Upsell', () => {
         await tryCloseTourModal( page );
     } );
 
-    test( 'upgrade banner', async({ editor, page }) => {
-        const bannerLinkElement = page.getByRole('link', { name: 'upgrading to Feedzy Pro', exact: true });
-        await expect( bannerLinkElement ).toBeVisible();
-
-        const bannerLink = new URL( await bannerLinkElement.getAttribute('href') );
-        expect( bannerLink.host ).toBe( 'themeisle.com' );
-        expect( bannerLink.searchParams.get( 'utm_source' ) ).toBe( 'wpadmin');
-        expect( bannerLink.searchParams.get( 'utm_medium' ) ).toBe('import-screen');
-        expect( bannerLink.searchParams.get( 'utm_content' ) ).toBe('feedzy-rss-feeds');
-    });
 
     test( 'filters', async({ editor, page }) => {
         await page.getByRole('button', { name: 'Step 2 Filters' }).click({ force: true });
@@ -30,40 +20,61 @@ test.describe( 'Upsell', () => {
         // Hover over text named Filter by Keyword
         const filtersTab = page.locator('#feedzy-import-form > div.feedzy-accordion > div:nth-child(2)');
 
-        // It should have 3 elements with .only-pro-content class.
-        await expect( filtersTab.locator('.only-pro-content').count() ).resolves.toBe(3);
+        // It should have 1 elements with .only-pro-content class.
+        await expect( filtersTab.locator('.pro-label').count() ).resolves.toBe(1);
 
-        const filterByKeywordAlert = await filtersTab.locator('.upgrade-alert').first();
-        let upgradeLink = new URL( await filterByKeywordAlert.locator('a').first().getAttribute('href') );
-        expect( upgradeLink.searchParams.get( 'utm_campaign' ) ).toBe('filter-keyword');
-
-        const excludeItemsAlert = await filtersTab.locator('.upgrade-alert').nth(1);
-        upgradeLink = new URL( await excludeItemsAlert.locator('a').first().getAttribute('href') );
-        expect( upgradeLink.searchParams.get( 'utm_campaign' ) ).toBe('exclude-items');
-
-        const filterByTimeRangeAlert = await filtersTab.locator('.upgrade-alert').nth(2);
-        upgradeLink = new URL( await filterByTimeRangeAlert.locator('a').first().getAttribute('href') );
-        expect( upgradeLink.searchParams.get( 'utm_campaign' ) ).toBe('filter-time-range');
     } );
 
-    test( 'map content', async({ editor, page }) => {
-        await page.getByRole('button', { name: 'Step 3 Map content' }).click({ force: true });
-
-        const magicTagsUpsell = page.locator('p').filter({ hasText: 'Using magic tags, specify' }).getByRole('link');
-        await expect( magicTagsUpsell ).toBeVisible();
-        const upgradeLink = new URL( await magicTagsUpsell.getAttribute('href') );
-        expect( upgradeLink.searchParams.get('utm_campaign') ).toBe('magictags');
-    } );
 
     test( 'general settings', async({ editor, page }) => {
         await page.getByRole('button', { name: 'Step 4 General feed settings' }).click({ force: true });
 
-        await page.locator('#feedzy_delete_days').hover({ force: true });
-        let upgradeAlert = page.locator('#feedzy-import-form a[href*="utm_campaign=auto-delete"]');
-        await expect( upgradeAlert ).toBeVisible();
+
 
         await page.locator('.fz-form-group:has( #feed-post-default-thumbnail )').hover({ force: true });
-        upgradeAlert = page.locator('#feedzy-import-form a[href*="utm_campaign=fallback-image"]');
+        let upgradeAlert = page.locator('#feedzy-import-form a[href*="utm_campaign=fallback-image"]');
+        await expect( upgradeAlert ).toBeVisible();
+
+        await page.locator('.fz-form-group:has( #fz-event-execution )').hover({ force: true });
+        upgradeAlert = page.locator('#feedzy-import-form a[href*="utm_campaign=schedule-import-job"]');
+        await expect( upgradeAlert ).toBeVisible();
+
+        await page.locator('.fz-form-group:has( #delete-attached-media )').hover({ force: true });
+        upgradeAlert = page.locator('#feedzy-import-form a[href*="utm_campaign=delete-featured-image"]');
+        await expect( upgradeAlert ).toBeVisible();
+
+        await page.locator('.fz-form-group:has( #feedzy_mark_duplicate )').hover({ force: true });
+        upgradeAlert = page.locator('#feedzy-import-form a[href*="utm_campaign=remove-duplicates"]');
         await expect( upgradeAlert ).toBeVisible();
     } );
+});
+
+test.describe( 'List Page Upsell', () => {
+    test.beforeEach( async ( { requestUtils, page } ) => {
+        await page.goto('/wp-admin/edit.php?post_type=feedzy_imports');
+    } );
+
+    test('Import/Export', async ({ editor, page }) => {
+        // Locate and click the "Import Job" link
+        const importButton = page.locator('.fz-export-import-btn');
+        await expect(importButton).toBeVisible();
+        await importButton.click();
+
+        // Wait for the popup to become visible
+        const upsellPopup = page.locator('#fz_import_export_upsell');
+        await expect(upsellPopup).toBeVisible();
+
+        // Locate and check the "Upgrade to PRO" link inside the popup
+        const upgradeToProLink = upsellPopup.locator('a', { hasText: 'Upgrade to PRO' });
+        await expect(upgradeToProLink).toBeVisible();
+
+        // Get the URL from the "Upgrade to PRO" link
+        const upsellLink = new URL(await upgradeToProLink.getAttribute('href'));
+
+        // Validate the URL parameters
+        expect(upsellLink.host).toBe('themeisle.com');
+        expect(upsellLink.searchParams.get('utm_source')).toBe('wpadmin');
+        expect(upsellLink.searchParams.get('utm_medium')).toBe('edit');
+        expect(upsellLink.searchParams.get('utm_content')).toBe('feedzy-rss-feeds');
+    });
 });

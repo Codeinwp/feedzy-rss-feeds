@@ -177,7 +177,7 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 			$screen = get_current_screen();
 			if (
 					( $screen->base === 'edit' && ( $screen->post_type === 'feedzy_imports' || $screen->post_type === 'feedzy_categories' ) ) ||
-				 'feedzy_page_feedzy-settings' === $screen->id
+				 'feedzy_page_feedzy-settings' === $screen->id || 'feedzy_page_feedzy-integration' === $screen->id
 			) {
 				return;
 			}
@@ -285,7 +285,7 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 			$screen = get_current_screen();
 			if (
 				 ( $screen->base === 'edit' && ( $screen->post_type === 'feedzy_imports' || $screen->post_type === 'feedzy_categories' ) ) ||
-				 'feedzy_page_feedzy-settings' === $screen->id
+				 'feedzy_page_feedzy-settings' === $screen->id || 'feedzy_page_feedzy-integration' === $screen->id
 			) {
 				// Small hack to supress rendering of other notices in those pages.
 				$products['feedzy'] = -2;

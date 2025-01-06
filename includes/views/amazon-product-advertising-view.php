@@ -2,7 +2,7 @@
 	<div class="form-block">
 		<div class="upgrade-alert mb-24">
 			<?php
-				$upgrade_url = tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'amazonproductadvertising' ), 'query' );
+				$upgrade_url = tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'amazonproductadvertising' ) );
 
 				$content  = __( 'You are using Feedzy Lite.', 'feedzy-rss-feeds' ) . ' ';
 				$content .= wp_sprintf(
@@ -17,13 +17,13 @@
 		<div class="locked-form-block">
 			<div class="fz-form-group mb-20">
 				<?php
-					echo wp_kses_post(
+					echo wp_kses_post(wp_sprintf(
 						// translators: %1$s to available amazon domain, %2$s example URL with ASIN, %3$s list of available Amazon domains.
 						__( 'Please use this URL structure %1$s or %2$s while getting Amazon product information. <br> Here are the available Amazon domains: %3$s', 'feedzy-rss-feeds' ),
 						'<strong>amazon.[extension]?keyword=Laptop</strong>',
 						'<strong>amazon.com?asin=ASIN_1|ASIN_2</strong>',
 						'<strong>com, au, br, ca, fr, de, in, it, jp, mx, nl, pl, sg, sa, es, se, tr, ae, uk</strong>'
-					);
+					));
 					?>
 			</div>
 			<div class="fz-form-row">
@@ -64,9 +64,6 @@
 					<div class="fz-input-group-left">
 						<input type="text" class="form-control" name="amazon_partner_tag" placeholder="<?php echo esc_attr( __( 'Partner Tag (store/tracking id)', 'feedzy-rss-feeds' ) ); ?>"/>
 						<div class="help-text"><?php esc_html_e( 'API Status: Invalid | Last check: Never', 'feedzy-rss-feeds' ); ?></div>
-					</div>
-					<div class="fz-input-group-right">
-						<button type="button" class="btn btn-outline-primary disabled" ><?php echo esc_html_x( 'Validate connection', 'Check and save action button', 'feedzy-rss-feeds' ); ?></button>
 					</div>
 				</div>
 			</div>

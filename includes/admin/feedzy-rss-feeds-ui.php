@@ -59,7 +59,6 @@ class Feedzy_Rss_Feeds_Ui {
 		$this->plugin_name = $plugin_name;
 		$this->version     = $version;
 		$this->loader      = $loader;
-
 	}
 
 	/**
@@ -210,6 +209,18 @@ class Feedzy_Rss_Feeds_Ui {
 		}
 	}
 
+    /**
+     * Check if the user has dismissed the notice.
+     *
+     * @return bool
+     */
+	public static function had_dismissed_notice() {
+		if ( ! is_user_logged_in() ) {
+			return false;
+		}
+
+		return get_user_meta( get_current_user_id(), 'feedzy_import_upsell_notice', true ) === 'dismissed';
+	}
 	/**
 	 * Load feedzy import post screen.
 	 */
@@ -218,14 +229,14 @@ class Feedzy_Rss_Feeds_Ui {
 		?>
 		<div class="feedzy-wrap">
 			<div class="feedzy-container fz-import-field-item">
-				<?php if ( ! feedzy_is_pro() ) : ?>
+				<?php if ( ! feedzy_is_pro() && ( time() - feedzy_install_time() ) > ( 2 * DAY_IN_SECONDS )  && ! self::had_dismissed_notice()) : ?>
 					<div class="upgrade-alert mb-24">
 						<?php
-							$upgrade_url = tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'post_title', 'import-screen' ), 'query' );
+							$upgrade_url = tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'post_title', 'import-screen' ) );
 
 							$content  = __( 'You are using Feedzy Lite.', 'feedzy-rss-feeds' ) . ' ';
 							// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
-							$content .= wp_sprintf( __( 'Unlock more powerful features, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ), '<a href="' . esc_url( $upgrade_url ) . '" target="_blank">', '</a>' );
+							$content .= wp_sprintf( __( 'Unlock more powerful features, by %1$s upgrading to Feedzy Pro %2$s and get 50%% off.', 'feedzy-rss-feeds' ), '<a href="' . esc_url( $upgrade_url ) . '" target="_blank">', '</a>' );
 
 							echo wp_kses_post( $content );
 						?>

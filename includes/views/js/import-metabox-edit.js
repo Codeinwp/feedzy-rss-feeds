@@ -96,6 +96,7 @@
 		$(".custom_fields").append(html_row);
 		$(".btn.btn-remove-fields").on("click", remove_row);
 		initCustomFieldAutoComplete();
+		document.dispatchEvent(new Event('feedzy_new_row_added'));
 		return false;
 	}
 
@@ -327,6 +328,34 @@
 			}
 		})
 
+		// Add magic tag support for post taxonomy field.
+		$("#feedzy_post_author.fz-chosen-custom-tag").on("chosen:no_results", function() {
+			var select = $(this);
+			var search = select.siblings(".chosen-container").find(".chosen-search-input");
+			var text = htmlEntities(search.val().replace(/\s+/g, ''));
+			// dont add if it already exists
+			if (! select.find('option[value=' + escapeSelector(search.val().replace(/\s+/g, '')) + ']').length) {
+				var btn = $('<li class="active-result highlighted">' + text + '</li>');
+				btn.on("mousedown mouseup click", function(e) {
+					var arr = select.val() || [];
+					select.append("<option value='" + text + "' selected>" + text + "</option>");
+					select.trigger("chosen:updated").trigger('chosen:close');
+					e.stopImmediatePropagation();
+					return false;
+				});
+				search.on("keydown", function(e) {
+					if (e.which == 13) {
+						btn.click();
+						return false;
+					}
+				});
+				select.siblings(".chosen-container").find(".no-results").replaceWith(btn);
+				select.siblings(".chosen-container").find(".chosen-results").append('<li class="helper-text">' + feedzy.i10n.author_helper + '</li>');
+			} else {
+				select.siblings(".chosen-container").find(".no-results").replaceWith('');
+			}
+		})
+
 		/*
          Form
          */
@@ -428,17 +457,20 @@
 			}
 		});
 
-		// Enable/Disable auto translation.
-		$( document ).on( 'change', '#feedzy-auto-translation', function() {
-		    $( '#feedzy_auto_translation_lang' ).attr( 'disabled', ! $( this ).is( ':checked' ) ).trigger( 'chosen:updated' );
-		} );
-
 		// Click to hide upsell notice.
 		$(document).on("click", ".remove-alert", function (e) {
 			var upSellNotice = $(this).parents( '.upgrade-alert' );
 			upSellNotice.fadeOut( 500,
 				function() {
 					upSellNotice.remove();
+					jQuery.post(
+						ajaxurl,
+						{
+							security: feedzy.ajax.security,
+							action: "feedzy",
+							_action: "remove_upsell_notice"
+						}
+					);
 				}
 			);
 		});
@@ -628,6 +660,79 @@
 				tagList.find( 'input:text' ).val( '' );
 			}
 		} );
+
+		$( document ).on( 'change', 'input#remove-duplicates', function() {
+			if ( $(this).is(':checked') ) {
+				$('input#feedzy_mark_duplicate').attr( 'disabled', false );
+			} else {
+				$('input#feedzy_mark_duplicate').attr( 'disabled', true );
+			}
+		} );
+
+		$(document).on( 'input', 'input[name="custom_vars_value[]"]', function () {
+			$(this)
+			.next('.fz-action-icon')
+			.toggleClass( 'disabled', $(this).val() === '' );
+
+			$(this)
+			.parent( '.fz-form-group' )
+			.find( 'input:hidden' )
+			.attr( 'disabled', $(this).val() === '' );
+		} );
+
+    // Append import button.
+		$( feedzy.i10n.importButton ).insertAfter( $( '.page-title-action', document ) );
+		$( $( '.page-title-action', document ) ).wrapAll( '<div class="fz-header-action"></div>' );
+
+		// Create dialog box
+		$( '#fz_import_export_upsell' ).dialog( {
+			title: '',
+			dialogClass: 'wp-dialog',
+			autoOpen: false,
+			draggable: false,
+			width: 'auto',
+			modal: true,
+			resizable: false,
+			closeOnEscape: true,
+			position: {
+				my: "center",
+				at: "center",
+				of: window
+			},
+			open: function( event, ui ) {
+				$(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
+				$(".ui-dialog-titlebar", ui.dialog | ui).hide();
+			},
+			create: function() {
+				// style fix for WordPress admin
+				$( '.ui-dialog-titlebar-close' ).addClass( 'ui-button' );
+			},
+		} );
+
+		$( '.fz-export-import-btn.only-pro, .fz-export-btn-pro' ).on( 'click', function( e ) {
+            e.preventDefault();
+            $( '#fz_import_export_upsell' ).dialog( 'open' );
+        });
+
+        $( '#fz_import_export_upsell' ).on( 'click', '.close-modal', function ( e ) {
+        	e.preventDefault();
+            $( '#fz_import_export_upsell' ).dialog( 'close' );
+        } );
+
+        $(document).on( 'click', '.fz-export-import-btn:not(.only-pro)', function( e ) {
+            e.preventDefault();
+            if ( $('.fz-import-field').length === 0 ) {
+	            var importField = $( '#fz_import_field_section' ).html();
+	            $( importField ).insertAfter( $( this ).parents( 'div.wrap' ).find( '.wp-header-end' ) );
+	        }
+            $('.fz-import-field').toggleClass('hidden');
+        });
+
+		let url = new URL(window.location.href);
+		if (url.searchParams.has('imported')) {
+			url.searchParams.delete('imported');
+			history.replaceState(history.state, '', url.href);
+		}
 	}
 
 	function initSummary() {
@@ -641,12 +746,63 @@
 			modal: true,
 			autoOpen: false,
 			height: 400,
-			width: 500,
-			buttons: {
-				Ok: function () {
-					$(this).dialog("close");
-				},
+			classes: {
+				"ui-dialog-content": "feedzy-dialog-content",
 			},
+			width: 500,
+			buttons:[
+				{
+					text: feedzy.i10n.okButton,
+					click: function () {
+						$(this).dialog('close');
+					}
+				}
+			]
+		});
+
+		// Error logs popup.
+		$(".feedzy-errors-dialog").dialog({
+			modal: true,
+			autoOpen: false,
+			height: 400,
+			width: 500,
+			buttons:[
+				{
+					text: feedzy.i10n.clearLogButton,
+					class: 'button button-primary feedzy-clear-logs',
+					click: function (event) {
+						var clearButton = $(event.target);
+						var dialogBox = $(this);
+						$('<span class="feedzy-spinner spinner is-active"></span>').insertAfter(clearButton);
+						clearButton.attr('disabled', true);
+						$.post(
+							ajaxurl,
+							{
+								security: feedzy.ajax.security,
+								id: $(this).attr('data-id'),
+								action: 'feedzy',
+								_action: 'clear_error_logs',
+							},
+							function () {
+								clearButton
+								.next('.feedzy-spinner')
+								.remove();
+
+								dialogBox
+								.find('.feedzy-error.feedzy-api-error')
+								.html('<div class="notice notice-success"><p>' + feedzy.i10n.removeErrorLogsMsg + '</p></div>')
+							}
+						);
+					}
+				},
+				{
+					text: feedzy.i10n.okButton,
+					class: 'alignright',
+					click: function () {
+						$(this).dialog('close');
+					}
+				}
+			]
 		});
 
 		$(".feedzy-dialog-open").on("click", function (e) {
@@ -708,6 +864,9 @@
 			e.preventDefault();
 			var element = $(this);
 			var deleteImportedPosts = confirm(feedzy.i10n.delete_post_message);
+			if (!deleteImportedPosts) {
+				return;
+			}
 			showSpinner(element);
 			$.ajax({
 				url: ajaxurl,
@@ -843,23 +1002,60 @@
 				button: {
 					text: feedzy.i10n.media_iframe_button
 				},
-				multiple: false
-		} ).on( 'select', function() { // it also has "open" and "close" events
-			var attachment = wp_media_uploader.state().get( 'selection' ).first().toJSON();
-			var attachmentUrl = attachment.url;
-			if ( attachment.sizes.thumbnail ) {
-				attachmentUrl = attachment.sizes.thumbnail.url;
-			}
-			if ( $( '.feedzy-media-preview' ).length ) {
-				$( '.feedzy-media-preview' ).find( 'img' ).attr( 'src', attachmentUrl );
-			} else {
-				$( '<div class="fz-form-group mb-20 feedzy-media-preview"><img src="' + attachmentUrl + '"></div>' ).insertBefore( button.parent() );
-			}
-			button.parent().find( '.feedzy-remove-media' ).addClass( 'is-show' );
-			button.parent().find( 'input:hidden' ).val( attachment.id ).trigger( 'change' );
-			$( '.feedzy-open-media' ).html( feedzy.i10n.action_btn_text_2 );
-		} ).open();
+				multiple: true
+			} ).on( 'select', function() { // it also has "open" and "close" events
+				var selectedAttachments = wp_media_uploader.state().get( 'selection' );
+				var countSelected = selectedAttachments?.toJSON()?.length;
+				button.parents( '.fz-form-group' ).find( '.feedzy-media-preview' ).remove();
+				// Display image preview when a single image is selected.
+				if ( 1 === countSelected ) {
+					var attachment = selectedAttachments.first().toJSON();
+					var attachmentUrl = attachment.url;
+					if ( attachment.sizes.thumbnail ) {
+						attachmentUrl = attachment.sizes.thumbnail.url;
+					}
+					if ( $( '.feedzy-media-preview' ).length ) {
+						$( '.feedzy-media-preview' ).find( 'img' ).attr( 'src', attachmentUrl );
+					} else {
+						$( '<div class="fz-form-group mb-20 feedzy-media-preview"><img src="' + attachmentUrl + '"></div>' ).insertBefore( button.parent() );
+					}
+				} else {
+					$( '<div class="fz-form-group mb-20 feedzy-media-preview"><a href="javascript:;" class="btn btn-outline-primary feedzy-images-selected">' + feedzy.i10n.action_btn_text_3.replace( '%d', countSelected ) + '</a></div>' ).insertBefore( button.parent() );
+				}
+				// Get all selected attachment ids.
+				var ids = selectedAttachments.map( function( attachment ) {
+					return attachment.id;
+				} ).join( ',' );
+
+				button.parent().find( '.feedzy-remove-media' ).addClass( 'is-show' );
+				button.parent().find( 'input:hidden' ).val( ids ).trigger( 'change' );
+				$( '.feedzy-open-media' ).html( feedzy.i10n.action_btn_text_2 );
+			} );
+
+			wp_media_uploader.on(' open', function() {
+				var selectedVal = button.parent().find( 'input:hidden' ).val();
+				if ( '' === selectedVal ) {
+					return;
+				}
+				var selection = wp_media_uploader.state().get('selection');
+
+				selectedVal.split(',').forEach(function( id ) {
+					var attachment = wp.media.attachment( id );
+					attachment.fetch();
+					selection.add(attachment ? [attachment] : []);
+				});
+			} );
+
+			wp_media_uploader.open();
 		});
+
+		$(document).on( 'click', '.feedzy-images-selected', function( e ) {
+			$(this)
+			.parents( '.fz-form-group' )
+			.find( '.feedzy-open-media' )
+			.trigger( 'click' );
+			e.preventDefault();
+		} );
 	}
 }(jQuery, feedzy));
 

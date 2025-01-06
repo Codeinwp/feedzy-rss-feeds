@@ -81,7 +81,6 @@ if ( ! class_exists( 'Feedy_Rss_Feeds_Options' ) ) {
 			self::$instance->options[ $key ] = apply_filters( 'feedzy_pre_set_option_' . $key, $value );
 
 			return update_option( Feedzy_Rss_Feeds::get_plugin_name(), self::$instance->options );
-
 		}
 	}
 }// End if().
