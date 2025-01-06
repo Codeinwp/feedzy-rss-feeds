@@ -158,6 +158,11 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		}
 
 		$feed_items = apply_filters( 'feedzy_get_feed_array', array(), $options, $feed, implode( ',', $feed_urls ), $sizes );
+
+		if ( empty( $feed_items ) ) {
+			return '<div>' . esc_html__( 'No items to display.', 'feedzy-rss-feeds' ) . '</div>';
+		}
+
 		$loop       = '';
 
 		foreach ($feed_items as $key => $item) {
