@@ -39,7 +39,7 @@ test.describe( 'Upsell', () => {
         upgradeAlert = page.locator('#feedzy-import-form a[href*="utm_campaign=schedule-import-job"]');
         await expect( upgradeAlert ).toBeVisible();
 
-        await page.locator('#delete-attached-media').hover({ force: true });
+        await page.locator('.fz-form-group:has( #delete-attached-media )').hover({ force: true });
         upgradeAlert = page.locator('#feedzy-import-form a[href*="utm_campaign=delete-featured-image"]');
         await expect( upgradeAlert ).toBeVisible();
 
