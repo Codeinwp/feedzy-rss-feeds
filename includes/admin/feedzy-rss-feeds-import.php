@@ -1469,6 +1469,8 @@ class Feedzy_Rss_Feeds_Import {
 		if ( feedzy_is_pro() ) {
 			$default_thumbnail = get_post_meta( $job->ID, 'default_thumbnail_id', true );
 			$default_thumbnail = ! empty( $default_thumbnail ) ? explode( ',', (string) $default_thumbnail ) : $global_fallback_thumbnail;
+		} else {
+			$default_thumbnail = $global_fallback_thumbnail;
 		}
 
 		// Note: this implementation will only work if only one of the fields is allowed to provide
