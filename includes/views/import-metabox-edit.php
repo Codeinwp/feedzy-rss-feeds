@@ -674,9 +674,9 @@ global $post;
 									<?php echo esc_attr( $import_feed_delete_media ); ?>>
 									<label class="feedzy-inline form-label" for="delete-attached-media"><?php esc_html_e( 'Delete attached featured image', 'feedzy-rss-feeds' ); ?></label>
 								</div>
-							</div>
-							<div class="help-text">
-								<?php echo wp_sprintf( esc_html__( 'Helpful if you want to delete attached featured image when posts are automatically deleted.', 'feedzy-rss-feeds' ) ); ?>
+								<div class="help-text">
+									<?php echo wp_sprintf( esc_html__( 'Helpful if you want to delete attached featured image when posts are automatically deleted.', 'feedzy-rss-feeds' ) ); ?>
+								</div>
 							</div>
 						</div>
 					</div>
