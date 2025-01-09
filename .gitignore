@@ -14,3 +14,4 @@ cypress.env.json
 js/build
 /build
 artifacts
+.DS_Store

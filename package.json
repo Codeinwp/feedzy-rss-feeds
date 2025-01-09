@@ -1,6 +1,6 @@
 {
   "name": "feedzy-rss-feeds",
-  "version": "4.4.16",
+  "version": "5.0.0",
   "description": "Feedzy RSS Feeds - lite version",
   "repository": {
     "type": "git",
@@ -19,6 +19,7 @@
   "scripts": {
     "build": "npm-run-all build:*",
     "build:block": "wp-scripts build --webpack-src-dir=js/FeedzyBlock --output-path=build/block --output-filename=index.js",
+    "build:loop": "wp-scripts build --webpack-src-dir=js/FeedzyLoop --output-path=build/loop --output-filename=index.js",
     "build:onboarding": "wp-scripts build --webpack-src-dir=js/Onboarding --output-path=build/onboarding --output-filename=index.js",
     "build:feedback": "wp-scripts build --webpack-src-dir=js/FeedBack --output-path=build/feedback --output-filename=index.js",
     "build:actions": "wp-scripts build --webpack-src-dir=js/ActionPopup --output-path=build/action-popup --output-filename=index.js",
@@ -26,6 +27,7 @@
     "build:review": "wp-scripts build --webpack-src-dir=js/Review --output-path=build/review --output-filename=index.js",
     "dev": "npm-run-all --parallel dev:*",
     "dev:block": "wp-scripts start --webpack-src-dir=js/FeedzyBlock --output-path=build/block --output-filename=index.js",
+    "dev:loop": "wp-scripts start --webpack-src-dir=js/FeedzyLoop --output-path=build/loop --output-filename=index.js",
     "dev:onboarding": "wp-scripts start --webpack-src-dir=js/Onboarding --output-path=build/onboarding --output-filename=index.js",
     "dev:feedback": "wp-scripts start --webpack-src-dir=js/FeedBack --output-path=build/feedback --output-filename=index.js",
     "dev:actions": "wp-scripts start --webpack-src-dir=js/ActionPopup --output-path=build/action-popup --output-filename=index.js",
@@ -61,7 +63,7 @@
     "@wordpress/media-utils": "^4.49.0",
     "@wordpress/scripts": "^27.9.0",
     "classnames": "^2.3.2",
-    "conventional-changelog-simple-preset": "^1.0.15",
+    "conventional-changelog-simple-preset": "^1.0.24",
     "dayjs": "^1.10.4",
     "eslint": "^8.57.1",
     "grunt": "^1.4.0",

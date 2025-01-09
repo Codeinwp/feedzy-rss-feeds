@@ -1,3 +1,42 @@
+#### [Version 5.0.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.16...v5.0.0) (2025-01-06)
+
+### New Features
+- [Free] Created a new Feedzy Loop block that provides greater flexibility. This new block allows you to easily modify the design of feed items using the Gutenberg editor, giving you enhanced control over layout and styling.
+- [PRO] Auto-delete featured image after a number of days set up together with the post.
+- [PRO] Added the possibility to choose more, randomly selected fallback images for posts.
+- [PRO] Assign individual imports to specific authors (existing usernames) using the Feedzy UI.
+- [PRO] Allow actions to be used on custom fields in Feedzy import jobs. You can now translate, trim, search & replace, or even rephrase with AI custom fields that you import to your posts from different tags.
+- [PRO] Added the ability to export and upload import jobs. This feature helps with re-creating existing imports, transferring them to a different server where Feedzy is also used, and saves significant time.
+- [PRO] Global management for assigning imported posts to categories based on keywords used in titles with [#auto_categories].
+- [PRO] Added OpenRouter integration for enhanced connectivity, allowing users to utilize more large language models (LLMs) beyond OpenAI.
+- [PRO] Allowed cron settings to be configured per import job instead of globally.
+
+### Improvements
+- [Free] Made the default tags created with new import actionable.
+- [Free] Improved the run_cron method to enhance compatibility and stability across various server setups.
+- [Free] Made the image URL an available option for use as a featured image. This enhancement allows you to use a direct URL of an online image in your import job instead of the [#item_image] tag, setting it as the featured image for imported posts.
+- [Free] Renamed Feed Categories to Feed Groups for better clarity.
+- [Free] Improved error logging next to each import job to provide more detailed insights.
+- [Free] Added regex and wildcard support in the Search and Replace action.
+- [Free] Use the Action Scheduler when available for better reliability.
+- [Free] Added a new integrations tab for managing service connections.
+- [PRO] Improved filtering systems for the import process and the Feedzy Loop block. With robust filtering options, you can include items matching any condition, filter by fields like title, description, or custom fields, and use operators like contains, equals, or regex for precise control.
+- [PRO] Improved the way duplicates are removed during imports [Option to filter duplicates by magic tags].
+- [PRO] Simplified the translation user experience by incorporating translations into the action tags.
+- [PRO] Added more OpenAI models for enhanced selection options.
+- [PRO] Created a prompt for passing parameters to OpenAI to generate featured images more accurately.
+- [PRO] Moved the license key field from General Settings to Feedzy Settings for better accessibility.
+
+### Bug Fixes
+- [Free] Added the option to exclude the default category (ID not equal to 1) from being assigned to imported posts.
+- [Free] Fixed reappearing notices for a smoother user experience.
+- [Free] Updated the demo URL in the onboarding process.
+- [Free] Ensured that an author is always assigned to imported posts.
+- [PRO] Fixed the helper link to direct users to the correct OpenAI API key page.
+- [PRO] Fixed compatibility issues with certain third-party products when Feedzy External Image is used.
+- [PRO] Fixed a bug where content paraphrased with OpenAI returned quotes unexpectedly.
+- [PRO] Clarified that the PRO version requires the free plugin for seamless functionality.
+
 ##### [Version 4.4.16](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.15...v4.4.16) (2024-11-18)
 
 - Fixed compatibility issue with WordPress 6.7, preventing the New Import button from showing up

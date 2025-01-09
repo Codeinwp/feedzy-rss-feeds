@@ -177,7 +177,7 @@ class Feedzy_Rss_Feeds_Conditions {
 	 */
 	public function is_condition_met( $condition, $value ): bool {
 		$operator        = $condition['operator'];
-		$condition_value = trim( $condition['value'] );
+		$condition_value = trim( $condition['value'] ?? '' );
 		$value           = trim( $value );
 
 		switch ( $operator ) {
@@ -292,7 +292,7 @@ class Feedzy_Rss_Feeds_Conditions {
 				case 'featured_image':
 					$instance = Feedzy_Rss_Feeds::instance();
 					$admin    = $instance->get_admin();
-					$image    = $admin->feedzy_retrieve_image( $item );
+					$image    = $admin->feedzy_retrieve_image( $item, $attrs );
 					$value    = $image;
 					break;
 				default:

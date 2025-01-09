@@ -104,7 +104,7 @@ class Feedzy_Rss_Feeds {
 	 */
 	public function init() {
 		self::$plugin_name = 'feedzy-rss-feeds';
-		self::$version     = '4.4.16';
+		self::$version     = '5.0.0';
 		self::$instance->load_dependencies();
 		self::$instance->define_admin_hooks();
 	}
@@ -285,6 +285,7 @@ class Feedzy_Rss_Feeds {
 				function () {
 					if ( function_exists( 'register_block_type' ) ) {
 						Feedzy_Rss_Feeds_Gutenberg_Block::get_instance();
+						Feedzy_Rss_Feeds_Loop_Block::get_instance();
 					}
 				}
 			);

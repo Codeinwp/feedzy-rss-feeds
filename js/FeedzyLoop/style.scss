@@ -1,0 +1,26 @@
+.wp-block-feedzy-rss-feeds-loop {
+    display: grid;
+    gap: 24px;
+
+    @media (min-width: 782px) {
+        @for $i from 2 through 5 {
+            &.feedzy-loop-columns-#{$i} {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    }
+
+    @media (min-width: 960px) {
+        @for $i from 2 through 5 {
+            &.feedzy-loop-columns-#{$i} {
+                grid-template-columns: repeat(#{$i}, 1fr);
+            }
+        }
+    }
+
+    grid-template-columns: repeat(1, 1fr);
+
+    .wp-block-image.is-style-rounded img {
+        border-radius: 9999px;
+    }
+}
