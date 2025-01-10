@@ -28,13 +28,12 @@ class Feedzy_Rss_Feeds_Util_Scheduler {
 	 * @return bool|int
 	 */
 	public static function is_scheduled( string $hook, array $args = array() ) {
-		if ( function_exists( 'as_has_scheduled_action' ) ) {
-			return as_has_scheduled_action( $hook, $args );
-		}
-
 		if ( function_exists( 'as_next_scheduled_action' ) ) {
 			// For older versions of AS.
 			return as_next_scheduled_action( $hook, $args );
+		}
+		if ( function_exists( 'as_has_scheduled_action' ) ) {
+			return as_has_scheduled_action( $hook, $args );
 		}
 
 		return wp_next_scheduled( $hook, $args );

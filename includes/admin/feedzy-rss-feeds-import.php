@@ -834,8 +834,10 @@ class Feedzy_Rss_Feeds_Import {
 				if ( ! $next ) {
 					$next = Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'feedzy_cron' );
 				}
-				if ( $next ) {
+				if ( is_numeric( $next ) ) {
 					echo wp_kses_post( human_time_diff( $next, time() ) );
+				} elseif ( $next ) {
+					echo esc_html__( 'in-progress', 'feedzy-rss-feeds' );
 				}
 				break;
 			default:
