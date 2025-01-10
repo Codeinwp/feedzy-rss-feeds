@@ -1,3 +1,9 @@
+##### [Version 5.0.1](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.0...v5.0.1) (2025-01-10)
+
+- Fixed Action Scheduler time issue with the old method
+- Fixed Global Fallback image issue
+- Fixed Feedzy Loop button not working with Groups
+
 #### [Version 5.0.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v4.4.16...v5.0.0) (2025-01-06)
 
 ### New Features
