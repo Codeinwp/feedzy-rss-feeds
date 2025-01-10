@@ -9,6 +9,17 @@ test.describe('Feedzy Loop', () => {
 	const POST_TITLE = `Feedzy Loop Test ${Math.floor(Math.random() * 1000)}`;
 
 	test('add Feedzy Loop Block', async ({ editor, page }) => {
+		await page.goto('/wp-admin/post-new.php?post_type=feedzy_categories');
+		await page.getByLabel('Add title').click();
+		await page.keyboard.type('Group One');
+
+		await page.locator('textarea[name="feedzy_category_feed"]').click();
+		await page.keyboard.type(FEED_URL);
+		await page
+			.getByRole('button', { name: 'Publish', exact: true })
+			.click();
+		await page.waitForTimeout(1000);
+
 		await page.goto('/wp-admin/post-new.php');
 
 		if (
@@ -36,12 +47,34 @@ test.describe('Feedzy Loop', () => {
 		await page.getByPlaceholder('Enter URLs or select a').click();
 		await page.keyboard.type(FEED_URL);
 
+		const loadFeedButton = await page.getByRole('button', {
+			name: 'Load Feed',
+			exact: true,
+		});
+		const isDisabled = await loadFeedButton.isDisabled();
+		expect(isDisabled).toBe(false);
+		await loadFeedButton.click();
+		await page.waitForTimeout(1000);
+
+		await page.getByLabel('Display curated RSS content').click();
+		await page.waitForTimeout(1000);
+
+		// Now that we have tested we can insert URL, we can test the Feed Group.
+
+		await page
+			.getByLabel('Block: Feedzy Loop')
+			.locator('div')
+			.nth(1)
+			.click();
+		await page.getByRole('button', { name: 'Edit Feed' }).click();
+
+		await page.getByRole('button', { name: 'Select Feed Group' }).click();
+		await page.locator('.fz-dropdown-item').first().click();
+
 		await page
 			.getByRole('button', { name: 'Load Feed', exact: true })
 			.click();
 		await page.waitForTimeout(1000);
-
-		await page.getByLabel('Display curated RSS content').click();
 
 		await page
 			.getByRole('button', { name: 'Publish', exact: true })
