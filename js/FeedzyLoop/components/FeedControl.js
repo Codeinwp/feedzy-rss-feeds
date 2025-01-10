@@ -1,6 +1,8 @@
 /**
  * WordPress dependencies.
  */
+import { __ } from '@wordpress/i18n';
+
 import { useState, useEffect, useRef } from '@wordpress/element';
 
 const FeedControl = ({ value, options, onChange }) => {
@@ -80,7 +82,10 @@ const FeedControl = ({ value, options, onChange }) => {
 				value={selectedOption ? selectedOption.label : inputValue}
 				onChange={handleInputChange}
 				onBlur={handleInputBlur}
-				placeholder="Enter URLs or select a category"
+				placeholder={__(
+					'Enter URLs or select a Feed Group',
+					'feedzy-rss-feeds'
+				)}
 				disabled={selectedOption !== null}
 				className="fz-input-field"
 			/>
@@ -89,7 +94,7 @@ const FeedControl = ({ value, options, onChange }) => {
 					<button
 						onClick={handleClear}
 						className="fz-clear-button"
-						title="Clear selection"
+						title={__('Clear', 'feedzy-rss-feeds')}
 					>
 						<svg
 							width="14"
@@ -111,6 +116,7 @@ const FeedControl = ({ value, options, onChange }) => {
 				<button
 					onClick={() => setIsOpen(!isOpen)}
 					className="fz-dropdown-button"
+					title={__('Select Feed Group', 'feedzy-rss-feeds')}
 				>
 					<svg
 						width="12"

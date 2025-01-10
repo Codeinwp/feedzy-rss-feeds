@@ -82,10 +82,7 @@ const BlockPlaceholder = ({ attributes, setAttributes, onSaveFeed }) => {
 						<Button
 							variant="primary"
 							onClick={() => {
-								if (
-									attributes?.feed?.source &&
-									attributes?.feed?.source.length > 0
-								) {
+								if (attributes?.feed?.source) {
 									onSaveFeed();
 								}
 							}}
