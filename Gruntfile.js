@@ -26,6 +26,14 @@ module.exports = function (grunt) {
                     'css/feedzy-rss-feeds.css',
                 ]
             },
+            readmetxt: {
+                options: {
+                    prefix: 'Stable tag:\\s*'
+                },
+                src: [
+                    'readme.txt'
+                ]
+            },
             class: {
                 options: {
                     prefix: '\\.*version\.*\\s=\.*\\s\''
