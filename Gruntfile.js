@@ -6,8 +6,10 @@
 module.exports = function (grunt) {
     grunt.initConfig({
         wp_readme_to_markdown: {
-            files: {
-                'readme.md': 'readme.txt'
+            feedzy : {
+                files: {
+                    'readme.md': 'readme.txt'
+                }
             },
         },
         version: {
@@ -24,6 +26,14 @@ module.exports = function (grunt) {
                 src: [
                     'feedzy-rss-feed.php',
                     'css/feedzy-rss-feeds.css',
+                ]
+            },
+            readmetxt: {
+                options: {
+                    prefix: 'Stable tag:\\s*'
+                },
+                src: [
+                    'readme.txt'
                 ]
             },
             class: {
