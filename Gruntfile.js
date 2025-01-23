@@ -6,8 +6,10 @@
 module.exports = function (grunt) {
     grunt.initConfig({
         wp_readme_to_markdown: {
-            files: {
-                'readme.md': 'readme.txt'
+            feedzy : {
+                files: {
+                    'readme.md': 'readme.txt'
+                }
             },
         },
         version: {
