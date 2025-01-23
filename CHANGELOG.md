@@ -1,3 +1,7 @@
+##### [Version 5.0.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.1...v5.0.2) (2025-01-23)
+
+- Fix language pack loading
+
 ##### [Version 5.0.1](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.0...v5.0.1) (2025-01-10)
 
 - Fixed Action Scheduler time issue with the old method
