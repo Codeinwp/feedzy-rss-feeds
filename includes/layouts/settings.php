@@ -292,8 +292,13 @@
 								<div class="form-block">
 									<div class="fz-form-group">
 										<label class="form-label"><?php esc_html_e( 'User Agent', 'feedzy-rss-feeds' ); ?></label>
-										<input type="text" class="form-control" name="user-agent" placeholder="Add the user agent string"
-												value="<?php echo isset( $settings['header']['user-agent'] ) ? esc_attr( $settings['header']['user-agent'] ) : ''; ?>">
+										<input
+											type="text"
+											class="form-control"
+											name="user-agent"
+											placeholder="<?php esc_attr_e( 'Add the user agent string', 'feedzy-rss-feeds' ); ?>"
+											value="<?php echo isset( $settings['header']['user-agent'] ) ? esc_attr( $settings['header']['user-agent'] ) : ''; ?>"
+										>
 									</div>
 								</div>
 							</div>
@@ -307,31 +312,41 @@
 										<div class="fz-form-col-6">
 											<div class="fz-form-group">
 												<label class="form-label"><?php esc_html_e( 'Username', 'feedzy-rss-feeds' ); ?>:</label>
-												<input type="text" class="form-control" name="proxy-user" placeholder="Enter the authorized username"
+												<input type="text" class="form-control" name="proxy-user" placeholder="<?php esc_attr_e( 'Enter the authorized username', 'feedzy-rss-feeds' ); ?>"
 													value="<?php echo isset( $settings['proxy']['user'] ) ? esc_attr( $settings['proxy']['user'] ) : ''; ?>">
 											</div>
 										</div>
 										<div class="fz-form-col-6">
 											<div class="fz-form-group">
 												<label class="form-label"><?php esc_html_e( 'Password', 'feedzy-rss-feeds' ); ?>:</label>
-												<input type="password" class="form-control" name="proxy-pass" placeholder="Enter the password for the authorized user"
+												<input type="password" class="form-control" name="proxy-pass" placeholder="<?php esc_attr_e( 'Enter the password for the authorized user', 'feedzy-rss-feeds' ); ?>"
 													value="<?php echo isset( $settings['proxy']['pass'] ) ? esc_attr( $settings['proxy']['pass'] ) : ''; ?>">
 											</div>
 										</div>
 										<div class="fz-form-col-8">
 											<div class="fz-form-group">
 												<label class="form-label"><?php esc_html_e( 'Host', 'feedzy-rss-feeds' ); ?>:</label>
-												<input type="text" class="form-control" name="proxy-host" placeholder="Enter the IP address or Domain name of the proxy server"
+												<input type="text" class="form-control" name="proxy-host" placeholder="<?php esc_attr_e( 'Enter the IP address or Domain name of the proxy server', 'feedzy-rss-feeds' ); ?>"
 													value="<?php echo isset( $settings['proxy']['host'] ) ? esc_attr( $settings['proxy']['host'] ) : ''; ?>">
-												<div class="help-text pt-8">Example: 127.0.0.1</div>
+												<div class="help-text pt-8">
+													<?php
+													/* translators: %s: the value to introduce. */
+													printf( esc_html__( 'Example: %s', 'feedzy-rss-feeds' ), '127.0.0.1' );
+													?>
+												</div>
 											</div>
 										</div>
 										<div class="fz-form-col-4">
 											<div class="fz-form-group">
 												<label class="form-label"><?php esc_html_e( 'Port', 'feedzy-rss-feeds' ); ?>:</label>
-												<input type="number" min="0" max="65535" class="form-control" name="proxy-port" placeholder="Add the port number"
+												<input type="number" min="0" max="65535" class="form-control" name="proxy-port" placeholder="<?php esc_attr_e( 'Add the port number', 'feedzy-rss-feeds' ); ?>"
 													value="<?php echo isset( $settings['proxy']['port'] ) ? esc_attr( (int) $settings['proxy']['port'] ) : ''; ?>">
-												<div class="help-text pt-8">Example: 8080</div>
+												<div class="help-text pt-8">
+													<?php
+													/* translators: %s: the value to introduce. */
+													printf( esc_html__( 'Example: %s', 'feedzy-rss-feeds' ), '8080' );
+													?>
+												</div>
 											</div>
 										</div>
 									</div>
