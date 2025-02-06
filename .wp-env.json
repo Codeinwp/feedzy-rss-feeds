@@ -8,7 +8,7 @@
 	"env": {
 		"tests": {
 			"config": {
-				"CYPRESS_TESTING": true
+				"E2E_TESTING": true
 			},
 			"mappings": {
 				"wp-content/themes/gutenberg-test-themes/twentytwentyone": "https://downloads.wordpress.org/theme/twentytwentyone.2.1.zip",
