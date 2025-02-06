@@ -499,7 +499,14 @@ class Inspector extends Component {
 								<BaseControl>
 									<TextControl
 										label={feedzyjs.isPro ? __('Should we display additional meta fields out of author, date, time or categories? (comma-separated list, in order of display).', 'feedzy-rss-feeds') : __('Should we display additional meta fields out of author, date or time? (comma-separated list, in order of display).', 'feedzy-rss-feeds')}
-										help={__('Leave empty to display all and "no" to display nothing.', 'feedzy-rss-feeds')}
+										help={sprintf(
+											//translators: %s: the keyword for the user to introduce.
+											__(
+												'Leave empty to display all and "%s" to display nothing.',
+												'feedzy-rss-feeds'
+											),
+											'no'
+										)}
 										placeholder={feedzyjs.isPro ? __('(eg: author, date, time, tz=local, categories)', 'feedzy-rss-feeds') : __('(eg: author, date, time, tz=local)', 'feedzy-rss-feeds')}
 										value={this.props.attributes.metafields}
 										onChange={this.props.edit.onChangeMeta}

@@ -257,7 +257,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 										variant="secondary"
 										onClick={ () => propRef.updatePromptText( { 'index': loopIndex, 'type': 'paraphase' } ) }
 										disabled={!feedzyData.isPro || !providerLicenseStatus}
-									>{ __( 'Paraphase', 'feedzy-rss-feeds' ) }
+									>{ __( 'Paraphrase', 'feedzy-rss-feeds' ) }
 									</Button>
 									<Button
 										variant="secondary"

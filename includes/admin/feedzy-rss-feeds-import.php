@@ -3485,7 +3485,7 @@ class Feedzy_Rss_Feeds_Import {
 		<script type="template/text" id="fz_import_field_section">
 			<div class="fz-import-field hidden">
 				<form method="post" enctype="multipart/form-data" action="<?php echo esc_url( add_query_arg( array( 'action' => 'fz_import_job' ), admin_url( 'admin.php' ) ) ); ?>">
-					<h4> <?php esc_html_e( 'Choose the inport job .json file to import.', 'feedzy-rss-feeds' ); ?></h4>
+					<h4> <?php esc_html_e( 'Choose the import job .json file to import.', 'feedzy-rss-feeds' ); ?></h4>
 					<?php wp_nonce_field( 'fz_import_job' ); ?>
 					<input type="file" accept=".json" name="fz_import" required>
 					<button type="submit" class="button button-primary"><?php esc_html_e( 'Import', 'feedzy-rss-feeds' ); ?></button>

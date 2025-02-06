@@ -366,7 +366,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						),
 					),
 					'keywords_ban'   => array(
-						'label'       => __( 'Exclude items if selected field contains specific keyword(s) (Use comma(,) and plus(+) keyword). ', 'feedzy-rss-feeds' ),
+						'label'       => __( 'Exclude items if selected field contains specific keyword(s) (Use comma(,) and plus(+) keyword).', 'feedzy-rss-feeds' ),
 						'placeholder' => __( '(eg: politics, gossip + stock etc.)', 'feedzy-rss-feeds' ),
 						'type'        => 'text',
 						'value'       => '',
