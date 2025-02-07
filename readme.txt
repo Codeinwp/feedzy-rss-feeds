@@ -57,7 +57,7 @@ https://youtu.be/YcMn_yicgGg
 
 It doesn't matter which industry or topic your site focuses on. With over 50,000+ users, FEEDZY RSS Aggregator has been used to curate content from a diverse range, including finance, technology, food, home furniture, e-commerce products, religion, sports, and more. 
 
-**Note:** To learn more about how to use curated content to boost your SEO in a proper and effective way, read more [here](http://www.curata.com/blog/content-curation-seo-dos-and-donts/).
+**Note:** To learn more about how to use curated content to boost your SEO in a proper and effective way, read more [here](https://curata.com/blog/content-curation-seo-dos-and-donts/).
 
 ## 🤝 MORE POWER WITH FEEDZY RSS AGGREGATOR’S PREMIUM FEATURES ##
 
