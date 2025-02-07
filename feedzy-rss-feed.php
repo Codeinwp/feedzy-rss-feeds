@@ -204,6 +204,16 @@ function run_feedzy_rss_feeds() {
 			);
 		}
 	);
+	add_filter(
+		'feedzy_rss_feeds_feedback_review_button_do', function () {
+			return __( 'Upgrade Now!', 'feedzy-rss-feeds' );
+		}
+	);
+	add_filter(
+		'feedzy_rss_feeds_feedback_review_button_cancel', function () {
+			return __( 'No, thanks.', 'feedzy-rss-feeds' );
+		}
+	);
 	define( 'FEEDZY_SURVEY_PRO', 'https://forms.gle/FZXhL3D48KJUhb7q9' );
 	define( 'FEEDZY_SURVEY_FREE', 'https://forms.gle/yQUGSrKEa7XJTGLx8' );
 }
