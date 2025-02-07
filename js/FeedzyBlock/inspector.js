@@ -867,11 +867,7 @@ class Inspector extends Component {
 															'eg: %s',
 															'feedzy-rss-feeds'
 														),
-														// translators: here source mean the source of the imported article (author, website, ...).
-														__(
-															'source',
-															'feedzy-rss-feeds'
-														)
+														'source'
 													) +
 													')'
 											)}

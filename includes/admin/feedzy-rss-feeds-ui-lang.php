@@ -321,7 +321,8 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 					),
 					'multiple_meta'  => array(
 						'label'       => $multiple,
-						'placeholder' => __( '(eg: source)', 'feedzy-rss-feeds' ),
+						// translators: %s is the list of examples.
+						'placeholder' => '(' . sprintf( __( 'eg: %s', 'feedzy-rss-feeds' ), 'source' ) . ')',
 						'type'        => 'text',
 						'value'       => '',
 					),
