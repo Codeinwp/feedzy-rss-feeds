@@ -4,7 +4,7 @@
 **Requires at least:** 6.0  
 **Requires PHP:** 7.2  
 **Tested up to:** 6.7  
-**Stable tag:** 5.0.2  
+**Stable tag:** 5.0.3  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -48,7 +48,7 @@ https://youtu.be/YcMn_yicgGg
 
 * [You own a news site](https://themeisle.com/blog/wordpress-news-aggregator-website/); you want a WP news aggregator to make sure your site always updated with the latest news
 * You own a blog; you need a [WP content aggregator to autoblog](https://themeisle.com/blog/create-an-autoblogging-site-wordpress/) and keep your audience engaged with fresh content
-* You want to improve your SEO rankings. See how the SEO expert, MOZ, talked about 10 reasons “[How Fresh Content May Influence Google Rankings”](https://moz.com/blog/google-fresh-factor-new)“
+* You want to improve your SEO rankings. See how the SEO expert, MOZ, talked about 10 reasons “[How Fresh Content May Influence Google Rankings](https://moz.com/blog/google-fresh-factor-new)”
 * You develop a site for your client and just want to quickly demo a news feed of frequently  updated content
 * You build a company website and want a news/blog page to enhance the company’s reputation and SEO. Focus on your business and leave the content marketing work to FEEDZY RSS Aggregator.
 * You run an affiliate business or want to earn extra from RSS affiliate marketing feeds
@@ -57,7 +57,7 @@ https://youtu.be/YcMn_yicgGg
 
 It doesn't matter which industry or topic your site focuses on. With over 50,000+ users, FEEDZY RSS Aggregator has been used to curate content from a diverse range, including finance, technology, food, home furniture, e-commerce products, religion, sports, and more. 
 
-**Note:** To learn more about how to use curated content to boost your SEO in a proper and effective way, read more [here](http://www.curata.com/blog/content-curation-seo-dos-and-donts/).
+**Note:** To learn more about how to use curated content to boost your SEO in a proper and effective way, read more [here](https://curata.com/blog/content-curation-seo-dos-and-donts/).
 
 ## 🤝 MORE POWER WITH FEEDZY RSS AGGREGATOR’S PREMIUM FEATURES ##
 
@@ -262,7 +262,7 @@ You have to check first if your feed is valid. Please test it here: https://vali
 ### How remove feed items duplicates by url ###
 [http://docs.themeisle.com/article/638-how-to-eliminate-duplicate-feed-item](http://docs.themeisle.com/article/638-how-to-eliminate-duplicate-feed-item)
 
-### How to use feedzy categories ###
+### How to use Feedzy categories ###
 [http://docs.themeisle.com/article/640-how-to-use-feedzy-categories](http://docs.themeisle.com/article/640-how-to-use-feedzy-categories)
 
 ### How to add a read more link to Feedzy ###
@@ -301,7 +301,7 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = What actions and filters are available in Feedzy =
  [https://docs.themeisle.com/article/540-what-actions-and-filters-are-available-in-feedzy](https://docs.themeisle.com/article/540-what-actions-and-filters-are-available-in-feedzy)
 
- = How to change thumbs size and aspect ratio Feedzy =
+ = How to change thumbs size and aspect ratio in Feedzy =
  [https://docs.themeisle.com/article/551-how-to-change-thumbs-size-and-aspect-ratio-feedzy](https://docs.themeisle.com/article/551-how-to-change-thumbs-size-and-aspect-ratio-feedzy)
 
  = How to display RSS feed time and date in local time =
@@ -310,7 +310,7 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = How to add a read more link to Feedzy =
  [https://docs.themeisle.com/article/544-how-to-add-a-read-more-link-to-feedzy](https://docs.themeisle.com/article/544-how-to-add-a-read-more-link-to-feedzy)
 
- = How to use feedzy categories =
+ = How to use Feedzy categories =
  [https://docs.themeisle.com/article/640-how-to-use-feedzy-categories](https://docs.themeisle.com/article/640-how-to-use-feedzy-categories)
 
  = How to use your own inline css =
@@ -430,7 +430,7 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = How to check whether the RSS feed is valid or not in Feedzy =
  [https://docs.themeisle.com/article/716-feedzy-how-to-check-whether-the-rss-feed-is-valid-or-not](https://docs.themeisle.com/article/716-feedzy-how-to-check-whether-the-rss-feed-is-valid-or-not)
 
- = How to change thumbs size and aspect ratio Feedzy =
+ = How to change thumbs size and aspect ratio in Feedzy =
  [https://docs.themeisle.com/article/551-how-to-change-thumbs-size-and-aspect-ratio](https://docs.themeisle.com/article/551-how-to-change-thumbs-size-and-aspect-ratio)
 
  = How to use proxy settings in Feedzy =
@@ -493,9 +493,9 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
-##### [Version 5.0.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.1...v5.0.2) (2025-01-23)
+##### [Version 5.0.3](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.2...v5.0.3) (2025-02-07)
 
-- Fix language pack loading
+- Improved the i18n support.
 
 
 
