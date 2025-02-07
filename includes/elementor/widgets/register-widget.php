@@ -479,6 +479,7 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 			'fz-cus-multiple-meta',
 			array(
 				'label'       => __( 'When using multiple sources, should we display additional meta fields?', 'feedzy-rss-feeds' ),
+				// translators: the source of the imported article (author, website).
 				'placeholder' => __( '(eg: source)', 'feedzy-rss-feeds' ),
 				'label_block' => true,
 				'type'        => Controls_Manager::TEXT,
