@@ -4,7 +4,7 @@ Tags: rss aggregator, news aggregator, autoblogging, feed to post, rss import
 Requires at least: 6.0
 Requires PHP: 7.2
 Tested up to: 6.7
-Stable tag: 5.0.2
+Stable tag: 5.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -493,9 +493,9 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
-##### [Version 5.0.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.1...v5.0.2) (2025-01-23)
+##### [Version 5.0.3](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.2...v5.0.3) (2025-02-07)
 
-- Fix language pack loading
+- Improved the i18n support.
 
 
 
