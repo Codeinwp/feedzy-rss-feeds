@@ -290,3 +290,31 @@ add_filter(
 		);
 	}
 );
+
+add_filter( 'themeisle_sdk_labels', function( $labels ) {
+	if ( isset( $labels['float_widget'] ) ) {
+		$labels['float_widget'] = array_merge(
+			$labels['float_widget'],
+			array(
+				/* translators: %s: Product name */
+				'button' => esc_html__( 'Toggle Help Widget for %s', 'feedzy-rss-feeds' ),
+				'panel'  => array(
+					/* translators: %s: Product name */
+					'greeting' => esc_html__( 'Thank you for using %s', 'feedzy-rss-feeds' ),
+					'title'    => esc_html__( 'How can we help you?', 'feedzy-rss-feeds' ),
+					'close'    => esc_html__( 'Close Toggle Help Widget', 'feedzy-rss-feeds' ),
+				),
+				'links'  => array(
+					'documentation'   => esc_html__( 'Documentation', 'feedzy-rss-feeds' ),
+					'support'         => esc_html__( 'Get Support', 'feedzy-rss-feeds' ),
+					'wizard'          => esc_html__( 'Run Setup Wizard', 'feedzy-rss-feeds' ),
+					'upgrade'         => esc_html__( 'Upgrade to Pro', 'feedzy-rss-feeds' ),
+					'feature_request' => esc_html__( 'Suggest a Feature', 'feedzy-rss-feeds' ),
+					'rate'            => esc_html__( 'Rate Us', 'feedzy-rss-feeds' ),
+				),
+			)
+		);
+	}
+
+	return $labels;
+});
