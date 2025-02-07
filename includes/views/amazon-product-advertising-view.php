@@ -6,7 +6,7 @@
 
 				$content  = __( 'You are using Feedzy Lite.', 'feedzy-rss-feeds' ) . ' ';
 				$content .= wp_sprintf(
-					// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+					// translators: %1$s: opening anchor tag, %2$s: closing anchor tag.
 					__( 'Unlock more powerful features, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ),
 					'<a href="' . esc_url( $upgrade_url ) . '" target="_blank">',
 					'</a>'

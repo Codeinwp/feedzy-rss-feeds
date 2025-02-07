@@ -213,6 +213,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				)
 			);
 
+			wp_set_script_translations( $this->plugin_name . '_action_popup', 'feedzy-rss-feeds' );
+
 			$asset_file = include FEEDZY_ABSPATH . '/build/conditions/index.asset.php';
 			wp_enqueue_script( $this->plugin_name . '_conditions', FEEDZY_ABSURL . 'build/conditions/index.js', array_merge( $asset_file['dependencies'], array( 'wp-editor', 'wp-api' ) ), $asset_file['version'], true );
 
@@ -234,6 +236,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			);
 
 			wp_enqueue_style( 'wp-block-editor' );
+
+			wp_set_script_translations( $this->plugin_name . '_conditions', 'feedzy-rss-feeds' );
 
 			$this->register_survey();
 		}
@@ -661,15 +665,15 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * Render RN upsell metabox.
 	 */
 	public function render_upsell_rn() {
-		echo '<strong>Get access to more features.</strong>';
+		echo '<strong>' . esc_html__( 'Get access to more features.', 'feedzy-rss-feeds' ) . '</strong>';
 		echo '<ul>
-			<li>- Auto add referral parameters to links</li>
-			<li>- Full Text Import</li>
-			<li>- Parahrase content</li>
-			<li>- Translate content</li>
-			<li>- Elementor Templates support</li>
+			<li>- ' . esc_html__( 'Auto add referral parameters to links', 'feedzy-rss-feeds' ) . '</li>
+			<li>- ' . esc_html__( 'Full Text Import', 'feedzy-rss-feeds' ) . '</li>
+			<li>- ' . esc_html__( 'Paraphrase content', 'feedzy-rss-feeds' ) . '</li>
+			<li>- ' . esc_html__( 'Translate content', 'feedzy-rss-feeds' ) . '</li>
+			<li>- ' . esc_html__( 'Elementor Templates support', 'feedzy-rss-feeds' ) . '</li>
 		</ul>';
-		echo '<a class="button button-primary  " href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'metabox', 'new-category' ) ) ) . '" target="_blank">View more details</a>';
+		echo '<a class="button button-primary  " href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'metabox', 'new-category' ) ) ) . '" target="_blank">' . esc_html__( 'View more details', 'feedzy-rss-feeds' ) . '</a>';
 	}
 
 	/**
@@ -1693,7 +1697,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				$response = array(
 					'status'      => 1,
 					'redirect_to' => add_query_arg( 'post_type', 'feedzy_imports', admin_url( 'edit.php' ) ),
-					'message'     => __( 'Redirecting to feedzy dashboard', 'feedzy-rss-feeds' ),
+					'message'     => __( 'Redirecting to Feedzy dashboard', 'feedzy-rss-feeds' ),
 				);
 			}
 		} elseif ( 'shortcode' === $integrate_with ) {
@@ -1708,7 +1712,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				$response = array(
 					'status'      => 1,
 					'redirect_to' => add_query_arg( 'post_type', 'feedzy_imports', admin_url( 'edit.php' ) ),
-					'message'     => __( 'Redirecting to feedzy dashboard', 'feedzy-rss-feeds' ),
+					'message'     => __( 'Redirecting to Feedzy dashboard', 'feedzy-rss-feeds' ),
 				);
 			}
 		} elseif ( 'page_builder' === $integrate_with ) {
@@ -2120,7 +2124,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			'ars_Arab' => __( 'Najdi Arabic', 'feedzy-rss-feeds' ),
 			'ary_Arab' => __( 'Moroccan Arabic', 'feedzy-rss-feeds' ),
 			'arz_Arab' => __( 'Egyptian Arabic', 'feedzy-rss-feeds' ),
-			'asm_Beng' => __( 'Assamese ', 'feedzy-rss-feeds' ),
+			'asm_Beng' => __( 'Assamese', 'feedzy-rss-feeds' ),
 			'ast_Latn' => __( 'Asturian', 'feedzy-rss-feeds' ),
 			'awa_Deva' => __( 'Awadhi', 'feedzy-rss-feeds' ),
 			'ayr_Latn' => __( 'Central Aymara', 'feedzy-rss-feeds' ),
@@ -2128,7 +2132,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			'azj_Latn' => __( 'North Azerbaijani', 'feedzy-rss-feeds' ),
 			'bak_Cyrl' => __( 'Bashkir', 'feedzy-rss-feeds' ),
 			'bam_Latn' => __( 'Bambara', 'feedzy-rss-feeds' ),
-			'ban_Latn' => __( 'Balinese ', 'feedzy-rss-feeds' ),
+			'ban_Latn' => __( 'Balinese', 'feedzy-rss-feeds' ),
 			'bel_Cyrl' => __( 'Belarusian', 'feedzy-rss-feeds' ),
 			'bem_Latn' => __( 'Bemba', 'feedzy-rss-feeds' ),
 			'ben_Beng' => __( 'Bengali', 'feedzy-rss-feeds' ),
@@ -2168,7 +2172,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			'glg_Latn' => __( 'Galician', 'feedzy-rss-feeds' ),
 			'grn_Latn' => __( 'Guarani', 'feedzy-rss-feeds' ),
 			'guj_Gujr' => __( 'Gujarati', 'feedzy-rss-feeds' ),
-			'hat_Latn' => __( 'Haitian Creole ', 'feedzy-rss-feeds' ),
+			'hat_Latn' => __( 'Haitian Creole', 'feedzy-rss-feeds' ),
 			'hau_Latn' => __( 'Hausa', 'feedzy-rss-feeds' ),
 			'heb_Hebr' => __( 'Hebrew', 'feedzy-rss-feeds' ),
 			'hin_Deva' => __( 'Hindi', 'feedzy-rss-feeds' ),
@@ -2187,7 +2191,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			'kac_Latn' => __( 'Jingpho', 'feedzy-rss-feeds' ),
 			'kam_Latn' => __( 'Kamba', 'feedzy-rss-feeds' ),
 			'kan_Knda' => __( 'Kannada', 'feedzy-rss-feeds' ),
-			'kas_Arab' => __( 'Kashmiri Arab)', 'feedzy-rss-feeds' ),
+			'kas_Arab' => __( 'Kashmiri Arab', 'feedzy-rss-feeds' ),
 			'kas_Deva' => __( 'Kashmiri Devanagari', 'feedzy-rss-feeds' ),
 			'kat_Geor' => __( 'Georgian', 'feedzy-rss-feeds' ),
 			'knc_Arab' => __( 'Central Kanuri Arab', 'feedzy-rss-feeds' ),
@@ -2288,7 +2292,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			'tso_Latn' => __( 'Tsonga', 'feedzy-rss-feeds' ),
 			'tuk_Latn' => __( 'Turkmen', 'feedzy-rss-feeds' ),
 			'tum_Latn' => __( 'Tumbuka', 'feedzy-rss-feeds' ),
-			'tur_Latn' => __( 'Turkish ', 'feedzy-rss-feeds' ),
+			'tur_Latn' => __( 'Turkish', 'feedzy-rss-feeds' ),
 			'twi_Latn' => __( 'Twi', 'feedzy-rss-feeds' ),
 			'tzm_Tfng' => __( 'Central Atlas Tamazight', 'feedzy-rss-feeds' ),
 			'uig_Arab' => __( 'Uyghur', 'feedzy-rss-feeds' ),

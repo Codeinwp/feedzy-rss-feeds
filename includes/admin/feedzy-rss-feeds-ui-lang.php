@@ -127,7 +127,8 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 					),
 					'max'         => array(
 						'label'       => __( 'Number of items to display.', 'feedzy-rss-feeds' ),
-						'placeholder' => __( '(eg: 5)', 'feedzy-rss-feeds' ),
+						// translators: %s is the list of examples.
+						'placeholder' => '(' . sprintf( __( 'eg: %s', 'feedzy-rss-feeds' ), '5' ) . ')',
 						'type'        => 'text',
 						'value'       => '',
 					),
@@ -154,7 +155,12 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 					),
 					'refresh'     => array(
 						'label'       => __( 'For how long we will cache the feed results.', 'feedzy-rss-feeds' ),
-						'placeholder' => __( '(eg: 1_days, defaults: 12_hours)', 'feedzy-rss-feeds' ),
+						'placeholder' => '('
+							// translators: %s is the list of examples.
+							. sprintf( __( 'eg: %s', 'feedzy-rss-feeds' ), '1_days' )
+							// translators: %s is the default value.
+							. sprintf( __( 'default: %s', 'feedzy-rss-feeds' ), '12_hours' )
+							. ')',
 						'type'        => 'select',
 						'value'       => '12_hours',
 						'opts'        => feedzy_classic_widget_refresh_options(),
@@ -301,19 +307,22 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 					),
 					'title'          => array(
 						'label'       => __( 'Trim the title of the item after X characters. A value of 0 will remove the title.', 'feedzy-rss-feeds' ),
-						'placeholder' => __( '(eg: 160)', 'feedzy-rss-feeds' ),
+						// translators: %s is the list of examples.
+						'placeholder' => '(' . sprintf( __( 'eg: %s', 'feedzy-rss-feeds' ), '160' ) . ')',
 						'type'        => 'text',
 						'value'       => '',
 					),
 					'meta'           => array(
 						'label'       => $meta,
-						'placeholder' => __( '(eg: author, date, time, tz=local)', 'feedzy-rss-feeds' ),
+						// translators: %s is the list of examples.
+						'placeholder' => '(' . sprintf( __( 'eg: %s', 'feedzy-rss-feeds' ), 'author, date, time, tz=local' ) . ')',
 						'type'        => 'text',
 						'value'       => '',
 					),
 					'multiple_meta'  => array(
 						'label'       => $multiple,
-						'placeholder' => __( '(eg: source)', 'feedzy-rss-feeds' ),
+						// translators: %s is the list of examples.
+						'placeholder' => '(' . sprintf( __( 'eg: %s', 'feedzy-rss-feeds' ), 'source' ) . ')',
 						'type'        => 'text',
 						'value'       => '',
 					),
@@ -335,7 +344,8 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 					'summarylength'  => array(
 						'label'       => __( 'Crop description (summary) of the element after X characters.', 'feedzy-rss-feeds' ),
 						'type'        => 'text',
-						'placeholder' => __( '(eg: 160)', 'feedzy-rss-feeds' ),
+						// translators: %s is the list of examples.
+						'placeholder' => '(' . sprintf( __( 'eg: %s', 'feedzy-rss-feeds' ), '160' ) . ')',
 						'value'       => '',
 					),
 					'keywords_title' => array(
@@ -366,7 +376,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						),
 					),
 					'keywords_ban'   => array(
-						'label'       => __( 'Exclude items if selected field contains specific keyword(s) (Use comma(,) and plus(+) keyword). ', 'feedzy-rss-feeds' ),
+						'label'       => __( 'Exclude items if selected field contains specific keyword(s) (Use comma(,) and plus(+) keyword).', 'feedzy-rss-feeds' ),
 						'placeholder' => __( '(eg: politics, gossip + stock etc.)', 'feedzy-rss-feeds' ),
 						'type'        => 'text',
 						'value'       => '',
@@ -427,7 +437,8 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 					),
 					'size'    => array(
 						'label'       => __( 'Thumbnails dimension. Do not include "px". Eg: 150', 'feedzy-rss-feeds' ),
-						'placeholder' => __( '(eg: 150)', 'feedzy-rss-feeds' ),
+						// translators: %s is the list of examples.
+						'placeholder' => '(' . sprintf( __( 'eg: %s', 'feedzy-rss-feeds' ), '150' ) . ')',
 						'type'        => 'text',
 						'value'       => '',
 					),
@@ -492,7 +503,8 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 					),
 					'columns'      => array(
 						'label'       => __( 'How many columns we should use to display the feed items', 'feedzy-rss-feeds' ),
-						'placeholder' => __( '(eg. 1, 2, ..., 6)', 'feedzy-rss-feeds' ),
+						// translators: %s is the list of examples.
+						'placeholder' => '(' . sprintf( __( 'eg: %s', 'feedzy-rss-feeds' ), '1, 2, ..., 6' ) . ')',
 						'type'        => 'number',
 						'disabled'    => true,
 						'value'       => '1',

@@ -130,7 +130,7 @@ $is_pro = feedzy_is_pro();
 	</ul>
 	<?php if ( ! $is_pro ) : ?>
 		<div class="cta">
-			<a href="<?php echo tsdk_utmify( FEEDZY_UPSELL_LINK, 'viewall', 'tutorial' ); ?>#pro-features" class="btn btn-ghost" target="blank">
+			<a href="<?php echo esc_url_raw( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'viewall', 'tutorial' ) ) ); ?>#pro-features" class="btn btn-ghost" target="blank">
 				<?php esc_html_e( 'View all Premium features', 'feedzy-rss-feeds' ); ?>
 			</a>
 		</div>

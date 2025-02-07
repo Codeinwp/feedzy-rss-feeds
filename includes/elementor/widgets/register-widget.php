@@ -243,7 +243,7 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 			'fz-filter-from-dt',
 			array(
 				'label_block' => true,
-				'label'       => __( 'Filter items by time range, from: ', 'feedzy-rss-feeds' ),
+				'label'       => __( 'Filter items by time range, from:', 'feedzy-rss-feeds' ) . ' ',
 				'type'        => 'date_time_local',
 				'classes'     => $this->upsell_class(),
 				'separator'   => 'before',
@@ -253,7 +253,7 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 			'fz-filter-to-dt',
 			array(
 				'label_block' => true,
-				'label'       => __( 'To ', 'feedzy-rss-feeds' ),
+				'label'       => __( 'To', 'feedzy-rss-feeds' ) . ' ',
 				'type'        => 'date_time_local',
 				'classes'     => $this->upsell_class(),
 			)
@@ -468,31 +468,28 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 				'label'       => __( 'Display additional meta fields (author, date, time or categories)', 'feedzy-rss-feeds' ),
 				'label_block' => true,
 				'type'        => Controls_Manager::TEXT,
-				'description' => wp_sprintf(
-					// translators: %1$s: opening anchor tag, %2$s: closing anchor tag.
-					__(
-						'You can add multiple tags at once, by separating them with commas.%1$s View documentation here %2$s .', 'feedzy-rss-feeds'
-					),
-					'<a target="_blank" href="' . esc_url( 'https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed' ) . '">',
-					'</a>'
-				),
+				'description' => __( 'You can add multiple tags at once, by separating them with commas.', 'feedzy-rss-feeds' )
+					. ' '
+					. '<a target="_blank" href="' . esc_url( 'https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed' ) . '">'
+					. __( 'View documentation here.', 'feedzy-rss-feeds' )
+					. '</a>',
 			)
 		);
 		$this->add_control(
 			'fz-cus-multiple-meta',
 			array(
 				'label'       => __( 'When using multiple sources, should we display additional meta fields?', 'feedzy-rss-feeds' ),
-				'placeholder' => __( '(eg: source)', 'feedzy-rss-feeds' ),
+				// translators: %s is the list of examples.
+				'placeholder' => '(' . sprintf( __( 'eg: %s', 'feedzy-rss-feeds' ), 'source' ) . ')',
 				'label_block' => true,
 				'type'        => Controls_Manager::TEXT,
-				'description' => wp_sprintf(
-					// translators: %1$s: opening anchor tag, %2$s: closing anchor tag.
-					__(
-						'You can find more info about available meta field values here.%1$s View documentation here %2$s .', 'feedzy-rss-feeds'
-					),
-					'<a target="_blank" href="' . esc_url( 'https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed' ) . '">',
-					'</a>'
-				),
+				// translators: this followed by sentence: View documentation here.
+				'description' => __( 'You can find more info about available meta field values here.', 'feedzy-rss-feeds' )
+					. ' '
+					. '<a target="_blank" href="' . esc_url( 'https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed' ) . '">'
+					// translators: this sentence is wrapped with a link tag.
+					. __( 'View documentation here.', 'feedzy-rss-feeds' )
+					. '</a>',
 			)
 		);
 		$this->add_control(

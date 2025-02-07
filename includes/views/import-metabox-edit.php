@@ -94,7 +94,7 @@ global $post;
 							<input type="text" id="feedzy-source-tags" name="feedzy_meta_data[source]" class="fz-tagify--outside" value="<?php echo esc_attr( $source ); ?>" />
 						</div>
 						<div class="cta-text pt-8">
-							<a href="<?php echo esc_url( 'https://docs.themeisle.com/article/799-how-to-find-feed-url-for-feedzy-rss-feeds' ); ?>" target="_blank"><?php esc_html_e( 'How do I find an RSS feed URL? ', 'feedzy-rss-feeds' ); ?></a>
+							<a href="<?php echo esc_url( 'https://docs.themeisle.com/article/799-how-to-find-feed-url-for-feedzy-rss-feeds' ); ?>" target="_blank"><?php esc_html_e( 'How do I find an RSS feed URL?', 'feedzy-rss-feeds' ); ?></a>
 						</div>
 					</div>
 				</div>
@@ -304,7 +304,7 @@ global $post;
 								</div>
 								<div class="fz-right">
 									<div class="fz-form-group">
-										<label class="form-label"><?php esc_html_e( 'The date for the generated post. ', 'feedzy-rss-feeds' ); ?></label>
+										<label class="form-label"><?php esc_html_e( 'The date for the generated post.', 'feedzy-rss-feeds' ); ?></label>
 										<div class="fz-input-group">
 											<div class="fz-input-group-left">
 												<div class="fz-group">
@@ -864,7 +864,7 @@ global $post;
 		</div>
 		<div class="fz-right">
 			<button type="button" id="preflight" name="check" class="btn btn-ghost" value="Check"
-			title="<?php esc_html_e( 'Click to see what items will be imported from the source, according to the filters specified', 'feedzy-rss-feeds' ); ?>"><?php esc_html_e( 'Preview  Import', 'feedzy-rss-feeds' ); ?></button>
+			title="<?php esc_html_e( 'Click to see what items will be imported from the source, according to the filters specified', 'feedzy-rss-feeds' ); ?>"><?php esc_html_e( 'Preview Import', 'feedzy-rss-feeds' ); ?></button>
 			<?php
 			if ( 'publish' === $post_status ) {
 				?>

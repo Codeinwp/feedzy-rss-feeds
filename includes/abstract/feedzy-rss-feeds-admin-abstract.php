@@ -1004,7 +1004,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				)
 			);
 			if ( ! empty( $amazon_products->get_errors() ) ) {
-				$amazon_api_errors['source_type'] = __( '[Amazon Product Advertising API] ', 'feedzy-rss-feeds' );
+				$amazon_api_errors['source_type'] = '[' . __( 'Amazon Product Advertising API', 'feedzy-rss-feeds' ) . ']';
 				$amazon_api_errors['source']      = array( $url );
 				$amazon_api_errors['errors']      = $amazon_products->get_errors();
 				update_post_meta( $post_id, '__transient_feedzy_invalid_source_errors', $amazon_api_errors );
