@@ -284,8 +284,6 @@ function feedzy_import_job_logs( $name, $msg, $type ) {
 }
 add_action( 'themeisle_log_event', 'feedzy_import_job_logs', 20, 3 );
 
-add_filter( 'themeisle_sdk_enable_telemetry', '__return_true' );
-
 add_filter(
 	'feedzy_rss_feeds_float_widget_metadata', function () {
 		return array(
