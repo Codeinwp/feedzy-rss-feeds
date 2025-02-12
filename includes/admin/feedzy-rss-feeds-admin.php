@@ -2081,6 +2081,26 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$install_category = 91;
 		}
 
+		$import_jobs_num = get_transient( FEEDZY_IMPORT_JOBS_NUM_CACHE_KEY );
+
+		if ( false === $import_jobs_num ) {
+			$args = array(
+				'post_type'              => 'feedzy_imports',
+				'posts_per_page'         => 50,
+				'post_status'            => array( 'publish', 'draft' ),
+				'fields'                 => 'ids',
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+			);
+
+			$query           = new WP_Query( $args );
+			$import_jobs_num = count( $query->posts );
+			set_transient( FEEDZY_IMPORT_JOBS_NUM_CACHE_KEY, $import_jobs_num, 50 >= $import_jobs_num ? WEEK_IN_SECONDS : HOUR_IN_SECONDS );
+		} else {
+			$import_jobs_num = intval( $import_jobs_num );
+		}
+
 		$survey_data = array(
 			'environmentId' => 'clskgehf78eu5podwdrnzciti',
 			'attributes'    => array(
@@ -2093,8 +2113,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				'plan'                => $this->plan_category( $license_data ),
 				'days_since_install'  => $install_category,
 				'install_days_number' => $days_since_install,
-				'license_status'      => ! empty( $license_data->license ) ? $license_data->license : 'invalid'
-			),
+				'license_status'      => ! empty( $license_data->license ) ? $license_data->license : 'invalid',
+				'import_jobs_num'     => $import_jobs_num
+ 			),
 		);
 
 		if ( isset( $license_data->key ) ) {
