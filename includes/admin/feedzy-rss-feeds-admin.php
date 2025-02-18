@@ -2067,19 +2067,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$integration_status = $this->api_license_status();
 
 		$days_since_install = round( ( time() - get_option( 'feedzy_rss_feeds_install', time() ) ) / DAY_IN_SECONDS );
-		$install_category   = 0;
-
-		if ( 0 === $days_since_install || 1 === $days_since_install ) {
-			$install_category = 0;
-		} elseif ( 1 < $days_since_install && 8 > $days_since_install ) {
-			$install_category = 7;
-		} elseif ( 8 <= $days_since_install && 31 > $days_since_install ) {
-			$install_category = 30;
-		} elseif ( 30 < $days_since_install && 90 > $days_since_install ) {
-			$install_category = 90;
-		} elseif ( 90 <= $days_since_install ) {
-			$install_category = 91;
-		}
 
 		$import_jobs_num = get_transient( FEEDZY_IMPORT_JOBS_NUM_CACHE_KEY );
 
@@ -2111,7 +2098,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				'spinnerchief'        => $integration_status['spinnerChiefStatus'] ? 'valid' : 'invalid',
 				'wordai'              => $integration_status['wordaiStatus'] ? 'valid' : 'invalid',
 				'plan'                => $this->plan_category( $license_data ),
-				'days_since_install'  => $install_category,
 				'install_days_number' => $days_since_install,
 				'license_status'      => ! empty( $license_data->license ) ? $license_data->license : 'invalid',
 				'import_jobs_num'     => $import_jobs_num
