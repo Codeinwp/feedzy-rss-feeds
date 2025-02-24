@@ -3,26 +3,17 @@
 /**
  * Block dependencies
  */
-import { RawHTML } from '@wordpress/element';
+import { Component, Fragment } from '@wordpress/element';
 import RadioImageControl from './radio-image-control/';
 
 /**
  * External dependencies
  */
 import classnames from 'classnames';
-
-/**
- * Internal block libraries
- */
-const { __ } = wp.i18n;
-
-const { applyFilters } = wp.hooks;
-
-const { InspectorControls, MediaUpload } = wp.blockEditor || wp.editor;
-
-const { Component, Fragment } = wp.element;
-
-const {
+import { __ } from '@wordpress/i18n';
+import { applyFilters } from '@wordpress/hooks';
+import { InspectorControls, MediaUpload } from '@wordpress/block-editor';
+import {
 	BaseControl,
 	ExternalLink,
 	PanelBody,
@@ -34,7 +25,7 @@ const {
 	SelectControl,
 	ResponsiveWrapper,
 	Dashicon,
-} = wp.components;
+} from '@wordpress/components';
 
 /**
  * Create an Inspector Controls wrapper Component
