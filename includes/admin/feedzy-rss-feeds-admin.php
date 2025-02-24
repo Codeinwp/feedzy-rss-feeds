@@ -2068,7 +2068,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$days_since_install = round( ( time() - get_option( 'feedzy_rss_feeds_install', time() ) ) / DAY_IN_SECONDS );
 
-		$import_jobs_num = get_transient( FEEDZY_IMPORT_JOBS_NUM_CACHE_KEY );
+		$import_jobs_num = get_transient( 'feedzy_import_jobs_num' );
 
 		if ( false === $import_jobs_num ) {
 			$args = array(
@@ -2083,7 +2083,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 			$query           = new WP_Query( $args );
 			$import_jobs_num = count( $query->posts );
-			set_transient( FEEDZY_IMPORT_JOBS_NUM_CACHE_KEY, $import_jobs_num, 50 >= $import_jobs_num ? WEEK_IN_SECONDS : HOUR_IN_SECONDS );
+			set_transient( 'feedzy_import_jobs_num', $import_jobs_num, 50 >= $import_jobs_num ? WEEK_IN_SECONDS : HOUR_IN_SECONDS );
 		} else {
 			$import_jobs_num = intval( $import_jobs_num );
 		}

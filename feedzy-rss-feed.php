@@ -130,7 +130,6 @@ function run_feedzy_rss_feeds() {
 	// to redirect all themeisle_log_event to error log.
 	define( 'FEEDZY_LOCAL_DEBUG', false );
 	define( 'FEEDZY_FEED_CUSTOM_TAG_NAMESPACE', 'http://feedzy.themeisle.com' );
-	define( 'FEEDZY_IMPORT_JOBS_NUM_CACHE_KEY', 'feedzy_import_jobs_num' );
 
 	// always make this true before testing
 	// also used in gutenberg.
