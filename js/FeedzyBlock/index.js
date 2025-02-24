@@ -1,4 +1,6 @@
 // jshint ignore: start
+import { __ } from '@wordpress/i18n';
+import { registerBlockType } from '@wordpress/blocks';
 
 /**
  * Block dependencies
@@ -6,13 +8,6 @@
 import './style.scss';
 import blockAttributes from './attributes.js';
 import Editor from './Editor.js';
-
-/**
- * Internal block libraries
- */
-const { __ } = wp.i18n;
-
-const { registerBlockType } = wp.blocks;
 
 /**
  * Register block

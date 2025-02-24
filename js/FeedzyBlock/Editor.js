@@ -1,17 +1,19 @@
 /**
  * WordPress dependencies
  */
-const { __, sprintf } = wp.i18n;
-
-const { apiRequest } = wp;
-
-const { Component, Fragment } = wp.element;
-
-const { ExternalLink, Placeholder, TextControl, Button, Spinner } =
-	wp.components;
+import {
+	ExternalLink,
+	Placeholder,
+	TextControl,
+	Button,
+	Spinner,
+} from '@wordpress/components';
 
 import queryString from 'query-string';
 import Inspector from './inspector';
+import { __, sprintf } from '@wordpress/i18n';
+import { apiFetch as apiRequest } from '@wordpress/api-fetch';
+import { Component, Fragment } from '@wordpress/element';
 import {
 	unescapeHTML,
 	filterData,
