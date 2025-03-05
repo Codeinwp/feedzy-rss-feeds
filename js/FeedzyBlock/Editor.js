@@ -12,7 +12,7 @@ import {
 import queryString from 'query-string';
 import Inspector from './inspector';
 import { __, sprintf } from '@wordpress/i18n';
-import { apiFetch as apiRequest } from '@wordpress/api-fetch';
+import apiFetch from '@wordpress/api-fetch';
 import { Component, Fragment } from '@wordpress/element';
 import {
 	unescapeHTML,
@@ -128,7 +128,7 @@ class Editor extends Component {
 			loading: true,
 		});
 
-		apiRequest({
+		apiFetch({
 			path: `/feedzy/v1/feed?${url}`,
 			method: 'POST',
 			data: this.props.attributes,
@@ -163,7 +163,7 @@ class Editor extends Component {
 	}
 
 	loadCategories() {
-		apiRequest({ path: '/wp/v2/feedzy_categories?per_page=100' })
+		apiFetch({ path: '/wp/v2/feedzy_categories?per_page=100' })
 			.then((data) => {
 				if (this.unmounting) {
 					return data;
