@@ -2127,6 +2127,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function get_lang_list() {
 		$target_lang = array(
+			''         => __( 'Choose Language', 'feedzy-rss-feeds' ),
 			'eng_Latn' => __( 'English', 'feedzy-rss-feeds' ),
 			'ace_Arab' => __( 'Acehnese Arab', 'feedzy-rss-feeds' ),
 			'ace_Latn' => __( 'Acehnese Latin', 'feedzy-rss-feeds' ),
