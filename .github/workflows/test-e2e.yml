@@ -10,19 +10,11 @@ jobs:
     name: E2E
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '18'
-      - uses: actions/cache@v2
-        id: npm-and-build-cache
-        with:
-          path: |
-            ~/.cache/Cypress
-            node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          node-version: "18"
+          cache: "npm"
       - name: Install npm deps
         run: |
           npm ci
@@ -41,5 +33,3 @@ jobs:
           path: artifacts
           retention-days: 1
           if-no-files-found: ignore
-
-

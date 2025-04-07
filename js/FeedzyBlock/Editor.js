@@ -1,17 +1,19 @@
 /**
  * WordPress dependencies
  */
-const { __, sprintf } = wp.i18n;
-
-const { apiRequest } = wp;
-
-const { Component, Fragment } = wp.element;
-
-const { ExternalLink, Placeholder, TextControl, Button, Spinner } =
-	wp.components;
+import {
+	ExternalLink,
+	Placeholder,
+	TextControl,
+	Button,
+	Spinner,
+} from '@wordpress/components';
 
 import queryString from 'query-string';
 import Inspector from './inspector';
+import { __, sprintf } from '@wordpress/i18n';
+import apiFetch from '@wordpress/api-fetch';
+import { Component, Fragment } from '@wordpress/element';
 import {
 	unescapeHTML,
 	filterData,
@@ -126,7 +128,7 @@ class Editor extends Component {
 			loading: true,
 		});
 
-		apiRequest({
+		apiFetch({
 			path: `/feedzy/v1/feed?${url}`,
 			method: 'POST',
 			data: this.props.attributes,
@@ -161,7 +163,7 @@ class Editor extends Component {
 	}
 
 	loadCategories() {
-		apiRequest({ path: '/wp/v2/feedzy_categories?per_page=100' })
+		apiFetch({ path: '/wp/v2/feedzy_categories?per_page=100' })
 			.then((data) => {
 				if (this.unmounting) {
 					return data;

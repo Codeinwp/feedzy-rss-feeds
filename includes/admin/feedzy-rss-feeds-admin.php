@@ -59,6 +59,50 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	public function __construct( $plugin_name, $version ) {
 		$this->plugin_name = $plugin_name;
 		$this->version     = $version;
+
+		if ( ! defined( 'E2E_TESTING' ) ) {
+			add_filter(
+				'themeisle-sdk/survey/' . $this->plugin_name,
+				function( $data, $page_slug ) {
+
+					// Show survey only on `Help us improve` tab on Support page.
+					if ( strpos( $page_slug, 'support' ) !== false && $page_slug !== 'support-improve' ) {
+						return $data;
+					}
+
+					return $this->get_survey_data();
+				},
+				10,
+				2
+			);
+		}
+
+		/**
+		 * Load SDK dependencies.
+		 */
+		add_filter( 'themeisle_internal_page', function( $product_name, $page_slug ) {
+			if ( $product_name !== $this->plugin_name ) {
+				return;
+			}
+
+			if ( in_array( $page_slug, array( 'imports', 'categories' ), true ) ) {
+				$this->add_banner_anchor();
+			}
+
+			if ( in_array( $page_slug, array( 'imports', 'categories', 'settings' ), true ) ) {
+				$license_data = get_option( 'feedzy_rss_feeds_pro_license_data', array() );
+				if ( self::plan_category( $license_data ) <= 1 ) {
+					do_action( 'themeisle_sdk_load_banner', 'feedzy' );
+				}
+			}
+
+			if (
+				in_array( $page_slug, array( 'imports', 'new-category', 'settings' ), true )
+				&& 'yes' === get_option( 'feedzy_rss_feeds_logger_flag', false )
+			) {
+				$this->enable_telemetry();
+			}
+		}, 10, 2 );
 	}
 
 	/**
@@ -116,21 +160,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			return;
 		}
 
-		$telemetry_enabled = get_option( 'feedzy_rss_feeds_logger_flag', false );
-		if ( ! defined( 'TI_CYPRESS_TESTING' ) &&
-			! empty( $telemetry_enabled ) &&
-			(
-				'feedzy_categories' === $screen->post_type ||
-				'feedzy_page_feedzy-settings' === $screen->base ||
-				'feedzy_imports' === $screen->post_type
-			)
-		) {
-			wp_enqueue_script( $this->plugin_name . '_telemetry', FEEDZY_ABSURL . 'js/telemetry.js', array(), $this->version, true );
-		}
-
 		if ( 'feedzy_imports' === $screen->post_type && 'edit' === $screen->base ) {
-			$this->register_survey();
-			$this->add_banner_anchor();
+			$this->do_internal_page( 'imports' );
 		}
 
 		if ( 'feedzy_categories' === $screen->post_type ) {
@@ -157,9 +188,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					),
 				)
 			);
-
-			$this->register_survey();
-			$this->add_banner_anchor();
 		}
 
 		if ( 'feedzy_page_feedzy-settings' === $screen->base || 'feedzy_page_feedzy-integration' === $screen->base ) {
@@ -179,19 +207,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					),
 				)
 			);
-
-			$this->register_survey();
-		}
-
-		if (
-			'feedzy_page_feedzy-settings' === $screen->base ||
-			'feedzy_categories' === $screen->post_type ||
-			( 'feedzy_imports' === $screen->post_type && 'edit' === $screen->base )
-		) {
-			$license_data = get_option( 'feedzy_rss_feeds_pro_license_data', array() );
-			if ( self::plan_category( $license_data ) <= 1 ) {
-				do_action( 'themeisle_sdk_load_banner', 'feedzy' );
-			}
 		}
 
 		$upsell_screens = array( 'feedzy-rss_page_feedzy-settings', 'feedzy-rss_page_feedzy-admin-menu-pro-upsell' );
@@ -238,13 +253,25 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			wp_enqueue_style( 'wp-block-editor' );
 
 			wp_set_script_translations( $this->plugin_name . '_conditions', 'feedzy-rss-feeds' );
-
-			$this->register_survey();
+			$this->enable_telemetry();
 		}
 		if ( ! defined( 'TI_CYPRESS_TESTING' ) && ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type && feedzy_show_import_tour() ) ) {
 			$asset_file = include FEEDZY_ABSPATH . '/build/onboarding/index.asset.php';
 			wp_enqueue_script( $this->plugin_name . '_on_boarding', FEEDZY_ABSURL . 'build/onboarding/index.js', array_merge( $asset_file['dependencies'], array( 'wp-editor', 'wp-api' ) ), $asset_file['version'], true );
 			wp_set_script_translations( $this->plugin_name . '_on_boarding', 'feedzy-rss-feeds' );
+			$this->enable_telemetry();
+		}
+
+		if ( 'feedzy_page_feedzy-settings' === $screen->base ) {
+			$this->do_internal_page( 'settings' );
+		}
+
+		if ( 'feedzy_page_feedzy-integration' === $screen->base ) {
+			$this->do_internal_page( 'integrations' );
+		}
+
+		if ( 'feedzy_categories' === $screen->post_type ) {
+			$this->do_internal_page( 'add' === $screen->action ? 'new-category' : 'categories' );
 		}
 
 		if ( ! in_array( $screen->base, $upsell_screens, true ) && strpos( $screen->id, 'feedzy' ) === false ) {
@@ -253,8 +280,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( 'feedzy_page_feedzy-support' === $screen->base && ( isset( $_GET['tab'] ) && 'improve' === $_GET['tab'] ) || ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type ) ) {
-
-			$this->register_survey();
 
 			$asset_file = include FEEDZY_ABSPATH . '/build/feedback/index.asset.php';
 			wp_enqueue_script( $this->plugin_name . '_feedback', FEEDZY_ABSURL . 'build/feedback/index.js', array_merge( $asset_file['dependencies'], array( 'wp-editor', 'wp-api', 'lodash' ) ), $asset_file['version'], true );
@@ -270,6 +295,17 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			);
 
 			wp_set_script_translations( $this->plugin_name . '_feedback', 'feedzy-rss-feeds' );
+		}
+
+		if ( 'feedzy_page_feedzy-support' === $screen->base ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$tab    = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
+			$suffix = ! empty( $tab ) ? '-' . $tab : '';
+			$this->do_internal_page( 'support' . $suffix );
+		}
+
+		if ( ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type ) ) {
+			$this->do_internal_page( 'new-import' );
 		}
 
 		if ( 'feedzy_imports' === $screen->post_type && 'edit' === $screen->base && feedzy_show_review_notice() ) {
@@ -735,7 +771,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$category_meta['feedzy_category_feed'] = array();
 		if ( isset( $_POST['feedzy_category_feed'] ) ) {
 			$feedzy_category_feed                  = wp_strip_all_tags( wp_unslash( $_POST['feedzy_category_feed'] ) );
-			$feedzy_category_feed                  = preg_replace( '/\s*,\s*/', ',', $feedzy_category_feed );
+			$feedzy_category_feed                  = preg_replace( '/\s*,\s*|\R/', ',', $feedzy_category_feed );
 			$category_meta['feedzy_category_feed'] = $feedzy_category_feed;
 		}
 		if ( $post->post_type === 'revision' ) {
@@ -2026,70 +2062,53 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return array
 	 * @see survey.js
 	 */
-	public function get_survery_metadata() {
-
-		$user_id = 'feedzy_';
-		$license_data = get_option( 'feedzy_rss_feeds_pro_license_data', array() );
-
-		if ( ! empty( $license_data->key ) ) {
-			$user_id .= $license_data->key;
-		} else {
-			$user_id .= preg_replace( '/[^\w\d]*/', '', get_site_url() ); // Use a normalized version of the site URL as a user ID for free users.
-		}
-
+	public function get_survey_data() {
+		$license_data       = get_option( 'feedzy_rss_feeds_pro_license_data', array() );
 		$integration_status = $this->api_license_status();
 
-		$days_since_install = round( ( time() - get_option( 'feedzy_rss_feeds_install', 0 ) ) / DAY_IN_SECONDS );
-		$install_category = 0;
-		if ( 0 === $days_since_install || 1 === $days_since_install ) {
-			$install_category = 0;
-		} elseif ( 1 < $days_since_install && 8 > $days_since_install ) {
-			$install_category = 7;
-		} elseif ( 8 <= $days_since_install && 31 > $days_since_install ) {
-			$install_category = 30;
-		} elseif ( 30 < $days_since_install && 90 > $days_since_install ) {
-			$install_category = 90;
-		} elseif ( 90 <= $days_since_install ) {
-			$install_category = 91;
+		$days_since_install = round( ( time() - get_option( 'feedzy_rss_feeds_install', time() ) ) / DAY_IN_SECONDS );
+
+		$import_jobs_num = get_transient( 'feedzy_import_jobs_num' );
+
+		if ( false === $import_jobs_num ) {
+			$args = array(
+				'post_type'              => 'feedzy_imports',
+				'posts_per_page'         => 50,
+				'post_status'            => array( 'publish', 'draft' ),
+				'fields'                 => 'ids',
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+			);
+
+			$query           = new WP_Query( $args );
+			$import_jobs_num = count( $query->posts );
+			set_transient( 'feedzy_import_jobs_num', $import_jobs_num, 50 >= $import_jobs_num ? WEEK_IN_SECONDS : HOUR_IN_SECONDS );
+		} else {
+			$import_jobs_num = intval( $import_jobs_num );
 		}
 
-		return array(
-			'userId' => $user_id,
-			'attributes' => array(
-				'free_version' => $this->version,
-				'pro_version' => defined( 'FEEDZY_PRO_VERSION' ) ? FEEDZY_PRO_VERSION : '',
-				'openai' => $integration_status['openaiStatus'] ? 'valid' : 'invalid',
-				'amazon' => $integration_status['amazonStatus'] ? 'valid' : 'invalid',
-				'spinnerchief' => $integration_status['spinnerChiefStatus'] ? 'valid' : 'invalid',
-				'wordai' => $integration_status['wordaiStatus'] ? 'valid' : 'invalid',
-				'plan' => $this->plan_category( $license_data ),
-				'days_since_install' => $install_category,
-				'license_status' => ! empty( $license_data->license ) ? $license_data->license : 'invalid',
-			),
+		$survey_data = array(
+			'environmentId' => 'clskgehf78eu5podwdrnzciti',
+			'attributes'    => array(
+				'free_version'        => $this->version,
+				'pro_version'         => defined( 'FEEDZY_PRO_VERSION' ) ? FEEDZY_PRO_VERSION : '',
+				'openai'              => $integration_status['openaiStatus'] ? 'valid' : 'invalid',
+				'amazon'              => $integration_status['amazonStatus'] ? 'valid' : 'invalid',
+				'spinnerchief'        => $integration_status['spinnerChiefStatus'] ? 'valid' : 'invalid',
+				'wordai'              => $integration_status['wordaiStatus'] ? 'valid' : 'invalid',
+				'plan'                => $this->plan_category( $license_data ),
+				'install_days_number' => $days_since_install,
+				'license_status'      => ! empty( $license_data->license ) ? $license_data->license : 'invalid',
+				'import_jobs_num'     => $import_jobs_num
+ 			),
 		);
-	}
 
-	/**
-	 * Register the survey script.
-	 *
-	 * It does register if we are in CI environment.
-	 *
-	 * @return void
-	 */
-	public function register_survey() {
-
-		if ( defined( 'CYPRESS_TESTING' ) ) {
-			return;
+		if ( isset( $license_data->key ) ) {
+			$survey_data['attributes']['license_key'] = apply_filters( 'themeisle_sdk_secret_masking', $license_data->key );
 		}
 
-		$survey_handler = apply_filters( 'themeisle_sdk_dependency_script_handler', 'survey' );
-		if ( empty( $survey_handler ) ) {
-			return;
-		}
-
-		do_action( 'themeisle_sdk_dependency_enqueue_script', 'survey' );
-		wp_enqueue_script( $this->plugin_name . '_survey', FEEDZY_ABSURL . 'js/survey.js', array( $survey_handler ), $this->version, true );
-		wp_localize_script( $this->plugin_name . '_survey', 'feedzySurveyData', $this->get_survery_metadata() );
+		return $survey_data;
 	}
 
 	/**
@@ -2108,6 +2127,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function get_lang_list() {
 		$target_lang = array(
+			''         => __( 'Choose Language', 'feedzy-rss-feeds' ),
 			'eng_Latn' => __( 'English', 'feedzy-rss-feeds' ),
 			'ace_Arab' => __( 'Acehnese Arab', 'feedzy-rss-feeds' ),
 			'ace_Latn' => __( 'Acehnese Latin', 'feedzy-rss-feeds' ),
@@ -2331,5 +2351,24 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				'show_in_rest' => true
 			)
 		);
+	}
+
+	/**
+	 * Mark the page as internal.
+	 */
+	private function do_internal_page( $page_slug ) {
+		do_action( 'themeisle_internal_page', $this->plugin_name, $page_slug );
+	}
+
+	/**
+	 * Enable the loading of telemetry script in page.
+	 */
+	private function enable_telemetry() {
+		if ( defined( 'E2E_TESTING' ) ) {
+			return;
+		}
+
+		add_filter( 'themeisle_sdk_enable_telemetry', '__return_true' );
+		wp_enqueue_script( $this->plugin_name . '_telemetry', FEEDZY_ABSURL . 'js/telemetry.js', array(), $this->version, true );
 	}
 }
