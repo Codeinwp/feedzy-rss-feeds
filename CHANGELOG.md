@@ -1,3 +1,9 @@
+##### [Version 5.0.4](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.3...v5.0.4) (2025-04-07)
+
+- Updated dependencies
+- Fixed invalid feed URL issue when adding URLs per line
+- Fixed issue with initial translation action
+
 ##### [Version 5.0.3](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.2...v5.0.3) (2025-02-07)
 
 - Improved the i18n support.
