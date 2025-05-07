@@ -35,7 +35,7 @@ test.describe( 'Upsell', () => {
         let upgradeAlert = page.locator('#feedzy-import-form a[href*="utm_campaign=fallback-image"]');
         await expect( upgradeAlert ).toBeVisible();
 
-        await page.locator('.fz-form-group:has( #fz-event-execution )').hover({ force: true });
+        await page.locator('.fz-form-group:has( #fz-event-schedule )').hover({ force: true });
         upgradeAlert = page.locator('#feedzy-import-form a[href*="utm_campaign=schedule-import-job"]');
         await expect( upgradeAlert ).toBeVisible();
 
