@@ -78,47 +78,40 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		if ( feedzy_is_pro() ) {
-			add_filter( 'themeisle_sdk_allow_global_event_notice', function( $allowed, $event_slug ) {
-				if ( 'black_friday' === $event_slug ) {
-					$allowed = false;
-				}
-
-				return $allowed;
+			add_filter( 'themeisle_sdk_allow_global_black_friday_notice', function( $allowed) {
+				return false;
 			}, 10, 2 );
 		}
 
 		$license_data = get_option( 'feedzy_rss_feeds_pro_license_data', array() );
 		if ( self::plan_category( $license_data ) <= 1 ) {
-			add_filter( 'themeisle_sdk_event_data', function( $event_data, $event_slug, $product_slug ) {
-	
+			add_filter( 'themeisle_sdk_event_black_friday', function( $event_data, $product_slug ) {
+
 				$event_data['global_notice_product_labels'][] = 'Feedzy RSS Feeds';
-	
+
 				if ( $product_slug !== $this->plugin_name ) {
 					return $event_data;
 				}
-	
-				if ( 'black_friday' === $event_slug) {
-					$event_data['internal_pages'] = array( 'imports', 'categories', 'settings' );
-	
-					$event_data['banner_cta_url'] = tsdk_utmify( tsdk_translate_link( 'https://themeisle.com/plugins/feedzy-rss-feeds/blackfriday/' ), 'bfcm2025' );
-					$event_data['banner_bg'] = sprintf( 'url(%s)', FEEDZY_ABSURL . '/img/black-friday.png' );
-					$event_data['banner_description'] = sprintf(
-						// translators: %s is the name of the license.
-						__( 'Get your Feedzy Agency %s', 'feedzy-rss-feeds' ),
-						'<strong class="tsdk-banner-dashline">' . __( 'Lifetime License!', 'feedzy-rss-feeds' ) . '</strong>'
-					)
-					. ' ' . __( 'Pay once for endless benefits.', 'feedzy-rss-feeds' )
-					. ' ' . sprintf(
-						// translators: %s is number of licenses (100).
-						__( 'Only %s licenses available!', 'feedzy-rss-feeds' ),
-						'<strong>' . '100' . '</strong>'
-					);
-				}
-	
-				return $event_data;
-			}, 10, 3);
-		}
 
+				$event_data['internal_pages'] = array( 'imports', 'categories', 'settings' );
+
+				$event_data['banner_cta_url'] = tsdk_utmify( tsdk_translate_link( 'https://themeisle.com/plugins/feedzy-rss-feeds/blackfriday/' ), 'bfcm2025' );
+				$event_data['banner_bg'] = sprintf( 'url(%s)', FEEDZY_ABSURL . '/img/black-friday.png' );
+				$event_data['banner_description'] = sprintf(
+					// translators: %s is the name of the license.
+					__( 'Get your Feedzy Agency %s', 'feedzy-rss-feeds' ),
+					'<strong class="tsdk-banner-dashline">' . __( 'Lifetime License!', 'feedzy-rss-feeds' ) . '</strong>'
+				)
+				. ' ' . __( 'Pay once for endless benefits.', 'feedzy-rss-feeds' )
+				. ' ' . sprintf(
+					// translators: %s is number of licenses (100).
+					__( 'Only %s licenses available!', 'feedzy-rss-feeds' ),
+					'<strong>' . '100' . '</strong>'
+				);
+
+				return $event_data;
+			}, 10, 2);
+		}
 
 		/**
 		 * Load SDK dependencies.
@@ -131,7 +124,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			if ( in_array( $page_slug, array( 'imports', 'categories' ), true ) ) {
 				$this->add_banner_anchor();
 			}
-			
+
 			if (
 				in_array( $page_slug, array( 'imports', 'new-category', 'settings' ), true )
 				&& 'yes' === get_option( 'feedzy_rss_feeds_logger_flag', false )
