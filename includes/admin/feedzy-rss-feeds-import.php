@@ -2938,7 +2938,7 @@ class Feedzy_Rss_Feeds_Import {
 				) : '#',
 				feedzy_is_pro() ? 'fz-export-btn' : 'fz-export-btn-pro',
 				! feedzy_is_pro() ? 'opacity:0.5;' : '',
-				( ! feedzy_is_pro() ? '<span style="font-size: 13px;line-height: 1.5em;width: 13px;height: 13px;" class="dashicons dashicons-lock"></span>' : '' ) . esc_html__( 'Export', 'feedzy-rss-feeds' )
+				( ! feedzy_is_pro() ? esc_html__( 'Export', 'feedzy-rss-feeds' ) . '<span style="font-size: 13px;line-height: 1.5em;width: 13px;height: 13px;" class="dashicons dashicons-lock"></span>' : '' )
 			);
 
 			$actions['export'] = $export_action;

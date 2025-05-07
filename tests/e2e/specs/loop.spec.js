@@ -35,7 +35,7 @@ test.describe('Feedzy Loop', () => {
 		await page.getByLabel('Add title').click();
 		await page.keyboard.type(POST_TITLE);
 
-		await page.getByLabel('Toggle block inserter').click();
+		await page.getByLabel('Add block').click();
 
 		await page.getByPlaceholder('Search').click();
 		await page.keyboard.type('Feedzy Loop');
