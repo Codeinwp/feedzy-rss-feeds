@@ -1,4 +1,4 @@
-.feedzy-wrap *{
+.feedzy-wrap > *{
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
@@ -119,7 +119,9 @@
 	margin: 0 auto;
 	display: flex;
 	justify-content: center;
+	padding: 1rem;
 	margin-bottom: 20px;
+	width: 100%;
 }
 
 .feedzy-banner:has(.tsdk-banner-cta) .tsdk-banner-urgency-text {
