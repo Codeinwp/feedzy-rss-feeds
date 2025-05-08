@@ -459,18 +459,12 @@ class Feedzy_Rss_Feeds_Import {
 			}
 		}
 		$import_schedule = array(
-			'fz_execution_offset' => ! empty( $this->free_settings['general']['fz_execution_offset'] ) ? $this->free_settings['general']['fz_execution_offset'] : '',
-			'fz_cron_execution' => ! empty( $this->free_settings['general']['fz_cron_execution'] ) ? $this->free_settings['general']['fz_cron_execution'] : '',
 			'fz_cron_schedule' => ! empty( $this->free_settings['general']['fz_cron_schedule'] ) ? $this->free_settings['general']['fz_cron_schedule'] : '',
 		);
 
-		$fz_cron_execution   = get_post_meta( $post->ID, 'fz_cron_execution', true );
 		$fz_cron_schedule    = get_post_meta( $post->ID, 'fz_cron_schedule', true );
-		$fz_execution_offset = get_post_meta( $post->ID, 'fz_execution_offset', true );
-		if ( ! empty( $fz_cron_schedule ) && ! empty( $fz_cron_execution ) ) {
+		if ( ! empty( $fz_cron_schedule ) ) {
 			$import_schedule['fz_cron_schedule']    = $fz_cron_schedule;
-			$import_schedule['fz_execution_offset'] = $fz_execution_offset;
-			$import_schedule['fz_cron_execution']   = $fz_cron_execution;
 		}
 
 		$post_status        = $post->post_status;
@@ -544,17 +538,12 @@ class Feedzy_Rss_Feeds_Import {
 			}
 		}
 
-		$global_cron_execution = ! empty( $this->free_settings['general']['fz_cron_execution'] ) ? $this->free_settings['general']['fz_cron_execution'] : '';
 		$global_cron_schedule  = ! empty( $this->free_settings['general']['fz_cron_schedule'] ) ? $this->free_settings['general']['fz_cron_schedule'] : '';
 		if (
-			(
-				empty( $data_meta['fz_cron_execution'] ) || $global_cron_schedule === $data_meta['fz_cron_execution']
-			)
-			&&
 			empty( $data_meta['fz_cron_schedule'] ) || $global_cron_schedule === $data_meta['fz_cron_schedule']
 		) {
 			// Remove scheduled cron settings if they are equal to the global settings.
-			unset( $data_meta['fz_cron_execution'], $data_meta['fz_cron_schedule'], $data_meta['fz_execution_offset'] );
+			unset( $data_meta['fz_cron_schedule'] );
 		}
 
 		$custom_fields_keys = array();
@@ -1361,10 +1350,6 @@ class Feedzy_Rss_Feeds_Import {
 				// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 				'meta_query'  => array(
 					'relation' => 'AND',
-					array(
-						'key'     => 'fz_cron_execution',
-						'compare' => 'NOT EXISTS',
-					),
 					array(
 						'key'     => 'fz_cron_schedule',
 						'compare' => 'NOT EXISTS',
@@ -2467,19 +2452,15 @@ class Feedzy_Rss_Feeds_Import {
 	 * @access  public
 	 */
 	public function add_cron() {
-		$time     = ! empty( $this->free_settings['general']['fz_cron_execution'] ) ? $this->get_cron_execution( $this->free_settings['general']['fz_cron_execution'] ) : time();
 		$schedule = ! empty( $this->free_settings['general']['fz_cron_schedule'] ) ? $this->free_settings['general']['fz_cron_schedule'] : ( feedzy_is_legacyv5() ? 'hourly' : 'daily' );
 		if ( ( isset( $_POST['nonce'] ) && isset( $_POST['tab'] ) ) && ( wp_verify_nonce( filter_input( INPUT_POST, 'nonce', FILTER_UNSAFE_RAW ), filter_input( INPUT_POST, 'tab', FILTER_UNSAFE_RAW ) ) ) ) {
-			if ( ! empty( $_POST['fz_cron_execution'] ) && ! empty( $_POST['fz_cron_schedule'] ) && ! empty( $_POST['fz_execution_offset'] ) ) {
-				$execution = sanitize_text_field( wp_unslash( $_POST['fz_cron_execution'] ) );
-				$offset    = sanitize_text_field( wp_unslash( $_POST['fz_execution_offset'] ) );
-				$time      = $this->get_cron_execution( $execution, $offset );
+			if (  ! empty( $_POST['fz_cron_schedule'] )) {
 				$schedule  = sanitize_text_field( wp_unslash( $_POST['fz_cron_schedule'] ) );
 				Feedzy_Rss_Feeds_Util_Scheduler::clear_scheduled_hook( 'feedzy_cron' );
 			}
 		}
 		if ( false === Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'feedzy_cron' ) ) {
-			Feedzy_Rss_Feeds_Util_Scheduler::schedule_event( $time, $schedule, 'feedzy_cron' );
+			Feedzy_Rss_Feeds_Util_Scheduler::schedule_event( time() + 10, $schedule, 'feedzy_cron' );
 		}
 
 		// Register import jobs based cron jobs.
@@ -2493,10 +2474,6 @@ class Feedzy_Rss_Feeds_Import {
 				'meta_query'  => array(
 					'relation' => 'AND',
 					array(
-						'key'     => 'fz_cron_execution',
-						'compare' => 'EXISTS',
-					),
-					array(
 						'key'     => 'fz_cron_schedule',
 						'compare' => 'EXISTS',
 					),
@@ -2506,32 +2483,14 @@ class Feedzy_Rss_Feeds_Import {
 
 		if ( ! empty( $import_job_crons ) ) {
 			foreach ( $import_job_crons as $job_id ) {
-				$fz_cron_execution   = get_post_meta( $job_id, 'fz_cron_execution', true );
 				$fz_cron_schedule    = get_post_meta( $job_id, 'fz_cron_schedule', true );
-				$fz_execution_offset = get_post_meta( $job_id, 'fz_execution_offset', true );
-				$time                = $this->get_cron_execution( $fz_cron_execution, $fz_execution_offset );
-
 				if ( false === Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'feedzy_cron', array( 100, $job_id ) ) ) {
-					Feedzy_Rss_Feeds_Util_Scheduler::schedule_event( $time, $fz_cron_schedule, 'feedzy_cron', array( 100, $job_id ) );
+					Feedzy_Rss_Feeds_Util_Scheduler::schedule_event( time() + 10, $fz_cron_schedule, 'feedzy_cron', array( 100, $job_id ) );
 				}
 			}
 		}
 	}
 
-	/**
-	 * Get cron job execution.
-	 *
-	 * @param string $execution Execution time.
-	 * @param int    $offset Offset.
-	 * @return int
-	 */
-	public function get_cron_execution( $execution, $offset = 0 ) {
-		if ( empty( $offset ) && ! empty( $this->free_settings['general']['fz_execution_offset'] ) ) {
-			$offset = $this->free_settings['general']['fz_execution_offset'];
-		}
-		$execution = strtotime( $execution ) ? strtotime( $execution ) + ( HOUR_IN_SECONDS * (int) $offset ) : time() + ( HOUR_IN_SECONDS * (int) $offset );
-		return $execution;
-	}
 
 	/**
 	 * Checks if WP Cron is enabled and if not, shows a notice.
@@ -2979,7 +2938,7 @@ class Feedzy_Rss_Feeds_Import {
 				) : '#',
 				feedzy_is_pro() ? 'fz-export-btn' : 'fz-export-btn-pro',
 				! feedzy_is_pro() ? 'opacity:0.5;' : '',
-				( ! feedzy_is_pro() ? '<span style="font-size: 13px;line-height: 1.5em;width: 13px;height: 13px;" class="dashicons dashicons-lock"></span>' : '' ) . esc_html__( 'Export', 'feedzy-rss-feeds' )
+				( ! feedzy_is_pro() ? esc_html__( 'Export', 'feedzy-rss-feeds' ) . '<span style="font-size: 13px;line-height: 1.5em;width: 13px;height: 13px;" class="dashicons dashicons-lock"></span>' : '' )
 			);
 
 			$actions['export'] = $export_action;

@@ -748,21 +748,9 @@ global $post;
 						</div>
 						<div class="fz-right">
 							<div class="fz-form-row">
+
 								<div class="fz-form-col-6">
 									<div class="fz-form-group">
-										<label class="form-label"><?php esc_html_e( 'First date/time to run the import', 'feedzy-rss-feeds' ); ?></label>
-										<?php if ( feedzy_is_pro() ) : ?>
-											<input type="hidden" name="feedzy_meta_data[fz_execution_offset]" id="fz-execution-offset" value="<?php echo ! empty( $import_schedule['fz_execution_offset'] ) ? esc_attr( $import_schedule['fz_execution_offset'] ) : ''; ?>">
-										<?php endif; ?>
-										<input type="datetime-local" id="fz-event-execution" name="feedzy_meta_data[fz_cron_execution]" class="form-control" value="<?php echo ! empty( $import_schedule['fz_cron_execution'] ) ? esc_attr( $import_schedule['fz_cron_execution'] ) : ''; ?>"<?php disabled( true, ! feedzy_is_pro() ); ?>>
-										<div class="help-text pt-8">
-											<?php esc_html_e( 'Set the date and time when Feedzy should first run the import.', 'feedzy-rss-feeds' ); ?>
-										</div>
-									</div>
-								</div>
-								<div class="fz-form-col-6">
-									<div class="fz-form-group">
-										<label class="form-label"><?php esc_html_e( 'Schedule', 'feedzy-rss-feeds' ); ?></label>
 										<select id="fz-event-schedule" class="form-control fz-select-control" name="feedzy_meta_data[fz_cron_schedule]"<?php disabled( true, ! feedzy_is_pro() ); ?>>
 											<?php
 											$save_schedule = ! empty( $import_schedule['fz_cron_schedule'] ) ? $import_schedule['fz_cron_schedule'] : '';

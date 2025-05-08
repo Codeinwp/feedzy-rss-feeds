@@ -98,10 +98,6 @@ jQuery(function ($) {
 		}
 	});
 
-	// Select cron execution time.
-	$(document).on('change', '#fz-event-execution', function () {
-		$('#fz-execution-offset').val(new Date().getTimezoneOffset() / 60);
-	});
 
 	// License key.
 	jQuery('.fz-license-section #license_key').on('input', function () {
