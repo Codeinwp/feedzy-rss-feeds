@@ -1,3 +1,8 @@
+##### [Version 5.0.5](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.4...v5.0.5) (2025-05-08)
+
+- Fix inconsistency with import scheduling.
+- Remove the setting for initial import time to simplify the UX
+
 ##### [Version 5.0.4](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.3...v5.0.4) (2025-04-07)
 
 - Updated dependencies
