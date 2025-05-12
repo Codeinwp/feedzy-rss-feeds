@@ -91,7 +91,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				$this->add_banner_anchor();
 			}
 
-			if ( in_array( $page_slug, array( 'imports', 'categories', 'settings' ) ) ) {
+			if ( in_array( $page_slug, array( 'imports', 'categories', 'settings' ), true ) ) {
 				apply_filters( 'themeisle_sdk_blackfriday_data', array( $this, 'set_black_friday_data' ), 99 );
 			}
 
@@ -2386,6 +2386,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$license_data = get_option( 'feedzy_rss_feeds_pro_license_data', array() );
 
+		// translators: %1$s - discount, %2$s - product label.
 		$config['message'] = sprintf( __( 'Our biggest sale of the year: <strong>%1$s OFF</strong> on <strong>%2$s</strong>! Don\'t miss this limited-time offer.', 'feedzy-rss-feeds' ), $discount, $product_label );
 		$config['url']    = add_query_arg( array(
 			'utm_plugin' => feedzy_is_pro() ? 'feedzy-pro' : 'feedzy-rss-feeds',
