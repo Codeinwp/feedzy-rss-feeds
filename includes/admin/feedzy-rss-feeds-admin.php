@@ -91,9 +91,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				$this->add_banner_anchor();
 			}
 
-			if ( in_array( $page_slug, array( 'imports', 'categories', 'settings' ), true ) ) {
-				apply_filters( 'themeisle_sdk_blackfriday_data', array( $this, 'set_black_friday_data' ), 99 );
-			}
+			add_filter( 'themeisle_sdk_blackfriday_data', array( $this, 'set_black_friday_data' ), 99 );
 
 			if (
 				in_array( $page_slug, array( 'imports', 'new-category', 'settings' ), true )
