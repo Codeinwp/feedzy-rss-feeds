@@ -61,6 +61,8 @@ jobs:
       pr_number: ${{ steps.get-pr-number.outputs.num }}
       comment_body: ${{ steps.get-comment-body.outputs.body }}
     steps:
+      - name: Check out source files
+        uses: actions/checkout@v4
       - name: Get PR number
         id: get-pr-number
         run: echo "::set-output name=num::$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')"

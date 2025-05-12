@@ -77,7 +77,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			);
 		}
 
-		apply_filters( 'themeisle_sdk_blackfriday_data', array( $this, 'set_black_friday_data' ) );
+		add_filter( 'themeisle_sdk_blackfriday_data', array( $this, 'set_black_friday_data' ) );
 
 		/**
 		 * Load SDK dependencies.
@@ -2376,22 +2376,28 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return array
 	 */
 	public function set_black_friday_data( $config ) {
-		$product_label = __( 'Feedzy RSS Feeds', 'feedzy-rss-feeds' );
-		$discount      = '40%';
-
-		if ( feedzy_is_pro() ) {
-			$product_label = __( 'Feedzy RSS Feeds Pro', 'feedzy-rss-feeds' );
-			$discount = '50%';
-		}
-
-		$license_data = get_option( 'feedzy_rss_feeds_pro_license_data', array() );
+		$product_label = __( 'Feedzy', 'feedzy-rss-feeds' );
+		$discount      = '70%';
 
 		// translators: %1$s - discount, %2$s - product label.
 		$config['message'] = sprintf( __( 'Our biggest sale of the year: <strong>%1$s OFF</strong> on <strong>%2$s</strong>! Don\'t miss this limited-time offer.', 'feedzy-rss-feeds' ), $discount, $product_label );
-		$config['url']    = add_query_arg( array(
-			'utm_plugin' => feedzy_is_pro() ? 'feedzy-pro' : 'feedzy-rss-feeds',
-			'utm_plan'   => self::plan_category( $license_data ),
-		), $config['base_url'] );
+
+		$is_pro = feedzy_is_pro();
+
+		if ( $is_pro ) {
+			$product_label = __( 'Feedzy Pro', 'feedzy-rss-feeds' );
+			$discount      = '30%';
+
+			// translators: %1$s - discount, %2$s - product label.
+			$config['message'] = sprintf( __( 'Get <strong>%1$s off</strong> when you upgrade your <strong>%2$s</strong> plan or renew early.', 'feedzy-rss-feeds' ), $discount, $product_label );
+		}
+
+		$config['sale_url'] = add_query_arg(
+			array(
+				'utm_term' => $is_pro ? 'plan-' . apply_filters( 'product_feedzy_license_plan', 0 ) : 'free'
+			),
+			tsdk_translate_link( tsdk_utmify( 'https://themeisle.com/plugins/feedzy-rss-feeds/blackfriday', 'bfcm', 'feedzy' ) )
+		);
 
 		return $config;
 	}
