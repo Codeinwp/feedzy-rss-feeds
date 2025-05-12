@@ -77,41 +77,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			);
 		}
 
-		if ( feedzy_is_pro() ) {
-			add_filter( 'themeisle_sdk_allow_global_black_friday_notice', function( $allowed) {
-				return false;
-			}, 10, 2 );
-		}
-
-		$license_data = get_option( 'feedzy_rss_feeds_pro_license_data', array() );
-		if ( self::plan_category( $license_data ) <= 1 ) {
-			add_filter( 'themeisle_sdk_event_black_friday', function( $event_data, $product_slug ) {
-
-				$event_data['global_notice_product_labels'][] = 'Feedzy RSS Feeds';
-
-				if ( $product_slug !== $this->plugin_name ) {
-					return $event_data;
-				}
-
-				$event_data['internal_pages'] = array( 'imports', 'categories', 'settings' );
-
-				$event_data['banner_cta_url'] = tsdk_utmify( tsdk_translate_link( 'https://themeisle.com/plugins/feedzy-rss-feeds/blackfriday/' ), 'bfcm2025' );
-				$event_data['banner_bg'] = sprintf( 'url(%s)', FEEDZY_ABSURL . '/img/black-friday.png' );
-				$event_data['banner_description'] = sprintf(
-					// translators: %s is the name of the license.
-					__( 'Get your Feedzy Agency %s', 'feedzy-rss-feeds' ),
-					'<strong class="tsdk-banner-dashline">' . __( 'Lifetime License!', 'feedzy-rss-feeds' ) . '</strong>'
-				)
-				. ' ' . __( 'Pay once for endless benefits.', 'feedzy-rss-feeds' )
-				. ' ' . sprintf(
-					// translators: %s is number of licenses (100).
-					__( 'Only %s licenses available!', 'feedzy-rss-feeds' ),
-					'<strong>' . '100' . '</strong>'
-				);
-
-				return $event_data;
-			}, 10, 2);
-		}
+		apply_filters( 'themeisle_sdk_blackfriday_data', array( $this, 'set_black_friday_data' ) );
 
 		/**
 		 * Load SDK dependencies.
@@ -123,6 +89,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 			if ( in_array( $page_slug, array( 'imports', 'categories' ), true ) ) {
 				$this->add_banner_anchor();
+			}
+
+			if ( in_array( $page_slug, array( 'imports', 'categories', 'settings' ) ) ) {
+				apply_filters( 'themeisle_sdk_blackfriday_data', array( $this, 'set_black_friday_data' ), 99 );
 			}
 
 			if (
@@ -2397,5 +2367,31 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 		add_filter( 'themeisle_sdk_enable_telemetry', '__return_true' );
 		wp_enqueue_script( $this->plugin_name . '_telemetry', FEEDZY_ABSURL . 'js/telemetry.js', array(), $this->version, true );
+	}
+
+	/**
+	 * Set the black friday data.
+	 *
+	 * @param array $config The configuration array.
+	 * @return array
+	 */
+	public function set_black_friday_data( $config ) {
+		$product_label = __( 'Feedzy RSS Feeds', 'feedzy-rss-feeds' );
+		$discount      = '40%';
+
+		if ( feedzy_is_pro() ) {
+			$product_label = __( 'Feedzy RSS Feeds Pro', 'feedzy-rss-feeds' );
+			$discount = '50%';
+		}
+
+		$license_data = get_option( 'feedzy_rss_feeds_pro_license_data', array() );
+
+		$config['message'] = sprintf( __( 'Our biggest sale of the year: <strong>%1$s OFF</strong> on <strong>%2$s</strong>! Don\'t miss this limited-time offer.', 'feedzy-rss-feeds' ), $discount, $product_label );
+		$config['url']    = add_query_arg( array(
+			'utm_plugin' => feedzy_is_pro() ? 'feedzy-pro' : 'feedzy-rss-feeds',
+			'utm_plan'   => self::plan_category( $license_data ),
+		), $config['base_url'] );
+
+		return $config;
 	}
 }
