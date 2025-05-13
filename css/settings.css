@@ -115,6 +115,10 @@
 	display: none;
 }
 
+:is(.feedzy-banner, .feedzy-banner-dashboard):not(.themeisle-sale) {
+	visibility: hidden;
+}
+
 .feedzy-banner:has(.themeisle-sale) {
 	margin: 0 auto;
 	display: flex;
