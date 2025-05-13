@@ -77,7 +77,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			);
 		}
 
-		add_filter( 'themeisle_sdk_blackfriday_data', array( $this, 'set_black_friday_data' ) );
+		add_filter( 'themeisle_sdk_blackfriday_data', array( $this, 'add_black_friday_data' ) );
 
 		/**
 		 * Load SDK dependencies.
@@ -90,8 +90,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			if ( in_array( $page_slug, array( 'imports', 'categories' ), true ) ) {
 				$this->add_banner_anchor();
 			}
-
-			add_filter( 'themeisle_sdk_blackfriday_data', array( $this, 'set_black_friday_data' ), 99 );
 
 			if (
 				in_array( $page_slug, array( 'imports', 'new-category', 'settings' ), true )
@@ -2370,10 +2368,12 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Set the black friday data.
 	 *
-	 * @param array $config The configuration array.
+	 * @param array $configs The configuration array for the loaded products.
 	 * @return array
 	 */
-	public function set_black_friday_data( $config ) {
+	public function add_black_friday_data( $configs ) {
+		$config = $configs['default'];
+
 		$product_label = __( 'Feedzy', 'feedzy-rss-feeds' );
 		$discount      = '70%';
 
@@ -2408,6 +2408,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			tsdk_translate_link( tsdk_utmify( 'https://themeisle.com/plugins/feedzy-rss-feeds/blackfriday', 'bfcm', 'feedzy' ) )
 		);
 
-		return $config;
+		$configs[ $this->plugin_name ] = $config;
+
+		return $configs;
 	}
 }
