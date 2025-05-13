@@ -2378,24 +2378,22 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$discount      = '70%';
 
 		// translators: %1$s - discount, %2$s - product label.
-		$config['message'] = sprintf( __( 'Our biggest sale of the year: <strong>%1$s OFF</strong> on <strong>%2$s</strong>! Don\'t miss this limited-time offer.', 'feedzy-rss-feeds' ), $discount, $product_label );
+		$message_template = __( 'Our biggest sale of the year: %1$s off on %2$s! Don\'t miss this limited-time offer.', 'feedzy-rss-feeds' );
 
 		$is_pro      = feedzy_is_pro();
-		$license_key = '';
+		$license_key = apply_filters( 'product_feedzy_license_key', '' );
 
 		if ( $is_pro ) {
 			$product_label = __( 'Feedzy Pro', 'feedzy-rss-feeds' );
 			$discount      = '30%';
 
 			// translators: %1$s - discount, %2$s - product label.
-			$config['message'] = sprintf( __( 'Get <strong>%1$s off</strong> when you upgrade your <strong>%2$s</strong> plan or renew early.', 'feedzy-rss-feeds' ), $discount, $product_label );
-
-			if ( current_user_can( 'manage_options' ) ) {
-				$license_key = apply_filters( 'product_feedzy_license_key', '' );
-			}
+			$message_template = __( 'Get %1$s off when you upgrade your %2$s plan or renew early.', 'feedzy-rss-feeds' );
 		}
 
-		$url_params = array(
+		$discount      = sprintf( '<strong>%s</strong>', $discount );
+		$product_label = sprintf( '<strong>%s</strong>', $product_label );
+		$url_params    = array(
 			'utm_term' => $is_pro ? 'plan-' . apply_filters( 'product_feedzy_license_plan', 0 ) : 'free'
 		);
 
@@ -2403,6 +2401,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$url_params['lkey'] = $license_key;
 		}
 
+		$config['message']  = sprintf( $message_template, $discount, $product_label );
 		$config['sale_url'] = add_query_arg(
 			$url_params,
 			tsdk_translate_link( tsdk_utmify( 'https://themeisle.com/plugins/feedzy-rss-feeds/blackfriday', 'bfcm', 'feedzy' ) )
