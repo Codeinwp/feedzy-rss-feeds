@@ -2374,27 +2374,25 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	public function add_black_friday_data( $configs ) {
 		$config = $configs['default'];
 
-		$product_label = __( 'Feedzy', 'feedzy-rss-feeds' );
-		$discount      = '70%';
-
 		// translators: %1$s - discount, %2$s - product label.
 		$message_template = __( 'Our biggest sale of the year: %1$s off on %2$s! Don\'t miss this limited-time offer.', 'feedzy-rss-feeds' );
+		$product_label    = __( 'Feedzy', 'feedzy-rss-feeds' );
+		$discount         = '70%';
 
-		$is_pro      = feedzy_is_pro();
-		$license_key = apply_filters( 'product_feedzy_license_key', '' );
+		$is_pro = feedzy_is_pro();
 
 		if ( $is_pro ) {
-			$product_label = __( 'Feedzy Pro', 'feedzy-rss-feeds' );
-			$discount      = '30%';
-
 			// translators: %1$s - discount, %2$s - product label.
 			$message_template = __( 'Get %1$s off when you upgrade your %2$s plan or renew early.', 'feedzy-rss-feeds' );
+			$product_label    = __( 'Feedzy Pro', 'feedzy-rss-feeds' );
+			$discount         = '30%';
 		}
 
 		$discount      = sprintf( '<strong>%s</strong>', $discount );
 		$product_label = sprintf( '<strong>%s</strong>', $product_label );
 		$url_params    = array(
-			'utm_term' => $is_pro ? 'plan-' . apply_filters( 'product_feedzy_license_plan', 0 ) : 'free'
+			'utm_term' => $is_pro ? 'plan-' . apply_filters( 'product_feedzy_license_plan', 0 ) : 'free',
+			'lkey'     => apply_filters( 'product_feedzy_license_key', false )
 		);
 
 		if ( ! empty( $license_key ) ) {
