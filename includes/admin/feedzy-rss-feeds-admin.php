@@ -2391,7 +2391,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$product_label = sprintf( '<strong>%s</strong>', $product_label );
 		$url_params    = array(
 			'utm_term' => $is_pro ? 'plan-' . apply_filters( 'product_feedzy_license_plan', 0 ) : 'free',
-			'lkey'     => apply_filters( 'product_feedzy_license_key', false )
+			'lkey'     => $is_pro ? apply_filters( 'product_feedzy_license_key', false ) : false
 		);
 
 		$config['message']  = sprintf( $message_template, '<strong>', $discount, '</strong>', $product_label );
