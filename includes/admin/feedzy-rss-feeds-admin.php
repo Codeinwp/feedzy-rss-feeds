@@ -2374,35 +2374,30 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	public function add_black_friday_data( $configs ) {
 		$config = $configs['default'];
 
-		// translators: %1$s - discount, %2$s - product label.
-		$message_template = __( 'Our biggest sale of the year: %1$s off on %2$s! Don\'t miss this limited-time offer.', 'feedzy-rss-feeds' );
-		$product_label    = __( 'Feedzy', 'feedzy-rss-feeds' );
+		// translators: %1$s - HTML tag, %2$s - discount, %3$s - HTML tag, %4$s - product name.
+		$message_template = __( 'Our biggest sale of the year: %1$sup to %2$s OFF%3$s on %4$s. Don\'t miss this limited-time offer.', 'feedzy-rss-feeds' );
+		$product_label    = 'Feedzy';
 		$discount         = '70%';
 
 		$is_pro = feedzy_is_pro();
 
 		if ( $is_pro ) {
-			// translators: %1$s - discount, %2$s - product label.
-			$message_template = __( 'Get %1$s off when you upgrade your %2$s plan or renew early.', 'feedzy-rss-feeds' );
-			$product_label    = __( 'Feedzy Pro', 'feedzy-rss-feeds' );
+			// translators: %1$s - HTML tag, %2$s - discount, %3$s - HTML tag, %4$s - product name.
+			$message_template = __( 'Get %1$sup to %2$s off%3$s when you upgrade your %4$s plan or renew early.', 'feedzy-rss-feeds' );
+			$product_label    = 'Feedzy Pro';
 			$discount         = '30%';
 		}
 
-		$discount      = sprintf( '<strong>%s</strong>', $discount );
 		$product_label = sprintf( '<strong>%s</strong>', $product_label );
 		$url_params    = array(
 			'utm_term' => $is_pro ? 'plan-' . apply_filters( 'product_feedzy_license_plan', 0 ) : 'free',
 			'lkey'     => apply_filters( 'product_feedzy_license_key', false )
 		);
 
-		if ( ! empty( $license_key ) ) {
-			$url_params['lkey'] = $license_key;
-		}
-
-		$config['message']  = sprintf( $message_template, $discount, $product_label );
+		$config['message']  = sprintf( $message_template, '<strong>', $discount, '</strong>', $product_label );
 		$config['sale_url'] = add_query_arg(
 			$url_params,
-			tsdk_translate_link( tsdk_utmify( 'https://themeisle.com/plugins/feedzy-rss-feeds/blackfriday', 'bfcm', 'feedzy' ) )
+			tsdk_translate_link( tsdk_utmify( 'https://themeisle.link/feedzy-bf', 'bfcm', 'feedzy' ) )
 		);
 
 		$configs[ $this->plugin_name ] = $config;
