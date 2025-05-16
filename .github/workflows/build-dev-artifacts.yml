@@ -61,6 +61,8 @@ jobs:
       pr_number: ${{ steps.get-pr-number.outputs.num }}
       comment_body: ${{ steps.get-comment-body.outputs.body }}
     steps:
+      - name: Check out source files
+        uses: actions/checkout@v4
       - name: Get PR number
         id: get-pr-number
         run: echo "::set-output name=num::$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')"
@@ -76,9 +78,20 @@ jobs:
 
       - name: Get comment body
         id: get-comment-body
+        env:
+          GITHUB_REPO_NAME: ${{ github.event.pull_request.base.repo.name }}
+          DEV_ZIP_BRANCH_NAME: ${{ needs.dev-zip.outputs.branch-name }}
+          DEV_ZIP_GIT_SHA_8: ${{ needs.dev-zip.outputs.git-sha-8 }}
+          GITHUB_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
+          previewLink=$(node ./bin/generatePlaygroundPreviewLink.js)
+
           body="Plugin build for ${{ github.event.pull_request.head.sha }} is ready :bellhop_bell:!
-          - Download [build](https://verti-artifacts.s3.amazonaws.com/${{ github.event.pull_request.base.repo.name }}-${{ needs.dev-zip.outputs.branch-name }}-${{ needs.dev-zip.outputs.git-sha-8 }}/feedzy-rss-feeds.zip)"
+          - Download [build](https://verti-artifacts.s3.amazonaws.com/${{ github.event.pull_request.base.repo.name }}-${{ needs.dev-zip.outputs.branch-name }}-${{ needs.dev-zip.outputs.git-sha-8 }}/feedzy-rss-feeds.zip)
+
+          > [!NOTE]
+          > You can preview the changes in the <a href=\"$previewLink\" target=\"_blank\">Playground</a>
+          "
           body="${body//$'\n'/'%0A'}"
           echo "::set-output name=body::$body"
       - name: Create comment on PR with links to plugin builds

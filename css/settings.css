@@ -1,4 +1,4 @@
-.feedzy-wrap *{
+.feedzy-wrap > *{
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
@@ -115,30 +115,22 @@
 	display: none;
 }
 
-.feedzy-banner:has(.tsdk-banner-cta) {
+:is(.feedzy-banner, .feedzy-banner-dashboard):not(.themeisle-sale) {
+	visibility: hidden;
+}
+
+.feedzy-banner:has(.themeisle-sale) {
 	margin: 0 auto;
 	display: flex;
 	justify-content: center;
 	margin-bottom: 20px;
+	max-width: 1224px;
+	padding: 0 12px;
 }
 
-.feedzy-banner:has(.tsdk-banner-cta) .tsdk-banner-urgency-text {
-	padding: 5px;
-}
-
-.feedzy-banner-dashboard {
-	display: none;
-}
-
-.feedzy-banner-dashboard:has(.tsdk-banner-cta) {
-	display: block;
-	margin: 20px 0;
-
-	/* Remove the properties added by .notice */
-	background: transparent;
-	border: unset;
-	box-shadow: unset;
-	padding: unset;
+.feedzy-banner .themeisle-sale {
+	width: 100%;
+	margin: 0;
 }
 
 .feedzy-container{

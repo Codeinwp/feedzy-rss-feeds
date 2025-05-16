@@ -77,6 +77,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			);
 		}
 
+		add_filter( 'themeisle_sdk_blackfriday_data', array( $this, 'add_black_friday_data' ) );
+
 		/**
 		 * Load SDK dependencies.
 		 */
@@ -87,13 +89,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 			if ( in_array( $page_slug, array( 'imports', 'categories' ), true ) ) {
 				$this->add_banner_anchor();
-			}
-
-			if ( in_array( $page_slug, array( 'imports', 'categories', 'settings' ), true ) ) {
-				$license_data = get_option( 'feedzy_rss_feeds_pro_license_data', array() );
-				if ( self::plan_category( $license_data ) <= 1 ) {
-					do_action( 'themeisle_sdk_load_banner', 'feedzy' );
-				}
 			}
 
 			if (
@@ -2368,5 +2363,45 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 		add_filter( 'themeisle_sdk_enable_telemetry', '__return_true' );
 		wp_enqueue_script( $this->plugin_name . '_telemetry', FEEDZY_ABSURL . 'js/telemetry.js', array(), $this->version, true );
+	}
+
+	/**
+	 * Set the black friday data.
+	 *
+	 * @param array $configs The configuration array for the loaded products.
+	 * @return array
+	 */
+	public function add_black_friday_data( $configs ) {
+		$config = $configs['default'];
+
+		// translators: %1$s - HTML tag, %2$s - discount, %3$s - HTML tag, %4$s - product name.
+		$message_template = __( 'Our biggest sale of the year: %1$sup to %2$s OFF%3$s on %4$s. Don\'t miss this limited-time offer.', 'feedzy-rss-feeds' );
+		$product_label    = 'Feedzy';
+		$discount         = '70%';
+
+		$is_pro = feedzy_is_pro();
+
+		if ( $is_pro ) {
+			// translators: %1$s - HTML tag, %2$s - discount, %3$s - HTML tag, %4$s - product name.
+			$message_template = __( 'Get %1$sup to %2$s off%3$s when you upgrade your %4$s plan or renew early.', 'feedzy-rss-feeds' );
+			$product_label    = 'Feedzy Pro';
+			$discount         = '30%';
+		}
+
+		$product_label = sprintf( '<strong>%s</strong>', $product_label );
+		$url_params    = array(
+			'utm_term' => $is_pro ? 'plan-' . apply_filters( 'product_feedzy_license_plan', 0 ) : 'free',
+			'lkey'     => $is_pro ? apply_filters( 'product_feedzy_license_key', false ) : false
+		);
+
+		$config['message']  = sprintf( $message_template, '<strong>', $discount, '</strong>', $product_label );
+		$config['sale_url'] = add_query_arg(
+			$url_params,
+			tsdk_translate_link( tsdk_utmify( 'https://themeisle.link/feedzy-bf', 'bfcm', 'feedzy' ) )
+		);
+
+		$configs[ $this->plugin_name ] = $config;
+
+		return $configs;
 	}
 }
