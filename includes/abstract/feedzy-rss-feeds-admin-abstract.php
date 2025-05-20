@@ -849,7 +849,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		if ( isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
-			$set_server_agent = sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) );
+			$set_server_agent = sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) . SIMPLEPIE_USERAGENT );
 			$feed->set_useragent( apply_filters( 'http_headers_useragent', $set_server_agent ) );
 		}
 
