@@ -1,3 +1,8 @@
+##### [Version 5.0.6](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.5...v5.0.6) (2025-05-23)
+
+- Fixed issue with import job failing when it has one of the source feeds invalid
+- Updated dependencies
+
 ##### [Version 5.0.5](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.4...v5.0.5) (2025-05-08)
 
 - Fix inconsistency with import scheduling.
