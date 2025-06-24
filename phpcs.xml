@@ -10,36 +10,33 @@
     <exclude-pattern>tests/*</exclude-pattern>
 
     <rule ref="WordPress-Core">
-        <exclude name="Generic.WhiteSpace" />
-        <exclude name="Universal.WhiteSpace" />
-        <exclude name="WordPress.WhiteSpace" />
-        <exclude name="Generic.Files" />
-        <exclude name="Squiz.Commenting" />
-        <exclude name="Squiz.Functions" />
-        <exclude name="Universal.Operators.StrictComparisons" />
-        <exclude name="PEAR.Functions.FunctionCallSignature" />
-        <exclude name="Universal.NamingConventions" />
-        <exclude name="WordPress.NamingConventions" />
-        <exclude name="WordPress.PHP.YodaConditions.NotYoda" />
-        <exclude name="Squiz.PHP.DisallowMultipleAssignments" />
-        <exclude name="WordPress.Files.FileName" />
-        <exclude name="WordPress.Arrays.ArrayDeclarationSpacing" />
-        <exclude name="Squiz.PHP.CommentedOutCode" />
-        <exclude name="WordPress.Arrays.MultipleStatementAlignment" />
-        <exclude name="Generic.Formatting" />
-        <exclude name="WordPress.CodeAnalysis" />
-        <exclude name="Generic.CodeAnalysis" />
-        <exclude name="NormalizedArrays.Arrays" />
     </rule>
-    <rule ref="WordPress-Docs">
 
+    <rule ref="WordPress-Docs">
     </rule>
+
     <rule ref="WordPress">
         <exclude name="Generic.Strings.UnnecessaryStringConcat.Found" />
         <exclude name="WordPress.PHP.DevelopmentFunctions.error_log_print_r" />
         <exclude name="WordPress.WP.AlternativeFunctions" />
         <exclude name="WordPress.PHP.DevelopmentFunctions.error_log_error_log" />
     </rule>
+
+    <rule ref="WordPress-VIP-Go">
+        <!-- Exclude deprecated JS sniffs -->
+        <exclude name="WordPressVIPMinimum.JS.Window" />
+        <exclude name="WordPressVIPMinimum.JS.DangerouslySetInnerHTML" />
+        <exclude name="WordPressVIPMinimum.JS.InnerHTML" />
+        <exclude name="WordPressVIPMinimum.JS.StrippingTags" />
+        <exclude name="WordPressVIPMinimum.JS.StringConcat" />
+        <exclude name="WordPressVIPMinimum.JS.HTMLExecutingFunctions" />
+    </rule>
+
+    <!-- Exclude deprecated Generic sniff -->
+    <rule ref="Generic.Functions.CallTimePassByReference">
+        <exclude name="Generic.Functions.CallTimePassByReference" />
+    </rule>
+
     <config name="testVersion" value="7.2-" />
     <rule ref="PHPCompatibilityWP">
     </rule>
