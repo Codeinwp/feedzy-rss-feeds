@@ -128,7 +128,10 @@ class Feedzy_Rss_Feeds_Conditions {
 			}
 		}
 
-		foreach ( array( 'keywords_title' => 'keywords_inc', 'keywords_ban' => 'keywords_exc' ) as $old_key => $new_key ) {
+		foreach ( array(
+			'keywords_title' => 'keywords_inc',
+			'keywords_ban'   => 'keywords_exc',
+		) as $old_key => $new_key ) {
 			if ( isset( $conditions[ $old_key ] ) ) {
 				$conditions[ $new_key ] = $conditions[ $old_key ];
 				unset( $conditions[ $old_key ] );
@@ -152,7 +155,8 @@ class Feedzy_Rss_Feeds_Conditions {
 				$field = $key === 'from_datetime' || $key === 'to_datetime' ? 'date' : ( isset( $conditions[ $key . '_on' ] ) ? $conditions[ $key . '_on' ] : '' );
 				if ( ! empty( $field ) ) {
 					array_push(
-						$new_conditions['conditions'], array(
+						$new_conditions['conditions'],
+						array(
 							'field'    => $field,
 							'operator' => $operator,
 							'value'    => $conditions[ $key ],
@@ -329,7 +333,7 @@ class Feedzy_Rss_Feeds_Conditions {
 	private function check_contains( $value, $condition_value ): bool {
 		$or_conditions = preg_split( '/\s*,\s*/', $condition_value );
 		foreach ( $or_conditions as $or_condition ) {
-			$and_conditions = preg_split( '/\s*\+\s*/', $or_condition );
+			$and_conditions           = preg_split( '/\s*\+\s*/', $or_condition );
 			$all_and_conditions_match = true;
 			foreach ( $and_conditions as $and_condition ) {
 				if ( strpos( $value, trim( $and_condition ) ) === false ) {
@@ -364,7 +368,7 @@ class Feedzy_Rss_Feeds_Conditions {
 			// Check if this segment defines 'match'.
 			if ( strpos( $segment, 'match=' ) === 0 ) {
 				// Extract match value.
-				list( , $match_val ) = explode( '=', $segment, 2 );
+				list( , $match_val )   = explode( '=', $segment, 2 );
 				$filter_array['match'] = trim( $match_val );
 			} elseif ( strpos( $segment, 'condition=' ) === 0 ) {
 				// Check if this segment defines a 'condition'.
@@ -377,7 +381,7 @@ class Feedzy_Rss_Feeds_Conditions {
 				foreach ( $pairs as $pair ) {
 					$pair = trim( $pair );
 					if ( strpos( $pair, ':' ) !== false ) {
-						list( $key, $val ) = explode( ':', $pair, 2 );
+						list( $key, $val )         = explode( ':', $pair, 2 );
 						$condition[ trim( $key ) ] = trim( $val );
 					}
 				}

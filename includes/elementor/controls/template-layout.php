@@ -40,15 +40,15 @@ class Control_Template_Layout extends Base_Data_Control {
 			<h3>' . esc_html__( 'Discover Feedzy Pro', 'feedzy-rss-feeds' ) . '</h3>
 			<p>' . esc_html__( 'With Feedzy Pro you get more features, like Custom Templates, Magic Tags, Keywords filters and much more.', 'feedzy-rss-feeds' ) . '</p>
 			<div class="docs-btn">
-				<a href="' . tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'more', 'elementoreditor' )) . '" target="_blank" class="fz-upgrade-link">' . esc_html__( 'Learn more', 'feedzy-rss-feeds' ) . '</a>
+				<a href="' . tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'more', 'elementoreditor' ) ) . '" target="_blank" class="fz-upgrade-link">' . esc_html__( 'Learn more', 'feedzy-rss-feeds' ) . '</a>
 				<span><a href="' . esc_url( 'https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation' ) . '" target="_blank">' . esc_html__( 'Open Feedzy docs', 'feedzy-rss-feeds' ) . '</a></span>
 			</div>
 		</div>';
 		}
-		$upsell_notice  = '<div class="fz-upsell-notice">';
+		$upsell_notice = '<div class="fz-upsell-notice">';
 
 		$upsell_notice .= wp_sprintf(
-			// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+			// translators: %1$s: opening anchor tag, %2$s: closing anchor tag.
 			__( 'Create Reusable Elementor Templates with Feedzy\'s Dynamic Tags Using Feedzy Pro. %1$sLearn more%2$s', 'feedzy-rss-feeds' ),
 			'<br/><a target="_blank" href="http://rviv.ly/qjK7R1" >',
 			'</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>'
@@ -59,10 +59,10 @@ class Control_Template_Layout extends Base_Data_Control {
 			'feedzy-elementor',
 			'FeedzyElementorEditor',
 			array(
-				'notice' => $notice_text,
-                'security' => wp_create_nonce( FEEDZY_BASEFILE ),
+				'notice'         => $notice_text,
+				'security'       => wp_create_nonce( FEEDZY_BASEFILE ),
 				'pro_title_text' => __( 'Unlock this feature with Feedzy Pro', 'feedzy-rss-feeds' ),
-				'upsell_notice'  => ( ! feedzy_is_pro() && ! \Feedzy_Rss_Feeds_Ui::had_dismissed_notice() )  ? $upsell_notice : '',
+				'upsell_notice'  => ( ! feedzy_is_pro() && ! \Feedzy_Rss_Feeds_Ui::had_dismissed_notice() ) ? $upsell_notice : '',
 			)
 		);
 	}
@@ -128,7 +128,7 @@ class Control_Template_Layout extends Base_Data_Control {
 	protected function get_default_settings() {
 		return array(
 			'template_options' => array(),
-			'toggle'  => true,
+			'toggle'           => true,
 		);
 	}
 }

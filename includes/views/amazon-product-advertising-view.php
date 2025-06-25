@@ -17,13 +17,15 @@
 		<div class="locked-form-block">
 			<div class="fz-form-group mb-20">
 				<?php
-					echo wp_kses_post(wp_sprintf(
+					echo wp_kses_post(
+						wp_sprintf(
 						// translators: %1$s to available amazon domain, %2$s example URL with ASIN, %3$s list of available Amazon domains.
-						__( 'Please use this URL structure %1$s or %2$s while getting Amazon product information. <br> Here are the available Amazon domains: %3$s', 'feedzy-rss-feeds' ),
-						'<strong>amazon.[extension]?keyword=Laptop</strong>',
-						'<strong>amazon.com?asin=ASIN_1|ASIN_2</strong>',
-						'<strong>com, au, br, ca, fr, de, in, it, jp, mx, nl, pl, sg, sa, es, se, tr, ae, uk</strong>'
-					));
+							__( 'Please use this URL structure %1$s or %2$s while getting Amazon product information. <br> Here are the available Amazon domains: %3$s', 'feedzy-rss-feeds' ),
+							'<strong>amazon.[extension]?keyword=Laptop</strong>',
+							'<strong>amazon.com?asin=ASIN_1|ASIN_2</strong>',
+							'<strong>com, au, br, ca, fr, de, in, it, jp, mx, nl, pl, sg, sa, es, se, tr, ae, uk</strong>'
+						)
+					);
 					?>
 			</div>
 			<div class="fz-form-row">

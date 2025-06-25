@@ -110,20 +110,20 @@
 						$delete_media = 1;
 					}
 
-					$feedzy_delete_days = isset( $settings['general']['feedzy-delete-days'] ) ? $settings['general']['feedzy-delete-days'] : 0;
+					$feedzy_delete_days   = isset( $settings['general']['feedzy-delete-days'] ) ? $settings['general']['feedzy-delete-days'] : 0;
 					$default_thumbnail_id = isset( $settings['general']['default-thumbnail-id'] ) ? $settings['general']['default-thumbnail-id'] : 0;
-					$mapped_categories = isset( $settings['general']['auto-categories'] ) && ! empty( $settings['general']['auto-categories'] ) ? $settings['general']['auto-categories'] : array(
+					$mapped_categories    = isset( $settings['general']['auto-categories'] ) && ! empty( $settings['general']['auto-categories'] ) ? $settings['general']['auto-categories'] : array(
 						array(
 							'keywords' => '',
 							'category' => '',
 						),
 					);
-					$categories = get_categories(
+					$categories           = get_categories(
 						array(
 							'hide_empty' => false,
 						)
 					);
-					$telemetry_enabled = get_option( 'feedzy_rss_feeds_logger_flag', 0 );
+					$telemetry_enabled    = get_option( 'feedzy_rss_feeds_logger_flag', 0 );
 
 					switch ( $active_tab ) {
 						case 'general':
