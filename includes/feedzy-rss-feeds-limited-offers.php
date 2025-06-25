@@ -55,20 +55,22 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 
 		try {
 			foreach ( $this->announcements as $announcement => $event_data ) {
-				if ( false !== strpos( $announcement, 'black_friday' ) ) {
-					if (
-						empty( $event_data ) ||
-						! is_array( $event_data ) ||
-						empty( $event_data['active'] ) ||
-						empty( $event_data['feedzy_dashboard_url'] ) ||
-						! isset( $event_data['urgency_text'] )
-					) {
-						continue;
-					}
-
-					$this->active = $announcement;
-					$this->prepare_black_friday_assets( $event_data );
+				if ( false === strpos( $announcement, 'black_friday' ) ) {
+					continue;
 				}
+
+				if (
+					empty( $event_data ) ||
+					! is_array( $event_data ) ||
+					empty( $event_data['active'] ) ||
+					empty( $event_data['feedzy_dashboard_url'] ) ||
+					! isset( $event_data['urgency_text'] )
+				) {
+					continue;
+				}
+
+				$this->active = $announcement;
+				$this->prepare_black_friday_assets( $event_data );
 			}
 		} catch ( Exception $e ) {
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
@@ -176,7 +178,7 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 		if ( function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
 			if (
-					( $screen->base === 'edit' && ( $screen->post_type === 'feedzy_imports' || $screen->post_type === 'feedzy_categories' ) ) ||
+				( 'edit' === $screen->base && ( 'feedzy_imports' === $screen->post_type || 'feedzy_categories' === $screen->post_type ) ) ||
 				'feedzy_page_feedzy-settings' === $screen->id || 'feedzy_page_feedzy-integration' === $screen->id
 			) {
 				return;
@@ -284,7 +286,7 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 		if ( function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
 			if (
-				( $screen->base === 'edit' && ( $screen->post_type === 'feedzy_imports' || $screen->post_type === 'feedzy_categories' ) ) ||
+				( 'edit' === $screen->base && ( 'feedzy_imports' === $screen->post_type || 'feedzy_categories' === $screen->post_type ) ) ||
 				'feedzy_page_feedzy-settings' === $screen->id || 'feedzy_page_feedzy-integration' === $screen->id
 			) {
 				// Small hack to supress rendering of other notices in those pages.
@@ -328,8 +330,10 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 		}
 
 		$screen = get_current_screen();
-		if ( $screen->base !== 'edit' ||
-			( $screen->post_type !== 'feedzy_imports' && $screen->post_type !== 'feedzy_categories' ) ) {
+		if (
+			'edit' !== $screen->base ||
+			( 'feedzy_imports' !== $screen->post_type && 'feedzy_categories' !== $screen->post_type )
+		) {
 			return;
 		}
 

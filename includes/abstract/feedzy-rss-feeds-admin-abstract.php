@@ -72,13 +72,13 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Fetches the SDK logger data.
 	 *
-	 * @param array $data The default data that needs to be sent.
+	 * @param array<string, mixed> $data The default data that needs to be sent.
+	 * 
+	 * @return array<string, mixed> The usage data.
 	 *
 	 * @access public
 	 */
 	public function get_usage_data( $data ) {
-		global $wpdb;
-
 		// how many categories created.
 		$categories = 0;
 		$terms      = get_terms( array( 'taxonomy' => 'feedzy_categories' ) );
@@ -151,7 +151,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$imports = wp_parse_args( Feedzy_Rss_Feeds_Usage::get_instance()->get_usage_stats(), $imports );
 		$imports = apply_filters( 'feedzy_usage_data', $imports );
 
-		// how many posts contain the shortcode
+		// how many posts contain the shortcode.
 		global $wpdb;
 		$shortcodes = $wpdb->get_var( "SELECT count(*) FROM {$wpdb->prefix}posts WHERE post_status IN ('publish', 'private') AND post_content LIKE '%[feedzy-rss %'" ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 
@@ -319,7 +319,13 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @return  string
 	 */
-	public function feedzy_summary_input_filter( $description, $content, $feed_url ) {
+	public function feedzy_summary_input_filter(
+		$description,
+		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+		$content,
+		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+		$feed_url
+	) {
 		$description = trim( wp_strip_all_tags( $description ) );
 		$description = trim( str_replace( array( '[â€¦]', '[…]', '[&hellip;]' ), '', $description ) );
 
@@ -835,7 +841,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				add_filter(
 					'wp_feed_cache_transient_lifetime',
 					function ( $time ) use ( $cache_time ) {
-						return $cache_time;
+						$time = $cache_time;
+						return $time;
 					},
 					10,
 					1
@@ -874,6 +881,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		if ( isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
+			// phpcs:ignore WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___SERVER__HTTP_USER_AGENT__
 			$set_server_agent = sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) . SIMPLEPIE_USERAGENT );
 			$feed->set_useragent( apply_filters( 'http_headers_useragent', $set_server_agent ) );
 		}
@@ -893,7 +901,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! empty( $error ) ) {
 			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Error while parsing feed: %s', $error ), 'error', __FILE__, __LINE__ );
 
-			// curl: (60) SSL certificate problem: unable to get local issuer certificate
+			// curl: (60) SSL certificate problem: unable to get local issuer certificate.
 			if ( strpos( $error, 'SSL certificate' ) !== false ) {
 				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Got an SSL Error (%s), retrying by ignoring SSL', $error ), 'debug', __FILE__, __LINE__ );
 				$feed = $this->init_feed( $feed_url, $cache, $sc, false );
@@ -945,11 +953,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @param   array|string $feed_url The feeds URL/s.
 	 * @param   string       $cache The cache string (eg. 1_hour, 30_min etc.).
-	 * @param   bool         $echo Echo the results.
+	 * @param   bool         $echo_result Echo the results.
 	 *
 	 * @return array
 	 */
-	protected function get_valid_source_urls( $feed_url, $cache, $echo = true ) {
+	protected function get_valid_source_urls( $feed_url, $cache, $echo_result = true ) {
 		$valid_feed_url = array();
 		if ( is_array( $feed_url ) ) {
 			foreach ( $feed_url as $url ) {
@@ -962,7 +970,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				}
 				if ( $this->check_valid_source( $url, $cache, $source_type ) ) {
 					$valid_feed_url[] = $url;
-				} elseif ( $echo ) {
+				} elseif ( $echo_result ) {
 						echo wp_kses_post(
 							sprintf(
 							// translators: %s: Feed URL.
@@ -982,7 +990,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 			if ( $this->check_valid_source( $feed_url, $cache, $source_type ) ) {
 				$valid_feed_url[] = $feed_url;
-			} elseif ( $echo ) {
+			} elseif ( $echo_result ) {
 					echo wp_kses_post(
 						sprintf(
 							// translators: %s: Feed URL.
@@ -1115,7 +1123,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$sizes                   = apply_filters( 'feedzy_thumb_sizes', $sizes, $feed_url );
 		$feed_title              = $this->get_feed_title_filter( $feed, $sc, $feed_url );
 		$feed_title['use_title'] = false;
-		if ( $sc['feed_title'] === 'yes' ) {
+		if ( 'yes' === $sc['feed_title'] ) {
 			$feed_title['use_title'] = true;
 		}
 		// Display the error message and quit (before showing the template for pro).
@@ -1181,7 +1189,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$content .= '</ul> </div>';
 		if ( ! $is_dry_run ) {
 			$content  = apply_filters( 'feedzy_global_output', $content, $sc, $feed_title, $feed_items );
-			$content .= '<style type="text/css" media="all">' . esc_attr( feedzy_default_css( $main_class ) ) . '</style>';
+			$content .= '<style type="text/css" media="all">' . feedzy_default_css( $main_class ) . '</style>';
 		}
 		return $content;
 	}
@@ -1408,13 +1416,13 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			) {
 				if ( ! empty( $the_thumbnail ) ) {
 					$the_thumbnail  = $this->feedzy_image_encode( $the_thumbnail );
-					$content_thumb .= '<span class="fetched" style="background-image:  url(\'' . $the_thumbnail . '\');" title="' . esc_html( $item->get_title() ) . '"></span>';
+					$content_thumb .= '<span class="fetched" style="background-image:  url(\'' . $the_thumbnail . '\');" title="' . esc_attr( $item->get_title() ) . '"></span>';
 					if ( ! isset( $sc['amp'] ) || 'no' !== $sc['amp'] ) {
 						$content_thumb .= '<amp-img width="' . $sizes['width'] . '" height="' . $sizes['height'] . '" src="' . $the_thumbnail . '">';
 					}
 				}
 				if ( empty( $the_thumbnail ) && 'yes' === $sc['thumb'] ) {
-					$content_thumb .= '<span class="default" style="background-image:url(' . $sc['default'] . ');" title="' . esc_html( $item->get_title() ) . '"></span>';
+					$content_thumb .= '<span class="default" style="background-image:url(' . $sc['default'] . ');" title="' . esc_attr( $item->get_title() ) . '"></span>';
 					if ( ! isset( $sc['amp'] ) || 'no' !== $sc['amp'] ) {
 						$content_thumb .= '<amp-img width="' . $sizes['width'] . '" height="' . $sizes['height'] . '" src="' . $sc['default'] . '">';
 					}
@@ -1723,12 +1731,12 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @since   3.0.0
 	 * @access  public
 	 *
-	 * @param   string $string A string with an <img/> tag.
+	 * @param   string $img_html A string with an <img/> tag.
 	 *
 	 * @return  string
 	 */
-	public function feedzy_return_image( $string ) {
-		$img     = html_entity_decode( $string, ENT_QUOTES, 'UTF-8' );
+	public function feedzy_return_image( $img_html ) {
+		$img     = html_entity_decode( $img_html, ENT_QUOTES, 'UTF-8' );
 		$pattern = '/<img[^>]+\>/i';
 		preg_match_all( $pattern, $img, $matches );
 
@@ -1738,8 +1746,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$link         = $this->feedzy_scrape_image( $match );
 				$blacklist    = $this->feedzy_blacklist_images();
 				$is_blacklist = false;
-				foreach ( $blacklist as $string ) {
-					if ( strpos( (string) $link, $string ) !== false ) {
+				foreach ( $blacklist as $img_html ) {
+					if ( strpos( (string) $link, $img_html ) !== false ) {
 						$is_blacklist = true;
 						break;
 					}
@@ -1760,15 +1768,15 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @since   3.0.0
 	 * @access  public
 	 *
-	 * @param   string $string A string with an <img/> tag.
+	 * @param   string $img_html A string with an <img/> tag.
 	 * @param   string $link The link to search for.
 	 *
 	 * @return  string
 	 */
-	public function feedzy_scrape_image( $string, $link = '' ) {
+	public function feedzy_scrape_image( $img_html, $link = '' ) {
 		$pattern = '/< *img[^>]*src *= *["\']?([^"\']*)/';
 		$match   = $link;
-		preg_match( $pattern, $string, $link );
+		preg_match( $pattern, $img_html, $link );
 		if ( ! empty( $link ) && isset( $link[1] ) ) {
 			$match = $link[1];
 		}
@@ -1824,22 +1832,22 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @since   3.0.0
 	 * @access  public
 	 *
-	 * @param   string $string A string containing the image URL.
+	 * @param   string $img_url A string containing the image URL.
 	 *
 	 * @return  string
 	 */
-	public function feedzy_image_encode( $string ) {
+	public function feedzy_image_encode( $img_url ) {
 		// Check if img url is set as an URL parameter.
-		$url_tab = wp_parse_url( $string );
+		$url_tab = wp_parse_url( $img_url );
 		if ( isset( $url_tab['query'] ) ) {
 			preg_match_all( '/(http|https):\/\/[^ ]+(\.gif|\.GIF|\.jpg|\.JPG|\.jpeg|\.JPEG|\.png|\.PNG)/', $url_tab['query'], $img_url );
 			if ( isset( $img_url[0][0] ) ) {
-				$string = $img_url[0][0];
+				$img_url = $img_url[0][0];
 			}
 		}
 
-		$return = apply_filters( 'feedzy_image_encode', esc_url( $string ), $string );
-		do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Changing image URL from %s to %s', $string, $return ), 'debug', __FILE__, __LINE__ );
+		$return = apply_filters( 'feedzy_image_encode', esc_url( $img_url ), $img_url );
+		do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Changing image URL from %s to %s', $img_url, $return ), 'debug', __FILE__, __LINE__ );
 		return $return;
 	}
 
@@ -1887,16 +1895,16 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @access  public
 	 *
 	 * @param   string $key The key before to insert.
-	 * @param   array  $array The array in which to insert the new key.
+	 * @param   array  $from_array The array in which to insert the new key.
 	 * @param   string $new_key The new key name.
 	 * @param   mixed  $new_value The new key value.
 	 *
 	 * @return array|bool
 	 */
-	protected function array_insert_before( $key, &$array, $new_key, $new_value ) {
-		if ( array_key_exists( $key, $array ) ) {
+	protected function array_insert_before( $key, &$from_array, $new_key, $new_value ) {
+		if ( array_key_exists( $key, $from_array ) ) {
 			$new = array();
-			foreach ( $array as $k => $value ) {
+			foreach ( $from_array as $k => $value ) {
 				if ( $k === $key ) {
 					$new[ $new_key ] = $new_value;
 				}

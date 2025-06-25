@@ -1139,17 +1139,25 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 	/**
 	 * Set up the HTTP parameters/headers.
+	 * 
+	 * @param string $url The URl.
 	 *
 	 * @access  public
 	 */
 	public function pre_http_setup( $url ) {
 		$this->add_proxy( $url );
 		add_filter( 'http_headers_useragent', array( $this, 'add_user_agent' ) );
+
+		// phpcs:ignore WordPressVIPMinimum.Hooks.RestrictedHooks.http_request_args
 		add_filter( 'http_request_args', array( $this, 'http_request_args' ) );
 	}
 
 	/**
 	 * Add the proxy settings as specified in the settings.
+	 * 
+	 * @param string $url The url.
+	 * 
+	 * @return void
 	 *
 	 * @access  private
 	 */
@@ -1200,8 +1208,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$args['reject_unsafe_urls'] = false;
 		// allow SSLs to go through without certificate verification.
 		$args['sslverify'] = false;
-		// Set timeout. (Manual review: timeout is high for VIP)
-		$args['timeout'] = 300;
+		// Set timeout. (Manual review: timeout is high for VIP).
+		$args['timeout'] = 300; // phpcs:ignore WordPressVIPMinimum.Performance.RemoteRequestTimeout.timeout_timeout
 
 		return $args;
 	}
@@ -1225,13 +1233,13 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Check if the uri should go through the proxy.
 	 *
-	 * @param mixed  $return Return value.
+	 * @param mixed  $return_value Return value.
 	 * @param string $uri URI.
 	 * @param mixed  $check Check value.
 	 * @param mixed  $home Home value.
 	 * @return bool
 	 */
-	public function send_through_proxy( $return, $uri, $check, $home ) {
+	public function send_through_proxy( $return_value, $uri, $check, $home ) {
 		$proxied = defined( 'FEEZY_URL_THRU_PROXY' ) ? FEEZY_URL_THRU_PROXY : null;
 		if ( $proxied && ( ( is_array( $proxied ) && in_array( $uri, $proxied, true ) ) || $uri === $proxied ) ) {
 			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'sending %s through proxy', $uri ), 'info', __FILE__, __LINE__ );
@@ -1244,6 +1252,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 	/**
 	 * Teardown the HTTP parameters/headers.
+	 * 
+	 * @param string $url The URL.
+	 * 
+	 * @return void
 	 *
 	 * @access  public
 	 */
@@ -1391,10 +1403,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @param string $message Message.
 	 * @param object $post    Post object.
-	 * @param string $class   CSS class.
+	 * @param string $css_class   CSS class.
 	 * @return string
 	 */
-	public function get_source_validity_error( $message = '', $post = '', $class = '' ) {
+	public function get_source_validity_error( $message = '', $post = '', $css_class = '' ) {
 		$invalid = null;
 		$text    = null;
 		switch ( $post->post_type ) {
@@ -1428,10 +1440,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		if ( $invalid ) {
-			if ( empty( $class ) ) {
-				$class = 'notice notice-error notice-alt feedzy-error-critical';
+			if ( empty( $css_class ) ) {
+				$css_class = 'notice notice-error notice-alt feedzy-error-critical';
 			}
-			$message .= '<div class="' . $class . '"><p style="color: inherit"><i class="dashicons dashicons-warning"></i>' . $text . ': <ol style="color: inherit">';
+			$message .= '<div class="' . $css_class . '"><p style="color: inherit"><i class="dashicons dashicons-warning"></i>' . $text . ': <ol style="color: inherit">';
 			foreach ( $invalid as $url ) {
 				$message .= '<li>' . ( empty( $url ) ? __( 'Empty URL', 'feedzy-rss-feeds' ) : esc_html( $url ) ) . '</li>';
 			}
@@ -1481,38 +1493,38 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Remove legacy widget.
 	 *
-	 * @param array $list Black list widgets.
+	 * @param array<string> $black_list Black list widgets.
 	 * @return array
 	 */
-	public function feedzy_remove_elementor_widgets( $list ) {
+	public function feedzy_remove_elementor_widgets( $black_list ) {
 		global $post;
 
 		if ( ! defined( 'ELEMENTOR_PATH' ) || ! class_exists( '\Elementor\Plugin', false ) ) {
-			return $list;
+			return $black_list;
 		}
 
 		if ( ! $post || ! \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
-			return $list;
+			return $black_list;
 		}
 
 		if ( ! method_exists( \Elementor\Plugin::$instance->documents, 'get' ) ) {
-			return $list;
+			return $black_list;
 		}
 
-		$black_list = array( 'feedzy_wp_widget' );
-		$data       = \Elementor\Plugin::$instance->documents->get( $post->ID )->get_elements_data();
+		$exclude_widgets = array( 'feedzy_wp_widget' );
+		$data            = \Elementor\Plugin::$instance->documents->get( $post->ID )->get_elements_data();
 
 		if ( ! empty( $data ) ) {
 			\Elementor\Plugin::$instance->db->iterate_data(
 				$data,
-				function ( $element ) use ( &$black_list ) {
+				function ( $element ) use ( &$exclude_widgets ) {
 					if ( ! empty( $element['widgetType'] ) && 'wp-widget-feedzy_wp_widget' === $element['widgetType'] ) {
-						$black_list = array();
+						$exclude_widgets = array();
 					}
 				}
 			);
 		}
-		return array_merge( $list, $black_list );
+		return array_merge( $black_list, $exclude_widgets );
 	}
 
 	/**
@@ -1608,7 +1620,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
-		$step = ! empty( $_POST['step'] ) ? filter_input( INPUT_POST, 'step', FILTER_UNSAFE_RAW ) : 1;
+		$step = ! empty( $_POST['step'] ) ? sanitize_text_field( $_POST['step'] ) : 1;
 		switch ( $step ) {
 			case 'step_2':
 				$this->setup_wizard_import_feed();
@@ -1633,9 +1645,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	private function setup_wizard_import_feed() {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$feed_url = ! empty( $_POST['feed'] ) ? filter_input( INPUT_POST, 'feed', FILTER_UNSAFE_RAW ) : '';
+		$feed_url = ! empty( $_POST['feed'] ) ? sanitize_text_field( $_POST['feed'] ) : '';
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$integrate_with = ! empty( $_POST['integrate_with'] ) ? filter_input( INPUT_POST, 'integrate_with', FILTER_UNSAFE_RAW ) : '';
+		$integrate_with = ! empty( $_POST['integrate_with'] ) ? sanitize_text_field( $_POST['integrate_with'] ) : '';
 
 		$feed_url = $this->normalize_urls( $feed_url );
 		if ( ! is_array( $feed_url ) ) {
@@ -1671,7 +1683,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	private function setup_wizard_install_plugin() {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$slug = ! empty( $_POST['slug'] ) ? filter_input( INPUT_POST, 'slug', FILTER_UNSAFE_RAW ) : '';
+		$slug = ! empty( $_POST['slug'] ) ? sanitize_key( wp_unslash( $_POST['slug'] ) ) : '';
 
 		if ( empty( $slug ) ) {
 			wp_send_json(
@@ -1698,7 +1710,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$api = plugins_api(
 				'plugin_information',
 				array(
-					'slug'   => sanitize_key( wp_unslash( $slug ) ),
+					'slug'   => $slug,
 					'fields' => array(
 						'sections' => false,
 					),
@@ -1853,7 +1865,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$request_res = wp_remote_post(
 				FEEDZY_SUBSCRIBE_API,
 				array(
-					'timeout' => 100,
+					'timeout' => 100, // phpcs:ignore WordPressVIPMinimum.Performance.RemoteRequestTimeout.timeout_timeout
 					'headers' => array(
 						'Content-Type'  => 'application/json',
 						'Cache-Control' => 'no-cache',
@@ -1898,7 +1910,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	private function setup_wizard_create_draft_page( $type = 'shortcode', $return_page_id = false ) {
 		$add_basic_shortcode = ! empty( $_POST['add_basic_shortcode'] ) ? sanitize_text_field( wp_unslash( $_POST['add_basic_shortcode'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$add_basic_shortcode = 'true' === $add_basic_shortcode ? true : false;
-		$basic_shortcode     = ! empty( $_POST['basic_shortcode'] ) ? filter_input( INPUT_POST, 'basic_shortcode', FILTER_UNSAFE_RAW ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$basic_shortcode     = ! empty( $_POST['basic_shortcode'] ) ? sanitize_text_field( wp_unslash( $_POST['basic_shortcode'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		// Do not create draft page.
 		if ( 'shortcode' === $type && false === $add_basic_shortcode ) {
@@ -2109,16 +2121,16 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	public static function plan_category( $license_data ) {
 
 		if ( ! isset( $license_data->plan ) || ! is_numeric( $license_data->plan ) ) {
-			return 0; // Free
+			return 0; // Free.
 		}
 
 		$plan             = (int) $license_data->plan;
 		$current_category = -1;
 
 		$categories = array(
-			'1' => array( 1, 4, 9 ), // Personal
-			'2' => array( 2, 5, 8 ), // Business/Developer
-			'3' => array( 3, 6, 7, 10 ), // Agency
+			'1' => array( 1, 4, 9 ), // Personal.
+			'2' => array( 2, 5, 8 ), // Business/Developer.
+			'3' => array( 3, 6, 7, 10 ), // Agency.
 		);
 
 		foreach ( $categories as $category => $plans ) {
