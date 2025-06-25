@@ -57,27 +57,27 @@ function feedzy_display_external_post_image( $html, $post_id, $post_thumbnail_id
 	$size = ! empty( $size ) ? $size : 'thumbnail';
 
 	// Attributes.
-	$attr = (array) $attr;
+	$attr          = (array) $attr;
 	$attr['style'] = isset( $attr['style'] ) ? $attr['style'] : '';
 
 	// Get image dimensions.
 	if ( is_array( $size ) ) {
-		$dimensions = wp_sprintf( 'width:%dpx; height:%dpx;', $size[0], $size[1] );
+		$dimensions     = wp_sprintf( 'width:%dpx; height:%dpx;', $size[0], $size[1] );
 		$attr['style'] .= $dimensions;
 	} elseif ( function_exists( 'wp_get_registered_image_subsizes' ) ) {
 		$_wp_additional_image_sizes = wp_get_registered_image_subsizes();
 		if ( isset( $_wp_additional_image_sizes[ $size ] ) ) {
-			$sizes = $_wp_additional_image_sizes[ $size ];
-			$dimensions = wp_sprintf( 'width:%dpx; height:%dpx;', $sizes['width'], $sizes['height'] );
+			$sizes          = $_wp_additional_image_sizes[ $size ];
+			$dimensions     = wp_sprintf( 'width:%dpx; height:%dpx;', $sizes['width'], $sizes['height'] );
 			$attr['style'] .= $dimensions;
 		}
 	}
 
 	$url = get_post_meta( $post_id, 'feedzy_item_external_url', true );
 	if ( ! empty( $url ) ) {
-		$alt  = get_the_title( $post_id );
+		$alt         = get_the_title( $post_id );
 		$attr['alt'] = $alt;
-		$attr = apply_filters( 'wp_get_attachment_image_attributes', $attr, '', '' );
+		$attr        = apply_filters( 'wp_get_attachment_image_attributes', $attr, '', '' );
 		if ( isset( $attr['style'] ) ) {
 			unset( $attr['style'] );
 		}
@@ -163,8 +163,8 @@ add_filter( 'elementor/image_size/get_attachment_image_html', 'feedzy_el_display
  *
  * @return string The translated and UTM-ified upgrade link.
  */
-function feedzy_upgrade_link($area, $location = null) {
-	return tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, $area, $location ));
+function feedzy_upgrade_link( $area, $location = null ) {
+	return tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, $area, $location ) );
 }
 /**
  * Filters whether a post has a post thumbnail.
@@ -241,7 +241,7 @@ function feedzy_is_new() {
 	return feedzy_options()->get_var( 'is_new' ) === 'yes' && ! feedzy_is_pro();
 }
 
-function feedzy_is_legacyv5( ) {
+function feedzy_is_legacyv5() {
 	$legacy = (int) get_option( 'feedzy_legacyv5', 0 );
 
 	return $legacy === 1;
@@ -316,7 +316,7 @@ function feedzy_filter_custom_pattern( $keyword = '' ) {
 			foreach ( $keywords as $keyword ) {
 				$keyword = explode( '+', $keyword );
 				$keyword = array_map(
-					function( $k ) {
+					function ( $k ) {
 						$k = trim( $k );
 						return "(?=.*$k)";
 					},
@@ -413,9 +413,9 @@ function feedzy_default_css( $suffix_class = '' ) {
 
 add_filter(
 	'feedzy_wp_kses_allowed_html',
-	function( $allowed_html = array() ) {
+	function ( $allowed_html = array() ) {
 		return array(
-			'select' => array(
+			'select'   => array(
 				'type'        => array(),
 				'id'          => array(),
 				'name'        => array(),
@@ -423,9 +423,9 @@ add_filter(
 				'class'       => array(),
 				'selected'    => array(),
 				'data-feedzy' => array(),
-				'disabled' => array(),
+				'disabled'    => array(),
 			),
-			'option' => array(
+			'option'   => array(
 				'type'     => array(),
 				'id'       => array(),
 				'name'     => array(),
@@ -433,7 +433,7 @@ add_filter(
 				'class'    => array(),
 				'selected' => array(),
 			),
-			'input'  => array(
+			'input'    => array(
 				'type'        => array(),
 				'id'          => array(),
 				'name'        => array(),
@@ -442,66 +442,66 @@ add_filter(
 				'checked'     => array(),
 				'placeholder' => array(),
 				'data-feedzy' => array(),
-				'disabled' => array(),
+				'disabled'    => array(),
 			),
-			'textarea'  => array(
+			'textarea' => array(
 				'id'          => array(),
 				'name'        => array(),
 				'value'       => array(),
 				'class'       => array(),
 				'data-feedzy' => array(),
 			),
-			'button' => array(
+			'button'   => array(
 				'class' => array(),
 				'id'    => array(),
 			),
-			'p'      => array(
+			'p'        => array(
 				'class' => array(),
 			),
-			'span'   => array(
-				'class' => array(),
+			'span'     => array(
+				'class'    => array(),
 				'disabled' => array(),
-				'style' => array(),
+				'style'    => array(),
 			),
-			'div'    => array(
+			'div'      => array(
 				'class' => array(),
 			),
-			'h1'     => array(
+			'h1'       => array(
 				'class' => array(),
 			),
-			'h2'     => array(
+			'h2'       => array(
 				'class' => array(),
 			),
-			'h3'     => array(
+			'h3'       => array(
 				'class' => array(),
 			),
-			'h4'     => array(
+			'h4'       => array(
 				'class' => array(),
 			),
-			'h5'     => array(
+			'h5'       => array(
 				'class' => array(),
 			),
-			'h6'     => array(
+			'h6'       => array(
 				'class' => array(),
 			),
-			'label'  => array(
-				'id'  => array(),
-				'for' => array(),
+			'label'    => array(
+				'id'    => array(),
+				'for'   => array(),
 				'class' => array(),
 			),
-			'a'      => array(
-				'href'  => array(),
-				'title' => array(),
-				'class' => array(),
+			'a'        => array(
+				'href'   => array(),
+				'title'  => array(),
+				'class'  => array(),
 				'target' => array(),
 			),
-			'br'     => array(),
-			'em'     => array(),
-			'strong' => array(
+			'br'       => array(),
+			'em'       => array(),
+			'strong'   => array(
 				'class' => array(),
 				'style' => array(),
 			),
-			'iframe' => array(
+			'iframe'   => array(
 				'src'             => array(),
 				'height'          => array(),
 				'width'           => array(),
@@ -509,7 +509,7 @@ add_filter(
 				'allowfullscreen' => array(),
 				'data-*'          => true,
 			),
-			'small' => array(
+			'small'    => array(
 				'class' => array(),
 			),
 		);
@@ -642,9 +642,9 @@ function feedzy_show_review_notice() {
 				'key'     => 'imported_items_count',
 				'value'   => 100,
 				'type'    => 'numeric',
-				'compare' => '>='
-			)
-		)
+				'compare' => '>=',
+			),
+		),
 	);
 
 	$imported_posts = new WP_Query( $args );

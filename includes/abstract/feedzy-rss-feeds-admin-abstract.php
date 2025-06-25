@@ -512,7 +512,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'permission_callback' => '__return_true',
 				'args'                => array(
 					'nonce' => array(
-						'validate_callback' => function( $value ) {
+						'validate_callback' => function ( $value ) {
 							return wp_verify_nonce( $value, 'feedzy' );
 						},
 						'required'          => true,
@@ -555,7 +555,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			)
 		);
 
-		$feed     = $this->fetch_feed( $feed_url, $sc['refresh'], $sc );
+		$feed = $this->fetch_feed( $feed_url, $sc['refresh'], $sc );
 		if ( is_string( $feed ) ) {
 			return $feed;
 		}
@@ -584,71 +584,71 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$sc = shortcode_atts(
 			array(
 				// comma separated feeds url.
-				'feeds'           => '',
+				'feeds'                 => '',
 				// number of feeds items (0 for unlimited).
-				'max'             => '5',
+				'max'                   => '5',
 				// display feed title yes/no.
-				'feed_title'      => 'yes',
+				'feed_title'            => 'yes',
 				// _blank, _self
-				'target'          => '_blank',
+				'target'                => '_blank',
 				// empty or no for nofollow.
-				'follow'          => '',
+				'follow'                => '',
 				// strip title after X char. X can be 0 too, which will remove the title.
-				'title'           => '',
+				'title'                 => '',
 				// yes (author, date, time), no (NEITHER), author, date, time, categories
 				// tz=local (for date/time in blog time)
 				// tz=gmt (for date/time in UTC time, this is the default)
 				// tz=no (for date/time in the feed, without conversion).
-				'meta'            => 'yes',
+				'meta'                  => 'yes',
 				// yes (all), no (NEITHER)
 				// source: show feed title.
-				'multiple_meta'   => 'no',
+				'multiple_meta'         => 'no',
 				// strip title.
-				'summary'         => 'yes',
+				'summary'               => 'yes',
 				// strip summary after X char.
-				'summarylength'   => '',
+				'summarylength'         => '',
 				// yes, no, auto.
-				'thumb'           => 'auto',
+				'thumb'                 => 'auto',
 				// default thumb URL if no image found (only if thumb is set to yes or auto).
-				'default'         => '',
+				'default'               => '',
 				// thumbs pixel size.
-				'size'            => '',
+				'size'                  => '',
 				// only display item if title contains specific keywords (Use comma(,) and plus(+) keyword).
-				'keywords_title'  => '',
+				'keywords_title'        => '',
 				// only display item if title OR content contains specific keywords (Use comma(,) and plus(+) keyword).
-				'keywords_inc'    => '',
+				'keywords_inc'          => '',
 				// Keyword filter include in specific field( title, description, author ).
-				'keywords_inc_on' => '',
+				'keywords_inc_on'       => '',
 				// Keyword filter exclude in specific field( title, description, author ).
-				'keywords_exc_on' => '',
+				'keywords_exc_on'       => '',
 				// cache refresh.
-				'refresh'         => '12_hours',
+				'refresh'               => '12_hours',
 				// sorting.
-				'sort'            => '',
+				'sort'                  => '',
 				// https = force https
 				// default = fall back to default image
 				// auto = continue as it is.
-				'http'            => 'auto',
+				'http'                  => 'auto',
 				// message to show when feed is empty.
-				'error_empty'     => __( 'Feed has no items.', 'feedzy-rss-feeds' ),
+				'error_empty'           => __( 'Feed has no items.', 'feedzy-rss-feeds' ),
 				// to disable amp support, use 'no'. This is currently not available as part of the shortcode tinymce form.
-				'amp'             => 'yes',
+				'amp'                   => 'yes',
 				// paginate.
-				'offset'          => 0,
+				'offset'                => 0,
 				// class name of this block.
-				'className'       => '',
+				'className'             => '',
 				// lazy loading of feeds?
-				'lazy'            => 'no',
+				'lazy'                  => 'no',
 				// these are only for internal purposes.
-				'_dryrun_'        => 'no',
-				'_dry_run_tags_'  => '',
+				'_dryrun_'              => 'no',
+				'_dry_run_tags_'        => '',
 				// From datetime.
-				'from_datetime'   => '',
+				'from_datetime'         => '',
 				// To datetime.
-				'to_datetime'     => '',
+				'to_datetime'           => '',
 				// Disable default style.
 				'disable_default_style' => 'no',
-				'filters'         => '',
+				'filters'               => '',
 			),
 			$atts,
 			'feedzy_default'
@@ -732,8 +732,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$amazon_hosts     = feedzy_amazon_get_locale_hosts();
 			$is_amazon_source = false;
 			if ( is_array( $feed_url ) ) {
-				$url_host = array_map(
-					function( $url ) {
+				$url_host         = array_map(
+					function ( $url ) {
 						return 'webservices.' . wp_parse_url( $url, PHP_URL_HOST );
 					},
 					$feed_url
@@ -803,7 +803,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'days'  => DAY_IN_SECONDS,
 		);
 		$cache_time    = 12 * HOUR_IN_SECONDS;
-		$cache = trim( $cache );
+		$cache         = trim( $cache );
 		if ( isset( $cache ) && '' !== $cache ) {
 			list( $value, $unit ) = explode( '_', $cache );
 			if ( isset( $value ) && is_numeric( $value ) && $value >= 1 && $value <= 100 ) {
@@ -834,7 +834,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			if ( ! has_filter( 'wp_feed_cache_transient_lifetime' ) ) {
 				add_filter(
 					'wp_feed_cache_transient_lifetime',
-					function( $time ) use ( $cache_time ) {
+					function ( $time ) use ( $cache_time ) {
 						return $cache_time;
 					},
 					10,
@@ -1020,7 +1020,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$is_valid = true;
 		if ( 'amazon' === $source_type ) {
 			$amazon_api_errors = array();
-			$amazon_products = $this->init_amazon_api(
+			$amazon_products   = $this->init_amazon_api(
 				$url,
 				$cache,
 				array(
@@ -1316,8 +1316,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 					}
 				} elseif ( FEEDZY_ALLOW_HTTPS ) {
 						$feed_url[] = $feed;
-					} else {
-						$feed_url[] = preg_replace( '/^https:/i', 'http:', $feed );
+				} else {
+					$feed_url[] = preg_replace( '/^https:/i', 'http:', $feed );
 				}
 			}
 			if ( count( $feed_url ) === 1 ) {
@@ -1581,26 +1581,26 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$item_content = esc_html__( 'Post Content', 'feedzy-rss-feeds' );
 		}
 		$item_array = array(
-			'feed_url'            => $item->get_feed()->subscribe_url(),
-			'item_unique_hash'    => wp_hash( $item->get_permalink() ),
-			'item_img_class'      => 'rss_image',
-			'item_img_style'      => 'width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px;',
-			'item_url'            => $new_link,
-			'item_url_target'     => $sc['target'],
-			'item_url_follow'     => isset( $sc['follow'] ) && 'yes' === $sc['follow'] ? 'nofollow' : '',
-			'item_url_title'      => $item->get_title(),
-			'item_img'            => $content_thumb,
-			'item_img_path'       => $this->feedzy_retrieve_image( $item, $sc ),
-			'item_title'          => $content_title,
-			'item_content_class'  => 'rss_content',
-			'item_content_style'  => '',
-			'item_meta'           => $content_meta,
-			'item_date'           => $item->get_date( 'U' ),
-			'item_date_formatted' => $content_meta_date,
-			'item_author'         => $item->get_author(),
-			'item_description'    => $content_summary,
-			'item_content'        => apply_filters( 'feedzy_content', $item_content, $item ),
-			'item_source'         => $feed_source,
+			'feed_url'              => $item->get_feed()->subscribe_url(),
+			'item_unique_hash'      => wp_hash( $item->get_permalink() ),
+			'item_img_class'        => 'rss_image',
+			'item_img_style'        => 'width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px;',
+			'item_url'              => $new_link,
+			'item_url_target'       => $sc['target'],
+			'item_url_follow'       => isset( $sc['follow'] ) && 'yes' === $sc['follow'] ? 'nofollow' : '',
+			'item_url_title'        => $item->get_title(),
+			'item_img'              => $content_thumb,
+			'item_img_path'         => $this->feedzy_retrieve_image( $item, $sc ),
+			'item_title'            => $content_title,
+			'item_content_class'    => 'rss_content',
+			'item_content_style'    => '',
+			'item_meta'             => $content_meta,
+			'item_date'             => $item->get_date( 'U' ),
+			'item_date_formatted'   => $content_meta_date,
+			'item_author'           => $item->get_author(),
+			'item_description'      => $content_summary,
+			'item_content'          => apply_filters( 'feedzy_content', $item_content, $item ),
+			'item_source'           => $feed_source,
 			'item_full_description' => $item->get_description(),
 		);
 		$item_array = apply_filters( 'feedzy_item_filter', $item_array, $item, $sc, $index, $item_index );

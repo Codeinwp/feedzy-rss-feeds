@@ -16,10 +16,14 @@
     </rule>
 
     <rule ref="WordPress">
-        <exclude name="Generic.Strings.UnnecessaryStringConcat.Found" />
         <exclude name="WordPress.PHP.DevelopmentFunctions.error_log_print_r" />
-        <exclude name="WordPress.WP.AlternativeFunctions" />
         <exclude name="WordPress.PHP.DevelopmentFunctions.error_log_error_log" />
+    </rule>
+
+    <rule ref="WordPress-Extra">
+        <!-- Forget about file names -->
+        <exclude name="WordPress.Files.FileName" />
+        <exclude name="Universal.Arrays.DisallowShortArraySyntax.Found" />
     </rule>
 
     <rule ref="WordPress-VIP-Go">
@@ -30,6 +34,7 @@
         <exclude name="WordPressVIPMinimum.JS.StrippingTags" />
         <exclude name="WordPressVIPMinimum.JS.StringConcat" />
         <exclude name="WordPressVIPMinimum.JS.HTMLExecutingFunctions" />
+        <exclude name="WordPressVIPMinimum.Security.Mustache.OutputNotation" />
     </rule>
 
     <!-- Exclude deprecated Generic sniff -->

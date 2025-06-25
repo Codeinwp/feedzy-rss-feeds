@@ -144,7 +144,8 @@ function run_feedzy_rss_feeds() {
 	add_filter( 'themeisle_sdk_products', 'feedzy_register_sdk', 10, 1 );
 	add_filter( 'pirate_parrot_log', 'feedzy_register_parrot', 10, 1 );
 	add_filter(
-		'themeisle_sdk_compatibilities/' . FEEDZY_DIRNAME, function ( $compatibilities ) {
+		'themeisle_sdk_compatibilities/' . FEEDZY_DIRNAME,
+		function ( $compatibilities ) {
 			$compatibilities['FeedzyPRO'] = array(
 				'basefile'  => defined( 'FEEDZY_PRO_BASEFILE' ) ? FEEDZY_PRO_BASEFILE : '',
 				'required'  => '2.4',
@@ -155,7 +156,7 @@ function run_feedzy_rss_feeds() {
 	);
 	add_filter(
 		'feedzy_rss_feeds_about_us_metadata',
-		function() {
+		function () {
 			return array(
 				'logo'             => FEEDZY_ABSURL . 'img/feedzy.svg',
 				'location'         => 'feedzy-admin-menu',
@@ -178,15 +179,19 @@ function run_feedzy_rss_feeds() {
 							array(
 								'discount' => 'LOYALUSER5824',
 								'dvalue'   => 55,
-							), FEEDZY_UPSELL_LINK
-						), 'feedzy-welcome', 'notice'
+							),
+							FEEDZY_UPSELL_LINK
+						),
+						'feedzy-welcome',
+						'notice'
 					)
 				),
 			);
 		}
 	);
 	add_filter(
-		'feedzy_rss_feeds_welcome_upsell_message', function () {
+		'feedzy_rss_feeds_welcome_upsell_message',
+		function () {
 			return sprintf(
 			/* translators: 1: opening <p> tag, 2: opening <b> tag, 3: closing </b> tag, 4: product name, 5: pro product name, 6: opening <a> tag with cta link, 7: closing </a> tag, 8: discount percentage */
 				__(
@@ -205,12 +210,14 @@ function run_feedzy_rss_feeds() {
 		}
 	);
 	add_filter(
-		'feedzy_rss_feeds_feedback_review_button_do', function () {
+		'feedzy_rss_feeds_feedback_review_button_do',
+		function () {
 			return __( 'Upgrade Now!', 'feedzy-rss-feeds' );
 		}
 	);
 	add_filter(
-		'feedzy_rss_feeds_feedback_review_button_cancel', function () {
+		'feedzy_rss_feeds_feedback_review_button_cancel',
+		function () {
 			return __( 'No, thanks.', 'feedzy-rss-feeds' );
 		}
 	);
@@ -285,7 +292,8 @@ function feedzy_import_job_logs( $name, $msg, $type ) {
 add_action( 'themeisle_log_event', 'feedzy_import_job_logs', 20, 3 );
 
 add_filter(
-	'feedzy_rss_feeds_float_widget_metadata', function () {
+	'feedzy_rss_feeds_float_widget_metadata',
+	function () {
 		return array(
 			'nice_name'          => 'Feedzy',
 			'logo'               => FEEDZY_ABSURL . 'img/feedzy.svg',
@@ -299,30 +307,33 @@ add_filter(
 	}
 );
 
-add_filter( 'themeisle_sdk_labels', function( $labels ) {
-	if ( isset( $labels['float_widget'] ) ) {
-		$labels['float_widget'] = array_merge(
-			$labels['float_widget'],
-			array(
-				/* translators: %s: Product name */
-				'button' => esc_html__( 'Toggle Help Widget for %s', 'feedzy-rss-feeds' ),
-				'panel'  => array(
+add_filter(
+	'themeisle_sdk_labels',
+	function ( $labels ) {
+		if ( isset( $labels['float_widget'] ) ) {
+			$labels['float_widget'] = array_merge(
+				$labels['float_widget'],
+				array(
 					/* translators: %s: Product name */
-					'greeting' => esc_html__( 'Thank you for using %s', 'feedzy-rss-feeds' ),
-					'title'    => esc_html__( 'How can we help you?', 'feedzy-rss-feeds' ),
-					'close'    => esc_html__( 'Close Toggle Help Widget', 'feedzy-rss-feeds' ),
-				),
-				'links'  => array(
-					'documentation'   => esc_html__( 'Documentation', 'feedzy-rss-feeds' ),
-					'support'         => esc_html__( 'Get Support', 'feedzy-rss-feeds' ),
-					'wizard'          => esc_html__( 'Run Setup Wizard', 'feedzy-rss-feeds' ),
-					'upgrade'         => esc_html__( 'Upgrade to Pro', 'feedzy-rss-feeds' ),
-					'feature_request' => esc_html__( 'Suggest a Feature', 'feedzy-rss-feeds' ),
-					'rate'            => esc_html__( 'Rate Us', 'feedzy-rss-feeds' ),
-				),
-			)
-		);
-	}
+					'button' => esc_html__( 'Toggle Help Widget for %s', 'feedzy-rss-feeds' ),
+					'panel'  => array(
+						/* translators: %s: Product name */
+						'greeting' => esc_html__( 'Thank you for using %s', 'feedzy-rss-feeds' ),
+						'title'    => esc_html__( 'How can we help you?', 'feedzy-rss-feeds' ),
+						'close'    => esc_html__( 'Close Toggle Help Widget', 'feedzy-rss-feeds' ),
+					),
+					'links'  => array(
+						'documentation'   => esc_html__( 'Documentation', 'feedzy-rss-feeds' ),
+						'support'         => esc_html__( 'Get Support', 'feedzy-rss-feeds' ),
+						'wizard'          => esc_html__( 'Run Setup Wizard', 'feedzy-rss-feeds' ),
+						'upgrade'         => esc_html__( 'Upgrade to Pro', 'feedzy-rss-feeds' ),
+						'feature_request' => esc_html__( 'Suggest a Feature', 'feedzy-rss-feeds' ),
+						'rate'            => esc_html__( 'Rate Us', 'feedzy-rss-feeds' ),
+					),
+				)
+			);
+		}
 
-	return $labels;
-});
+		return $labels;
+	}
+);

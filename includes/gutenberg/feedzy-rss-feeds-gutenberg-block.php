@@ -52,7 +52,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 	public function feedzy_gutenberg_scripts() {
 		// Dependent WordPress core libraries.
 		$asset_file = include FEEDZY_ABSPATH . '/build/block/index.asset.php';
-		$depends = array_merge( $asset_file['dependencies'], array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-compose', 'wp-editor', 'wp-api', 'lodash', 'wp-hooks', 'jquery-ui-autocomplete' ) );
+		$depends    = array_merge( $asset_file['dependencies'], array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-compose', 'wp-editor', 'wp-api', 'lodash', 'wp-hooks', 'jquery-ui-autocomplete' ) );
 
 		// Remove "wp-editor" script for widget block.
 		if ( wp_script_is( 'wp-edit-widgets' ) && wp_use_widgets_block_editor() ) {
@@ -72,8 +72,8 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 			'feedzy-gutenberg-block-js',
 			'feedzyjs',
 			array(
-				'imagepath'  => esc_url( FEEDZY_ABSURL . 'img/' ),
-				'isPro'      => feedzy_is_pro(),
+				'imagepath'             => esc_url( FEEDZY_ABSURL . 'img/' ),
+				'isPro'                 => feedzy_is_pro(),
 				'upsellLinkBlockEditor' => esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'keywordsfilter', 'blockeditor' ) ) ),
 			)
 		);
@@ -96,128 +96,128 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 			array(
 				'render_callback' => array( $this, 'feedzy_gutenberg_block_callback' ),
 				'attributes'      => array(
-					'feeds'          => array(
+					'feeds'           => array(
 						'type' => 'string',
 					),
-					'max'            => array(
+					'max'             => array(
 						'type'    => 'number',
 						'default' => '5',
 					),
-					'offset'         => array(
+					'offset'          => array(
 						'type'    => 'number',
 						'default' => '0',
 					),
-					'feed_title'     => array(
+					'feed_title'      => array(
 						'type'    => 'boolean',
 						'default' => true,
 					),
-					'refresh'        => array(
+					'refresh'         => array(
 						'type'    => 'string',
 						'default' => '12_hours',
 					),
-					'sort'           => array(
+					'sort'            => array(
 						'type'    => 'string',
 						'default' => 'default',
 					),
-					'target'         => array(
+					'target'          => array(
 						'type'    => 'string',
 						'default' => '_blank',
 					),
-					'title'          => array(
+					'title'           => array(
 						'type' => 'number',
 					),
-					'meta'           => array(
+					'meta'            => array(
 						'type' => 'boolean',
 					),
-					'lazy'           => array(
+					'lazy'            => array(
 						'type'    => 'boolean',
 						'default' => false,
 					),
-					'metafields'     => array(
+					'metafields'      => array(
 						'type' => 'string',
 					),
-					'multiple_meta'  => array(
+					'multiple_meta'   => array(
 						'type' => 'string',
 					),
-					'summary'        => array(
+					'summary'         => array(
 						'type'    => 'boolean',
 						'default' => true,
 					),
-					'summarylength'  => array(
+					'summarylength'   => array(
 						'type' => 'number',
 					),
-					'keywords_title' => array(
+					'keywords_title'  => array(
 						'type' => 'string',
 					),
 					'keywords_inc_on' => array(
-						'type' => 'string',
+						'type'    => 'string',
 						'default' => 'title',
 					),
-					'keywords_ban'   => array(
+					'keywords_ban'    => array(
 						'type' => 'string',
 					),
-					'keywords_exc_on'   => array(
-						'type' => 'string',
+					'keywords_exc_on' => array(
+						'type'    => 'string',
 						'default' => 'title',
 					),
-					'thumb'          => array(
+					'thumb'           => array(
 						'type'    => 'string',
 						'default' => 'auto',
 					),
-					'default'        => array(
+					'default'         => array(
 						'type' => 'object',
 					),
-					'size'           => array(
+					'size'            => array(
 						'type'    => 'number',
 						'default' => 150,
 					),
-					'price'          => array(
+					'price'           => array(
 						'type'    => 'boolean',
 						'default' => true,
 					),
-					'referral_url'   => array(
+					'referral_url'    => array(
 						'type' => 'string',
 					),
-					'columns'        => array(
+					'columns'         => array(
 						'type'    => 'number',
 						'default' => 1,
 					),
-					'template'       => array(
+					'template'        => array(
 						'type'    => 'string',
 						'default' => 'default',
 					),
 					'from_datetime'   => array(
 						'type' => 'string',
 					),
-					'to_datetime'   => array(
+					'to_datetime'     => array(
 						'type' => 'string',
 					),
-					'itemTitle' => array(
-						'type' => 'boolean',
+					'itemTitle'       => array(
+						'type'    => 'boolean',
 						'default' => true,
 					),
-					'disableStyle' => array(
-						'type' => 'boolean',
+					'disableStyle'    => array(
+						'type'    => 'boolean',
 						'default' => false,
 					),
-					'follow' => array(
-						'type' => 'string',
+					'follow'          => array(
+						'type'    => 'string',
 						'default' => 'no',
 					),
-					'error_empty' => array(
-						'type' => 'string',
+					'error_empty'     => array(
+						'type'    => 'string',
 						'default' => '',
 					),
-					'className' => array(
-						'type' => 'string',
+					'className'       => array(
+						'type'    => 'string',
 						'default' => '',
 					),
-					'_dryrun_' => array(
-						'type' => 'string',
+					'_dryrun_'        => array(
+						'type'    => 'string',
 						'default' => 'no',
 					),
-					'_dry_run_tags_' => array(
-						'type' => 'string',
+					'_dry_run_tags_'  => array(
+						'type'    => 'string',
 						'default' => '',
 					),
 				),
