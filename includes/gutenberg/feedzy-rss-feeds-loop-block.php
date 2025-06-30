@@ -66,7 +66,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 
 		wp_set_script_translations( 'feedzy-rss-feeds-loop-editor-script', 'feedzy-rss-feeds' );
 
-		// Pass in REST URL
+		// Pass in REST URL.
 		wp_localize_script(
 			'feedzy-rss-feeds-loop-editor-script',
 			'feedzyData',
@@ -184,6 +184,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	 * Magic Tags Replacement.
 	 *
 	 * @param string $content The content.
+	 * @param array  $item The item.
 	 *
 	 * @return string The content.
 	 */

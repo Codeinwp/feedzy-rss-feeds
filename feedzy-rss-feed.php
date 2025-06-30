@@ -26,6 +26,7 @@
  * Pro Slug:    feedzy-rss-feeds-pro
  * Requires License:    no
  */
+
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
 	die;
@@ -51,45 +52,47 @@ function deactivate_feedzy_rss_feeds() {
 register_activation_hook( __FILE__, 'activate_feedzy_rss_feeds' );
 register_deactivation_hook( __FILE__, 'deactivate_feedzy_rss_feeds' );
 /**
- * The function thast will handle the queue for autoloader.
+ * The function that will handle the queue for autoloader.
+ * 
+ * @param string $class_to_load The name of class to load.
  *
  * @since    3.0.0
  */
-function feedzy_rss_feeds_autoload( $class ) {
+function feedzy_rss_feeds_autoload( $class_to_load ) {
 	$namespaces = array( 'Feedzy_Rss_Feeds' );
 	foreach ( $namespaces as $namespace ) {
-		if ( substr( $class, 0, strlen( $namespace ) ) === $namespace ) {
-			$filename = plugin_dir_path( __FILE__ ) . 'includes/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
+		if ( substr( $class_to_load, 0, strlen( $namespace ) ) === $namespace ) {
+			$filename = plugin_dir_path( __FILE__ ) . 'includes/' . str_replace( '_', '-', strtolower( $class_to_load ) ) . '.php';
 			if ( is_readable( $filename ) ) {
 				require_once $filename;
 
 				return true;
 			}
-			$filename = plugin_dir_path( __FILE__ ) . 'includes/abstract/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
+			$filename = plugin_dir_path( __FILE__ ) . 'includes/abstract/' . str_replace( '_', '-', strtolower( $class_to_load ) ) . '.php';
 			if ( is_readable( $filename ) ) {
 				require_once $filename;
 
 				return true;
 			}
-			$filename = plugin_dir_path( __FILE__ ) . 'includes/admin/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
+			$filename = plugin_dir_path( __FILE__ ) . 'includes/admin/' . str_replace( '_', '-', strtolower( $class_to_load ) ) . '.php';
 			if ( is_readable( $filename ) ) {
 				require_once $filename;
 
 				return true;
 			}
-			$filename = plugin_dir_path( __FILE__ ) . 'includes/gutenberg/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
+			$filename = plugin_dir_path( __FILE__ ) . 'includes/gutenberg/' . str_replace( '_', '-', strtolower( $class_to_load ) ) . '.php';
 			if ( is_readable( $filename ) ) {
 				require_once $filename;
 
 				return true;
 			}
-			$filename = plugin_dir_path( __FILE__ ) . 'includes/util/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
+			$filename = plugin_dir_path( __FILE__ ) . 'includes/util/' . str_replace( '_', '-', strtolower( $class_to_load ) ) . '.php';
 			if ( is_readable( $filename ) ) {
 				require_once $filename;
 
 				return true;
 			}
-			$filename = plugin_dir_path( __FILE__ ) . 'includes/elementor/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
+			$filename = plugin_dir_path( __FILE__ ) . 'includes/elementor/' . str_replace( '_', '-', strtolower( $class_to_load ) ) . '.php';
 			if ( is_readable( $filename ) ) {
 				require_once $filename;
 
@@ -226,7 +229,11 @@ function run_feedzy_rss_feeds() {
 }
 
 /**
- * Registers with the SDK
+ * Registers with the SDK.
+ * 
+ * @param string[] $products The loaded products base file.
+ * 
+ * @return string[] The loaded products base file.
  *
  * @since    1.0.0
  */
@@ -237,6 +244,10 @@ function feedzy_register_sdk( $products ) {
 
 /**
  * Registers with the parrot plugin
+ * 
+ * @param string[] $plugins The plugins name.
+ * 
+ * @return string[] The plugins name.
  *
  * @since    1.0.0
  */
@@ -254,9 +265,15 @@ if ( FEEDZY_LOCAL_DEBUG ) {
 
 	/**
 	 * Redirect themeisle_log_event to error log.
+	 *
+	 * @param string $name Event name.
+	 * @param string $msg  Error message.
+	 * @param string $type Error type.
+	 * @param string $file File where the event occurred.
+	 * @param int    $line Line number where the event occurred.
 	 */
 	function feedzy_themeisle_log_event( $name, $msg, $type, $file, $line ) {
-		if ( $name === FEEDZY_NAME ) {
+		if ( FEEDZY_NAME === $name ) {
 			error_log( sprintf( '%s (%s:%d): %s', $type, $file, $line, $msg ) );
 		}
 	}

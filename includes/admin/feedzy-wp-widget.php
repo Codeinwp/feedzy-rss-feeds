@@ -79,7 +79,7 @@ class feedzy_wp_widget extends WP_Widget {
 			</p>
 			<p>
 				<label for="' . $this->get_field_id( 'textarea' ) . '">' . __( 'Intro text', 'feedzy-rss-feeds' ) . '</label>
-				<textarea class="widefat" id="' . $this->get_field_id( 'textarea' ) . '" name="' . $this->get_field_name( 'textarea' ) . '">' . esc_attr( $instance['textarea'] ) . '</textarea>
+				<textarea class="widefat" id="' . $this->get_field_id( 'textarea' ) . '" name="' . $this->get_field_name( 'textarea' ) . '">' . esc_textarea( $instance['textarea'] ) . '</textarea>
 			</p>';
 		foreach ( Feedzy_Rss_Feeds_Ui_Lang::get_form_elements() as $key_section => $section ) {
 			$widget_form .= '<hr/><h4>' . $section['title'] . '</h4>';

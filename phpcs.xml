@@ -9,6 +9,22 @@
     <exclude-pattern>lib/*</exclude-pattern>
     <exclude-pattern>tests/*</exclude-pattern>
 
+    <rule ref="Squiz.Commenting.FileComment">
+        <exclude name="Squiz.Commenting.FileComment.Missing" />
+    </rule>
+
+    <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter">
+        <exclude name="Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed" />
+    </rule>
+
+    <rule ref="Squiz.PHP.CommentedOutCode">
+        <exclude name="Squiz.PHP.CommentedOutCode.Found" />
+    </rule>
+
+    <rule ref="Squiz.Commenting.InlineComment">
+        <exclude name="Squiz.Commenting.InlineComment.InvalidEndChar" />
+    </rule>
+
     <rule ref="WordPress-Core">
     </rule>
 
@@ -57,6 +73,7 @@
             </property>
         </properties>
     </rule>
+
     <arg name="extensions" value="php" />
     <arg value="sp" />
     <arg name="basepath" value="./" />
