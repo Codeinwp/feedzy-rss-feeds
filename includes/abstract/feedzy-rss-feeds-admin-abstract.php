@@ -321,9 +321,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function feedzy_summary_input_filter(
 		$description,
-		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		$content,
-		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		$feed_url
 	) {
 		$description = trim( wp_strip_all_tags( $description ) );

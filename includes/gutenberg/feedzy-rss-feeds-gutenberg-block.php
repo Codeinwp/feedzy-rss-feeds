@@ -227,6 +227,10 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 
 	/**
 	 * Feedzy Gutenberg Block Callback Function
+	 * 
+	 * @param array<string, mixed> $attr THe block attributes.
+	 * 
+	 * @return string The block html.
 	 */
 	public function feedzy_gutenberg_block_callback( $attr ) {
 		if ( is_admin() ) {
@@ -291,6 +295,10 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 
 	/**
 	 * Output Feed JSON
+	 * 
+	 * @param array $data The feeds data.
+	 * 
+	 * @return array The return output.
 	 */
 	public function feedzy_rest_route( $data ) {
 
@@ -377,6 +385,10 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 
 	/**
 	 * Sanitize Rest API Return
+	 * 
+	 * @param array $input The feeds.
+	 * 
+	 * @return string|array The sanitized feeds.
 	 */
 	public function feedzy_sanitize_feeds( $input ) {
 		if ( count( $input ) === 1 ) {
@@ -393,9 +405,14 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 
 	/**
 	 * Sanitize Rest API Return
+	 * 
+	 * @param string $input The page path.
+	 * 
+	 * @return array|string The Feedzy categories.
 	 */
 	public function feedzy_sanitize_categories( $input ) {
-		if ( $post = get_page_by_path( $input, OBJECT, 'feedzy_categories' ) ) {
+		$post = get_page_by_path( $input, OBJECT, 'feedzy_categories' );
+		if ( null !== $post ) {
 			$id    = $post->ID;
 			$value = get_post_meta( $id, 'feedzy_category_feed', true );
 			$value = trim( $value );
@@ -407,5 +424,6 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 				return $value;
 			}
 		}
+		return array();
 	}
 }

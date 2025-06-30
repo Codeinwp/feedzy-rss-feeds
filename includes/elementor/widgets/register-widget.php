@@ -585,16 +585,16 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 	}
 
 	/**
-	 * Upsell calss.
+	 * Upsell class.
 	 *
-	 * @param string $class ClassName.
+	 * @param string $css_class ClassName.
 	 * @return string
 	 */
-	public function upsell_class( $class = '' ) {
+	public function upsell_class( $css_class = '' ) {
 		if ( ! feedzy_is_pro() ) {
-			$class .= ' fz-feat-locked';
+			$css_class .= ' fz-feat-locked';
 		}
-		return trim( $class );
+		return trim( $css_class );
 	}
 
 	/**

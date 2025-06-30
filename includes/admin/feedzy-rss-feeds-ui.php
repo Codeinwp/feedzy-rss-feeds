@@ -96,8 +96,9 @@ class Feedzy_Rss_Feeds_Ui {
 	/**
 	 * Add the strings required for the TinyMCE buttons for the classic block (not the classic editor).
 	 *
-	 * @since   ?
-	 * @access  friendly
+	 * @param array<string, mixed> $settings The block settings.
+	 * 
+	 * @return array<string, mixed> The strings.
 	 */
 	public function get_strings_for_block( $settings ) {
 		$feedzy_lang_class = new Feedzy_Rss_Feeds_Ui_Lang();

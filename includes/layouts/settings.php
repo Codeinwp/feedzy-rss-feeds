@@ -40,7 +40,7 @@
 		<?php if ( ! empty( $offer_data['active'] ) ) { ?>
 			<div class="feedzy-sale">
 				<a href="<?php echo esc_url( $offer_data['bannerStoreUrl'] ); ?>">
-					<img src="<?php echo esc_url( $offer_data['bannerUrl'] ); ?>" alt="<?php echo esc_html( $offer_data['bannerAlt'] ); ?>">
+					<img src="<?php echo esc_url( $offer_data['bannerUrl'] ); ?>" alt="<?php echo esc_attr( $offer_data['bannerAlt'] ); ?>">
 					<div class="feedzy-urgency"><?php echo esc_html( $offer_data['urgencyText'] ); ?></div>
 				</a>
 			</div>
@@ -191,7 +191,12 @@
 															}
 															?>
 														</select>
-														<button type="button" class="btn btn-outline-primary<?php echo $index === 0 ? ' disabled' : ''; ?>" <?php echo $index === 0 ? 'disabled' : ''; ?>><?php esc_html_e( 'Delete', 'feedzy-rss-feeds' ); ?></button>
+														<button
+															type="button"
+															class="btn btn-outline-primary<?php echo 0 === $index ? ' disabled' : ''; ?>" <?php echo 0 === $index ? 'disabled' : ''; ?>
+														> 
+															<?php esc_html_e( 'Delete', 'feedzy-rss-feeds' ); ?>
+														</button>
 													</td>
 												</tr>
 												<?php endforeach; ?>

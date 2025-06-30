@@ -118,6 +118,7 @@ function feedzy_el_display_external_post_image( $html, $settings, $image_size_ke
 
 	$size = $settings[ $image_size_key . '_size' ];
 	// If is the new version - with image size.
+	// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.get_intermediate_image_sizes_get_intermediate_image_sizes
 	$image_sizes   = get_intermediate_image_sizes();
 	$image_sizes[] = 'full';
 
@@ -217,6 +218,8 @@ add_filter( 'wp_get_attachment_image_src', 'feedzy_get_attachment_image_src', 10
  * Boostrap the plugin view.
  *
  * @param array $options The shortcode attributes.
+ * 
+ * @return string The feeds HTML view.
  */
 function feedzy_rss( $options = array() ) {
 	$admin = Feedzy_Rss_Feeds::instance()->get_admin();
@@ -238,33 +241,42 @@ function feedzy_options() {
  * @return bool If the users is before 3.0.3 or after
  */
 function feedzy_is_new() {
-	return feedzy_options()->get_var( 'is_new' ) === 'yes' && ! feedzy_is_pro();
+	return 'yes' === feedzy_options()->get_var( 'is_new' ) && ! feedzy_is_pro();
 }
 
+/**
+ * Check if the this is a legacy version v5.
+ * 
+ * @return bool
+ */
 function feedzy_is_legacyv5() {
 	$legacy = (int) get_option( 'feedzy_legacyv5', 0 );
 
-	return $legacy === 1;
+	return 1 === $legacy;
 }
 
 /**
  * Check if the user is pro or not.
+ * 
+ * @param bool $check_license Should check if the license if valid.
  *
  * @return bool If the users is pro or not
  */
 function feedzy_is_pro( $check_license = true ) {
-	$status = apply_filters( 'product_feedzy_license_status', false ) === 'valid';
+	$status = 'valid' === apply_filters( 'product_feedzy_license_status', false );
 	if ( ! $check_license ) {
 		$status = true;
 	}
-	return defined( 'FEEDZY_PRO_ABSPATH' ) && $status === true;
+	return defined( 'FEEDZY_PRO_ABSPATH' ) && true === $status;
 }
 
 
 /**
  * Checks if the PRO version is older than a particular version.
- *
- * @since ?
+ * 
+ * @param string $version The plugin version.
+ * 
+ * @return int
  */
 function feedzy_is_pro_older_than( $version ) {
 	return version_compare( FEEDZY_PRO_VERSION, $version, '<' );
@@ -414,7 +426,7 @@ function feedzy_default_css( $suffix_class = '' ) {
 add_filter(
 	'feedzy_wp_kses_allowed_html',
 	function ( $allowed_html = array() ) {
-		return array(
+		$allowed_html = array(
 			'select'   => array(
 				'type'        => array(),
 				'id'          => array(),
@@ -513,6 +525,8 @@ add_filter(
 				'class' => array(),
 			),
 		);
+
+		return $allowed_html;
 	}
 );
 
@@ -565,27 +579,27 @@ function feedzy_elementor_widget_refresh_options() {
 function feedzy_classic_widget_refresh_options() {
 	$options = array(
 		'1_hours'  => array(
-			'label' => '1' . ' ' . __( 'Hour', 'feedzy-rss-feeds' ),
+			'label' => '1 ' . __( 'Hour', 'feedzy-rss-feeds' ),
 			'value' => '1_hours',
 		),
 		'3_hours'  => array(
-			'label' => '3' . ' ' . __( 'Hours', 'feedzy-rss-feeds' ),
+			'label' => '3 ' . __( 'Hours', 'feedzy-rss-feeds' ),
 			'value' => '3_hours',
 		),
 		'12_hours' => array(
-			'label' => '12' . ' ' . __( 'Hours', 'feedzy-rss-feeds' ),
+			'label' => '12 ' . __( 'Hours', 'feedzy-rss-feeds' ),
 			'value' => '12_hours',
 		),
 		'1_days'   => array(
-			'label' => '1' . ' ' . __( 'Day', 'feedzy-rss-feeds' ),
+			'label' => '1 ' . __( 'Day', 'feedzy-rss-feeds' ),
 			'value' => '1_days',
 		),
 		'3_days'   => array(
-			'label' => '3' . ' ' . __( 'Days', 'feedzy-rss-feeds' ),
+			'label' => '3 ' . __( 'Days', 'feedzy-rss-feeds' ),
 			'value' => '3_days',
 		),
 		'15_days'  => array(
-			'label' => '15' . ' ' . __( 'Days', 'feedzy-rss-feeds' ),
+			'label' => '15 ' . __( 'Days', 'feedzy-rss-feeds' ),
 			'value' => '15_days',
 		),
 	);

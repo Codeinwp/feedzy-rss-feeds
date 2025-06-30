@@ -8,6 +8,7 @@
  * @package    feedzy-rss-feeds
  * @subpackage feedzy-rss-feeds/includes/admin
  */
+
 if ( ! class_exists( 'Feedzy_Rss_Feeds_Upgrader' ) ) {
 	/**
 	 * Class Feedzy_Rss_Feeds_Upgrader for upgrading processes
@@ -33,7 +34,7 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Upgrader' ) ) {
 		public function __construct() {
 			$php_version = Feedzy_Rss_Feeds::get_version();
 			$db_version  = feedzy_options()->get_var( 'db_version' );
-			if ( $db_version === false ) {
+			if ( false === $db_version ) {
 				feedzy_options()->set_var( 'db_version', $php_version );
 				$this->db_version = $php_version;
 			} else {

@@ -8,6 +8,7 @@
  * @package    feedzy-rss-feeds
  * @subpackage feedzy-rss-feeds/includes/admin
  */
+
 /**
  *
  * SECURITY : Exit if accessed directly
@@ -89,7 +90,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 	 */
 	public static function get_form_elements() {
 		$meta = sprintf(
-			// translators: 1: <code> tag for author, 2: closing </code> tag, 3: <code> tag for date, 4: closing </code> tag, 5: <code> tag for time, 6: closing </code> tag, 7: <a> tag for documentation link, 8: closing </a> tag
+			// translators: 1: <code> tag for author, 2: closing </code> tag, 3: <code> tag for date, 4: closing </code> tag, 5: <code> tag for time, 6: closing </code> tag, 7: <a> tag for documentation link, 8: closing </a> tag.
 			__( 'Should we display additional meta fields out of %1$s author %2$s, %3$s date %4$s and %5$s time %6$s? (comma-separated list, in order of display). View documentation %7$s here %8$s.', 'feedzy-rss-feeds' ),
 			'<code>',
 			'</code>',
@@ -102,7 +103,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 		);
 		if ( has_filter( 'feedzy_retrieve_categories' ) ) {
 			$meta = sprintf(
-				// translators: 1: <code> tag for author, 2: closing </code> tag, 3: <code> tag for date, 4: closing </code> tag, 5: <code> tag for time, 6: closing </code> tag, 7: <code> tag for categories, 8: closing </code> tag, 9: <a> tag for documentation link, 10: closing </a> tag
+				// translators: 1: <code> tag for author, 2: closing </code> tag, 3: <code> tag for date, 4: closing </code> tag, 5: <code> tag for time, 6: closing </code> tag, 7: <code> tag for categories, 8: closing </code> tag, 9: <a> tag for documentation link, 10: closing </a> tag.
 				__( 'Should we display additional meta fields out of %1$s author%2$s, %3$s date%4$s, %5$s time %6$s and %7$s categories %8$s? (comma-separated list). View documentation %9$s here %10$s.', 'feedzy-rss-feeds' ),
 				'<code>',
 				'</code>',
@@ -118,7 +119,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 		}
 
 		$multiple = sprintf(
-			// translators: 1: <code> tag for source, 2: closing </code> tag
+			// translators: 1: <code> tag for source, 2: closing </code> tag.
 			__( 'When using multiple sources, should we display additional meta fields? %1$s source %2$s (feed title).', 'feedzy-rss-feeds' ),
 			'<code>',
 			'</code>'
@@ -132,7 +133,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'label'       => (
 							__( 'The feed(s) URL (comma-separated list).', 'feedzy-rss-feeds' ) . ' ' .
 							sprintf(
-								// translators: 1: <a> tag opening, 2: </a> tag closing
+								// translators: 1: <a> tag opening, 2: </a> tag closing.
 								__( 'Click %1$s here %2$s to check if feed is valid.', 'feedzy-rss-feeds' ),
 								'<a href="' . esc_url( 'https://validator.w3.org/feed/' ) . '" target="_new">',
 								'</a>'
@@ -483,11 +484,11 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 			),
 			'section_pro'   => array(
 				'title'       => __( 'PRO Options', 'feedzy-rss-feeds' ),
-				'description' => __( 'Get access to more options and customizations with full version of Feedzy RSS Feeds . Use existing templates or extend them and make them your own.', 'feedzy-rss-feeds' ) . '<br/>' . '<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'sectionpro' ) ) ) . '" target="_blank"><small>' . __( 'See more features of Feedzy RSS Feeds PRO', 'feedzy-rss-feeds' ) . '</small></a>',
+				'description' => __( 'Get access to more options and customizations with full version of Feedzy RSS Feeds . Use existing templates or extend them and make them your own.', 'feedzy-rss-feeds' ) . '<br/><a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'sectionpro' ) ) ) . '" target="_blank"><small>' . __( 'See more features of Feedzy RSS Feeds PRO', 'feedzy-rss-feeds' ) . '</small></a>',
 				'elements'    => array(
 					'price'        => array(
 						'label'    => sprintf(
-							// translators: 1: <br/> tag, 2: <a> tag opening, 3: </a> tag closing
+							// translators: 1: <br/> tag, 2: <a> tag opening, 3: </a> tag closing.
 							__( 'Should we display the price from the feed if it is available? %1$s You can read about how to extract price from a custom tag %2$s here %3$s', 'feedzy-rss-feeds' ),
 							'<br/>',
 							'<a href="' . esc_url( 'https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy' ) . '" target="_blank">',
@@ -509,7 +510,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 					),
 					'referral_url' => array(
 						'label'       => sprintf(
-							// translators: 1: <a> tag opening, 2: </a> tag closing
+							// translators: 1: <a> tag opening, 2: </a> tag closing.
 							__( 'Referral URL parameters as per %1$s this document here %2$s', 'feedzy-rss-feeds' ),
 							'<a href="' . esc_url( 'https://docs.themeisle.com/article/1073-how-to-add-referral-parameters-in-feedzy' ) . '" target="_blank">',
 							'</a>'
@@ -529,7 +530,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 					),
 					'mapping'      => array(
 						'label'       => sprintf(
-							// translators: 1: <a> tag opening, 2: </a> tag closing
+							// translators: 1: <a> tag opening, 2: </a> tag closing.
 							__( 'Provide mapping for custom feed elements as per %1$s this document here %2$s. This will only work for single feeds, not comma-separated feeds.', 'feedzy-rss-feeds' ),
 							'<a href="' . esc_url( 'https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy' ) . '" target="_blank">',
 							'</a>'

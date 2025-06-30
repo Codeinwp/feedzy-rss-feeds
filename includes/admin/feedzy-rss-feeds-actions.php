@@ -555,8 +555,8 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 */
 		private function modify_links() {
 			$content = call_user_func( array( $this, $this->current_job->tag ) );
-			// Returns item content because it has no HTML tags
-			if ( $content === wp_strip_all_tags( $content ) ) {
+			// Returns item content because it has no HTML tags.
+			if ( wp_strip_all_tags( $content ) === $content ) {
 				return $content;
 			}
 			// Pro version is required to perform this action.
