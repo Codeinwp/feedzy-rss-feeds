@@ -1766,6 +1766,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			);
 		}
 		if ( $with_subscribe && is_email( $email ) ) {
+			update_option( 'feedzy_rss_feeds_logger_flag', 'yes' );
 			$request_res = wp_remote_post(
 				FEEDZY_SUBSCRIBE_API,
 				array(
