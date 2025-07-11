@@ -149,6 +149,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 					'integrations' => $integrations,
 				)
 			);
+
+			$imports = wp_parse_args( Feedzy_Rss_Feeds_Usage::get_instance()->get_usage_data(), $imports );
 		}
 
 		$settings = apply_filters( 'feedzy_get_settings', null );

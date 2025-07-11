@@ -1387,6 +1387,8 @@ class Feedzy_Rss_Feeds_Import {
 	 * @access  private
 	 */
 	private function run_job( $job, $max ) {
+		Feedzy_Rss_Feeds_Usage::get_instance()->track_rss_import();
+
 		global $themeisle_log_event;
 		$source                   = get_post_meta( $job->ID, 'source', true );
 		$inc_key                  = get_post_meta( $job->ID, 'inc_key', true );
@@ -3352,6 +3354,7 @@ class Feedzy_Rss_Feeds_Import {
 					'post_status' => 'publish',
 				)
 			);
+			Feedzy_Rss_Feeds_Usage::get_instance()->track_import_creation();
 		}
 
 		if ( ! is_wp_error( $job_id ) ) {
