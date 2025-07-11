@@ -769,6 +769,12 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$feedzy_category_feed                  = preg_replace( '/\s*,\s*|\R/', ',', $feedzy_category_feed );
 			$category_meta['feedzy_category_feed'] = $feedzy_category_feed;
 		}
+
+		if ( empty( get_post_meta( $post_id, 'usage_counted', true ) ) ) {
+			Feedzy_Rss_Feeds_Usage::get_instance()->track_import_creation();
+			update_post_meta( $post_id, 'usage_counted', 'yes' );
+		}
+
 		if ( $post->post_type === 'revision' ) {
 			return true;
 		} else {
