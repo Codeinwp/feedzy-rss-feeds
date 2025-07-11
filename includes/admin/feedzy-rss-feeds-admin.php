@@ -1767,6 +1767,15 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 		if ( $with_subscribe && is_email( $email ) ) {
 			update_option( 'feedzy_rss_feeds_logger_flag', 'yes' );
+
+			$extra_data = array(
+				'segment' => $segment,
+			);
+
+			if ( ! empty( $integrate_with ) ) {
+				$extra_data['integration_scope_onboarding'] = $integrate_with;
+			}
+
 			$request_res = wp_remote_post(
 				FEEDZY_SUBSCRIBE_API,
 				array(
@@ -1781,9 +1790,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 							'slug'  => 'feedzy-rss-feeds',
 							'site'  => home_url(),
 							'email' => $email,
-							'data'  => array(
-								'segment' => $segment,
-							),
+							'data'  => $extra_data
 						)
 					),
 				)
