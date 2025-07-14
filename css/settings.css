@@ -1118,7 +1118,7 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 /* FZ tab style end */
 
 .upgrade-alert{
-	padding: 10px 0 10px 0;
+	padding: 10px 0;
 	background: #4268CF;
 	text-align: center;
 	font-size: 14px;
