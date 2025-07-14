@@ -36,7 +36,7 @@ class Feedzy_Rss_Feeds_Usage {
      * @var array<string, string|int>
      */
     private $default_data = array(
-        'first_import_run_datetime' => null,
+        'first_import_run_datetime'     => '',
         'imports_runs'                  => 0,
         'first_import_created_datetime' => '',
         'can_track_first_usage'         => false,

@@ -86,7 +86,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$categories = count( $terms );
 		}
 		// imports.
-		$imports = array();
 		$license = 'free';
 
 		$imports = array(
