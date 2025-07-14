@@ -1055,7 +1055,7 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 	border-bottom: 1px solid #D9D9D9;
 }
 
-.fz-tabs-menu ul li a{
+.fz-tabs-menu ul li a {
 	font-weight: 600;
 	font-size: 16px;
 	line-height: 19px;
@@ -1070,6 +1070,11 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 	-o-transition: all 0.3s ease-in-out;
 	transition: all 0.3s ease-in-out;
 }
+
+.fz-tabs-menu ul li {
+	margin-bottom: 0px;
+}
+
 .fz-tabs-menu ul li a:after{
 	content: "";
 	width: 100%;
