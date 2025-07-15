@@ -1251,8 +1251,11 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 	justify-content: flex-end;
 }
 
-.support-box-list{
-	padding: 30px 0 24px;
+.support-box-list {
+	padding: 20px 0 24px;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
 }
 .support-box-list > ul{
 	display: grid;
