@@ -1256,13 +1256,13 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 	padding: 30px 0 24px;
 }
 .support-box-list > ul{
-	display: flex;
-	flex-wrap: wrap;
-	margin: 0 -15px;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap : 20px;
 }
 .support-box-list > ul > li{
-	width: 50%;
-	padding: 0 15px 30px;
+	width: 100%;
+	display: flex;
 }
 .support-box-list .cta{
 	text-align: center;
@@ -1270,8 +1270,11 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 
 .support-box{
 	border: 1px solid #D9D9D9;
-	padding: 40px 30px 30px;
-	height: 100%;
+	padding: 0 30px;
+	padding-bottom: 30px;
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
 }
 .support-box .h3{
 	padding-bottom: 16px;
@@ -1281,11 +1284,13 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 	line-height: 24px;
 	color: #050505;
 	margin-bottom: 24px;
+	flex-grow: 1;
 }
 
 .quick-link-list{
 	display: flex;
 	flex-wrap: wrap;
+	flex-grow: 10;
 }
 .quick-link-list ul{
 	width: 50%;
