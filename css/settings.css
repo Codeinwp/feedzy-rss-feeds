@@ -1258,7 +1258,7 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 .support-box-list > ul{
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
-	gap : 20px;
+	gap: 20px;
 }
 .support-box-list > ul > li{
 	width: 100%;
