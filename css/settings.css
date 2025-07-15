@@ -1269,7 +1269,7 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 
 .support-box{
 	border: 1px solid #D9D9D9;
-	padding: 0 30px 30px;
+	padding: 30px;
 	flex-grow: 1;
 	display: flex;
 	flex-direction: column;
