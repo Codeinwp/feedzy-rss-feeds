@@ -385,7 +385,7 @@
 					if ( $show_button ) {
 							$disable_button = ! feedzy_is_pro() && in_array( $active_tab, array( 'amazon-product-advertising', 'openai' ), true ) ? ' disabled' : '';
 						?>
-						<div class="mb-24" style="display: flex; justify-content: space-between; align-items: center; gap: 15px;">
+						<div class="mb-24 fz-form-actions">
 							<button type="submit" class="btn btn-primary<?php echo esc_attr( $disable_button ); ?>" id="feedzy-settings-submit" name="feedzy-settings-submit"><?php esc_html_e( 'Save Settings', 'feedzy-rss-feeds' ); ?></button>
 							<a href="<?php echo esc_url( $help_btn_url ); ?>" class="btn btn-ghost" target="_blank"><?php esc_html_e( 'Go to Documentation', 'feedzy-rss-feeds' ); ?></a>
 						</div>
