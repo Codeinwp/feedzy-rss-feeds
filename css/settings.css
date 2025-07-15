@@ -2570,3 +2570,16 @@ li.draggable-item .components-panel__body-toggle.components-button{
 		grid-template-columns: repeat(2, 1fr);
 	}
 }
+
+.fz-proxy-info-box {
+    margin-top: 30px;
+}
+
+.fz-section-title {
+    margin: 0 0 15px 0;
+}
+
+.fz-section-description p {
+    margin: 0 0 10px 0;
+    line-height: 1.6;
+}

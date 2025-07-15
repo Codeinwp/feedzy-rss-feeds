@@ -54,12 +54,6 @@
 							case 'misc':
 								esc_html_e( 'Miscellaneous', 'feedzy-rss-feeds' );
 								break;
-							case 'spinnerchief':
-								esc_html_e( 'SpinnerChief', 'feedzy-rss-feeds' );
-								break;
-							case 'wordai':
-								esc_html_e( 'WordAI', 'feedzy-rss-feeds' );
-								break;
 							default:
 								echo esc_html( ucwords( str_replace( array( '-', '_' ), ' ', $active_tab ) ) );
 								break;
@@ -278,16 +272,30 @@
 						case 'headers':
 							?>
 							<div class="fz-form-wrap">
-								<div class="form-block">
-									<div class="fz-form-group">
-										<label class="form-label"><?php esc_html_e( 'User Agent', 'feedzy-rss-feeds' ); ?></label>
-										<input
-											type="text"
-											class="form-control"
-											name="user-agent"
-											placeholder="<?php esc_attr_e( 'Add the user agent string', 'feedzy-rss-feeds' ); ?>"
-											value="<?php echo isset( $settings['header']['user-agent'] ) ? esc_attr( $settings['header']['user-agent'] ) : ''; ?>"
-										>
+								<div class="fz-proxy-info-box">
+									<h3 class="fz-section-title"><?php esc_html_e( 'HTTP Headers Configuration', 'feedzy-rss-feeds' ); ?></h3>
+									<div class="fz-section-description">
+										<p><?php esc_html_e( 'Customize the HTTP headers sent when fetching RSS feeds. This can help bypass certain restrictions or identify your requests to feed providers.', 'feedzy-rss-feeds' ); ?></p>
+										<p class="fz-when-to-use">
+											<?php esc_html_e( 'Configure a custom user agent if feeds are blocking default WordPress requests or require specific identification.', 'feedzy-rss-feeds' ); ?>
+										</p>
+									</div>
+								</div>
+								
+								<div class="form-block pb-0">
+									<div class="fz-form-row">
+										<div class="fz-form-col-4">
+											<div class="fz-form-group">
+												<label class="form-label"><?php esc_html_e( 'User Agent', 'feedzy-rss-feeds' ); ?></label>
+												<input
+													type="text"
+													class="form-control"
+													name="user-agent"
+													placeholder="<?php esc_attr_e( 'Add the user agent string', 'feedzy-rss-feeds' ); ?>"
+													value="<?php echo isset( $settings['header']['user-agent'] ) ? esc_attr( $settings['header']['user-agent'] ) : ''; ?>"
+												>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -296,43 +304,55 @@
 						case 'proxy':
 							?>
 							<div class="fz-form-wrap">
+								<div class="fz-proxy-info-box">
+									<h3 class="fz-section-title"><?php esc_html_e( 'Proxy Configuration', 'feedzy-rss-feeds' ); ?></h3>
+									<div class="fz-section-description">
+										<p><?php esc_html_e( 'Use these settings if you need to fetch RSS feeds through a proxy server. This is commonly required in corporate environments or when your hosting provider restricts direct internet access.', 'feedzy-rss-feeds' ); ?></p>
+										<p class="fz-when-to-use">
+											<?php esc_html_e( 'Only configure these settings if you know you need a proxy. Leave empty for direct connections.', 'feedzy-rss-feeds' ); ?>
+										</p>
+									</div>
+								</div>
 								<div class="form-block pb-0">
 									<div class="fz-form-row">
 										<div class="fz-form-col-6">
 											<div class="fz-form-group">
-												<label class="form-label"><?php esc_html_e( 'Username', 'feedzy-rss-feeds' ); ?>:</label>
+												<label class="form-label"><?php esc_html_e( 'Username', 'feedzy-rss-feeds' ); ?></label>
 												<input type="text" class="form-control" name="proxy-user" placeholder="<?php esc_attr_e( 'Enter the authorized username', 'feedzy-rss-feeds' ); ?>"
 													value="<?php echo isset( $settings['proxy']['user'] ) ? esc_attr( $settings['proxy']['user'] ) : ''; ?>">
 											</div>
 										</div>
 										<div class="fz-form-col-6">
 											<div class="fz-form-group">
-												<label class="form-label"><?php esc_html_e( 'Password', 'feedzy-rss-feeds' ); ?>:</label>
+												<label class="form-label"><?php esc_html_e( 'Password', 'feedzy-rss-feeds' ); ?></label>
 												<input type="password" class="form-control" name="proxy-pass" placeholder="<?php esc_attr_e( 'Enter the password for the authorized user', 'feedzy-rss-feeds' ); ?>"
 													value="<?php echo isset( $settings['proxy']['pass'] ) ? esc_attr( $settings['proxy']['pass'] ) : ''; ?>">
 											</div>
 										</div>
 										<div class="fz-form-col-8">
 											<div class="fz-form-group">
-												<label class="form-label"><?php esc_html_e( 'Host', 'feedzy-rss-feeds' ); ?>:</label>
+												<label class="form-label"><?php esc_html_e( 'Host', 'feedzy-rss-feeds' ); ?></label>
 												<input type="text" class="form-control" name="proxy-host" placeholder="<?php esc_attr_e( 'Enter the IP address or Domain name of the proxy server', 'feedzy-rss-feeds' ); ?>"
 													value="<?php echo isset( $settings['proxy']['host'] ) ? esc_attr( $settings['proxy']['host'] ) : ''; ?>">
 												<div class="help-text pt-8">
 													<?php
-													/* translators: %s: the value to introduce. */
-													printf( esc_html__( 'Example: %s', 'feedzy-rss-feeds' ), '127.0.0.1' );
+														printf(
+															// translators: %s is the example value.
+															esc_html__( 'Example: %s', 'feedzy-rss-feeds' ),
+															esc_html( '192.168.1.100, proxy.mycompany.com' )
+														);
 													?>
 												</div>
 											</div>
 										</div>
 										<div class="fz-form-col-4">
 											<div class="fz-form-group">
-												<label class="form-label"><?php esc_html_e( 'Port', 'feedzy-rss-feeds' ); ?>:</label>
+												<label class="form-label"><?php esc_html_e( 'Port', 'feedzy-rss-feeds' ); ?></label>
 												<input type="number" min="0" max="65535" class="form-control" name="proxy-port" placeholder="<?php esc_attr_e( 'Add the port number', 'feedzy-rss-feeds' ); ?>"
 													value="<?php echo isset( $settings['proxy']['port'] ) ? esc_attr( (int) $settings['proxy']['port'] ) : ''; ?>">
 												<div class="help-text pt-8">
 													<?php
-													/* translators: %s: the value to introduce. */
+													// translators: %s is the example value.
 													printf( esc_html__( 'Example: %s', 'feedzy-rss-feeds' ), '8080' );
 													?>
 												</div>
@@ -365,19 +385,17 @@
 					if ( $show_button ) {
 							$disable_button = ! feedzy_is_pro() && in_array( $active_tab, array( 'spinnerchief', 'wordai', 'amazon-product-advertising', 'openai' ), true ) ? ' disabled' : '';
 						?>
-						<div class="mb-24">
+						<div class="mb-24" style="display: flex; justify-content: space-between; align-items: center; gap: 15px;">
 							<button type="submit" class="btn btn-primary<?php echo esc_attr( $disable_button ); ?>" id="feedzy-settings-submit" name="feedzy-settings-submit"><?php esc_html_e( 'Save Settings', 'feedzy-rss-feeds' ); ?></button>
+							<a href="<?php echo esc_url( $help_btn_url ); ?>" class="btn btn-ghost" target="_blank"><?php esc_html_e( 'Go to Documentation', 'feedzy-rss-feeds' ); ?></a>
 						</div>
+						
 						<?php
 					}
 					?>
 				</form>
 
 			</div>
-		</div>
-
-		<div class="cta pt-30">
-			<a href="<?php echo esc_url( $help_btn_url ); ?>" class="btn btn-ghost" target="_blank"><?php esc_html_e( 'Need help?', 'feedzy-rss-feeds' ); ?></a>
 		</div>
 	</div>
 </div>
