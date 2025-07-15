@@ -1418,10 +1418,11 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 
 .fz-pro-features-table-row{
 	display: flex;
-	flex-wrap: wrap;
+	margin: 0;
 }
 .fz-pro-features-table-row .features-info{
 	width: calc(100% - 280px);
+	margin-bottom: 0;
 }
 .fz-pro-features-table-row .free,
 .fz-pro-features-table-row .pro{
@@ -1431,6 +1432,7 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	margin-bottom: 0;
 }
 .fz-pro-features-table-row .free .dashicons,
 .fz-pro-features-table-row .pro .dashicons{
@@ -1449,7 +1451,10 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 	font-size: 20px;
 	font-weight: 700;
 	color: #757575;
-	padding-bottom: 16px;
+	padding-bottom: 28px;
+}
+.fz-pro-features-table-header .fz-pro-features-table-row li {
+    padding: 0 44px;
 }
 .fz-pro-features-table-body{
 	border-top: 1px solid #D9D9D9;
