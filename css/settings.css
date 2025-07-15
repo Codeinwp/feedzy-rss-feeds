@@ -852,7 +852,6 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 }
 .btn.btn-block{
 	display: block;
-	width: 100%;
 	text-align: center;
 }
 .btn.btn-lg{
