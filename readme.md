@@ -4,7 +4,7 @@
 **Requires at least:** 6.0  
 **Requires PHP:** 7.2  
 **Tested up to:** 6.8  
-**Stable tag:** 5.0.6  
+**Stable tag:** 5.0.7  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -493,10 +493,9 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
-##### [Version 5.0.6](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.5...v5.0.6) (2025-05-23)
+##### [Version 5.0.7](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.6...v5.0.7) (2025-07-16)
 
-- Fixed issue with import job failing when it has one of the source feeds invalid
-- Updated dependencies
+- Fixed various layout issues for the plugin pages.
 
 
 

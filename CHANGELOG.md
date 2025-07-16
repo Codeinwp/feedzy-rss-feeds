@@ -1,3 +1,7 @@
+##### [Version 5.0.7](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.6...v5.0.7) (2025-07-16)
+
+- Fixed various layout issues for the plugin pages.
+
 ##### [Version 5.0.6](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.5...v5.0.6) (2025-05-23)
 
 - Fixed issue with import job failing when it has one of the source feeds invalid
