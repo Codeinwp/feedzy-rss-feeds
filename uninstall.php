@@ -31,3 +31,4 @@ delete_option( 'feedzy-settings' );
 delete_option( 'feedzy-rss-feeds' );
 delete_option( 'feedzy_fresh_install' );
 delete_option( 'feedzy_wizard_data' );
+delete_option( 'feedzy_usage' );

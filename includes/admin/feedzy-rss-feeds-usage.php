@@ -12,6 +12,9 @@
 /**
  * Track the usage of the plugin.
  *
+ * Implements Singleton pattern to track usage metrics for analytics.
+ *
+ * @since      5.0.7
  * @package    feedzy-rss-feeds
  * @subpackage feedzy-rss-feeds/includes/admin
  * @author     Themeisle <friends@themeisle.com>
@@ -20,20 +23,25 @@ class Feedzy_Rss_Feeds_Usage {
 
     /**
      * Option name in wp_options table.
+     *
+     * @since 5.0.7
+     * @var   string
      */
     const OPTION_NAME = 'feedzy_usage';
 
     /**
-     * The single instance of the class.
+     * Singleton instance.
      *
-     * @var Feedzy_Rss_Feeds_Usage|null
+     * @since 5.0.7
+     * @var   Feedzy_Rss_Feeds_Usage|null
      */
     private static $instance = null;
 
     /**
      * Default usage data structure.
      *
-     * @var array<string, string|int>
+     * @since 5.0.7
+     * @var   array<string, string|int|bool>
      */
     private $default_data = array(
         'first_import_run_datetime'     => '',
@@ -43,25 +51,32 @@ class Feedzy_Rss_Feeds_Usage {
     );
 
     /**
-     * Private constructor to prevent direct instantiation.
+     * Initialize usage tracking.
+     *
+     * @since 5.0.7
      */
     private function __construct() {
         $this->init();
     }
 
     /**
-     * Prevent cloning of the instance.
+     * Prevent cloning.
+     *
+     * @since 5.0.7
      */
     public function __clone() {}
 
     /**
-     * Prevent unserialization of the instance.
+     * Prevent unserialization.
+     *
+     * @since 5.0.7
      */
     public function __wakeup() {}
 
     /**
-     * Get the single instance of the class.
+     * Get singleton instance.
      *
+     * @since  5.0.7
      * @return Feedzy_Rss_Feeds_Usage
      */
     public static function get_instance() {
@@ -72,8 +87,9 @@ class Feedzy_Rss_Feeds_Usage {
     }
 
     /**
-     * Initialize the usage tracking.
-     * Creates the option if it doesn't exist.
+     * Initialize usage tracking option.
+     *
+     * @since 5.0.7
      */
     private function init() {
         if ( false === get_option(self::OPTION_NAME) ) {
@@ -82,9 +98,10 @@ class Feedzy_Rss_Feeds_Usage {
     }
 
     /**
-     * Get all usage data.
+     * Get usage data with defaults merged.
      *
-     * @return array<string, string|int> Usage data array.
+     * @since  5.0.7
+     * @return array<string, string|int|bool>
      */
     public function get_usage_data() {
         $data = get_option( self::OPTION_NAME, array() );
@@ -94,8 +111,9 @@ class Feedzy_Rss_Feeds_Usage {
     /**
      * Update usage data.
      *
-     * @param array<string, string|int> $new_data Data to update.
-     * @return bool True if the option was updated, false otherwise.
+     * @since  5.0.7
+     * @param  array<string, string|int|bool> $new_data Data to merge.
+     * @return bool
      */
     public function update_usage_data( $new_data ) {
         $current_data = $this->get_usage_data();
@@ -104,10 +122,9 @@ class Feedzy_Rss_Feeds_Usage {
     }
 
     /**
-     * Track RSS feed import.
-     * Sets first import timestamp if it's the first import, always increments counter.
+     * Track RSS feed import runs.
      *
-     * @return void
+     * @since 5.0.7
      */
     public function track_rss_import() {
         $data = $this->get_usage_data();
@@ -128,10 +145,9 @@ class Feedzy_Rss_Feeds_Usage {
     }
 
     /**
-     * Track settings page creation.
-     * Sets first settings page timestamp if it's the first page, always increments counter.
+     * Track first import creation timestamp.
      *
-     * @return void
+     * @since 5.0.7
      */
     public function track_import_creation() {
         $data = $this->get_usage_data();
@@ -144,19 +160,20 @@ class Feedzy_Rss_Feeds_Usage {
     }
 
     /**
-     * Delete the usage data option.
-     * Useful for plugin uninstall.
+     * Delete usage data option.
      *
-     * @return bool True if the option was deleted, false otherwise.
+     * @since  5.0.7
+     * @return bool
      */
     public function delete_usage_data() {
         return delete_option(self::OPTION_NAME);
     }
 
     /**
-     * Get usage statistics in a formatted array.
+     * Get formatted usage statistics with calculated fields.
      *
-     * @return array<string, string|int> Formatted usage statistics.
+     * @since  5.0.7
+     * @return array<string, string|int>
      */
     public function get_usage_stats() {
         $data = $this->get_usage_data();
@@ -191,8 +208,9 @@ class Feedzy_Rss_Feeds_Usage {
     }
 
     /**
-     * Check if the user is new to track the first usage.
+     * Check if user installed plugin within last day.
      *
+     * @since  5.0.7
      * @return bool
      */
     public function is_new_user() {
