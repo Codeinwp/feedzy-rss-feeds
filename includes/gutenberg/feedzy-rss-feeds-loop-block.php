@@ -49,7 +49,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		$this->version = Feedzy_Rss_Feeds::get_version();
 		$this->admin   = Feedzy_Rss_Feeds::instance()->get_admin();
 		add_action( 'init', array( $this, 'register_block' ) );
-		add_filter( 'feedzy_loop_item', array( $this, 'apply_magic_tags' ), 10, 2 );
+		add_filter( 'feedzy_loop_item', array( $this, 'apply_magic_tags' ), 10, 3 );
 	}
 
 	/**
@@ -93,11 +93,12 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	/**
 	 * Render Callback
 	 *
-	 * @param array  $attributes The block attributes.
-	 * @param string $content The block content.
+	 * @param array    $attributes The block attributes.
+	 * @param string   $content The block content.
+	 * @param WP_Block $block Block instance.
 	 * @return string The block content.
 	 */
-	public function render_callback( $attributes, $content ) {
+	public function render_callback( $attributes, $content, $block ) {
 		$content    = empty( $content ) ? ( $attributes['innerBlocksContent'] ?? '' ) : $content;
 		$is_preview = isset( $attributes['innerBlocksContent'] ) && ! empty( $attributes['innerBlocksContent'] );
 		$feed_urls  = array();
@@ -166,12 +167,20 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		$loop = '';
 
 		foreach ( $feed_items as $key => $item ) {
-			$loop .= apply_filters( 'feedzy_loop_item', $content, $item );
+			// Reference https://github.com/WordPress/gutenberg/blob/b3cda428abe895a0a97c0a6df0e0cf5c925d9208/packages/block-library/src/post-template/index.php#L113-L125
+			$filter_block_context = static function ( $context ) use ( $item ) {
+				$context['feedzy-rss-feeds/feedItem'] = $item;
+				return $context;
+			};
+
+			add_filter( 'render_block_context', $filter_block_context, 1 );
+			$loop .= apply_filters( 'feedzy_loop_item', $content, $item, $block );
+			remove_filter( 'render_block_context', $filter_block_context, 1 );
 		}
 
 		return sprintf(
 			'<div %1$s>%2$s</div>',
-			$wrapper_attributes = get_block_wrapper_attributes(
+			get_block_wrapper_attributes(
 				array(
 					'class' => 'feedzy-loop-columns-' . $column_count,
 				) 
@@ -183,13 +192,23 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	/**
 	 * Magic Tags Replacement.
 	 *
-	 * @param string $content The content.
-	 * @param array  $item The item.
+	 * @param string               $content The content.
+	 * @param array<string, mixed> $item The feed item.
+	 * @param WP_Block             $block Block instance.
 	 *
-	 * @return string The content.
+	 * @return string The feed content.
 	 */
-	public function apply_magic_tags( $content, $item ) {
+	public function apply_magic_tags( $content, $item, $block ) {
 		$pattern = '/\{\{feedzy_([^}]+)\}\}/';
+
+		$block_content = ( new WP_Block( $block->parsed_block ) )->render( array( 'dynamic' => false ) );
+
+		if ( empty( $block_content ) ) {
+			$content = do_blocks( $block->attributes['innerBlocksContent'] );
+		} else {
+			$content = $block_content;
+		}
+
 		$content = str_replace(
 			array(
 				FEEDZY_ABSURL . 'img/feedzy.svg',
