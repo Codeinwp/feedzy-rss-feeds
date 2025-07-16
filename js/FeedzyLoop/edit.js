@@ -121,7 +121,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 		);
 	}
 
-	if ((!isSelected || isPreviewing) && innerBlocksContent) {
+	if (isPreviewing && innerBlocksContent) {
 		return (
 			<>
 				<Controls

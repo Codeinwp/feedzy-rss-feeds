@@ -1,0 +1,196 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "feedzy-rss-feeds/tag",
+    "version": "1.0.0",
+    "title": "Feedzy Tag",
+    "category": "common",
+    "icon": "rss",
+    "keywords": [
+        "rss",
+        "feed",
+        "feedzy",
+        "text",
+        "content"
+    ],
+    "ancestor": ["feedzy-rss-feeds/loop"],
+    "description": "Dynamically display the part of the content feed with full text formatting support.",
+    "attributes": {
+        "tag": {
+            "type": "string"
+        },
+        "content": {
+            "type": "rich-text",
+            "source": "rich-text",
+            "selector": "p"
+        },
+        "align": {
+            "type": "string"
+        },
+        "backgroundColor": {
+            "type": "string"
+        },
+        "textColor": {
+            "type": "string"
+        },
+        "gradient": {
+            "type": "string"
+        },
+        "fontSize": {
+            "type": "string"
+        },
+        "fontFamily": {
+            "type": "string"
+        },
+        "fontStyle": {
+            "type": "string"
+        },
+        "fontWeight": {
+            "type": "string"
+        },
+        "lineHeight": {
+            "type": "string"
+        },
+        "letterSpacing": {
+            "type": "string"
+        },
+        "textTransform": {
+            "type": "string"
+        },
+        "textDecoration": {
+            "type": "string"
+        },
+        "writingMode": {
+            "type": "string"
+        },
+        "direction": {
+            "type": "string"
+        },
+        "dropCap": {
+            "type": "boolean",
+            "default": false
+        },
+        "placeholder": {
+            "type": "string"
+        },
+        "className": {
+            "type": "string"
+        },
+        "style": {
+            "type": "object"
+        }
+    },
+    "supports": {
+        "html": false,
+        "align": ["left", "center", "right", "wide", "full"],
+        "alignWide": true,
+        "anchor": true,
+        "className": true,
+        "customClassName": true,
+        "inserter": true,
+        "multiple": true,
+        "reusable": true,
+        "__experimentalSelector": "p",
+        "__experimentalSlashInserter": true,
+        "spacing": {
+            "margin": true,
+            "padding": true,
+            "blockGap": true,
+            "__experimentalDefaultControls": {
+                "margin": false,
+                "padding": false
+            }
+        },
+        "typography": {
+            "fontSize": true,
+            "lineHeight": true,
+            "fontFamily": true,
+            "fontStyle": true,
+            "fontWeight": true,
+            "letterSpacing": true,
+            "textTransform": true,
+            "textDecoration": true,
+            "writingMode": true,
+            "direction": true,
+            "__experimentalFontStyle": true,
+            "__experimentalFontWeight": true,
+            "__experimentalLetterSpacing": true,
+            "__experimentalTextTransform": true,
+            "__experimentalTextDecoration": true,
+            "__experimentalWritingMode": true,
+            "__experimentalDefaultControls": {
+                "fontSize": true,
+                "fontAppearance": true,
+                "textTransform": true
+            }
+        },
+        "color": {
+            "gradients": true,
+            "text": true,
+            "background": true,
+            "link": true,
+            "__experimentalDefaultControls": {
+                "background": true,
+                "text": true
+            }
+        },
+        "dimensions": {
+            "minHeight": true,
+            "__experimentalDefaultControls": {
+                "minHeight": false
+            }
+        },
+        "border": {
+            "color": true,
+            "radius": true,
+            "style": true,
+            "width": true,
+            "__experimentalDefaultControls": {
+                "color": false,
+                "radius": false,
+                "style": false,
+                "width": false
+            }
+        },
+        "position": {
+            "sticky": true
+        },
+        "shadow": true,
+        "__experimentalBorder": {
+            "color": true,
+            "radius": true,
+            "style": true,
+            "width": true,
+            "__experimentalDefaultControls": {
+                "color": false,
+                "radius": false,
+                "style": false,
+                "width": false
+            }
+        },
+        "layout": {
+            "allowSwitching": false,
+            "allowInheriting": false,
+            "default": {
+                "type": "default"
+            }
+        },
+        "interactivity": {
+            "clientNavigation": true
+        },
+        "__experimentalConnections": true,
+        "__experimentalSettings": true
+    },
+    "usesContext": [
+        "postId",
+        "postType",
+        "queryId"
+    ],
+    "providesContext": {
+        "feedzy/tag": "tag"
+    },
+    "editorScript": "file:./index.js",
+    "editorStyle": "file:./index.css",
+    "style": "file:./style-index.css",
+    "textdomain": "feedzy-rss-block"
+}
