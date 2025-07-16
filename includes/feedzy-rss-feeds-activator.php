@@ -49,5 +49,13 @@ class Feedzy_Rss_Feeds_Activator {
 			update_option( 'feedzy_fresh_install', '1' );
 		}
 		add_option( 'feedzy-activated', true );
+
+		if ( Feedzy_Rss_Feeds_Usage::get_instance()->is_new_user() ) {
+			Feedzy_Rss_Feeds_Usage::get_instance()->update_usage_data(
+					array(
+						'can_track_first_usage' => true
+					)
+			);
+		}
 	}
 }

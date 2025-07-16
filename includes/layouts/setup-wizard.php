@@ -306,6 +306,35 @@ if ( ! empty( $integrate_with ) ) {
 												<div class="fz-newsletter-wrap">
 													<div class="fz-newsletter">
 														<p class="p pb-30"><?php esc_html_e( 'Let us know your email so that we can send you product updates, helpful tutorials, exclusive offers and more useful stuff.', 'feedzy-rss-feeds' ); ?></p>
+														
+														<ul class="fz-benefits-list">
+															<li>
+																<svg width="16" height="16" viewBox="0 0 24 24" fill="#00a32a" aria-hidden="true">
+																	<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+																</svg>
+																<?php esc_html_e( 'Receive product updates, tutorials, and exclusive offers', 'feedzy-rss-feeds' ); ?>
+															</li>
+															<li>
+																<svg width="16" height="16" viewBox="0 0 24 24" fill="#00a32a" aria-hidden="true">
+																	<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+																</svg>
+																<?php esc_html_e( 'Help improve Feedzy by sharing anonymous usage data', 'feedzy-rss-feeds' ); ?>
+															</li>
+															<li>
+																<svg width="16" height="16" viewBox="0 0 24 24" fill="#00a32a" aria-hidden="true">
+																	<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+																</svg>
+																<?php esc_html_e( 'Get priority notification about new features', 'feedzy-rss-feeds' ); ?>
+															</li>
+														</ul>
+														
+														<div class="fz-privacy-note">
+															<svg width="14" height="14" viewBox="0 0 24 24" fill="#666">
+																<path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+															</svg>
+															<span><?php esc_html_e( 'Your privacy matters: We only collect anonymous plugin usage data. No sensitive information is shared with third parties.', 'feedzy-rss-feeds' ); ?></span>
+														</div>
+														
 														<div class="fz-form-group">
 															<input type="email" id="fz_subscribe_email" class="form-control" placeholder="<?php echo esc_attr( get_bloginfo( 'admin_email' ) ); ?>" value="<?php echo esc_attr( get_bloginfo( 'admin_email' ) ); ?>">
 														</div>
@@ -317,8 +346,8 @@ if ( ! empty( $integrate_with ) ) {
 											</div>
 											<div class="form-block">
 												<div class="fz-btn-group">
-													<button class="btn btn-primary fz-subscribe" data-fz_subscribe="true"><?php esc_html_e( 'Send Me Access', 'feedzy-rss-feeds' ); ?></button>
-													<button class="btn btn-outline-primary fz-subscribe" data-fz_subscribe="false"><?php esc_html_e( 'Skip, Don’t give me access', 'feedzy-rss-feeds' ); ?></button>
+													<button class="btn btn-primary fz-subscribe" data-fz_subscribe="true"><?php esc_html_e( 'Complete Setup & Start Using Feedzy', 'feedzy-rss-feeds' ); ?></button>
+													<button class="btn btn-link fz-subscribe fz-skip-link" data-fz_subscribe="false"><?php esc_html_e( 'Skip for now', 'feedzy-rss-feeds' ); ?></button>
 													<span class="spinner"></span>
 												</div>
 											</div>

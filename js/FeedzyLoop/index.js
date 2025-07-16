@@ -16,6 +16,7 @@ import './extension';
 import metadata from './block.json';
 import variations from './variations';
 import edit from './edit';
+import './tracking';
 
 const { name } = metadata;
 
