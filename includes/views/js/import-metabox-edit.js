@@ -105,7 +105,7 @@
 		} catch (error) {
 			console.error( error );
 		} finally {
-			unlockButton()
+			unlockButton();
 		}
 	}
 
