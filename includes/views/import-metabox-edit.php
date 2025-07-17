@@ -42,24 +42,28 @@ global $post;
 							<div class="fz-input-group-left">
 								<div class="fz-group">
 									<div class="fz-input-icon">
-										<input type="text" id="feedzy-import-source" title="<?php esc_attr_e( 'Make sure you validate the feed by using the validate button on the right', 'feedzy-rss-feeds' ); ?>"
-											placeholder="<?php esc_attr_e( 'Paste your feed URL and click the plus icon to add it in the list', 'feedzy-rss-feeds' ); ?>"
-											class="form-control" />
-										<div class="fz-input-group-append">
-											<button class="fz-plus-btn add-outside-tags" disabled>
-												<span class="dashicons dashicons-plus-alt2"></span>
-											</button>
+										<div class="fz-feed-validator-wrapper">
+											<input type="text" 
+												id="feedzy-import-source" 
+												title="<?php esc_attr_e( 'Make sure you validate the feed by using the validate button on the right', 'feedzy-rss-feeds' ); ?>"
+												placeholder="<?php esc_attr_e( 'Paste your feed URL and click the plus icon to add it in the list', 'feedzy-rss-feeds' ); ?>"
+												class="form-control" />
+											<div class="fz-input-group-append">
+												<button class="btn btn-flate btn-icon add-outside-tags" 
+												type="button"
+												id="feedzy-validate-feed" 
+												role="button"
+												title="<?php esc_attr_e('Validate Feed', 'feedzy-rss-feeds'); ?>">
+													<i class="dashicons dashicons-plus-alt2" aria-hidden="true"></i>
+												</a>
+											</div>
 										</div>
-									</div>
-									<div class="cta">
-										<a class="btn btn-flate btn-icon" id="feedzy-validate-feed" target="_blank" data-href-base="https://validator.w3.org/feed/check.cgi?url="
-											href="#" title="<?php esc_attr_e( 'Validate Feed', 'feedzy-rss-feeds' ); ?>"><i
-												title="<?php esc_attr_e( 'Validate Feed', 'feedzy-rss-feeds' ); ?>"
-												class="dashicons dashicons-external"></i></a>
 									</div>
 								</div>
 								<div class="help-text">
 									<?php esc_html_e( 'You can add multiple sources at once, by separating them with commas. Make sure to use the validate button. Invalid feeds may not import anything.', 'feedzy-rss-feeds' ); ?>
+								</div>
+								<div class="fz-validation-summary">
 								</div>
 							</div>
 							<div class="fz-input-group-right">
