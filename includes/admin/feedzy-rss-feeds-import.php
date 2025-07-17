@@ -189,6 +189,9 @@ class Feedzy_Rss_Feeds_Import {
 							feedzy_is_pro() ? 'dashicons-upload' : 'dashicons-lock',
 							esc_html__( 'Upload Import', 'feedzy-rss-feeds' )
 						),
+						'validation_messages' => array(
+							'invalid_feed_url' => __( 'Invalid feed URL.', 'feedzy-rss-feeds' ),
+							'error_validating_feed_url' => __( 'Error validating feed URL.', 'feedzy-rss-feeds' ),
 					),
 				)
 			);
