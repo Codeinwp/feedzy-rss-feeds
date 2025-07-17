@@ -163,6 +163,7 @@ class Feedzy_Rss_Feeds_Import {
 				array(
 					'ajax' => array(
 						'security' => wp_create_nonce( FEEDZY_BASEFILE ),
+						'url' => admin_url('admin-ajax.php'),
 					),
 					'i10n' => array(
 						'importing'           => __( 'Importing', 'feedzy-rss-feeds' ) . '...',
