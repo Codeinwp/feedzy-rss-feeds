@@ -2521,8 +2521,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function validate_feed() {
 		try {
-			if ( ! isset( $_POST['nonce'] ) ||
-			! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), FEEDZY_BASEFILE ) ) {
+			if (
+				! isset( $_POST['nonce'] ) ||
+				! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), FEEDZY_BASEFILE )
+			) {
 				wp_send_json_error( array( 'message' => __( 'Security check failed.', 'feedzy-rss-feeds' ) ) );
 			}
 
