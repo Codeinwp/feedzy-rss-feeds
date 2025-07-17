@@ -152,9 +152,6 @@
                 "width": false
             }
         },
-        "position": {
-            "sticky": true
-        },
         "shadow": true,
         "__experimentalBorder": {
             "color": true,
@@ -166,13 +163,6 @@
                 "radius": false,
                 "style": false,
                 "width": false
-            }
-        },
-        "layout": {
-            "allowSwitching": false,
-            "allowInheriting": false,
-            "default": {
-                "type": "default"
             }
         },
         "interactivity": {

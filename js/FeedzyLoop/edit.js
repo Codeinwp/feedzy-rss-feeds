@@ -25,7 +25,11 @@ import {
 
 import { useDispatch, useSelect } from '@wordpress/data';
 
-import { useState, useMemo, memo } from '@wordpress/element';
+import { useState, useMemo, memo, useEffect } from '@wordpress/element';
+
+import apiFetch from '@wordpress/api-fetch';
+
+import { addQueryArgs, buildQueryString } from '@wordpress/url';
 
 import ServerSideRender from '@wordpress/server-side-render';
 
@@ -107,59 +111,55 @@ function FeedItemBlockPreview({
 
 const MemoizedFeedItemBlockPreview = memo(FeedItemBlockPreview);
 
-// Hook to fetch and parse RSS feed data
-function useFeedData(feedUrl) {
+// Helper function to check if value is in array
+function inArray(value, array) {
+	return Array.isArray(array) && array.includes(value);
+}
+
+// Hook to fetch and parse RSS feed data using the real API
+function useFeedData(feedSource, feedType, attributes = {}) {
 	const [feedData, setFeedData] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState(null);
 
-	// In a real implementation, you'd use useSelect with REST API or apiFetch
-	// This is a simplified example
-	useMemo(() => {
-		if (!feedUrl) {
+	useEffect(() => {
+		if (!feedSource) {
+			setFeedData(null);
+			setIsLoading(false);
+			setError(null);
 			return;
 		}
 
-		setIsLoading(true);
-		setError(null);
+		const loadFeed = async () => {
+			setIsLoading(true);
+			setError(null);
 
-		// Simulate API call - replace with actual RSS parsing
-		const mockFeedItems = [
-			{
-				id: 1,
-				title: 'Sample Feed Item 1',
-				excerpt: 'This is the first feed item excerpt...',
-				url: 'https://example.com/post-1',
-				date: '2025-01-15',
-				author: 'John Doe',
-				image: 'https://example.com/image1.jpg',
-			},
-			{
-				id: 2,
-				title: 'Sample Feed Item 2',
-				excerpt: 'This is the second feed item excerpt...',
-				url: 'https://example.com/post-2',
-				date: '2025-01-14',
-				author: 'Jane Smith',
-				image: 'https://example.com/image2.jpg',
-			},
-			{
-				id: 3,
-				title: 'Sample Feed Item 3',
-				excerpt: 'This is the third feed item excerpt...',
-				url: 'https://example.com/post-3',
-				date: '2025-01-13',
-				author: 'Bob Johnson',
-				image: 'https://example.com/image3.jpg',
-			},
-		];
+			try {
+				// Make API call to WordPress REST endpoint
+				const response = await apiFetch({
+					path: `/feedzy/v1/loop/feed?${buildQueryString(attributes)}`,
+					method: 'GET',
+				});
 
-		// Simulate async operation
-		setTimeout(() => {
-			setFeedData(mockFeedItems);
-			setIsLoading(false);
-		}, 1000);
-	}, [feedUrl]);
+				console.log(response);
+
+				if (response.error) {
+					throw new Error(response.error);
+				}
+
+				// Set the transformed feed data
+				setFeedData(response);
+				setIsLoading(false);
+			} catch (err) {
+				console.error('Feed loading error:', err);
+				setError(err.message || 'Failed to load feed');
+				setIsLoading(false);
+				setFeedData(null);
+			}
+		};
+
+		loadFeed();
+	}, [feedSource, feedType, JSON.stringify(attributes)]);
 
 	return { feedData, isLoading, error };
 }
@@ -218,28 +218,20 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 		return getDefaultBlockVariation(name, 'block');
 	}, []);
 
-	// Fetch RSS feed data for interactive preview
+	// Fetch RSS feed data using real API
 	const {
 		feedData,
 		isLoading: isFeedLoading,
 		error: feedError,
-	} = useFeedData(attributes?.feed?.source);
+	} = useFeedData(attributes?.feed?.source, attributes?.feed?.type, {
+		...attributes,
+		query: attributes?.query || {},
+		layout: attributes?.layout || {},
+		conditions: attributes?.conditions || {},
+	});
 
 	// Create block contexts for each feed item
-	const feedItemContexts = useMemo(
-		() =>
-			feedData?.map((feedItem) => ({
-				item_id: feedItem.id,
-				item_title: feedItem.title,
-				item_excerpt: feedItem.excerpt,
-				item_url: feedItem.url,
-				item_date: feedItem.date,
-				item_author: feedItem.author,
-				item_image: feedItem.image,
-				classList: `feed-item-${feedItem.id}`,
-			})),
-		[feedData]
-	);
+	const feedItemContexts = useMemo(() => feedData, [feedData]);
 
 	const onSaveFeed = () => {
 		setIsEditing(false);
@@ -341,7 +333,17 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 						setIsPreviewing={setIsPreviewing}
 					/>
 					<div {...blockProps}>
-						<p>Error loading feed: {feedError}</p>
+						<div className="feedzy-error">
+							<p>
+								<strong>Error loading feed:</strong> {feedError}
+							</p>
+							<button
+								onClick={() => setIsEditing(true)}
+								className="button button-primary"
+							>
+								Edit Feed Settings
+							</button>
+						</div>
 					</div>
 				</>
 			);
@@ -365,7 +367,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 					<div className="wp-block-feedzy-feed-items">
 						{feedItemContexts.map((feedItemContext) => (
 							<BlockContextProvider
-								key={feedItemContext.feedItemId}
+								key={feedItemContext.item_id}
 								value={{
 									'feedzy-rss-feeds/feedItem':
 										feedItemContext,
