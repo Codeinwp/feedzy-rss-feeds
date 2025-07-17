@@ -85,7 +85,13 @@ class Feedzy_Rss_Feeds_Tag_Block {
 			return '';
 		}
 
-		return wp_kses_post( $feed_item[ $attributes['tag'] ] );
+		$wrapper_attributes = get_block_wrapper_attributes();
+
+		return sprintf(
+			'<div %1$s>%2$s</div>',
+			$wrapper_attributes,
+			wp_kses_post( $feed_item[ $attributes['tag'] ] )
+		);
 	}
 
 	/**

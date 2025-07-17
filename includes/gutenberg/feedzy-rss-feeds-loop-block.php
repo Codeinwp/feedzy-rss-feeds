@@ -49,6 +49,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		$this->version = Feedzy_Rss_Feeds::get_version();
 		$this->admin   = Feedzy_Rss_Feeds::instance()->get_admin();
 		add_action( 'init', array( $this, 'register_block' ) );
+		add_action( 'rest_api_init', array( $this, 'register_fetch_feed_endpoint' ) );
 		add_filter( 'feedzy_loop_item', array( $this, 'apply_magic_tags' ), 10, 3 );
 	}
 
@@ -99,8 +100,44 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	 * @return string The block content.
 	 */
 	public function render_callback( $attributes, $content, $block ) {
-		$content    = empty( $content ) ? ( $attributes['innerBlocksContent'] ?? '' ) : $content;
-		$is_preview = isset( $attributes['innerBlocksContent'] ) && ! empty( $attributes['innerBlocksContent'] );
+		$feed_items = $this->fetch_feed( $attributes );
+
+		if ( empty( $feed_items ) ) {
+			return '<div>' . esc_html__( 'No feeds to display', 'feedzy-rss-feeds' ) . '</div>';
+		}
+
+		if ( is_wp_error( $feed_items ) ) {
+			return '<div>' . $feed_items->get_error_message() . '</div>';
+		}
+
+		$content      = empty( $content ) ? ( $attributes['innerBlocksContent'] ?? '' ) : $content;
+		$loop = '';
+		$column_count = isset( $attributes['layout'] ) && isset( $attributes['layout']['columnCount'] ) && ! empty( $attributes['layout']['columnCount'] ) ? $attributes['layout']['columnCount'] : 1;
+
+		foreach ( $feed_items as $key => $item ) {
+			// Reference https://github.com/WordPress/gutenberg/blob/b3cda428abe895a0a97c0a6df0e0cf5c925d9208/packages/block-library/src/post-template/index.php#L113-L125
+			$filter_block_context = static function ( $context ) use ( $item ) {
+				$context['feedzy-rss-feeds/feedItem'] = $item;
+				return $context;
+			};
+
+			add_filter( 'render_block_context', $filter_block_context, 1 );
+			$loop .= apply_filters( 'feedzy_loop_item', $content, $item, $block );
+			remove_filter( 'render_block_context', $filter_block_context, 1 );
+		}
+
+		return sprintf(
+			'<div %1$s>%2$s</div>',
+			get_block_wrapper_attributes(
+				array(
+					'class' => 'feedzy-loop-columns-' . $column_count,
+				) 
+			),
+			$loop
+		);
+	}
+
+	public function fetch_feed( $attributes ) {
 		$feed_urls  = array();
 
 		if ( isset( $attributes['feed']['type'] ) && 'group' === $attributes['feed']['type'] && isset( $attributes['feed']['source'] ) && is_numeric( $attributes['feed']['source'] ) ) {
@@ -110,15 +147,16 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			$feed_urls = ! empty( $value ) ? explode( ',', $value ) : array();
 		}
 
-		if ( isset( $attributes['feed']['type'] ) && 'url' === $attributes['feed']['type'] && isset( $attributes['feed']['source'] ) && is_array( $attributes['feed']['source'] ) ) {
+		if (
+			isset( $attributes['feed']['type'] ) && 'url' === $attributes['feed']['type'] &&
+			isset( $attributes['feed']['source'] ) && is_array( $attributes['feed']['source'] )
+		) {
 			$feed_urls = $attributes['feed']['source'];
 		}
 
 		if ( empty( $feed_urls ) ) {
-			return '<div>' . esc_html__( 'No feeds to display', 'feedzy-rss-feeds' ) . '</div>';
+			return array();
 		}
-
-		$column_count = isset( $attributes['layout'] ) && isset( $attributes['layout']['columnCount'] ) && ! empty( $attributes['layout']['columnCount'] ) ? $attributes['layout']['columnCount'] : 1;
 
 		$default_query = array(
 			'max'     => 5,
@@ -147,46 +185,123 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			'filters'       => wp_json_encode( $filters ),
 		);
 
+		$feed = $this->admin->fetch_feed( $feed_urls, $query['refresh'], $options );
+
 		$sizes = array(
 			'width'  => 300,
 			'height' => 300,
 		);
 
-		$feed = $this->admin->fetch_feed( $feed_urls, $query['refresh'], $options );
-
 		if ( isset( $feed->error ) && ! empty( $feed->error ) ) {
-			return '<div>' . esc_html__( 'An error occurred while fetching the feed.', 'feedzy-rss-feeds' ) . '</div>';
+			return new \WP_Error( 'invalid_feed', __( 'No feeds to display', 'feedzy-rss-feeds' ) );
 		}
 
-		$feed_items = apply_filters( 'feedzy_get_feed_array', array(), $options, $feed, implode( ',', $feed_urls ), $sizes );
+		return apply_filters( 'feedzy_get_feed_array', array(), $options, $feed, implode( ',', $feed_urls ), $sizes );
+	}
 
-		if ( empty( $feed_items ) ) {
-			return '<div>' . esc_html__( 'No items to display.', 'feedzy-rss-feeds' ) . '</div>';
-		}
-
-		$loop = '';
-
-		foreach ( $feed_items as $key => $item ) {
-			// Reference https://github.com/WordPress/gutenberg/blob/b3cda428abe895a0a97c0a6df0e0cf5c925d9208/packages/block-library/src/post-template/index.php#L113-L125
-			$filter_block_context = static function ( $context ) use ( $item ) {
-				$context['feedzy-rss-feeds/feedItem'] = $item;
-				return $context;
-			};
-
-			add_filter( 'render_block_context', $filter_block_context, 1 );
-			$loop .= apply_filters( 'feedzy_loop_item', $content, $item, $block );
-			remove_filter( 'render_block_context', $filter_block_context, 1 );
-		}
-
-		return sprintf(
-			'<div %1$s>%2$s</div>',
-			get_block_wrapper_attributes(
-				array(
-					'class' => 'feedzy-loop-columns-' . $column_count,
-				) 
-			),
-			$loop
+	public function register_fetch_feed_endpoint() {
+		register_rest_route(
+			'feedzy/v1',
+			'/loop/feed',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $this, 'get_feed_items' ),
+				'permission_callback' => function () {
+					return is_user_logged_in();
+				},
+			)
 		);
+	}
+
+	/**
+	 *	Get the feed items.
+	 *
+	 * @param WP_REST_Request $request
+	 * @return void
+	 */
+	public function get_feed_items( $request ) {
+		// Get query parameters
+		$params = $request->get_query_params();
+
+		ray( $params );
+
+		// Extract attributes
+		$attributes = array();
+
+		// Sanitize feed data
+		if ( isset( $params['feed'] ) ) {
+			$attributes['feed'] = array();
+
+			// Sanitize feed type
+			if ( isset( $params['feed']['type'] ) ) {
+				$attributes['feed']['type'] = sanitize_text_field( $params['feed']['type'] );
+			}
+
+			// Sanitize feed source
+			if ( isset( $params['feed']['source'] ) ) {
+				if ( is_array( $params['feed']['source'] ) ) {
+					// For URL type - array of URLs
+					$attributes['feed']['source'] = array();
+					foreach ( $params['feed']['source'] as $url ) {
+						$clean_url = esc_url_raw( urldecode( $url ) );
+						if ( $clean_url ) {
+							$attributes['feed']['source'][] = $clean_url;
+						}
+					}
+				} else {
+					// For group type - numeric ID
+					$attributes['feed']['source'] = absint( $params['feed']['source'] );
+				}
+			}
+		}
+
+		// Sanitize query parameters
+		if ( isset( $params['query'] ) ) {
+			$attributes['query'] = array();
+
+			if ( isset( $params['query']['max'] ) ) {
+				$attributes['query']['max'] = absint( $params['query']['max'] );
+			}
+
+			if ( isset( $params['query']['sort'] ) ) {
+				$attributes['query']['sort'] = sanitize_text_field( $params['query']['sort'] );
+			}
+
+			if ( isset( $params['query']['refresh'] ) ) {
+				$attributes['query']['refresh'] = sanitize_text_field( $params['query']['refresh'] );
+			}
+		}
+
+		// Sanitize conditions/filters
+		if ( isset( $params['conditions'] ) ) {
+			$attributes['conditions'] = array();
+			// Add specific sanitization for conditions based on your needs
+			foreach ( $params['conditions'] as $key => $condition ) {
+				$attributes['conditions'][ sanitize_key( $key ) ] = sanitize_text_field( $condition );
+			}
+		}
+
+		ray( 'attributes', $attributes );
+
+		$feed_items = $this->fetch_feed( $attributes );
+
+		if ( is_wp_error( $feed_items) ) {
+			wp_send_json_error( $feed_items->get_error_message() );
+		}
+
+		foreach ($feed_items as &$item) {
+			if ( ! is_array( $item ) ) {
+				continue;
+			}
+
+			foreach ( $item as $key => $value ) {
+				if ( is_array( $value ) || is_object( $value ) ) {
+					unset( $item[ $key ] );
+				}
+			}
+		}
+
+		return $feed_items;
 	}
 
 	/**

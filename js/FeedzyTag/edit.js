@@ -13,7 +13,7 @@ import {
 	TextControl,
 	ToolbarButton,
 	Button,
-	SelectControl,
+	RadioControl,
 } from '@wordpress/components';
 
 import { __ } from '@wordpress/i18n';
@@ -22,72 +22,13 @@ import { edit as editIcon, check, close } from '@wordpress/icons';
 
 import { useState } from '@wordpress/element';
 
-// Tag mapping for RSS feed data - maps tag names to feedItem properties
-const FEED_TAGS = {
-	item_title: {
-		label: __('Post Title', 'feedzy-rss-feeds'),
-		property: 'title',
-		fallback: 'Sample Post Title',
-	},
-	item_content: {
-		label: __('Post Content', 'feedzy-rss-feeds'),
-		property: 'content',
-		fallback:
-			'This is a sample post excerpt that would normally come from the RSS feed...',
-	},
-	item_excerpt: {
-		label: __('Post Excerpt', 'feedzy-rss-feeds'),
-		property: 'excerpt',
-		fallback: 'This is a sample post excerpt...',
-	},
-	item_date_formatted: {
-		label: __('Post Date', 'feedzy-rss-feeds'),
-		property: 'date',
-		fallback: 'January 15, 2025',
-		formatter: (date) => {
-			if (!date) {
-				return 'January 15, 2025';
-			}
-			return new Date(date).toLocaleDateString('en-US', {
-				year: 'numeric',
-				month: 'long',
-				day: 'numeric',
-			});
-		},
-	},
-	item_author: {
-		label: __('Post Author', 'feedzy-rss-feeds'),
-		property: 'author',
-		fallback: 'John Doe',
-	},
-	item_url: {
-		label: __('Post URL', 'feedzy-rss-feeds'),
-		property: 'url',
-		fallback: 'https://example.com/sample-post',
-	},
-	item_img: {
-		label: __('Post Image', 'feedzy-rss-feeds'),
-		property: 'image',
-		fallback: 'https://via.placeholder.com/300x200?text=Sample+Image',
-		isImage: true,
-	},
-};
-
 // Component to render the actual tag content - displays only ONE property
-function TagContent({ tag, feedItem, isPreview = false }) {
+function TagContent({ tag, feedItem }) {
 	// Get ONLY the specific property for this tag
 	const rawValue = feedItem[tag] ?? 'No content found!';
 
 	// Default text rendering for any other tag
-	return (
-		<span
-			style={{
-				...(isPreview && { color: '#666' }),
-			}}
-		>
-			{rawValue}
-		</span>
-	);
+	return <span>{rawValue}</span>;
 }
 
 function Edit({ attributes, setAttributes, context }) {
@@ -118,11 +59,6 @@ function Edit({ attributes, setAttributes, context }) {
 		}
 	};
 
-	const tagOptions = Object.keys(FEED_TAGS).map((tagKey) => ({
-		value: tagKey,
-		label: FEED_TAGS[tagKey].label,
-	}));
-
 	return (
 		<div {...blockProps}>
 			<BlockControls>
@@ -139,61 +75,32 @@ function Edit({ attributes, setAttributes, context }) {
 
 			<InspectorControls>
 				<PanelBody title={__('Tag Settings', 'feedzy-rss-feeds')}>
-					<SelectControl
-						label={__('Select Tag', 'feedzy-rss-feeds')}
-						value={tag || ''}
-						onChange={(value) => setAttributes({ tag: value })}
-						options={[
-							{
-								value: '',
-								label: __('Choose a tag…', 'feedzy-rss-feeds'),
-							},
-							...tagOptions,
-						]}
-					/>
 					<TextControl
 						label={__('Custom Tag Value', 'feedzy-rss-feeds')}
 						value={tag || ''}
 						onChange={(value) => setAttributes({ tag: value })}
 						help={__(
-							'Or enter a custom tag name',
+							'Enter a custom tag name.',
 							'feedzy-rss-feeds'
 						)}
 					/>
 
 					{hasContext && (
-						<div
-							style={{
-								marginTop: '16px',
-								padding: '12px',
-								backgroundColor: '#f0f0f0',
-								borderRadius: '4px',
-							}}
-						>
-							<strong>
-								{__(
-									'Preview Data Available:',
-									'feedzy-rss-feeds'
-								)}
-							</strong>
-							<ul
-								style={{
-									margin: '8px 0 0 0',
-									paddingLeft: '16px',
-									fontSize: '12px',
-								}}
-							>
-								{Object.entries(feedItem).map(
-									([key, value]) => (
-										<li key={key}>
-											<code>{key}</code>:{' '}
-											{String(value).substring(0, 50)}
-											{String(value).length > 50 && '...'}
-										</li>
-									)
-								)}
-							</ul>
-						</div>
+						<RadioControl
+							label={__(
+								'Select from available data:',
+								'feedzy-rss-feeds'
+							)}
+							onChange={(value) => setAttributes({ tag: value })}
+							options={Object.entries(feedItem).map(
+								([key, value]) => ({
+									label: key,
+									value: key,
+									description: `${String(value).substring(0, 80)}${String(value).length > 80 ? '...' : ''}`,
+								})
+							)}
+							selected={tag || ''}
+						/>
 					)}
 				</PanelBody>
 			</InspectorControls>
@@ -210,19 +117,6 @@ function Edit({ attributes, setAttributes, context }) {
 						borderRadius: '4px',
 					}}
 				>
-					<SelectControl
-						value={tempValue}
-						onChange={setTempValue}
-						options={[
-							{
-								value: '',
-								label: __('Choose a tag…', 'feedzy-rss-feeds'),
-							},
-							...tagOptions,
-						]}
-						style={{ minWidth: '200px' }}
-					/>
-					<span>{__('or', 'feedzy-rss-feeds')}</span>
 					<input
 						type="text"
 						value={tempValue}
@@ -251,18 +145,7 @@ function Edit({ attributes, setAttributes, context }) {
 					/>
 				</div>
 			) : (
-				<div
-					style={{
-						minHeight: '24px',
-						padding: '8px',
-						border: hasContext
-							? '1px solid #0073aa'
-							: '1px solid #ddd',
-						borderRadius: '4px',
-						backgroundColor: hasContext ? '#f0f8ff' : '#f9f9f9',
-						position: 'relative',
-					}}
-				>
+				<div>
 					{tag ? (
 						<TagContent
 							tag={tag}
