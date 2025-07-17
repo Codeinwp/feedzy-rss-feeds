@@ -131,7 +131,11 @@
 	 */
 	async function validate_feed_url(feedUrl) {
 		if (!feedUrl) {
-			return { success: false, message: 'Invalid feed URL.' };
+			return {
+				success: false,
+				message:
+					window.feedzy.i10n.validation_messages.invalid_feed_url,
+			};
 		}
 
 		try {
@@ -150,7 +154,9 @@
 			return {
 				success: false,
 				message:
-					'Error validating feed URL: ' +
+					window.feedzy.i10n.validation_messages
+						.error_validating_feed_url +
+					': ' +
 					(error.responseJSON?.message || error.statusText),
 			};
 		}
@@ -162,10 +168,7 @@
 	 */
 	function handle_validation_response(response) {
 		if (!response || !response.data || !response.data.results) {
-			showMessage(
-				'✗ ' + 'Unknown error',
-				response.status
-			);
+			showMessage('✗ ' + response?.message, false);
 			return;
 		}
 
@@ -198,7 +201,7 @@
 
 	function showMessage(message, autoDismiss = true) {
 		const $container = $('.fz-validation-summary');
-		if ( !$container.length ) {
+		if (!$container.length) {
 			$('body').append('<div class="fz-validation-summary"></div>');
 			return;
 		}
