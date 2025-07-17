@@ -215,7 +215,7 @@ span.feedzy-spinner {
 	flex-direction: column;
     align-items: flex-start;
     gap: 8px;
-	border: 1px solid black;
+	border: 1px solid #5555559c;
 }
 
 .feedzy-wrap .fz-validation-message button {

@@ -163,7 +163,7 @@
 	function handle_validation_response(response) {
 		if (!response || !response.data || !response.data.results) {
 			showMessage(
-				'✗ ' + (response.message || 'Unknown error'),
+				'✗ ' + (response.data.results.message || 'Unknown error'),
 				response.status
 			);
 			return;
@@ -197,14 +197,20 @@
 	}
 
 	function showMessage(message, autoDismiss = true) {
-		$('.fz-validation-message').remove();
+		const $container = $('.fz-validation-summary');
+		if ( !$container.length ) {
+			$('body').append('<div class="fz-validation-summary"></div>');
+			return;
+		}
+
+		$container.find('.fz-validation-message').remove();
 
 		const $message = $('<div>', {
 			class: 'fz-validation-message',
 			html: message,
 		});
 
-		$('.fz-validation-summary').append($message);
+		$container.append($message);
 		if (autoDismiss) {
 			$message.delay(5000).fadeOut(300, () => $message.remove());
 		} else {
