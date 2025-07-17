@@ -29,10 +29,6 @@ test.describe( 'Feed Settings', () => {
         await page.getByPlaceholder('Add a name for your import').fill(importName);
 
         // Add feed URL via tag input.
-        await page.getByPlaceholder('Paste your feed URL and click').fill(FEED_URL);
-        await page.getByPlaceholder('Paste your feed URL and click').press('Enter');
-        await expect( page.getByText( FEED_URL ) ).toBeVisible();
-
         await addFeeds( page, [FEED_URL] );
 
         await page.getByRole('button', { name: 'Save', exact: true }).click({ force: true, clickCount: 1 });
