@@ -2521,16 +2521,15 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function validate_feed() {
 		try {
-			if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), FEEDZY_BASEFILE ) ) {
-			wp_send_json_error( array( 'message' => __( 'Security check failed.', 'feedzy-rss-feeds' ) ) );
-			return;
-		}
+			if ( ! isset( $_POST['nonce'] ) ||
+			! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), FEEDZY_BASEFILE ) ) {
+				wp_send_json_error( array( 'message' => __( 'Security check failed.', 'feedzy-rss-feeds' ) ) );
+			}
 
 			$feed_urls = isset($_POST['feed_url']) ? sanitize_text_field( wp_unslash( $_POST['feed_url'] ) ) : '';
 
 			if (empty($feed_urls)) {
 				wp_send_json_error(array('message' => __('Feed URL cannot be empty.', 'feedzy-rss-feeds')));
-				return;
 			}
 
 			$urls = array_map('trim', explode(',', $feed_urls));
@@ -2538,12 +2537,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 			if (empty($urls)) {
 				wp_send_json_error(array('message' => __('No valid URLs provided.', 'feedzy-rss-feeds')));
-				return;
 			}
 
 			$results = array();
-
-			$cache = isset($_POST['cache']) ? sanitize_text_field( wp_unslash( $_POST['cache'] ) ) : '1_mins';
 
 			foreach ($urls as $feed_url) {
 				$feed_url = esc_url_raw($feed_url);
@@ -2557,7 +2553,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					continue;
 				}
 
-				$feed = $this->fetch_feed(array($feed_url), $cache, array());
+				$feed = $this->fetch_feed(array($feed_url), '1_mins', array());
 
 				if ( is_wp_error($feed) ) {
 					$results[] = array(
@@ -2630,7 +2626,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			wp_send_json_success(array(
 				'results' => $results
 			));
-		} catch (Exception $e) {
+		} catch (Throwable $e) {
 			wp_send_json_error(array(
 				/* translators: %s is the error message */
 				'message' => sprintf(__('An error occurred: %s', 'feedzy-rss-feeds'), $e->getMessage())
