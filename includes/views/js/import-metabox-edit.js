@@ -163,7 +163,7 @@
 	function handle_validation_response(response) {
 		if (!response || !response.data || !response.data.results) {
 			showMessage(
-				'✗ ' + (response.data.results.message || 'Unknown error'),
+				'✗ ' + (response.message || 'Unknown error'),
 				response.status
 			);
 			return;
