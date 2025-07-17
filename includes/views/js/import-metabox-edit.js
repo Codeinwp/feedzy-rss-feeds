@@ -202,7 +202,6 @@
 	function showMessage(message, autoDismiss = true) {
 		const $container = $('.fz-validation-summary');
 		if (!$container.length) {
-			$('body').append('<div class="fz-validation-summary"></div>');
 			return;
 		}
 
@@ -217,10 +216,14 @@
 		if (autoDismiss) {
 			$message.delay(5000).fadeOut(300, () => $message.remove());
 		} else {
-			$message.append(
-				'<button type="button" class="button button-primary">✕</button>'
-			);
-			$message.find('button').on('click', function (e) {
+			const $closeButton = $('<button>', {
+				type: 'button',
+				class: 'button button-primary',
+				text: '✕'
+			});
+
+			$message.append($closeButton);
+			$closeButton.on('click', function (e) {
 				e.preventDefault();
 				$(this)
 					.parent()
