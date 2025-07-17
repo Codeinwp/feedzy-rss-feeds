@@ -55,7 +55,7 @@ global $post;
 												role="button"
 												title="<?php esc_attr_e('Validate Feed', 'feedzy-rss-feeds'); ?>">
 													<i class="dashicons dashicons-plus-alt2" aria-hidden="true"></i>
-												</a>
+												</button>
 											</div>
 										</div>
 									</div>
