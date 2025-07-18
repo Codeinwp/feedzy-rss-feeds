@@ -52,9 +52,9 @@ class Feedzy_Rss_Feeds_Activator {
 
 		if ( Feedzy_Rss_Feeds_Usage::get_instance()->is_new_user() ) {
 			Feedzy_Rss_Feeds_Usage::get_instance()->update_usage_data(
-					array(
-						'can_track_first_usage' => true
-					)
+				array(
+					'can_track_first_usage' => true,
+				)
 			);
 		}
 	}

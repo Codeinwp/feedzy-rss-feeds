@@ -90,7 +90,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$imports = array(
 			// how many active imports are created.
-			'publish'      => count(
+			'publish'  => count(
 				get_posts(
 					array(
 						'post_type'   => 'feedzy_imports',
@@ -101,7 +101,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				)
 			),
 			// how many draft imports are created.
-			'draft'        => count(
+			'draft'    => count(
 				get_posts(
 					array(
 						'post_type'   => 'feedzy_imports',
@@ -112,7 +112,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				)
 			),
 			// how many posts were imported by the imports.
-			'imported'     => count(
+			'imported' => count(
 				get_posts(
 					array(
 						'post_type'   => 'post',
@@ -155,14 +155,14 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		global $wpdb;
 		$shortcodes = $wpdb->get_var( "SELECT count(*) FROM {$wpdb->prefix}posts WHERE post_status IN ('publish', 'private') AND post_content LIKE '%[feedzy-rss %'" ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 
-		$data       = array(
-			'categories'       => $categories,
-			'imports'          => $imports,
-			'shortcodes'       => $shortcodes,
-			'license'          => $license,
+		$data = array(
+			'categories' => $categories,
+			'imports'    => $imports,
+			'shortcodes' => $shortcodes,
+			'license'    => $license,
 		);
 
-		$settings         = apply_filters( 'feedzy_get_settings', null );
+		$settings = apply_filters( 'feedzy_get_settings', null );
 
 		if ( ! is_array( $settings ) || empty( $settings ) ) {
 			return $data;

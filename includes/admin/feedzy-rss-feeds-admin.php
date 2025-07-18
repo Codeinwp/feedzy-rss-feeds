@@ -1876,7 +1876,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 							'slug'  => 'feedzy-rss-feeds',
 							'site'  => home_url(),
 							'email' => $email,
-							'data'  => $extra_data
+							'data'  => $extra_data,
 						)
 					),
 				)
