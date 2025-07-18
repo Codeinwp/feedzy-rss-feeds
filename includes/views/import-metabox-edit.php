@@ -116,7 +116,7 @@ global $post;
 					<input type="hidden" name="feedzy_meta_data[filter_conditions]" id="feed-post-filters-conditions" value="<?php echo esc_attr( $filter_conditions ); ?>">
 					<div class="fz-conditions" id="fz-conditions"></div>
 					<?php if ( ! feedzy_is_pro() ) : ?>
-                    <div class="fdz-upgrade-link"><span class="dashicons dashicons-lock"></span> <a href="<?php echo esc_url(feedzy_upgrade_link('filters', 'import')); ?>"><?php __( 'Upgrade to Unlock Advanced Filtering', 'feedzy-rss-feeds'); ?> </a></div>
+					<div class="fdz-upgrade-link"><span class="dashicons dashicons-lock"></span> <a href="<?php echo esc_url( feedzy_upgrade_link( 'filters', 'import' ) ); ?>"><?php __( 'Upgrade to Unlock Advanced Filtering', 'feedzy-rss-feeds' ); ?> </a></div>
 					<?php endif; ?>
 				</div>
 			</div>
@@ -196,7 +196,7 @@ global $post;
 											<?php
 												echo wp_kses_post(
 													sprintf(
-														// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+														// translators: %1$s: opening anchor tag, %2$s: closing anchor tag.
 														__( 'Add more advanced tags, like item categories and custom field, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ),
 														'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'moreadvanced' ) ) ) . '" target="_blank">',
 														'</a>'
@@ -223,7 +223,7 @@ global $post;
 											// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
 											echo wp_kses_post(
 												sprintf(
-													// translators: %1$s: magic tag, %2$s: opening anchor tag, %3$s: closing anchor tag
+													// translators: %1$s: magic tag, %2$s: opening anchor tag, %3$s: closing anchor tag.
 													__( 'You can automatically assign categories with a magic tag %1$s by the keywords used in title. Configure it %2$s here%3$s .', 'feedzy-rss-feeds' ),
 													'<strong>[#auto_categories]</strong>',
 													'<a href="' . esc_url( get_admin_url( null, 'admin.php?page=feedzy-settings' ) ) . '" target="_blank">',
@@ -241,7 +241,9 @@ global $post;
 								</div>
 								<div class="fz-right">
 									<div class="fz-form-group">
-										<label class="form-label"><?php esc_html_e( 'The post status for the imported posts.', 'feedzy-rss-feeds' ); ?></label>
+										<label class="form-label">
+											<?php esc_html_e( 'The post status for the imported posts.', 'feedzy-rss-feeds' ); ?>
+										</label>
 										<div class="mx-320">
 											<select id="feedzy_post_status" class="form-control feedzy-chosen" name="feedzy_meta_data[import_post_status]">
 												<?php
@@ -269,12 +271,14 @@ global $post;
 								</div>
 								<div class="fz-right">
 									<div class="fz-form-group">
-										<label class="form-label"><?php esc_html_e( 'The title for the generated post.', 'feedzy-rss-feeds' ); ?></label>
+										<label class="form-label">
+											<?php esc_html_e( 'The title for the generated post.', 'feedzy-rss-feeds' ); ?>
+										</label>
 										<div class="fz-input-group">
 											<div class="fz-input-group-left">
 												<div class="fz-group">
 													<input type="text" name="feedzy_meta_data[import_post_title]"
-														placeholder="<?php esc_html_e( 'Post Title', 'feedzy-rss-feeds' ); ?>" class="form-control fz-input-tagify"
+														placeholder="<?php esc_attr_e( 'Post Title', 'feedzy-rss-feeds' ); ?>" class="form-control fz-input-tagify"
 														value="<?php echo esc_attr( $import_title ); ?>" />
 												</div>
 												<div class="help-text">
@@ -300,16 +304,20 @@ global $post;
 
 							<div class="form-block form-block-two-column">
 								<div class="fz-left">
-									<h4 class="h4"><?php esc_html_e( 'Post Date', 'feedzy-rss-feeds' ); ?></h4>
+									<h4 class="h4">
+										<?php esc_html_e( 'Post Date', 'feedzy-rss-feeds' ); ?>
+									</h4>
 								</div>
 								<div class="fz-right">
 									<div class="fz-form-group">
-										<label class="form-label"><?php esc_html_e( 'The date for the generated post.', 'feedzy-rss-feeds' ); ?></label>
+										<label class="form-label">
+											<?php esc_html_e( 'The date for the generated post.', 'feedzy-rss-feeds' ); ?>
+										</label>
 										<div class="fz-input-group">
 											<div class="fz-input-group-left">
 												<div class="fz-group">
 													<input type="text" name="feedzy_meta_data[import_post_date]"
-														placeholder="<?php esc_html_e( 'Post Date', 'feedzy-rss-feeds' ); ?>" class="form-control fz-input-tagify"
+														placeholder="<?php esc_attr_e( 'Post Date', 'feedzy-rss-feeds' ); ?>" class="form-control fz-input-tagify"
 														value="<?php echo esc_attr( $import_date ); ?>" />
 												</div>
 												<div class="help-text">
@@ -336,16 +344,20 @@ global $post;
 
 							<div class="form-block form-block-two-column">
 								<div class="fz-left">
-									<h4 class="h4"><?php esc_html_e( 'Content', 'feedzy-rss-feeds' ); ?></h4>
+									<h4 class="h4">
+										<?php esc_html_e( 'Content', 'feedzy-rss-feeds' ); ?>
+									</h4>
 								</div>
 								<div class="fz-right">
 									<div class="fz-form-group">
-										<label class="form-label"><?php esc_html_e( 'The content for the generated post', 'feedzy-rss-feeds' ); ?></label>
+										<label class="form-label">
+											<?php esc_attr_e( 'The content for the generated post', 'feedzy-rss-feeds' ); ?>
+										</label>
 										<div class="fz-input-group">
 											<div class="fz-input-group-left">
 												<div class="fz-group">
 													<textarea name="feedzy_meta_data[import_post_content]"
-														placeholder="<?php esc_html_e( 'Post Content', 'feedzy-rss-feeds' ); ?>"
+														placeholder="<?php esc_attr_e( 'Post Content', 'feedzy-rss-feeds' ); ?>"
 														class="form-control fz-textarea-tagify"><?php echo esc_html( feedzy_custom_tag_escape( $import_content ) ); ?></textarea>
 												</div>
 												<div class="help-text">
@@ -372,7 +384,7 @@ global $post;
 											<?php
 												echo wp_kses_post(
 													sprintf(
-														// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+														// translators: %1$s: opening anchor tag, %2$s: closing anchor tag.
 														__( 'Add more advanced tags, like item price, rating and many more, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ),
 														'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'moreadvanced' ) ) ) . '" target="_blank">',
 														'</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>'
@@ -390,12 +402,14 @@ global $post;
 								</div>
 								<div class="fz-right">
 									<div class="fz-form-group">
-										<label class="form-label"><?php esc_html_e( 'The Featured image for the generated post.', 'feedzy-rss-feeds' ); ?></label>
+										<label class="form-label">
+											<?php esc_html_e( 'The Featured image for the generated post.', 'feedzy-rss-feeds' ); ?>
+										</label>
 										<div class="fz-input-group">
 											<div class="fz-input-group-left">
 												<div class="fz-group">
 													<input type="text" name="feedzy_meta_data[import_post_featured_img]"
-														placeholder="<?php esc_html_e( 'Add a tag for the featured image', 'feedzy-rss-feeds' ); ?>" class="form-control fz-input-tagify fz-tagify-image"
+														placeholder="<?php esc_attr_e( 'Add a tag for the featured image', 'feedzy-rss-feeds' ); ?>" class="form-control fz-input-tagify fz-tagify-image"
 														value="<?php echo esc_attr( $import_featured_img ); ?>" />
 												</div>
 												<div class="help-text">
@@ -500,16 +514,20 @@ global $post;
 
 							<div class="form-block form-block-two-column">
 								<div class="fz-left">
-									<h4 class="h4"><?php esc_html_e( 'Post Excerpt', 'feedzy-rss-feeds' ); ?></h4>
+									<h4 class="h4">
+										<?php esc_html_e( 'Post Excerpt', 'feedzy-rss-feeds' ); ?>
+									</h4>
 								</div>
 								<div class="fz-right">
 									<div class="fz-form-group">
-										<label class="form-label"><?php esc_html_e( 'The Post Excerpt for the generated post', 'feedzy-rss-feeds' ); ?></label>
+										<label class="form-label">
+											<?php esc_html_e( 'The Post Excerpt for the generated post', 'feedzy-rss-feeds' ); ?>
+										</label>
 										<div class="fz-input-group">
 											<div class="fz-input-group-left">
 												<div class="fz-group">
 													<input type="text" name="feedzy_meta_data[import_post_excerpt]"
-														placeholder="<?php esc_html_e( 'Post Excerpt', 'feedzy-rss-feeds' ); ?>" class="form-control fz-input-tagify"
+														placeholder="<?php esc_attr_e( 'Post Excerpt', 'feedzy-rss-feeds' ); ?>" class="form-control fz-input-tagify"
 														value="<?php echo esc_attr( $post_excerpt ); ?>" />
 												</div>
 												<div class="help-text">
@@ -537,14 +555,20 @@ global $post;
 							<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
 								<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'custom-fields', 'import' ) ); ?>
 								<div class="fz-left">
-									<h4 class="h4"><?php esc_html_e( 'Custom Fields', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
+									<h4 class="h4">
+										<?php esc_html_e( 'Custom Fields', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?>
+									</h4>
 									<div class="form-block-pro-text">
-										<a href="https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy" target="_blank"><?php esc_html_e( 'Learn More', 'feedzy-rss-feeds' ); ?></a>
+										<a href="https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy" target="_blank">
+											<?php esc_html_e( 'Learn More', 'feedzy-rss-feeds' ); ?>
+										</a>
 									</div>
 								</div>
 								<div class="fz-right">
 									<div class="fz-form-group">
-										<label class="form-label pb-16"><?php esc_html_e( 'Customizable fields to fetch custom values such as date updated, rating, etc.', 'feedzy-rss-feeds' ); ?></label>
+										<label class="form-label pb-16">
+											<?php esc_html_e( 'Customizable fields to fetch custom values such as date updated, rating, etc.', 'feedzy-rss-feeds' ); ?>
+										</label>
 										<div class="custom_fields">
 											<?php
 											if ( isset( $import_custom_fields ) && ! empty( $import_custom_fields ) ) {
@@ -553,14 +577,14 @@ global $post;
 														<div class="key-value-item">
 															<div class="fz-form-group">
 																<input type="text" name="custom_vars_key[]"
-																	placeholder="<?php esc_html_e( 'Key Name', 'feedzy-rss-feeds' ); ?>" class="form-control"
+																	placeholder="<?php esc_attr_e( 'Key Name', 'feedzy-rss-feeds' ); ?>" class="form-control"
 																			value="<?php echo esc_attr( $custom_field_key ); ?>" />
 															</div>
 															<div class="key-value-arrow">
 																<span class="dashicons dashicons-arrow-right-alt"></span>
 															</div>
 															<div class="fz-form-group">
-																<input type="text" name="custom_vars_value[]" placeholder="<?php esc_html_e( 'Value', 'feedzy-rss-feeds' ); ?>" class="form-control" value="<?php echo esc_attr( $custom_field_value ); ?>" />
+																<input type="text" name="custom_vars_value[]" placeholder="<?php esc_attr_e( 'Value', 'feedzy-rss-feeds' ); ?>" class="form-control" value="<?php echo esc_attr( $custom_field_value ); ?>" />
 																<span class="fz-action-icon<?php echo empty( $custom_field_value ) ? ' disabled' : ''; ?>"></span>
 																<input type="hidden" name="custom_vars_action[]" value="<?php echo isset( $custom_fields_actions[ $custom_field_key ] ) ? esc_attr( $custom_fields_actions[ $custom_field_key ] ) : ''; ?>">
 															</div>
@@ -584,7 +608,7 @@ global $post;
 										<?php
 											echo wp_kses_post(
 												sprintf(
-													// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+													// translators: %1$s: opening anchor tag, %2$s: closing anchor tag.
 													__( 'Check the %1$s Documentation %2$s for more details.', 'feedzy-rss-feeds' ),
 													'<a href="' . esc_url( 'https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy' ) . '" target="_blank">',
 													'</a>'
@@ -611,42 +635,42 @@ global $post;
 			<div class="feedzy-accordion-item__content border-top">
 				<div class="fz-form-wrap">
 
-                    <div class="form-block form-block-two-column no-border">
-                        <div class="fz-left">
-                            <h4 class="h4"><?php esc_html_e( 'Remove Duplicates', 'feedzy-rss-feeds' ); ?></h4>
-                        </div>
-                        <div class="fz-right">
-                            <div class="fz-form-group">
-                                <div class="fz-form-switch">
-                                    <input id="remove-duplicates" name="feedzy_meta_data[import_remove_duplicates]"
-                                           class="fz-switch-toggle" type="checkbox" value="yes"
+					<div class="form-block form-block-two-column no-border">
+						<div class="fz-left">
+							<h4 class="h4"><?php esc_html_e( 'Remove Duplicates', 'feedzy-rss-feeds' ); ?></h4>
+						</div>
+						<div class="fz-right">
+							<div class="fz-form-group">
+								<div class="fz-form-switch">
+									<input id="remove-duplicates" name="feedzy_meta_data[import_remove_duplicates]"
+											class="fz-switch-toggle" type="checkbox" value="yes"
 										<?php echo esc_attr( $import_remove_duplicates ); ?>>
-                                    <label class="feedzy-inline form-label" for="remove-duplicates"><?php esc_html_e( 'Remove Duplicate Items', 'feedzy-rss-feeds' ); ?></label>
-                                </div>
-                            </div>
-                            <div class="help-text">
+									<label class="feedzy-inline form-label" for="remove-duplicates"><?php esc_html_e( 'Remove Duplicate Items', 'feedzy-rss-feeds' ); ?></label>
+								</div>
+							</div>
+							<div class="help-text">
 								<?php echo wp_sprintf( esc_html__( 'To understand how duplicates will be removed, check out our', 'feedzy-rss-feeds' ) ); ?>
-                                <a href="<?php echo esc_url( 'https://docs.themeisle.com/article/638-how-to-eliminate-duplicate-feed-item' ); ?>" target="_blank"><?php esc_html_e( 'Documentation.', 'feedzy-rss-feeds' ); ?></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
+								<a href="<?php echo esc_url( 'https://docs.themeisle.com/article/638-how-to-eliminate-duplicate-feed-item' ); ?>" target="_blank"><?php esc_html_e( 'Documentation.', 'feedzy-rss-feeds' ); ?></a>
+							</div>
+						</div>
+					</div>
+					<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
 						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'remove-duplicates', 'import' ) ); ?>
-                        <div class="fz-left">
-                            <h4 class="h4"><?php esc_html_e( 'Duplication Key', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
-                        </div>
-                        <div class="fz-right">
-                            <div class="fz-form-group">
-                                <label class="form-label"><?php esc_html_e( 'Set a custom duplication key to identify unique feed items', 'feedzy-rss-feeds' ); ?></label>
-                                <input type="text" id="feedzy_mark_duplicate" name="feedzy_meta_data[mark_duplicate_tag]" class="form-control" value="<?php echo esc_attr( $mark_duplicate_tag ); ?>"<?php disabled( true, 'checked' !== $import_remove_duplicates ); ?> />
-                                <div class="help-text pt-8">
+						<div class="fz-left">
+							<h4 class="h4"><?php esc_html_e( 'Duplication Key', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
+						</div>
+						<div class="fz-right">
+							<div class="fz-form-group">
+								<label class="form-label"><?php esc_html_e( 'Set a custom duplication key to identify unique feed items', 'feedzy-rss-feeds' ); ?></label>
+								<input type="text" id="feedzy_mark_duplicate" name="feedzy_meta_data[mark_duplicate_tag]" class="form-control" value="<?php echo esc_attr( $mark_duplicate_tag ); ?>"<?php disabled( true, 'checked' !== $import_remove_duplicates ); ?> />
+								<div class="help-text pt-8">
 									<?php esc_html_e( 'Define a custom duplication key for identifying unique feed items when importing content. By default, items are considered unique based on their title and URL. Enter one or multiple magic tags.', 'feedzy-rss-feeds' ); ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+								</div>
+							</div>
+						</div>
+					</div>
 
-                    <div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
+					<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
 						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'auto-delete', 'import' ) ); ?>
 						<div class="fz-left">
 							<h4 class="h4"><?php esc_html_e( 'Auto-Delete', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
@@ -681,59 +705,59 @@ global $post;
 						</div>
 					</div>
 
-                    <div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
+					<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
 						<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'fallback-image', 'import' ) ); ?>
-                        <div class="fz-left">
-                            <h4 class="h4"><?php esc_html_e( 'Fallback Image', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
-                        </div>
-                        <div class="fz-right">
-                            <div class="fz-form-group">
-                                <label class="form-label"><?php esc_html_e( 'Select an image to be the fallback featured image.', 'feedzy-rss-feeds' ); ?></label>
+						<div class="fz-left">
+							<h4 class="h4"><?php esc_html_e( 'Fallback Image', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
+						</div>
+						<div class="fz-right">
+							<div class="fz-form-group">
+								<label class="form-label"><?php esc_html_e( 'Select an image to be the fallback featured image.', 'feedzy-rss-feeds' ); ?></label>
 								<?php
 								$btn_label            = esc_html__( 'Choose image', 'feedzy-rss-feeds' );
 								$default_thumbnail_id = ! empty( $default_thumbnail_id ) ? explode( ',', (string) $default_thumbnail_id ) : array();
 								if ( ! empty( $default_thumbnail_id ) ) :
 									$btn_label = esc_html__( 'Replace image', 'feedzy-rss-feeds' );
 									?>
-                                    <div class="fz-form-group mb-20 feedzy-media-preview">
+									<div class="fz-form-group mb-20 feedzy-media-preview">
 										<?php
 										if ( count( $default_thumbnail_id ) > 1 ) {
 											?>
-                                            <a href="javascript:;" class="btn btn-outline-primary feedzy-images-selected">
+											<a href="javascript:;" class="btn btn-outline-primary feedzy-images-selected">
 												<?php
 												// translators: %d select images count.
 												echo esc_html( sprintf( __( '(%d) images selected', 'feedzy-rss-feeds' ), count( $default_thumbnail_id ) ) );
 												?>
-                                            </a>
+											</a>
 											<?php
 										} else {
 											echo wp_get_attachment_image( reset( $default_thumbnail_id ), 'thumbnail' );
 										}
 										?>
-                                    </div>
+									</div>
 								<?php endif; ?>
-                                <div class="fz-cta-group pb-8">
-                                    <a href="javascript:;" class="feedzy-open-media btn btn-outline-primary"><?php echo esc_html( $btn_label ); ?></a>
-                                    <a href="javascript:;" class="feedzy-remove-media btn btn-outline-primary <?php echo ! empty( $default_thumbnail_id ) ? esc_attr( 'is-show' ) : ''; ?>"><?php esc_html_e( 'Remove', 'feedzy-rss-feeds' ); ?></a>
-                                    <input type="hidden" name="feedzy_meta_data[default_thumbnail_id]" id="feed-post-default-thumbnail" value="<?php echo esc_attr( implode( ',', $default_thumbnail_id ) ); ?>">
-                                </div>
-                                <div class="help-text pt-8">
+								<div class="fz-cta-group pb-8">
+									<a href="javascript:;" class="feedzy-open-media btn btn-outline-primary"><?php echo esc_html( $btn_label ); ?></a>
+									<a href="javascript:;" class="feedzy-remove-media btn btn-outline-primary <?php echo ! empty( $default_thumbnail_id ) ? esc_attr( 'is-show' ) : ''; ?>"><?php esc_html_e( 'Remove', 'feedzy-rss-feeds' ); ?></a>
+									<input type="hidden" name="feedzy_meta_data[default_thumbnail_id]" id="feed-post-default-thumbnail" value="<?php echo esc_attr( implode( ',', $default_thumbnail_id ) ); ?>">
+								</div>
+								<div class="help-text pt-8">
 									<?php esc_html_e( 'Helpful for setting a fallback image for feed items without an image. If multiple fallback images are selected, one of them will be randomly assigned to each post without an image during the import process.', 'feedzy-rss-feeds' ); ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+								</div>
+							</div>
+						</div>
+					</div>
 
 					<div class="form-block form-block-two-column no-border  <?php echo ! feedzy_is_pro() && ! feedzy_is_legacyv5() ? esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ) : ''; ?>">
 
 						<?php echo ! feedzy_is_pro() && ! feedzy_is_legacyv5() ? wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'item-count', 'import' ) ) : ''; ?>
-                        <div class="fz-left">
+						<div class="fz-left">
 							<h4 class="h4"><?php esc_html_e( 'Items Count', 'feedzy-rss-feeds' ); ?><?php echo ! feedzy_is_pro() && ! feedzy_is_legacyv5() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
 						</div>
 						<div class="fz-right">
 							<div class="fz-form-group">
 								<label class="form-label"><?php esc_html_e( 'How many feed items to import from the source?', 'feedzy-rss-feeds' ); ?></label>
-								<input type="number" min="0" max="9999" id="feedzy_item_limit" name="feedzy_meta_data[import_feed_limit<?php echo! feedzy_is_pro() && ! feedzy_is_legacyv5() ?   'locked' : ''; ?>]" class="form-control" value="<?php echo esc_attr( (int) $import_feed_limit ); ?>" />
+								<input type="number" min="0" max="9999" id="feedzy_item_limit" name="feedzy_meta_data[import_feed_limit<?php echo ! feedzy_is_pro() && ! feedzy_is_legacyv5() ? 'locked' : ''; ?>]" class="form-control" value="<?php echo esc_attr( (int) $import_feed_limit ); ?>" />
 								<div class="help-text pt-8">
 									<?php echo wp_kses_post( sprintf( __( 'If you choose a high number, please check that your configuration can support it or your imports may fail.', 'feedzy-rss-feeds' ), '<b>', '</b>' ) ); ?>
 								</div>
@@ -768,7 +792,10 @@ global $post;
 												}
 												$duplicate_schedule[] = $schedule['interval'];
 												?>
-												<option data-slug="<?php echo esc_html( $slug ); ?>" value="<?php echo esc_attr( $slug ); ?>"<?php selected( $save_schedule, $slug ); ?>><?php echo esc_html( $schedule['display'] ); ?></option>
+												<option data-slug="<?php echo esc_attr( $slug ); ?>" value="<?php echo esc_attr( $slug ); ?>"<?php selected( $save_schedule, $slug ); ?>
+												>
+													<?php echo esc_html( $schedule['display'] ); ?>
+												</option>
 											<?php endforeach; ?>
 										</select>
 										<div class="help-text pt-8"><?php esc_html_e( 'How often Feedzy will run the import.', 'feedzy-rss-feeds' ); ?></div>
@@ -833,7 +860,7 @@ global $post;
 	<div class="fz-form-action">
 		<div class="fz-left">
 			<?php
-            if ( feedzy_is_pro() ) {
+			if ( feedzy_is_pro() ) {
 				$clone_url = wp_nonce_url(
 					add_query_arg(
 						array(
@@ -846,13 +873,15 @@ global $post;
 					'clone_import'
 				);
 				?>
-                <a href="<?php echo esc_url( $clone_url ); ?>"
-                   class="btn btn-ghost"><?php esc_html_e( 'Clone Import', 'feedzy-rss-feeds' ); ?></a>
+				<a href="<?php echo esc_url( $clone_url ); ?>"
+					class="btn btn-ghost"><?php esc_html_e( 'Clone Import', 'feedzy-rss-feeds' ); ?></a>
 			<?php } ?>
 		</div>
 		<div class="fz-right">
 			<button type="button" id="preflight" name="check" class="btn btn-ghost" value="Check"
-			title="<?php esc_html_e( 'Click to see what items will be imported from the source, according to the filters specified', 'feedzy-rss-feeds' ); ?>"><?php esc_html_e( 'Preview Import', 'feedzy-rss-feeds' ); ?></button>
+			title="<?php esc_attr_e( 'Click to see what items will be imported from the source, according to the filters specified', 'feedzy-rss-feeds' ); ?>">
+				<?php esc_html_e( 'Preview Import', 'feedzy-rss-feeds' ); ?>
+			</button>
 			<?php
 			if ( 'publish' === $post_status ) {
 				?>
