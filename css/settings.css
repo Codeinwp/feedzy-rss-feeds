@@ -270,8 +270,10 @@
 	border-bottom: 0;
 }
 .fz-form-wrap .form-label{
-	display: block;
+	display: flex;
 	margin-bottom: 8px;
+	align-items: center;
+	gap: 10px;
 }
 
 .fz-form-wrap .form-control {
@@ -2573,4 +2575,37 @@ li.draggable-item .components-panel__body-toggle.components-button{
 	.support-box-list > ul{
 		grid-template-columns: repeat(2, 1fr);
 	}
+}
+
+.fz-license-badge {
+    padding: 2px 8px;
+    font-size: 10px;
+    text-transform: uppercase;
+    border-radius: 5px;
+    letter-spacing: 0.5px;
+}
+
+.fz-license-badge-agency {
+    background: linear-gradient(135deg, #4268CF 0%, #3458BC 100%);
+    color: #ffffff;
+}
+
+.fz-license-badge-developer {
+    background: linear-gradient(135deg, #689F38 0%, #558B2F 100%);
+    color: #ffffff;
+}
+
+.fz-license-badge-personal {
+    background: linear-gradient(135deg, #FF6B35 0%, #F4511E 100%);
+    color: #ffffff;
+}
+
+.fz-license-badge-yearly {
+    background: linear-gradient(135deg, #F4511E 0%, #D32F2F 100%);
+    color: #ffffff;
+}
+
+.fz-license-badge-lifetime {
+    background: linear-gradient(135deg, #FFB300 0%, #FFA000 100%);
+    color: #ffffff;
 }
