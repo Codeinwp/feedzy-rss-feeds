@@ -38,7 +38,7 @@ class Control_Date_Time_Local extends Base_Data_Control {
 	 */
 	protected function get_default_settings() {
 		return array(
-			'label_block' => true,
+			'label_block'    => true,
 			'picker_options' => array(),
 		);
 	}

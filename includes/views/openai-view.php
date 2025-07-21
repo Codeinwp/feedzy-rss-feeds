@@ -33,7 +33,7 @@
 							__( 'Pricing', 'feedzy-rss-feeds' )
 						)
 					);
-				?>
+					?>
 				</div>
 				<div class="fz-input-group">
 					<div class="fz-input-group-left">

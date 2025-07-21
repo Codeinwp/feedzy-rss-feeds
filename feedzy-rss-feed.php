@@ -26,6 +26,7 @@
  * Pro Slug:    feedzy-rss-feeds-pro
  * Requires License:    no
  */
+
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
 	die;
@@ -51,45 +52,47 @@ function deactivate_feedzy_rss_feeds() {
 register_activation_hook( __FILE__, 'activate_feedzy_rss_feeds' );
 register_deactivation_hook( __FILE__, 'deactivate_feedzy_rss_feeds' );
 /**
- * The function thast will handle the queue for autoloader.
+ * The function that will handle the queue for autoloader.
+ * 
+ * @param string $class_to_load The name of class to load.
  *
  * @since    3.0.0
  */
-function feedzy_rss_feeds_autoload( $class ) {
+function feedzy_rss_feeds_autoload( $class_to_load ) {
 	$namespaces = array( 'Feedzy_Rss_Feeds' );
 	foreach ( $namespaces as $namespace ) {
-		if ( substr( $class, 0, strlen( $namespace ) ) === $namespace ) {
-			$filename = plugin_dir_path( __FILE__ ) . 'includes/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
+		if ( substr( $class_to_load, 0, strlen( $namespace ) ) === $namespace ) {
+			$filename = plugin_dir_path( __FILE__ ) . 'includes/' . str_replace( '_', '-', strtolower( $class_to_load ) ) . '.php';
 			if ( is_readable( $filename ) ) {
 				require_once $filename;
 
 				return true;
 			}
-			$filename = plugin_dir_path( __FILE__ ) . 'includes/abstract/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
+			$filename = plugin_dir_path( __FILE__ ) . 'includes/abstract/' . str_replace( '_', '-', strtolower( $class_to_load ) ) . '.php';
 			if ( is_readable( $filename ) ) {
 				require_once $filename;
 
 				return true;
 			}
-			$filename = plugin_dir_path( __FILE__ ) . 'includes/admin/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
+			$filename = plugin_dir_path( __FILE__ ) . 'includes/admin/' . str_replace( '_', '-', strtolower( $class_to_load ) ) . '.php';
 			if ( is_readable( $filename ) ) {
 				require_once $filename;
 
 				return true;
 			}
-			$filename = plugin_dir_path( __FILE__ ) . 'includes/gutenberg/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
+			$filename = plugin_dir_path( __FILE__ ) . 'includes/gutenberg/' . str_replace( '_', '-', strtolower( $class_to_load ) ) . '.php';
 			if ( is_readable( $filename ) ) {
 				require_once $filename;
 
 				return true;
 			}
-			$filename = plugin_dir_path( __FILE__ ) . 'includes/util/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
+			$filename = plugin_dir_path( __FILE__ ) . 'includes/util/' . str_replace( '_', '-', strtolower( $class_to_load ) ) . '.php';
 			if ( is_readable( $filename ) ) {
 				require_once $filename;
 
 				return true;
 			}
-			$filename = plugin_dir_path( __FILE__ ) . 'includes/elementor/' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
+			$filename = plugin_dir_path( __FILE__ ) . 'includes/elementor/' . str_replace( '_', '-', strtolower( $class_to_load ) ) . '.php';
 			if ( is_readable( $filename ) ) {
 				require_once $filename;
 
@@ -144,7 +147,8 @@ function run_feedzy_rss_feeds() {
 	add_filter( 'themeisle_sdk_products', 'feedzy_register_sdk', 10, 1 );
 	add_filter( 'pirate_parrot_log', 'feedzy_register_parrot', 10, 1 );
 	add_filter(
-		'themeisle_sdk_compatibilities/' . FEEDZY_DIRNAME, function ( $compatibilities ) {
+		'themeisle_sdk_compatibilities/' . FEEDZY_DIRNAME,
+		function ( $compatibilities ) {
 			$compatibilities['FeedzyPRO'] = array(
 				'basefile'  => defined( 'FEEDZY_PRO_BASEFILE' ) ? FEEDZY_PRO_BASEFILE : '',
 				'required'  => '2.4',
@@ -155,7 +159,7 @@ function run_feedzy_rss_feeds() {
 	);
 	add_filter(
 		'feedzy_rss_feeds_about_us_metadata',
-		function() {
+		function () {
 			return array(
 				'logo'             => FEEDZY_ABSURL . 'img/feedzy.svg',
 				'location'         => 'feedzy-admin-menu',
@@ -178,15 +182,19 @@ function run_feedzy_rss_feeds() {
 							array(
 								'discount' => 'LOYALUSER5824',
 								'dvalue'   => 55,
-							), FEEDZY_UPSELL_LINK
-						), 'feedzy-welcome', 'notice'
+							),
+							FEEDZY_UPSELL_LINK
+						),
+						'feedzy-welcome',
+						'notice'
 					)
 				),
 			);
 		}
 	);
 	add_filter(
-		'feedzy_rss_feeds_welcome_upsell_message', function () {
+		'feedzy_rss_feeds_welcome_upsell_message',
+		function () {
 			return sprintf(
 			/* translators: 1: opening <p> tag, 2: opening <b> tag, 3: closing </b> tag, 4: product name, 5: pro product name, 6: opening <a> tag with cta link, 7: closing </a> tag, 8: discount percentage */
 				__(
@@ -205,12 +213,14 @@ function run_feedzy_rss_feeds() {
 		}
 	);
 	add_filter(
-		'feedzy_rss_feeds_feedback_review_button_do', function () {
+		'feedzy_rss_feeds_feedback_review_button_do',
+		function () {
 			return __( 'Upgrade Now!', 'feedzy-rss-feeds' );
 		}
 	);
 	add_filter(
-		'feedzy_rss_feeds_feedback_review_button_cancel', function () {
+		'feedzy_rss_feeds_feedback_review_button_cancel',
+		function () {
 			return __( 'No, thanks.', 'feedzy-rss-feeds' );
 		}
 	);
@@ -219,7 +229,11 @@ function run_feedzy_rss_feeds() {
 }
 
 /**
- * Registers with the SDK
+ * Registers with the SDK.
+ * 
+ * @param string[] $products The loaded products base file.
+ * 
+ * @return string[] The loaded products base file.
  *
  * @since    1.0.0
  */
@@ -230,6 +244,10 @@ function feedzy_register_sdk( $products ) {
 
 /**
  * Registers with the parrot plugin
+ * 
+ * @param string[] $plugins The plugins name.
+ * 
+ * @return string[] The plugins name.
  *
  * @since    1.0.0
  */
@@ -247,9 +265,15 @@ if ( FEEDZY_LOCAL_DEBUG ) {
 
 	/**
 	 * Redirect themeisle_log_event to error log.
+	 *
+	 * @param string $name Event name.
+	 * @param string $msg  Error message.
+	 * @param string $type Error type.
+	 * @param string $file File where the event occurred.
+	 * @param int    $line Line number where the event occurred.
 	 */
 	function feedzy_themeisle_log_event( $name, $msg, $type, $file, $line ) {
-		if ( $name === FEEDZY_NAME ) {
+		if ( FEEDZY_NAME === $name ) {
 			error_log( sprintf( '%s (%s:%d): %s', $type, $file, $line, $msg ) );
 		}
 	}
@@ -285,7 +309,8 @@ function feedzy_import_job_logs( $name, $msg, $type ) {
 add_action( 'themeisle_log_event', 'feedzy_import_job_logs', 20, 3 );
 
 add_filter(
-	'feedzy_rss_feeds_float_widget_metadata', function () {
+	'feedzy_rss_feeds_float_widget_metadata',
+	function () {
 		return array(
 			'nice_name'          => 'Feedzy',
 			'logo'               => FEEDZY_ABSURL . 'img/feedzy.svg',
@@ -299,30 +324,33 @@ add_filter(
 	}
 );
 
-add_filter( 'themeisle_sdk_labels', function( $labels ) {
-	if ( isset( $labels['float_widget'] ) ) {
-		$labels['float_widget'] = array_merge(
-			$labels['float_widget'],
-			array(
-				/* translators: %s: Product name */
-				'button' => esc_html__( 'Toggle Help Widget for %s', 'feedzy-rss-feeds' ),
-				'panel'  => array(
+add_filter(
+	'themeisle_sdk_labels',
+	function ( $labels ) {
+		if ( isset( $labels['float_widget'] ) ) {
+			$labels['float_widget'] = array_merge(
+				$labels['float_widget'],
+				array(
 					/* translators: %s: Product name */
-					'greeting' => esc_html__( 'Thank you for using %s', 'feedzy-rss-feeds' ),
-					'title'    => esc_html__( 'How can we help you?', 'feedzy-rss-feeds' ),
-					'close'    => esc_html__( 'Close Toggle Help Widget', 'feedzy-rss-feeds' ),
-				),
-				'links'  => array(
-					'documentation'   => esc_html__( 'Documentation', 'feedzy-rss-feeds' ),
-					'support'         => esc_html__( 'Get Support', 'feedzy-rss-feeds' ),
-					'wizard'          => esc_html__( 'Run Setup Wizard', 'feedzy-rss-feeds' ),
-					'upgrade'         => esc_html__( 'Upgrade to Pro', 'feedzy-rss-feeds' ),
-					'feature_request' => esc_html__( 'Suggest a Feature', 'feedzy-rss-feeds' ),
-					'rate'            => esc_html__( 'Rate Us', 'feedzy-rss-feeds' ),
-				),
-			)
-		);
-	}
+					'button' => esc_html__( 'Toggle Help Widget for %s', 'feedzy-rss-feeds' ),
+					'panel'  => array(
+						/* translators: %s: Product name */
+						'greeting' => esc_html__( 'Thank you for using %s', 'feedzy-rss-feeds' ),
+						'title'    => esc_html__( 'How can we help you?', 'feedzy-rss-feeds' ),
+						'close'    => esc_html__( 'Close Toggle Help Widget', 'feedzy-rss-feeds' ),
+					),
+					'links'  => array(
+						'documentation'   => esc_html__( 'Documentation', 'feedzy-rss-feeds' ),
+						'support'         => esc_html__( 'Get Support', 'feedzy-rss-feeds' ),
+						'wizard'          => esc_html__( 'Run Setup Wizard', 'feedzy-rss-feeds' ),
+						'upgrade'         => esc_html__( 'Upgrade to Pro', 'feedzy-rss-feeds' ),
+						'feature_request' => esc_html__( 'Suggest a Feature', 'feedzy-rss-feeds' ),
+						'rate'            => esc_html__( 'Rate Us', 'feedzy-rss-feeds' ),
+					),
+				)
+			);
+		}
 
-	return $labels;
-});
+		return $labels;
+	}
+);

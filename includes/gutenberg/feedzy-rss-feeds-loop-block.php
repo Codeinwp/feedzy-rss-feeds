@@ -66,7 +66,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 
 		wp_set_script_translations( 'feedzy-rss-feeds-loop-editor-script', 'feedzy-rss-feeds' );
 
-		// Pass in REST URL
+		// Pass in REST URL.
 		wp_localize_script(
 			'feedzy-rss-feeds-loop-editor-script',
 			'feedzyData',
@@ -83,8 +83,8 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			apply_filters(
 				'feedzy_conditions_data',
 				array(
-					'isPro'            => feedzy_is_pro(),
-					'operators'        => Feedzy_Rss_Feeds_Conditions::get_operators(),
+					'isPro'     => feedzy_is_pro(),
+					'operators' => Feedzy_Rss_Feeds_Conditions::get_operators(),
 				)
 			)
 		);
@@ -93,20 +93,20 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	/**
 	 * Render Callback
 	 *
-	 * @param array $attributes The block attributes.
+	 * @param array  $attributes The block attributes.
 	 * @param string $content The block content.
 	 * @return string The block content.
 	 */
 	public function render_callback( $attributes, $content ) {
 		$content    = empty( $content ) ? ( $attributes['innerBlocksContent'] ?? '' ) : $content;
 		$is_preview = isset( $attributes['innerBlocksContent'] ) && ! empty( $attributes['innerBlocksContent'] );
-		$feed_urls      = array();
+		$feed_urls  = array();
 
 		if ( isset( $attributes['feed']['type'] ) && 'group' === $attributes['feed']['type'] && isset( $attributes['feed']['source'] ) && is_numeric( $attributes['feed']['source'] ) ) {
-			$group = $attributes['feed']['source'];
-			$value = get_post_meta( $group, 'feedzy_category_feed', true );
-			$value = trim( $value );
-			$feed_urls = !empty( $value ) ? explode( ',', $value ) : array();
+			$group     = $attributes['feed']['source'];
+			$value     = get_post_meta( $group, 'feedzy_category_feed', true );
+			$value     = trim( $value );
+			$feed_urls = ! empty( $value ) ? explode( ',', $value ) : array();
 		}
 
 		if ( isset( $attributes['feed']['type'] ) && 'url' === $attributes['feed']['type'] && isset( $attributes['feed']['source'] ) && is_array( $attributes['feed']['source'] ) ) {
@@ -117,7 +117,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			return '<div>' . esc_html__( 'No feeds to display', 'feedzy-rss-feeds' ) . '</div>';
 		}
 
-		$column_count = isset($attributes['layout']) && isset($attributes['layout']['columnCount']) && !empty($attributes['layout']['columnCount']) ? $attributes['layout']['columnCount'] : 1;
+		$column_count = isset( $attributes['layout'] ) && isset( $attributes['layout']['columnCount'] ) && ! empty( $attributes['layout']['columnCount'] ) ? $attributes['layout']['columnCount'] : 1;
 
 		$default_query = array(
 			'max'     => 5,
@@ -131,7 +131,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		$options = array(
 			'feeds'         => implode( ',', $feed_urls ),
 			'max'           => $query['max'],
-			'sort'		    => $query['sort'],
+			'sort'          => $query['sort'],
 			'offset'        => 0,
 			'target'        => '_blank',
 			'keywords_ban'  => '',
@@ -163,17 +163,19 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			return '<div>' . esc_html__( 'No items to display.', 'feedzy-rss-feeds' ) . '</div>';
 		}
 
-		$loop       = '';
+		$loop = '';
 
-		foreach ($feed_items as $key => $item) {
+		foreach ( $feed_items as $key => $item ) {
 			$loop .= apply_filters( 'feedzy_loop_item', $content, $item );
 		}
 
 		return sprintf(
 			'<div %1$s>%2$s</div>',
-			$wrapper_attributes = get_block_wrapper_attributes( array(
-				'class' => 'feedzy-loop-columns-' . $column_count,
-			) ),
+			$wrapper_attributes = get_block_wrapper_attributes(
+				array(
+					'class' => 'feedzy-loop-columns-' . $column_count,
+				) 
+			),
 			$loop
 		);
 	}
@@ -182,6 +184,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	 * Magic Tags Replacement.
 	 *
 	 * @param string $content The content.
+	 * @param array  $item The item.
 	 *
 	 * @return string The content.
 	 */
@@ -190,25 +193,29 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		$content = str_replace(
 			array(
 				FEEDZY_ABSURL . 'img/feedzy.svg',
-				'http://{{feedzy_url}}'
+				'http://{{feedzy_url}}',
 			),
 			array(
 				'{{feedzy_image}}',
-				'{{feedzy_url}}'
+				'{{feedzy_url}}',
 			),
 			$content
 		);
 
-		return preg_replace_callback( $pattern, function( $matches ) use ( $item ) {
-			return isset( $matches[1] ) ? $this->get_value( $matches[1], $item ) : '';
-		}, $content );
+		return preg_replace_callback(
+			$pattern,
+			function ( $matches ) use ( $item ) {
+				return isset( $matches[1] ) ? $this->get_value( $matches[1], $item ) : '';
+			},
+			$content 
+		);
 	}
 
 	/**
 	 * Get Dynamic Value.
 	 *
 	 * @param string $key The key.
-	 * @param array $item Feed item.
+	 * @param array  $item Feed item.
 	 *
 	 * @return string The value.
 	 */

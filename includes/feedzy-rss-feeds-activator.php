@@ -33,7 +33,7 @@ class Feedzy_Rss_Feeds_Activator {
 		$options           = get_option( Feedzy_Rss_Feeds::get_plugin_name(), array() );
 		$is_fresh_install  = get_option( 'feedzy_fresh_install', false );
 		$old_logger_option = get_option( 'feedzy_logger_flag', 'no' );
-		if ( $old_logger_option === 'yes' ) {
+		if ( 'yes' === $old_logger_option ) {
 			update_option( 'feedzy_rss_feeds_logger_flag', 'yes' );
 			update_option( 'feedzy_logger_flag', 'no' );
 		}
@@ -52,9 +52,9 @@ class Feedzy_Rss_Feeds_Activator {
 
 		if ( Feedzy_Rss_Feeds_Usage::get_instance()->is_new_user() ) {
 			Feedzy_Rss_Feeds_Usage::get_instance()->update_usage_data(
-					array(
-						'can_track_first_usage' => true
-					)
+				array(
+					'can_track_first_usage' => true,
+				)
 			);
 		}
 	}
