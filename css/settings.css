@@ -2578,30 +2578,11 @@ li.draggable-item .components-panel__body-toggle.components-button{
 }
 
 .fz-license-badge {
-    padding: 2px 8px;
-    font-size: 10px;
-    text-transform: uppercase;
-    border-radius: 5px;
-    letter-spacing: 0.5px;
+	padding: 2px 8px;
+	font-size: 10px;
+	text-transform: uppercase;
+	border-radius: 5px;
+	letter-spacing: 0.5px;
 	color: #ffffff;
-}
-
-.fz-license-badge-agency {
-    background: linear-gradient(135deg, #4268CF 0%, #3458BC 100%);
-}
-
-.fz-license-badge-developer {
-    background: linear-gradient(135deg, #689F38 0%, #558B2F 100%);
-}
-
-.fz-license-badge-personal {
-    background: linear-gradient(135deg, #FF6B35 0%, #F4511E 100%);
-}
-
-.fz-license-badge-yearly {
-    background: linear-gradient(135deg, #F4511E 0%, #D32F2F 100%);
-}
-
-.fz-license-badge-lifetime {
-    background: linear-gradient(135deg, #FFB300 0%, #FFA000 100%);
+	background: linear-gradient(135deg, #4268CF 0%, #3458BC 100%);
 }
