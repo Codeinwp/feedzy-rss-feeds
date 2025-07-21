@@ -111,6 +111,10 @@
 	vertical-align: super;
 }
 
+.fz-pro-disabled-item {
+    opacity: 0.6;
+}
+
 .post-type-feedzy_imports:not(.edit-post) .wrap div#side-sortables{
 	display: none;
 }
@@ -1864,10 +1868,12 @@ span.error-message .components-external-link .components-visually-hidden{
 	border-radius: 8px;
 }
 .popover-action-list ul{
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
 	margin: 0;
 }
 .popover-action-list ul li{
-	padding-bottom: 13px;
 	margin-bottom: 0;
 	font-size: 16px;
 	font-weight: 400;
@@ -2573,4 +2579,15 @@ li.draggable-item .components-panel__body-toggle.components-button{
 	.support-box-list > ul{
 		grid-template-columns: repeat(2, 1fr);
 	}
+}
+ 
+button.feedzy-action-button {
+	padding: 0;
+	font-size: 16px;
+	font-weight: 400;
+	background: none;
+	border: none;
+	width: 100%;
+	cursor: pointer;
+	height: unset;
 }
