@@ -113,7 +113,6 @@
 
 .pro-disabled-item {
     opacity: 0.6;
-    cursor: not-allowed;
 }
 
 .post-type-feedzy_imports:not(.edit-post) .wrap div#side-sortables{
@@ -2664,4 +2663,15 @@ li.draggable-item .components-panel__body-toggle.components-button{
     font-weight: 600;
     font-size: 16px;
     margin-bottom: 8px;
+}
+
+button.action-button {
+	padding: 13px 0px;
+	height: 0px;
+    font-size: 16px;
+    font-weight: 400;
+    background: none;
+    border: none;
+	width: 100%;
+	cursor: pointer;
 }
