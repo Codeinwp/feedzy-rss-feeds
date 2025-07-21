@@ -370,7 +370,10 @@ const ActionModal = () => {
 													feedzyData.isPro && ( feedzyData.isBusinessPlan || feedzyData.isAgencyPlan ) ? (
 														<li key="action-1" onClick={ () => addAction('fz_image') }>{__( 'Generate with OpenAI', 'feedzy-rss-feeds' )}</li>
 													) : (
-														<li key="action-1" onClick={ () => addAction('fz_image') }>{__( 'Generate with OpenAI', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+														<li className="pro-disabled-item">
+															{__('Generate with OpenAI', 'feedzy-rss-feeds')} 
+															<span className="pro-label">PRO</span>
+														</li>
 													)]
 												) : ([
 													<li key="action-2" onClick={ () => addAction('trim') }>{__( 'Trim Content', 'feedzy-rss-feeds' )}</li>,
@@ -378,7 +381,10 @@ const ActionModal = () => {
 														feedzyData.isPro && feedzyData.isAgencyPlan ? (
 															<li key="action-3" onClick={ () => addAction('fz_translate') }>{__( 'Translate with Feedzy', 'feedzy-rss-feeds' )}</li>
 														) : (
-															<li key="action-3" onClick={ () => addAction('fz_translate') }>{__( 'Translate with Feedzy', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+															<li className="pro-disabled-item">
+																{__('Translate with Feedzy', 'feedzy-rss-feeds')}
+																<span className="pro-label">PRO</span>
+															</li>
 														)
 													),
 													<li key="action-4" onClick={ () => addAction('search_replace') }>{__( 'Search / Replace', 'feedzy-rss-feeds' )}</li>,
@@ -387,7 +393,10 @@ const ActionModal = () => {
 															feedzyData.isPro ? (
 																<li key="action-5" onClick={ () => addAction('modify_links') }>{__( 'Modify Links', 'feedzy-rss-feeds' )}</li>
 															) : (
-																<li key="action-5" onClick={ () => addAction('modify_links') }>{__( 'Modify Links', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+																<li className="pro-disabled-item">
+																	{__('Modify Links', 'feedzy-rss-feeds')} 
+																	<span className="pro-label">PRO</span>
+																</li>
 															)
 														)
 													),
@@ -396,7 +405,10 @@ const ActionModal = () => {
 															feedzyData.isPro && ( feedzyData.isBusinessPlan || feedzyData.isAgencyPlan ) ? (
 																<li key="action-6" onClick={ () => addAction('fz_paraphrase') }>{__( 'Paraphrase with Feedzy', 'feedzy-rss-feeds' )}</li>
 															) : (
-																<li key="action-6" onClick={ () => addAction('fz_paraphrase') }>{__( 'Paraphrase with Feedzy', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+																<li className="pro-disabled-item">
+																	{__('Paraphrase with Feedzy', 'feedzy-rss-feeds')}
+																	<span className="pro-label">PRO</span>
+																</li>
 															)
 														)
 													),
@@ -405,7 +417,10 @@ const ActionModal = () => {
 															feedzyData.isPro && feedzyData.isAgencyPlan ? (
 																<li key="action-7" onClick={ () => addAction('spinnerchief') }>{__( 'Spin using SpinnerChief', 'feedzy-rss-feeds' )}</li>
 															) : (
-																<li key="action-7" onClick={ () => addAction('spinnerchief') }>{__( 'Spin using SpinnerChief', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+																<li className="pro-disabled-item">
+																	{__('Spin using SpinnerChief', 'feedzy-rss-feeds')}
+																	<span className="pro-label">PRO</span>
+																</li>
 															)
 														)
 													),
@@ -414,7 +429,10 @@ const ActionModal = () => {
 															feedzyData.isPro && feedzyData.isAgencyPlan ? (
 																<li key="action-8" onClick={ () => addAction('wordAI') }>{__( 'Spin using WordAI', 'feedzy-rss-feeds' )}</li>
 															) : (
-																<li key="action-8" onClick={ () => addAction('wordAI') }>{__( 'Spin using WordAI', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+																<li className="pro-disabled-item">
+																	{__('Spin using WordAI', 'feedzy-rss-feeds')}
+																	<span className="pro-label">PRO</span>
+																</li>
 															)
 														)
 													),
@@ -423,7 +441,10 @@ const ActionModal = () => {
 															feedzyData.isPro && ( feedzyData.isBusinessPlan || feedzyData.isAgencyPlan ) ? (
 																<li key="action-9" onClick={ () => addAction('chat_gpt_rewrite') }>{__( 'Rewrite with AI', 'feedzy-rss-feeds' )}</li>
 															) : (
-																<li key="action-9" onClick={ () => addAction('chat_gpt_rewrite') }>{__( 'Rewrite with AI', 'feedzy-rss-feeds' )} <span className="pro-label">PRO</span></li>
+																<li className="pro-disabled-item">
+																	{__('Rewrite with AI', 'feedzy-rss-feeds')}
+																	<span className="pro-label">PRO</span>
+																</li>
 															)
 														)
 													)
