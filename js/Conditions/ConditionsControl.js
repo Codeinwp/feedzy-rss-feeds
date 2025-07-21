@@ -56,6 +56,7 @@ const SUPPORTED_FIELDS = [
 ];
 
 const ConditionsControl = ({ conditions, setConditions }) => {
+	const isPro = window.feedzyData.isPro;
 	const onChangeMatch = (value) => {
 		setConditions({
 			...conditions,
@@ -88,6 +89,10 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 	};
 
 	const onChangeCondtion = (index, value, key) => {
+		if (!isPro) {
+			return;
+		}
+
 		const conditionsCopy = [...conditions.conditions];
 
 		conditionsCopy[index][key] = value;
@@ -117,7 +122,7 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 	return (
 		<div
 			className={classNames('fz-condition-control', {
-				'is-upsell': !window.feedzyData.isPro,
+				'is-upsell': !isPro,
 			})}
 		>
 			<SelectControl
@@ -137,6 +142,7 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 					},
 				]}
 				onChange={onChangeMatch}
+				disabled={!isPro}
 			/>
 
 			{conditions.conditions.map((condition, index) => {
@@ -161,6 +167,7 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 							onChange={(value) =>
 								onChangeCondtion(index, value, 'field')
 							}
+							disabled={!isPro}
 						/>
 
 						<SelectControl
@@ -185,6 +192,7 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 							onChange={(value) =>
 								onChangeCondtion(index, value, 'operator')
 							}
+							disabled={!isPro}
 						/>
 
 						{!['has_value', 'empty'].includes(
@@ -203,6 +211,7 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 												'value'
 											)
 										}
+										disabled={!isPro}
 									/>
 								) : (
 									<TextControl
@@ -215,6 +224,7 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 												'value'
 											)
 										}
+										disabled={!isPro}
 									/>
 								)}
 							</>
