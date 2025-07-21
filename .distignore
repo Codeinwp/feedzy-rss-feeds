@@ -42,3 +42,5 @@ docker-compose.travis.yml
 docker-compose.ci.yml
 .wp-env.json
 artifacts
+phpstan.neon
+phpstan-baseline.neon

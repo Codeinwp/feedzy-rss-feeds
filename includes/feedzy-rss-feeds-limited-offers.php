@@ -55,20 +55,22 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 
 		try {
 			foreach ( $this->announcements as $announcement => $event_data ) {
-				if ( false !== strpos( $announcement, 'black_friday' ) ) {
-					if (
-						empty( $event_data ) ||
-						! is_array( $event_data ) ||
-						empty( $event_data['active'] ) ||
-						empty( $event_data['feedzy_dashboard_url'] ) ||
-						! isset( $event_data['urgency_text'] )
-					) {
-						continue;
-					}
-
-					$this->active = $announcement;
-					$this->prepare_black_friday_assets( $event_data );
+				if ( false === strpos( $announcement, 'black_friday' ) ) {
+					continue;
 				}
+
+				if (
+					empty( $event_data ) ||
+					! is_array( $event_data ) ||
+					empty( $event_data['active'] ) ||
+					empty( $event_data['feedzy_dashboard_url'] ) ||
+					! isset( $event_data['urgency_text'] )
+				) {
+					continue;
+				}
+
+				$this->active = $announcement;
+				$this->prepare_black_friday_assets( $event_data );
 			}
 		} catch ( Exception $e ) {
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
@@ -89,7 +91,7 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 		}
 
 		add_filter( 'themeisle_products_deal_priority', array( $this, 'add_priority' ) );
-		add_action( 'admin_notices', array( $this, 'render_notice') );
+		add_action( 'admin_notices', array( $this, 'render_notice' ) );
 		add_action( 'wp_ajax_dismiss_themeisle_sale_notice_feedzy', array( $this, 'disable_notification_ajax' ) );
 	}
 
@@ -113,11 +115,11 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 		$this->assets = array_merge(
 			$this->assets,
 			array(
-				'bannerUrl'     => FEEDZY_ABSURL . 'img/black-friday-banner.png',
-				'bannerAlt'     => 'Feedzy Black Friday Sale',
+				'bannerUrl'      => FEEDZY_ABSURL . 'img/black-friday-banner.png',
+				'bannerAlt'      => 'Feedzy Black Friday Sale',
 				'bannerStoreUrl' => esc_url_raw( $data['feedzy_dashboard_url'] ),
-				'linkGlobal'    => '',
-				'urgencyText'   => esc_html( $data['urgency_text'] ),
+				'linkGlobal'     => '',
+				'urgencyText'    => esc_html( $data['urgency_text'] ),
 			)
 		);
 	}
@@ -139,8 +141,8 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 	public function get_localized_data() {
 		return array_merge(
 			array(
-				'active'              => $this->is_active(),
-				'dealSlug'            => $this->get_active_deal(),
+				'active'   => $this->is_active(),
+				'dealSlug' => $this->get_active_deal(),
 			),
 			$this->assets
 		);
@@ -176,8 +178,8 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 		if ( function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
 			if (
-					( $screen->base === 'edit' && ( $screen->post_type === 'feedzy_imports' || $screen->post_type === 'feedzy_categories' ) ) ||
-				 'feedzy_page_feedzy-settings' === $screen->id || 'feedzy_page_feedzy-integration' === $screen->id
+				( 'edit' === $screen->base && ( 'feedzy_imports' === $screen->post_type || 'feedzy_categories' === $screen->post_type ) ) ||
+				'feedzy_page_feedzy-settings' === $screen->id || 'feedzy_page_feedzy-integration' === $screen->id
 			) {
 				return;
 			}
@@ -284,8 +286,8 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 		if ( function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
 			if (
-				 ( $screen->base === 'edit' && ( $screen->post_type === 'feedzy_imports' || $screen->post_type === 'feedzy_categories' ) ) ||
-				 'feedzy_page_feedzy-settings' === $screen->id || 'feedzy_page_feedzy-integration' === $screen->id
+				( 'edit' === $screen->base && ( 'feedzy_imports' === $screen->post_type || 'feedzy_categories' === $screen->post_type ) ) ||
+				'feedzy_page_feedzy-settings' === $screen->id || 'feedzy_page_feedzy-integration' === $screen->id
 			) {
 				// Small hack to supress rendering of other notices in those pages.
 				$products['feedzy'] = -2;
@@ -328,8 +330,10 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 		}
 
 		$screen = get_current_screen();
-		if ( $screen->base !== 'edit' ||
-			( $screen->post_type !== 'feedzy_imports' && $screen->post_type !== 'feedzy_categories' ) ) {
+		if (
+			'edit' !== $screen->base ||
+			( 'feedzy_imports' !== $screen->post_type && 'feedzy_categories' !== $screen->post_type )
+		) {
 			return;
 		}
 
@@ -385,12 +389,12 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 			}
 		</style>
 		<div class="themeisle-sale-banner">
-		   <a href="<?php echo esc_url( $this->assets['bannerStoreUrl'] ); ?>" target="_blank" rel="external noreferrer noopener">
-			   <img src="<?php echo esc_url( $this->assets['bannerUrl'] ); ?>" alt="<?php echo esc_attr( ! empty( $this->assets['bannerAlt'] ) ? $this->assets['bannerAlt'] : '' ); ?>">
-			   <div class="themeisle-sale-urgency">
-					 <?php echo esc_html( ! empty( $this->assets['urgencyText'] ) ? $this->assets['urgencyText'] : '' ); ?>
-			   </div>
-		   </a>
+			<a href="<?php echo esc_url( $this->assets['bannerStoreUrl'] ); ?>" target="_blank" rel="external noreferrer noopener">
+				<img src="<?php echo esc_url( $this->assets['bannerUrl'] ); ?>" alt="<?php echo esc_attr( ! empty( $this->assets['bannerAlt'] ) ? $this->assets['bannerAlt'] : '' ); ?>">
+				<div class="themeisle-sale-urgency">
+					<?php echo esc_html( ! empty( $this->assets['urgencyText'] ) ? $this->assets['urgencyText'] : '' ); ?>
+				</div>
+			</a>
 		</div>
 		<?php
 	}

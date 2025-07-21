@@ -92,15 +92,15 @@ class Feedzy_Rss_Feeds_Loader {
 	 * @param   string  $callback       The name of the function definition on the $component.
 	 * @param   int     $priority       Optional. he priority at which the function should be fired. Default is 10.
 	 * @param   int     $accepted_args  Optional. The number of arguments that should be passed to the $callback. Default is 1.
-	 * @param   boolean $private        Optional. Determines if we should register hook for logged in users.
-	 * @param   boolean $public         Optional. Determines if we should register hook for not logged in users.
+	 * @param   boolean $is_private        Optional. Determines if we should register hook for logged in users.
+	 * @param   boolean $is_public         Optional. Determines if we should register hook for not logged in users.
 	 */
-	public function add_ajax_action( $tag, $component, $callback, $priority = 10, $accepted_args = 1, $private = true, $public = false ) {
-		if ( $private ) {
+	public function add_ajax_action( $tag, $component, $callback, $priority = 10, $accepted_args = 1, $is_private = true, $is_public = false ) {
+		if ( $is_private ) {
 			$this->actions = $this->add( $this->actions, 'wp_ajax_' . $tag, $component, $callback, $priority, $accepted_args );
 		}
 
-		if ( $public ) {
+		if ( $is_public ) {
 			$this->actions = $this->add( $this->actions, 'wp_ajax_nopriv_' . $tag, $component, $callback, $priority, $accepted_args );
 		}
 	}

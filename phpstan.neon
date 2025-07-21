@@ -1,0 +1,10 @@
+parameters:
+	level: 6
+	paths:
+		- %currentWorkingDirectory%/includes
+	bootstrapFiles:
+		- %currentWorkingDirectory%/tests/php/static-analysis-stubs/feedzy.php
+		- %currentWorkingDirectory%/tests/php/static-analysis-stubs/elementor.php
+includes:
+	- %currentWorkingDirectory%/vendor/szepeviktor/phpstan-wordpress/extension.neon
+	- %currentWorkingDirectory%/phpstan-baseline.neon

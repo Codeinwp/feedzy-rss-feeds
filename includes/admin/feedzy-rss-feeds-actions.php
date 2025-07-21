@@ -178,7 +178,7 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			$extract_tags = array();
 			if ( ! empty( $item_magic_tags[0] ) ) {
 				$extract_tags = array_map(
-					function( $tag ) {
+					function ( $tag ) {
 						$magic_tags = str_replace( array( '[[{"value":"', '"}]]' ), '', $tag );
 						return array(
 							'replace_to'   => $tag,
@@ -227,12 +227,12 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 
 			$replace_with = array_column( $this->get_extract_tags(), 'replace_with' );
 			$actions      = array_map(
-				function( $serialized_actions ) {
+				function ( $serialized_actions ) {
 					$job_actions = json_decode( $serialized_actions );
 					if ( $job_actions ) {
 						return array(
-							'serialized_actions'   => $serialized_actions,
-							'job_actions' => $job_actions,
+							'serialized_actions' => $serialized_actions,
+							'job_actions'        => $job_actions,
 						);
 					}
 					return false;
@@ -433,7 +433,7 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 * @return string
 		 */
 		private function translate_content() {
-			$content = call_user_func( array( $this, $this->current_job->tag ) );
+			$content                = call_user_func( array( $this, $this->current_job->tag ) );
 			$this->translation_lang = ! empty( $this->current_job->data->lang ) ? $this->current_job->data->lang : $this->translation_lang;
 			return apply_filters( 'feedzy_invoke_auto_translate_services', $content, '[#translated_content]', $this->translation_lang, $this->job, $this->language_code, $this->item );
 		}
@@ -555,8 +555,8 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 */
 		private function modify_links() {
 			$content = call_user_func( array( $this, $this->current_job->tag ) );
-			// Returns item content because it has no HTML tags
-			if ( $content === wp_strip_all_tags( $content ) ) {
+			// Returns item content because it has no HTML tags.
+			if ( wp_strip_all_tags( $content ) === $content ) {
 				return $content;
 			}
 			// Pro version is required to perform this action.
@@ -590,7 +590,7 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			if ( ! empty( $this->current_job->data->follow ) && 'yes' === $this->current_job->data->follow ) {
 				add_filter(
 					'wp_targeted_link_rel',
-					function() {
+					function () {
 						return 'nofollow';
 					}
 				);
