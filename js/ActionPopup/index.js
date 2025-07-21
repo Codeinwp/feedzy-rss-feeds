@@ -490,7 +490,7 @@ const ActionModal = () => {
 													: [
 															<li key="action-2">
 																<button
-																	className="action-button"
+																	className="feedzy-action-button"
 																	onClick={() =>
 																		addAction(
 																			'trim'
@@ -509,7 +509,7 @@ const ActionModal = () => {
 																.isAgencyPlan ? (
 																<li key="action-3">
 																	<button
-																		className="action-button"
+																		className="feedzy-action-button"
 																		onClick={() =>
 																			addAction(
 																				'fz_translate'
@@ -538,7 +538,7 @@ const ActionModal = () => {
 															),
 															<li key="action-4">
 																<button
-																	className="action-button"
+																	className="feedzy-action-button"
 																	onClick={() =>
 																		addAction(
 																			'search_replace'
@@ -558,7 +558,7 @@ const ActionModal = () => {
 																	.isPro ? (
 																	<li key="action-5">
 																		<button
-																			className="action-button"
+																			className="feedzy-action-button"
 																			onClick={() =>
 																				addAction(
 																					'modify_links'
@@ -598,7 +598,7 @@ const ActionModal = () => {
 																		.isAgencyPlan) ? (
 																	<li key="action-6">
 																		<button
-																			className="action-button"
+																			className="feedzy-action-button"
 																			onClick={() =>
 																				addAction(
 																					'fz_paraphrase'
@@ -635,7 +635,7 @@ const ActionModal = () => {
 																	.isAgencyPlan ? (
 																	<li key="action-7">
 																		<button
-																			className="action-button"
+																			className="feedzy-action-button"
 																			onClick={() =>
 																				addAction(
 																					'spinnerchief'
@@ -672,7 +672,7 @@ const ActionModal = () => {
 																	.isAgencyPlan ? (
 																	<li key="action-8">
 																		<button
-																			className="action-button"
+																			className="feedzy-action-button"
 																			onClick={() =>
 																				addAction(
 																					'wordAI'
@@ -712,7 +712,7 @@ const ActionModal = () => {
 																		.isAgencyPlan) ? (
 																	<li key="action-9">
 																		<button
-																			className="action-button"
+																			className="feedzy-action-button"
 																			onClick={() =>
 																				addAction(
 																					'chat_gpt_rewrite'
