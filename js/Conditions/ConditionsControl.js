@@ -54,6 +54,7 @@ const SUPPORTED_FIELDS = [
 		unsupportedOperators: ['greater_than', 'gte', 'less_than', 'lte'],
 	},
 ];
+const isPro = window.feedzyData.isPro;
 
 const ConditionsControl = ({ conditions, setConditions }) => {
 	const onChangeMatch = (value) => {
@@ -87,7 +88,7 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 		});
 	};
 
-	const onChangeCondtion = (index, value, key) => {
+	const onChangeCondition = (index, value, key) => {
 		const conditionsCopy = [...conditions.conditions];
 
 		conditionsCopy[index][key] = value;
@@ -117,7 +118,7 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 	return (
 		<div
 			className={classNames('fz-condition-control', {
-				'is-upsell': !window.feedzyData.isPro,
+				'is-upsell': !isPro,
 			})}
 		>
 			<SelectControl
@@ -125,10 +126,7 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 				value={conditions.match}
 				options={[
 					{
-						label: __(
-							'All conditions are met',
-							'feedzy-rss-feeds'
-						),
+						label: __('All conditions are met', 'feedzy-rss-feeds'),
 						value: 'all',
 					},
 					{
@@ -137,6 +135,7 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 					},
 				]}
 				onChange={onChangeMatch}
+				disabled={!isPro}
 			/>
 
 			{conditions.conditions.map((condition, index) => {
@@ -159,8 +158,9 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 							value={condition?.field}
 							options={SUPPORTED_FIELDS}
 							onChange={(value) =>
-								onChangeCondtion(index, value, 'field')
+								onChangeCondition(index, value, 'field')
 							}
+							disabled={!isPro}
 						/>
 
 						<SelectControl
@@ -183,8 +183,9 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 							}
 							value={condition?.operator}
 							onChange={(value) =>
-								onChangeCondtion(index, value, 'operator')
+								onChangeCondition(index, value, 'operator')
 							}
+							disabled={!isPro}
 						/>
 
 						{!['has_value', 'empty'].includes(
@@ -197,24 +198,26 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 										label={__('Value', 'feedzy-rss-feeds')}
 										value={condition?.value}
 										onChange={(value) =>
-											onChangeCondtion(
+											onChangeCondition(
 												index,
 												value,
 												'value'
 											)
 										}
+										disabled={!isPro}
 									/>
 								) : (
 									<TextControl
 										label={__('Value', 'feedzy-rss-feeds')}
 										value={condition?.value}
 										onChange={(value) =>
-											onChangeCondtion(
+											onChangeCondition(
 												index,
 												value,
 												'value'
 											)
 										}
+										disabled={!isPro}
 									/>
 								)}
 							</>
