@@ -54,9 +54,9 @@ const SUPPORTED_FIELDS = [
 		unsupportedOperators: ['greater_than', 'gte', 'less_than', 'lte'],
 	},
 ];
+const isPro = window.feedzyData.isPro;
 
 const ConditionsControl = ({ conditions, setConditions }) => {
-	const isPro = window.feedzyData.isPro;
 	const onChangeMatch = (value) => {
 		setConditions({
 			...conditions,
@@ -88,11 +88,7 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 		});
 	};
 
-	const onChangeCondtion = (index, value, key) => {
-		if (!isPro) {
-			return;
-		}
-
+	const onChangeCondition = (index, value, key) => {
 		const conditionsCopy = [...conditions.conditions];
 
 		conditionsCopy[index][key] = value;
@@ -130,10 +126,7 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 				value={conditions.match}
 				options={[
 					{
-						label: __(
-							'All conditions are met',
-							'feedzy-rss-feeds'
-						),
+						label: __('All conditions are met', 'feedzy-rss-feeds'),
 						value: 'all',
 					},
 					{
@@ -165,7 +158,7 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 							value={condition?.field}
 							options={SUPPORTED_FIELDS}
 							onChange={(value) =>
-								onChangeCondtion(index, value, 'field')
+								onChangeCondition(index, value, 'field')
 							}
 							disabled={!isPro}
 						/>
@@ -190,7 +183,7 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 							}
 							value={condition?.operator}
 							onChange={(value) =>
-								onChangeCondtion(index, value, 'operator')
+								onChangeCondition(index, value, 'operator')
 							}
 							disabled={!isPro}
 						/>
@@ -205,7 +198,7 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 										label={__('Value', 'feedzy-rss-feeds')}
 										value={condition?.value}
 										onChange={(value) =>
-											onChangeCondtion(
+											onChangeCondition(
 												index,
 												value,
 												'value'
@@ -218,7 +211,7 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 										label={__('Value', 'feedzy-rss-feeds')}
 										value={condition?.value}
 										onChange={(value) =>
-											onChangeCondtion(
+											onChangeCondition(
 												index,
 												value,
 												'value'
