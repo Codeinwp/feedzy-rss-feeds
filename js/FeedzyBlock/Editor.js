@@ -294,7 +294,7 @@ class Editor extends Component {
 		});
 		this.props.setAttributes({ multiple_meta: value });
 	}
-	onToggleSummary() {
+	toggleSummary() {
 		this.props.setAttributes({ summary: !this.props.attributes.summary });
 	}
 	onToggleLazy(value) {
