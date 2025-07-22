@@ -455,13 +455,13 @@ class Editor extends Component {
 										{this.props.attributes.categories &&
 											this.props.attributes.categories
 												.length > 0 && (
+												// eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
 												<span
 													className="dashicons dashicons-arrow-down-alt2"
 													onClick={
 														this
 															.feedzyCategoriesList
 													}
-													role="presentation"
 												></span>
 											)}
 									</div>
