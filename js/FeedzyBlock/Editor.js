@@ -7,6 +7,7 @@ import {
 	TextControl,
 	Button,
 	Spinner,
+	Disabled,
 } from '@wordpress/components';
 
 import queryString from 'query-string';
@@ -37,14 +38,14 @@ class Editor extends Component {
 		this.onChangeFeed = this.onChangeFeed.bind(this);
 		this.onChangeMax = this.onChangeMax.bind(this);
 		this.onChangeOffset = this.onChangeOffset.bind(this);
-		this.onToggleFeedTitle = this.onToggleFeedTitle.bind(this);
+		this.onToggleFeedTitle = this.toggleFeedTitle.bind(this);
 		this.onRefresh = this.onRefresh.bind(this);
 		this.onSort = this.onSort.bind(this);
 		this.onTarget = this.onTarget.bind(this);
 		this.onTitle = this.onTitle.bind(this);
 		this.onChangeMeta = this.onChangeMeta.bind(this);
 		this.onChangeMultipleMeta = this.onChangeMultipleMeta.bind(this);
-		this.onToggleSummary = this.onToggleSummary.bind(this);
+		this.onToggleSummary = this.toggleSummary.bind(this);
 		this.onToggleLazy = this.onToggleLazy.bind(this);
 		this.onSummaryLength = this.onSummaryLength.bind(this);
 		this.onKeywordsTitle = this.onKeywordsTitle.bind(this);
@@ -52,18 +53,17 @@ class Editor extends Component {
 		this.onThumb = this.onThumb.bind(this);
 		this.onDefault = this.onDefault.bind(this);
 		this.onSize = this.onSize.bind(this);
-		this.onHTTP = this.onHTTP.bind(this);
 		this.onReferralURL = this.onReferralURL.bind(this);
 		this.onColumns = this.onColumns.bind(this);
 		this.onTemplate = this.onTemplate.bind(this);
-		this.onTogglePrice = this.onTogglePrice.bind(this);
+		this.onTogglePrice = this.togglePrice.bind(this);
 		this.onKeywordsIncludeOn = this.onKeywordsIncludeOn.bind(this);
 		this.onKeywordsExcludeOn = this.onKeywordsExcludeOn.bind(this);
 		this.onFromDateTime = this.onFromDateTime.bind(this);
 		this.onToDateTime = this.onToDateTime.bind(this);
 		this.feedzyCategoriesList = this.feedzyCategoriesList.bind(this);
-		this.onToggleItemTitle = this.onToggleItemTitle.bind(this);
-		this.onToggleDisableStyle = this.onToggleDisableStyle.bind(this);
+		this.onToggleItemTitle = this.toggleItemTitle.bind(this);
+		this.onToggleDisableStyle = this.toggleDisableStyle.bind(this);
 		this.handleKeyUp = this.handleKeyUp.bind(this);
 		this.handleKeyUp = this.handleKeyUp.bind(this);
 		this.onLinkNoFollow = this.onLinkNoFollow.bind(this);
@@ -97,7 +97,7 @@ class Editor extends Component {
 		}
 	}
 
-	async componentDidUpdate(prevProps) {
+	async componentDidUpdate() {
 		if ('reload' === this.state.route) {
 			this.loadFeed();
 		}
@@ -152,7 +152,7 @@ class Editor extends Component {
 				});
 				return data;
 			})
-			.fail((err) => {
+			.catch((err) => {
 				this.setState({
 					route: 'home',
 					loading: false,
@@ -176,10 +176,12 @@ class Editor extends Component {
 				});
 				const _this = this;
 				_this.props.setAttributes({ categories });
-				const editorCanvas = jQuery('iframe[name="editor-canvas"]');
-				let $target = jQuery('.feedzy-source input');
+				const editorCanvas = window.jQuery(
+					'iframe[name="editor-canvas"]'
+				);
+				let $target = window.jQuery('.feedzy-source input');
 				if (editorCanvas.length > 0) {
-					$target = jQuery(
+					$target = window.jQuery(
 						'.feedzy-source input',
 						editorCanvas.contents()
 					);
@@ -195,8 +197,8 @@ class Editor extends Component {
 					},
 				});
 			})
-			.fail((err) => {
-				return err;
+			.catch((err) => {
+				window.console.error(err);
 			});
 	}
 
@@ -222,23 +224,16 @@ class Editor extends Component {
 	}
 
 	getImageURL(item, background) {
-		let url = item.thumbnail
-			? item.thumbnail
-			: this.props.attributes.default
-				? this.props.attributes.default.url
-				: feedzyjs.imagepath + 'feedzy.svg';
-		switch (this.props.attributes.http) {
-			case 'default':
-				if (url.indexOf('https') === -1 && url.indexOf('http') === 0) {
-					url = this.props.attributes.default
-						? this.props.attributes.default.url
-						: feedzyjs.imagepath + 'feedzy.svg';
-				}
-				break;
-			case 'https':
-				url = url.replace(/http:/g, 'https:');
-				break;
+		let url;
+		if (item.thumbnail) {
+			url = item.thumbnail;
+		} else if (this.props.attributes.default) {
+			url = this.props.attributes.default.url;
+		} else {
+			url = window.feedzyjs.imagepath + 'feedzy.svg';
 		}
+
+		url = url.replace(/http:/g, 'https:');
 
 		if (background) {
 			url = 'url("' + url + '")';
@@ -259,7 +254,7 @@ class Editor extends Component {
 	onChangeOffset(value) {
 		this.props.setAttributes({ offset: Number(value) });
 	}
-	onToggleFeedTitle(value) {
+	toggleFeedTitle() {
 		this.props.setAttributes({
 			feed_title: !this.props.attributes.feed_title,
 		});
@@ -300,7 +295,7 @@ class Editor extends Component {
 		});
 		this.props.setAttributes({ multiple_meta: value });
 	}
-	onToggleSummary(value) {
+	toggleSummary() {
 		this.props.setAttributes({ summary: !this.props.attributes.summary });
 	}
 	onToggleLazy(value) {
@@ -331,12 +326,6 @@ class Editor extends Component {
 	onSize(value) {
 		this.props.setAttributes({ size: !value ? 150 : Number(value) });
 	}
-	onHTTP(value) {
-		this.props.setAttributes({ http: value });
-		this.setState({
-			route: 'reload',
-		});
-	}
 	onReferralURL(value) {
 		window.tiTrk?.with('feedzy').add({ feature: 'block-referral-url' });
 		this.props.setAttributes({ referral_url: value });
@@ -355,7 +344,7 @@ class Editor extends Component {
 		});
 		this.props.setAttributes({ template: value });
 	}
-	onTogglePrice(value) {
+	togglePrice() {
 		window.tiTrk?.with('feedzy').set(`feedzy-price`, {
 			feature: 'block-price',
 			featureValue: !this.props.attributes.price,
@@ -374,11 +363,14 @@ class Editor extends Component {
 	onToDateTime(value) {
 		this.props.setAttributes({ to_datetime: value });
 	}
-	feedzyCategoriesList(value) {
-		const editorCanvas = jQuery('iframe[name="editor-canvas"]');
-		let $target = jQuery('.feedzy-source input');
+	feedzyCategoriesList() {
+		const editorCanvas = window.jQuery('iframe[name="editor-canvas"]');
+		let $target = window.jQuery('.feedzy-source input');
 		if (editorCanvas.length > 0) {
-			$target = jQuery('.feedzy-source input', editorCanvas.contents());
+			$target = window.jQuery(
+				'.feedzy-source input',
+				editorCanvas.contents()
+			);
 		}
 		$target.autocomplete({ disabled: false }).autocomplete('search', '');
 	}
@@ -389,12 +381,12 @@ class Editor extends Component {
 		}
 		return url;
 	}
-	onToggleItemTitle(value) {
+	toggleItemTitle() {
 		this.props.setAttributes({
 			itemTitle: !this.props.attributes.itemTitle,
 		});
 	}
-	onToggleDisableStyle(value) {
+	toggleDisableStyle() {
 		this.props.setAttributes({
 			disableStyle: !this.props.attributes.disableStyle,
 		});
@@ -461,10 +453,18 @@ class Editor extends Component {
 											onKeyUp={this.handleKeyUp}
 											value={this.props.attributes.feeds}
 										/>
-										<span
-											className="dashicons dashicons-arrow-down-alt2"
-											onClick={this.feedzyCategoriesList}
-										></span>
+										{this.props.attributes.categories &&
+											this.props.attributes.categories
+												.length > 0 && (
+												// eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+												<span
+													className="dashicons dashicons-arrow-down-alt2"
+													onClick={
+														this
+															.feedzyCategoriesList
+													}
+												></span>
+											)}
 									</div>
 									<Button
 										isLarge
@@ -522,12 +522,21 @@ class Editor extends Component {
 							this.props.attributes.feedData.channel !== null && (
 								<div className="rss_header">
 									<h2>
-										<a className="rss_title">
-											{unescapeHTML(
-												this.props.attributes.feedData
-													.channel.title
-											)}
-										</a>
+										<Disabled>
+											<a
+												className="rss_title"
+												href={
+													this.props.attributes
+														.feedData.channel
+														.link || '#'
+												}
+											>
+												{unescapeHTML(
+													this.props.attributes
+														.feedData.channel.title
+												)}
+											</a>
+										</Disabled>
 										<span className="rss_description">
 											{' ' +
 												unescapeHTML(
@@ -573,10 +582,10 @@ class Editor extends Component {
 									);
 									itemDateTimeObj =
 										itemDateTimeObj.toUTCString();
-									itemDate = moment
+									itemDate = window.moment
 										.utc(itemDateTimeObj)
 										.format('MMMM D, YYYY');
-									itemTime = moment
+									itemTime = window.moment
 										.utc(itemDateTimeObj)
 										.format('h:mm A');
 								}
@@ -617,24 +626,34 @@ class Editor extends Component {
 									item.thumbnail = item.default_img;
 								}
 
-								const meta_values = new Object();
-								meta_values.author =
-									__('by', 'feedzy-rss-feeds') + ' ' + author;
-								meta_values.date = sprintf(
-									// translators: %s: the date of the imported content.
-									__('on %s', 'feedzy-rss-feeds'),
-									unescapeHTML(itemDate)
-								);
-								meta_values.time = sprintf(
-									// translators: %s: the time of the imported content.
-									__('at %s', 'feedzy-rss-feeds'),
-									unescapeHTML(itemTime)
-								);
-								meta_values.categories = sprintf(
-									// translators: %s: the category of the imported content.
-									__('in %s', 'feedzy-rss-feeds'),
-									unescapeHTML(categories)
-								);
+								const metaValues = {};
+								if (author) {
+									metaValues.author =
+										__('by', 'feedzy-rss-feeds') +
+										' ' +
+										author;
+								}
+								if (itemDate) {
+									metaValues.date = sprintf(
+										// translators: %s: the date of the imported content.
+										__('on %s', 'feedzy-rss-feeds'),
+										unescapeHTML(itemDate)
+									);
+								}
+								if (itemTime) {
+									metaValues.time = sprintf(
+										// translators: %s: the time of the imported content.
+										__('at %s', 'feedzy-rss-feeds'),
+										unescapeHTML(itemTime)
+									);
+								}
+								if (categories) {
+									metaValues.categories = sprintf(
+										// translators: %s: the category of the imported content.
+										__('in %s', 'feedzy-rss-feeds'),
+										unescapeHTML(categories)
+									);
+								}
 
 								return (
 									<li
@@ -658,23 +677,12 @@ class Editor extends Component {
 															.size + 'px',
 												}}
 											>
-												<a
-													title={unescapeHTML(
-														item.title
-													)}
-													style={{
-														width:
-															this.props
-																.attributes
-																.size + 'px',
-														height:
-															this.props
-																.attributes
-																.size + 'px',
-													}}
-												>
-													<span
-														className="fetched"
+												<Disabled>
+													<a
+														href={item.link}
+														title={unescapeHTML(
+															item.title
+														)}
 														style={{
 															width:
 																this.props
@@ -686,17 +694,33 @@ class Editor extends Component {
 																	.attributes
 																	.size +
 																'px',
-															backgroundImage:
-																this.getImageURL(
-																	item,
-																	true
-																),
 														}}
-														title={unescapeHTML(
-															item.title
-														)}
-													></span>
-												</a>
+													>
+														<span
+															className="fetched"
+															style={{
+																width:
+																	this.props
+																		.attributes
+																		.size +
+																	'px',
+																height:
+																	this.props
+																		.attributes
+																		.size +
+																	'px',
+																backgroundImage:
+																	this.getImageURL(
+																		item,
+																		true
+																	),
+															}}
+															title={unescapeHTML(
+																item.title
+															)}
+														></span>
+													</a>
+												</Disabled>
 											</div>
 										)}
 										<div className="rss_content_wrap">
@@ -704,26 +728,31 @@ class Editor extends Component {
 											this.props.attributes.title !==
 												0 ? (
 												<span className="title">
-													<a>
-														{this.props.attributes
-															.title &&
-														unescapeHTML(item.title)
-															.length >
-															this.props
+													<Disabled>
+														<a href={item.link}>
+															{this.props
 																.attributes
-																.title
-															? unescapeHTML(
-																	item.title
-																).substring(
-																	0,
-																	this.props
-																		.attributes
-																		.title
-																) + '...'
-															: unescapeHTML(
-																	item.title
-																)}
-													</a>
+																.title &&
+															unescapeHTML(
+																item.title
+															).length >
+																this.props
+																	.attributes
+																	.title
+																? unescapeHTML(
+																		item.title
+																	).substring(
+																		0,
+																		this
+																			.props
+																			.attributes
+																			.title
+																	) + '...'
+																: unescapeHTML(
+																		item.title
+																	)}
+														</a>
+													</Disabled>
 												</span>
 											) : (
 												''
@@ -733,7 +762,7 @@ class Editor extends Component {
 													.metafields !== 'no' && (
 													<small className="meta">
 														{arrangeMeta(
-															meta_values,
+															metaValues,
 															this.props
 																.attributes
 																.metafields
@@ -764,7 +793,7 @@ class Editor extends Component {
 																)}
 													</p>
 												)}
-												{feedzyjs.isPro &&
+												{window.feedzyjs.isPro &&
 													item.media &&
 													item.media.src && (
 														<audio
@@ -795,7 +824,7 @@ class Editor extends Component {
 															</a>
 														</audio>
 													)}
-												{feedzyjs.isPro &&
+												{window.feedzyjs.isPro &&
 													this.props.attributes
 														.price &&
 													item.price &&
