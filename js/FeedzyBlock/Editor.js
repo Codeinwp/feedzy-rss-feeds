@@ -380,7 +380,7 @@ class Editor extends Component {
 		}
 		return url;
 	}
-	onToggleItemTitle() {
+	toggleItemTitle() {
 		this.props.setAttributes({
 			itemTitle: !this.props.attributes.itemTitle,
 		});
