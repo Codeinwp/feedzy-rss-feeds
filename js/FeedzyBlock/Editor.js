@@ -253,7 +253,7 @@ class Editor extends Component {
 	onChangeOffset(value) {
 		this.props.setAttributes({ offset: Number(value) });
 	}
-	onToggleFeedTitle() {
+	toggleFeedTitle() {
 		this.props.setAttributes({
 			feed_title: !this.props.attributes.feed_title,
 		});
