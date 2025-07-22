@@ -343,7 +343,7 @@ class Editor extends Component {
 		});
 		this.props.setAttributes({ template: value });
 	}
-	onTogglePrice() {
+	togglePrice() {
 		window.tiTrk?.with('feedzy').set(`feedzy-price`, {
 			feature: 'block-price',
 			featureValue: !this.props.attributes.price,
