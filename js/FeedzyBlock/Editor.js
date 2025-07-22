@@ -37,14 +37,14 @@ class Editor extends Component {
 		this.onChangeFeed = this.onChangeFeed.bind(this);
 		this.onChangeMax = this.onChangeMax.bind(this);
 		this.onChangeOffset = this.onChangeOffset.bind(this);
-		this.onToggleFeedTitle = this.onToggleFeedTitle.bind(this);
+		this.onToggleFeedTitle = this.ToggleFeedTitle.bind(this);
 		this.onRefresh = this.onRefresh.bind(this);
 		this.onSort = this.onSort.bind(this);
 		this.onTarget = this.onTarget.bind(this);
 		this.onTitle = this.onTitle.bind(this);
 		this.onChangeMeta = this.onChangeMeta.bind(this);
 		this.onChangeMultipleMeta = this.onChangeMultipleMeta.bind(this);
-		this.onToggleSummary = this.onToggleSummary.bind(this);
+		this.onToggleSummary = this.ToggleSummary.bind(this);
 		this.onToggleLazy = this.onToggleLazy.bind(this);
 		this.onSummaryLength = this.onSummaryLength.bind(this);
 		this.onKeywordsTitle = this.onKeywordsTitle.bind(this);
@@ -55,14 +55,14 @@ class Editor extends Component {
 		this.onReferralURL = this.onReferralURL.bind(this);
 		this.onColumns = this.onColumns.bind(this);
 		this.onTemplate = this.onTemplate.bind(this);
-		this.onTogglePrice = this.onTogglePrice.bind(this);
+		this.onTogglePrice = this.TogglePrice.bind(this);
 		this.onKeywordsIncludeOn = this.onKeywordsIncludeOn.bind(this);
 		this.onKeywordsExcludeOn = this.onKeywordsExcludeOn.bind(this);
 		this.onFromDateTime = this.onFromDateTime.bind(this);
 		this.onToDateTime = this.onToDateTime.bind(this);
 		this.feedzyCategoriesList = this.feedzyCategoriesList.bind(this);
-		this.onToggleItemTitle = this.onToggleItemTitle.bind(this);
-		this.onToggleDisableStyle = this.onToggleDisableStyle.bind(this);
+		this.onToggleItemTitle = this.ToggleItemTitle.bind(this);
+		this.onToggleDisableStyle = this.ToggleDisableStyle.bind(this);
 		this.handleKeyUp = this.handleKeyUp.bind(this);
 		this.handleKeyUp = this.handleKeyUp.bind(this);
 		this.onLinkNoFollow = this.onLinkNoFollow.bind(this);
@@ -96,7 +96,7 @@ class Editor extends Component {
 		}
 	}
 
-	async componentDidUpdate(prevProps) {
+	async componentDidUpdate() {
 		if ('reload' === this.state.route) {
 			this.loadFeed();
 		}
@@ -197,7 +197,7 @@ class Editor extends Component {
 				});
 			})
 			.catch((err) => {
-				return err;
+				window.console.error(err);
 			});
 	}
 
@@ -294,7 +294,7 @@ class Editor extends Component {
 		});
 		this.props.setAttributes({ multiple_meta: value });
 	}
-	toggleSummary() {
+	onToggleSummary() {
 		this.props.setAttributes({ summary: !this.props.attributes.summary });
 	}
 	onToggleLazy(value) {
@@ -343,7 +343,7 @@ class Editor extends Component {
 		});
 		this.props.setAttributes({ template: value });
 	}
-	togglePrice() {
+	onTogglePrice() {
 		window.tiTrk?.with('feedzy').set(`feedzy-price`, {
 			feature: 'block-price',
 			featureValue: !this.props.attributes.price,
@@ -380,12 +380,12 @@ class Editor extends Component {
 		}
 		return url;
 	}
-	toggleItemTitle() {
+	onToggleItemTitle() {
 		this.props.setAttributes({
 			itemTitle: !this.props.attributes.itemTitle,
 		});
 	}
-	toggleDisableStyle() {
+	onToggleDisableStyle() {
 		this.props.setAttributes({
 			disableStyle: !this.props.attributes.disableStyle,
 		});
@@ -452,19 +452,16 @@ class Editor extends Component {
 											onKeyUp={this.handleKeyUp}
 											value={this.props.attributes.feeds}
 										/>
-										<button
-											className="dashicons dashicons-arrow-down-alt2"
-											onClick={this.feedzyCategoriesList}
-											onKeyDown={(e) => {
-												if (
-													e.key === 'Enter' ||
-													e.key === ' '
-												) {
-													this.feedzyCategoriesList();
-												}
-											}}
-											aria-label="Show categories list"
-										></button>
+										{this.props.attributes.categories &&
+											this.props.attributes.categories
+												.length > 0 && (
+												<span
+													className="dashicons dashicons-arrow-down-alt2"
+													onClick={
+														this
+															.feedzyCategoriesList
+													}></span>
+											)}
 									</div>
 									<Button
 										isLarge
