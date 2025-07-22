@@ -151,6 +151,7 @@ class Feedzy_Rss_Feeds_Import {
 				array(
 					'ajax' => array(
 						'security' => wp_create_nonce( FEEDZY_BASEFILE ),
+						'url' => admin_url('admin-ajax.php'),
 					),
 					'i10n' => array(
 						'importing'           => __( 'Importing', 'feedzy-rss-feeds' ) . '...',
@@ -175,6 +176,10 @@ class Feedzy_Rss_Feeds_Import {
 							! feedzy_is_pro() ? ' only-pro' : '',
 							feedzy_is_pro() ? 'dashicons-upload' : 'dashicons-lock',
 							esc_html__( 'Upload Import', 'feedzy-rss-feeds' )
+						),
+						'validation_messages' => array(
+							'invalid_feed_url' => __( 'Invalid feed URL.', 'feedzy-rss-feeds' ),
+							'error_validating_feed_url' => __( 'Error validating feed URL.', 'feedzy-rss-feeds' )
 						),
 					),
 				)
