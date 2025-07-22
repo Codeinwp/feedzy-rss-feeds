@@ -622,24 +622,34 @@ class Editor extends Component {
 									item.thumbnail = item.default_img;
 								}
 
-								const metaValues = new Object();
-								metaValues.author =
-									__('by', 'feedzy-rss-feeds') + ' ' + author;
-								metaValues.date = sprintf(
-									// translators: %s: the date of the imported content.
-									__('on %s', 'feedzy-rss-feeds'),
-									unescapeHTML(itemDate)
-								);
-								metaValues.time = sprintf(
-									// translators: %s: the time of the imported content.
-									__('at %s', 'feedzy-rss-feeds'),
-									unescapeHTML(itemTime)
-								);
-								metaValues.categories = sprintf(
-									// translators: %s: the category of the imported content.
-									__('in %s', 'feedzy-rss-feeds'),
-									unescapeHTML(categories)
-								);
+								const metaValues = {};
+								if (author) {
+									metaValues.author =
+										__('by', 'feedzy-rss-feeds') +
+										' ' +
+										author;
+								}
+								if (itemDate) {
+									metaValues.date = sprintf(
+										// translators: %s: the date of the imported content.
+										__('on %s', 'feedzy-rss-feeds'),
+										unescapeHTML(itemDate)
+									);
+								}
+								if (itemTime) {
+									metaValues.time = sprintf(
+										// translators: %s: the time of the imported content.
+										__('at %s', 'feedzy-rss-feeds'),
+										unescapeHTML(itemTime)
+									);
+								}
+								if (categories) {
+									metaValues.categories = sprintf(
+										// translators: %s: the category of the imported content.
+										__('in %s', 'feedzy-rss-feeds'),
+										unescapeHTML(categories)
+									);
+								}
 
 								return (
 									<li
