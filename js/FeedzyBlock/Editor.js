@@ -385,7 +385,7 @@ class Editor extends Component {
 			itemTitle: !this.props.attributes.itemTitle,
 		});
 	}
-	onToggleDisableStyle() {
+	toggleDisableStyle() {
 		this.props.setAttributes({
 			disableStyle: !this.props.attributes.disableStyle,
 		});
