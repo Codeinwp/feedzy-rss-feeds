@@ -7,6 +7,7 @@ import {
 	TextControl,
 	Button,
 	Spinner,
+	Disabled,
 } from '@wordpress/components';
 
 import queryString from 'query-string';
@@ -521,18 +522,21 @@ class Editor extends Component {
 							this.props.attributes.feedData.channel !== null && (
 								<div className="rss_header">
 									<h2>
-										<a
-											className="rss_title"
-											href={
-												this.props.attributes.feedData
-													.channel.link || '#'
-											}
-										>
-											{unescapeHTML(
-												this.props.attributes.feedData
-													.channel.title
-											)}
-										</a>
+										<Disabled>
+											<a
+												className="rss_title"
+												href={
+													this.props.attributes
+														.feedData.channel
+														.link || '#'
+												}
+											>
+												{unescapeHTML(
+													this.props.attributes
+														.feedData.channel.title
+												)}
+											</a>
+										</Disabled>
 										<span className="rss_description">
 											{' ' +
 												unescapeHTML(
@@ -673,24 +677,12 @@ class Editor extends Component {
 															.size + 'px',
 												}}
 											>
-												<a
-													href={item.link}
-													title={unescapeHTML(
-														item.title
-													)}
-													style={{
-														width:
-															this.props
-																.attributes
-																.size + 'px',
-														height:
-															this.props
-																.attributes
-																.size + 'px',
-													}}
-												>
-													<span
-														className="fetched"
+												<Disabled>
+													<a
+														href={item.link}
+														title={unescapeHTML(
+															item.title
+														)}
 														style={{
 															width:
 																this.props
@@ -702,17 +694,33 @@ class Editor extends Component {
 																	.attributes
 																	.size +
 																'px',
-															backgroundImage:
-																this.getImageURL(
-																	item,
-																	true
-																),
 														}}
-														title={unescapeHTML(
-															item.title
-														)}
-													></span>
-												</a>
+													>
+														<span
+															className="fetched"
+															style={{
+																width:
+																	this.props
+																		.attributes
+																		.size +
+																	'px',
+																height:
+																	this.props
+																		.attributes
+																		.size +
+																	'px',
+																backgroundImage:
+																	this.getImageURL(
+																		item,
+																		true
+																	),
+															}}
+															title={unescapeHTML(
+																item.title
+															)}
+														></span>
+													</a>
+												</Disabled>
 											</div>
 										)}
 										<div className="rss_content_wrap">
@@ -720,26 +728,31 @@ class Editor extends Component {
 											this.props.attributes.title !==
 												0 ? (
 												<span className="title">
-													<a href={item.link}>
-														{this.props.attributes
-															.title &&
-														unescapeHTML(item.title)
-															.length >
-															this.props
+													<Disabled>
+														<a href={item.link}>
+															{this.props
 																.attributes
-																.title
-															? unescapeHTML(
-																	item.title
-																).substring(
-																	0,
-																	this.props
-																		.attributes
-																		.title
-																) + '...'
-															: unescapeHTML(
-																	item.title
-																)}
-													</a>
+																.title &&
+															unescapeHTML(
+																item.title
+															).length >
+																this.props
+																	.attributes
+																	.title
+																? unescapeHTML(
+																		item.title
+																	).substring(
+																		0,
+																		this
+																			.props
+																			.attributes
+																			.title
+																	) + '...'
+																: unescapeHTML(
+																		item.title
+																	)}
+														</a>
+													</Disabled>
 												</span>
 											) : (
 												''
