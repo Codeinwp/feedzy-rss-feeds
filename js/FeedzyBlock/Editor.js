@@ -52,7 +52,6 @@ class Editor extends Component {
 		this.onThumb = this.onThumb.bind(this);
 		this.onDefault = this.onDefault.bind(this);
 		this.onSize = this.onSize.bind(this);
-		this.onHTTP = this.onHTTP.bind(this);
 		this.onReferralURL = this.onReferralURL.bind(this);
 		this.onColumns = this.onColumns.bind(this);
 		this.onTemplate = this.onTemplate.bind(this);
@@ -152,7 +151,7 @@ class Editor extends Component {
 				});
 				return data;
 			})
-			.fail((err) => {
+			.catch((err) => {
 				this.setState({
 					route: 'home',
 					loading: false,
@@ -176,10 +175,12 @@ class Editor extends Component {
 				});
 				const _this = this;
 				_this.props.setAttributes({ categories });
-				const editorCanvas = jQuery('iframe[name="editor-canvas"]');
-				let $target = jQuery('.feedzy-source input');
+				const editorCanvas = window.jQuery(
+					'iframe[name="editor-canvas"]'
+				);
+				let $target = window.jQuery('.feedzy-source input');
 				if (editorCanvas.length > 0) {
-					$target = jQuery(
+					$target = window.jQuery(
 						'.feedzy-source input',
 						editorCanvas.contents()
 					);
@@ -195,7 +196,7 @@ class Editor extends Component {
 					},
 				});
 			})
-			.fail((err) => {
+			.catch((err) => {
 				return err;
 			});
 	}
@@ -222,23 +223,16 @@ class Editor extends Component {
 	}
 
 	getImageURL(item, background) {
-		let url = item.thumbnail
-			? item.thumbnail
-			: this.props.attributes.default
-				? this.props.attributes.default.url
-				: feedzyjs.imagepath + 'feedzy.svg';
-		switch (this.props.attributes.http) {
-			case 'default':
-				if (url.indexOf('https') === -1 && url.indexOf('http') === 0) {
-					url = this.props.attributes.default
-						? this.props.attributes.default.url
-						: feedzyjs.imagepath + 'feedzy.svg';
-				}
-				break;
-			case 'https':
-				url = url.replace(/http:/g, 'https:');
-				break;
+		let url;
+		if (item.thumbnail) {
+			url = item.thumbnail;
+		} else if (this.props.attributes.default) {
+			url = this.props.attributes.default.url;
+		} else {
+			url = window.feedzyjs.imagepath + 'feedzy.svg';
 		}
+
+		url = url.replace(/http:/g, 'https:');
 
 		if (background) {
 			url = 'url("' + url + '")';
@@ -259,7 +253,7 @@ class Editor extends Component {
 	onChangeOffset(value) {
 		this.props.setAttributes({ offset: Number(value) });
 	}
-	onToggleFeedTitle(value) {
+	onToggleFeedTitle() {
 		this.props.setAttributes({
 			feed_title: !this.props.attributes.feed_title,
 		});
@@ -300,7 +294,7 @@ class Editor extends Component {
 		});
 		this.props.setAttributes({ multiple_meta: value });
 	}
-	onToggleSummary(value) {
+	onToggleSummary() {
 		this.props.setAttributes({ summary: !this.props.attributes.summary });
 	}
 	onToggleLazy(value) {
@@ -331,12 +325,6 @@ class Editor extends Component {
 	onSize(value) {
 		this.props.setAttributes({ size: !value ? 150 : Number(value) });
 	}
-	onHTTP(value) {
-		this.props.setAttributes({ http: value });
-		this.setState({
-			route: 'reload',
-		});
-	}
 	onReferralURL(value) {
 		window.tiTrk?.with('feedzy').add({ feature: 'block-referral-url' });
 		this.props.setAttributes({ referral_url: value });
@@ -355,7 +343,7 @@ class Editor extends Component {
 		});
 		this.props.setAttributes({ template: value });
 	}
-	onTogglePrice(value) {
+	onTogglePrice() {
 		window.tiTrk?.with('feedzy').set(`feedzy-price`, {
 			feature: 'block-price',
 			featureValue: !this.props.attributes.price,
@@ -374,11 +362,14 @@ class Editor extends Component {
 	onToDateTime(value) {
 		this.props.setAttributes({ to_datetime: value });
 	}
-	feedzyCategoriesList(value) {
-		const editorCanvas = jQuery('iframe[name="editor-canvas"]');
-		let $target = jQuery('.feedzy-source input');
+	feedzyCategoriesList() {
+		const editorCanvas = window.jQuery('iframe[name="editor-canvas"]');
+		let $target = window.jQuery('.feedzy-source input');
 		if (editorCanvas.length > 0) {
-			$target = jQuery('.feedzy-source input', editorCanvas.contents());
+			$target = window.jQuery(
+				'.feedzy-source input',
+				editorCanvas.contents()
+			);
 		}
 		$target.autocomplete({ disabled: false }).autocomplete('search', '');
 	}
@@ -389,12 +380,12 @@ class Editor extends Component {
 		}
 		return url;
 	}
-	onToggleItemTitle(value) {
+	onToggleItemTitle() {
 		this.props.setAttributes({
 			itemTitle: !this.props.attributes.itemTitle,
 		});
 	}
-	onToggleDisableStyle(value) {
+	onToggleDisableStyle() {
 		this.props.setAttributes({
 			disableStyle: !this.props.attributes.disableStyle,
 		});
@@ -461,10 +452,19 @@ class Editor extends Component {
 											onKeyUp={this.handleKeyUp}
 											value={this.props.attributes.feeds}
 										/>
-										<span
+										<button
 											className="dashicons dashicons-arrow-down-alt2"
 											onClick={this.feedzyCategoriesList}
-										></span>
+											onKeyDown={(e) => {
+												if (
+													e.key === 'Enter' ||
+													e.key === ' '
+												) {
+													this.feedzyCategoriesList();
+												}
+											}}
+											aria-label="Show categories list"
+										></button>
 									</div>
 									<Button
 										isLarge
@@ -522,7 +522,13 @@ class Editor extends Component {
 							this.props.attributes.feedData.channel !== null && (
 								<div className="rss_header">
 									<h2>
-										<a className="rss_title">
+										<a
+											className="rss_title"
+											href={
+												this.props.attributes.feedData
+													.channel.link || '#'
+											}
+										>
 											{unescapeHTML(
 												this.props.attributes.feedData
 													.channel.title
@@ -573,10 +579,10 @@ class Editor extends Component {
 									);
 									itemDateTimeObj =
 										itemDateTimeObj.toUTCString();
-									itemDate = moment
+									itemDate = window.moment
 										.utc(itemDateTimeObj)
 										.format('MMMM D, YYYY');
-									itemTime = moment
+									itemTime = window.moment
 										.utc(itemDateTimeObj)
 										.format('h:mm A');
 								}
@@ -617,20 +623,20 @@ class Editor extends Component {
 									item.thumbnail = item.default_img;
 								}
 
-								const meta_values = new Object();
-								meta_values.author =
+								const metaValues = new Object();
+								metaValues.author =
 									__('by', 'feedzy-rss-feeds') + ' ' + author;
-								meta_values.date = sprintf(
+								metaValues.date = sprintf(
 									// translators: %s: the date of the imported content.
 									__('on %s', 'feedzy-rss-feeds'),
 									unescapeHTML(itemDate)
 								);
-								meta_values.time = sprintf(
+								metaValues.time = sprintf(
 									// translators: %s: the time of the imported content.
 									__('at %s', 'feedzy-rss-feeds'),
 									unescapeHTML(itemTime)
 								);
-								meta_values.categories = sprintf(
+								metaValues.categories = sprintf(
 									// translators: %s: the category of the imported content.
 									__('in %s', 'feedzy-rss-feeds'),
 									unescapeHTML(categories)
@@ -659,6 +665,7 @@ class Editor extends Component {
 												}}
 											>
 												<a
+													href={item.link}
 													title={unescapeHTML(
 														item.title
 													)}
@@ -704,7 +711,7 @@ class Editor extends Component {
 											this.props.attributes.title !==
 												0 ? (
 												<span className="title">
-													<a>
+													<a href={item.link}>
 														{this.props.attributes
 															.title &&
 														unescapeHTML(item.title)
@@ -733,7 +740,7 @@ class Editor extends Component {
 													.metafields !== 'no' && (
 													<small className="meta">
 														{arrangeMeta(
-															meta_values,
+															metaValues,
 															this.props
 																.attributes
 																.metafields
@@ -764,7 +771,7 @@ class Editor extends Component {
 																)}
 													</p>
 												)}
-												{feedzyjs.isPro &&
+												{window.feedzyjs.isPro &&
 													item.media &&
 													item.media.src && (
 														<audio
@@ -795,7 +802,7 @@ class Editor extends Component {
 															</a>
 														</audio>
 													)}
-												{feedzyjs.isPro &&
+												{window.feedzyjs.isPro &&
 													this.props.attributes
 														.price &&
 													item.price &&
