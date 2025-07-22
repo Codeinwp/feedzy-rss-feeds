@@ -209,8 +209,8 @@ class Feedzy_Rss_Feeds_Limited_Offers {
 				display: none;
 			}
 		</style>
-		<div class="themeisle-sale notice notice-info is-dismissible">
-			<div class="notice-dismiss"></div>
+		<div class="themeisle-sale notice notice-info is-dismissible fz-notice">
+			<div class="notice-dismiss fz-notice"></div>
 			<svg width="24px" height="24px" viewBox="0 0 77 77" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 				<!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
 				<title>Combined Shape</title>
