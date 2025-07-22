@@ -790,7 +790,7 @@
 
 								dialogBox
 								.find('.feedzy-error.feedzy-api-error')
-								.html('<div class="notice notice-success"><p>' + feedzy.i10n.removeErrorLogsMsg + '</p></div>')
+								.html('<div class="notice notice-success fz-notice"><p>' + feedzy.i10n.removeErrorLogsMsg + '</p></div>')
 							}
 						);
 					}
