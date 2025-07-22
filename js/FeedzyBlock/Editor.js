@@ -460,7 +460,9 @@ class Editor extends Component {
 													onClick={
 														this
 															.feedzyCategoriesList
-													}></span>
+													}
+													role="presentation"
+												></span>
 											)}
 									</div>
 									<Button
