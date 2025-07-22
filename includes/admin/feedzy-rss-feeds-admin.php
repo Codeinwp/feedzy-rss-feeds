@@ -426,7 +426,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			</script>
 			<div id="feedzy-add-new-import" class="wp-core-ui feedzy-modal" style="display:none;">
 				<div class="modal-content">
-					<button type="button" class="notice-dismiss close-modal">
+					<button type="button" class="notice-dismiss fz-notice close-modal">
 						<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this dialog', 'feedzy-rss-feeds' ); ?></span>
 					</button>
 					<div class="modal-header">
@@ -456,7 +456,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		?>
 			<div id="feedzy-renew-edit" class="wp-core-ui feedzy-modal" style="display:none;">
 				<div class="modal-content">
-					<button type="button" class="notice-dismiss close-modal">
+					<button type="button" class="notice-dismiss fz-notice close-modal">
 						<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this dialog', 'feedzy-rss-feeds' ); ?></span>
 					</button>
 					<div class="modal-header">
@@ -481,7 +481,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			</div>
 			<div id="feedzy-clone-modal" class="wp-core-ui feedzy-modal" style="display:none;">
 				<div class="modal-content">
-					<button type="button" class="notice-dismiss close-modal">
+					<button type="button" class="notice-dismiss fz-notice close-modal">
 						<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this dialog', 'feedzy-rss-feeds' ); ?></span>
 					</button>
 					<div class="modal-header">
@@ -1441,7 +1441,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 		if ( $invalid ) {
 			if ( empty( $css_class ) ) {
-				$css_class = 'notice notice-error notice-alt feedzy-error-critical';
+				$css_class = 'notice notice-error notice-alt fz-notice feedzy-error-critical';
 			}
 			$message .= '<div class="' . $css_class . '"><p style="color: inherit"><i class="dashicons dashicons-warning"></i>' . $text . ': <ol style="color: inherit">';
 			foreach ( $invalid as $url ) {
@@ -2215,7 +2215,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		add_action(
 			'admin_notices',
 			function () {
-				echo '<div id="tsdk_banner" class="notice feedzy-banner-dashboard"></div>';
+				echo '<div id="tsdk_banner" class="notice fz-notice feedzy-banner-dashboard"></div>';
 			},
 			999
 		);
