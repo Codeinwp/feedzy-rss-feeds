@@ -445,6 +445,9 @@ add_filter(
 				'class'    => array(),
 				'selected' => array(),
 			),
+			'optgroup' => array(
+				'label' => array(),
+			),
 			'input'    => array(
 				'type'        => array(),
 				'id'          => array(),
