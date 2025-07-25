@@ -156,10 +156,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$shortcodes = $wpdb->get_var( "SELECT count(*) FROM {$wpdb->prefix}posts WHERE post_status IN ('publish', 'private') AND post_content LIKE '%[feedzy-rss %'" ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		$data = array(
-			'categories' => $categories,
-			'imports'    => $imports,
-			'shortcodes' => $shortcodes,
-			'license'    => $license,
+			'categories'         => $categories,
+			'imports'            => $imports,
+			'shortcodes'         => $shortcodes,
+			'license'            => $license,
+			'days_since_install' => round( ( time() - get_option( 'feedzy_rss_feeds_install', time() ) ) / DAY_IN_SECONDS ),
 		);
 
 		$settings = apply_filters( 'feedzy_get_settings', null );
