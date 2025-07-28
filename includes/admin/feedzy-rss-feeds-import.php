@@ -3534,9 +3534,8 @@ class Feedzy_Rss_Feeds_Import {
 			$wizard_data['job_id'] = $job_id;
 			update_option( 'feedzy_wizard_data', $wizard_data );
 
-			$job   = get_post( $job_id );
-			$count = $this->run_job( $job, 10 );
-			do_action( 'feedzy_run_cron_extra', $job );
+			$job      = get_post( $job_id );
+			$count    = $this->run_job( $job, 10 );
 			$response = array(
 				'status' => $count > 0,
 			);
