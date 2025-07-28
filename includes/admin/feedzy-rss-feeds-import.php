@@ -3489,6 +3489,7 @@ class Feedzy_Rss_Feeds_Import {
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
 
 		$post_type                = ! empty( $_POST['post_type'] ) ? sanitize_text_field( wp_unslash( $_POST['post_type'] ) ) : '';
+		$post_status              = ! empty( $_POST['post_status'] ) ? sanitize_text_field( wp_unslash( $_POST['post_status'] ) ) : '';
 		$wizard_data              = get_option( 'feedzy_wizard_data', array() );
 		$wizard_data              = ! empty( $wizard_data ) ? $wizard_data : array();
 		$wizard_data['post_type'] = $post_type;
@@ -3514,7 +3515,7 @@ class Feedzy_Rss_Feeds_Import {
 				array(
 					'post_title'  => $post_title,
 					'post_type'   => 'feedzy_imports',
-					'post_status' => 'publish',
+					'post_status' => 'draft',
 				)
 			);
 			Feedzy_Rss_Feeds_Usage::get_instance()->track_import_creation();
@@ -3526,10 +3527,11 @@ class Feedzy_Rss_Feeds_Import {
 			update_post_meta( $job_id, 'import_post_date', '[#item_date]' );
 			update_post_meta( $job_id, 'import_post_content', '[[{"value":"%5B%7B%22id%22%3A%22%22%2C%22tag%22%3A%22item_content%22%2C%22data%22%3A%7B%7D%7D%5D"}]]' );
 			update_post_meta( $job_id, 'import_post_type', $post_type );
-			update_post_meta( $job_id, 'import_post_status', 'publish' );
+			update_post_meta( $job_id, 'import_post_status', $post_status );
 			update_post_meta( $job_id, 'import_post_featured_img', '[#item_image]' );
 
 			// Update wizard data.
+			$wizard_data['job_id'] = $job_id;
 			update_option( 'feedzy_wizard_data', $wizard_data );
 
 			$job   = get_post( $job_id );

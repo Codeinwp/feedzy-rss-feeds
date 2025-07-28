@@ -2,10 +2,8 @@
  * Plugin Name: FEEDZY RSS Feeds
  * Plugin URI: https://themeisle.com/plugins/feedzy-rss-feeds/
  * Author: Themeisle
- *
- * @package
  */
-/* jshint unused:false */
+
 jQuery(function ($) {
 	$('#smartwizard').smartWizard({
 		transition: {
@@ -209,6 +207,9 @@ jQuery(function ($) {
 				security: window.feedzySetupWizardData.ajax.security,
 				post_type: $(
 					'select[name="feedzy[wizard_data][import_post_type]"]'
+				).val(),
+				post_status: $(
+					'select[name="feedzy_meta_data[import_post_status]"]'
 				).val(),
 				action: 'feedzy',
 				_action: 'wizard_import_feed',

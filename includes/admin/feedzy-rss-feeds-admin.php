@@ -1791,6 +1791,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$integrate_with = ! empty( $wizard_data['integrate_with'] ) ? $wizard_data['integrate_with'] : '';
 		$post_type      = ! empty( $wizard_data['post_type'] ) ? $wizard_data['post_type'] : '';
 		$page_id        = ! empty( $wizard_data['page_id'] ) ? $wizard_data['page_id'] : '';
+		$job_id         = ! empty( $wizard_data['job_id'] ) ? $wizard_data['job_id'] : '';
 		$response       = array(
 			'status'      => 0,
 			'redirect_to' => '',
@@ -1801,19 +1802,22 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$email          = ! empty( $_POST['email'] ) ? filter_input( INPUT_POST, 'email', FILTER_SANITIZE_EMAIL ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		if ( 'feed' === $integrate_with ) {
-			$segment     = 1;
-			$redirect_to = get_post_type_archive_link( $post_type );
-			$response    = array(
+			$segment  = 1;
+			$response = array(
 				'status'      => 1,
-				'redirect_to' => $redirect_to,
-				'message'     => __( 'Redirecting to archive page', 'feedzy-rss-feeds' ),
+				'redirect_to' => add_query_arg( 'post_type', 'feedzy_imports', admin_url( 'edit.php' ) ),
+				'message'     => __( 'Redirecting to Feedzy dashboard', 'feedzy-rss-feeds' ),
 			);
-			if ( false === $redirect_to ) {
-				$response = array(
-					'status'      => 1,
-					'redirect_to' => add_query_arg( 'post_type', 'feedzy_imports', admin_url( 'edit.php' ) ),
-					'message'     => __( 'Redirecting to Feedzy dashboard', 'feedzy-rss-feeds' ),
+
+			if ( $job_id ) {
+				$response['redirect_to'] = add_query_arg(
+					array(
+						'post'   => $job_id,
+						'action' => 'edit',
+					),
+					admin_url( 'post.php' )
 				);
+				$response['message']     = __( 'Redirecting to import feed', 'feedzy-rss-feeds' );
 			}
 		} elseif ( 'shortcode' === $integrate_with ) {
 			$segment = 2;
