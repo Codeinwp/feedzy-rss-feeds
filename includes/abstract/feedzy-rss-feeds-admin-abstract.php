@@ -1627,7 +1627,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			return false;
 		}
 
-		$image_extensions = array( 'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'tiff', 'tif' );
+		$image_extensions = array( 'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'tiff', 'tif', 'avif' );
 		$url_parts        = wp_parse_url( $url );
 		if ( ! isset( $url_parts['path'] ) ) {
 			return false;
