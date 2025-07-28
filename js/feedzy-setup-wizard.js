@@ -266,10 +266,12 @@ jQuery(function ($) {
 	// Step: 4 Skip and subscribe process.
 	$(document).on('click', '.fz-subscribe', function (e) {
 		const withSubscribe = $(this).data('fz_subscribe');
+		const urlParams = new URLSearchParams(window.location.search);
 		const postData = {
 			action: 'feedzy_wizard_step_process',
 			security: window.feedzySetupWizardData.ajax.security,
 			step: 'step_4',
+			integrate_with: urlParams.get('integrate-with'),
 		};
 		const emailElement = $('#fz_subscribe_email');
 		// Remove error message.

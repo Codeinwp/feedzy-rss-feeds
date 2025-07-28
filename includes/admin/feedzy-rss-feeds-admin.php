@@ -1786,10 +1786,11 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * Step: 4 skip and subscribe process.
 	 */
 	private function setup_wizard_subscribe_process() {
+		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
+
 		$segment        = 0;
 		$wizard_data    = get_option( 'feedzy_wizard_data', array() );
 		$integrate_with = ! empty( $wizard_data['integrate_with'] ) ? $wizard_data['integrate_with'] : '';
-		$post_type      = ! empty( $wizard_data['post_type'] ) ? $wizard_data['post_type'] : '';
 		$page_id        = ! empty( $wizard_data['page_id'] ) ? $wizard_data['page_id'] : '';
 		$job_id         = ! empty( $wizard_data['job_id'] ) ? $wizard_data['job_id'] : '';
 		$response       = array(
@@ -1798,8 +1799,11 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			'message'     => '',
 		);
 
-		$with_subscribe = ! empty( $_POST['with_subscribe'] ) ? (bool) $_POST['with_subscribe'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$email          = ! empty( $_POST['email'] ) ? filter_input( INPUT_POST, 'email', FILTER_SANITIZE_EMAIL ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$with_subscribe = ! empty( $_POST['with_subscribe'] ) ? (bool) $_POST['with_subscribe'] : '';
+		$email          = ! empty( $_POST['email'] ) ? filter_input( INPUT_POST, 'email', FILTER_SANITIZE_EMAIL ) : '';
+		if ( empty( $integrate_with ) ) {
+			$integrate_with = ! empty( $_POST['integrate_with'] ) ? sanitize_text_field( $_POST['integrate_with'] ) : '';
+		}
 
 		if ( 'feed' === $integrate_with ) {
 			$segment  = 1;
