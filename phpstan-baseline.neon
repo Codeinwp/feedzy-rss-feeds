@@ -1706,42 +1706,12 @@ parameters:
 			path: includes/layouts/setup-wizard.php
 
 		-
-			message: "#^Cannot call method get_author\\(\\) on array\\<string, string\\>\\.$#"
-			count: 1
-			path: includes/util/feedzy-rss-feeds-conditions.php
-
-		-
-			message: "#^Cannot call method get_content\\(\\) on array\\<string, string\\>\\.$#"
-			count: 1
-			path: includes/util/feedzy-rss-feeds-conditions.php
-
-		-
-			message: "#^Cannot call method get_date\\(\\) on array\\<string, string\\>\\.$#"
-			count: 1
-			path: includes/util/feedzy-rss-feeds-conditions.php
-
-		-
-			message: "#^Cannot call method get_item_tags\\(\\) on array\\<string, string\\>\\.$#"
-			count: 1
-			path: includes/util/feedzy-rss-feeds-conditions.php
-
-		-
-			message: "#^Cannot call method get_title\\(\\) on array\\<string, string\\>\\.$#"
-			count: 1
-			path: includes/util/feedzy-rss-feeds-conditions.php
-
-		-
 			message: "#^Constant SIMPLEPIE_NAMESPACE_ATOM_10 not found\\.$#"
 			count: 1
 			path: includes/util/feedzy-rss-feeds-conditions.php
 
 		-
 			message: "#^Method Feedzy_Rss_Feeds_Conditions\\:\\:migrate_conditions\\(\\) has parameter \\$conditions with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: includes/util/feedzy-rss-feeds-conditions.php
-
-		-
-			message: "#^Parameter \\#1 \\$item of method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:feedzy_retrieve_image\\(\\) expects object, array\\<string, string\\> given\\.$#"
 			count: 1
 			path: includes/util/feedzy-rss-feeds-conditions.php
 
