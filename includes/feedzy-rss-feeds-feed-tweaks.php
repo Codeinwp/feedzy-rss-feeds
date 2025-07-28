@@ -446,7 +446,8 @@ add_filter(
 				'selected' => array(),
 			),
 			'optgroup' => array(
-				'label' => array(),
+				'label'    => array(),
+				'disabled' => array(),
 			),
 			'input'    => array(
 				'type'        => array(),
