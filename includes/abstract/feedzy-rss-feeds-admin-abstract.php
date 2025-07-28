@@ -1628,7 +1628,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		$image_extensions = array( 'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'tiff', 'tif' );
-		$url_parts        = parse_url( $url );
+		$url_parts        = wp_parse_url( $url );
 		if ( ! isset( $url_parts['path'] ) ) {
 			return false;
 		}
@@ -1687,10 +1687,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 					}
 				}
 
-				$embeded_thumbnail = $enclosure->embed();
-				if ( $embeded_thumbnail ) {
+				$embedded_thumbnail = $enclosure->embed();
+				if ( $embedded_thumbnail ) {
 					$pattern = '/https?:\/\/.*\.(?:jpg|JPG|jpeg|JPEG|jpe|JPE|gif|GIF|png|PNG)/i';
-					if ( preg_match( $pattern, $embeded_thumbnail, $matches ) ) {
+					if ( preg_match( $pattern, $embedded_thumbnail, $matches ) ) {
 						$the_thumbnail = $matches[0];
 					}
 				}
