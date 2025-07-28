@@ -222,7 +222,7 @@ class Feedzy_Rss_Feeds_Usage {
 	 * 
 	 * @return void
 	 * 
-	 * @since 5.0.7
+	 * @since 5.0.8
 	 */
 	public function record_import_per_week() {
 		$data_time  = current_datetime();
