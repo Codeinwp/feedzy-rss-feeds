@@ -240,7 +240,7 @@ class Feedzy_Rss_Feeds_Conditions {
 	 *
 	 * @param bool                  $default_value The current return value.
 	 * @param array<string, string> $attrs The attributes of the feed.
-	 * @param array<string, string> $item The item to evaluate.
+	 * @param SimplePie\Item        $item The item to evaluate.
 	 * @param string                $feed_url The URL of the feed.
 	 * @param int                   $index The index of the item.
 	 *

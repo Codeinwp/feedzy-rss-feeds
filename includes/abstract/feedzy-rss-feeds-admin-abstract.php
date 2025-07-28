@@ -1173,7 +1173,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 					sprintf( $anchor2, esc_url( $item['item_url'] ), esc_attr( $item['item_url_target'] ), esc_attr( $item['item_url_follow'] ), wp_kses_post( $item['item_title'] ) ),
 					$details
 				);
-			} else {
+			} else { 
 				$content .= sprintf(
 					$line_item,
 					wp_kses_post( $item['itemAttr'] ),
@@ -1617,13 +1617,37 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	}
 
 	/**
+	 * Check if the URL is an image URL based on its extension.
+	 * 
+	 * @param string|null $url The URL to check.
+	 * @return bool
+	 */
+	public function is_image_url( $url ) {
+		if ( empty( $url ) || ! is_string( $url ) ) {
+			return false;
+		}
+
+		$image_extensions = array( 'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'tiff', 'tif' );
+		$url_parts        = parse_url( $url );
+		if ( ! isset( $url_parts['path'] ) ) {
+			return false;
+		}
+
+		$path_info = pathinfo( $url_parts['path'] );
+		return (
+			isset( $path_info['extension'] ) &&
+			in_array( strtolower( $path_info['extension'] ), $image_extensions )
+		);
+	}
+
+	/**
 	 * Retrive image from the item object
 	 *
 	 * @since   3.0.0
 	 * @access  public
 	 *
-	 * @param   object $item The item object.
-	 * @param   array  $sc The shorcode attributes array.
+	 * @param   SimplePie\Item $item The item object.
+	 * @param   array          $sc The shorcode attributes array.
 	 *
 	 * @return  string
 	 */
@@ -1640,38 +1664,40 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$the_thumbnail = '';
 		$enclosures    = $item->get_enclosures();
 		if ( $enclosures ) {
-			foreach ( (array) $enclosures as $enclosure ) {
+			foreach ( $enclosures as $enclosure ) {
 				// Item thumbnail.
-				$thumbnail = $enclosure->get_thumbnail();
-				$medium    = $enclosure->get_medium();
+				$single_thumbnail = $enclosure->get_thumbnail();
+				$medium           = $enclosure->get_medium();
+
 				if ( in_array( $medium, array( 'video' ), true ) ) {
 					break;
 				}
-				if ( $thumbnail ) {
-					$the_thumbnail = $thumbnail;
+
+				if ( $single_thumbnail && $this->is_image_url( $single_thumbnail ) ) {
+					$the_thumbnail = $single_thumbnail;
 				}
-				if ( isset( $enclosure->thumbnails ) ) {
-					foreach ( (array) $enclosure->thumbnails as $thumbnail ) {
-						$the_thumbnail = $thumbnail;
+
+				$thumbnails = $enclosure->get_thumbnails();
+				if ( ! empty( $thumbnails ) ) {
+					foreach ( $thumbnails as $enclosure_thumbnail ) {
+						if ( ! $this->is_image_url( $enclosure_thumbnail ) ) {
+							continue;
+						}
+						$the_thumbnail = $enclosure_thumbnail;
 					}
 				}
-				$thumbnail = $enclosure->embed();
-				if ( $thumbnail ) {
+
+				$embeded_thumbnail = $enclosure->embed();
+				if ( $embeded_thumbnail ) {
 					$pattern = '/https?:\/\/.*\.(?:jpg|JPG|jpeg|JPEG|jpe|JPE|gif|GIF|png|PNG)/i';
-					if ( preg_match( $pattern, $thumbnail, $matches ) ) {
+					if ( preg_match( $pattern, $embeded_thumbnail, $matches ) ) {
 						$the_thumbnail = $matches[0];
 					}
 				}
-				foreach ( (array) $enclosure->get_link() as $thumbnail ) {
-					$pattern = '/https?:\/\/.*\.(?:jpg|JPG|jpeg|JPEG|jpe|JPE|gif|GIF|png|PNG)/i';
-					$imgsrc  = $thumbnail;
-					if ( preg_match( $pattern, $imgsrc, $matches ) ) {
-						$the_thumbnail = $thumbnail;
-						break;
-					} elseif ( in_array( $enclosure->type, $image_mime_types, true ) ) {
-						$the_thumbnail = $thumbnail;
-						break;
-					}
+
+				$enclosure_link = $enclosure->get_link();
+				if ( $this->is_image_url( $enclosure_link ) ) {
+					$the_thumbnail = $enclosure_link;
 				}
 				// Break loop if thumbnail is found.
 				if ( ! empty( $the_thumbnail ) ) {
