@@ -208,7 +208,6 @@ $published_status = array( 'publish', 'draft' );
 											</div>
 										</div>
 									</div>
-									
 								</div>
 								<div class="feedzy-accordion-item hidden" id="shortcode">
 									<div class="feedzy-accordion-item__title">
