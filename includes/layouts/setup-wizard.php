@@ -22,6 +22,7 @@ if ( ! empty( $integrate_with ) ) {
 	$wizard_data = get_option( 'feedzy_wizard_data', array() );
 	$feed_source = ! empty( $wizard_data['feed'] ) ? $wizard_data['feed'] : '';
 }
+$published_status = array( 'publish', 'draft' );
 
 ?>
 <div class="feedzy-wizard-wrap feedzy-wrap">
@@ -147,6 +148,11 @@ if ( ! empty( $integrate_with ) ) {
 													?>
 													<span class="dashicons dashicons-arrow-right-alt"></span>
 												</button>
+												<button class="btn btn-ghost btn-skip" style="color: #757575;">
+													<?php
+														esc_html_e( 'Skip', 'feedzy-rss-feeds' );
+													?>
+												</button>
 												<span class="spinner"></span>
 											</div>
 										</div>
@@ -161,6 +167,9 @@ if ( ! empty( $integrate_with ) ) {
 									<div class="feedzy-accordion-item__content border-top">
 										<div class="fz-form-wrap">
 											<div class="form-block">
+												<label class="form-label">
+													<?php esc_html_e( 'Import as', 'feedzy-rss-feeds' ); ?>
+												</label>
 												<div class="mx-320">
 													<select name="feedzy[wizard_data][import_post_type]" class="form-control feedzy-chosen">
 														<option value="post"><?php esc_html_e( 'Post', 'feedzy-rss-feeds' ); ?></option>
@@ -169,8 +178,31 @@ if ( ! empty( $integrate_with ) ) {
 												</div>
 											</div>
 											<div class="form-block">
+												<label class="form-label">
+													<?php esc_html_e( 'Post status', 'feedzy-rss-feeds' ); ?>
+												</label>
+												<div class="mx-320">
+													<select id="feedzy_post_status" class="form-control feedzy-chosen" name="feedzy_meta_data[import_post_status]">
+														<?php
+														foreach ( $published_status as $_status ) {
+															?>
+															<option value="<?php echo esc_attr( $_status ); ?>">
+																<?php echo esc_html( ucfirst( $_status ) ); ?>
+															</option>
+															<?php
+														}
+														?>
+													</select>
+												</div>
+											</div>
+											<div class="form-block">
 												<button class="btn btn-primary fz-wizard-feed-import">
-													<?php esc_html_e( 'Save and Import', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-arrow-right-alt"></span>
+													<?php esc_html_e( 'Create a draft import', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-arrow-right-alt"></span>
+												</button>
+												<button class="btn btn-ghost btn-skip" style="color: #757575;">
+													<?php
+														esc_html_e( 'Skip', 'feedzy-rss-feeds' );
+													?>
 												</button>
 												<span class="spinner"></span>
 											</div>
