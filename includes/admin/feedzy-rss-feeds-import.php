@@ -212,9 +212,9 @@ class Feedzy_Rss_Feeds_Import {
 	/**
 	 * Fetches additional information for each item.
 	 *
-	 * @param array  $item_array The item attributes array.
-	 * @param object $item The feed item.
-	 * @param array  $sc The shortcode attributes array. This will be empty through the block editor.
+	 * @param array<string, string > $item_array The item attributes array.
+	 * @param object                 $item The feed item.
+	 * @param array<string, mixed>   $sc The shortcode attributes array. This will be empty through the block editor.
 	 * 
 	 * @return array<string, string>
 	 */
@@ -235,33 +235,42 @@ class Feedzy_Rss_Feeds_Import {
 		$host = str_replace( array( '.', 'www' ), '', $host );
 
 		// youtube.
-		if ( in_array( $host, array( 'youtubecom', 'youtube' ), true ) ) {
-			$tags = $item->get_item_tags( SIMPLEPIE_NAMESPACE_MEDIARSS, 'group' );
-			$desc = '';
-			if ( $tags ) {
-				$desc_tag = $tags[0]['child'][ SIMPLEPIE_NAMESPACE_MEDIARSS ]['description'];
-				if ( $desc_tag ) {
-					$desc = $desc_tag[0]['data'];
-				}
-			}
+		if ( ! in_array( $host, array( 'youtubecom', 'youtube' ), true ) ) {
+			// Not a YouTube link, return the item array as is.
+			return $item_array;
+		}
 
-			if ( ! empty( $desc ) ) {
-				if ( empty( $item_array['item_content'] ) ) {
-					$item_array['item_content'] = $desc;
-				}
-				if ( ( empty( $sc ) || 'yes' === $sc['summary'] ) && empty( $item_array['item_description'] ) ) {
-					if ( is_numeric( $sc['summarylength'] ) && strlen( $desc ) > $sc['summarylength'] ) {
-						$desc = preg_replace( '/\s+?(\S+)?$/', '', substr( $desc, 0, $sc['summarylength'] ) ) . ' [&hellip;]';
-					}
-					$item_array['item_description'] = $desc;
-				}
-			}
-			if ( str_contains( $item_array['item_content'], 'Post Content' ) ) {
-				$item_array['item_content'] = '[embed]' . $url . '[/embed]' ;
-			} else {
-				$item_array['item_content'] .= '[embed]' . $url . '[/embed]';
+		$tags = $item->get_item_tags( \SimplePie\SimplePie::NAMESPACE_MEDIARSS, 'group' );
+		$desc = '';
+		if ( $tags ) {
+			$desc_tag = $tags[0]['child'][ \SimplePie\SimplePie::NAMESPACE_MEDIARSS ]['description'];
+			if ( $desc_tag ) {
+				$desc = $desc_tag[0]['data'];
 			}
 		}
+
+		if ( ! empty( $desc ) ) {
+			if ( empty( $item_array['item_content'] ) ) {
+				$item_array['item_content'] = $desc;
+			}
+
+			if (
+				( empty( $sc ) || 'yes' === $sc['summary'] ) &&
+				empty( $item_array['item_description'] )
+			) {
+				if (
+					is_numeric( $sc['summarylength'] ) &&
+					strlen( $desc ) > $sc['summarylength']
+				) {
+					$desc = preg_replace( '/\s+?(\S+)?$/', '', substr( $desc, 0, $sc['summarylength'] ) ) . ' [&hellip;]';
+				}
+				$item_array['item_description'] = $desc;
+			}
+		}
+
+		$embed_shortcode            = '[embed]' . $url . '[/embed]';
+		$should_overwrite           = str_contains( $item_array['item_content'], 'Post Content' );
+		$item_array['item_content'] = ( $should_overwrite ? '' : $item_array['item_content'] ) . $embed_shortcode;
 		
 		return $item_array;
 	}
