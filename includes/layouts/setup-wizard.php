@@ -128,7 +128,7 @@ $published_status = array( 'publish', 'draft' );
 																sprintf(
 																	// translators: %1$s and %2$s are HTML tags for the link to the demo URL.
 																	__( 'No Feed URL? %1$s Click here %2$s to use demo URL', 'feedzy-rss-feeds' ),
-																	'<a target="_blank" class="feed-demo-link" href="' . esc_url( 'https://cointelegraph.com/rss' ) . '" >',
+																	'<a target="_blank" class="feed-demo-link" href="' . esc_url( 'https://wpshout.com/feed/' ) . '" >',
 																	'</a>'
 																)
 															);
