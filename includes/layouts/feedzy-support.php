@@ -10,31 +10,6 @@
 
 	<div class="feedzy-container">
 		<div class="feedzy-accordion-item mb-30">
-			<div class="feedzy-accordion-item__title">
-				<div class="feedzy-accordion-item__button">
-					<div class="feedzy-accordion__step-title h2">
-						<?php
-						switch ( $active_tab ) {
-							case 'help':
-								esc_html_e( 'Getting Started', 'feedzy-rss-feeds' );
-								break;
-							case 'docs':
-								esc_html_e( 'Documentation', 'feedzy-rss-feeds' );
-								break;
-							case 'feedzy-pro':
-								esc_html_e( 'Free vs Pro', 'feedzy-rss-feeds' );
-								break;
-							case 'improve':
-								esc_html_e( 'Help us improve!', 'feedzy-rss-feeds' );
-								break;
-							default:
-								echo esc_html( ucwords( str_replace( array( '-', '_' ), ' ', $active_tab ) ) );
-								break;
-						}
-						?>
-					</div>
-				</div>
-			</div>
 			<div class="feedzy-accordion-item__content">
 				<div class="fz-tabs-menu">
 					<ul>
