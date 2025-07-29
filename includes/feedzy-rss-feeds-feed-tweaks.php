@@ -466,10 +466,13 @@ add_filter(
 				'value'       => array(),
 				'class'       => array(),
 				'data-feedzy' => array(),
+				'placeholder' => array(),
+				'rows'        => array(),
 			),
 			'button'   => array(
-				'class' => array(),
-				'id'    => array(),
+				'class'    => array(),
+				'id'       => array(),
+				'disabled' => array(),
 			),
 			'p'        => array(
 				'class' => array(),
