@@ -302,18 +302,18 @@ class Feedzy_Rss_Feeds_Usage {
 	}
 
 	/**
-	 * Remove the records older than one year.
+	 * Remove the records older than two years.
 	 * 
 	 * @param array<string, int> $imports_per_week The imports per week data.
 	 * @param DateTimeImmutable  $datetime The current datetime.
 	 * @return array<string, int>
 	 */
 	public function remove_old_import_records( $imports_per_week, $datetime ) {
-		$last_year_date_time = ( clone $datetime )->modify( '-1 year' );
+		$cutoff_date_time = ( clone $datetime )->modify( '-2 years' );
 
 		return array_filter(
 			$imports_per_week,
-			function ( $key ) use ( $last_year_date_time ) {
+			function ( $key ) use ( $cutoff_date_time ) {
 				// Parse the ISO week format manually (e.g., "2025-W31")
 				if ( ! preg_match( '/^(\d{4})-W(\d{1,2})$/', $key, $matches ) ) {
 					return false;
@@ -322,11 +322,11 @@ class Feedzy_Rss_Feeds_Usage {
 				$year = (int) $matches[1];
 				$week = (int) $matches[2];
 
-				// Create a datetime for the first day of that week
+				// Create a datetime for the last day of that week (Sunday)
 				$record_datetime = new DateTime();
-				$record_datetime->setISODate( $year, $week, 1 );
+				$record_datetime->setISODate( $year, $week, 7 );
 
-				return $record_datetime >= $last_year_date_time;
+				return $record_datetime >= $cutoff_date_time;
 			},
 			ARRAY_FILTER_USE_KEY 
 		);

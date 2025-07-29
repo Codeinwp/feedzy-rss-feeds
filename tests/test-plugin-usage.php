@@ -202,18 +202,27 @@ class Test_Plugin_Usage extends WP_UnitTestCase {
 	 */
 	public function test_remove_old_import_records() {
 		$current_datetime = current_datetime();
-		$old_datetime = ( clone $current_datetime )->modify( '-2 years' );
+		$two_years_old = ( clone $current_datetime )->modify( '-2 years' );
+		$three_years_old = ( clone $current_datetime )->modify( '-3 years' );
 		
 		$imports_per_week = array(
 			$current_datetime->format( 'o-\WW' ) => 5,
-			$old_datetime->format( 'o-\WW' ) => 3,
+			$two_years_old->format( 'o-\WW' ) => 3,
+			$three_years_old->format( 'o-\WW' ) => 2,
 		);
 		
 		$filtered = $this->usage->remove_old_import_records( $imports_per_week, $current_datetime );
 		
+		// Current data should be kept
 		$this->assertArrayHasKey( $current_datetime->format( 'o-\WW' ), $filtered );
-		$this->assertArrayNotHasKey( $old_datetime->format( 'o-\WW' ), $filtered );
 		$this->assertEquals( 5, $filtered[ $current_datetime->format( 'o-\WW' ) ] );
+		
+		// 2 years old data should be kept (exactly at the cutoff)
+		$this->assertArrayHasKey( $two_years_old->format( 'o-\WW' ), $filtered );
+		$this->assertEquals( 3, $filtered[ $two_years_old->format( 'o-\WW' ) ] );
+		
+		// 3 years old data should be removed
+		$this->assertArrayNotHasKey( $three_years_old->format( 'o-\WW' ), $filtered );
 	}
 
 	/**
