@@ -41,7 +41,7 @@ class Feedzy_Rss_Feeds_Usage {
 	 * Default usage data structure.
 	 *
 	 * @since 5.0.7
-	 * @var   array{ first_import_run_datetime: string, first_import_created_datetime: string, import_count: int, 'can_track_first_usage': bool, imports_per_week: array<array{year: int, week: int, count: int, month: int}> }
+	 * @var   array{ first_import_run_datetime: string, first_import_created_datetime: string, import_count: int, 'can_track_first_usage': bool, imports_per_week: array<string, int> }
 	 */
 	private $default_data = array(
 		'first_import_run_datetime'          => '',
@@ -105,7 +105,7 @@ class Feedzy_Rss_Feeds_Usage {
 	 * Get usage data with defaults merged.
 	 *
 	 * @since  5.0.7
-	 * @return array{ first_import_run_datetime: string, first_import_created_datetime: string, import_count: int, can_track_first_usage: bool, imports_per_week: array<array{year: int, week: int, count: int, month: int}> }
+	 * @return array{ first_import_run_datetime: string, first_import_created_datetime: string, import_count: int, can_track_first_usage: bool, imports_per_week: array<string, int> }
 	 */
 	public function get_usage_data() {
 		$data = get_option( self::OPTION_NAME, array() );
@@ -116,7 +116,7 @@ class Feedzy_Rss_Feeds_Usage {
 	 * Update usage data.
 	 *
 	 * @since  5.0.7
-	 * @param  array<string, string|int|bool|array<array{year: int, week: int, count: int, month: int}>> $new_data Data to merge.
+	 * @param  array<string, string|int|bool|array<string, int>> $new_data Data to merge.
 	 * @return bool
 	 */
 	public function update_usage_data( $new_data ) {
@@ -189,11 +189,47 @@ class Feedzy_Rss_Feeds_Usage {
 
 		$stats = array(
 			'import_count'     => $data['import_count'],
-			'imports_per_week' => $data['imports_per_week'],
+			'imports_per_week' => array(),
 		);
+
+		if ( ! empty( $data['imports_per_week'] ) ) {
+
+			/**
+			 * Format the import into friendly structure for MongoDB.
+			 * 
+			 * @var array<array{year: int, week: int, count: int, month: int}>
+			 */
+			$formatted_imports = array();
+
+			foreach ( $data['imports_per_week'] as $key => $count ) {
+				$datetime = DateTime::createFromFormat( 'W-o_n', $key );
+				if ( false === $datetime ) {
+					continue;
+				}
+
+				$formatted_imports[] = array(
+					'year'  => (int) $datetime->format( 'o' ),
+					'week'  => (int) $datetime->format( 'W' ),
+					'count' => (int) $count,
+					'month' => (int) $datetime->format( 'n' ),
+				);
+			}
+
+			// Sort in chronological order by year and week.
+			usort(
+				$formatted_imports,
+				function ( $a, $b ) {
+					if ( $a['year'] !== $b['year'] ) {
+						return $a['year'] - $b['year'];
+					}
+					return $a['week'] - $b['week'];
+				}
+			);
+			$stats['imports_per_week'] = $formatted_imports;
+		}
 		
 		if ( ! $data['can_track_first_usage'] ) {
-			return $data;
+			return $stats;
 		}
 
 		$stats['first_import_run_datetime']     = ! empty( $data['first_import_run_datetime'] ) ? $data['first_import_run_datetime'] : 'Never';
@@ -225,10 +261,8 @@ class Feedzy_Rss_Feeds_Usage {
 	 * @since 5.0.8
 	 */
 	public function record_import_per_week() {
-		$data_time  = current_datetime();
-		$curr_week  = intval( $data_time->format( 'W' ) );
-		$curr_year  = intval( $data_time->format( 'Y' ) );
-		$curr_month = intval( $data_time->format( 'n' ) );
+		$datetime = current_datetime();
+		$key      = $datetime->format( 'W-o_n' );
 
 		$imports_per_week = array();
 		$data             = $this->get_usage_data();
@@ -236,41 +270,14 @@ class Feedzy_Rss_Feeds_Usage {
 			$imports_per_week = $data['imports_per_week'];
 		}
 
-		$should_add = true;
-		foreach ( $imports_per_week as &$import ) {
-			if (
-				$curr_week !== $import['week'] ||
-				$curr_year !== $import['year'] ||
-				$curr_month !== $import['month']
-			) {
-				continue;
-			}
-
-			$import['count'] += 1;
-			$should_add       = false;
+		if ( array_key_exists( $key, $imports_per_week ) ) {
+			$imports_per_week[ $key ] += 1;
+		} else {
+			$imports_per_week[ $key ] = 1;
 		}
 
-		if ( $should_add ) {
-			$imports_per_week[] = array(
-				'year'  => $curr_year,
-				'week'  => $curr_week,
-				'month' => $curr_month,
-				'count' => 1,
-			);
-		}
-
-		$max_records = 100;
-		if ( count( $imports_per_week ) > $max_records ) {
-			usort(
-				$imports_per_week,
-				function ( $a, $b ) {
-					if ( $a['year'] === $b['year'] ) {
-						return $a['week'] - $b['week'];
-					}
-					return $a['year'] - $b['year'];
-				}
-			);
-			$imports_per_week = array_slice( $imports_per_week, -$max_records );
+		if ( 100 < count( $imports_per_week ) ) {
+			$imports_per_week = $this->remove_old_import_records( $imports_per_week, $datetime );
 		}
 
 		$this->update_usage_data( array( 'imports_per_week' => $imports_per_week ) );
@@ -290,5 +297,25 @@ class Feedzy_Rss_Feeds_Usage {
 		}
 
 		return DAY_IN_SECONDS >= ( time() - $install_time );
+	}
+
+	/**
+	 * Remove the records older than one year.
+	 * 
+	 * @param array<string, int> $imports_per_week The imports per week data.
+	 * @param DateTimeImmutable  $datetime The current datetime.
+	 * @return array<string, int>
+	 */
+	public function remove_old_import_records( $imports_per_week, $datetime ) {
+		$last_year_date_time = ( clone $datetime )->modify( '-1 year' );
+
+		return array_filter(
+			$imports_per_week,
+			function ( $key ) use ( $last_year_date_time ) {
+				$record_datetime = DateTime::createFromFormat( 'W-o_n', $key );
+				return $record_datetime && $record_datetime >= $last_year_date_time;
+			},
+			ARRAY_FILTER_USE_KEY 
+		);
 	}
 }
