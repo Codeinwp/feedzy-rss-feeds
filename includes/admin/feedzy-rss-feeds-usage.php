@@ -182,7 +182,7 @@ class Feedzy_Rss_Feeds_Usage {
 	 * Get formatted usage statistics with calculated fields.
 	 *
 	 * @since  5.0.7
-	 * @return array{ first_import_run_datetime?: string, first_import_created_datetime?: string, import_count: int, imports_per_week: array<array{year: int, week: int, count: int, month: int}>, time_between_first_import_created_and_run?: int }
+	 * @return array{ first_import_run_datetime?: string, first_import_created_datetime?: string, import_count: int, imports_per_week: array<array{year: int, week: int, count: int}>, time_between_first_import_created_and_run?: int }
 	 */
 	public function get_usage_stats() {
 		$data = $this->get_usage_data();
@@ -197,21 +197,23 @@ class Feedzy_Rss_Feeds_Usage {
 			/**
 			 * Format the import into friendly structure for MongoDB.
 			 * 
-			 * @var array<array{year: int, week: int, count: int, month: int}>
+			 * @var array<array{year: int, week: int, count: int}>
 			 */
 			$formatted_imports = array();
 
 			foreach ( $data['imports_per_week'] as $key => $count ) {
-				$datetime = DateTime::createFromFormat( 'W-o_n', $key );
-				if ( false === $datetime ) {
+				// Parse the ISO week format manually (e.g., "2025-W31")
+				if ( ! preg_match( '/^(\d{4})-W(\d{1,2})$/', $key, $matches ) ) {
 					continue;
 				}
 
+				$year = (int) $matches[1];
+				$week = (int) $matches[2];
+
 				$formatted_imports[] = array(
-					'year'  => (int) $datetime->format( 'o' ),
-					'week'  => (int) $datetime->format( 'W' ),
+					'year'  => $year,
+					'week'  => $week,
 					'count' => (int) $count,
-					'month' => (int) $datetime->format( 'n' ),
 				);
 			}
 
@@ -262,7 +264,7 @@ class Feedzy_Rss_Feeds_Usage {
 	 */
 	public function record_import_per_week() {
 		$datetime = current_datetime();
-		$key      = $datetime->format( 'W-o_n' );
+		$key      = $datetime->format( 'o-\WW' );
 
 		$imports_per_week = array();
 		$data             = $this->get_usage_data();
@@ -276,7 +278,7 @@ class Feedzy_Rss_Feeds_Usage {
 			$imports_per_week[ $key ] = 1;
 		}
 
-		if ( 100 < count( $imports_per_week ) ) {
+		if ( 120 < count( $imports_per_week ) ) {
 			$imports_per_week = $this->remove_old_import_records( $imports_per_week, $datetime );
 		}
 
@@ -312,8 +314,19 @@ class Feedzy_Rss_Feeds_Usage {
 		return array_filter(
 			$imports_per_week,
 			function ( $key ) use ( $last_year_date_time ) {
-				$record_datetime = DateTime::createFromFormat( 'W-o_n', $key );
-				return $record_datetime && $record_datetime >= $last_year_date_time;
+				// Parse the ISO week format manually (e.g., "2025-W31")
+				if ( ! preg_match( '/^(\d{4})-W(\d{1,2})$/', $key, $matches ) ) {
+					return false;
+				}
+
+				$year = (int) $matches[1];
+				$week = (int) $matches[2];
+
+				// Create a datetime for the first day of that week
+				$record_datetime = new DateTime();
+				$record_datetime->setISODate( $year, $week, 1 );
+
+				return $record_datetime >= $last_year_date_time;
 			},
 			ARRAY_FILTER_USE_KEY 
 		);
