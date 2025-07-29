@@ -204,6 +204,65 @@ class Feedzy_Rss_Feeds_Import {
 		$item_array['item']       = $item;
 		$item_array['item_index'] = $item_index;
 
+		$item_array = $this->handle_youtube_content( $item_array, $item, $sc );
+
+		return $item_array;
+	}
+
+	/**
+	 * Fetches additional information for each item.
+	 *
+	 * @param array  $item_array The item attributes array.
+	 * @param object $item The feed item.
+	 * @param array  $sc The shortcode attributes array. This will be empty through the block editor.
+	 * 
+	 * @return array<string, string>
+	 */
+	private function handle_youtube_content( $item_array, $item, $sc ) {
+		$url = '';
+		if ( array_key_exists( 'item_url', $item_array ) ) {
+			$url = $item_array['item_url'];
+		} elseif ( $item ) {
+			$url = $item->get_permalink();
+		}
+
+		if ( empty( $url ) ) {
+			return $item_array;
+		}
+
+		$host = wp_parse_url( $url, PHP_URL_HOST );
+		// remove all dots in the hostname so that shortforms such as youtu.be can also be resolved.
+		$host = str_replace( array( '.', 'www' ), '', $host );
+
+		// youtube.
+		if ( in_array( $host, array( 'youtubecom', 'youtube' ), true ) ) {
+			$tags = $item->get_item_tags( SIMPLEPIE_NAMESPACE_MEDIARSS, 'group' );
+			$desc = '';
+			if ( $tags ) {
+				$desc_tag = $tags[0]['child'][ SIMPLEPIE_NAMESPACE_MEDIARSS ]['description'];
+				if ( $desc_tag ) {
+					$desc = $desc_tag[0]['data'];
+				}
+			}
+
+			if ( ! empty( $desc ) ) {
+				if ( empty( $item_array['item_content'] ) ) {
+					$item_array['item_content'] = $desc;
+				}
+				if ( ( empty( $sc ) || 'yes' === $sc['summary'] ) && empty( $item_array['item_description'] ) ) {
+					if ( is_numeric( $sc['summarylength'] ) && strlen( $desc ) > $sc['summarylength'] ) {
+						$desc = preg_replace( '/\s+?(\S+)?$/', '', substr( $desc, 0, $sc['summarylength'] ) ) . ' [&hellip;]';
+					}
+					$item_array['item_description'] = $desc;
+				}
+			}
+			if ( str_contains( $item_array['item_content'], 'Post Content' ) ) {
+				$item_array['item_content'] = '[embed]' . $url . '[/embed]' ;
+			} else {
+				$item_array['item_content'] .= '[embed]' . $url . '[/embed]';
+			}
+		}
+		
 		return $item_array;
 	}
 
