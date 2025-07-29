@@ -991,59 +991,47 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$feed        = $this->fetch_feed( $feed_urls, $atts['refresh'], $atts );
 		$feed_items  = apply_filters( 'feedzy_get_feed_array', array(), $atts, $feed, $feed_urls, $sizes );
 		$total_items = count( $feed_items );
-		$count       = 0;
 
-		echo wp_kses(
-			sprintf(
-				// translators: %s is the total number of items available in the feed.
-				'<strong>' . __( 'Latest 5 feed items out of %s available from', 'feedzy-rss-feeds' ) . '</strong>',
-				$total_items
-			),
-			array(
-				'strong' => array(),
-			)
-		);
-
-		echo '<div class="feedzy-preview">';
-		$content = '<ul class="feedzy-preview-list">';
-
-		foreach ( $feed_items as $item ) {
-			if ( $count > 4 ) {
-				break;
+		$max_items_preview_count = 5;
+		$preview_feed_items      = array_slice( $feed_items, 0, $max_items_preview_count );
+		?>
+		<strong>
+			<?php
+				echo esc_html(
+					sprintf(
+						// translators: %1$s the number of maximum displayed items, %2$s is the total number of items available in the feed.
+						__( 'Latest %1$s feed items out of %2$s available from', 'feedzy-rss-feeds' ),
+						$max_items_preview_count,
+						$total_items
+					)
+				);
+			?>
+		</strong>
+		<div>
+			<ul class="feedzy-preview-list">
+			<?php
+			foreach ( $preview_feed_items as $item ) {
+				$datetime     = date_i18n( 'c', $item['item_date'] );
+				$time_content = date_i18n( 'Y-m-d', $item['item_date'] );
+				?>
+					<li <?php echo esc_attr( $item['itemAttr'] ); ?>>
+						<a href="<?php echo esc_url( $item['item_url'] ); ?>" target="_blank">
+							<?php echo esc_html( $item['item_title'] ); ?>
+						</a>
+						<br/>
+						<time
+							datetime="<?php echo esc_attr( $datetime ); ?>"
+							content="<?php echo esc_attr( $time_content ); ?>"
+						>
+							<?php echo esc_html( $this->get_humman_readable_time_diff( $item['item_date'] ) ); ?>
+						</time>
+					</li>
+				<?php
 			}
-			$content .= sprintf(
-				'<li %s><a href="%s" target="_blank">%s</a><br/><time datetime="%s" content="%s">%s</time></li>',
-				esc_attr( $item['itemAttr'] ),
-				esc_attr( $item['item_url'] ),
-				esc_html( $item['item_title'] ),
-				esc_attr( date_i18n( 'c', $item['item_date'] ) ),
-				esc_attr( date_i18n( 'Y-m-d', $item['item_date'] ) ),
-				esc_html( $this->get_humman_readable_time_diff( $item['item_date'] ) )
-			);
-			++$count;
-		}
-		$content .= '</ul>';
-		echo wp_kses(
-			$content,
-			array(
-				'ul'   => array(
-					'class' => array(),
-				),
-				'li'   => array(
-					'class' => array(),
-				),
-				'a'    => array(
-					'href'   => array(),
-					'target' => array(),
-				),
-				'time' => array(
-					'datetime' => array(),
-					'content'  => array(),
-				),
-				'br'   => array(),
-			)
-		);
-		echo '</div>';
+			?>
+			</ul>
+		</div>
+		<?php
 	}
 
 	/**
