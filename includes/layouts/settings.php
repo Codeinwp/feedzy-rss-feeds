@@ -46,28 +46,6 @@
 			</div>
 		<?php } ?>
 		<div class="feedzy-accordion-item">
-			<div class="feedzy-accordion-item__title">
-				<div class="feedzy-accordion-item__button">
-					<div class="feedzy-accordion__step-title h2">
-						<?php
-						switch ( $active_tab ) {
-							case 'misc':
-								esc_html_e( 'Miscellaneous', 'feedzy-rss-feeds' );
-								break;
-							case 'spinnerchief':
-								esc_html_e( 'SpinnerChief', 'feedzy-rss-feeds' );
-								break;
-							case 'wordai':
-								esc_html_e( 'WordAI', 'feedzy-rss-feeds' );
-								break;
-							default:
-								echo esc_html( ucwords( str_replace( array( '-', '_' ), ' ', $active_tab ) ) );
-								break;
-						}
-						?>
-					</div>
-				</div>
-			</div>
 			<div class="feedzy-accordion-item__content">
 				<div class="fz-tabs-menu">
 					<ul>
