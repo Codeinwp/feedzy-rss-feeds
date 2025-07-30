@@ -559,64 +559,65 @@ class Inspector extends Component {
 														}
 														render={({ open }) => (
 															<Fragment>
-																this.props.attributes
-																.default !==
-																undefined && (
-																<Fragment>
-																	<ResponsiveWrapper
-																		naturalWidth={
-																			this
-																				.props
-																				.attributes
-																				.default
-																				.width
-																		}
-																		naturalHeight={
-																			this
-																				.props
-																				.attributes
-																				.default
-																				.height
-																		}
-																	>
-																		<img
-																			src={
+																{this.props
+																	.attributes
+																	.default !==
+																	undefined && (
+																	<Fragment>
+																		<ResponsiveWrapper
+																			naturalWidth={
 																				this
 																					.props
 																					.attributes
 																					.default
-																					.url
+																					.width
 																			}
-																			alt={__(
-																				'Featured image',
+																			naturalHeight={
+																				this
+																					.props
+																					.attributes
+																					.default
+																					.height
+																			}
+																		>
+																			<img
+																				src={
+																					this
+																						.props
+																						.attributes
+																						.default
+																						.url
+																				}
+																				alt={__(
+																					'Featured image',
+																					'feedzy-rss-feeds'
+																				)}
+																			/>
+																		</ResponsiveWrapper>
+
+																		<Button
+																			isLarge
+																			isSecondary
+																			onClick={() =>
+																				this.props.setAttributes(
+																					{
+																						default:
+																							undefined,
+																					}
+																				)
+																			}
+																			style={{
+																				marginTop:
+																					'10px',
+																			}}
+																		>
+																			{__(
+																				'Remove Image',
 																				'feedzy-rss-feeds'
 																			)}
-																		/>
-																	</ResponsiveWrapper>
-
-																	<Button
-																		isLarge
-																		isSecondary
-																		onClick={() =>
-																			this.props.setAttributes(
-																				{
-																					default:
-																						undefined,
-																				}
-																			)
-																		}
-																		style={{
-																			marginTop:
-																				'10px',
-																		}}
-																	>
-																		{__(
-																			'Remove Image',
-																			'feedzy-rss-feeds'
-																		)}
-																	</Button>
-																</Fragment>
-																)
+																		</Button>
+																	</Fragment>
+																)}
 																<Button
 																	isLarge
 																	isPrimary
