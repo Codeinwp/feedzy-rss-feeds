@@ -1,3 +1,11 @@
+##### [Version 5.0.8](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.7...v5.0.8) (2025-07-30)
+
+- Updated the Onboarding workflow
+- Improved the image detection in the feed
+- Fixed the autocompletion for Feedzy categories in Feedzy Block (Classic)
+- Small layout changes for plugin pages
+- Upgrade dependencies
+
 ##### [Version 5.0.7](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.6...v5.0.7) (2025-07-16)
 
 - Fixed various layout issues for the plugin pages.
