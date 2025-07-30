@@ -3533,11 +3533,9 @@ class Feedzy_Rss_Feeds_Import {
 			// Update wizard data.
 			$wizard_data['job_id'] = $job_id;
 			update_option( 'feedzy_wizard_data', $wizard_data );
-
-			$job      = get_post( $job_id );
-			$count    = $this->run_job( $job, 10 );
+		
 			$response = array(
-				'status' => $count > 0,
+				'status' => true,
 			);
 		}
 		wp_send_json( $response );
