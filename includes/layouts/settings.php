@@ -40,34 +40,12 @@
 		<?php if ( ! empty( $offer_data['active'] ) ) { ?>
 			<div class="feedzy-sale">
 				<a href="<?php echo esc_url( $offer_data['bannerStoreUrl'] ); ?>">
-					<img src="<?php echo esc_url( $offer_data['bannerUrl'] ); ?>" alt="<?php echo esc_html( $offer_data['bannerAlt'] ); ?>">
+					<img src="<?php echo esc_url( $offer_data['bannerUrl'] ); ?>" alt="<?php echo esc_attr( $offer_data['bannerAlt'] ); ?>">
 					<div class="feedzy-urgency"><?php echo esc_html( $offer_data['urgencyText'] ); ?></div>
 				</a>
 			</div>
 		<?php } ?>
 		<div class="feedzy-accordion-item">
-			<div class="feedzy-accordion-item__title">
-				<div class="feedzy-accordion-item__button">
-					<div class="feedzy-accordion__step-title h2">
-						<?php
-						switch ( $active_tab ) {
-							case 'misc':
-								esc_html_e( 'Miscellaneous', 'feedzy-rss-feeds' );
-								break;
-							case 'spinnerchief':
-								esc_html_e( 'SpinnerChief', 'feedzy-rss-feeds' );
-								break;
-							case 'wordai':
-								esc_html_e( 'WordAI', 'feedzy-rss-feeds' );
-								break;
-							default:
-								echo esc_html( ucwords( str_replace( array( '-', '_' ), ' ', $active_tab ) ) );
-								break;
-						}
-						?>
-					</div>
-				</div>
-			</div>
 			<div class="feedzy-accordion-item__content">
 				<div class="fz-tabs-menu">
 					<ul>
@@ -110,20 +88,20 @@
 						$delete_media = 1;
 					}
 
-					$feedzy_delete_days = isset( $settings['general']['feedzy-delete-days'] ) ? $settings['general']['feedzy-delete-days'] : 0;
+					$feedzy_delete_days   = isset( $settings['general']['feedzy-delete-days'] ) ? $settings['general']['feedzy-delete-days'] : 0;
 					$default_thumbnail_id = isset( $settings['general']['default-thumbnail-id'] ) ? $settings['general']['default-thumbnail-id'] : 0;
-					$mapped_categories = isset( $settings['general']['auto-categories'] ) && ! empty( $settings['general']['auto-categories'] ) ? $settings['general']['auto-categories'] : array(
+					$mapped_categories    = isset( $settings['general']['auto-categories'] ) && ! empty( $settings['general']['auto-categories'] ) ? $settings['general']['auto-categories'] : array(
 						array(
 							'keywords' => '',
 							'category' => '',
 						),
 					);
-					$categories = get_categories(
+					$categories           = get_categories(
 						array(
 							'hide_empty' => false,
 						)
 					);
-					$telemetry_enabled = get_option( 'feedzy_rss_feeds_logger_flag', 0 );
+					$telemetry_enabled    = get_option( 'feedzy_rss_feeds_logger_flag', 0 );
 
 					switch ( $active_tab ) {
 						case 'general':
@@ -191,7 +169,12 @@
 															}
 															?>
 														</select>
-														<button type="button" class="btn btn-outline-primary<?php echo $index === 0 ? ' disabled' : ''; ?>" <?php echo $index === 0 ? 'disabled' : ''; ?>><?php esc_html_e( 'Delete', 'feedzy-rss-feeds' ); ?></button>
+														<button
+															type="button"
+															class="btn btn-outline-primary<?php echo 0 === $index ? ' disabled' : ''; ?>" <?php echo 0 === $index ? 'disabled' : ''; ?>
+														> 
+															<?php esc_html_e( 'Delete', 'feedzy-rss-feeds' ); ?>
+														</button>
 													</td>
 												</tr>
 												<?php endforeach; ?>

@@ -256,7 +256,7 @@ class Feedzy_Rss_Feeds {
 			self::$instance->loader->add_filter( 'feedzy_retrieve_categories', $plugin_import, 'retrieve_categories', 10, 2 );
 			self::$instance->loader->add_filter( 'feedzy_is_license_of_type', $plugin_import, 'feedzy_is_license_of_type', 10, 2 );
 			self::$instance->loader->add_filter( 'post_row_actions', $plugin_import, 'add_import_actions', 10, 2 );
-			self::$instance->loader->add_filter( 'wp_kses_allowed_html', $plugin_import, 'feedzy_wp_kses_allowed_html', 10, 2 );
+			self::$instance->loader->add_filter( 'wp_kses_allowed_html', $plugin_import, 'feedzy_wp_kses_allowed_html' );
 			self::$instance->loader->add_filter( 'feedzy_magic_tags_post_excerpt', $plugin_import, 'magic_tags_post_excerpt', 11 );
 			self::$instance->loader->add_action( 'admin_action_feedzy_clone_import_job', $plugin_import, 'feedzy_clone_import_job' );
 			self::$instance->loader->add_action( 'admin_notices', $plugin_import, 'feedzy_import_clone_success_notice' );

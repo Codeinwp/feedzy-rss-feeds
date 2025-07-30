@@ -4,7 +4,7 @@
 			<?php
 				$upgrade_url = tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'wordai' ) );
 
-				$content  = __( 'You are using Feedzy Lite.', 'feedzy-rss-feeds' ) . ' ';
+				$content = __( 'You are using Feedzy Lite.', 'feedzy-rss-feeds' ) . ' ';
 				// translators: %1$s: opening anchor tag, %2$s: closing anchor tag.
 				$content .= wp_sprintf( __( 'Unlock more powerful features, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ), '<a href="' . esc_url( $upgrade_url ) . '" target="_blank">', '</a>' );
 

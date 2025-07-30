@@ -46,7 +46,7 @@
     "lasttranslator": "Themeisle Translate Team <friends@themeisle.com>"
   },
   "devDependencies": {
-    "@playwright/test": "^1.44.0",
+    "@playwright/test": "^1.54.1",
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/exec": "^5.0.0",
     "@semantic-release/git": "^9.0.0",

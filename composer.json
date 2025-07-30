@@ -31,7 +31,9 @@
   "scripts": {
     "format": "phpcbf --standard=phpcs.xml --report-summary --report-source",
     "lint": "phpcs --standard=phpcs.xml",
-    "test": "phpunit"
+    "test": "phpunit",
+    "phpstan": "phpstan",
+    "phpstan:generate:baseline": "phpstan --generate-baseline"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
@@ -48,6 +50,9 @@
     "wp-coding-standards/wpcs": "^3.1",
     "dealerdirect/phpcodesniffer-composer-installer": "^1.0.0",
     "phpcompatibility/phpcompatibility-wp": "^2.1",
-    "yoast/phpunit-polyfills": "^4.0"
+    "yoast/phpunit-polyfills": "^4.0",
+    "automattic/vipwpcs": "^3.0",
+    "phpstan/phpstan": "^1.12",
+    "szepeviktor/phpstan-wordpress": "^1.3"
   }
 }

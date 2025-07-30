@@ -147,7 +147,7 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 				'type'        => Controls_Manager::SELECT,
 				'default'     => '12_hours',
 				'options'     => feedzy_elementor_widget_refresh_options(),
-				'separator' => 'before',
+				'separator'   => 'before',
 			)
 		);
 		$this->add_control(
@@ -217,10 +217,10 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 		$this->add_control(
 			'fz-filter-exc-on',
 			array(
-				'label'   => __( 'Exclude items if', 'feedzy-rss-feeds' ),
-				'type'    => Controls_Manager::SELECT,
-				'default' => 'title',
-				'options' => array(
+				'label'     => __( 'Exclude items if', 'feedzy-rss-feeds' ),
+				'type'      => Controls_Manager::SELECT,
+				'default'   => 'title',
+				'options'   => array(
 					'title'       => __( 'Title', 'feedzy-rss-feeds' ),
 					'description' => __( 'Description', 'feedzy-rss-feeds' ),
 					'author'      => __( 'Author', 'feedzy-rss-feeds' ),
@@ -264,17 +264,17 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 		$this->start_controls_section(
 			'fz-item-options',
 			array(
-				'label'   => wp_sprintf( __( 'Item Options', 'feedzy-rss-feeds' ) ),
+				'label' => wp_sprintf( __( 'Item Options', 'feedzy-rss-feeds' ) ),
 			)
 		);
 		$this->add_control(
 			'fz-item-target',
 			array(
 				'label_block' => true,
-				'label'   => __( 'Links behavior (opened in the same window or a new tab)', 'feedzy-rss-feeds' ),
-				'type'    => Controls_Manager::SELECT,
-				'default' => '',
-				'options' => array(
+				'label'       => __( 'Links behavior (opened in the same window or a new tab)', 'feedzy-rss-feeds' ),
+				'type'        => Controls_Manager::SELECT,
+				'default'     => '',
+				'options'     => array(
 					''          => __( 'Auto', 'feedzy-rss-feeds' ),
 					'_blank'    => __( '_blank', 'feedzy-rss-feeds' ),
 					'_self'     => __( '_self', 'feedzy-rss-feeds' ),
@@ -344,20 +344,20 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 		$this->start_controls_section(
 			'fz-item-thumbnail',
 			array(
-				'label'   => wp_sprintf( __( 'Item Thumbnail Options', 'feedzy-rss-feeds' ) ),
+				'label' => wp_sprintf( __( 'Item Thumbnail Options', 'feedzy-rss-feeds' ) ),
 			)
 		);
 		$this->add_control(
 			'fz-item-thumb',
 			array(
 				'label_block' => true,
-				'label'   => __( 'Display first image, when available', 'feedzy-rss-feeds' ),
-				'type'    => Controls_Manager::SELECT,
-				'default' => '',
-				'options' => array(
-					''       => __( 'Yes (without a fallback image)', 'feedzy-rss-feeds' ),
-					'yes'    => __( 'Yes (with a fallback image)', 'feedzy-rss-feeds' ),
-					'no'     => __( 'No', 'feedzy-rss-feeds' ),
+				'label'       => __( 'Display first image, when available', 'feedzy-rss-feeds' ),
+				'type'        => Controls_Manager::SELECT,
+				'default'     => '',
+				'options'     => array(
+					''    => __( 'Yes (without a fallback image)', 'feedzy-rss-feeds' ),
+					'yes' => __( 'Yes (with a fallback image)', 'feedzy-rss-feeds' ),
+					'no'  => __( 'No', 'feedzy-rss-feeds' ),
 				),
 			)
 		);
@@ -365,9 +365,9 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 			'fz-item-fallback-thumb',
 			array(
 				'label_block' => true,
-				'label'   => __( 'Choose the Fallback Image', 'feedzy-rss-feeds' ),
-				'type'    => Controls_Manager::MEDIA,
-				'default' => array(
+				'label'       => __( 'Choose the Fallback Image', 'feedzy-rss-feeds' ),
+				'type'        => Controls_Manager::MEDIA,
+				'default'     => array(
 					'url' => \Elementor\Utils::get_placeholder_image_src(),
 				),
 			)
@@ -385,15 +385,15 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 			'fz-item-thumb-http',
 			array(
 				'label_block' => true,
-				'label'   => __( 'How should we treat HTTP images?', 'feedzy-rss-feeds' ),
-				'type'    => Controls_Manager::SELECT,
-				'default' => '',
-				'options' => array(
+				'label'       => __( 'How should we treat HTTP images?', 'feedzy-rss-feeds' ),
+				'type'        => Controls_Manager::SELECT,
+				'default'     => '',
+				'options'     => array(
 					''        => __( 'Show with HTTP link', 'feedzy-rss-feeds' ),
 					'https'   => __( 'Force HTTPS (please verify that the images exist on HTTPS)', 'feedzy-rss-feeds' ),
 					'default' => __( 'Ignore and show the default image instead', 'feedzy-rss-feeds' ),
 				),
-				'separator' => 'before',
+				'separator'   => 'before',
 			)
 		);
 		$this->end_controls_section(); // End item thumbnail section.
@@ -409,37 +409,37 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 		$this->add_control(
 			'fz-layout-columns',
 			array(
-				'label'      => esc_html__( 'Columns', 'feedzy-rss-feeds' ),
-				'type'       => Controls_Manager::SLIDER,
-				'classes'    => $this->upsell_class(),
+				'label'   => esc_html__( 'Columns', 'feedzy-rss-feeds' ),
+				'type'    => Controls_Manager::SLIDER,
+				'classes' => $this->upsell_class(),
 			)
 		);
 
 		$this->add_control(
 			'fz-template',
 			array(
-				'label_block' => true,
-				'type'        => 'fz-layout-template',
+				'label_block'      => true,
+				'type'             => 'fz-layout-template',
 				'template_options' => array(
 					'default' => array(
 						'title' => esc_html__( 'Default', 'feedzy-rss-feeds' ),
 						'icon'  => 'eicon-text-align-left',
 						'image' => FEEDZY_ABSURL . 'img/{{ui_mode}}-mode-default.png',
 					),
-					'style1' => array(
+					'style1'  => array(
 						'title' => esc_html__( 'Style 1', 'feedzy-rss-feeds' ),
-						'icon' => 'eicon-text-align-center',
+						'icon'  => 'eicon-text-align-center',
 						'image' => FEEDZY_ABSURL . 'img/{{ui_mode}}-mode-style1.png',
 					),
-					'style2' => array(
+					'style2'  => array(
 						'title' => esc_html__( 'Style 2', 'feedzy-rss-feeds' ),
-						'icon' => 'eicon-text-align-right',
+						'icon'  => 'eicon-text-align-right',
 						'image' => FEEDZY_ABSURL . 'img/{{ui_mode}}-mode-style2.png',
 					),
 				),
-				'default' => 'default',
-				'toggle'  => true,
-				'classes' => $this->upsell_class(),
+				'default'          => 'default',
+				'toggle'           => true,
+				'classes'          => $this->upsell_class(),
 			)
 		);
 		$this->end_controls_section(); // End layout section.
@@ -448,7 +448,7 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 		$this->start_controls_section(
 			'fz-custom-options',
 			array(
-				'label'   => __( 'Feed Items Custom Options', 'feedzy-rss-feeds' ),
+				'label' => __( 'Feed Items Custom Options', 'feedzy-rss-feeds' ),
 			)
 		);
 		$this->add_control(
@@ -505,7 +505,8 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 				'description'  => wp_sprintf(
 					// translators: %1$s: opening anchor tag, %2$s: closing anchor tag.
 					__(
-						'Learn more about this feature in %1$s Feedzy docs %2$s .', 'feedzy-rss-feeds'
+						'Learn more about this feature in %1$s Feedzy docs %2$s .',
+						'feedzy-rss-feeds'
 					),
 					'<a target="_blank" href="' . esc_url( 'https://docs.themeisle.com/article/923-how-price-is-displayed-from-the-feed' ) . '">',
 					'</a>'
@@ -523,7 +524,7 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 				'label_off'    => esc_html__( 'No', 'feedzy-rss-feeds' ),
 				'return_value' => 'yes',
 				'separator'    => 'before',
-				'description' => __( 'When using multiple sources this will append the item source to the author tag (required).', 'feedzy-rss-feeds' ),
+				'description'  => __( 'When using multiple sources this will append the item source to the author tag (required).', 'feedzy-rss-feeds' ),
 			)
 		);
 		$this->add_control(
@@ -577,23 +578,23 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 						)
 						: ''
 					),
-				'classes' => $this->upsell_class(),
+				'classes'     => $this->upsell_class(),
 			)
 		);
 		$this->end_controls_section(); // End referral URL section.
 	}
 
 	/**
-	 * Upsell calss.
+	 * Upsell class.
 	 *
-	 * @param string $class ClassName.
+	 * @param string $css_class ClassName.
 	 * @return string
 	 */
-	public function upsell_class( $class = '' ) {
+	public function upsell_class( $css_class = '' ) {
 		if ( ! feedzy_is_pro() ) {
-			$class .= ' fz-feat-locked';
+			$css_class .= ' fz-feat-locked';
 		}
-		return trim( $class );
+		return trim( $css_class );
 	}
 
 	/**
@@ -647,37 +648,37 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo '<p class="feedzy-widget-intro">' . wp_kses_post( $intro ) . '</p>';
 		}
-		$display_source = $this->get_settings_for_display( 'fz-show-item-source' );
+		$display_source                     = $this->get_settings_for_display( 'fz-show-item-source' );
 		$feedzy_widget_shortcode_attributes = array(
-			'feeds'           => $this->get_settings_for_display( 'fz-source' ),
-			'max'             => $this->get_settings_for_display( 'fz-max' ),
-			'feed_title'      => 'no',
-			'target'          => $this->get_settings_for_display( 'fz-item-target' ),
-			'title'           => $this->get_settings_for_display( 'fz-item-title-length' ),
-			'meta'            => self::bool_to_enum( $this->get_settings_for_display( 'fz-cus-meta-fields' ) ),
-			'summary'         => self::bool_to_enum( $this->get_settings_for_display( 'fz-item-display-desc' ) ),
-			'summarylength'   => $this->get_settings_for_display( 'fz-item-desc-length' ),
-			'thumb'           => self::bool_to_enum( $this->get_settings_for_display( 'fz-item-thumb' ) ),
-			'default'         => ! empty( $fallback_img['url'] ) ? $fallback_img['url'] : '',
-			'size'            => $this->get_settings_for_display( 'fz-item-thumb-size' ),
-			'http'            => $this->get_settings_for_display( 'fz-item-thumb-http' ),
-			'keywords_title'  => $this->get_settings_for_display( 'fz-filter-inc-key' ),
-			'keywords_inc_on' => $this->get_settings_for_display( 'fz-filter-inc-on' ),
-			'keywords_ban'    => $this->get_settings_for_display( 'fz-filter-exc-key' ),
-			'keywords_exc_on' => $this->get_settings_for_display( 'fz-filter-exc-on' ),
-			'error_empty'     => $this->get_settings_for_display( 'fz-error-empty' ),
-			'sort'            => $this->get_settings_for_display( 'fz-orderby' ),
-			'refresh'         => $this->get_settings_for_display( 'fz-refresh' ),
-			'follow'          => $this->get_settings_for_display( 'fz-item-nofollow-link' ),
-			'lazy'            => $lazy ? self::bool_to_enum( $lazy ) : false,
-			'offset'          => $this->get_settings_for_display( 'fz-offset' ),
-			'from_datetime'   => $this->get_settings_for_display( 'fz-filter-from-dt' ),
-			'to_datetime'     => $this->get_settings_for_display( 'fz-filter-to-dt' ),
-			'multiple_meta'   => $display_source ? 'source' : '',
+			'feeds'                 => $this->get_settings_for_display( 'fz-source' ),
+			'max'                   => $this->get_settings_for_display( 'fz-max' ),
+			'feed_title'            => 'no',
+			'target'                => $this->get_settings_for_display( 'fz-item-target' ),
+			'title'                 => $this->get_settings_for_display( 'fz-item-title-length' ),
+			'meta'                  => self::bool_to_enum( $this->get_settings_for_display( 'fz-cus-meta-fields' ) ),
+			'summary'               => self::bool_to_enum( $this->get_settings_for_display( 'fz-item-display-desc' ) ),
+			'summarylength'         => $this->get_settings_for_display( 'fz-item-desc-length' ),
+			'thumb'                 => self::bool_to_enum( $this->get_settings_for_display( 'fz-item-thumb' ) ),
+			'default'               => ! empty( $fallback_img['url'] ) ? $fallback_img['url'] : '',
+			'size'                  => $this->get_settings_for_display( 'fz-item-thumb-size' ),
+			'http'                  => $this->get_settings_for_display( 'fz-item-thumb-http' ),
+			'keywords_title'        => $this->get_settings_for_display( 'fz-filter-inc-key' ),
+			'keywords_inc_on'       => $this->get_settings_for_display( 'fz-filter-inc-on' ),
+			'keywords_ban'          => $this->get_settings_for_display( 'fz-filter-exc-key' ),
+			'keywords_exc_on'       => $this->get_settings_for_display( 'fz-filter-exc-on' ),
+			'error_empty'           => $this->get_settings_for_display( 'fz-error-empty' ),
+			'sort'                  => $this->get_settings_for_display( 'fz-orderby' ),
+			'refresh'               => $this->get_settings_for_display( 'fz-refresh' ),
+			'follow'                => $this->get_settings_for_display( 'fz-item-nofollow-link' ),
+			'lazy'                  => $lazy ? self::bool_to_enum( $lazy ) : false,
+			'offset'                => $this->get_settings_for_display( 'fz-offset' ),
+			'from_datetime'         => $this->get_settings_for_display( 'fz-filter-from-dt' ),
+			'to_datetime'           => $this->get_settings_for_display( 'fz-filter-to-dt' ),
+			'multiple_meta'         => $display_source ? 'source' : '',
 			'disable_default_style' => $this->get_settings_for_display( 'fz-disable-default-style' ),
-			'className'       => $this->get_settings_for_display( 'fz-custom-class' ),
-			'_dryrun_'        => $this->get_settings_for_display( 'fz-dry-run' ),
-			'_dry_run_tags_'  => $this->get_settings_for_display( 'fz-dry-run-tags' ),
+			'className'             => $this->get_settings_for_display( 'fz-custom-class' ),
+			'_dryrun_'              => $this->get_settings_for_display( 'fz-dry-run' ),
+			'_dry_run_tags_'        => $this->get_settings_for_display( 'fz-dry-run-tags' ),
 		);
 		$feedzy_widget_shortcode_attributes = apply_filters( 'feedzy_widget_shortcode_attributes_filter', $feedzy_widget_shortcode_attributes, array(), $settings );
 		// Hide item meta.

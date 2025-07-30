@@ -1,0 +1,1891 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Access to an undefined property Feedzy_Rss_Feeds_Admin_Abstract\\:\\:\\$version\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Binary operation \"\\+\" between string and \\(float\\|int\\) results in an error\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Call to function is_array\\(\\) with object will always evaluate to false\\.$#"
+			count: 2
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
+			count: 3
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Call to function is_string\\(\\) with object will always evaluate to false\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Call to function is_wp_error\\(\\) with SimplePie will always evaluate to false\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Call to method call_api\\(\\) on an unknown class Feedzy_Rss_Feeds_Pro_Amazon_Product_Advertising\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Call to method get_api_option\\(\\) on an unknown class Feedzy_Rss_Feeds_Pro_Amazon_Product_Advertising\\.$#"
+			count: 3
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Call to method set_config_option\\(\\) on an unknown class Feedzy_Rss_Feeds_Pro_Amazon_Product_Advertising\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Constant SIMPLEPIE_USERAGENT not found\\.$#"
+			count: 2
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Constant WPINC not found\\.$#"
+			count: 2
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Default value of the parameter \\#3 \\$sc \\(string\\) of method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:fetch_feed\\(\\) is incompatible with type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
+			count: 2
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Elseif condition is always true\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^If condition is always true\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Instantiated class Feedzy_Rss_Feeds_Pro_Amazon_Product_Advertising not found\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Left side of && is always false\\.$#"
+			count: 2
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:array_insert_before\\(\\) has parameter \\$from_array with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:array_insert_before\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:feedzy_add_item_padding\\(\\) has parameter \\$sizes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:feedzy_blacklist_images\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:feedzy_include_thumbnail_rss\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:feedzy_lazy_load\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:feedzy_lazy_load\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:feedzy_retrieve_image\\(\\) has parameter \\$sc with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:feedzy_rss\\(\\) has parameter \\$atts with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:fetch_feed\\(\\) has parameter \\$feed_url with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:fetch_feed\\(\\) has parameter \\$sc with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:get_default_user_agent\\(\\) has parameter \\$urls with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:get_dry_run_results\\(\\) has parameter \\$sc with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:get_feed_array\\(\\) has parameter \\$feed_items with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:get_feed_array\\(\\) has parameter \\$sc with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:get_feed_array\\(\\) has parameter \\$sizes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:get_feed_array\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:get_feed_item_filter\\(\\) has parameter \\$sc with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:get_feed_item_filter\\(\\) has parameter \\$sizes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:get_feed_item_filter\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:get_feed_title_filter\\(\\) has parameter \\$sc with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:get_feed_title_filter\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:get_short_code_attributes\\(\\) has parameter \\$atts with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:get_short_code_attributes\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:get_tinymce_form\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:get_valid_source_urls\\(\\) has parameter \\$feed_url with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:get_valid_source_urls\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:init_amazon_api\\(\\) has parameter \\$additional with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:init_feed\\(\\) has parameter \\$sc with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:render_content\\(\\) has parameter \\$sc with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:render_support\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:rest_route\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:sanitize_attr\\(\\) has parameter \\$sc with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:smart_convert\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Offset 'classname' on array\\{feeds\\: string, max\\: string, feed_title\\: string, target\\: string, follow\\: string, title\\: string, meta\\: string, multiple_meta\\: string, \\.\\.\\.\\} in isset\\(\\) does not exist\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Offset 0 on array\\{array\\<int, string\\>\\} in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Parameter \\#1 \\$args of function get_posts expects array\\{numberposts\\?\\: int, category\\?\\: int\\|string, include\\?\\: array\\<int\\>, exclude\\?\\: array\\<int\\>, suppress_filters\\?\\: bool, attachment_id\\?\\: int, author\\?\\: int\\|string, author_name\\?\\: string, \\.\\.\\.\\}\\|null, array\\{post_type\\: 'post', post_status\\: array\\{'publish', 'private', 'draft', 'trash'\\}, numberposts\\: 2999, fields\\: 'ids', meta_key\\: 'feedzy', meta_value\\: 1\\} given\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Parameter \\#1 \\$feed_url of method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:init_feed\\(\\) expects string, array given\\.$#"
+			count: 2
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Parameter \\#1 \\$text of function esc_attr expects string, int\\<0, max\\>\\|false given\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Parameter \\#1 \\$urls of method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:init_amazon_api\\(\\) expects array\\<string\\>, string given\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Parameter \\#2 \\$class of static method SimplePie\\\\Cache\\:\\:register\\(\\) expects class\\-string\\<SimplePie\\\\Base\\>, string given\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Parameter \\#5 \\$args of function wp_register_script expects array\\{strategy\\?\\: string, in_footer\\?\\: bool\\}\\|bool, 'all' given\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Result of && is always false\\.$#"
+			count: 4
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Result of \\|\\| is always true\\.$#"
+			count: 3
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between 1 and \\*NEVER\\* will always evaluate to false\\.$#"
+			count: 2
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Variable \\$cache in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Variable \\$unit in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^is_wp_error\\(SimplePie\\) will always evaluate to false\\.$#"
+			count: 1
+			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
+
+		-
+			message: "#^Call to an undefined method DOMNode\\:\\:setAttribute\\(\\)\\.$#"
+			count: 2
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Actions\\:\\:custom_field\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Actions\\:\\:custom_field\\(\\) is unused\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Actions\\:\\:extract_magic_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Actions\\:\\:get_actions\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Actions\\:\\:get_extract_tags\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Actions\\:\\:get_translation_lang\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Actions\\:\\:item_categories\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Actions\\:\\:item_categories\\(\\) is unused\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Actions\\:\\:item_content\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Actions\\:\\:item_content\\(\\) is unused\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Actions\\:\\:item_description\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Actions\\:\\:item_description\\(\\) is unused\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Actions\\:\\:item_full_content\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Actions\\:\\:item_full_content\\(\\) is unused\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Actions\\:\\:item_title\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Actions\\:\\:paraphrase_content\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Actions\\:\\:run_action_job\\(\\) has parameter \\$item with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Actions\\:\\:search_replace\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Actions\\:\\:set_raw_serialized_actions\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Property Feedzy_Rss_Feeds_Actions\\:\\:\\$default_value \\(string\\) in isset\\(\\) is not nullable\\.$#"
+			count: 2
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Property Feedzy_Rss_Feeds_Actions\\:\\:\\$extract_tags type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Property Feedzy_Rss_Feeds_Actions\\:\\:\\$item type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Property Feedzy_Rss_Feeds_Actions\\:\\:\\$job \\(object\\) does not accept default value of type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Property Feedzy_Rss_Feeds_Actions\\:\\:\\$result \\(string\\) does not accept null\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Result of && is always false\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Static property Feedzy_Rss_Feeds_Actions\\:\\:\\$instance \\(Feedzy_Rss_Feeds_Actions\\) in isset\\(\\) is not nullable\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Variable \\$pattern might not be defined\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-actions.php
+
+		-
+			message: "#^Access to static property \\$instance on an unknown class Elementor\\\\Plugin\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Call to an undefined method WP_Ajax_Upgrader_Skin\\:\\:get_error_code\\(\\)\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Call to an undefined method WP_Ajax_Upgrader_Skin\\:\\:get_error_message\\(\\)\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Call to function is_null\\(\\) with bool will always evaluate to false\\.$#"
+			count: 2
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Call to static method generate_random_string\\(\\) on an unknown class Elementor\\\\Utils\\.$#"
+			count: 3
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Cannot access property \\$download_link on array\\|object\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Cannot call method get_error_message\\(\\) on array\\|object\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Default value of the parameter \\#2 \\$post \\(string\\) of method Feedzy_Rss_Feeds_Admin\\:\\:get_source_validity_error\\(\\) is incompatible with type object\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:add_black_friday_data\\(\\) has parameter \\$configs with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:add_black_friday_data\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:add_feedzy_category_actions\\(\\) has parameter \\$actions with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:add_feedzy_category_actions\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:add_feedzy_post_type_metaboxes\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:add_modals\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:admin_init\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:ajax\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:api_license_status\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:check_source_validity\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:enable_telemetry\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:enqueue_scripts\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:enqueue_styles\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:enqueue_styles_admin\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:feedzy_block_editor_content\\(\\) has parameter \\$wizard_data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:feedzy_category_columns\\(\\) has parameter \\$columns with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:feedzy_category_columns\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:feedzy_enqueue_setup_wizard_scripts\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:feedzy_filter_plugin_row_meta\\(\\) has parameter \\$links with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:feedzy_filter_plugin_row_meta\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:feedzy_hide_wizard_menu\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:feedzy_integration_page\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:feedzy_load_setup_wizard_page\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:feedzy_make_elementor_page\\(\\) has parameter \\$wizard_data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:feedzy_menu_pages\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:feedzy_remove_elementor_feature\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:feedzy_remove_elementor_feature\\(\\) has parameter \\$experimental_data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:feedzy_remove_elementor_widgets\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:feedzy_settings_page\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:feedzy_setup_wizard_page\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:feedzy_wizard_step_process\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:get_lang_list\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:get_settings\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:get_survey_data\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:handle_upgrade_submenu\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:http_request_args\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:http_request_args\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:plugin_actions\\(\\) has parameter \\$actions with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:pre_http_setup\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:register_post_type\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:register_settings\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:render_upsell_rn\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:save_settings\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:setup_wizard_create_draft_page\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:setup_wizard_import_feed\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:setup_wizard_install_plugin\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:setup_wizard_subscribe_process\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Parameter \\#4 \\$return_valid of method Feedzy_Rss_Feeds_Admin\\:\\:check_source_validity\\(\\) expects bool, null given\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Parameter \\#5 \\$callback of function add_menu_page expects callable\\(\\)\\: mixed, '' given\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Property WP_Screen\\:\\:\\$base \\(string\\) in isset\\(\\) is not nullable\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 3
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Variable \\$slug in empty\\(\\) always exists and is not falsy\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^is_wp_error\\(WP_Error\\) will always evaluate to true\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-admin.php
+
+		-
+			message: "#^Action callback returns bool\\|int but should not return anything\\.$#"
+			count: 2
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Call to function is_wp_error\\(\\) with int\\<0, max\\> will always evaluate to false\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Call to function is_wp_error\\(\\) with int\\|int\\<1, max\\> will always evaluate to false\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Call to function is_wp_error\\(\\) with string will always evaluate to false\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Function acf_get_fields not found\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Function remove_action invoked with 4 parameters, 2\\-3 required\\.$#"
+			count: 2
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Left side of && is always true\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:add_data_to_item\\(\\) has parameter \\$item_array with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:add_data_to_item\\(\\) has parameter \\$sc with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:add_import_export_section\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:array_insert_before\\(\\) has parameter \\$from_array with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:array_insert_before\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:clear_error_logs\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:enqueue_styles\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:feedzy_clone_import_job\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:feedzy_import_clone_success_notice\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:feedzy_wp_kses_allowed_html\\(\\) has parameter \\$context with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:feedzy_wp_kses_allowed_html\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:fetch_custom_fields\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:get_job_feed\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:load_edit_screen\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:magic_tags_image\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:magic_tags_image\\(\\) has parameter \\$default_value with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:magic_tags_post_excerpt\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:magic_tags_post_excerpt\\(\\) has parameter \\$default_value with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:purge_data\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:register_import_post_type\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:remove_import_upsell\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:run_cron\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:run_job\\(\\) should return int but empty return statement found\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:set_wpml_element_language_details\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:try_save_featured_image\\(\\) has parameter \\$import_errors with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:try_save_featured_image\\(\\) has parameter \\$import_info with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:try_save_featured_image\\(\\) has parameter \\$post_data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:upsell_class\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:upsell_content\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:wizard_import_feed\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:wp\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Parameter \\#1 \\$dumb of method Feedzy_Rss_Feeds_Import\\:\\:retrieve_categories\\(\\) expects string, null given\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Parameter \\#1 \\$options of method Feedzy_Rss_Feeds_Actions\\:\\:set_settings\\(\\) expects string, array given\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Parameter \\#1 \\$post of function get_post expects int\\|WP_Post\\|null, string\\|false\\|null given\\.$#"
+			count: 2
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Parameter \\#1 \\$post_id of function delete_post_meta expects int, string\\|false\\|null given\\.$#"
+			count: 6
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Parameter \\#1 \\$post_id of function get_post_meta expects int, string\\|false\\|null given\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Parameter \\#1 \\$text of function esc_attr expects string, int given\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Parameter \\#2 \\$action of function wp_nonce_url expects \\-1\\|string, null given\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Parameter \\#2 \\$action of function wp_verify_nonce expects \\-1\\|string, null given\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Parameter \\#2 \\$br of function wpautop expects bool, string given\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Property Feedzy_Rss_Feeds_Import\\:\\:\\$free_settings has no type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Property Feedzy_Rss_Feeds_Import\\:\\:\\$settings type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Result of && is always true\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Variable \\$post in empty\\(\\) always exists and is not falsy\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^is_wp_error\\(int\\) will always evaluate to false\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^is_wp_error\\(int\\<0, max\\>\\) will always evaluate to false\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^is_wp_error\\(string\\) will always evaluate to false\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-import.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Options\\:\\:init\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-options.php
+
+		-
+			message: "#^Property Feedzy_Rss_Feeds_Options\\:\\:\\$options type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-options.php
+
+		-
+			message: "#^Result of && is always false\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-options.php
+
+		-
+			message: "#^Static property Feedzy_Rss_Feeds_Options\\:\\:\\$instance \\(Feedzy_Rss_Feeds_Options\\) in isset\\(\\) is not nullable\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-options.php
+
+		-
+			message: "#^Constant WPINC not found\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-ui-lang.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Ui_Lang\\:\\:get_form_defaults\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-ui-lang.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Ui_Lang\\:\\:get_strings\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-ui-lang.php
+
+		-
+			message: "#^Property Feedzy_Rss_Feeds_Ui_Lang\\:\\:\\$strings type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-ui-lang.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Ui\\:\\:add_feedzy_global_style\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-ui.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Ui\\:\\:enqueue_scripts\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-ui.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Ui\\:\\:feedzy_add_tinymce_lang\\(\\) has parameter \\$arr with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-ui.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Ui\\:\\:feedzy_add_tinymce_lang\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-ui.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Ui\\:\\:feedzy_import_post_title_section\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-ui.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Ui\\:\\:feedzy_post_import_admin_header\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-ui.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Ui\\:\\:feedzy_register_mce_button\\(\\) has parameter \\$buttons with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-ui.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Ui\\:\\:feedzy_register_mce_button\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-ui.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Ui\\:\\:feedzy_tinymce_plugin\\(\\) has parameter \\$plugin_array with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-ui.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Ui\\:\\:feedzy_tinymce_plugin\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-ui.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Ui\\:\\:is_block_editor\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-ui.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Ui\\:\\:is_block_editor\\(\\) is unused\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-ui.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Ui\\:\\:register_init\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-ui.php
+
+		-
+			message: "#^Property Feedzy_Rss_Feeds_Ui\\:\\:\\$plugin_name is never read, only written\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-ui.php
+
+		-
+			message: "#^Property Feedzy_Rss_Feeds_Ui\\:\\:\\$version is never read, only written\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-ui.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Upgrader\\:\\:check\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-rss-feeds-upgrader.php
+
+		-
+			message: "#^Class feedzy_wp_widget extends generic class WP_Widget but does not specify its types\\: T$#"
+			count: 1
+			path: includes/admin/feedzy-wp-widget.php
+
+		-
+			message: "#^Constructor of class feedzy_wp_widget has an unused parameter \\$plugin_admin\\.$#"
+			count: 1
+			path: includes/admin/feedzy-wp-widget.php
+
+		-
+			message: "#^Method feedzy_wp_widget\\:\\:bool_to_enum\\(\\) should return bool but returns string\\.$#"
+			count: 5
+			path: includes/admin/feedzy-wp-widget.php
+
+		-
+			message: "#^Method feedzy_wp_widget\\:\\:get_widget_defaults\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-wp-widget.php
+
+		-
+			message: "#^Method feedzy_wp_widget\\:\\:update\\(\\) has parameter \\$new_instance with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-wp-widget.php
+
+		-
+			message: "#^Method feedzy_wp_widget\\:\\:update\\(\\) has parameter \\$old_instance with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-wp-widget.php
+
+		-
+			message: "#^Method feedzy_wp_widget\\:\\:update\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-wp-widget.php
+
+		-
+			message: "#^Method feedzy_wp_widget\\:\\:widget\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/admin/feedzy-wp-widget.php
+
+		-
+			message: "#^Method feedzy_wp_widget\\:\\:widget\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-wp-widget.php
+
+		-
+			message: "#^Method feedzy_wp_widget\\:\\:widget\\(\\) has parameter \\$instance with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/feedzy-wp-widget.php
+
+		-
+			message: "#^Parameter \\#1 \\$id_base of method WP_Widget\\<array\\<string, mixed\\>\\>\\:\\:__construct\\(\\) expects string, false given\\.$#"
+			count: 1
+			path: includes/admin/feedzy-wp-widget.php
+
+		-
+			message: "#^Parameter \\#1 \\$instance \\(string\\) of method feedzy_wp_widget\\:\\:form\\(\\) should be compatible with parameter \\$instance \\(array\\<string, mixed\\>\\) of method WP_Widget\\<array\\<string, mixed\\>\\>\\:\\:form\\(\\)$#"
+			count: 1
+			path: includes/admin/feedzy-wp-widget.php
+
+		-
+			message: "#^Method Elementor\\\\Control_Date_Time_Local\\:\\:content_template\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/elementor/controls/datetime-local.php
+
+		-
+			message: "#^Method Elementor\\\\Control_Date_Time_Local\\:\\:get_default_settings\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/elementor/controls/datetime-local.php
+
+		-
+			message: "#^Method Elementor\\\\Control_Template_Layout\\:\\:content_template\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/elementor/controls/template-layout.php
+
+		-
+			message: "#^Method Elementor\\\\Control_Template_Layout\\:\\:enqueue\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/elementor/controls/template-layout.php
+
+		-
+			message: "#^Method Elementor\\\\Control_Template_Layout\\:\\:get_default_settings\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/elementor/controls/template-layout.php
+
+		-
+			message: "#^Call to method register\\(\\) on an unknown class Elementor\\\\Controls_Manager\\.$#"
+			count: 2
+			path: includes/elementor/feedzy-rss-feeds-elementor.php
+
+		-
+			message: "#^Call to static method instance\\(\\) on an unknown class Elementor\\\\Plugin\\.$#"
+			count: 1
+			path: includes/elementor/feedzy-rss-feeds-elementor.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Elementor\\:\\:feedzy_elementor_before_enqueue_scripts\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/elementor/feedzy-rss-feeds-elementor.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Elementor\\:\\:feedzy_elementor_widgets_assets\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/elementor/feedzy-rss-feeds-elementor.php
+
+		-
+			message: "#^Parameter \\$controls_manager of method Feedzy_Rss_Feeds_Elementor\\:\\:feedzy_elementor_register_datetime_local_control\\(\\) has invalid type Elementor\\\\Controls_Manager\\.$#"
+			count: 1
+			path: includes/elementor/feedzy-rss-feeds-elementor.php
+
+		-
+			message: "#^Access to constant MEDIA on an unknown class Elementor\\\\Controls_Manager\\.$#"
+			count: 1
+			path: includes/elementor/widgets/register-widget.php
+
+		-
+			message: "#^Access to constant NUMBER on an unknown class Elementor\\\\Controls_Manager\\.$#"
+			count: 4
+			path: includes/elementor/widgets/register-widget.php
+
+		-
+			message: "#^Access to constant SELECT on an unknown class Elementor\\\\Controls_Manager\\.$#"
+			count: 8
+			path: includes/elementor/widgets/register-widget.php
+
+		-
+			message: "#^Access to constant SLIDER on an unknown class Elementor\\\\Controls_Manager\\.$#"
+			count: 1
+			path: includes/elementor/widgets/register-widget.php
+
+		-
+			message: "#^Access to constant SWITCHER on an unknown class Elementor\\\\Controls_Manager\\.$#"
+			count: 8
+			path: includes/elementor/widgets/register-widget.php
+
+		-
+			message: "#^Access to constant TEXT on an unknown class Elementor\\\\Controls_Manager\\.$#"
+			count: 7
+			path: includes/elementor/widgets/register-widget.php
+
+		-
+			message: "#^Access to constant TEXTAREA on an unknown class Elementor\\\\Controls_Manager\\.$#"
+			count: 5
+			path: includes/elementor/widgets/register-widget.php
+
+		-
+			message: "#^Access to static property \\$instance on an unknown class Elementor\\\\Plugin\\.$#"
+			count: 1
+			path: includes/elementor/widgets/register-widget.php
+
+		-
+			message: "#^Call to an undefined method Feedzy_Register_Widget\\:\\:add_control\\(\\)\\.$#"
+			count: 37
+			path: includes/elementor/widgets/register-widget.php
+
+		-
+			message: "#^Call to an undefined method Feedzy_Register_Widget\\:\\:end_controls_section\\(\\)\\.$#"
+			count: 8
+			path: includes/elementor/widgets/register-widget.php
+
+		-
+			message: "#^Call to an undefined method Feedzy_Register_Widget\\:\\:get_settings_for_display\\(\\)\\.$#"
+			count: 37
+			path: includes/elementor/widgets/register-widget.php
+
+		-
+			message: "#^Call to an undefined method Feedzy_Register_Widget\\:\\:start_controls_section\\(\\)\\.$#"
+			count: 8
+			path: includes/elementor/widgets/register-widget.php
+
+		-
+			message: "#^Call to static method get_placeholder_image_src\\(\\) on an unknown class Elementor\\\\Utils\\.$#"
+			count: 1
+			path: includes/elementor/widgets/register-widget.php
+
+		-
+			message: "#^Default value of the parameter \\#1 \\$instance \\(array\\) of method Feedzy_Register_Widget\\:\\:render_plain_content\\(\\) is incompatible with type object\\.$#"
+			count: 1
+			path: includes/elementor/widgets/register-widget.php
+
+		-
+			message: "#^Method Feedzy_Register_Widget\\:\\:bool_to_enum\\(\\) should return bool but returns string\\.$#"
+			count: 5
+			path: includes/elementor/widgets/register-widget.php
+
+		-
+			message: "#^Method Feedzy_Register_Widget\\:\\:content_template\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/elementor/widgets/register-widget.php
+
+		-
+			message: "#^Method Feedzy_Register_Widget\\:\\:get_icon\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/elementor/widgets/register-widget.php
+
+		-
+			message: "#^Method Feedzy_Register_Widget\\:\\:get_keywords\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/elementor/widgets/register-widget.php
+
+		-
+			message: "#^Method Feedzy_Register_Widget\\:\\:get_name\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/elementor/widgets/register-widget.php
+
+		-
+			message: "#^Method Feedzy_Register_Widget\\:\\:get_title\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/elementor/widgets/register-widget.php
+
+		-
+			message: "#^Method Feedzy_Register_Widget\\:\\:register_controls\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/elementor/widgets/register-widget.php
+
+		-
+			message: "#^Method Feedzy_Register_Widget\\:\\:render\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/elementor/widgets/register-widget.php
+
+		-
+			message: "#^Method Feedzy_Register_Widget\\:\\:render_plain_content\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/elementor/widgets/register-widget.php
+
+		-
+			message: "#^Offset 'columns' on array\\{referral_url\\: mixed, price\\: mixed, template\\: mixed, columns\\: mixed\\} in empty\\(\\) always exists and is not falsy\\.$#"
+			count: 1
+			path: includes/elementor/widgets/register-widget.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Activator\\:\\:activate\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-activator.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Deactivator\\:\\:deactivate\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-deactivator.php
+
+		-
+			message: "#^Call to method get_install_time\\(\\) on an unknown class ThemeisleSDK\\\\Product\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-feed-tweaks.php
+
+		-
+			message: "#^Call to static method instance\\(\\) on an unknown class Elementor\\\\Plugin\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-feed-tweaks.php
+
+		-
+			message: "#^Function feedzy_classic_widget_refresh_options\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-feed-tweaks.php
+
+		-
+			message: "#^Function feedzy_current_user_can\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-feed-tweaks.php
+
+		-
+			message: "#^Function feedzy_el_display_external_post_image\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-feed-tweaks.php
+
+		-
+			message: "#^Function feedzy_el_display_external_post_image\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-feed-tweaks.php
+
+		-
+			message: "#^Function feedzy_elementor_widget_refresh_options\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-feed-tweaks.php
+
+		-
+			message: "#^Function feedzy_get_attachment_image_src\\(\\) has parameter \\$image with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-feed-tweaks.php
+
+		-
+			message: "#^Function feedzy_get_attachment_image_src\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-feed-tweaks.php
+
+		-
+			message: "#^Function feedzy_is_pro_older_than\\(\\) should return int but returns bool\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-feed-tweaks.php
+
+		-
+			message: "#^Function feedzy_rss\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-feed-tweaks.php
+
+		-
+			message: "#^Instantiated class ThemeisleSDK\\\\Product not found\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-feed-tweaks.php
+
+		-
+			message: "#^Offset 'style' on array\\{string\\} in isset\\(\\) does not exist\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-feed-tweaks.php
+
+		-
+			message: "#^Offset 2 on array\\{string, non\\-empty\\-string, string\\} in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-feed-tweaks.php
+
+		-
+			message: "#^Variable \\$image_src in empty\\(\\) always exists and is not falsy\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-feed-tweaks.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Limited_Offers\\:\\:add_priority\\(\\) has parameter \\$products with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-limited-offers.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Limited_Offers\\:\\:add_priority\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-limited-offers.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Limited_Offers\\:\\:get_localized_data\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-limited-offers.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Limited_Offers\\:\\:prepare_black_friday_assets\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-limited-offers.php
+
+		-
+			message: "#^Property Feedzy_Rss_Feeds_Limited_Offers\\:\\:\\$announcements type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-limited-offers.php
+
+		-
+			message: "#^Property Feedzy_Rss_Feeds_Limited_Offers\\:\\:\\$assets type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-limited-offers.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Loader\\:\\:add\\(\\) has parameter \\$hooks with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-loader.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Loader\\:\\:add\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-loader.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Loader\\:\\:add_action\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-loader.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Loader\\:\\:add_ajax_action\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-loader.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Loader\\:\\:add_filter\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-loader.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Loader\\:\\:run\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-loader.php
+
+		-
+			message: "#^Property Feedzy_Rss_Feeds_Loader\\:\\:\\$actions type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-loader.php
+
+		-
+			message: "#^Property Feedzy_Rss_Feeds_Loader\\:\\:\\$filters type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds-loader.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds\\:\\:define_admin_hooks\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds\\:\\:init\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds\\:\\:load_dependencies\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds\\:\\:run\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds.php
+
+		-
+			message: "#^Result of && is always false\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds.php
+
+		-
+			message: "#^Static property Feedzy_Rss_Feeds\\:\\:\\$instance \\(Feedzy_Rss_Feeds\\) in isset\\(\\) is not nullable\\.$#"
+			count: 1
+			path: includes/feedzy-rss-feeds.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Gutenberg_Block\\:\\:feedzy_gutenberg_scripts\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/gutenberg/feedzy-rss-feeds-gutenberg-block.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Gutenberg_Block\\:\\:feedzy_register_block_type\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/gutenberg/feedzy-rss-feeds-gutenberg-block.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Gutenberg_Block\\:\\:feedzy_register_rest_route\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/gutenberg/feedzy-rss-feeds-gutenberg-block.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Gutenberg_Block\\:\\:feedzy_rest_route\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/gutenberg/feedzy-rss-feeds-gutenberg-block.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Gutenberg_Block\\:\\:feedzy_rest_route\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/gutenberg/feedzy-rss-feeds-gutenberg-block.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Gutenberg_Block\\:\\:feedzy_sanitize_categories\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/gutenberg/feedzy-rss-feeds-gutenberg-block.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Gutenberg_Block\\:\\:feedzy_sanitize_feeds\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/gutenberg/feedzy-rss-feeds-gutenberg-block.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Gutenberg_Block\\:\\:feedzy_sanitize_feeds\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/gutenberg/feedzy-rss-feeds-gutenberg-block.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Gutenberg_Block\\:\\:get_instance\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/gutenberg/feedzy-rss-feeds-gutenberg-block.php
+
+		-
+			message: "#^Negated boolean expression is always true\\.$#"
+			count: 2
+			path: includes/gutenberg/feedzy-rss-feeds-gutenberg-block.php
+
+		-
+			message: "#^Ternary operator condition is always true\\.$#"
+			count: 1
+			path: includes/gutenberg/feedzy-rss-feeds-gutenberg-block.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Loop_Block\\:\\:apply_magic_tags\\(\\) has parameter \\$item with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/gutenberg/feedzy-rss-feeds-loop-block.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Loop_Block\\:\\:get_instance\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/gutenberg/feedzy-rss-feeds-loop-block.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Loop_Block\\:\\:get_value\\(\\) has parameter \\$item with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/gutenberg/feedzy-rss-feeds-loop-block.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Loop_Block\\:\\:register_block\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: includes/gutenberg/feedzy-rss-feeds-loop-block.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Loop_Block\\:\\:render_callback\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/gutenberg/feedzy-rss-feeds-loop-block.php
+
+		-
+			message: "#^Offset 1 on array\\{string, non\\-empty\\-string\\} in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: includes/gutenberg/feedzy-rss-feeds-loop-block.php
+
+		-
+			message: "#^Variable \\$this might not be defined\\.$#"
+			count: 4
+			path: includes/layouts/integration.php
+
+		-
+			message: "#^Parameter \\#1 \\$text of function esc_attr expects string, int given\\.$#"
+			count: 2
+			path: includes/layouts/settings.php
+
+		-
+			message: "#^Parameter \\#2 \\$allowed_html of function wp_kses expects array\\<array\\>\\|string, array\\<string, true\\> given\\.$#"
+			count: 1
+			path: includes/layouts/settings.php
+
+		-
+			message: "#^Variable \\$this might not be defined\\.$#"
+			count: 4
+			path: includes/layouts/settings.php
+
+		-
+			message: "#^Parameter \\#1 \\$text of function esc_attr expects string, int given\\.$#"
+			count: 2
+			path: includes/layouts/setup-wizard.php
+
+		-
+			message: "#^Constant SIMPLEPIE_NAMESPACE_ATOM_10 not found\\.$#"
+			count: 1
+			path: includes/util/feedzy-rss-feeds-conditions.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Conditions\\:\\:migrate_conditions\\(\\) has parameter \\$conditions with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/util/feedzy-rss-feeds-conditions.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: includes/util/feedzy-rss-feeds-conditions.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Util_Scheduler\\:\\:clear_scheduled_hook\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/util/feedzy-rss-feeds-util-scheduler.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Util_Scheduler\\:\\:is_scheduled\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/util/feedzy-rss-feeds-util-scheduler.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Util_Scheduler\\:\\:schedule_event\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/util/feedzy-rss-feeds-util-scheduler.php
+
+		-
+			message: "#^Call to an undefined method SimplePie\\:\\:get_date\\(\\)\\.$#"
+			count: 2
+			path: includes/util/feedzy-rss-feeds-util-simplepie.php
+
+		-
+			message: "#^Constant WPINC not found\\.$#"
+			count: 3
+			path: includes/util/feedzy-rss-feeds-util-simplepie.php
+
+		-
+			message: "#^Method Feedzy_Rss_Feeds_Util_SimplePie\\:\\:__construct\\(\\) has parameter \\$sc with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/util/feedzy-rss-feeds-util-simplepie.php
+
+		-
+			message: "#^Property Feedzy_Rss_Feeds_Util_SimplePie\\:\\:\\$sc type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/util/feedzy-rss-feeds-util-simplepie.php
+
+		-
+			message: "#^Parameter \\#1 \\$attachment_id of function wp_get_attachment_image expects int, string given\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php
+
+		-
+			message: "#^Parameter \\#1 \\$text of function esc_attr expects string, int given\\.$#"
+			count: 2
+			path: includes/views/import-metabox-edit.php
+
+		-
+			message: "#^Parameter \\#2 \\$action of function wp_nonce_url expects \\-1\\|string, null given\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php
+
+		-
+			message: "#^Variable \\$authors_array might not be defined\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php
+
+		-
+			message: "#^Variable \\$filter_conditions might not be defined\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php
+
+		-
+			message: "#^Variable \\$import_auto_translation might not be defined\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php
+
+		-
+			message: "#^Variable \\$import_content might not be defined\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php
+
+		-
+			message: "#^Variable \\$import_date might not be defined\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php
+
+		-
+			message: "#^Variable \\$import_featured_img might not be defined\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php
+
+		-
+			message: "#^Variable \\$import_feed_delete_days might not be defined\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php
+
+		-
+			message: "#^Variable \\$import_feed_delete_media might not be defined\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php
+
+		-
+			message: "#^Variable \\$import_feed_limit might not be defined\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php
+
+		-
+			message: "#^Variable \\$import_item_img_url might not be defined\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php
+
+		-
+			message: "#^Variable \\$import_link_author might not be defined\\.$#"
+			count: 2
+			path: includes/views/import-metabox-edit.php
+
+		-
+			message: "#^Variable \\$import_post_author might not be defined\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php
+
+		-
+			message: "#^Variable \\$import_post_status might not be defined\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php
+
+		-
+			message: "#^Variable \\$import_post_term might not be defined\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php
+
+		-
+			message: "#^Variable \\$import_post_type might not be defined\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php
+
+		-
+			message: "#^Variable \\$import_remove_duplicates might not be defined\\.$#"
+			count: 2
+			path: includes/views/import-metabox-edit.php
+
+		-
+			message: "#^Variable \\$import_title might not be defined\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php
+
+		-
+			message: "#^Variable \\$import_translation_lang might not be defined\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php
+
+		-
+			message: "#^Variable \\$invalid_source_msg might not be defined\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php
+
+		-
+			message: "#^Variable \\$mark_duplicate_tag might not be defined\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php
+
+		-
+			message: "#^Variable \\$post_excerpt might not be defined\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php
+
+		-
+			message: "#^Variable \\$post_status might not be defined\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php
+
+		-
+			message: "#^Variable \\$post_types might not be defined\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php
+
+		-
+			message: "#^Variable \\$published_status might not be defined\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php

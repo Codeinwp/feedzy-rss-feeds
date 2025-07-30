@@ -10,7 +10,7 @@ import RadioImageControl from './radio-image-control/';
  * External dependencies
  */
 import classnames from 'classnames';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { applyFilters } from '@wordpress/hooks';
 import { InspectorControls, MediaUpload } from '@wordpress/block-editor';
 import {
@@ -40,7 +40,6 @@ class Inspector extends Component {
 	}
 
 	render() {
-		let http_help = '';
 		const refreshFeed = applyFilters('feedzy_widget_refresh_feed', [
 			{ label: __('1 Hour', 'feedzy-rss-feeds'), value: '1_hours' },
 			{ label: __('2 Hours', 'feedzy-rss-feeds'), value: '3_hours' },
@@ -49,12 +48,6 @@ class Inspector extends Component {
 			{ label: __('3 Days', 'feedzy-rss-feeds'), value: '3_days' },
 			{ label: __('15 Days', 'feedzy-rss-feeds'), value: '15_days' },
 		]);
-		if (this.props.attributes.http === 'https') {
-			http_help += __(
-				'Please verify that the images exist on HTTPS.',
-				'feedzy-rss-feeds'
-			);
-		}
 
 		const decodeHtmlEntities = (str) => {
 			if (typeof str !== 'string') {
@@ -109,112 +102,129 @@ class Inspector extends Component {
 								title={__('Feed Source', 'feedzy-rss-feeds')}
 								initialOpen={true}
 							>
-								{this.props.attributes.status !== 0 && [
-									<TextControl
-										label={__(
-											'Feed Source',
-											'feedzy-rss-feeds'
-										)}
-										className="feedzy-source"
-										value={this.props.attributes.feeds}
-										onChange={this.props.edit.onChangeFeed}
-									/>,
-									<Button
-										isLarge
-										isPrimary
-										type="submit"
-										onClick={this.props.edit.loadFeed}
-										className="loadFeed"
-									>
-										{__('Load Feed', 'feedzy-rss-feeds')}
-									</Button>,
-									<TextareaControl
-										label={__(
-											'Message to show when feed is empty',
-											'feedzy-rss-feeds'
-										)}
-										value={
-											this.props.attributes.error_empty
-										}
-										onChange={this.props.edit.onErrorEmpty}
-									/>,
-								]}
-								{'fetched' === this.props.state.route && [
-									<RangeControl
-										label={__(
-											'Number of Items',
-											'feedzy-rss-feeds'
-										)}
-										value={
-											Number(this.props.attributes.max) ||
-											5
-										}
-										onChange={this.props.edit.onChangeMax}
-										min={1}
-										max={
-											this.props.attributes.feedData.items
-												.length || 10
-										}
-										beforeIcon="sort"
-										className="feedzy-max"
-									/>,
-									<SelectControl
-										label={__(
-											'Sorting Order',
-											'feedzy-rss-feeds'
-										)}
-										value={this.props.attributes.sort}
-										options={[
-											{
-												label: __(
-													'Default',
-													'feedzy-rss-feeds'
-												),
-												value: 'default',
-											},
-											{
-												label: __(
-													'Date Descending',
-													'feedzy-rss-feeds'
-												),
-												value: 'date_desc',
-											},
-											{
-												label: __(
-													'Date Ascending',
-													'feedzy-rss-feeds'
-												),
-												value: 'date_asc',
-											},
-											{
-												label: __(
-													'Title Descending',
-													'feedzy-rss-feeds'
-												),
-												value: 'title_desc',
-											},
-											{
-												label: __(
-													'Title Ascending',
-													'feedzy-rss-feeds'
-												),
-												value: 'title_asc',
-											},
-										]}
-										onChange={this.props.edit.onSort}
-										className="feedzy-sort"
-									/>,
-									<SelectControl
-										label={__(
-											'Feed Caching Time',
-											'feedzy-rss-feeds'
-										)}
-										value={this.props.attributes.refresh}
-										options={refreshFeed}
-										onChange={this.props.edit.onRefresh}
-										className="feedzy-refresh"
-									/>,
-								]}
+								{this.props.attributes.status !== 0 && (
+									<Fragment>
+										<TextControl
+											label={__(
+												'Feed Source',
+												'feedzy-rss-feeds'
+											)}
+											className="feedzy-source"
+											value={this.props.attributes.feeds}
+											onChange={
+												this.props.edit.onChangeFeed
+											}
+										/>
+										<Button
+											isLarge
+											isPrimary
+											type="submit"
+											onClick={this.props.edit.loadFeed}
+											className="loadFeed"
+										>
+											{__(
+												'Load Feed',
+												'feedzy-rss-feeds'
+											)}
+										</Button>
+										<TextareaControl
+											label={__(
+												'Message to show when feed is empty',
+												'feedzy-rss-feeds'
+											)}
+											value={
+												this.props.attributes
+													.error_empty
+											}
+											onChange={
+												this.props.edit.onErrorEmpty
+											}
+										/>
+									</Fragment>
+								)}
+								{'fetched' === this.props.state.route && (
+									<Fragment>
+										<RangeControl
+											label={__(
+												'Number of Items',
+												'feedzy-rss-feeds'
+											)}
+											value={
+												Number(
+													this.props.attributes.max
+												) || 5
+											}
+											onChange={
+												this.props.edit.onChangeMax
+											}
+											min={1}
+											max={
+												this.props.attributes.feedData
+													.items.length || 10
+											}
+											beforeIcon="sort"
+											className="feedzy-max"
+										/>
+										<SelectControl
+											label={__(
+												'Sorting Order',
+												'feedzy-rss-feeds'
+											)}
+											value={this.props.attributes.sort}
+											options={[
+												{
+													label: __(
+														'Default',
+														'feedzy-rss-feeds'
+													),
+													value: 'default',
+												},
+												{
+													label: __(
+														'Date Descending',
+														'feedzy-rss-feeds'
+													),
+													value: 'date_desc',
+												},
+												{
+													label: __(
+														'Date Ascending',
+														'feedzy-rss-feeds'
+													),
+													value: 'date_asc',
+												},
+												{
+													label: __(
+														'Title Descending',
+														'feedzy-rss-feeds'
+													),
+													value: 'title_desc',
+												},
+												{
+													label: __(
+														'Title Ascending',
+														'feedzy-rss-feeds'
+													),
+													value: 'title_asc',
+												},
+											]}
+											onChange={this.props.edit.onSort}
+											className="feedzy-sort"
+										/>
+										<SelectControl
+											label={__(
+												'Feed Caching Time',
+												'feedzy-rss-feeds'
+											)}
+											value={
+												this.props.attributes.refresh
+											}
+											options={refreshFeed}
+											onChange={this.props.edit.onRefresh}
+											className="feedzy-refresh"
+										/>
+									</Fragment>
+								)}
 							</PanelBody>
 
 							<PanelBody
@@ -332,7 +342,7 @@ class Inspector extends Component {
 							<PanelBody
 								title={[
 									__('Filter items', 'feedzy-rss-feeds'),
-									!feedzyjs.isPro && (
+									!window.feedzyjs.isPro && (
 										<span className="fz-pro-label">
 											Pro
 										</span>
@@ -340,12 +350,12 @@ class Inspector extends Component {
 								]}
 								initialOpen={false}
 								className={
-									feedzyjs.isPro
+									window.feedzyjs.isPro
 										? 'feedzy-item-filter'
 										: 'feedzy-item-filter fz-locked'
 								}
 							>
-								{!feedzyjs.isPro && (
+								{!window.feedzyjs.isPro && (
 									<div className="fz-upsell-notice">
 										{__(
 											'Unlock this feature and more advanced options with',
@@ -478,7 +488,7 @@ class Inspector extends Component {
 					)}
 
 					{'fetched' === this.props.state.route &&
-						'style' === this.state.tab && [
+						'style' === this.state.tab && (
 							<Fragment>
 								<PanelBody
 									title={__(
@@ -521,158 +531,143 @@ class Inspector extends Component {
 										className="feedzy-thumb"
 									/>
 
-									{this.props.attributes.thumb !== 'no' && [
-										this.props.attributes.thumb !==
-											'auto' && (
-											<div className="feedzy-blocks-base-control">
-												<label
-													className="blocks-base-control__label"
-													htmlFor="inspector-media-upload"
-												>
-													{__(
-														'Fallback image if no image is found.',
-														'feedzy-rss-feeds'
-													)}
-												</label>
-												<MediaUpload
-													type="image"
-													id="inspector-media-upload"
-													value={
-														this.props.attributes
-															.default
-													}
-													onSelect={
-														this.props.edit
-															.onDefault
-													}
-													render={({ open }) => [
-														this.props.attributes
-															.default !==
-															undefined && [
-															<ResponsiveWrapper
-																naturalWidth={
-																	this.props
-																		.attributes
-																		.default
-																		.width
-																}
-																naturalHeight={
-																	this.props
-																		.attributes
-																		.default
-																		.height
-																}
-															>
-																<img
-																	src={
+									{this.props.attributes.thumb !== 'no' && (
+										<Fragment>
+											{this.props.attributes.thumb !==
+												'auto' && (
+												<div className="feedzy-blocks-base-control">
+													<label
+														className="blocks-base-control__label"
+														htmlFor="inspector-media-upload"
+													>
+														{__(
+															'Fallback image if no image is found.',
+															'feedzy-rss-feeds'
+														)}
+													</label>
+													<MediaUpload
+														type="image"
+														id="inspector-media-upload"
+														value={
+															this.props
+																.attributes
+																.default
+														}
+														onSelect={
+															this.props.edit
+																.onDefault
+														}
+														render={({ open }) => (
+															<Fragment>
+																{this.props
+																	.attributes
+																	.default !==
+																	undefined && (
+																	<Fragment>
+																		<ResponsiveWrapper
+																			naturalWidth={
+																				this
+																					.props
+																					.attributes
+																					.default
+																					.width
+																			}
+																			naturalHeight={
+																				this
+																					.props
+																					.attributes
+																					.default
+																					.height
+																			}
+																		>
+																			<img
+																				src={
+																					this
+																						.props
+																						.attributes
+																						.default
+																						.url
+																				}
+																				alt={__(
+																					'Featured image',
+																					'feedzy-rss-feeds'
+																				)}
+																			/>
+																		</ResponsiveWrapper>
+
+																		<Button
+																			isLarge
+																			isSecondary
+																			onClick={() =>
+																				this.props.setAttributes(
+																					{
+																						default:
+																							undefined,
+																					}
+																				)
+																			}
+																			style={{
+																				marginTop:
+																					'10px',
+																			}}
+																		>
+																			{__(
+																				'Remove Image',
+																				'feedzy-rss-feeds'
+																			)}
+																		</Button>
+																	</Fragment>
+																)}
+																<Button
+																	isLarge
+																	isPrimary
+																	onClick={
+																		open
+																	}
+																	style={{
+																		marginTop:
+																			'10px',
+																	}}
+																	className={
 																		this
 																			.props
 																			.attributes
-																			.default
-																			.url
+																			.default ===
+																			undefined &&
+																		'feedzy_image_upload'
 																	}
-																	alt={__(
-																		'Featured image',
+																>
+																	{__(
+																		'Upload Image',
 																		'feedzy-rss-feeds'
 																	)}
-																/>
-															</ResponsiveWrapper>,
-															<Button
-																isLarge
-																isSecondary
-																onClick={() =>
-																	this.props.setAttributes(
-																		{
-																			default:
-																				undefined,
-																		}
-																	)
-																}
-																style={{
-																	marginTop:
-																		'10px',
-																}}
-															>
-																{__(
-																	'Remove Image',
-																	'feedzy-rss-feeds'
-																)}
-															</Button>,
-														],
-														<Button
-															isLarge
-															isPrimary
-															onClick={open}
-															style={{
-																marginTop:
-																	'10px',
-															}}
-															className={
-																this.props
-																	.attributes
-																	.default ===
-																	undefined &&
-																'feedzy_image_upload'
-															}
-														>
-															{__(
-																'Upload Image',
-																'feedzy-rss-feeds'
-															)}
-														</Button>,
-													]}
-												/>
-											</div>
-										),
-										<TextControl
-											label={__(
-												'Thumbnails dimension.',
-												'feedzy-rss-feeds'
+																</Button>
+															</Fragment>
+														)}
+													/>
+												</div>
 											)}
-											type="number"
-											value={this.props.attributes.size}
-											onChange={this.props.edit.onSize}
-										/>,
-										<SelectControl
-											label={__(
-												'How should we treat HTTP images?',
-												'feedzy-rss-feeds'
-											)}
-											value={this.props.attributes.http}
-											options={[
-												{
-													label: __(
-														'Show with HTTP link',
-														'feedzy-rss-feeds'
-													),
-													value: 'auto',
-												},
-												{
-													label: __(
-														'Force HTTPS',
-														'feedzy-rss-feeds'
-													),
-													value: 'https',
-												},
-												{
-													label: __(
-														'Ignore and show the default image instead',
-														'feedzy-rss-feeds'
-													),
-													value: 'default',
-												},
-											]}
-											onChange={this.props.edit.onHTTP}
-											className="feedzy-http"
-											help={http_help}
-										/>,
-									]}
+											<TextControl
+												label={__(
+													'Thumbnails dimension.',
+													'feedzy-rss-feeds'
+												)}
+												type="number"
+												value={
+													this.props.attributes.size
+												}
+												onChange={
+													this.props.edit.onSize
+												}
+											/>
+										</Fragment>
+									)}
 								</PanelBody>
 
 								<PanelBody
 									title={[
 										__('Feed Layout', 'feedzy-rss-feeds'),
-										!feedzyjs.isPro && (
+										!window.feedzyjs.isPro && (
 											<span className="fz-pro-label">
 												Pro
 											</span>
@@ -680,12 +675,12 @@ class Inspector extends Component {
 									]}
 									initialOpen={false}
 									className={
-										feedzyjs.isPro
+										window.feedzyjs.isPro
 											? 'feedzy-layout'
 											: 'feedzy-layout fz-locked'
 									}
 								>
-									{!feedzyjs.isPro && (
+									{!window.feedzyjs.isPro && (
 										<div className="fz-upsell-notice">
 											{__(
 												'Unlock this feature and more advanced options with',
@@ -734,7 +729,7 @@ class Inspector extends Component {
 													'feedzy-rss-feeds'
 												),
 												src:
-													feedzyjs.imagepath +
+													window.feedzyjs.imagepath +
 													'feedzy-default-template.png',
 												value: 'default',
 											},
@@ -744,7 +739,7 @@ class Inspector extends Component {
 													'feedzy-rss-feeds'
 												),
 												src:
-													feedzyjs.imagepath +
+													window.feedzyjs.imagepath +
 													'feedzy-style1-template.png',
 												value: 'style1',
 											},
@@ -754,7 +749,7 @@ class Inspector extends Component {
 													'feedzy-rss-feeds'
 												),
 												src:
-													feedzyjs.imagepath +
+													window.feedzyjs.imagepath +
 													'feedzy-style2-template.png',
 												value: 'style2',
 											},
@@ -789,10 +784,10 @@ class Inspector extends Component {
 										)}
 									/>
 								</PanelBody>
-							</Fragment>,
-						]}
+							</Fragment>
+						)}
 					{'fetched' === this.props.state.route &&
-						'advanced' === this.state.tab && [
+						'advanced' === this.state.tab && (
 							<Fragment>
 								<PanelBody
 									title={__(
@@ -805,7 +800,7 @@ class Inspector extends Component {
 									<BaseControl>
 										<TextControl
 											label={
-												feedzyjs.isPro
+												window.feedzyjs.isPro
 													? __(
 															'Should we display additional meta fields out of author, date, time or categories? (comma-separated list, in order of display).',
 															'feedzy-rss-feeds'
@@ -831,7 +826,7 @@ class Inspector extends Component {
 															'eg: %s',
 															'feedzy-rss-feeds'
 														),
-														feedzyjs.isPro
+														window.feedzyjs.isPro
 															? 'author, date, time, tz=local, categories'
 															: 'author, date, time, tz=local'
 													) +
@@ -899,7 +894,7 @@ class Inspector extends Component {
 										checked={!!this.props.attributes.price}
 										onChange={this.props.edit.onTogglePrice}
 										className={
-											feedzyjs.isPro
+											window.feedzyjs.isPro
 												? 'feedzy-pro-price'
 												: 'feedzy-pro-price fz-locked'
 										}
@@ -964,7 +959,7 @@ class Inspector extends Component {
 								<PanelBody
 									title={[
 										__('Referral URL', 'feedzy-rss-feeds'),
-										!feedzyjs.isPro && (
+										!window.feedzyjs.isPro && (
 											<span className="fz-pro-label">
 												Pro
 											</span>
@@ -972,12 +967,12 @@ class Inspector extends Component {
 									]}
 									initialOpen={false}
 									className={
-										feedzyjs.isPro
+										window.feedzyjs.isPro
 											? 'feedzy-pro-options'
 											: 'feedzy-pro-options fz-locked'
 									}
 								>
-									{!feedzyjs.isPro && (
+									{!window.feedzyjs.isPro && (
 										<div className="fz-upsell-notice">
 											{__(
 												'Unlock this feature and more advanced options with',
@@ -1072,8 +1067,8 @@ class Inspector extends Component {
 										onChange={this.props.edit.onDryRunTags}
 									/>
 								</PanelBody>
-							</Fragment>,
-						]}
+							</Fragment>
+						)}
 				</InspectorControls>
 			</Fragment>
 		);

@@ -128,7 +128,10 @@ class Feedzy_Rss_Feeds_Conditions {
 			}
 		}
 
-		foreach ( array( 'keywords_title' => 'keywords_inc', 'keywords_ban' => 'keywords_exc' ) as $old_key => $new_key ) {
+		foreach ( array(
+			'keywords_title' => 'keywords_inc',
+			'keywords_ban'   => 'keywords_exc',
+		) as $old_key => $new_key ) {
 			if ( isset( $conditions[ $old_key ] ) ) {
 				$conditions[ $new_key ] = $conditions[ $old_key ];
 				unset( $conditions[ $old_key ] );
@@ -149,10 +152,11 @@ class Feedzy_Rss_Feeds_Conditions {
 
 		foreach ( $mapping as $key => $operator ) {
 			if ( isset( $conditions[ $key ] ) && ! empty( $conditions[ $key ] ) ) {
-				$field = $key === 'from_datetime' || $key === 'to_datetime' ? 'date' : ( isset( $conditions[ $key . '_on' ] ) ? $conditions[ $key . '_on' ] : '' );
+				$field = 'from_datetime' === $key || 'to_datetime' === $key ? 'date' : ( isset( $conditions[ $key . '_on' ] ) ? $conditions[ $key . '_on' ] : '' );
 				if ( ! empty( $field ) ) {
 					array_push(
-						$new_conditions['conditions'], array(
+						$new_conditions['conditions'],
+						array(
 							'field'    => $field,
 							'operator' => $operator,
 							'value'    => $conditions[ $key ],
@@ -198,7 +202,7 @@ class Feedzy_Rss_Feeds_Conditions {
 			case self::OPERATOR_LESS_THAN:
 			case self::OPERATOR_LESS_THAN_EQUALS:
 				// Check if the field type is date.
-				if ( isset( $condition['field'] ) && $condition['field'] === 'date' ) {
+				if ( isset( $condition['field'] ) && 'date' === $condition['field'] ) {
 					$condition_value = new DateTime( $condition_value, new DateTimeZone( 'UTC' ) );
 					$condition_value = $condition_value->getTimestamp();
 				} elseif ( isset( $condition['field'] ) && in_array( $condition['field'], array( 'title', 'description', 'fullcontent' ), true ) ) {
@@ -224,7 +228,7 @@ class Feedzy_Rss_Feeds_Conditions {
 				}
 				return preg_match( $condition_value, $value ) === 1;
 			default:
-				// Default is self::OPERATOR_HAS_VALUE
+				// Default is OPERATOR_HAS_VALUE.
 				return ! empty( $value );
 		}
 	}
@@ -234,37 +238,37 @@ class Feedzy_Rss_Feeds_Conditions {
 	 *
 	 * This function evaluates a set of conditions against an item and returns whether they are met.
 	 *
-	 * @param bool                  $continue The current return value.
+	 * @param bool                  $default_value The current return value.
 	 * @param array<string, string> $attrs The attributes of the feed.
-	 * @param array<string, string> $item The item to evaluate.
+	 * @param SimplePie\Item        $item The item to evaluate.
 	 * @param string                $feed_url The URL of the feed.
 	 * @param int                   $index The index of the item.
 	 *
 	 * @return bool True if the conditions are met, false otherwise.
 	 */
-	public function evaluate_conditions( $continue, $attrs, $item, $feed_url, $index ): bool {
+	public function evaluate_conditions( $default_value, $attrs, $item, $feed_url, $index ): bool {
 		if ( feedzy_is_new() && ! feedzy_is_pro() ) {
-			return $continue;
+			return $default_value;
 		}
 
 		if ( ! isset( $attrs['filters'] ) || empty( $attrs['filters'] ) ) {
-			return $continue;
+			return $default_value;
 		}
 
 		$filters = json_decode( $attrs['filters'], true );
 
 		if ( ! is_array( $filters ) ) {
-			return $continue;
+			return $default_value;
 		}
 
 		$conditions = $filters['conditions'] ?? array();
 		$logic      = $filters['match'] ?? self::LOGIC_AND;
 
 		if ( ! is_array( $conditions ) ) {
-			return $continue;
+			return $default_value;
 		}
 
-		$continue = $logic === self::LOGIC_AND;
+		$default_value = self::LOGIC_AND === $logic;
 
 		foreach ( $conditions as $condition ) {
 			$field = $condition['field'] ?? '';
@@ -302,18 +306,18 @@ class Feedzy_Rss_Feeds_Conditions {
 
 			$condition_met = $this->is_condition_met( $condition, $value );
 
-			if ( $logic === self::LOGIC_AND && ! $condition_met ) {
-				$continue = false;
+			if ( self::LOGIC_AND === $logic && ! $condition_met ) {
+				$default_value = false;
 				break;
 			}
 
-			if ( $logic === self::LOGIC_OR && $condition_met ) {
-				$continue = true;
+			if ( self::LOGIC_OR === $logic && $condition_met ) {
+				$default_value = true;
 				break;
 			}
 		}
 
-		return $continue;
+		return $default_value;
 	}
 
 	/**
@@ -329,7 +333,7 @@ class Feedzy_Rss_Feeds_Conditions {
 	private function check_contains( $value, $condition_value ): bool {
 		$or_conditions = preg_split( '/\s*,\s*/', $condition_value );
 		foreach ( $or_conditions as $or_condition ) {
-			$and_conditions = preg_split( '/\s*\+\s*/', $or_condition );
+			$and_conditions           = preg_split( '/\s*\+\s*/', $or_condition );
 			$all_and_conditions_match = true;
 			foreach ( $and_conditions as $and_condition ) {
 				if ( strpos( $value, trim( $and_condition ) ) === false ) {
@@ -351,7 +355,7 @@ class Feedzy_Rss_Feeds_Conditions {
 	 *
 	 * @param string $filter_str The filter string to convert.
 	 *
-	 * @return string The JSON object.
+	 * @return string|false The JSON object.
 	 */
 	public function convert_filter_string_to_json( $filter_str ) {
 		// Split into segments by semicolon.
@@ -364,7 +368,7 @@ class Feedzy_Rss_Feeds_Conditions {
 			// Check if this segment defines 'match'.
 			if ( strpos( $segment, 'match=' ) === 0 ) {
 				// Extract match value.
-				list( , $match_val ) = explode( '=', $segment, 2 );
+				list( , $match_val )   = explode( '=', $segment, 2 );
 				$filter_array['match'] = trim( $match_val );
 			} elseif ( strpos( $segment, 'condition=' ) === 0 ) {
 				// Check if this segment defines a 'condition'.
@@ -377,7 +381,7 @@ class Feedzy_Rss_Feeds_Conditions {
 				foreach ( $pairs as $pair ) {
 					$pair = trim( $pair );
 					if ( strpos( $pair, ':' ) !== false ) {
-						list( $key, $val ) = explode( ':', $pair, 2 );
+						list( $key, $val )         = explode( ':', $pair, 2 );
 						$condition[ trim( $key ) ] = trim( $val );
 					}
 				}
@@ -389,6 +393,6 @@ class Feedzy_Rss_Feeds_Conditions {
 		}
 
 		// Encode the final array as JSON.
-		return json_encode( $filter_array );
+		return wp_json_encode( $filter_array );
 	}
 }

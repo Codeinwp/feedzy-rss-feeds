@@ -23,7 +23,7 @@ class Feedzy_Rss_Feeds_Util_Scheduler {
 	 * Check if an action hook is scheduled.
 	 *
 	 * @param string $hook The hook to check.
-	 * @param array  $args Optional. Arguments to pass to the hook
+	 * @param array  $args Optional. Arguments to pass to the hook.
 	 *
 	 * @return bool|int
 	 */

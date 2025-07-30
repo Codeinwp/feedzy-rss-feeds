@@ -79,7 +79,7 @@ class feedzy_wp_widget extends WP_Widget {
 			</p>
 			<p>
 				<label for="' . $this->get_field_id( 'textarea' ) . '">' . __( 'Intro text', 'feedzy-rss-feeds' ) . '</label>
-				<textarea class="widefat" id="' . $this->get_field_id( 'textarea' ) . '" name="' . $this->get_field_name( 'textarea' ) . '">' . esc_attr( $instance['textarea'] ) . '</textarea>
+				<textarea class="widefat" id="' . $this->get_field_id( 'textarea' ) . '" name="' . $this->get_field_name( 'textarea' ) . '">' . esc_textarea( $instance['textarea'] ) . '</textarea>
 			</p>';
 		foreach ( Feedzy_Rss_Feeds_Ui_Lang::get_form_elements() as $key_section => $section ) {
 			$widget_form .= '<hr/><h4>' . $section['title'] . '</h4>';
@@ -221,35 +221,35 @@ class feedzy_wp_widget extends WP_Widget {
 			echo '<p class="feedzy-widget-intro">' . wp_kses_post( wpautop( $textarea ) ) . '</p>';
 		}
 		$feedzy_widget_shortcode_attributes = array(
-			'feeds'          => isset( $instance['feeds'] ) ? $instance['feeds'] : '',
-			'max'            => isset( $instance['max'] ) ? $instance['max'] : '',
-			'feed_title'     => 'no',
-			'target'         => isset( $instance['target'] ) ? $instance['target'] : '',
-			'title'          => isset( $instance['titlelength'] ) ? $instance['titlelength'] : '',
-			'meta'           => self::bool_to_enum( isset( $instance['meta'] ) ? $instance['meta'] : '' ),
-			'summary'        => self::bool_to_enum( isset( $instance['summary'] ) ? $instance['summary'] : '' ),
-			'summarylength'  => isset( $instance['summarylength'] ) ? $instance['summarylength'] : '',
-			'thumb'          => self::bool_to_enum( isset( $instance['thumb'] ) ? $instance['thumb'] : '' ),
-			'default'        => isset( $instance['default'] ) ? $instance['default'] : '',
-			'size'           => isset( $instance['size'] ) ? $instance['size'] : '',
-			'keywords_title' => isset( $instance['keywords_title'] ) ? $instance['keywords_title'] : '',
-			'keywords_ban'   => isset( $instance['keywords_ban'] ) ? $instance['keywords_ban'] : '',
-			'error_empty'    => isset( $instance['error_empty'] ) ? $instance['error_empty'] : '',
-			'sort'           => isset( $instance['sort'] ) ? $instance['sort'] : '',
-			'refresh'        => isset( $instance['refresh'] ) ? $instance['refresh'] : '',
-			'follow'         => isset( $instance['follow'] ) ? $instance['follow'] : '',
-			'http'           => isset( $instance['http'] ) ? $instance['http'] : '',
-			'lazy'           => isset( $instance['lazy'] ) ? self::bool_to_enum( $instance['lazy'] ) : false,
-			'offset'         => isset( $instance['offset'] ) ? $instance['offset'] : '',
-			'multiple_meta'  => isset( $instance['multiple_meta'] ) ? $instance['multiple_meta'] : '',
-			'keywords_inc_on'  => isset( $instance['keywords_inc_on'] ) ? $instance['keywords_inc_on'] : '',
-			'keywords_exc_on'  => isset( $instance['keywords_exc_on'] ) ? $instance['keywords_exc_on'] : '',
-			'from_datetime'  => isset( $instance['from_datetime'] ) ? $instance['from_datetime'] : '',
-			'to_datetime'  => isset( $instance['to_datetime'] ) ? $instance['to_datetime'] : '',
+			'feeds'                 => isset( $instance['feeds'] ) ? $instance['feeds'] : '',
+			'max'                   => isset( $instance['max'] ) ? $instance['max'] : '',
+			'feed_title'            => 'no',
+			'target'                => isset( $instance['target'] ) ? $instance['target'] : '',
+			'title'                 => isset( $instance['titlelength'] ) ? $instance['titlelength'] : '',
+			'meta'                  => self::bool_to_enum( isset( $instance['meta'] ) ? $instance['meta'] : '' ),
+			'summary'               => self::bool_to_enum( isset( $instance['summary'] ) ? $instance['summary'] : '' ),
+			'summarylength'         => isset( $instance['summarylength'] ) ? $instance['summarylength'] : '',
+			'thumb'                 => self::bool_to_enum( isset( $instance['thumb'] ) ? $instance['thumb'] : '' ),
+			'default'               => isset( $instance['default'] ) ? $instance['default'] : '',
+			'size'                  => isset( $instance['size'] ) ? $instance['size'] : '',
+			'keywords_title'        => isset( $instance['keywords_title'] ) ? $instance['keywords_title'] : '',
+			'keywords_ban'          => isset( $instance['keywords_ban'] ) ? $instance['keywords_ban'] : '',
+			'error_empty'           => isset( $instance['error_empty'] ) ? $instance['error_empty'] : '',
+			'sort'                  => isset( $instance['sort'] ) ? $instance['sort'] : '',
+			'refresh'               => isset( $instance['refresh'] ) ? $instance['refresh'] : '',
+			'follow'                => isset( $instance['follow'] ) ? $instance['follow'] : '',
+			'http'                  => isset( $instance['http'] ) ? $instance['http'] : '',
+			'lazy'                  => isset( $instance['lazy'] ) ? self::bool_to_enum( $instance['lazy'] ) : false,
+			'offset'                => isset( $instance['offset'] ) ? $instance['offset'] : '',
+			'multiple_meta'         => isset( $instance['multiple_meta'] ) ? $instance['multiple_meta'] : '',
+			'keywords_inc_on'       => isset( $instance['keywords_inc_on'] ) ? $instance['keywords_inc_on'] : '',
+			'keywords_exc_on'       => isset( $instance['keywords_exc_on'] ) ? $instance['keywords_exc_on'] : '',
+			'from_datetime'         => isset( $instance['from_datetime'] ) ? $instance['from_datetime'] : '',
+			'to_datetime'           => isset( $instance['to_datetime'] ) ? $instance['to_datetime'] : '',
 			'disable_default_style' => isset( $instance['disable_default_style'] ) ? $instance['disable_default_style'] : 'no',
-			'className'  => isset( $instance['classname'] ) ? $instance['classname'] : '',
-			'_dryrun_'  => isset( $instance['dryrun'] ) ? $instance['dryrun'] : '',
-			'_dry_run_tags_'  => isset( $instance['dry_run_tags'] ) ? $instance['dry_run_tags'] : '',
+			'className'             => isset( $instance['classname'] ) ? $instance['classname'] : '',
+			'_dryrun_'              => isset( $instance['dryrun'] ) ? $instance['dryrun'] : '',
+			'_dry_run_tags_'        => isset( $instance['dry_run_tags'] ) ? $instance['dry_run_tags'] : '',
 		);
 		$feedzy_widget_shortcode_attributes = apply_filters( 'feedzy_widget_shortcode_attributes_filter', $feedzy_widget_shortcode_attributes, $args, $instance );
 

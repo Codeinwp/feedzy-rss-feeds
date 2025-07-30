@@ -28,37 +28,12 @@
 		<?php if ( ! empty( $offer_data['active'] ) ) { ?>
 			<div class="feedzy-sale">
 				<a href="<?php echo esc_url( $offer_data['bannerStoreUrl'] ); ?>">
-					<img src="<?php echo esc_url( $offer_data['bannerUrl'] ); ?>" alt="<?php echo esc_html( $offer_data['bannerAlt'] ); ?>">
+					<img src="<?php echo esc_url( $offer_data['bannerUrl'] ); ?>" alt="<?php echo esc_attr( $offer_data['bannerAlt'] ); ?>">
 					<div class="feedzy-urgency"><?php echo esc_html( $offer_data['urgencyText'] ); ?></div>
 				</a>
 			</div>
 		<?php } ?>
 		<div class="feedzy-accordion-item">
-			<div class="feedzy-accordion-item__title">
-				<div class="feedzy-accordion-item__button">
-					<div class="feedzy-accordion__step-title h2">
-						<?php
-						switch ( $active_tab ) {
-							case 'spinnerchief':
-								esc_html_e( 'SpinnerChief', 'feedzy-rss-feeds' );
-								break;
-							case 'wordai':
-								esc_html_e( 'WordAI', 'feedzy-rss-feeds' );
-								break;
-							case 'openai':
-								esc_html_e( 'OpenAI', 'feedzy-rss-feeds' );
-								break;
-							case 'openrouter':
-								esc_html_e( 'OpenRouter', 'feedzy-rss-feeds' );
-								break;
-							default:
-								echo esc_html( ucwords( str_replace( array( '-', '_' ), ' ', $active_tab ) ) );
-								break;
-						}
-						?>
-					</div>
-				</div>
-			</div>
 			<div class="feedzy-accordion-item__content">
 				<div class="fz-tabs-menu">
 					<ul>
