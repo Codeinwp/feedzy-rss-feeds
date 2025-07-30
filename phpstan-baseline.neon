@@ -1762,7 +1762,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$text of function esc_attr expects string, int given\\.$#"
-			count: 2
+			count: 1
 			path: includes/views/import-metabox-edit.php
 
 		-
@@ -1797,16 +1797,6 @@ parameters:
 
 		-
 			message: "#^Variable \\$import_featured_img might not be defined\\.$#"
-			count: 1
-			path: includes/views/import-metabox-edit.php
-
-		-
-			message: "#^Variable \\$import_feed_delete_days might not be defined\\.$#"
-			count: 1
-			path: includes/views/import-metabox-edit.php
-
-		-
-			message: "#^Variable \\$import_feed_delete_media might not be defined\\.$#"
 			count: 1
 			path: includes/views/import-metabox-edit.php
 
@@ -1887,5 +1877,17 @@ parameters:
 
 		-
 			message: "#^Variable \\$published_status might not be defined\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php
+		-
+			message: "#^Variable \\$import_remove_html might not be defined\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php
+		-
+			message: "#^Variable \\$import_order might not be defined\\.$#"
+			count: 1
+			path: includes/views/import-metabox-edit.php
+		-
+			message: "#^Variable \\$default_thumbnail_url might not be defined\\.$#"
 			count: 1
 			path: includes/views/import-metabox-edit.php

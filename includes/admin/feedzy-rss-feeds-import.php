@@ -162,8 +162,8 @@ class Feedzy_Rss_Feeds_Import {
 						'delete_post_message' => __( 'Would you also like to delete all the imported posts for this import job?', 'feedzy-rss-feeds' ),
 						'media_iframe_title'  => __( 'Select image', 'feedzy-rss-feeds' ),
 						'media_iframe_button' => __( 'Set default image', 'feedzy-rss-feeds' ),
-						'action_btn_text_1'   => __( 'Choose image', 'feedzy-rss-feeds' ),
-						'action_btn_text_2'   => __( 'Replace image', 'feedzy-rss-feeds' ),
+						'action_btn_text_1'   => __( 'Choose', 'feedzy-rss-feeds' ),
+						'action_btn_text_2'   => __( 'Replace', 'feedzy-rss-feeds' ),
 						'author_helper'       => __( 'We display up to 100 users. If the desired username isn’t listed, type the exact existing username manually to save it.', 'feedzy-rss-feeds' ),
 						'clearLogButton'      => __( 'Clear Log', 'feedzy-rss-feeds' ),
 						'okButton'            => __( 'Ok', 'feedzy-rss-feeds' ),
@@ -176,6 +176,7 @@ class Feedzy_Rss_Feeds_Import {
 							feedzy_is_pro() ? 'dashicons-upload' : 'dashicons-lock',
 							esc_html__( 'Upload Import', 'feedzy-rss-feeds' )
 						),
+						'fallback_thumbnail'  => FEEDZY_ABSURL . 'img/default-featured-image.png',
 					),
 				)
 			);
@@ -384,6 +385,10 @@ class Feedzy_Rss_Feeds_Import {
 		$mark_duplicate_tag       = get_post_meta( $post->ID, 'mark_duplicate_tag', true );
 		$import_post_author       = get_post_meta( $post->ID, 'import_post_author', true );
 		$filter_conditions        = get_post_meta( $post->ID, 'filter_conditions', true );
+		$import_remove_html       = get_post_meta( $post->ID, 'import_remove_html', true );
+		$import_remove_html       = 'yes' === $import_remove_html ? 'checked' : '';
+		$import_order             = get_post_meta( $post->ID, 'import_order', true );
+		$default_thumbnail_url    = get_post_meta( $post->ID, 'default_thumbnail_url', true );
 
 		if ( empty( $filter_conditions ) ) {
 			$filter_conditions = apply_filters(
@@ -445,16 +450,6 @@ class Feedzy_Rss_Feeds_Import {
 		if ( empty( $import_feed_limit ) ) {
 			$import_feed_limit = 10;
 		}
-		$import_feed_delete_days = intval( get_post_meta( $post->ID, 'import_feed_delete_days', true ) );
-		if ( empty( $import_feed_delete_days ) ) {
-			$import_feed_delete_days = ! empty( $this->free_settings['general']['feedzy-delete-days'] ) ? (int) $this->free_settings['general']['feedzy-delete-days'] : 0;
-		}
-
-		$import_feed_delete_media = get_post_meta( $post->ID, 'import_feed_delete_media', true );
-		if ( empty( $import_feed_delete_media ) ) {
-			$import_feed_delete_media = ! empty( $this->free_settings['general']['feedzy-delete-media'] ) ? 'yes' : 'no';
-		}
-		$import_feed_delete_media = 'yes' === $import_feed_delete_media ? 'checked' : '';
 
 		$default_thumbnail_id = 0;
 		if ( feedzy_is_pro() ) {
@@ -594,14 +589,13 @@ class Feedzy_Rss_Feeds_Import {
 			$data_meta['import_auto_translation'] = isset( $data_meta['import_auto_translation'] ) ? $data_meta['import_auto_translation'] : 'no';
 			// Check feeds external image URL checkbox checked OR not.
 			$data_meta['import_use_external_image'] = isset( $data_meta['import_use_external_image'] ) ? $data_meta['import_use_external_image'] : 'no';
+			// Check feeds remove html checkbox checked OR not.
+			$data_meta['import_remove_html'] = isset( $data_meta['import_remove_html'] ) ? $data_meta['import_remove_html'] : 'no';
 
 			// If it is filter_conditions we want to escape it.
 			if ( isset( $data_meta['filter_conditions'] ) ) {
 				$data_meta['filter_conditions'] = wp_slash( $data_meta['filter_conditions'] );
 			}
-
-			// Check feeds remove attached media checkbox checked OR not.
-			$data_meta['import_feed_delete_media'] = isset( $data_meta['import_feed_delete_media'] ) ? $data_meta['import_feed_delete_media'] : 'no';
 
 			// $data_meta['feedzy_post_author'] should be the author username. We convert it to the author ID.
 			if ( ! empty( $data_meta['import_post_author'] ) ) {
@@ -1478,6 +1472,9 @@ class Feedzy_Rss_Feeds_Import {
 		$mark_duplicate_tag       = get_post_meta( $job->ID, 'mark_duplicate_tag', true );
 		$mark_duplicate_tag       = feedzy_is_pro() && ! empty( $mark_duplicate_tag ) ? preg_replace( '/[\[\]#]/', '', $mark_duplicate_tag ) : '';
 		$max                      = $import_feed_limit;
+		$import_remove_html       = get_post_meta( $job->ID, 'import_remove_html', true );
+		$import_order             = get_post_meta( $job->ID, 'import_order', true );
+		$default_thumbnail_url    = get_post_meta( $job->ID, 'default_thumbnail_url', true );
 
 		if ( empty( $filter_conditions ) ) {
 			$filter_conditions = apply_filters(
@@ -1552,6 +1549,7 @@ class Feedzy_Rss_Feeds_Import {
 				'multiple_meta' => 'no',
 				'refresh'       => '55_mins',
 				'filters'       => $filter_conditions,
+				'sort'          => $import_order,
 			),
 			$job
 		);
@@ -1951,6 +1949,11 @@ class Feedzy_Rss_Feeds_Import {
 
 			$post_author = ! empty( $import_post_author ) ? $import_post_author : $job->post_author;
 
+			// strip all HTML tag when remove html option is enabled.
+			if ( 'yes' === $import_remove_html ) {
+				$post_content = wp_strip_all_tags( $post_content );
+			}
+
 			$new_post = apply_filters(
 				'feedzy_insert_post_args',
 				array(
@@ -2207,6 +2210,20 @@ class Feedzy_Rss_Feeds_Import {
 					}
 				}
 
+				if ( feedzy_is_pro() ) {
+					// Set default thumbnail image from the url.
+					if ( 'yes' === $import_item_img_url ) {
+						// Set external image URL.
+						update_post_meta( $new_post_id, 'feedzy_item_external_url', $default_thumbnail_url );
+					} else {
+						$fallback_thumbnail = get_post_meta( $job->ID, 'default_thumbnail_id', true );
+						if ( empty( $fallback_thumbnail ) && ! $img_success && ! empty( $default_thumbnail_url ) ) {
+							$thumbnail_title = pathinfo( basename( $default_thumbnail_url ), PATHINFO_FILENAME );
+							$img_success     = $this->try_save_featured_image( $default_thumbnail_url, $new_post_id, $thumbnail_title, $import_errors, $import_info );
+						}
+					}
+				}
+
 				// Set default thumbnail image.
 				if ( ! $img_success && ! empty( $default_thumbnail ) ) {
 					if ( is_array( $default_thumbnail ) ) {
@@ -2311,7 +2328,12 @@ class Feedzy_Rss_Feeds_Import {
 			$feed = $admin->fetch_feed( $feed_url, isset( $options['refresh'] ) ? $options['refresh'] : '12_hours', $options );
 
 			$feed->force_feed( true );
-			$feed->enable_order_by_date( false );
+
+			if ( isset( $options['sort'] ) && ! empty( $options['sort'] ) ) {
+				$feed->enable_order_by_date( true );
+			} else {
+				$feed->enable_order_by_date( false );
+			}
 
 			if ( is_string( $feed ) ) {
 				return array();

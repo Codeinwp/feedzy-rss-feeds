@@ -978,15 +978,22 @@
 
 	function feedzyTab() {
 		$(".fz-tabs-menu a").click(function () {
-			$(".fz-tabs-menu a").removeClass("active");
+			$(this).parents(".fz-tabs-menu").find("a").removeClass("active");
 			$(this).addClass("active");
 			var tagid = $(this).data("id");
-			$(".fz-tab-content").hide();
+			$(this)
+				.parents(".feedzy-accordion-item__content")
+				.find(".fz-tabs-content .fz-tab-content")
+				.hide();
 			$("#" + tagid).show();
 		});
 		$(".fz-tabs-content .fz-tab-content").hide();
-		$(".fz-tabs-menu a").first().addClass("active");
-		$(".fz-tabs-content .fz-tab-content").first().show();
+		$(".fz-tabs-menu").each(function() {
+			$(this).find("a").first().addClass("active");
+		});
+		$(".fz-tabs-content").each(function() {
+			$(this).find(".fz-tab-content").first().show();
+		});
 	}
 
 	function feedzyMediaUploader() {
@@ -1017,10 +1024,10 @@
 					if ( $( '.feedzy-media-preview' ).length ) {
 						$( '.feedzy-media-preview' ).find( 'img' ).attr( 'src', attachmentUrl );
 					} else {
-						$( '<div class="fz-form-group mb-20 feedzy-media-preview"><img src="' + attachmentUrl + '"></div>' ).insertBefore( button.parent() );
+						$( '<div class="fz-form-group feedzy-media-preview"><img src="' + attachmentUrl + '"></div>' ).insertBefore( button.parents( '.fz-cta-group' ) );
 					}
 				} else {
-					$( '<div class="fz-form-group mb-20 feedzy-media-preview"><a href="javascript:;" class="btn btn-outline-primary feedzy-images-selected">' + feedzy.i10n.action_btn_text_3.replace( '%d', countSelected ) + '</a></div>' ).insertBefore( button.parent() );
+					$( '<div class="fz-form-group feedzy-media-preview"><a href="javascript:;" class="btn btn-outline-primary feedzy-images-selected">' + feedzy.i10n.action_btn_text_3.replace( '%d', countSelected ) + '</a></div>' ).insertBefore( button.parents( '.fz-cta-group' ) );
 				}
 				// Get all selected attachment ids.
 				var ids = selectedAttachments.map( function( attachment ) {
@@ -1068,7 +1075,7 @@ function initRemoveFallbackImageBtn() {
 		e.preventDefault();
 
 		// Reset the image preview.
-		document.querySelector('.feedzy-media-preview').remove();
+		document.querySelector('.feedzy-media-preview').innerHTML = '<img src="' + feedzy.i10n.fallback_thumbnail + '" />';
 		removeFallbackImage.classList.remove('is-show');
 
 		// Reset the input.
