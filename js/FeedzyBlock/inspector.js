@@ -660,6 +660,72 @@ class Inspector extends Component {
 													this.props.edit.onSize
 												}
 											/>
+											<SelectControl
+												label={__(
+													'Aspect Ratio',
+													'feedzy-rss-feeds'
+												)}
+												value={
+													this.props.attributes
+														.aspectRatio || '1:1'
+												}
+												options={[
+													{
+														label: __(
+															'Original',
+															'feedzy-rss-feeds'
+														),
+														value: 'auto',
+													},
+													{
+														label: __(
+															'1:1 (Square)',
+															'feedzy-rss-feeds'
+														),
+														value: '1 / 1',
+													},
+													{
+														label: __(
+															'16:9 (Widescreen)',
+															'feedzy-rss-feeds'
+														),
+														value: '16 / 9',
+													},
+													{
+														label: __(
+															'4:3 (Standard)',
+															'feedzy-rss-feeds'
+														),
+														value: '4 / 3',
+													},
+													{
+														label: __(
+															'3:2 (Classic)',
+															'feedzy-rss-feeds'
+														),
+														value: '3 / 2',
+													},
+													{
+														label: __(
+															'2:1 (Banner)',
+															'feedzy-rss-feeds'
+														),
+														value: '2 / 1',
+													},
+													{
+														label: __(
+															'3:4 (Portrait)',
+															'feedzy-rss-feeds'
+														),
+														value: '3 / 4',
+													},
+												]}
+												onChange={
+													this.props.edit
+														.onAspectRatio
+												}
+												className="feedzy-aspect-ratio-select"
+											/>
 										</Fragment>
 									)}
 								</PanelBody>

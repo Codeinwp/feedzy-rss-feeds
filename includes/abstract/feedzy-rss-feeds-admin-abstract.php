@@ -620,6 +620,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'default'               => '',
 				// thumbs pixel size.
 				'size'                  => '',
+				// default aspect ratio for the image.
+				'aspectRatio'			=> 'auto',
 				// only display item if title contains specific keywords (Use comma(,) and plus(+) keyword).
 				'keywords_title'        => '',
 				// only display item if title OR content contains specific keywords (Use comma(,) and plus(+) keyword).
@@ -1421,10 +1423,24 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				)
 			) {
 				$the_thumbnail  = $this->feedzy_image_encode( $the_thumbnail );
-				$content_thumb .= '<span class="fetched" style="background-image:  url(\'' . $the_thumbnail . '\');" title="' . esc_attr( $item->get_title() ) . '"></span>';
+
+				$img_style	 = '';
+
+				if ( isset(  $sizes['height'] ) && is_numeric( $sizes['height'] ) ) {
+					$img_style .= 'height:' . $sizes['height'] . 'px;';
+				}
+
+				if ( isset( $sc['aspectRatio'] ) ) {
+					$img_style .= 'aspect-ratio:' . $sc['aspectRatio'] . ';';
+				} else if ( isset( $sizes['width'] ) && is_numeric( $sizes['width'] ) ) {
+					$img_style .= 'width:' . $sizes['width'] . 'px;';
+				}
+
+				$content_thumb .= '<img decoding="async" src="' . $the_thumbnail . '" title="' . esc_attr( $item->get_title() ) . '" style="' . $img_style . '">';
+
 				if ( ! isset( $sc['amp'] ) || 'no' !== $sc['amp'] ) {
 					$content_thumb .= '<amp-img width="' . $sizes['width'] . '" height="' . $sizes['height'] . '" src="' . $the_thumbnail . '">';
-				}
+					}
 			}
 
 			if ( empty( $the_thumbnail ) && 'yes' === $sc['thumb'] ) {
@@ -1593,11 +1609,22 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( empty( $item_content ) ) {
 			$item_content = esc_html__( 'Post Content', 'feedzy-rss-feeds' );
 		}
+
+		$img_style = '';
+		if ( isset( $sizes['height'] ) ) {
+			$img_style = 'height:' . $sizes['height'] . 'px;';
+			if ( isset( $sc['aspectRatio'] ) ) {
+				$img_style .= 'aspect-ratio:' . $sc['aspectRatio'] . ';';
+			} else if( isset( $sizes['width'] ) ) {
+				$img_style .= 'width:' . $sizes['width'] . 'px;';
+			}
+		}
+
 		$item_array = array(
 			'feed_url'              => $item->get_feed()->subscribe_url(),
 			'item_unique_hash'      => wp_hash( $item->get_permalink() ),
 			'item_img_class'        => 'rss_image',
-			'item_img_style'        => 'width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px;',
+			'item_img_style'        => $img_style,
 			'item_url'              => $new_link,
 			'item_url_target'       => $sc['target'],
 			'item_url_follow'       => isset( $sc['follow'] ) && 'yes' === $sc['follow'] ? 'nofollow' : '',
