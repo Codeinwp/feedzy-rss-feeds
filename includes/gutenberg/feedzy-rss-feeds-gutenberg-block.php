@@ -171,7 +171,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 						'type'    => 'number',
 						'default' => 150,
 					),
-					'aspectRatio'    => array(
+					'aspectRatio'     => array(
 						'type'    => 'string',
 						'default' => 'auto',
 					),

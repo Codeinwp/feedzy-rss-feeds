@@ -621,7 +621,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				// thumbs pixel size.
 				'size'                  => '',
 				// default aspect ratio for the image.
-				'aspectRatio'			=> 'auto',
+				'aspectRatio'           => 'auto',
 				// only display item if title contains specific keywords (Use comma(,) and plus(+) keyword).
 				'keywords_title'        => '',
 				// only display item if title OR content contains specific keywords (Use comma(,) and plus(+) keyword).
@@ -1422,12 +1422,18 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 					)
 				)
 			) {
-				$the_thumbnail  = $this->feedzy_image_encode( $the_thumbnail );
+				$the_thumbnail = $this->feedzy_image_encode( $the_thumbnail );
 
-				$img_style	 = '';
+				$img_style = '';
 
-				if ( isset(  $sizes['height'] ) && is_numeric( $sizes['height'] ) ) {
+				if ( isset( $sizes['height'] ) && is_numeric( $sizes['height'] ) ) {
 					$img_style .= 'height:' . $sizes['height'] . 'px;';
+				}
+
+				if ( isset( $sc['aspectRatio'] ) ) {
+					$img_style .= 'aspect-ratio:' . $sc['aspectRatio'] . ';';
+				} elseif ( isset( $sizes['width'] ) && is_numeric( $sizes['width'] ) ) {
+					$img_style .= 'width:' . $sizes['width'] . 'px;';
 				}
 
 				if ( isset( $sc['aspectRatio'] ) ) {
@@ -1440,7 +1446,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 				if ( ! isset( $sc['amp'] ) || 'no' !== $sc['amp'] ) {
 					$content_thumb .= '<amp-img width="' . $sizes['width'] . '" height="' . $sizes['height'] . '" src="' . $the_thumbnail . '">';
-					}
+				}
 			}
 
 			if ( empty( $the_thumbnail ) && 'yes' === $sc['thumb'] ) {
@@ -1615,7 +1621,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$img_style = 'height:' . $sizes['height'] . 'px;';
 			if ( isset( $sc['aspectRatio'] ) ) {
 				$img_style .= 'aspect-ratio:' . $sc['aspectRatio'] . ';';
-			} else if( isset( $sizes['width'] ) ) {
+			} elseif ( isset( $sizes['width'] ) ) {
 				$img_style .= 'width:' . $sizes['width'] . 'px;';
 			}
 		}
