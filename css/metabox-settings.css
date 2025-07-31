@@ -42,6 +42,7 @@
 	.fz-input-group{flex-wrap: wrap;}
 	.fz-input-group .fz-input-group-right{width: 100%; padding-left: 0; padding-top: 8px;}
 	.fz-input-group .fz-input-group-right .btn.dropdown-toggle{width: 100%;}
+	.fz-input-group .fz-insert-tags{width: auto; padding: 0;}
 	.fz-form-wrap .form-block.form-block-two-column .fz-left{width: 100%; padding-right: 0; padding-bottom: 24px;}
 	.fz-form-wrap .form-block.form-block-two-column .fz-right{width: 100%;}
 	.fz-form-action .fz-left{width: 100%; padding-bottom: 16px;}

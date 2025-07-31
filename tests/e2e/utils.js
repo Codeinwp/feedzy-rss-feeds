@@ -61,7 +61,7 @@ export async function addFeaturedImage(page, feedTag) {
 export async function addContentMapping(page, mapping) {
 	await page.evaluate((mapping) => {
 		document.querySelector(
-			'textarea[name="feedzy_meta_data[import_post_content]"]'
+			'input[name="feedzy_meta_data[import_post_content]"]'
 		).value = mapping;
 	}, mapping);
 }

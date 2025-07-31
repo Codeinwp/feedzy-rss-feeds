@@ -135,13 +135,6 @@ global $post;
 				</button>
 			</div>
 			<div class="feedzy-accordion-item__content">
-				<div class="fz-content">
-					<p>
-						<?php
-							esc_html_e( 'Using magic tags, specify what part(s) of the source should form part of the imported post.', 'feedzy-rss-feeds' );
-						?>
-					</p>
-				</div>
 				<div class="fz-tabs-menu">
 					<ul>
 						<li>
@@ -161,7 +154,6 @@ global $post;
 								</div>
 								<div class="fz-right">
 									<div class="fz-form-group">
-										<label class="form-label"><?php esc_html_e( 'The post type you want to use for the generated post.', 'feedzy-rss-feeds' ); ?></label>
 										<div class="mx-320">
 											<select id="feedzy_post_type" class="form-control feedzy-chosen" name="feedzy_meta_data[import_post_type]"
 												data-tax="<?php echo esc_attr( $import_post_term ); ?>" data-custom-tag="<?php echo esc_attr( isset( $custom_post_term ) ? $custom_post_term : '' ); ?>">
@@ -232,9 +224,6 @@ global $post;
 								</div>
 								<div class="fz-right">
 									<div class="fz-form-group">
-										<label class="form-label">
-											<?php esc_html_e( 'The post status for the imported posts.', 'feedzy-rss-feeds' ); ?>
-										</label>
 										<div class="mx-320">
 											<select id="feedzy_post_status" class="form-control feedzy-chosen" name="feedzy_meta_data[import_post_status]">
 												<?php
@@ -262,31 +251,33 @@ global $post;
 								</div>
 								<div class="fz-right">
 									<div class="fz-form-group">
-										<label class="form-label">
-											<?php esc_html_e( 'The title for the generated post.', 'feedzy-rss-feeds' ); ?>
-										</label>
 										<div class="fz-input-group">
 											<div class="fz-input-group-left">
-												<div class="fz-group">
+												<div class="fz-group position-relative">
 													<input type="text" name="feedzy_meta_data[import_post_title]"
 														placeholder="<?php esc_attr_e( 'Post Title', 'feedzy-rss-feeds' ); ?>" class="form-control fz-input-tagify"
 														value="<?php echo esc_attr( $import_title ); ?>" />
+													<div class="fz-input-group-right fz-title-action-tags position-absolute fz-insert-tags">
+														<div class="dropdown">
+															<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+																<span class="dashicons dashicons-plus-alt2"></span>
+															</button>
+															<div class="dropdown-menu dropdown-menu-right">
+																<?php echo wp_kses_post( apply_filters( 'feedzy_render_magic_tags', '', apply_filters( 'feedzy_magic_tags_title', array() ), 'import_post_title' ) ); ?>
+															</div>
+														</div>
+												</div>
 												</div>
 												<div class="help-text">
 													<?php
 														esc_html_e( 'You can add multiple items. Keep in mind that this field is mandatory - without it, a post will not be created.', 'feedzy-rss-feeds' );
 													?>
 												</div>
-											</div>
-											<div class="fz-input-group-right fz-title-action-tags">
-													<div class="dropdown">
-														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" aria-haspopup="true" aria-expanded="false">
-															<?php esc_html_e( 'Insert Tag', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-plus-alt2"></span>
-														</button>
-														<div class="dropdown-menu dropdown-menu-right">
-															<?php echo wp_kses_post( apply_filters( 'feedzy_render_magic_tags', '', apply_filters( 'feedzy_magic_tags_title', array() ), 'import_post_title' ) ); ?>
-														</div>
-													</div>
+												<div class="help-text pt-8">
+													<?php
+														esc_html_e( 'Tip: Click the settings icon to add actions to this field.', 'feedzy-rss-feeds' );
+													?>
+												</div>
 											</div>
 										</div>
 									</div>
@@ -301,32 +292,29 @@ global $post;
 								</div>
 								<div class="fz-right">
 									<div class="fz-form-group">
-										<label class="form-label">
-											<?php esc_html_e( 'The date for the generated post.', 'feedzy-rss-feeds' ); ?>
-										</label>
 										<div class="fz-input-group">
 											<div class="fz-input-group-left">
-												<div class="fz-group">
+												<div class="fz-group position-relative">
 													<input type="text" name="feedzy_meta_data[import_post_date]"
 														placeholder="<?php esc_attr_e( 'Post Date', 'feedzy-rss-feeds' ); ?>" class="form-control fz-input-tagify"
 														value="<?php echo esc_attr( $import_date ); ?>" />
+													<div class="fz-input-group-right fz-date-action-tags position-absolute fz-insert-tags">
+														<div class="dropdown">
+															<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" aria-haspopup="true"
+																aria-expanded="false">
+																<span class="dashicons dashicons-plus-alt2"></span>
+															</button>
+															<div class="dropdown-menu dropdown-menu-right">
+																<?php echo wp_kses_post( apply_filters( 'feedzy_render_magic_tags', '', apply_filters( 'feedzy_magic_tags_date', array() ), 'import_post_date' ) ); ?>
+															</div>
+														</div>
+												</div>
 												</div>
 												<div class="help-text">
 													<?php
 														esc_html_e( 'Leave blank, if unsure.', 'feedzy-rss-feeds' );
 													?>
 												</div>
-											</div>
-											<div class="fz-input-group-right">
-													<div class="dropdown">
-														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" aria-haspopup="true"
-															aria-expanded="false">
-															<?php esc_html_e( 'Insert Tag', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-plus-alt2"></span>
-														</button>
-														<div class="dropdown-menu dropdown-menu-right">
-															<?php echo wp_kses_post( apply_filters( 'feedzy_render_magic_tags', '', apply_filters( 'feedzy_magic_tags_date', array() ), 'import_post_date' ) ); ?>
-														</div>
-													</div>
 											</div>
 										</div>
 									</div>
@@ -341,32 +329,30 @@ global $post;
 								</div>
 								<div class="fz-right">
 									<div class="fz-form-group">
-										<label class="form-label">
-											<?php esc_attr_e( 'The content for the generated post', 'feedzy-rss-feeds' ); ?>
-										</label>
 										<div class="fz-input-group">
 											<div class="fz-input-group-left">
-												<div class="fz-group">
-													<textarea name="feedzy_meta_data[import_post_content]"
+												<div class="fz-group position-relative">
+													<input type="text" name="feedzy_meta_data[import_post_content]"
 														placeholder="<?php esc_attr_e( 'Post Content', 'feedzy-rss-feeds' ); ?>"
-														class="form-control fz-textarea-tagify"><?php echo esc_html( feedzy_custom_tag_escape( $import_content ) ); ?></textarea>
+														class="form-control fz-input-tagify"
+														value="<?php echo esc_attr( feedzy_custom_tag_escape( $import_content ) ); ?>" />
+													<div class="fz-input-group-right fz-content-action-tags position-absolute fz-insert-tags">
+														<div class="dropdown">
+															<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" aria-haspopup="true"
+																aria-expanded="false">
+																<span class="dashicons dashicons-plus-alt2"></span>
+															</button>
+															<div class="dropdown-menu dropdown-menu-right">
+																<?php echo wp_kses_post( apply_filters( 'feedzy_render_magic_tags', '', apply_filters( 'feedzy_magic_tags_content', array() ), 'import_post_content' ) ); ?>
+															</div>
+														</div>
+												</div>
 												</div>
 												<div class="help-text">
 													<?php
 														esc_html_e( 'You can add more tags and other things that will be added in the Single Post layout. This field is mandatory.', 'feedzy-rss-feeds' );
 													?>
 												</div>
-											</div>
-											<div class="fz-input-group-right fz-content-action-tags">
-													<div class="dropdown">
-														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" aria-haspopup="true"
-															aria-expanded="false">
-															<?php esc_html_e( 'Insert Tag', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-plus-alt2"></span>
-														</button>
-														<div class="dropdown-menu dropdown-menu-right">
-															<?php echo wp_kses_post( apply_filters( 'feedzy_render_magic_tags', '', apply_filters( 'feedzy_magic_tags_content', array() ), 'import_post_content' ) ); ?>
-														</div>
-													</div>
 											</div>
 										</div>
 									</div>
@@ -393,32 +379,29 @@ global $post;
 								</div>
 								<div class="fz-right">
 									<div class="fz-form-group">
-										<label class="form-label">
-											<?php esc_html_e( 'The Featured image for the generated post.', 'feedzy-rss-feeds' ); ?>
-										</label>
 										<div class="fz-input-group">
 											<div class="fz-input-group-left">
-												<div class="fz-group">
+												<div class="fz-group position-relative">
 													<input type="text" name="feedzy_meta_data[import_post_featured_img]"
 														placeholder="<?php esc_attr_e( 'Add a tag for the featured image', 'feedzy-rss-feeds' ); ?>" class="form-control fz-input-tagify fz-tagify-image"
 														value="<?php echo esc_attr( $import_featured_img ); ?>" />
+													<div class="fz-input-group-right fz-image-action-tags position-absolute fz-insert-tags">
+														<div class="dropdown">
+															<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" aria-haspopup="true"
+																aria-expanded="false">
+																<span class="dashicons dashicons-plus-alt2"></span>
+															</button>
+															<div class="dropdown-menu dropdown-menu-right">
+																<?php echo wp_kses_post( apply_filters( 'feedzy_render_magic_tags', '', apply_filters( 'feedzy_magic_tags_image', array() ), 'import_post_featured_img' ) ); ?>
+															</div>
+														</div>
+													</div>
 												</div>
 												<div class="help-text">
 													<?php
 														esc_html_e( 'You can use the magic tags, URL, or leave it empty.', 'feedzy-rss-feeds' );
 													?>
 												</div>
-											</div>
-											<div class="fz-input-group-right fz-image-action-tags">
-													<div class="dropdown">
-														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" aria-haspopup="true"
-															aria-expanded="false">
-															<?php esc_html_e( 'Insert Tag', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-plus-alt2"></span>
-														</button>
-														<div class="dropdown-menu dropdown-menu-right">
-															<?php echo wp_kses_post( apply_filters( 'feedzy_render_magic_tags', '', apply_filters( 'feedzy_magic_tags_image', array() ), 'import_post_featured_img' ) ); ?>
-														</div>
-													</div>
 											</div>
 										</div>
 									</div>
@@ -454,7 +437,6 @@ global $post;
 								</div>
 								<div class="fz-right">
 									<div class="fz-form-group">
-										<label class="form-label"><?php esc_html_e( 'The post author for the imported posts.', 'feedzy-rss-feeds' ); ?></label>
 										<div class="mx-320">
 											<select id="feedzy_post_author" class="form-control feedzy-chosen fz-chosen-custom-tag" name="feedzy_meta_data[import_post_author]">
 												<?php
@@ -511,32 +493,29 @@ global $post;
 								</div>
 								<div class="fz-right">
 									<div class="fz-form-group">
-										<label class="form-label">
-											<?php esc_html_e( 'The Post Excerpt for the generated post', 'feedzy-rss-feeds' ); ?>
-										</label>
 										<div class="fz-input-group">
 											<div class="fz-input-group-left">
-												<div class="fz-group">
+												<div class="fz-group position-relative">
 													<input type="text" name="feedzy_meta_data[import_post_excerpt]"
 														placeholder="<?php esc_attr_e( 'Post Excerpt', 'feedzy-rss-feeds' ); ?>" class="form-control fz-input-tagify"
 														value="<?php echo esc_attr( $post_excerpt ); ?>" />
+													<div class="fz-input-group-right position-absolute fz-insert-tags">
+														<div class="dropdown">
+															<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" aria-haspopup="true"
+																aria-expanded="false">
+																<span class="dashicons dashicons-plus-alt2"></span>
+															</button>
+															<div class="dropdown-menu dropdown-menu-right">
+																<?php echo wp_kses_post( apply_filters( 'feedzy_render_magic_tags', '', apply_filters( 'feedzy_magic_tags_post_excerpt', array() ), 'import_post_excerpt' ) ); ?>
+															</div>
+														</div>
+													</div>
 												</div>
 												<div class="help-text">
 													<?php
 														esc_html_e( 'Add magic tags to extract custom elements from your feed. This will work only for single-feeds, not feed groups.', 'feedzy-rss-feeds' );
 													?>
 												</div>
-											</div>
-											<div class="fz-input-group-right">
-													<div class="dropdown">
-														<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" aria-haspopup="true"
-															aria-expanded="false">
-															<?php esc_html_e( 'Insert Tag', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-plus-alt2"></span>
-														</button>
-														<div class="dropdown-menu dropdown-menu-right">
-															<?php echo wp_kses_post( apply_filters( 'feedzy_render_magic_tags', '', apply_filters( 'feedzy_magic_tags_post_excerpt', array() ), 'import_post_excerpt' ) ); ?>
-														</div>
-													</div>
 											</div>
 										</div>
 									</div>
@@ -557,9 +536,6 @@ global $post;
 								</div>
 								<div class="fz-right">
 									<div class="fz-form-group">
-										<label class="form-label pb-16">
-											<?php esc_html_e( 'Customizable fields to fetch custom values such as date updated, rating, etc.', 'feedzy-rss-feeds' ); ?>
-										</label>
 										<div class="custom_fields">
 											<?php
 											if ( isset( $import_custom_fields ) && ! empty( $import_custom_fields ) ) {

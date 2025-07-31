@@ -252,6 +252,8 @@ const ActionModal = () => {
 		return document.querySelector('.fz-action-popup .fz-action-panel ul');
 	};
 
+	const actionButtonTitle = action.length ? __( 'Save Actions', 'feedzy-rss-feeds' ) : __( 'Skip Actions', 'feedzy-rss-feeds' );
+
 	// Click to open action popup.
 	document.querySelectorAll('[data-action_popup]').forEach((actionItem) => {
 		actionItem.addEventListener('click', (event) => {
@@ -792,7 +794,7 @@ const ActionModal = () => {
 											saveAction();
 										}}
 									>
-										{__('Save Actions', 'feedzy-rss-feeds')}
+										{ actionButtonTitle }
 									</Button>
 								)}
 							</div>
