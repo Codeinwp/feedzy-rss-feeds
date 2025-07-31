@@ -64,6 +64,52 @@ class Test_Abstract_Admin extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test feedzy_retrieve_image method with enclosure containing image which has query parameters.
+	 */
+	public function test_feedzy_retrieve_image_with_enclosure_image_and_query_params() {
+		// Create a SimplePie feed with test data
+		$feed = new SimplePie();
+		// Reference: https://heavy.com/author/jgbuck/feed/
+		$feed->set_raw_data('<?xml version="1.0" encoding="UTF-8"?>
+			<rss version="2.0"
+				xmlns:content="http://purl.org/rss/1.0/modules/content/"
+				xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+				xmlns:dc="http://purl.org/dc/elements/1.1/"
+				xmlns:atom="http://www.w3.org/2005/Atom"
+				xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+				xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+				
+				xmlns:georss="http://www.georss.org/georss"
+				xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+				xmlns:media="http://search.yahoo.com/mrss/"
+			>
+				<channel>
+					<title>Test Feed</title>
+					<item>
+						<title>Test Item</title>
+						<media:thumbnail url="https://heavy.com/wp-content/uploads/2025/05/GettyImages-2172500144.jpg?quality=65&#038;strip=all" />
+						<media:content url="https://heavy.com/wp-content/uploads/2025/05/GettyImages-2172500144.jpg?quality=65&#038;strip=all" medium="image" type="image/*">
+							<media:title type="html">Houston Texans head coach DeMeco Ryans reacts before a game against the Chicago Bears.</media:title>
+
+							<media:credit>Getty</media:credit>
+						</media:content>
+					</item>
+				</channel>
+			</rss>');
+		$feed->init();
+		
+		$items = $feed->get_items();
+
+		// Check if we have items before accessing
+        $this->assertNotEmpty($items, 'No items found in feed');
+		$item = $items[0];
+		
+		$result = $this->feedzy_abstract->feedzy_retrieve_image($item);
+		
+		$this->assertEquals('https://heavy.com/wp-content/uploads/2025/05/GettyImages-2172500144.jpg?quality=65&strip=all', $result);
+	}
+
+	/**
 	 * Test feedzy_retrieve_image method with iTunes podcast image.
 	 */
 	public function test_feedzy_retrieve_image_with_itunes_image() {
@@ -506,4 +552,76 @@ class Test_Abstract_Admin extends WP_UnitTestCase {
 			$this->assertEquals('https://example.com/thumb.jpg', $result);
 		}
 	}
+
+	/**
+     * Test feedzy_image_encode method with regular image URLs.
+     */
+    public function test_feedzy_image_encode_regular_urls() {
+        $test_cases = array(
+            // [input, expected]
+            ['https://example.com/image.jpg', 'https://example.com/image.jpg'],
+            ['https://example.com/simple-image.png', 'https://example.com/simple-image.png'],
+            ['not-a-valid-url', 'http://not-a-valid-url'], // esc_url adds http://
+            ['', ''] // Empty URL
+        );
+        
+        foreach ($test_cases as [$input, $expected]) {
+            $result = $this->feedzy_abstract->feedzy_image_encode($input);
+            $this->assertEquals($expected, $result, "Failed for URL: $input");
+        }
+    }
+
+    /**
+     * Test feedzy_image_encode method with query parameter extraction.
+     */
+    public function test_feedzy_image_encode_query_parameter_extraction() {
+        $test_cases = array(
+            // [input_url, expected_result]
+            ['https://example.com/proxy?url=https://cdn.example.com/image.jpg&width=300', 'https://cdn.example.com/image.jpg'],
+            ['https://proxy.example.com/image?src=https://secure.example.com/photo.png', 'https://secure.example.com/photo.png'],
+            ['https://example.com/proxy?url=http://legacy.example.com/photo.gif', 'http://legacy.example.com/photo.gif'],
+            ['https://example.com/proxy?callback=jsonp&url=https://cdn.example.com/uploads/2023/image.jpg&format=json', 'https://cdn.example.com/uploads/2023/image.jpg'],
+        );
+        
+        foreach ($test_cases as [$input, $expected]) {
+            $result = $this->feedzy_abstract->feedzy_image_encode($input);
+            $this->assertEquals($expected, $result, "Failed for input: $input");
+        }
+    }
+
+    /**
+     * Test feedzy_image_encode method with various image extensions.
+     */
+    public function test_feedzy_image_encode_image_extensions() {
+        $extensions = ['jpeg', 'PNG', 'webp', 'WEBP', 'avif', 'AVIF', 'gif', 'GIF'];
+        
+        foreach ($extensions as $ext) {
+            $url = "https://example.com/proxy?url=https://cdn.example.com/image.$ext";
+            $expected = "https://cdn.example.com/image.$ext";
+            
+            $result = $this->feedzy_abstract->feedzy_image_encode($url);
+            $this->assertEquals($expected, $result, "Failed for extension: $ext");
+        }
+    }
+
+    /**
+     * Test feedzy_image_encode method with non-image and edge cases.
+     */
+    public function test_feedzy_image_encode_edge_cases() {
+        $test_cases = array(
+            // Non-image URL in query - should return original (with & escaped)
+            ['https://example.com/proxy?url=https://example.com/document.pdf&width=300', 'https://example.com/proxy?url=https://example.com/document.pdf&#038;width=300'],
+            // URL with image separated by spaces (more realistic test case)
+            ['https://example.com/proxy?description=Check this image: https://example.com/image.jpg out', 'https://example.com/image.jpg'],
+            // Invalid image format in query (with & escaped)
+            ['https://example.com/proxy?url=https://example.com/image&format=jpg', 'https://example.com/proxy?url=https://example.com/image&#038;format=jpg'],
+            // URL with special characters - this should extract the image
+            ['https://example.com/proxy?url=https://example.com/images/file%20name.jpg', 'https://example.com/images/file%20name.jpg'],
+        );
+        
+        foreach ($test_cases as [$input, $expected]) {
+            $result = $this->feedzy_abstract->feedzy_image_encode($input);
+            $this->assertEquals($expected, $result, "Failed for input: $input");
+        }
+    }
 }
