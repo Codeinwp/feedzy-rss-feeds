@@ -117,7 +117,7 @@ const attributes = {
 	disableStyle: {
 		type: 'boolean',
 		default: false,
-  },
+	},
 	follow: {
 		type: 'string',
 		default: 'no',
@@ -137,7 +137,11 @@ const attributes = {
 	_dry_run_tags_: {
 		type: 'string',
 		default: '',
-	}
+	},
+	aspectRatio: {
+		type: 'string',
+		default: 'auto',
+	},
 };
 
 export default attributes;
