@@ -1962,10 +1962,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function feedzy_image_encode( $img_url ) {
 		// Check if img url is set as an URL parameter.
-		$parsed_url = wp_parse_url( $img_url );
-		if ( isset( $parsed_url['query'] ) ) {
-			preg_match_all( '/(http|https):\/\/[^ ]+(\.(gif|jpg|jpeg|png|webp|avif))/i', $parsed_url['query'], $matches );
-			if ( isset( $matches[0][0] ) && $this->is_image_url( $matches[0][0] ) ) {
+		$url_tab = wp_parse_url( $img_url );
+		if ( isset( $url_tab['query'] ) ) {
+			preg_match_all( '/(http|https):\/\/[^ ]+(\.gif|\.GIF|\.jpg|\.JPG|\.jpeg|\.JPEG|\.png|\.PNG)/', $url_tab['query'], $matches );
+			if ( isset( $matches[0][0] ) ) {
 				$img_url = $matches[0][0];
 			}
 		}
