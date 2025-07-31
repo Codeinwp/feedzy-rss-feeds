@@ -1,3 +1,7 @@
+##### [Version 5.0.9](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.8...v5.0.9) (2025-07-31)
+
+- Fixed an error for an edge case when image extraction failed to find a correct image in the feed entry.
+
 ##### [Version 5.0.8](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.7...v5.0.8) (2025-07-30)
 
 - Updated the Onboarding workflow
