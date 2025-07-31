@@ -1108,7 +1108,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @since   3.0.0
 	 * @access  private
 	 *
-	 * @param   array  $sc The shorcode attributes array.
+	 * @param   array  $sc The shortcode attributes array.
 	 * @param   object $feed The feed object.
 	 * @param   string $feed_url The feed url.
 	 * @param   string $content The original content.
@@ -1147,8 +1147,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$class[]  = $main_class;
 		$content .= '<div class="' . esc_attr( implode( ' ', $class ) ) . '">';
 		if ( $feed_title['use_title'] ) {
+			$feed_title       = ! empty( $feed->get_title() ) ? $feed->get_title() : '';
+			$feed_description = ! empty( $feed->get_description() ) ? $feed->get_description() : '';
+
 			$content .= '<div class="rss_header">';
-			$content .= '<h2><a href="' . esc_url( $feed->get_permalink() ) . '" class="rss_title" rel="noopener">' . wp_kses_post( html_entity_decode( $feed->get_title() ) ) . '</a> <span class="rss_description"> ' . wp_kses_post( $feed->get_description() ) . '</span></h2>';
+			$content .= '<h2><a href="' . esc_url( $feed->get_permalink() ) . '" class="rss_title" rel="noopener">' . wp_kses_post( html_entity_decode( $feed_title ) ) . '</a> <span class="rss_description"> ' . wp_kses_post( $feed_description ) . '</span></h2>';
 			$content .= '</div>';
 		}
 		$content .= '<ul>';
@@ -1405,28 +1408,28 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		// Fetch image thumbnail.
 		if ( 'yes' === $sc['thumb'] || 'auto' === $sc['thumb'] ) {
 			$the_thumbnail = $this->feedzy_retrieve_image( $item, $sc );
-		}
-		if ( 'yes' === $sc['thumb'] || 'auto' === $sc['thumb'] ) {
 			$content_thumb = '';
-			if ( (
-					! empty( $the_thumbnail ) &&
-					'auto' === $sc['thumb'] &&
-					! strpos( $the_thumbnail, 'img/feedzy.svg' )
-				) ||
-				'yes' === $sc['thumb']
+			if (
+				is_string( $the_thumbnail ) && ! empty( $the_thumbnail ) &&
+				(
+					'yes' === $sc['thumb'] ||
+					(
+						'auto' === $sc['thumb'] &&
+						! strpos( $the_thumbnail, 'img/feedzy.svg' )
+					)
+				)
 			) {
-				if ( ! empty( $the_thumbnail ) ) {
-					$the_thumbnail  = $this->feedzy_image_encode( $the_thumbnail );
-					$content_thumb .= '<span class="fetched" style="background-image:  url(\'' . $the_thumbnail . '\');" title="' . esc_attr( $item->get_title() ) . '"></span>';
-					if ( ! isset( $sc['amp'] ) || 'no' !== $sc['amp'] ) {
-						$content_thumb .= '<amp-img width="' . $sizes['width'] . '" height="' . $sizes['height'] . '" src="' . $the_thumbnail . '">';
-					}
+				$the_thumbnail  = $this->feedzy_image_encode( $the_thumbnail );
+				$content_thumb .= '<span class="fetched" style="background-image:  url(\'' . $the_thumbnail . '\');" title="' . esc_attr( $item->get_title() ) . '"></span>';
+				if ( ! isset( $sc['amp'] ) || 'no' !== $sc['amp'] ) {
+					$content_thumb .= '<amp-img width="' . $sizes['width'] . '" height="' . $sizes['height'] . '" src="' . $the_thumbnail . '">';
 				}
-				if ( empty( $the_thumbnail ) && 'yes' === $sc['thumb'] ) {
-					$content_thumb .= '<span class="default" style="background-image:url(' . $sc['default'] . ');" title="' . esc_attr( $item->get_title() ) . '"></span>';
-					if ( ! isset( $sc['amp'] ) || 'no' !== $sc['amp'] ) {
-						$content_thumb .= '<amp-img width="' . $sizes['width'] . '" height="' . $sizes['height'] . '" src="' . $sc['default'] . '">';
-					}
+			}
+
+			if ( empty( $the_thumbnail ) && 'yes' === $sc['thumb'] ) {
+				$content_thumb .= '<span class="default" style="background-image:url(' . $sc['default'] . ');" title="' . esc_attr( $item->get_title() ) . '"></span>';
+				if ( ! isset( $sc['amp'] ) || 'no' !== $sc['amp'] ) {
+					$content_thumb .= '<amp-img width="' . $sizes['width'] . '" height="' . $sizes['height'] . '" src="' . $sc['default'] . '">';
 				}
 			}
 			$content_thumb = apply_filters( 'feedzy_thumb_output', $content_thumb, $feed_url, $sizes, $item );
@@ -1642,13 +1645,13 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	}
 
 	/**
-	 * Retrive image from the item object
+	 * Retrieve image from the item object
 	 *
 	 * @since   3.0.0
 	 * @access  public
 	 *
-	 * @param   SimplePie\Item $item The item object.
-	 * @param   array          $sc The shorcode attributes array.
+	 * @param   SimplePie\Item            $item The item object.
+	 * @param   array<string, mixed>|null $sc The shortcode attributes array.
 	 *
 	 * @return  string
 	 */
@@ -1666,42 +1669,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$enclosures    = $item->get_enclosures();
 		if ( $enclosures ) {
 			foreach ( $enclosures as $enclosure ) {
-				// Item thumbnail.
-				$single_thumbnail = $enclosure->get_thumbnail();
-				$medium           = $enclosure->get_medium();
-
-				if ( in_array( $medium, array( 'video' ), true ) ) {
-					break;
-				}
-
-				if ( $single_thumbnail && $this->is_image_url( $single_thumbnail ) ) {
-					$the_thumbnail = $single_thumbnail;
-				}
-
-				$thumbnails = $enclosure->get_thumbnails();
-				if ( ! empty( $thumbnails ) ) {
-					foreach ( $thumbnails as $enclosure_thumbnail ) {
-						if ( ! $this->is_image_url( $enclosure_thumbnail ) ) {
-							continue;
-						}
-						$the_thumbnail = $enclosure_thumbnail;
-					}
-				}
-
-				$embedded_thumbnail = $enclosure->embed();
-				if ( $embedded_thumbnail ) {
-					$pattern = '/https?:\/\/.*\.(?:jpg|JPG|jpeg|JPEG|jpe|JPE|gif|GIF|png|PNG)/i';
-					if ( preg_match( $pattern, $embedded_thumbnail, $matches ) ) {
-						$the_thumbnail = $matches[0];
-					}
-				}
-
-				$enclosure_link = $enclosure->get_link();
-				if ( $this->is_image_url( $enclosure_link ) ) {
-					$the_thumbnail = $enclosure_link;
-				}
-				// Break loop if thumbnail is found.
-				if ( ! empty( $the_thumbnail ) ) {
+				$image_url = $this->extract_image_from_enclosure( $enclosure );
+				if ( $this->is_image_url( $image_url ) ) {
+					$the_thumbnail = $image_url;
 					break;
 				}
 			}
@@ -1715,17 +1685,28 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 		// Content image.
 		if ( empty( $the_thumbnail ) ) {
-			$feed_description = $item->get_content();
-			$the_thumbnail    = $this->feedzy_return_image( $feed_description );
+			$feed_description  = $item->get_content();
+			$description_image = $this->feedzy_return_image( $feed_description );
+
+			if ( $this->is_image_url( $description_image ) ) {
+				$the_thumbnail = $description_image;
+			}
 		}
 		// Description image.
 		if ( empty( $the_thumbnail ) ) {
-			$feed_description = $item->get_description();
-			$the_thumbnail    = $this->feedzy_return_image( $feed_description );
+			$feed_description  = $item->get_description();
+			$description_image = $this->feedzy_return_image( $feed_description );
+
+			if ( $this->is_image_url( $description_image ) ) {
+				$the_thumbnail = $description_image;
+			}
 		}
 
 		// handle HTTP images.
-		if ( $sc && isset( $sc['http'] ) && 0 === strpos( $the_thumbnail, 'http://' ) ) {
+		if (
+			is_string( $the_thumbnail ) && ! empty( $the_thumbnail ) &&
+			$sc && isset( $sc['http'] ) && 0 === strpos( $the_thumbnail, 'http://' )
+		) {
 			switch ( $sc['http'] ) {
 				case 'https':
 					// fall-through.
@@ -1740,16 +1721,68 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$the_thumbnail = html_entity_decode( $the_thumbnail, ENT_QUOTES, 'UTF-8' );
 
-		if ( isset( $sc['_dryrun_'] ) && 'yes' === $sc['_dryrun_'] ) {
-			return $the_thumbnail;
+		if ( is_array( $sc ) && ! empty( $sc ) ) {
+			if ( isset( $sc['_dryrun_'] ) && 'yes' === $sc['_dryrun_'] ) {
+				return $the_thumbnail;
+			}
+	
+			if ( ( ! defined( 'REST_REQUEST' ) || ! REST_REQUEST ) && ! empty( $sc['feeds'] ) ) {
+				$feed_url      = $this->normalize_urls( $sc['feeds'] );
+				$the_thumbnail = ! empty( $the_thumbnail ) ? $the_thumbnail : apply_filters( 'feedzy_default_image', $sc['default'], $feed_url );
+			}
 		}
 
-		if ( ! defined( 'REST_REQUEST' ) || ! REST_REQUEST ) {
-			$feed_url      = $this->normalize_urls( $sc['feeds'] );
-			$the_thumbnail = ! empty( $the_thumbnail ) ? $the_thumbnail : apply_filters( 'feedzy_default_image', $sc['default'], $feed_url );
-		}
 		$the_thumbnail = apply_filters( 'feedzy_retrieve_image', $the_thumbnail, $item );
 		return $the_thumbnail;
+	}
+
+	/**
+	 * Try to extract an image from the enclosure object.
+	 * 
+	 * @param \SimplePie\Enclosure $enclosure The enclosure object.
+	 * @return string|null
+	 * 
+	 * @since 5.0.9
+	 */
+	public function extract_image_from_enclosure( $enclosure ) {
+		$image_url = null;
+		$medium    = $enclosure->get_medium();
+		
+		if ( in_array( $medium, array( 'video' ), true ) ) {
+			return $image_url;
+		}
+		
+		$single_thumbnail = $enclosure->get_thumbnail();
+		if ( $single_thumbnail && $this->is_image_url( $single_thumbnail ) ) {
+			$image_url = $single_thumbnail;
+		}
+
+		$thumbnails = $enclosure->get_thumbnails();
+		if ( ! empty( $thumbnails ) ) {
+			foreach ( $thumbnails as $enclosure_thumbnail ) {
+				if ( ! $this->is_image_url( $enclosure_thumbnail ) ) {
+					continue;
+				}
+				$image_url = $enclosure_thumbnail;
+			}
+		}
+
+		if ( ! empty( $enclosure->get_real_type() ) ) {
+			$embedded_thumbnail = $enclosure->embed();
+			if ( $embedded_thumbnail ) {
+				$pattern = '/https?:\/\/.*\.(?:jpg|JPG|jpeg|JPEG|jpe|JPE|gif|GIF|png|PNG)/i';
+				if ( preg_match( $pattern, $embedded_thumbnail, $matches ) ) {
+					$image_url = $matches[0];
+				}
+			}
+		}
+
+		$enclosure_link = $enclosure->get_link();
+		if ( $this->is_image_url( $enclosure_link ) ) {
+			$image_url = $enclosure_link;
+		}
+
+		return $image_url;
 	}
 
 	/**
@@ -1758,7 +1791,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @since   3.0.0
 	 * @access  public
 	 *
-	 * @param   string $img_html A string with an <img/> tag.
+	 * @param   string|null $img_html A string with an <img/> tag.
 	 *
 	 * @return  string
 	 */
@@ -1801,7 +1834,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  string
 	 */
 	public function feedzy_scrape_image( $img_html, $link = '' ) {
-		$pattern = '/< *img[^>]*src *= *["\']?([^"\']*)/';
+		$pattern = '/< *img[^>]*src *= *["\']?([^"\'>]+)/';
 		$match   = $link;
 		preg_match( $pattern, $img_html, $link );
 		if ( ! empty( $link ) && isset( $link[1] ) ) {
@@ -1854,7 +1887,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	}
 
 	/**
-	 * Image name encoder and url retrive if in url param
+	 * Image name encoder and url retrieve if in url param
 	 *
 	 * @since   3.0.0
 	 * @access  public
