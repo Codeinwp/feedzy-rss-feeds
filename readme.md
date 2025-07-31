@@ -4,7 +4,7 @@
 **Requires at least:** 6.0  
 **Requires PHP:** 7.2  
 **Tested up to:** 6.8  
-**Stable tag:** 5.0.9  
+**Stable tag:** 5.0.10  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -493,9 +493,9 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
-##### [Version 5.0.9](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.8...v5.0.9) (2025-07-31)
+##### [Version 5.0.10](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.9...v5.0.10) (2025-07-31)
 
-- Fixed an error for an edge case when image extraction failed to find a correct image in the feed entry.
+- Fixed URL processing error for images containing optimization parameters.
 
 
 
