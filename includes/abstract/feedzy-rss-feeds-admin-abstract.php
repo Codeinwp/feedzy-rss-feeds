@@ -1147,12 +1147,12 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$class[]  = $main_class;
 		$content .= '<div class="' . esc_attr( implode( ' ', $class ) ) . '">';
 		if ( $feed_title['use_title'] ) {
-			$feed_title       = ! empty( $feed->get_title() ) ? $feed->get_title() : '';
-			$feed_description = ! empty( $feed->get_description() ) ? $feed->get_description() : '';
-			$feed_permalink   = ! empty( $feed->get_permalink() ) ? $feed->get_permalink() : '';
+			$item_title       = ! empty( $feed->get_title() ) ? $feed->get_title() : '';
+			$item_description = ! empty( $feed->get_description() ) ? $feed->get_description() : '';
+			$item_permalink   = ! empty( $feed->get_permalink() ) ? $feed->get_permalink() : '';
 
 			$content .= '<div class="rss_header">';
-			$content .= '<h2><a href="' . esc_url( $feed_permalink ) . '" class="rss_title" rel="noopener">' . wp_kses_post( html_entity_decode( $feed_title ) ) . '</a> <span class="rss_description"> ' . wp_kses_post( $feed_description ) . '</span></h2>';
+			$content .= '<h2><a href="' . esc_url( $item_permalink ) . '" class="rss_title" rel="noopener">' . wp_kses_post( html_entity_decode( $item_title ) ) . '</a> <span class="rss_description"> ' . wp_kses_post( $item_description ) . '</span></h2>';
 			$content .= '</div>';
 		}
 		$content .= '<ul>';
