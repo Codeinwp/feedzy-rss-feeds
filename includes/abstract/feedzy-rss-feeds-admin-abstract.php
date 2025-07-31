@@ -1149,9 +1149,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( $feed_title['use_title'] ) {
 			$feed_title       = ! empty( $feed->get_title() ) ? $feed->get_title() : '';
 			$feed_description = ! empty( $feed->get_description() ) ? $feed->get_description() : '';
+			$feed_permalink   = ! empty( $feed->get_permalink() ) ? $feed->get_permalink() : '';
 
 			$content .= '<div class="rss_header">';
-			$content .= '<h2><a href="' . esc_url( $feed->get_permalink() ) . '" class="rss_title" rel="noopener">' . wp_kses_post( html_entity_decode( $feed_title ) ) . '</a> <span class="rss_description"> ' . wp_kses_post( $feed_description ) . '</span></h2>';
+			$content .= '<h2><a href="' . esc_url( $feed_permalink ) . '" class="rss_title" rel="noopener">' . wp_kses_post( html_entity_decode( $feed_title ) ) . '</a> <span class="rss_description"> ' . wp_kses_post( $feed_description ) . '</span></h2>';
 			$content .= '</div>';
 		}
 		$content .= '<ul>';
@@ -1279,7 +1280,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		return array(
 			'rss_url'               => $feed->get_permalink(),
 			'rss_title_class'       => 'rss_title',
-			'rss_title'             => html_entity_decode( $feed->get_title() ),
+			'rss_title'             => html_entity_decode( ! empty( $feed->get_title() ) ? $feed->get_title() : '' ),
 			'rss_description_class' => 'rss_description',
 			'rss_description'       => $feed->get_description(),
 			'rss_classes'           => array( $sc['classname'], 'feedzy-' . md5( is_array( $feed_url ) ? implode( ', ', $feed_url ) : $feed_url ) ),
@@ -1887,28 +1888,31 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	}
 
 	/**
-	 * Image name encoder and url retrieve if in url param
+	 * Extracts image URLs from query parameters and sanitizes them.
+	 * 
+	 * Processes URLs that contain image URLs as query parameters (e.g., proxy or CDN URLs).
+	 * Supports GIF, JPG, JPEG, PNG, WebP, and AVIF formats.
 	 *
 	 * @since   3.0.0
 	 * @access  public
 	 *
-	 * @param   string $img_url A string containing the image URL.
+	 * @param   string $img_url URL containing either a direct image URL or one embedded in query parameters.
 	 *
-	 * @return  string
+	 * @return  string Extracted and sanitized image URL, or the original URL if no image found.
 	 */
 	public function feedzy_image_encode( $img_url ) {
 		// Check if img url is set as an URL parameter.
-		$url_tab = wp_parse_url( $img_url );
-		if ( isset( $url_tab['query'] ) ) {
-			preg_match_all( '/(http|https):\/\/[^ ]+(\.gif|\.GIF|\.jpg|\.JPG|\.jpeg|\.JPEG|\.png|\.PNG)/', $url_tab['query'], $img_url );
-			if ( isset( $img_url[0][0] ) ) {
-				$img_url = $img_url[0][0];
+		$parsed_url = wp_parse_url( $img_url );
+		if ( isset( $parsed_url['query'] ) ) {
+			preg_match_all( '/(http|https):\/\/[^ ]+(\.(gif|jpg|jpeg|png|webp|avif))/i', $parsed_url['query'], $matches );
+			if ( isset( $matches[0][0] ) && $this->is_image_url( $matches[0][0] ) ) {
+				$img_url = $matches[0][0];
 			}
 		}
 
-		$return = apply_filters( 'feedzy_image_encode', esc_url( $img_url ), $img_url );
-		do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Changing image URL from %s to %s', $img_url, $return ), 'debug', __FILE__, __LINE__ );
-		return $return;
+		$filtered_url = apply_filters( 'feedzy_image_encode', esc_url( $img_url ), $img_url );
+		do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Changing image URL from %s to %s', $img_url, $filtered_url ), 'debug', __FILE__, __LINE__ );
+		return $filtered_url;
 	}
 
 	/**
