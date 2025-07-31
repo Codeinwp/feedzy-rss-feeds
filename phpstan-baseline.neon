@@ -126,11 +126,6 @@ parameters:
 			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
 
 		-
-			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:feedzy_retrieve_image\\(\\) has parameter \\$sc with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
-
-		-
 			message: "#^Method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:feedzy_rss\\(\\) has parameter \\$atts with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
