@@ -1438,7 +1438,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 				if ( isset( $sc['aspectRatio'] ) ) {
 					$img_style .= 'aspect-ratio:' . $sc['aspectRatio'] . ';';
-				} else if ( isset( $sizes['width'] ) && is_numeric( $sizes['width'] ) ) {
+				} elseif ( isset( $sizes['width'] ) && is_numeric( $sizes['width'] ) ) {
 					$img_style .= 'width:' . $sizes['width'] . 'px;';
 				}
 
