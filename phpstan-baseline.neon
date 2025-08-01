@@ -1646,11 +1646,6 @@ parameters:
 			path: includes/gutenberg/feedzy-rss-feeds-gutenberg-block.php
 
 		-
-			message: "#^Method Feedzy_Rss_Feeds_Loop_Block\\:\\:apply_magic_tags\\(\\) has parameter \\$item with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: includes/gutenberg/feedzy-rss-feeds-loop-block.php
-
-		-
 			message: "#^Method Feedzy_Rss_Feeds_Loop_Block\\:\\:get_instance\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: includes/gutenberg/feedzy-rss-feeds-loop-block.php
