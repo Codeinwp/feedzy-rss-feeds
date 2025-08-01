@@ -682,21 +682,21 @@ class Inspector extends Component {
 															'1:1 (Square)',
 															'feedzy-rss-feeds'
 														),
-														value: '1 / 1',
-													},
-													{
-														label: __(
-															'16:9 (Widescreen)',
-															'feedzy-rss-feeds'
-														),
-														value: '16 / 9',
+														value: '1/1',
 													},
 													{
 														label: __(
 															'4:3 (Standard)',
 															'feedzy-rss-feeds'
 														),
-														value: '4 / 3',
+														value: '4/3',
+													},
+													{
+														label: __(
+															'3:4 (Portrait)',
+															'feedzy-rss-feeds'
+														),
+														value: '3/4',
 													},
 													{
 														label: __(
@@ -707,17 +707,24 @@ class Inspector extends Component {
 													},
 													{
 														label: __(
-															'2:1 (Banner)',
+															'2:3 (Clasic Portrait)',
 															'feedzy-rss-feeds'
 														),
-														value: '2 / 1',
+														value: '2/3',
 													},
 													{
 														label: __(
-															'3:4 (Portrait)',
+															'16:9 (Widescreen)',
 															'feedzy-rss-feeds'
 														),
-														value: '3 / 4',
+														value: '16/9',
+													},
+													{
+														label: __(
+															'9:16 (Vertical)',
+															'feedzy-rss-feeds'
+														),
+														value: '9/16',
 													},
 												]}
 												onChange={
