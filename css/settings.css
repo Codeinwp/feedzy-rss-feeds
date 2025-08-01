@@ -2559,6 +2559,11 @@ li.draggable-item .components-panel__body-toggle.components-button{
 	border-bottom: 0;
     padding: 24px 0 0;
 }
+.fz-fallback-images {
+	display: flex;
+	gap: 1em;
+}
+
 @-webkit-keyframes spin { 
     100% { -webkit-transform: rotate(360deg); } 
 }
