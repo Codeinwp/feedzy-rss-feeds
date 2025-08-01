@@ -765,16 +765,20 @@ global $post;
 								<div id="custom-fallback-section" style="<?php echo 'custom' === $fallback_option ? '' : 'display: none;'; ?>">
 									<?php
 									$btn_label             = esc_html__( 'Choose image', 'feedzy-rss-feeds' );
-									$default_thumbnails_id = isset( $default_thumbnail_id ) ? explode( ',', $default_thumbnail_id ) : array();
-									
-									if ( ! empty( $default_thumbnails_id ) ) :
+									$saved_fallback_thumbnail_ids = is_string( $default_thumbnail_id ) ? explode( ',', $default_thumbnail_id ) : array();
+									$valid_thumbnail_ids   = array_filter( $saved_fallback_thumbnail_ids, 'is_numeric' );
+									$valid_thumbnail_ids   = array_filter( $valid_thumbnail_ids, function ( $id ) {
+										return wp_attachment_is_image( $id );
+									} );
+								
+									if ( ! empty( $valid_thumbnail_ids ) ) :
 										$btn_label = esc_html__( 'Replace image', 'feedzy-rss-feeds' );
 										?>
 										<div class="fz-form-group mb-20 feedzy-media-preview ">
 											<label class="form-label"><?php esc_html_e( 'Custom fallback image for this feed:', 'feedzy-rss-feeds' ); ?></label>
 											<div class="fz-fallback-images">
 												<?php
-												foreach ( $default_thumbnails_id as $thumbnail_id ) {
+												foreach ( $valid_thumbnail_ids as $thumbnail_id ) {
 													echo wp_get_attachment_image( $thumbnail_id, 'thumbnail' );
 												}
 												?>
@@ -791,7 +795,7 @@ global $post;
 										<a 
 											href="javascript:;" class="feedzy-remove-media btn btn-outline-primary 
 												<?php
-													echo $default_thumbnail_id ? esc_attr( 'is-show' ) : ''; 
+													echo ! empty ( $valid_thumbnails_id ) ? esc_attr( 'is-show' ) : ''; 
 												?>
 										">
 											<?php
