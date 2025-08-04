@@ -2563,6 +2563,26 @@ li.draggable-item .components-panel__body-toggle.components-button{
 	display: flex;
 	flex-wrap: wrap;
 	gap: 1em;
+	margin: 1em 0 1em;
+}
+.feedzy-wrap .fz-spacing{
+	margin: 1em 0 1em;
+}
+.fz-radio-label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+}
+.fz-radio-description {
+    color: #666;
+    font-size: 13px;
+    line-height: 1.4;
+    display: block;
+}
+.fz-radio-title {
+	font-size: 16px;
+	font-weight: 600;
+	color: #050505;
 }
 
 @-webkit-keyframes spin { 
