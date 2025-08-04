@@ -667,7 +667,7 @@ class Inspector extends Component {
 												)}
 												value={
 													this.props.attributes
-														.aspectRatio || '1:1'
+														.aspectRatio
 												}
 												options={[
 													{
@@ -682,7 +682,7 @@ class Inspector extends Component {
 															'1:1 (Square)',
 															'feedzy-rss-feeds'
 														),
-														value: '1/1',
+														value: '1',
 													},
 													{
 														label: __(

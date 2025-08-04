@@ -140,7 +140,7 @@ const attributes = {
 	},
 	aspectRatio: {
 		type: 'string',
-		default: 'auto',
+		default: '1',
 	},
 };
 

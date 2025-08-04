@@ -173,7 +173,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 					),
 					'aspectRatio'     => array(
 						'type'    => 'string',
-						'default' => 'auto',
+						'default' => '1',
 					),
 					'price'           => array(
 						'type'    => 'boolean',
