@@ -2561,6 +2561,7 @@ li.draggable-item .components-panel__body-toggle.components-button{
 }
 .fz-fallback-images {
 	display: flex;
+	flex-wrap: wrap;
 	gap: 1em;
 }
 

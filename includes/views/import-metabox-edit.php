@@ -792,20 +792,30 @@ global $post;
 										<a 
 											href="javascript:;" class="feedzy-open-media btn btn-outline-primary">
 											<?php 
-												echo esc_html( $btn_label );
+											echo esc_html( $btn_label );
 											?>
 										</a>
-										<a 
-											href="javascript:;" class="feedzy-remove-media btn btn-outline-primary 
-												<?php
-													echo ! empty( $valid_thumbnails_id ) ? esc_attr( 'is-show' ) : ''; 
+										<a href="javascript:;"
+											class="feedzy-remove-media btn btn-outline-primary 
+												<?php 
+												echo ! empty( $valid_thumbnail_ids ) ? esc_attr( 'is-show' ) : ''; 
 												?>
-										">
+												"
+										>
 											<?php
 												esc_html_e( 'Remove', 'feedzy-rss-feeds' ); 
 											?>
 										</a>
-										<input type="hidden" name="feedzy_meta_data[default_thumbnail_id]" id="feed-post-default-thumbnail" value="<?php echo esc_attr( $default_thumbnail_id ); ?>">
+										<input 
+											type="hidden" 
+											name="feedzy_meta_data[default_thumbnail_id]" 
+											id="feed-post-default-thumbnail" 
+											value="
+												<?php
+												echo esc_attr( implode( ',', $valid_thumbnail_ids ) );
+												?>
+												"
+										>
 									</div>
 								</div>
 								
@@ -1022,39 +1032,4 @@ global $post;
 
 <script id="new_field_tpl" type="text/template">
 	<?php echo wp_kses( apply_filters( 'feedzy_custom_field_template', '' ), apply_filters( 'feedzy_wp_kses_allowed_html', array() ) ); ?>
-</script>
-
-<script>
-jQuery(document).ready(function($) {
-	$('#use-inherited-thumbnail').on('change', function() {
-		if ($(this).is(':checked')) {
-			$('#custom-fallback-image-section').hide();
-			$('#inherited-fallback-image-section').show();
-			$('#feed-post-default-thumbnail').val('');
-		} else {
-			$('#custom-fallback-image-section').show();
-			$('#inherited-fallback-image-section').hide();
-		}
-	});
-	
-	$('.feedzy-remove-media').on('click', function() {
-		if ($('#use-inherited-thumbnail').length && $('#use-inherited-thumbnail').is(':checked')) {
-			return false;
-		}
-	});
-
-	$('input[name="feedzy_meta_data[fallback_image_option]"]').on('change', function() {
-		var selectedValue = $(this).val();
-		
-		if (selectedValue === 'custom') {
-			$('#custom-fallback-section').show();
-			$('#general-fallback-preview').hide();
-		} else {
-			$('#custom-fallback-section').hide();
-			$('#general-fallback-preview').show();
-		}
-	});
-
-	$('input[name="feedzy_meta_data[fallback_image_option]"]:checked').trigger('change');
-});
 </script>
