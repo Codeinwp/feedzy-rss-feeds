@@ -113,6 +113,9 @@
 	color: #ffffff;
 	vertical-align: super;
 }
+.feedzy-wrap .feedzy-accordion-item .pro-label{
+	font-size: 0.55rem !important;
+}
 
 .post-type-feedzy_imports:not(.edit-post) .wrap div#side-sortables{
 	display: none;
