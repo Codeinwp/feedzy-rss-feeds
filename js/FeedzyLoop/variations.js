@@ -137,30 +137,31 @@ const variations = [
 					[
 						'core/image',
 						{
-							url: window.feedzyData.defaultImage,
-							alt: '{{feedzy_title}}',
-							href: '{{feedzy_url}}',
+							metadata: {
+								bindings: {
+									url: {
+										source: 'feedzy-rss-feeds/feed',
+										args: {
+											key: 'item_img_path',
+										},
+									},
+								},
+							},
 						},
 					],
 					[
 						'core/paragraph',
 						{
-							content:
-								'<a href="{{feedzy_url}}">{{feedzy_title}}</a>',
-						},
-					],
-					[
-						'core/paragraph',
-						{
-							content: '{{feedzy_meta}}',
-							fontSize: 'medium',
-						},
-					],
-					[
-						'core/paragraph',
-						{
-							content: '{{feedzy_description}}',
-							fontSize: 'small',
+							metadata: {
+								bindings: {
+									content: {
+										source: 'feedzy-rss-feeds/feed',
+										args: {
+											key: 'item_description',
+										},
+									},
+								},
+							},
 						},
 					],
 				],

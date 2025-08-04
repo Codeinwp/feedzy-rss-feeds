@@ -49,6 +49,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		$this->version = Feedzy_Rss_Feeds::get_version();
 		$this->admin   = Feedzy_Rss_Feeds::instance()->get_admin();
 		add_action( 'init', array( $this, 'register_block' ) );
+		add_action( 'init', array( $this, 'register_feed_block_bindings_source' ) );
 		add_action( 'rest_api_init', array( $this, 'register_fetch_feed_endpoint' ) );
 		add_filter( 'feedzy_loop_item', array( $this, 'apply_magic_tags' ), 10, 3 );
 	}
@@ -111,7 +112,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		}
 
 		$content      = empty( $content ) ? ( $attributes['innerBlocksContent'] ?? '' ) : $content;
-		$loop = '';
+		$loop         = '';
 		$column_count = isset( $attributes['layout'] ) && isset( $attributes['layout']['columnCount'] ) && ! empty( $attributes['layout']['columnCount'] ) ? $attributes['layout']['columnCount'] : 1;
 
 		foreach ( $feed_items as $key => $item ) {
@@ -138,7 +139,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	}
 
 	public function fetch_feed( $attributes ) {
-		$feed_urls  = array();
+		$feed_urls = array();
 
 		if ( isset( $attributes['feed']['type'] ) && 'group' === $attributes['feed']['type'] && isset( $attributes['feed']['source'] ) && is_numeric( $attributes['feed']['source'] ) ) {
 			$group     = $attributes['feed']['source'];
@@ -214,7 +215,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	}
 
 	/**
-	 *	Get the feed items.
+	 *  Get the feed items.
 	 *
 	 * @param WP_REST_Request $request
 	 * @return void
@@ -281,15 +282,15 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			}
 		}
 
-		ray( 'attributes', $attributes );
+		// ray( 'attributes', $attributes );
 
 		$feed_items = $this->fetch_feed( $attributes );
 
-		if ( is_wp_error( $feed_items) ) {
+		if ( is_wp_error( $feed_items ) ) {
 			wp_send_json_error( $feed_items->get_error_message() );
 		}
 
-		foreach ($feed_items as &$item) {
+		foreach ( $feed_items as &$item ) {
 			if ( ! is_array( $item ) ) {
 				continue;
 			}
@@ -405,5 +406,43 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			default:
 				return '';
 		}
+	}
+
+	public function register_feed_block_bindings_source() {
+		if ( ! function_exists( 'register_block_bindings_source' ) ) {
+			return;
+		}
+
+		register_block_bindings_source(
+			'feedzy-rss-feeds/feed',
+			array(
+				'label'              => __( 'Feed', 'feedzy-rss-feeds' ),
+				'get_value_callback' => array( $this, 'get_block_bindings_value' ),
+			)
+		);
+	}
+
+	/**
+	 * 
+	 * @param mixed[]  $source_args
+	 * @param WP_Block $block_instance
+	 * @param string   $attribute_name
+	 * @return string
+	 */
+	public function get_block_bindings_value( $source_args, $block_instance, $attribute_name ) {
+		
+		if ( ! isset( $block_instance->context['feedzy-rss-feeds/feedItem'] ) || ! is_array( $block_instance->context['feedzy-rss-feeds/feedItem'] ) ) {
+			return null;
+		}
+		
+		$feed_item = $block_instance->context['feedzy-rss-feeds/feedItem'];
+		ray( 'get_block_bindings_value', $source_args, $block_instance, $attribute_name, $feed_item );
+
+		if ( isset( $source_args['key'] ) && isset( $feed_item[ $source_args['key'] ] ) ) {
+			// If the key exists in the feed item, return its value.
+			return $feed_item[ $source_args['key'] ];
+		}
+
+		return null;
 	}
 }

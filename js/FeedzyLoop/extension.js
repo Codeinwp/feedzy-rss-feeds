@@ -12,7 +12,7 @@ import { ToolbarButton, ToolbarGroup } from '@wordpress/components';
 
 import { createHigherOrderComponent } from '@wordpress/compose';
 
-import { useSelect } from '@wordpress/data';
+import { useSelect, useDispatch } from '@wordpress/data';
 
 import { addFilter } from '@wordpress/hooks';
 
@@ -32,6 +32,12 @@ const withFeedzyLoopImage = createHigherOrderComponent((BlockEdit) => {
 				).length > 0
 			);
 		});
+		console.log(props);
+
+		// if (props.context?.['feedzy-rss-feeds/feedItem']) {
+		// 	props.attributes.url =
+		// 		props.context?.['feedzy-rss-feeds/feedItem']?.item_img_path;
+		// }
 
 		return (
 			<>
@@ -43,7 +49,13 @@ const withFeedzyLoopImage = createHigherOrderComponent((BlockEdit) => {
 							<ToolbarButton
 								onClick={() => {
 									props.setAttributes({
-										url: defaultImage,
+										metadata: {
+											bindings: {
+												url: {
+													source: 'feedzy-rss-feeds/feed',
+												},
+											},
+										},
 									});
 								}}
 							>
@@ -58,3 +70,25 @@ const withFeedzyLoopImage = createHigherOrderComponent((BlockEdit) => {
 }, 'withMasonryExtension');
 
 addFilter('editor.BlockEdit', 'feedzy-loop/image', withFeedzyLoopImage);
+
+function addCustomAttributes(settings, name) {
+	if ('core/image' === name) {
+		settings.attributes = {
+			...settings.attributes,
+			feedzyTag: {
+				type: 'string',
+			},
+		};
+		const context = new Set(settings?.usesContext ?? []);
+		context.add('feedzy-rss-feeds/feedItem');
+		settings.usesContext = Array.from(context);
+	}
+
+	return settings;
+}
+
+addFilter(
+	'blocks.registerBlockType',
+	'feedzy-loop/attributes',
+	addCustomAttributes
+);
