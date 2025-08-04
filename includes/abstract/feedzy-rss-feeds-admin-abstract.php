@@ -1406,8 +1406,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$item_link = $item->get_feed()->get_permalink();
 			}
 		}
-		$new_link    = apply_filters( 'feedzy_item_url_filter', $item_link, $sc, $item );
-		$amp_running = function_exists( 'amp_is_request' ) && amp_is_request();
+		$new_link      = apply_filters( 'feedzy_item_url_filter', $item_link, $sc, $item );
+		$amp_running   = function_exists( 'amp_is_request' ) && amp_is_request();
 		$content_thumb = '';
 
 		$thumbnail_to_use = '';
@@ -1424,7 +1424,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 		
 		if ( ! empty( $thumbnail_to_use ) && is_string( $thumbnail_to_use ) ) {
-			$img_style     = '';
+			$img_style = '';
 
 			if ( isset( $sizes['height'] ) && is_numeric( $sizes['height'] ) ) {
 				$img_style .= 'height:' . $sizes['height'] . 'px;';
