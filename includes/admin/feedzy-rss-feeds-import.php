@@ -162,8 +162,8 @@ class Feedzy_Rss_Feeds_Import {
 						'delete_post_message' => __( 'Would you also like to delete all the imported posts for this import job?', 'feedzy-rss-feeds' ),
 						'media_iframe_title'  => __( 'Select image', 'feedzy-rss-feeds' ),
 						'media_iframe_button' => __( 'Set default image', 'feedzy-rss-feeds' ),
-						'action_btn_text_1'   => __( 'Choose', 'feedzy-rss-feeds' ),
-						'action_btn_text_2'   => __( 'Replace', 'feedzy-rss-feeds' ),
+						'action_btn_text_1'   => __( 'Choose image', 'feedzy-rss-feeds' ),
+						'action_btn_text_2'   => __( 'Replace image', 'feedzy-rss-feeds' ),
 						'author_helper'       => __( 'We display up to 100 users. If the desired username isn’t listed, type the exact existing username manually to save it.', 'feedzy-rss-feeds' ),
 						'clearLogButton'      => __( 'Clear Log', 'feedzy-rss-feeds' ),
 						'okButton'            => __( 'Ok', 'feedzy-rss-feeds' ),
@@ -176,7 +176,6 @@ class Feedzy_Rss_Feeds_Import {
 							feedzy_is_pro() ? 'dashicons-upload' : 'dashicons-lock',
 							esc_html__( 'Upload Import', 'feedzy-rss-feeds' )
 						),
-						'fallback_thumbnail'  => FEEDZY_ABSURL . 'img/default-featured-image.png',
 					),
 				)
 			);
@@ -388,7 +387,6 @@ class Feedzy_Rss_Feeds_Import {
 		$import_remove_html       = get_post_meta( $post->ID, 'import_remove_html', true );
 		$import_remove_html       = 'yes' === $import_remove_html ? 'checked' : '';
 		$import_order             = get_post_meta( $post->ID, 'import_order', true );
-		$default_thumbnail_url    = get_post_meta( $post->ID, 'default_thumbnail_url', true );
 
 		if ( empty( $filter_conditions ) ) {
 			$filter_conditions = apply_filters(
@@ -1474,7 +1472,6 @@ class Feedzy_Rss_Feeds_Import {
 		$max                      = $import_feed_limit;
 		$import_remove_html       = get_post_meta( $job->ID, 'import_remove_html', true );
 		$import_order             = get_post_meta( $job->ID, 'import_order', true );
-		$default_thumbnail_url    = get_post_meta( $job->ID, 'default_thumbnail_url', true );
 
 		if ( empty( $filter_conditions ) ) {
 			$filter_conditions = apply_filters(
@@ -2206,20 +2203,6 @@ class Feedzy_Rss_Feeds_Import {
 						} else {
 							// if import_featured_img is a tag.
 							$img_success = $this->try_save_featured_image( $image_source_url, $new_post_id, $img_title, $import_errors, $import_info );
-						}
-					}
-				}
-
-				if ( feedzy_is_pro() ) {
-					// Set default thumbnail image from the url.
-					if ( 'yes' === $import_item_img_url ) {
-						// Set external image URL.
-						update_post_meta( $new_post_id, 'feedzy_item_external_url', $default_thumbnail_url );
-					} else {
-						$fallback_thumbnail = get_post_meta( $job->ID, 'default_thumbnail_id', true );
-						if ( empty( $fallback_thumbnail ) && ! $img_success && ! empty( $default_thumbnail_url ) ) {
-							$thumbnail_title = pathinfo( basename( $default_thumbnail_url ), PATHINFO_FILENAME );
-							$img_success     = $this->try_save_featured_image( $default_thumbnail_url, $new_post_id, $thumbnail_title, $import_errors, $import_info );
 						}
 					}
 				}

@@ -705,46 +705,38 @@ global $post;
 									<h4 class="h4"><?php esc_html_e( 'Fallback Image', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
 								</div>
 								<div class="fz-right">
-									<label class="form-label"><?php esc_html_e( 'Upload or paste URL for fallback image', 'feedzy-rss-feeds' ); ?></label>
 									<div class="fz-form-group">
-										<div class="fz-form-row">
-											<div class="fz-form-group feedzy-media-preview">
+										<label class="form-label"><?php esc_html_e( 'Select an image to be the fallback featured image.', 'feedzy-rss-feeds' ); ?></label>
+										<?php
+										$btn_label            = esc_html__( 'Choose image', 'feedzy-rss-feeds' );
+										$default_thumbnail_id = ! empty( $default_thumbnail_id ) ? explode( ',', (string) $default_thumbnail_id ) : array();
+										if ( ! empty( $default_thumbnail_id ) ) :
+											$btn_label = esc_html__( 'Replace image', 'feedzy-rss-feeds' );
+											?>
+											<div class="fz-form-group mb-20 feedzy-media-preview">
 												<?php
-												$btn_label            = esc_html__( 'Upload', 'feedzy-rss-feeds' );
-												$default_thumbnail_id = ! empty( $default_thumbnail_id ) ? explode( ',', (string) $default_thumbnail_id ) : array();
-												if ( ! empty( $default_thumbnail_id ) ) :
-													$btn_label = esc_html__( 'Replace', 'feedzy-rss-feeds' );
+												if ( count( $default_thumbnail_id ) > 1 ) {
 													?>
-													
+													<a href="javascript:;" class="btn btn-outline-primary feedzy-images-selected">
 														<?php
-														if ( count( $default_thumbnail_id ) > 1 ) {
-															?>
-															<a href="javascript:;" class="btn btn-outline-primary feedzy-images-selected">
-																<?php
-																// translators: %d select images count.
-																echo esc_html( sprintf( __( '(%d) images selected', 'feedzy-rss-feeds' ), count( $default_thumbnail_id ) ) );
-																?>
-															</a>
-															<?php
-														} else {
-															echo wp_get_attachment_image( reset( $default_thumbnail_id ), 'thumbnail' );
-														}
+														// translators: %d select images count.
+														echo esc_html( sprintf( __( '(%d) images selected', 'feedzy-rss-feeds' ), count( $default_thumbnail_id ) ) );
 														?>
-													<?php else : ?>
-														<img src="<?php echo esc_url( FEEDZY_ABSURL . 'img/default-featured-image.png' ); ?>" alt="<?php esc_attr_e( 'Fallback Image', 'feedzy-rss-feeds' ); ?>">
-												<?php endif; ?>
+													</a>
+													<?php
+												} else {
+													echo wp_get_attachment_image( reset( $default_thumbnail_id ), 'thumbnail' );
+												}
+												?>
 											</div>
-											<div class="fz-cta-group pb-8">
-												<a href="javascript:;" class="feedzy-open-media button-primary ps-16 pe-16"><?php echo esc_html( $btn_label ); ?></a>
-												<a href="javascript:;" class="feedzy-remove-media button-primary ps-16 pe-16 <?php echo ! empty( $default_thumbnail_id ) ? esc_attr( 'is-show' ) : ''; ?>"><?php esc_html_e( 'Remove', 'feedzy-rss-feeds' ); ?></a>
-												<input type="hidden" name="feedzy_meta_data[default_thumbnail_id]" id="feed-post-default-thumbnail" value="<?php echo esc_attr( implode( ',', $default_thumbnail_id ) ); ?>">
-											</div>
+										<?php endif; ?>
+										<div class="fz-cta-group pb-8">
+											<a href="javascript:;" class="feedzy-open-media btn btn-outline-primary"><?php echo esc_html( $btn_label ); ?></a>
+											<a href="javascript:;" class="feedzy-remove-media btn btn-outline-primary <?php echo ! empty( $default_thumbnail_id ) ? esc_attr( 'is-show' ) : ''; ?>"><?php esc_html_e( 'Remove', 'feedzy-rss-feeds' ); ?></a>
+											<input type="hidden" name="feedzy_meta_data[default_thumbnail_id]" id="feed-post-default-thumbnail" value="<?php echo esc_attr( implode( ',', $default_thumbnail_id ) ); ?>">
 										</div>
-									</div>
-									<div class="fz-from-group">
-										<input type="text" id="feedzy_default_thumbnail_url" name="feedzy_meta_data[default_thumbnail_url]" class="form-control" value="<?php echo esc_attr( $default_thumbnail_url ); ?>" placeholder="http://example.com/fallback.jpg"/>
 										<div class="help-text pt-8">
-											<?php esc_html_e( 'If a feed item doesn\'t have an image, this image will be used as a fallback. You can upload or paste a direct image URL.', 'feedzy-rss-feeds' ); ?>
+											<?php esc_html_e( 'Helpful for setting a fallback image for feed items without an image. If multiple fallback images are selected, one of them will be randomly assigned to each post without an image during the import process.', 'feedzy-rss-feeds' ); ?>
 										</div>
 									</div>
 								</div>

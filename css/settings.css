@@ -1226,11 +1226,6 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 	padding-left: 12px;
 	padding-right: 12px;
 }
-.fz-form-row .fz-form-col-3{
-	width: 25%;
-	padding-left: 12px;
-	padding-right: 12px;
-}
 .fz-auto-cat {
 	width: 100%;
 }
@@ -2563,27 +2558,6 @@ li.draggable-item .components-panel__body-toggle.components-button{
 .feedzy-accordion-item__content .form-block.feedzy-auto-delete {
 	border-bottom: 0;
     padding: 24px 0 0;
-}
-.fz-cta-group .button-primary {
-	background: #167cfe;
-	border-color: #167cfe;
-	padding: 0 16px;
-	font-weight: 500;
-	border-radius: 10px;
-}
-.fz-cta-group .button-primary:hover,
-.fz-cta-group .button-primary:active,
-.fz-cta-group .button-primary:focus{
-	background: #167cfe;
-	border-color: #167cfe;
-}
-.feedzy-media-preview {
-	text-align: center;
-	padding: 0 12px;
-}
-.feedzy-media-preview img {
-	border: 2px solid #e6e6e6;
-	border-radius: 5px;
 }
 @-webkit-keyframes spin { 
     100% { -webkit-transform: rotate(360deg); } 

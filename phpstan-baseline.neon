@@ -1887,7 +1887,3 @@ parameters:
 			message: "#^Variable \\$import_order might not be defined\\.$#"
 			count: 1
 			path: includes/views/import-metabox-edit.php
-		-
-			message: "#^Variable \\$default_thumbnail_url might not be defined\\.$#"
-			count: 1
-			path: includes/views/import-metabox-edit.php
