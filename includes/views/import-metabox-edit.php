@@ -737,13 +737,9 @@ global $post;
 										<div class="fz-form-group mb-20">
 											<div class="help-text">
 												<?php 
-												echo wp_kses_post( 
-													sprintf( 
-														/* translators: %s: opening anchor tag, %s: closing anchor tag */
-														__( 'No general fallback image set. %s', 'feedzy-rss-feeds' ),
-														'<a href="' . esc_url( admin_url( 'admin.php?page=feedzy-settings' ) ) . '" target="_blank">' . esc_html__( 'Set one in Feedzy Settings', 'feedzy-rss-feeds' ) . '</a>'
-													) 
-												); 
+												echo wp_kses_post(
+													__( 'No general fallback image set. ', 'feedzy-rss-feeds' )
+												);
 												?>
 											</div>
 										</div>
@@ -753,7 +749,7 @@ global $post;
 										<?php 
 										echo wp_kses_post( 
 											sprintf(
-												/* translators: %s: opening anchor tag, %s: closing anchor tag */ 
+												/* translators: %s is replaced with a link to the Feedzy Settings page */
 												__( 'You can update the general fallback image in %s.', 'feedzy-rss-feeds' ),
 												'<a href="' . esc_url( admin_url( 'admin.php?page=feedzy-settings' ) ) . '" target="_blank">' . esc_html__( 'Feedzy Settings', 'feedzy-rss-feeds' ) . '</a>'
 											) 
