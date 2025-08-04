@@ -706,35 +706,24 @@ global $post;
 						</div>
 						<div class="fz-right">
 							<div class="fz-form-group">
-								<label class="form-label"><?php esc_html_e( 'Which fallback featured image should be used for this feed?', 'feedzy-rss-feeds' ); ?></label>
+								<div class="form-label"><?php esc_html_e( 'Which fallback featured image should be used for this feed?', 'feedzy-rss-feeds' ); ?></div>
 								
 								<?php 
 								$fallback_option = ! empty( $default_thumbnail_id ) ? 'custom' : 'general';
 								?>
 								
-								<div class="fz-fallback-options mb-20">
-									<div class="fz-radio-option">
-										<input type="radio" id="use-general-fallback" name="feedzy_meta_data[fallback_image_option]" value="general" <?php checked( $fallback_option, 'general' ); ?>>
-										<label for="use-general-fallback" class="fz-radio-label">
-											<strong><?php esc_html_e( 'Use general setting', 'feedzy-rss-feeds' ); ?></strong>
-											<span class="fz-radio-description"><?php esc_html_e( 'Updates automatically when the general fallback image changes.', 'feedzy-rss-feeds' ); ?></span>
-										</label>
-									</div>
-									
-									<div class="fz-radio-option">
-										<input type="radio" id="use-custom-fallback" name="feedzy_meta_data[fallback_image_option]" value="custom" <?php checked( $fallback_option, 'custom' ); ?>>
-										<label for="use-custom-fallback" class="fz-radio-label">
-											<strong><?php esc_html_e( 'Add custom fallback image', 'feedzy-rss-feeds' ); ?></strong>
-											<span class="fz-radio-description"><?php esc_html_e( 'Use a specific image just for this feed.', 'feedzy-rss-feeds' ); ?></span>
-										</label>
-									</div>
+								<div class="fz-spacing">
+									<input type="radio" id="use-general-fallback" name="feedzy_meta_data[fallback_image_option]" value="general" <?php checked( $fallback_option, 'general' ); ?>>
+									<label for="use-general-fallback" class="fz-radio-label">
+										<strong class="fz-radio-title"><?php esc_html_e( 'Use general setting', 'feedzy-rss-feeds' ); ?></strong>
+										<br>
+										<span class="fz-radio-description"><?php esc_html_e( 'Updates automatically when the general fallback image changes.', 'feedzy-rss-feeds' ); ?></span>
+									</label>
 								</div>
 
-								<!-- General fallback preview -->
-								<div id="general-fallback-preview" style="<?php echo 'general' === $fallback_option ? '' : 'display: none;'; ?>">
+								<div id="general-fallback-preview" class="fz-spacing" style="<?php echo 'general' === $fallback_option ? '' : 'display: none;'; ?>">
 									<?php if ( ! empty( $inherited_thumbnail_id ) ) : ?>
-										<div class="fz-form-group mb-20">
-											<label class="form-label"><?php esc_html_e( 'Current general fallback image:', 'feedzy-rss-feeds' ); ?></label>
+										<div class="fz-form-group">
 											<?php 
 											$image = wp_get_attachment_image( $inherited_thumbnail_id, 'thumbnail' );
 											if ( $image ) {
@@ -759,9 +748,29 @@ global $post;
 											</div>
 										</div>
 									<?php endif; ?>
+									
+									<div class="help-text pt-8">
+										<?php 
+										echo wp_kses_post( 
+											sprintf(
+												/* translators: %s: opening anchor tag, %s: closing anchor tag */ 
+												__( 'You can update the general fallback image in %s.', 'feedzy-rss-feeds' ),
+												'<a href="' . esc_url( admin_url( 'admin.php?page=feedzy-settings' ) ) . '" target="_blank">' . esc_html__( 'Feedzy Settings', 'feedzy-rss-feeds' ) . '</a>'
+											) 
+										); 
+										?>
+									</div>
+								</div>
+								
+								<div class="fz-spacing">
+									<input type="radio" id="use-custom-fallback" name="feedzy_meta_data[fallback_image_option]" value="custom" <?php checked( $fallback_option, 'custom' ); ?>>
+									<label for="use-custom-fallback" class="fz-radio-label">
+										<strong class="fz-radio-title"><?php esc_html_e( 'Add custom fallback image', 'feedzy-rss-feeds' ); ?></strong>
+										<br>
+										<span class="fz-radio-description small"><?php esc_html_e( 'Use a specific image just for this feed.', 'feedzy-rss-feeds' ); ?></span>
+									</label>
 								</div>
 
-								<!-- Custom fallback section -->
 								<div id="custom-fallback-section" style="<?php echo 'custom' === $fallback_option ? '' : 'display: none;'; ?>">
 									<?php
 									$btn_label                    = esc_html__( 'Choose image', 'feedzy-rss-feeds' );
@@ -777,8 +786,7 @@ global $post;
 									if ( ! empty( $valid_thumbnail_ids ) ) :
 										$btn_label = esc_html__( 'Replace image', 'feedzy-rss-feeds' );
 										?>
-										<div class="fz-form-group mb-20 feedzy-media-preview ">
-											<label class="form-label"><?php esc_html_e( 'Custom fallback image for this feed:', 'feedzy-rss-feeds' ); ?></label>
+										<div class="fz-form-group feedzy-media-preview ">
 											<div class="fz-fallback-images">
 												<?php
 												foreach ( $valid_thumbnail_ids as $thumbnail_id ) {
@@ -788,6 +796,7 @@ global $post;
 											</div>
 										</div>
 									<?php endif; ?>
+
 									<div class="fz-cta-group pb-8">
 										<a 
 											href="javascript:;" class="feedzy-open-media btn btn-outline-primary">
@@ -818,22 +827,9 @@ global $post;
 										>
 									</div>
 								</div>
-								
-								<div class="help-text pt-8">
-									<?php esc_html_e( 'Helpful for setting a fallback image for feed items without an image during the import process.', 'feedzy-rss-feeds' ); ?>
-								</div>
-								
-								<div class="help-text pt-8">
-									<?php 
-									echo wp_kses_post( 
-										sprintf(
-											/* translators: %s: opening anchor tag, %s: closing anchor tag */ 
-											__( 'You can update the general fallback image in %s.', 'feedzy-rss-feeds' ),
-											'<a href="' . esc_url( admin_url( 'admin.php?page=feedzy-settings' ) ) . '" target="_blank">' . esc_html__( 'Feedzy Settings', 'feedzy-rss-feeds' ) . '</a>'
-										) 
-									); 
-									?>
-								</div>
+							</div>
+							<div class="help-text pt-8">
+								<?php esc_html_e( 'Helpful for setting a fallback image for feed items without an image during the import process.', 'feedzy-rss-feeds' ); ?>
 							</div>
 						</div>
 					</div>
