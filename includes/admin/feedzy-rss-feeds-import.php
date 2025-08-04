@@ -2311,12 +2311,7 @@ class Feedzy_Rss_Feeds_Import {
 			$feed = $admin->fetch_feed( $feed_url, isset( $options['refresh'] ) ? $options['refresh'] : '12_hours', $options );
 
 			$feed->force_feed( true );
-
-			if ( isset( $options['sort'] ) && ! empty( $options['sort'] ) ) {
-				$feed->enable_order_by_date( true );
-			} else {
-				$feed->enable_order_by_date( false );
-			}
+			$feed->enable_order_by_date( isset( $options['sort'] ) && ! empty( $options['sort'] ) );
 
 			if ( is_string( $feed ) ) {
 				return array();
