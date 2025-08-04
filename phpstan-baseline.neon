@@ -1879,11 +1879,3 @@ parameters:
 			message: "#^Variable \\$published_status might not be defined\\.$#"
 			count: 1
 			path: includes/views/import-metabox-edit.php
-		-
-			message: "#^Variable \\$import_remove_html might not be defined\\.$#"
-			count: 1
-			path: includes/views/import-metabox-edit.php
-		-
-			message: "#^Variable \\$import_order might not be defined\\.$#"
-			count: 1
-			path: includes/views/import-metabox-edit.php

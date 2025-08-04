@@ -790,7 +790,7 @@ global $post;
 										<div class="fz-form-switch">
 											<input id="remove-html" name="feedzy_meta_data[import_remove_html]"
 													class="fz-switch-toggle" type="checkbox" value="yes"
-												<?php echo esc_attr( $import_remove_html ); ?>>
+												<?php echo esc_attr( isset( $import_remove_html ) ? $import_remove_html : '' ); ?>>
 											<label class="feedzy-inline form-label" for="remove-html"><?php esc_html_e( 'Remove HTML tags from improted content', 'feedzy-rss-feeds' ); ?></label>
 										</div>
 									</div>
@@ -818,7 +818,7 @@ global $post;
 													);
 													foreach ( $orders as $key => $value ) :
 														?>
-														<option data-order="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( $key ); ?>"<?php selected( $import_order, $key ); ?>
+														<option data-order="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( $key ); ?>"<?php selected( isset( $import_order ) ? $import_order : '', $key ); ?>
 														>
 															<?php echo esc_html( $value ); ?>
 														</option>
