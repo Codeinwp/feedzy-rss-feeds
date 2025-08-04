@@ -8,7 +8,7 @@
  * Author: Themeisle
  */
 
-#feedzy_import_feeds{
+#feedzy_import_feeds {
 	background: transparent;
 	border: 0;
 	box-shadow: none;
@@ -18,49 +18,62 @@
 	padding-right: 12px;
 	box-sizing: border-box;
 }
-#feedzy_import_feeds > .postbox-header{
+
+#feedzy_import_feeds>.postbox-header {
 	display: none;
 }
-.post-type-feedzy_imports:not(.edit-php) .page-title-action, .post-type-feedzy_imports:not(.edit-php) .wp-heading-inline {
+
+.post-type-feedzy_imports:not(.edit-php) .page-title-action,
+.post-type-feedzy_imports:not(.edit-php) .wp-heading-inline {
 	display: none !important;
 }
-.post-type-feedzy_imports:not(.edit-php) #wpcontent{
+
+.post-type-feedzy_imports:not(.edit-php) #wpcontent {
 	padding-left: 0;
 }
-.post-type-feedzy_imports:not(.edit-php) #post-body-content{
+
+.post-type-feedzy_imports:not(.edit-php) #post-body-content {
 	display: none;
 }
-.post-type-feedzy_imports:not(.edit-php) .wrap{
+
+.post-type-feedzy_imports:not(.edit-php) .wrap {
 	margin-top: 0;
 	margin-right: 0;
 }
-.post-type-feedzy_imports:not(.edit-php) .wrap > .wp-heading-inline,
-.post-type-feedzy_imports:not(.edit-php) .wrap > .wp-header-end{
+
+.post-type-feedzy_imports:not(.edit-php) .wrap>.wp-heading-inline,
+.post-type-feedzy_imports:not(.edit-php) .wrap>.wp-header-end {
 	display: none;
 }
-.post-type-feedzy_imports:not(.edit-php) #poststuff{
+
+.post-type-feedzy_imports:not(.edit-php) #poststuff {
 	padding-top: 0;
 }
-.post-type-feedzy_imports:not(.edit-php) #poststuff .inside{
+
+.post-type-feedzy_imports:not(.edit-php) #poststuff .inside {
 	margin-top: 0;
 	padding-left: 0;
 	padding-right: 0;
 }
-.post-type-feedzy_imports:not(.edit-php) #poststuff #post-body.columns-2{
+
+.post-type-feedzy_imports:not(.edit-php) #poststuff #post-body.columns-2 {
 	margin-right: 0;
 }
-.post-type-feedzy_imports:not(.edit-php) #post-body.columns-2 #postbox-container-1{
+
+.post-type-feedzy_imports:not(.edit-php) #post-body.columns-2 #postbox-container-1 {
 	width: 100%;
 	float: none;
 }
+
 .feedzy_page_feedzy-settings #wpcontent,
 .feedzy_page_feedzy-support #wpcontent,
-.feedzy_page_feedzy-integration #wpcontent{
+.feedzy_page_feedzy-integration #wpcontent {
 	padding-left: 0;
 }
+
 .feedzy_page_feedzy-settings .feedzy-header,
 .feedzy_page_feedzy-support .feedzy-header,
-.feedzy_page_feedzy-integration .feedzy-header{
+.feedzy_page_feedzy-integration .feedzy-header {
 	margin-bottom: 40px;
 }
 
@@ -68,7 +81,7 @@
 	color: #ff0000;
 }
 
-tr.feedzy-import-status-row > td {
+tr.feedzy-import-status-row>td {
 	margin: 0;
 	padding: 0
 }
@@ -140,47 +153,60 @@ td.feedzy-has-popup {
 .feedzy-onboarding-modal {
 	max-width: 350px;
 }
+
 .feedzy-onboarding-modal .components-modal__header {
 	text-align: center;
 }
+
 .feedzy-onboarding-modal .components-modal__header h1 {
 	width: 100%;
 }
+
 .feedzy-onboarding-modal .feedzy-onboarding-modal-content {
 	text-align: center;
 	margin: 10px 0 15px;
 }
+
 .feedzy-onboarding-modal .feedzy-onboarding-modal-action {
 	text-align: center;
 	margin: 10px 0;
 }
+
 .feedzy-onboarding-modal .feedzy-onboarding-modal-action .components-button {
 	padding: 2px 20px;
 	font-size: 14px;
 	margin-right: 10px;
 }
+
 .components-modal__screen-overlay {
 	background-color: rgba(0, 0, 0, 0.5);
 }
+
 .react-joyride__tooltip {
 	font-size: 13px !important;
 }
-.react-joyride__tooltip > div {
+
+.react-joyride__tooltip>div {
 	text-align: left !important;
 }
-.react-joyride__tooltip div:nth-of-type( 2) {
+
+.react-joyride__tooltip div:nth-of-type(2) {
 	margin-top: 5px !important;
 }
+
 .react-joyride__tooltip button {
 	text-decoration: underline;
 }
+
 .react-joyride__beacon span:first-child {
 	background-color: #4268CF !important;
 }
+
 .react-joyride__beacon span:last-child {
 	background-color: rgba(66, 104, 207, 0.4) !important;
 	border: 2px solid #4268CF !important;
 }
+
 .react-joyride__tooltip button[data-action="primary"] {
 	background: #4268cf !important;
 	border-color: #006a95 #00648c #00648c !important;
@@ -193,20 +219,25 @@ td.feedzy-has-popup {
 	line-height: 28px !important;
 	font-size: 14px !important;
 }
+
 .react-joyride__tooltip button[data-action="back"] {
 	color: #23282d !important;
 	font-size: 14px !important;
 }
+
 .react-notification-root .notification-container-bottom-left {
 	bottom: 40px;
 }
+
 .react-notification-root .notification-container-mobile-bottom {
 	bottom: 60px;
 }
+
 .feedzy-onboarding-modal-action .components-button.is-primary,
 .feedzy-onboarding-modal-action .components-button.is-primary:hover:not(:disabled) {
 	background: #4268cf;
 }
+
 .feedzy-onboarding-modal-action .components-button.is-secondary,
 .feedzy-onboarding-modal-action .components-button.is-secondary:hover:not(:disabled),
 .feedzy-onboarding-modal-action .components-button.is-tertiary:hover:not(:disabled) {
@@ -277,6 +308,11 @@ i.mce-i-feedzy-icon {
 #feedzy-rss-insert-dialog-title {
 	font-weight: 300;
 	text-align: center;
+}
+
+/* NOTE: It will also exclude the Black Friday notice. */
+.notice:not(.fz-notice):not(.themeisle-sale) {
+	display: none;
 }
 
 @media screen and (max-width: 782px) {
