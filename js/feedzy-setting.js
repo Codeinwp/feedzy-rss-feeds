@@ -98,6 +98,49 @@ jQuery(function ($) {
 		}
 	});
 
+	// License key.
+	jQuery('.fz-license-section #license_key').on('input', function () {
+		const licenseKey = jQuery(this).val();
+		if (licenseKey !== '') {
+			jQuery('#check_ti_license').removeAttr('disabled');
+		} else {
+			jQuery('#check_ti_license').attr('disabled', true);
+		}
+		jQuery('.fz-license-section input[name="license_key"]').val(licenseKey);
+	});
+
+	jQuery('.fz-license-section #check_ti_license').on('click', function (e) {
+		e.preventDefault();
+		const _this = jQuery(this);
+		_this.attr('disabled', true).addClass('fz-checking');
+
+		_this.parents('.fz-license-section').find('.feedzy-api-error').remove();
+
+		const LicenseData = _this
+			.parent('.fz-input-group-btn')
+			.find('input')
+			.serialize();
+
+		jQuery.post(
+			ajaxurl,
+			LicenseData,
+			function (response) {
+				if (!response.success) {
+					jQuery(
+						'<p class="feedzy-api-error">' +
+							response.message +
+							'</p>'
+					).insertAfter(
+						jQuery('.fz-license-section').find('.help-text')
+					);
+					_this.removeAttr('disabled').removeClass('fz-checking');
+				} else {
+					window.location.reload();
+				}
+			},
+			'json'
+		);
+	});
 	snackbarNotice();
 
 	const initializeAutoCatActions = () => {
