@@ -129,7 +129,7 @@
 										<div class="help-text">
 											<?php
 											echo wp_kses(
-												__( 'This image will be used for the <strong>imported posts</strong> if an image is not available in the source XML Feed.', 'feedzy-rss-feeds' ),
+												__( 'This image will be used for the <strong>imported posts</strong> and Feedzy Blocks if an image is not available in the source XML Feed.', 'feedzy-rss-feeds' ),
 												array(
 													'strong' => true,
 												)
