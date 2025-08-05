@@ -278,7 +278,13 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		if ( 'feedzy_page_feedzy-support' === $screen->base && ( ( isset( $_GET['tab'] ) && 'improve' === $_GET['tab'] ) || ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type ) ) ) {
+		if ( 'feedzy_page_feedzy-support' === $screen->base && 
+			( 
+				( isset( $_GET['tab'] ) && 'improve' === $_GET['tab'] )
+				|| ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type ) 
+				|| ( isset( $_GET['tab'] ) && 'license' === $_GET['tab'] )
+			) 
+		) {
 
 			$asset_file = include FEEDZY_ABSPATH . '/build/feedback/index.asset.php';
 			wp_enqueue_script( $this->plugin_name . '_feedback', FEEDZY_ABSURL . 'build/feedback/index.js', array_merge( $asset_file['dependencies'], array( 'wp-editor', 'wp-api', 'lodash' ) ), $asset_file['version'], true );
@@ -290,6 +296,20 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				array(
 					'assetsUrl'     => FEEDZY_ABSURL,
 					'pluginVersion' => $this->version,
+				)
+			);
+
+			wp_enqueue_script( $this->plugin_name . '_license', FEEDZY_ABSURL . 'js/feedzy-license.js', array( 'jquery' ), $this->version, true );
+
+			wp_localize_script(
+				$this->plugin_name . '_license',
+				'feedzyLicense',
+				array(
+					'l10n' => array(
+						'licenseKey' => __( 'License Key', 'feedzy-rss-feeds' ),
+						'checkBtn'   => __( 'Check License', 'feedzy-rss-feeds' ),
+						'errorMsg'   => __( 'An error occurred while checking the license. Please try again.', 'feedzy-rss-feeds' ),
+					),
 				)
 			);
 
@@ -966,7 +986,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			)
 		);
 
-		 if ( ! feedzy_is_pro() && get_option( 'feedzy_fresh_install', false ) ) {
+		if ( ! feedzy_is_pro() && get_option( 'feedzy_fresh_install', false ) ) {
 			$hook = add_submenu_page(
 				'feedzy-admin-menu',
 				__( 'Setup Wizard', 'feedzy-rss-feeds' ),
@@ -989,7 +1009,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			return;
 		}
 
-		if ( defined ( 'REVIVE_NETWORK_VERSION' ) && ! feedzy_is_pro() ) {
+		if ( defined( 'REVIVE_NETWORK_VERSION' ) && ! feedzy_is_pro() ) {
 			return;
 		}
 
