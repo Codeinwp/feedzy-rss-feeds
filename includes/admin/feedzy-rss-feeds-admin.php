@@ -278,14 +278,15 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		if ( 'feedzy_page_feedzy-support' === $screen->base && 
-			( 
-				( isset( $_GET['tab'] ) && 'improve' === $_GET['tab'] )
-				|| ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type ) 
-				|| ( isset( $_GET['tab'] ) && 'license' === $_GET['tab'] )
+		$tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
+
+		if ( 'feedzy_page_feedzy-support' === $screen->base &&
+			(
+				( 'improve' === $tab )
+				|| ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type )
+				|| ( 'license' === $tab )
 			) 
 		) {
-
 			$asset_file = include FEEDZY_ABSPATH . '/build/feedback/index.asset.php';
 			wp_enqueue_script( $this->plugin_name . '_feedback', FEEDZY_ABSURL . 'build/feedback/index.js', array_merge( $asset_file['dependencies'], array( 'wp-editor', 'wp-api', 'lodash' ) ), $asset_file['version'], true );
 			wp_enqueue_style( 'wp-block-editor' );
@@ -1003,7 +1004,12 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 	}
 
-	public function rss_to_social_menu() {
+	/**
+	 * Method to render the support page.
+	 *
+	 * @access  public
+	 */
+	public function rss_to_social_menu(): void {
 		$capability = feedzy_current_user_can();
 		if ( ! $capability ) {
 			return;
@@ -1044,8 +1050,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					),
 				)
 			);
-			
-			$submenu['feedzy-admin-menu'] = array_values( $submenu['feedzy-admin-menu'] );
 		}
 	}
 
