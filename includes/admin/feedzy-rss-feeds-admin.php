@@ -934,6 +934,17 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 		add_submenu_page(
 			'feedzy-admin-menu',
+			__( 'Dashboard', 'feedzy-rss-feeds' ),
+			__( 'Dashboard', 'feedzy-rss-feeds' ),
+			'manage_options',
+			'feedzy-support',
+			array(
+				$this,
+				'render_support',
+			)
+		);
+		add_submenu_page(
+			'feedzy-admin-menu',
 			__( 'Settings', 'feedzy-rss-feeds' ),
 			__( 'Settings', 'feedzy-rss-feeds' ),
 			'manage_options',
@@ -954,19 +965,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				'feedzy_integration_page',
 			)
 		);
-		add_submenu_page(
-			'feedzy-admin-menu',
-			__( 'Support', 'feedzy-rss-feeds' ),
-			__( 'Support', 'feedzy-rss-feeds' ) . '<span class="dashicons dashicons-editor-help more-features-icon" style="width: 17px; height: 17px; margin-left: 4px; color: #ffca54; font-size: 17px; vertical-align: -3px;"></span>',
-			'manage_options',
-			'feedzy-support',
-			array(
-				$this,
-				'render_support',
-			)
-		);
 
-		if ( ! feedzy_is_pro() && get_option( 'feedzy_fresh_install', false ) ) {
+		 if ( ! feedzy_is_pro() && get_option( 'feedzy_fresh_install', false ) ) {
 			$hook = add_submenu_page(
 				'feedzy-admin-menu',
 				__( 'Setup Wizard', 'feedzy-rss-feeds' ),
@@ -981,37 +981,51 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			add_action( "load-$hook", array( $this, 'feedzy_load_setup_wizard_page' ) );
 			add_action( 'adminmenu', array( $this, 'feedzy_hide_wizard_menu' ) );
 		}
-		if ( ! defined( 'REVIVE_NETWORK_VERSION' ) ) {
-			$rss_to_social = __( 'RSS to Social', 'feedzy-rss-feeds' ) . '<span id="feedzy-rn-menu" class="dashicons dashicons-external" style="font-size:initial;"></span>';
-			add_action(
-				'admin_footer',
-				function () {
-					?>
-					<script type="text/javascript">
-						jQuery(document).ready(function ($) {
-							$('#feedzy-rn-menu').parent().attr('target', '_blank');
-						});
-					</script>
-					<?php
-				}
-			);
+	}
 
-			global $submenu;
-			if ( isset( $submenu['feedzy-admin-menu'] ) ) {
+	public function rss_to_social_menu() {
+		$capability = feedzy_current_user_can();
+		if ( ! $capability ) {
+			return;
+		}
 
-				array_splice(
-					$submenu['feedzy-admin-menu'],
-					4,
-					0,
-					array(
-						array(
-							$rss_to_social,
-							'manage_options',
-							tsdk_utmify( 'https://revive.social/plugins/revive-network', 'feedzy-menu' ),
-						),
-					)
-				);
+		if ( defined ( 'REVIVE_NETWORK_VERSION' ) && ! feedzy_is_pro() ) {
+			return;
+		}
+
+		$rss_to_social = __( 'RSS to Social', 'feedzy-rss-feeds' ) . '<span id="feedzy-rn-menu" class="dashicons dashicons-external" style="font-size:initial;"></span>';
+		add_action(
+			'admin_footer',
+			function () {
+				?>
+				<script type="text/javascript">
+					jQuery(document).ready(function ($) {
+						$('#feedzy-rn-menu').parent().attr('target', '_blank');
+					});
+				</script>
+				<?php
 			}
+		);
+
+		global $submenu;
+		if ( isset( $submenu['feedzy-admin-menu'] ) ) {
+			if ( isset( $submenu['feedzy-admin-menu'][0] ) ) {
+				unset( $submenu['feedzy-admin-menu'][0] );
+			}
+			array_splice(
+				$submenu['feedzy-admin-menu'],
+				5,
+				0,
+				array(
+					array(
+						$rss_to_social,
+						'manage_options',
+						tsdk_utmify( 'https://revive.social/plugins/revive-network', 'feedzy-menu' ),
+					),
+				)
+			);
+			
+			$submenu['feedzy-admin-menu'] = array_values( $submenu['feedzy-admin-menu'] );
 		}
 	}
 
