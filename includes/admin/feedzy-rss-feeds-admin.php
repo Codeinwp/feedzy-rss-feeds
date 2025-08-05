@@ -206,6 +206,20 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					),
 				)
 			);
+
+			wp_enqueue_script( $this->plugin_name . '_license', FEEDZY_ABSURL . 'js/feedzy-license.js', array( 'jquery' ), $this->version, true );
+
+			wp_localize_script(
+				$this->plugin_name . '_license',
+				'feedzyLicense',
+				array(
+					'l10n' => array(
+						'licenseKey' => __( 'License Key', 'feedzy-rss-feeds' ),
+						'checkBtn'   => __( 'Check License', 'feedzy-rss-feeds' ),
+						'errorMsg'   => __( 'An error occurred while checking the license. Please try again.', 'feedzy-rss-feeds' ),
+					),
+				)
+			);
 		}
 
 		$upsell_screens = array( 'feedzy-rss_page_feedzy-settings', 'feedzy-rss_page_feedzy-admin-menu-pro-upsell' );
