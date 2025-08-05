@@ -25,6 +25,16 @@
 	} elseif ( 'amazon-product-advertising' === $active_tab ) {
 		$help_btn_url = 'https://docs.themeisle.com/article/1745-how-to-display-amazon-products-using-feedzy';
 	}
+
+	$logs                = array();
+	$logging_level       = isset( $settings['logging-level'] ) ? $settings['logging-level'] : 'error';
+	$email_error_address = isset( $settings['email-error-address'] ) ? $settings['email-error-address'] : '';
+	$email_error_enabled = isset( $settings['email-error-enabled'] ) ? $settings['email-error-enabled'] : 0;
+
+	if ( 'logs' === $active_tab ) {
+		$logs_type = isset( $_REQUEST['logs_type'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_REQUEST['logs_type'] ) ) ) : null;// phpcs:ignore WordPress.Security.NonceVerification
+		$logs      = Feedzy_Rss_Feeds_Log::get_instance()->get_recent_logs( 50, $logs_type );
+	}
 	?>
 	<?php if ( $this->notice ) { ?>
 		<div class="fz-snackbar-notice updated"><p><?php echo wp_kses_post( $this->notice ); ?></p></div>
@@ -60,6 +70,10 @@
 						<li>
 							<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=proxy' ) ); ?>"
 								class="<?php echo 'proxy' === $active_tab ? esc_attr( 'active' ) : ''; ?>"><?php esc_html_e( 'Proxy', 'feedzy-rss-feeds' ); ?></a>
+						</li>
+						<li>
+							<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=logs' ) ); ?>"
+								class="<?php echo 'proxy' === $active_tab ? esc_attr( 'active' ) : ''; ?>"><?php esc_html_e( 'Logs', 'feedzy-rss-feeds' ); ?></a>
 						</li>
 						<?php
 						$_tabs = apply_filters( 'feedzy_settings_tabs', array() );
@@ -255,6 +269,72 @@
 										<div class="help-text pt-8"><?php esc_html_e( 'Send data about plugin settings to measure the usage of the features. The data is private and not shared with third-party entities. Only plugin data is collected without sensitive information.', 'feedzy-rss-feeds' ); ?></div>
 									</div>
 								</div>
+								<div class="form-block">
+									<div class="fz-form-group">
+										<label class="form-label">
+											<?php esc_html_e( 'Logging Level', 'feedzy-rss-feeds' ); ?>
+										</label>
+										<select class="form-control fz-select-control" name="proxy-logging-mode">
+											<option
+												value="error"
+												<?php selected( 'error', $logging_level ); ?>
+											>
+												<?php esc_html_e( 'Error', 'feedzy-rss-feeds' ); ?>
+											</option>
+											<option
+												value="warning"
+												<?php selected( 'warning', $logging_level ); ?>
+											>
+												<?php esc_html_e( 'Warning', 'feedzy-rss-feeds' ); ?>
+											</option>
+											<option
+												value="info"
+												<?php selected( 'info', $logging_level ); ?>
+											>
+												<?php esc_html_e( 'Info', 'feedzy-rss-feeds' ); ?>
+											</option>
+											<option
+												value="debug"
+												<?php selected( 'debug', $logging_level ); ?>
+											>
+												<?php esc_html_e( 'Debug', 'feedzy-rss-feeds' ); ?>
+											</option>
+										</select>
+									</div>
+									<div class="form-block">
+										<div class="fz-form-group">
+											<div class="fz-form-switch pb-0">
+												<input
+													type="checkbox"
+													id="feedzy-email-error"
+													class="fz-switch-toggle"
+													name="feedzy-email-error"
+													value="1"
+													<?php checked( 1, $email_error_enabled ); ?>
+												/>
+												<label
+													for="feedzy-email-error"
+													class="form-label"
+												>
+													<?php esc_html_e( 'Report errors via email', 'feedzy-rss-feeds' ); ?>
+												</label>
+											</div>
+										</div>
+									</div>
+									<div class="form-block">
+										<div class="fz-form-group">
+											<label class="form-label fz-email-error-text">
+												<?php esc_html_e( 'Email address', 'feedzy-rss-feeds' ); ?>
+											</label>
+											<input
+												type="email"
+												class="form-control"
+												name="feedzy-email-error-address"
+												value="<?php echo esc_attr( $email_error_address ); ?>"
+											>
+										</div>
+									</div>
+								</div>
 							</div>
 							<?php
 							break;
@@ -353,10 +433,12 @@
 							</div>
 							<?php
 							break;
+						case 'logs':
+							$show_button = false;
+							break;
 						default:
 							$fields = apply_filters( 'feedzy_display_tab_settings', array(), $active_tab );
 							if ( $fields ) {
-
 								foreach ( $fields as $field ) {
 									echo wp_kses( $field['content'], apply_filters( 'feedzy_wp_kses_allowed_html', array() ) );
 									if ( isset( $field['ajax'] ) && $field['ajax'] ) {
@@ -383,6 +465,11 @@
 					?>
 				</form>
 
+				<?php
+				if ( 'logs' === $active_tab ) {
+					require_once FEEDZY_ABSPATH . '/includes/layouts/feedzy-logs-viewer.php';
+				}
+				?>
 			</div>
 		</div>
 
