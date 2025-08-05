@@ -10,7 +10,7 @@
 // phpcs:disable WordPress.Security.NonceVerification
 $page_title = __( 'Settings', 'feedzy-rss-feeds' );
 if ( isset( $_GET['page'] ) && 'feedzy-support' === $_GET['page'] ) {
-	$page_title = __( 'Support', 'feedzy-rss-feeds' );
+	$page_title = __( 'Dashboard', 'feedzy-rss-feeds' );
 } elseif ( isset( $_GET['page'] ) && 'feedzy-integration' === $_GET['page'] ) {
 	$page_title = __( 'Integration', 'feedzy-rss-feeds' );
 }

@@ -31,6 +31,20 @@
 							<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-support&tab=improve' ) ); ?>"
 								class="<?php echo 'improve' === $active_tab ? 'active' : ''; ?>"><?php esc_html_e( 'Help us improve!', 'feedzy-rss-feeds' ); ?></a>
 						</li>
+						<li>
+							<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings' ) ); ?>"
+								onclick="window.location.href='<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings' ) ); ?>'; return false;">
+								<?php esc_html_e( 'Settings', 'feedzy-rss-feeds' ); ?>
+								<span class="dashicons dashicons-external"></span>
+							</a>
+						</li>
+						<li>
+							<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-integration' ) ); ?>"
+								onclick="window.location.href='<?php echo esc_url( admin_url( 'admin.php?page=feedzy-integration' ) ); ?>'; return false;">
+								<?php esc_html_e( 'Integration', 'feedzy-rss-feeds' ); ?>
+								<span class="dashicons dashicons-external"></span>
+							</a>
+						</li>
 						<?php $support_tab_heading = apply_filters( 'feedzy_support_tab_heading', '', $active_tab ); ?>
 						<?php if ( ! empty( $support_tab_heading ) ) : ?>
 							<li>
