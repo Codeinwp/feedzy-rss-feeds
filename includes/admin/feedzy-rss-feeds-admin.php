@@ -130,8 +130,11 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	}
 	
 	/**
-	* Helper function to enqueue the license script with localization
-	*/
+	 * Helper function to enqueue the license script with localization
+	 *
+	 * @access  public
+	 * @return void
+	 */
 	private function enqueue_license_script() {
 		wp_enqueue_script( 
 			$this->plugin_name . '_license', 
