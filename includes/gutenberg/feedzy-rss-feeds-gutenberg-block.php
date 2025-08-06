@@ -75,6 +75,8 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 				'imagepath'             => esc_url( FEEDZY_ABSURL . 'img/' ),
 				'isPro'                 => feedzy_is_pro(),
 				'upsellLinkBlockEditor' => esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'keywordsfilter', 'blockeditor' ) ) ),
+				'nonce'                 => wp_create_nonce( FEEDZY_BASEFILE ),
+				'url'                   => admin_url( 'admin-ajax.php' ),
 			)
 		);
 

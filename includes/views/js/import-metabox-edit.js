@@ -120,7 +120,7 @@
 		if ( ! feedUrl ) {
 			return { success: false, message: window.feedzy.i10n.validation_messages.invalid_feed_url };
 		}
-		
+
 		try {
 			const response = await $.ajax({
 				url: window.feedzy.ajax.url,
@@ -131,7 +131,7 @@
 					feed_url: feedUrl
 				}
 			});
-			
+
 			return response;
 		} catch (error) {
 			return {

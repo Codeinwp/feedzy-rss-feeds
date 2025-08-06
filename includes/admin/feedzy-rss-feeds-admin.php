@@ -2528,52 +2528,52 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				wp_send_json_error( array( 'message' => __( 'Security check failed.', 'feedzy-rss-feeds' ) ) );
 			}
 
-			$feed_urls = isset($_POST['feed_url']) ? sanitize_text_field( wp_unslash( $_POST['feed_url'] ) ) : '';
+			$feed_urls = isset( $_POST['feed_url'] ) ? sanitize_text_field( wp_unslash( $_POST['feed_url'] ) ) : '';
 
-			if (empty($feed_urls)) {
-				wp_send_json_error(array('message' => __('Feed URL cannot be empty.', 'feedzy-rss-feeds')));
+			if ( empty( $feed_urls ) ) {
+				wp_send_json_error( array( 'message' => __( 'Feed URL cannot be empty.', 'feedzy-rss-feeds' ) ) );
 			}
 
-			$urls = array_map('trim', explode(',', $feed_urls));
-			$urls = array_filter($urls);
+			$urls = array_map( 'trim', explode( ',', $feed_urls ) );
+			$urls = array_filter( $urls );
 
-			if (empty($urls)) {
-				wp_send_json_error(array('message' => __('No valid URLs provided.', 'feedzy-rss-feeds')));
+			if ( empty( $urls ) ) {
+				wp_send_json_error( array( 'message' => __( 'No valid URLs provided.', 'feedzy-rss-feeds' ) ) );
 			}
 
 			$results = array();
 
-			foreach ($urls as $feed_url) {
-				$feed_url = esc_url_raw($feed_url);
+			foreach ( $urls as $feed_url ) {
+				$feed_url = esc_url_raw( $feed_url );
 
-				if (!filter_var($feed_url, FILTER_VALIDATE_URL)) {
+				if ( ! filter_var( $feed_url, FILTER_VALIDATE_URL ) ) {
 					$results[] = array(
-						'url' => $feed_url,
-						'status' => 'error',
-						'message' => __('Invalid URL format', 'feedzy-rss-feeds')
+						'url'     => $feed_url,
+						'status'  => 'error',
+						'message' => __( 'Invalid URL format', 'feedzy-rss-feeds' ),
 					);
 					continue;
 				}
 
-				$feed = $this->fetch_feed(array($feed_url), '1_mins', array());
+				$feed = $this->fetch_feed( array( $feed_url ), '1_mins', array() );
 
-				if ( is_wp_error($feed) ) {
+				if ( is_wp_error( $feed ) ) {
 					$results[] = array(
-						'url' => $feed_url,
-						'status' => 'error',
-						'message' => __( 'Error fetching feed: ', 'feedzy-rss-feeds') . $feed->get_error_message()
+						'url'     => $feed_url,
+						'status'  => 'error',
+						'message' => __( 'Error fetching feed: ', 'feedzy-rss-feeds' ) . $feed->get_error_message(),
 					);
 					continue;
 				}
 
 				if (
-					! is_object($feed) ||
-					! method_exists($feed, 'get_item_quantity')
+					! is_object( $feed ) ||
+					! method_exists( $feed, 'get_item_quantity' )
 				) {
 					$results[] = array(
-						'url' => $feed_url,
-						'status' => 'error',
-						'message' => __('Invalid feed object returned', 'feedzy-rss-feeds')
+						'url'     => $feed_url,
+						'status'  => 'error',
+						'message' => __( 'Invalid feed object returned', 'feedzy-rss-feeds' ),
 					);
 					continue;
 				}
@@ -2585,18 +2585,18 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 					if ( is_array( $error ) && ! empty( $error ) ) {
 						$results[] = array(
-							'url' => $feed_url,
-							'status' => 'error',
-							'message' => __( 'Error fetching feed: ', 'feedzy-rss-feeds') . implode(', ', $error ),
+							'url'     => $feed_url,
+							'status'  => 'error',
+							'message' => __( 'Error fetching feed: ', 'feedzy-rss-feeds' ) . implode( ', ', $error ),
 						);
 						continue;
 					}
 
 					if ( $items === 0 ) {
 						$results[] = array(
-							'url' => $feed_url,
-							'status' => 'warning',
-							'message' => __('Feed is empty', 'feedzy-rss-feeds')
+							'url'     => $feed_url,
+							'status'  => 'warning',
+							'message' => __( 'Feed is empty', 'feedzy-rss-feeds' ),
 						);
 						continue;
 					}
@@ -2605,34 +2605,41 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 						'url'     => $feed_url,
 						'status'  => 'success',
 						/* translators: %d is the number of items found in the feed */
-						'message' => $title . sprintf( _n(
-							'%d item found',
-							'%d items found',
-							$items,
-							'feedzy-rss-feeds'
-						), $items ),
+						'message' => $title . sprintf(
+							_n(
+								'%d item found',
+								'%d items found',
+								$items,
+								'feedzy-rss-feeds'
+							),
+							$items 
+						),
 						'items'   => $items,
-						'title'   => $title
+						'title'   => $title,
 					);
 
 				} catch ( Throwable $e ) {
 					$results[] = array(
-						'url' => $feed_url,
-						'status' => 'error',
+						'url'     => $feed_url,
+						'status'  => 'error',
 						/* translators: %s is the error message */
-						'message' => sprintf(__('Error reading feed: %s', 'feedzy-rss-feeds'), $e->getMessage())
+						'message' => sprintf( __( 'Error reading feed: %s', 'feedzy-rss-feeds' ), $e->getMessage() ),
 					);
 				}
 			}
 
-			wp_send_json_success(array(
-				'results' => $results
-			));
-		} catch (Throwable $e) {
-			wp_send_json_error(array(
-				/* translators: %s is the error message */
-				'message' => sprintf(__('An error occurred: %s', 'feedzy-rss-feeds'), $e->getMessage())
-			));
+			wp_send_json_success(
+				array(
+					'results' => $results,
+				)
+			);
+		} catch ( Throwable $e ) {
+			wp_send_json_error(
+				array(
+					/* translators: %s is the error message */
+					'message' => sprintf( __( 'An error occurred: %s', 'feedzy-rss-feeds' ), $e->getMessage() ),
+				)
+			);
 		}
 	}
 }

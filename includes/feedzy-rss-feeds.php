@@ -202,7 +202,7 @@ class Feedzy_Rss_Feeds {
 		self::$instance->loader->add_filter( 'admin_footer', self::$instance->admin, 'handle_upgrade_submenu' );
 		self::$instance->loader->add_action( 'current_screen', self::$instance->admin, 'handle_legacy' );
 		self::$instance->loader->add_action( 'init', self::$instance->admin, 'register_settings' );
-		self::$instance->loader->add_action( 'wp_ajax_feedzy_validate_feed', self::$instance->admin, 'validate_feed');
+		self::$instance->loader->add_action( 'wp_ajax_feedzy_validate_feed', self::$instance->admin, 'validate_feed' );
 
 		// do not load this with the loader as this will need a corresponding remove_filter also.
 		add_filter( 'update_post_metadata', array( self::$instance->admin, 'validate_category_feeds' ), 10, 5 );
