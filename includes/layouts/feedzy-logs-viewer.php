@@ -16,25 +16,43 @@ $log_types = array(
 	'critical' => __( 'Critical', 'feedzy-rss-feeds' ),
 );
 
+$file_size = Feedzy_Rss_Feeds_Log::get_instance()->get_log_file_size();
+if ( is_numeric( $file_size ) && $file_size > 0 ) {
+	$file_size = size_format( $file_size, 0 );
+}
+
 ?>
 <div class="fz-logs">
 	<div class="fz-logs-header">
-		<h3><?php esc_html_e( 'Recent Logs', 'feedzy-rss-feeds' ); ?></h3>
+		<div class="fz-logs-header-title">
+			<h3><?php esc_html_e( 'Recent Logs', 'feedzy-rss-feeds' ); ?></h3>
+			<a
+				target="_blank"
+				href="<?php echo esc_url( add_query_arg( '_wpnonce', wp_create_nonce( 'wp_rest' ), rest_url( '/feedzy/v1/logs/download' ) ) ); ?>"
+				class="btn btn-ghost"
+			>
+				<?php esc_html_e( 'Export', 'feedzy-rss-feeds' ); ?>
+				<span class="dashicons dashicons-download"></span>
+				<?php if ( $file_size ) : ?>
+					<span class="fz-log-file-size">(<?php echo esc_html( $file_size ); ?>)</span>
+				<?php endif; ?>
+			</a>
+		</div>
 		<div class="fz-logs-header-actions">
-			<a href="<?php echo esc_url( $all_filter_url ); ?>" class="button button-secondary<?php echo esc_attr( is_null( $logs_type ) ? ' disabled' : '' ); ?>">
+			<a href="<?php echo esc_url( $all_filter_url ); ?>" class="btn <?php echo esc_attr( is_null( $logs_type ) ? 'btn-primary' : 'btn-secondary' ); ?>">
 				<?php esc_html_e( 'All', 'feedzy-rss-feeds' ); ?>
 			</a>
-			<?php foreach ( $log_types as $type => $label ) : ?>
+			<?php foreach ( $log_types as $log_type => $label ) : ?>
 				<?php
 				$filter_url  = add_query_arg(
 					array(
-						'logs_type' => $type,
+						'logs_type' => $log_type,
 					),
 					$all_filter_url
 				);
-				$is_selected = $logs_type === strtoupper( $type );
+				$is_selected = strtoupper( $log_type ) === $logs_type;
 				?>
-				<a href="<?php echo esc_url( $filter_url ); ?>" class="button button-secondary<?php echo esc_attr( $is_selected ? ' disabled' : '' ); ?>">
+				<a href="<?php echo esc_url( $filter_url ); ?>" class="btn <?php echo esc_attr( $is_selected ? 'btn-primary' : 'btn-secondary' ); ?>">
 					<?php echo esc_html( $label ); ?>
 				</a>
 			<?php endforeach; ?>

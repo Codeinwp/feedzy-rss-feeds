@@ -527,6 +527,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				),
 			)
 		);
+
+		Feedzy_Rss_Feeds_Log::get_instance()->register_endpoints();
 	}
 
 	/**
@@ -904,12 +906,29 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! empty( $error ) ) {
 			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Error while parsing feed: %s', $error ), 'error', __FILE__, __LINE__ );
 
+			Feedzy_Rss_Feeds_Log::error(
+				sprintf( 'Error while parsing feed: %s', $error ),
+				array(
+					'feed_url' => $feed_url,
+					'cache'    => $cache,
+					'sc'       => $sc,
+				)
+			);
+
 			// curl: (60) SSL certificate problem: unable to get local issuer certificate.
 			if ( strpos( $error, 'SSL certificate' ) !== false ) {
-				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Got an SSL Error (%s), retrying by ignoring SSL', $error ), 'debug', __FILE__, __LINE__ );
+				Feedzy_Rss_Feeds_Log::error(
+					sprintf( 'Got an SSL Error (%s), retrying by ignoring SSL', $error ),
+					array(
+						'feed_url' => $feed_url,
+						'cache'    => $cache,
+						'sc'       => $sc,
+					)
+				);
 				$feed = $this->init_feed( $feed_url, $cache, $sc, false );
 			} elseif ( is_string( $feed_url ) || ( is_array( $feed_url ) && 1 === count( $feed_url ) ) ) {
 				do_action( 'themeisle_log_event', FEEDZY_NAME, 'Trying to use raw data', 'debug', __FILE__, __LINE__ );
+
 				$data = wp_remote_retrieve_body( wp_safe_remote_get( $feed_url, array( 'user-agent' => $default_agent ) ) );
 				$cloned_feed->set_raw_data( $data );
 				$cloned_feed->init();
