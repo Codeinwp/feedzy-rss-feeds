@@ -8,6 +8,7 @@ import {
 	Button,
 	Spinner,
 	Disabled,
+	Notice,
 } from '@wordpress/components';
 
 import queryString from 'query-string';
@@ -79,7 +80,7 @@ class Editor extends Component {
 			// reload: when the feed needs to be refetched
 			route: this.props.attributes.route,
 			loading: false,
-			error: false,
+			validationResults: [],
 		};
 	}
 
@@ -105,12 +106,76 @@ class Editor extends Component {
 		}
 	}
 
-	loadFeed() {
-		let url = this.props.attributes.feeds;
+	async loadFeed() {
+		const url = this.props.attributes.feeds;
 		if (url === undefined) {
 			return;
 		}
 
+		this.setState({
+			route: 'home',
+			loading: true,
+			validationResults: [],
+		});
+
+		try {
+			const formData = new FormData();
+			formData.append('action', 'feedzy_validate_feed');
+			formData.append('feed_url', url);
+			formData.append('nonce', window.feedzyjs?.nonce);
+
+			const validationResponse = await fetch(window.feedzyjs?.url, {
+				method: 'POST',
+				body: formData,
+			});
+
+			const validationData = await validationResponse.json();
+
+			if (validationData.success && validationData.data?.results) {
+				const results = validationData.data.results;
+
+				this.setState({
+					validationResults: results,
+					loading: false,
+				});
+
+				const hasErrors = results.some(
+					(result) => result.status === 'error'
+				);
+
+				if (!hasErrors) {
+					this.loadFeedData(url);
+				}
+			} else if (!validationData.success) {
+				this.setState({
+					validationResults: [
+						{
+							status: 'error',
+							message:
+								validationData.data?.message ||
+								__('Validation failed', 'feedzy-rss-feeds'),
+						},
+					],
+					loading: false,
+				});
+			}
+		} catch (error) {
+			this.setState({
+				validationResults: [
+					{
+						status: 'error',
+						message: __(
+							'Failed to validate feed. Please check your connection and try again.',
+							'feedzy-rss-feeds'
+						),
+					},
+				],
+				loading: false,
+			});
+		}
+	}
+
+	loadFeedData(url) {
 		if (inArray(url, this.props.attributes.categories)) {
 			const category = url;
 			url = queryString.stringify(
@@ -124,11 +189,6 @@ class Editor extends Component {
 				.filter((item) => item !== '');
 			url = queryString.stringify({ url }, { arrayFormat: 'bracket' });
 		}
-
-		this.setState({
-			route: 'home',
-			loading: true,
-		});
 
 		apiFetch({
 			path: `/feedzy/v1/feed?${url}`,
@@ -144,13 +204,24 @@ class Editor extends Component {
 					this.setState({
 						route: 'fetched',
 						loading: false,
+						validationResults: [],
 					});
 					return data;
 				}
 				this.setState({
 					route: 'home',
 					loading: false,
-					error: true,
+					validationResults: [
+						{
+							status: 'error',
+							message:
+								data.message ||
+								__(
+									'Feed URL is invalid or unreachable',
+									'feedzy-rss-feeds'
+								),
+						},
+					],
 				});
 				return data;
 			})
@@ -158,7 +229,15 @@ class Editor extends Component {
 				this.setState({
 					route: 'home',
 					loading: false,
-					error: true,
+					validationResults: [
+						{
+							status: 'error',
+							message: __(
+								'Error loading feed. Please check your feed URL and try again.',
+								'feedzy-rss-feeds'
+							),
+						},
+					],
 				});
 				return err;
 			});
@@ -249,6 +328,9 @@ class Editor extends Component {
 			featureValue: value,
 		});
 		this.props.setAttributes({ feeds: value });
+		this.setState({
+			validationResults: [],
+		});
 	}
 	onChangeMax(value) {
 		this.props.setAttributes({ max: !value ? 5 : Number(value) });
@@ -423,6 +505,35 @@ class Editor extends Component {
 		}
 	}
 
+	renderValidationResults() {
+		if (
+			!this.state.validationResults ||
+			this.state.validationResults.length === 0
+		) {
+			return null;
+		}
+
+		return (
+			<div className="feedzy-validation-results">
+				{this.state.validationResults.map((result, index) => (
+					<Notice
+						key={`result-${index}`}
+						status={result.status}
+						isDismissible={false}
+					>
+						{result.url && (
+							<>
+								<strong>{result.url}</strong>
+								<br />
+							</>
+						)}
+						{result.message}
+					</Notice>
+				))}
+			</div>
+		);
+	}
+
 	render() {
 		return (
 			<Fragment>
@@ -450,61 +561,68 @@ class Editor extends Component {
 									className="wp-block-embed is-loading"
 								>
 									<Spinner />
-									<p>{__('Fetching…', 'feedzy-rss-feeds')}</p>
-								</div>
-							) : (
-								<Fragment>
-									<div className="feedzy-source-wrap">
-										<TextControl
-											type="url"
-											className="feedzy-source"
-											placeholder={__(
-												'Enter URL or group of your feed here…',
-												'feedzy-rss-feeds'
-											)}
-											onChange={this.onChangeFeed}
-											onKeyUp={this.handleKeyUp}
-											value={this.props.attributes.feeds}
-										/>
-										{this.props.attributes.categories &&
-											this.props.attributes.categories
-												.length > 0 && (
-												// eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-												<span
-													className="dashicons dashicons-arrow-down-alt2"
-													onClick={
-														this
-															.feedzyCategoriesList
-													}
-												></span>
-											)}
-									</div>
-									<Button
-										isLarge
-										isPrimary
-										type="submit"
-										onClick={this.loadFeed}
-									>
-										{__('Load Feed', 'feedzy-rss-feeds')}
-									</Button>
-									<ExternalLink
-										href={this.getValidateURL()}
-										title={__(
-											'Validate Feed',
+									<p>
+										{__(
+											'Validating and fetching feed…',
 											'feedzy-rss-feeds'
 										)}
+									</p>
+								</div>
+							) : (
+								<div
+									style={{
+										display: 'flex',
+										flexDirection: 'column',
+									}}
+								>
+									<div
+										style={{
+											display: 'flex',
+											flexDirection: 'row',
+										}}
 									>
-										{__('Validate', 'feedzy-rss-feeds')}
-									</ExternalLink>
-
-									{this.state.error && (
-										<div>
+										<div className="feedzy-source-wrap">
+											<TextControl
+												type="url"
+												className="feedzy-source"
+												placeholder={__(
+													'Enter URL or group of your feed here…',
+													'feedzy-rss-feeds'
+												)}
+												onChange={this.onChangeFeed}
+												onKeyUp={this.handleKeyUp}
+												value={
+													this.props.attributes.feeds
+												}
+											/>
+											{this.props.attributes.categories &&
+												this.props.attributes.categories
+													.length > 0 && (
+													// eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+													<span
+														className="dashicons dashicons-arrow-down-alt2"
+														onClick={
+															this
+																.feedzyCategoriesList
+														}
+													></span>
+												)}
+										</div>
+										<Button
+											isLarge
+											isPrimary
+											type="submit"
+											onClick={this.loadFeed}
+										>
 											{__(
-												'Feed URL is invalid or unreachable by WordPress SimplePie and will NOT display items.',
+												'Load Feed',
 												'feedzy-rss-feeds'
 											)}
-										</div>
-									)}
+										</Button>
+									</div>
+
+									{this.renderValidationResults()}
+
 									<p>
 										{__(
 											"Enter the full URL of the feed source you wish to display here, or the name of a group you've created. Also you can add multiple URLs just separate them with a comma. You can manage your groups feed from",
@@ -521,7 +639,7 @@ class Editor extends Component {
 											{__('here', 'feedzy-rss-feeds')}
 										</a>
 									</p>
-								</Fragment>
+								</div>
 							)}
 						</Placeholder>
 					</div>
