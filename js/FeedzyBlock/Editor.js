@@ -118,6 +118,11 @@ class Editor extends Component {
 			validationResults: [],
 		});
 
+		if (inArray(url, this.props.attributes.categories)) {
+			this.loadFeedData(url);
+			return;
+		}
+
 		try {
 			const formData = new FormData();
 			formData.append('action', 'feedzy_validate_feed');
