@@ -2592,7 +2592,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 						continue;
 					}
 
-					if ( $items === 0 ) {
+					if ( 0 === $items ) {
 						$results[] = array(
 							'url'     => $feed_url,
 							'status'  => 'warning',
@@ -2604,8 +2604,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					$results[] = array(
 						'url'     => $feed_url,
 						'status'  => 'success',
-						/* translators: %d is the number of items found in the feed */
 						'message' => $title . sprintf(
+						/* translators: %d is the number of items found in the feed */
 							_n(
 								'%d item found',
 								'%d items found',
