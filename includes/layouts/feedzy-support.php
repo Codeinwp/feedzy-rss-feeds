@@ -39,14 +39,14 @@
 						</li>
 						<li>
 							<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings' ) ); ?>"
-								onclick="window.location.href='<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings' ) ); ?>'; return false;">
+								class="<?php echo 'settings' === $active_tab ? 'active' : ''; ?>">
 								<?php esc_html_e( 'Settings', 'feedzy-rss-feeds' ); ?>
 								<span class="dashicons dashicons-external"></span>
 							</a>
 						</li>
 						<li>
 							<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-integration' ) ); ?>"
-								onclick="window.location.href='<?php echo esc_url( admin_url( 'admin.php?page=feedzy-integration' ) ); ?>'; return false;">
+								class="<?php echo 'integration' === $active_tab ? 'active' : ''; ?>">
 								<?php esc_html_e( 'Integration', 'feedzy-rss-feeds' ); ?>
 								<span class="dashicons dashicons-external"></span>
 							</a>

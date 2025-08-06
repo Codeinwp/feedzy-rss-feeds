@@ -128,6 +128,31 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 		wp_register_style( $this->plugin_name, FEEDZY_ABSURL . 'css/feedzy-rss-feeds.css', array(), $this->version, 'all' );
 	}
+	
+	/**
+	* Helper function to enqueue the license script with localization
+	*/
+	private function enqueue_license_script() {
+		wp_enqueue_script( 
+			$this->plugin_name . '_license', 
+			FEEDZY_ABSURL . 'js/feedzy-license.js', 
+			array( 'jquery' ), 
+			$this->version, 
+			true 
+		);
+
+		wp_localize_script(
+			$this->plugin_name . '_license',
+			'feedzyLicense',
+			array(
+				'l10n' => array(
+					'licenseKey' => __( 'License Key', 'feedzy-rss-feeds' ),
+					'checkBtn'   => __( 'Check License', 'feedzy-rss-feeds' ),
+					'errorMsg'   => __( 'An error occurred while checking the license. Please try again.', 'feedzy-rss-feeds' ),
+				),
+			)
+		);
+	}
 
 	/**
 	 * Register the stylesheets for the admin area.
@@ -207,19 +232,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				)
 			);
 
-			wp_enqueue_script( $this->plugin_name . '_license', FEEDZY_ABSURL . 'js/feedzy-license.js', array( 'jquery' ), $this->version, true );
-
-			wp_localize_script(
-				$this->plugin_name . '_license',
-				'feedzyLicense',
-				array(
-					'l10n' => array(
-						'licenseKey' => __( 'License Key', 'feedzy-rss-feeds' ),
-						'checkBtn'   => __( 'Check License', 'feedzy-rss-feeds' ),
-						'errorMsg'   => __( 'An error occurred while checking the license. Please try again.', 'feedzy-rss-feeds' ),
-					),
-				)
-			);
+			$this->enqueue_license_script();
 		}
 
 		$upsell_screens = array( 'feedzy-rss_page_feedzy-settings', 'feedzy-rss_page_feedzy-admin-menu-pro-upsell' );
@@ -314,19 +327,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				)
 			);
 
-			wp_enqueue_script( $this->plugin_name . '_license', FEEDZY_ABSURL . 'js/feedzy-license.js', array( 'jquery' ), $this->version, true );
-
-			wp_localize_script(
-				$this->plugin_name . '_license',
-				'feedzyLicense',
-				array(
-					'l10n' => array(
-						'licenseKey' => __( 'License Key', 'feedzy-rss-feeds' ),
-						'checkBtn'   => __( 'Check License', 'feedzy-rss-feeds' ),
-						'errorMsg'   => __( 'An error occurred while checking the license. Please try again.', 'feedzy-rss-feeds' ),
-					),
-				)
-			);
+			$this->enqueue_license_script();
 
 			wp_set_script_translations( $this->plugin_name . '_feedback', 'feedzy-rss-feeds' );
 		}
@@ -1019,7 +1020,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	}
 
 	/**
-	 * Method to render the support page.
+	 * Handle the RSS to Social menu item.
 	 *
 	 * @access  public
 	 */
