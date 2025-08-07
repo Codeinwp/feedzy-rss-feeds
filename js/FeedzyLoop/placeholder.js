@@ -115,7 +115,7 @@ const BlockPlaceholder = ({ attributes, setAttributes, onSaveFeed }) => {
 		return (
 			<div
 				className="feedzy-validation-results"
-				style={{ 
+				style={{
 					display: 'flex',
 					flexDirection: 'column',
 					gap: '10px',
@@ -154,7 +154,8 @@ const BlockPlaceholder = ({ attributes, setAttributes, onSaveFeed }) => {
 						{isValidating
 							? __(
 									'Validating and fetching feed…',
-									'feedzy-rss-feeds')
+									'feedzy-rss-feeds'
+								)
 							: __('Loading…', 'feedzy-rss-feeds')}
 					</p>
 				</div>
@@ -195,11 +196,7 @@ const BlockPlaceholder = ({ attributes, setAttributes, onSaveFeed }) => {
 					</BaseControl>
 
 					<div>
-						<Button
-							variant="primary"
-							onClick={handleLoadFeed}
-							disabled={!attributes?.feed?.source}
-						>
+						<Button variant="primary" onClick={handleLoadFeed}>
 							{__('Load Feed', 'feedzy-rss-feeds')}
 						</Button>
 					</div>
