@@ -281,6 +281,9 @@ class Feedzy_Rss_Feeds {
 
 		$plugin_slug = FEEDZY_DIRNAME . '/' . basename( FEEDZY_BASEFILE );
 		$this->loader->add_filter( "plugin_action_links_$plugin_slug", self::$instance->admin, 'plugin_actions', 10, 2 );
+
+		( new Feedzy_Rss_Feeds_Task_Manager() )->register_actions(); 
+
 		if ( ! defined( 'TI_UNIT_TESTING' ) ) {
 			add_action(
 				'plugins_loaded',

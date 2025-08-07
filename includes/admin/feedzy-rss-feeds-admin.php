@@ -1336,8 +1336,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! empty( $settings['general'] ) ) {
 			update_option( 'feedzy_rss_feeds_logger_flag', $settings['general']['feedzy-telemetry'] ? 'yes' : false );
 		}
-
-		Feedzy_Rss_Feeds_Log::get_instance()->try_to_send_email_report();
 	}
 
 	/**
