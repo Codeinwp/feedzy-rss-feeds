@@ -2612,3 +2612,17 @@ li.draggable-item .components-panel__body-toggle.components-button{
 	color: #ffffff;
 	background: linear-gradient(135deg, #4268CF 0%, #3458BC 100%);
 }
+
+.feedzy_helper_notice {
+	margin: 15px 0;
+    padding: 16px;
+    background: #e8f4fd;
+    border-left: 4px solid #2271b1;
+}
+
+.feedzy_helper_notice_title {
+    color: #0073aa;
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 8px;
+}
