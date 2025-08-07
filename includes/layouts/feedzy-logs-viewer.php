@@ -9,11 +9,10 @@ $all_filter_url = admin_url( 'admin.php?page=feedzy-settings&tab=logs' );
 $logs_type = isset( $_REQUEST['logs_type'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_REQUEST['logs_type'] ) ) ) : null; // phpcs:ignore WordPress.Security.NonceVerification
 
 $log_types = array(
-	'debug'    => __( 'Debug', 'feedzy-rss-feeds' ),
-	'info'     => __( 'Info', 'feedzy-rss-feeds' ),
-	'warning'  => __( 'Warning', 'feedzy-rss-feeds' ),
-	'error'    => __( 'Error', 'feedzy-rss-feeds' ),
-	'critical' => __( 'Critical', 'feedzy-rss-feeds' ),
+	'debug'   => __( 'Debug', 'feedzy-rss-feeds' ),
+	'info'    => __( 'Info', 'feedzy-rss-feeds' ),
+	'warning' => __( 'Warning', 'feedzy-rss-feeds' ),
+	'error'   => __( 'Error', 'feedzy-rss-feeds' ),
 );
 
 $file_size = Feedzy_Rss_Feeds_Log::get_instance()->get_log_file_size();

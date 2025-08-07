@@ -49,11 +49,11 @@ class Feedzy_Rss_Feeds_Log {
 	const ERROR = 400;
 
 	/**
-	 * Critical level.
+	 * Ignore level.
 	 *
-	 * @var int Critical level.
+	 * @var int Ignore level.
 	 */
-	const CRITICAL = 500;
+	const NONE = 500;
 
 	/**
 	 * Log file name.
@@ -89,11 +89,10 @@ class Feedzy_Rss_Feeds_Log {
 	 * @var array<int, string> Log levels.
 	 */
 	private static $levels = array(
-		self::DEBUG    => 'DEBUG',
-		self::INFO     => 'INFO',
-		self::WARNING  => 'WARNING',
-		self::ERROR    => 'ERROR',
-		self::CRITICAL => 'CRITICAL',
+		self::DEBUG   => 'DEBUG',
+		self::INFO    => 'INFO',
+		self::WARNING => 'WARNING',
+		self::ERROR   => 'ERROR',
 	);
 
 	const PRIORITIES_MAPPING = array(
@@ -101,6 +100,7 @@ class Feedzy_Rss_Feeds_Log {
 		'info'    => self::INFO,
 		'warning' => self::WARNING,
 		'error'   => self::ERROR,
+		'none'    => self::NONE,
 	);
 
 	/**
@@ -137,6 +137,20 @@ class Feedzy_Rss_Feeds_Log {
 	 * @var int The minimum log level threshold.
 	 */
 	public $level_threshold = self::ERROR;
+
+	/**
+	 * Whether to retain error messages for import run errors meta.
+	 *
+	 * @var string[]
+	 */
+	private $error_messages_accumulator = array();
+
+	/**
+	 * Whether to retain error messages for import run errors meta.
+	 *
+	 * @var bool Whether to retain error messages.
+	 */
+	private $retain_error_messages = false;
 
 	/**
 	 * Whether email reports can be sent.
@@ -268,16 +282,19 @@ class Feedzy_Rss_Feeds_Log {
 	 * @return void
 	 */
 	private function write_log( $level, $message, array $context = array() ) {
+		if ( self::ERROR === $level ) {
+			$this->increment_log_stat( 'error_count' );
+			if ( $this->retain_error_messages ) {
+				$this->error_messages_accumulator[] = $message;
+			}
+		}
+		
 		if ( ! $this->filesystem ) {
 			return;
 		}
 
 		if ( $this->level_threshold > $level ) {
 			return;
-		}
-
-		if ( self::ERROR <= $level ) {
-			$this->increment_log_stat( 'error_count' );
 		}
 
 		$record = array(
@@ -353,18 +370,6 @@ class Feedzy_Rss_Feeds_Log {
 	 */
 	public static function error( $message, array $context = array() ) {
 		self::log( self::ERROR, $message, $context );
-	}
-
-	/**
-	 * Log a critical message.
-	 *
-	 * @since 5.1.0
-	 * @param string               $message The log message.
-	 * @param array<string, mixed> $context The log context.
-	 * @return void
-	 */
-	public static function critical( $message, array $context = array() ) {
-		self::log( self::CRITICAL, $message, $context );
 	}
 
 	/**
@@ -597,7 +602,7 @@ class Feedzy_Rss_Feeds_Log {
 	 * REST API endpoint to export logs.
 	 *
 	 * @since 5.1.0
-	 * @param WP_REST_Request $request The REST request.
+	 * @param WP_REST_Request<array<string, mixed>> $request The REST request.
 	 * @return WP_Error|void
 	 */
 	public function export_logs_endpoint( $request ) {
@@ -628,8 +633,8 @@ class Feedzy_Rss_Feeds_Log {
 	 * REST API endpoint to delete log file.
 	 *
 	 * @since 5.1.0
-	 * @param WP_REST_Request $request The REST request.
-	 * @return WP_Error|array
+	 * @param WP_REST_Request<array<string, mixed>> $request The REST request.
+	 * @return WP_Error|array<string, mixed>
 	 */
 	public function delete_log_file_endpoint( $request ) {
 		if ( ! $request instanceof WP_REST_Request ) {
@@ -802,5 +807,33 @@ class Feedzy_Rss_Feeds_Log {
 		$upload_dir = wp_upload_dir();
 		$log_dir    = $upload_dir['basedir'] . '/feedzy-logs';
 		return $log_dir . '/' . self::FILE_NAME . self::FILE_EXT;
+	}
+
+	/**
+	 * Enable retention of error messages.
+	 * 
+	 * @return void
+	 */
+	public function enable_error_messages_retention() {
+		$this->retain_error_messages = true;
+	}
+
+	/**
+	 * Disable retention of error messages.
+	 * 
+	 * @return void
+	 */
+	public function disable_error_messages_retention() {
+		$this->retain_error_messages      = false;
+		$this->error_messages_accumulator = array();
+	}
+
+	/**
+	 * Get the accumulated error messages.
+	 * 
+	 * @return string[]
+	 */
+	public function get_error_messages_accumulator() {
+		return $this->error_messages_accumulator;
 	}
 }
