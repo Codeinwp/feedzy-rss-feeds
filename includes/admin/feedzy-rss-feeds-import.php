@@ -197,11 +197,11 @@ class Feedzy_Rss_Feeds_Import {
 	/**
 	 * Add attributes to $item_array.
 	 *
-	 * @param array  $item_array The item attributes array.
-	 * @param object $item The feed item.
-	 * @param array  $sc The shortcode attributes array.
-	 * @param int    $index The item number.
-	 * @param int    $item_index The real index of this item in the feed.
+	 * @param array          $item_array The item attributes array.
+	 * @param SimplePie\Item $item The feed item.
+	 * @param array          $sc The shortcode attributes array.
+	 * @param int            $index The item number.
+	 * @param int            $item_index The real index of this item in the feed.
 	 * @return mixed
 	 * @since 1.0.0
 	 * @access public
@@ -216,17 +216,84 @@ class Feedzy_Rss_Feeds_Import {
 		$item_array['item']       = $item;
 		$item_array['item_index'] = $item_index;
 
+		$item_array = $this->handle_youtube_content( $item_array, $item, $sc );
+
+		return $item_array;
+	}
+
+	/**
+	 * Fetches additional information for each item.
+	 *
+	 * @param array<string, string > $item_array The item attributes array.
+	 * @param SimplePie\Item         $item The feed item.
+	 * @param array<string, mixed>   $sc The shortcode attributes array. This will be empty through the block editor.
+	 * 
+	 * @return array<string, string>
+	 */
+	private function handle_youtube_content( $item_array, $item, $sc ) {
+		$url = '';
+		if ( array_key_exists( 'item_url', $item_array ) ) {
+			$url = $item_array['item_url'];
+		} elseif ( $item ) {
+			$url = $item->get_permalink();
+		}
+
+		if ( empty( $url ) ) {
+			return $item_array;
+		}
+
+		$host = wp_parse_url( $url, PHP_URL_HOST );
+
+		// Remove all dots in the hostname so that shortforms such as youtu.be can also be resolved.
+		$host = str_replace( array( '.', 'www' ), '', $host );
+		
+		if ( ! in_array( $host, array( 'youtubecom', 'youtube' ), true ) ) {
+			// Not a YouTube link, return the item array as is.
+			return $item_array;
+		}
+
+		$tags = $item->get_item_tags( \SimplePie\SimplePie::NAMESPACE_MEDIARSS, 'group' );
+		$desc = '';
+		if ( $tags ) {
+			$desc_tag = $tags[0]['child'][ \SimplePie\SimplePie::NAMESPACE_MEDIARSS ]['description'];
+			if ( $desc_tag ) {
+				$desc = $desc_tag[0]['data'];
+			}
+		}
+
+		if ( ! empty( $desc ) ) {
+			if ( empty( $item_array['item_content'] ) ) {
+				$item_array['item_content'] = $desc;
+			}
+
+			if (
+				( empty( $sc ) || 'yes' === $sc['summary'] ) &&
+				empty( $item_array['item_description'] )
+			) {
+				if (
+					is_numeric( $sc['summarylength'] ) &&
+					strlen( $desc ) > $sc['summarylength']
+				) {
+					$desc = preg_replace( '/\s+?(\S+)?$/', '', substr( $desc, 0, $sc['summarylength'] ) ) . ' [&hellip;]';
+				}
+				$item_array['item_description'] = $desc;
+			}
+		}
+
+		$embed_video_shortcode      = '[embed]' . $url . '[/embed]';
+		$should_overwrite           = str_contains( $item_array['item_content'], 'Post Content' );
+		$item_array['item_content'] = ( $should_overwrite ? '' : $item_array['item_content'] ) . $embed_video_shortcode;
+		
 		return $item_array;
 	}
 
 	/**
 	 * Retrieve the categories.
 	 *
-	 * @param string $dumb The initial categories (only a placeholder argument for the filter).
-	 * @param object $item The feed item.
+	 * @param string         $dumb The initial categories (only a placeholder argument for the filter).
+	 * @param SimplePie\Item $item The feed item.
 	 *
 	 * @return string
-	 * @since   ?
 	 * @access  public
 	 */
 	public function retrieve_categories( $dumb, $item ) {
@@ -234,11 +301,7 @@ class Feedzy_Rss_Feeds_Import {
 		$categories = $item->get_categories();
 		if ( $categories ) {
 			foreach ( $categories as $category ) {
-				if ( is_string( $category ) ) {
-					$cats[] = $category;
-				} else {
-					$cats[] = $category->get_label();
-				}
+				$cats[] = $category->get_label();
 			}
 		}
 
