@@ -104,7 +104,6 @@ const BlockPlaceholder = ({ attributes, setAttributes, onSaveFeed }) => {
 
 	const handleFeedChange = (value) => {
 		setAttributes({ feed: value });
-		setValidationResults([]);
 	};
 
 	const renderValidationResults = () => {
@@ -196,7 +195,7 @@ const BlockPlaceholder = ({ attributes, setAttributes, onSaveFeed }) => {
 					</BaseControl>
 
 					<div>
-						<Button variant="primary" onClick={handleLoadFeed}>
+						<Button variant="primary" onClick={() => handleLoadFeed()}>
 							{__('Load Feed', 'feedzy-rss-feeds')}
 						</Button>
 					</div>
