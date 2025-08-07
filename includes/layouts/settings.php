@@ -272,7 +272,7 @@
 												'feedzy-rss-feeds' 
 											);
 										?>
-										<a href="<?php echo esc_url( $help_btn_url ); ?>" target="_blank" style="text-decoration: underline; color: #2271b1;">
+										<a href="<?php echo esc_url( $help_btn_url ); ?>" target="_blank">
 											<?php esc_html_e( 'Learn more about headers here.', 'feedzy-rss-feeds' ); ?>
 										</a>
 									</p>
@@ -301,7 +301,7 @@
 									</p>
 									<p style="font-size: 14px">
 										<?php esc_html_e( 'Use a proxy to bypass firewalls, geographic restrictions, or IP blocks from feed sources. This ensures you can reliably access restricted RSS feeds.', 'feedzy-rss-feeds' ); ?>
-										<a href="<?php echo esc_url( $help_btn_url ); ?>" target="_blank" style="text-decoration: underline; color: #2271b1;">
+										<a href="<?php echo esc_url( $help_btn_url ); ?>" target="_blank" >
 											<?php esc_html_e( 'View proxy setup guide', 'feedzy-rss-feeds' ); ?>
 										</a>
 									</p>
