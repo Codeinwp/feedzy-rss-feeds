@@ -96,7 +96,7 @@ class Inspector extends Component {
 							</span>
 						</Button>
 					</PanelBody>
-					{'content' === this.state.tab && (
+					<div style={{ display: 'content' === this.state.tab ? 'block' : 'none' }}>
 						<Fragment>
 							<PanelBody
 								title={__('Feed Source', 'feedzy-rss-feeds')}
@@ -485,10 +485,11 @@ class Inspector extends Component {
 								/>
 							</PanelBody>
 						</Fragment>
-					)}
+					</div>
 
-					{'fetched' === this.props.state.route &&
-						'style' === this.state.tab && (
+					<div style={{ 
+					display: 'fetched' === this.props.state.route &&
+						'style' === this.state.tab ? 'block' : 'none' }}>
 							<Fragment>
 								<PanelBody
 									title={__(
@@ -785,9 +786,13 @@ class Inspector extends Component {
 									/>
 								</PanelBody>
 							</Fragment>
-						)}
-					{'fetched' === this.props.state.route &&
-						'advanced' === this.state.tab && (
+						
+					</div>
+					
+					<div style={{ 
+						display: 'fetched' === this.props.state.route && 
+								'advanced' === this.state.tab ? 'block' : 'none' 
+					}}>
 							<Fragment>
 								<PanelBody
 									title={__(
@@ -1068,7 +1073,7 @@ class Inspector extends Component {
 									/>
 								</PanelBody>
 							</Fragment>
-						)}
+					</div>
 				</InspectorControls>
 			</Fragment>
 		);
