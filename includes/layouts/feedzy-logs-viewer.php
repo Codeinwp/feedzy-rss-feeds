@@ -21,6 +21,8 @@ if ( is_numeric( $file_size ) && $file_size > 0 ) {
 	$file_size = size_format( $file_size, 0 );
 }
 
+$logs_entries = isset( $logs ) && is_array( $logs ) ? $logs : array();
+
 ?>
 <div class="fz-logs">
 	<div class="fz-logs-header">
@@ -61,12 +63,18 @@ if ( is_numeric( $file_size ) && $file_size > 0 ) {
 	<div class="fz-logs-view">
 		<?php
 		
-		if ( ! isset( $logs ) || empty( $logs ) ) {
+		if ( is_wp_error( $logs ) ) {
+			printf(
+				'<p>%$1s(%2$s)</p>',
+				esc_html__( 'An error occurred while fetching logs.', 'feedzy-rss-feeds' ),
+				esc_html( $logs->get_error_message() )
+			);
+		} elseif ( empty( $logs_entries ) ) {
 			echo '<p>' . esc_html__( 'No logs found.', 'feedzy-rss-feeds' ) . '</p>';
 			$logs = array();
 		}
 
-		foreach ( $logs as $log ) :
+		foreach ( $logs_entries as $log ) :
 			?>
 			<?php
 				$level = isset( $log['level'] ) ? $log['level'] : '';
