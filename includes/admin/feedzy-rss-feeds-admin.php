@@ -962,6 +962,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @since   3.0.12
 	 * @access  public
+	 * @return  void
 	 */
 	public function feedzy_menu_pages() {
 		$capability = feedzy_current_user_can();
@@ -1026,8 +1027,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * Handle the RSS to Social menu item.
 	 *
 	 * @access  public
+	 * @return  void
 	 */
-	public function rss_to_social_menu(): void {
+	public function rss_to_social_menu() {
 		$capability = feedzy_current_user_can();
 		if ( ! $capability ) {
 			return;
