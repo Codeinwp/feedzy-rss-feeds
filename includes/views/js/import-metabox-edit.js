@@ -1290,13 +1290,25 @@
 			'change',
 			function () {
 				const selectedValue = $(this).val();
+				const thumbnailValue = $('input[name="feedzy_meta_data[default_thumbnail_id]"]').val();
+				const hasImagePreview = $('#custom-fallback-section .feedzy-media-preview').length > 0;
+				const hasThumbnails = (thumbnailValue && thumbnailValue !== '' && thumbnailValue !== '0') || hasImagePreview;
 
 				if (selectedValue === 'custom') {
 					$('#custom-fallback-section').show();
 					$('#general-fallback-preview').hide();
-				} else {
+					
+					if (hasThumbnails) {
+						$('.feedzy-open-media').html(feedzy.i10n.action_btn_text_2);
+						$('.feedzy-remove-media').addClass('is-show');
+					} else {
+						$('.feedzy-open-media').html(feedzy.i10n.action_btn_text_1);
+						$('.feedzy-remove-media').removeClass('is-show');
+					}
+				} else if (selectedValue === 'general') {
 					$('#custom-fallback-section').hide();
 					$('#general-fallback-preview').show();
+					$('input[name="feedzy_meta_data[default_thumbnail_id]"]').val('');
 				}
 			}
 		);
