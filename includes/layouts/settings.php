@@ -68,20 +68,36 @@
 				<div class="fz-tabs-menu">
 					<ul>
 						<li>
-							<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=general' ) ); ?>"
-								class="<?php echo 'general' === $active_tab ? esc_attr( 'active' ) : ''; ?>"><?php esc_html_e( 'General', 'feedzy-rss-feeds' ); ?></a>
+							<a
+								href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=general' ) ); ?>"
+								class="<?php echo 'general' === $active_tab ? esc_attr( 'active' ) : ''; ?>"
+							>
+								<?php esc_html_e( 'General', 'feedzy-rss-feeds' ); ?>
+							</a>
 						</li>
 						<li>
-							<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=headers' ) ); ?>"
-								class="<?php echo 'headers' === $active_tab ? esc_attr( 'active' ) : ''; ?>"><?php esc_html_e( 'Headers', 'feedzy-rss-feeds' ); ?></a>
+							<a
+								href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=headers' ) ); ?>"
+								class="<?php echo 'headers' === $active_tab ? esc_attr( 'active' ) : ''; ?>"
+							>
+								<?php esc_html_e( 'Headers', 'feedzy-rss-feeds' ); ?>
+							</a>
 						</li>
 						<li>
-							<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=proxy' ) ); ?>"
-								class="<?php echo 'proxy' === $active_tab ? esc_attr( 'active' ) : ''; ?>"><?php esc_html_e( 'Proxy', 'feedzy-rss-feeds' ); ?></a>
+							<a
+								href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=proxy' ) ); ?>"
+								class="<?php echo 'proxy' === $active_tab ? esc_attr( 'active' ) : ''; ?>"
+							>
+								<?php esc_html_e( 'Proxy', 'feedzy-rss-feeds' ); ?>
+							</a>
 						</li>
 						<li>
-							<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=logs' ) ); ?>"
-								class="<?php echo 'proxy' === $active_tab ? esc_attr( 'active' ) : ''; ?>"><?php esc_html_e( 'Logs', 'feedzy-rss-feeds' ); ?></a>
+							<a
+								href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=logs' ) ); ?>"
+								class="<?php echo 'logs' === $active_tab ? esc_attr( 'active' ) : ''; ?>"
+							>
+								<?php esc_html_e( 'Logs', 'feedzy-rss-feeds' ); ?>
+							</a>
 						</li>
 						<?php
 						$_tabs = apply_filters( 'feedzy_settings_tabs', array() );
@@ -89,8 +105,12 @@
 							foreach ( $_tabs as $_tab => $label ) {
 								?>
 								<li>
-									<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=' . $_tab ) ); ?>"
-									class="<?php echo $_tab === $active_tab ? esc_attr( 'active' ) : ''; ?>"><?php echo wp_kses_post( $label ); ?></a>
+									<a
+										href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=' . $_tab ) ); ?>"
+										class="<?php echo $_tab === $active_tab ? esc_attr( 'active' ) : ''; ?>"
+									>
+										<?php echo wp_kses_post( $label ); ?>
+									</a>
 								</li>
 								<?php
 							}
@@ -273,6 +293,12 @@
 											<?php esc_html_e( 'Logging Level', 'feedzy-rss-feeds' ); ?>
 										</label>
 										<select class="form-control fz-select-control" name="logs-logging-level">
+											<option
+												value="none"
+												<?php selected( 'none', $logging_level ); ?>
+											>
+												<?php esc_html_e( 'None', 'feedzy-rss-feeds' ); ?>
+											</option>
 											<option
 												value="error"
 												<?php selected( 'error', $logging_level ); ?>

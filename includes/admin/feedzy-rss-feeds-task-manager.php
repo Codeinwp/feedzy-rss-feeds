@@ -78,17 +78,17 @@ class Feedzy_Rss_Feeds_Task_Manager {
 	 * Send error report email.
 	 *
 	 * @since 5.1.0
-	 * @return bool Whether the email was sent successfully.
+	 * @return void.
 	 */
 	public function send_error_report() {
 		$log_instance = Feedzy_Rss_Feeds_Log::get_instance();
 		
 		if ( ! $log_instance->can_send_email() ) {
-			return false;
+			return;
 		}
 
 		if ( ! $log_instance->has_reportable_data() ) {
-			return false;
+			return;
 		}
 
 		$logs_entries = $log_instance->get_error_logs_for_email( 50 );
@@ -100,21 +100,17 @@ class Feedzy_Rss_Feeds_Task_Manager {
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 
         // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_mail_wp_mail
-		$email_send = wp_mail( $log_instance->get_email_address(), $subject, $message, $headers );
-
-		if ( $email_send ) {
+		if ( wp_mail( $log_instance->get_email_address(), $subject, $message, $headers ) ) {
 			$log_instance->reset_log_stats();
 		}
-
-		return $email_send;
 	}
 
 	/**
 	 * Get the email report content using the layout template.
 	 *
 	 * @since 5.1.0
-	 * @param array $logs_entries The log entries to include in the report.
-	 * @param array $stats The log statistics.
+	 * @param array<int, array<string, mixed>> $logs_entries The log entries to include in the report.
+	 * @param array<string, mixed>             $stats The log statistics.
 	 * @return string The rendered email content.
 	 */
 	private function get_email_report_content( $logs_entries, $stats ) {

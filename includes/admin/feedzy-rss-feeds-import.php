@@ -161,11 +161,20 @@ class Feedzy_Rss_Feeds_Import {
 				$this->plugin_name . '_metabox_edit_script',
 				'feedzy',
 				array(
-					'ajax' => array(
+					'ajax'  => array(
 						'security' => wp_create_nonce( FEEDZY_BASEFILE ),
 						'url'      => admin_url( 'admin-ajax.php' ),
 					),
-					'i10n' => array(
+					'pages' => array(
+						'logs' => add_query_arg(
+							array(
+								'page' => 'feedzy-settings',
+								'tab'  => 'logs',
+							),
+							admin_url( 'admin.php' )
+						),
+					),
+					'i10n'  => array(
 						'importing'           => __( 'Importing', 'feedzy-rss-feeds' ) . '...',
 						'run_now'             => __( 'Run Now', 'feedzy-rss-feeds' ),
 						'dry_run_loading'     => '<p class="hide-when-loaded">' . __( 'Processing the source and loading the items that will be imported when it runs', 'feedzy-rss-feeds' ) . '...</p>'
@@ -179,6 +188,7 @@ class Feedzy_Rss_Feeds_Import {
 						'action_btn_text_2'   => __( 'Replace image', 'feedzy-rss-feeds' ),
 						'author_helper'       => __( 'We display up to 100 users. If the desired username isn’t listed, type the exact existing username manually to save it.', 'feedzy-rss-feeds' ),
 						'clearLogButton'      => __( 'Clear Log', 'feedzy-rss-feeds' ),
+						'goToLogsTab'         => __( 'See more details', 'feedzy-rss-feeds' ),
 						'okButton'            => __( 'Ok', 'feedzy-rss-feeds' ),
 						'removeErrorLogsMsg'  => __( 'Removed all error logs.', 'feedzy-rss-feeds' ),
 						// translators: %d select images count.
@@ -1532,6 +1542,7 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	private function run_job( $job, $max ) {
 		Feedzy_Rss_Feeds_Usage::get_instance()->track_rss_import();
+		Feedzy_Rss_Feeds_Log::get_instance()->enable_error_messages_retention();
 
 		global $themeisle_log_event;
 		$source                   = get_post_meta( $job->ID, 'source', true );
@@ -1708,24 +1719,32 @@ class Feedzy_Rss_Feeds_Import {
 		$import_info   = array();
 		$results       = $this->get_job_feed( $options, $import_content, true );
 		$language_code = $results['feed']->get_language();
-
+		
 		$xml_results = '';
 		if ( str_contains( $import_content, '_full_content' ) ) {
 			$xml_results = $this->get_job_feed( $options, '[#item_content]', true );
 		}
-
+		
 		if ( is_wp_error( $results ) ) {
-			$import_errors[] = $results->get_error_message();
-			update_post_meta( $job->ID, 'import_errors', $import_errors );
-			update_post_meta( $job->ID, 'imported_items_count', 0 );
-
+			// BUG: If $results is error, the import run details will not show the results even if the errors are set.
 			Feedzy_Rss_Feeds_Log::error(
-				'Error while fetching feed: ' . $options['feeds'],
+				sprintf(
+					// translators: %s is the error message.
+					__( 'Error when fetching the feed items: %s', 'feedzy-rss-feeds' ),
+					$results->get_error_message()
+				),
 				array(
-					'job_id' => $job->ID,
-					'error'  => $results->get_error_message(),
+					'job_id'  => $job->ID,
+					'errors'  => $results->get_error_messages(),
+					'options' => $options,
 				)
 			);
+
+			$import_errors = Feedzy_Rss_Feeds_Log::get_instance()->get_error_messages_accumulator();
+			Feedzy_Rss_Feeds_Log::get_instance()->disable_error_messages_retention();
+
+			update_post_meta( $job->ID, 'import_errors', $import_errors );
+			update_post_meta( $job->ID, 'imported_items_count', 0 );
 
 			return 0;
 		}
@@ -1765,9 +1784,11 @@ class Feedzy_Rss_Feeds_Import {
 		$duplicates       = array();
 		$items_found      = array();
 		$found_duplicates = array();
+		$result_count     = count( $result );
+
 		foreach ( $result as $key => $item ) {
 			Feedzy_Rss_Feeds_Log::debug(
-				sprintf( 'Processing item: %1$s', $key ),
+				sprintf( 'Processing item %1$s/%2$s', $key, $result_count ),
 				array(
 					'item_url' => $item['item_url'],
 				)
@@ -1848,11 +1869,16 @@ class Feedzy_Rss_Feeds_Import {
 						$author = $item['item_author']->get_email();
 					}
 				}
+
+				Feedzy_Rss_Feeds_Log::debug(
+					sprintf( 'Found author: %s', $author ),
+					array(
+						'item_author' => $item['item_author'],
+						'item_url'    => $item['item_url'],
+					)
+				);
 			}
 
-			Feedzy_Rss_Feeds_Log::debug(
-				sprintf( 'Author for item %1$s is %2$s', $item['item_url'], $author )
-			);
 
 			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 			$item_date = wp_date( get_option( 'date_format' ) . ' at ' . get_option( 'time_format' ), $item['item_date'] );
@@ -2000,6 +2026,10 @@ class Feedzy_Rss_Feeds_Import {
 					)
 				);
 			}
+
+			Feedzy_Rss_Feeds_Log::error(
+				'Check error reported. Remove on done'
+			);
 
 			// Used as a new line character in import content.
 			$import_content = rawurldecode( $import_content );
@@ -2177,10 +2207,9 @@ class Feedzy_Rss_Feeds_Import {
 			// no point creating a post if either the title or the content is null.
 			if ( is_null( $post_title ) || is_null( $post_content ) ) {
 				++$index;
-				$import_errors[] = __( 'Title or Content is empty.', 'feedzy-rss-feeds' );
 
 				Feedzy_Rss_Feeds_Log::error(
-					'Could not create post because title or content is empty after processing.',
+					__( 'Title or Content is empty.', 'feedzy-rss-feeds' ),
 					array(
 						'job_id'   => $job->ID,
 						'new_post' => $new_post,
@@ -2214,6 +2243,7 @@ class Feedzy_Rss_Feeds_Import {
 						)
 					);
 				} elseif ( strpos( $feed_img_tag, '[#item_custom' ) !== false ) {
+					$value = '';
 					if ( $this->feedzy_is_business() || $this->feedzy_is_personal() ) {
 						$value = apply_filters( 'feedzy_parse_custom_tags', $feed_img_tag, $item_obj );
 					}
@@ -2241,7 +2271,7 @@ class Feedzy_Rss_Feeds_Import {
 				}
 
 				if ( ! empty( $image_source_url ) ) {
-					$img_success = $this->try_save_featured_image( $image_source_url, 0, $img_title, $import_errors, $import_info, $new_post );
+					$img_success = $this->try_save_featured_image( $image_source_url, 0, $img_title, $import_info, $new_post );
 					$new_post_id = $img_success;
 
 					Feedzy_Rss_Feeds_Log::debug(
@@ -2273,30 +2303,30 @@ class Feedzy_Rss_Feeds_Import {
 			}
 
 			if ( 0 === $new_post_id || is_wp_error( $new_post_id ) ) {
-				$error_reason = 'N/A';
 				if ( is_wp_error( $new_post_id ) ) {
-					$error_reason = $new_post_id->get_error_message();
-					if ( ! empty( $error_reason ) ) {
-						$import_errors[] = $error_reason;
-					}
+					Feedzy_Rss_Feeds_Log::error(
+						sprintf(
+							// translators: %1$s is the item URL, %2$s is the error message.
+							'Error while inserting post for %1$s: %2$s',
+							esc_url( $item['item_url'] ),
+							$new_post_id->get_error_message()
+						),
+						array(
+							'job_id'   => $job->ID,
+							'new_post' => $new_post,
+						)
+					);
 				}
 
 				++$index;
-
-				Feedzy_Rss_Feeds_Log::error(
-					sprintf( 'Could not create post for item %1$s with error: %2$s', $item['item_url'], $error_reason ),
-					array(
-						'job_id'    => $job->ID,
-						'post_data' => $new_post,
-					)
-				);
 				continue;
 			}
 
 			Feedzy_Rss_Feeds_Log::info(
-				'Created a new post with ID: ' . $new_post_id,
+				'Created a new post: ' . $new_post['post_title'],
 				array(
-					'job_id' => $job->ID,
+					'job_id'  => $job->ID,
+					'post_id' => $new_post_id,
 				)
 			);
 
@@ -2372,7 +2402,7 @@ class Feedzy_Rss_Feeds_Import {
 				$job,
 				$item_obj,
 				$new_post_id,
-				$import_errors,
+				Feedzy_Rss_Feeds_Log::get_instance()->get_error_messages_accumulator(),
 				$import_info,
 				array(
 					'translation_lang' => $import_translation_lang,
@@ -2397,7 +2427,7 @@ class Feedzy_Rss_Feeds_Import {
 					}
 
 					Feedzy_Rss_Feeds_Log::debug(
-						'Set the image source URL from item image tag for created post.',
+						'Found an image for [#item_image]',
 						array(
 							'job_id'           => $job->ID,
 							'feed_img_tag'     => $feed_img_tag,
@@ -2512,7 +2542,7 @@ class Feedzy_Rss_Feeds_Import {
 							);
 						} else {
 							// if import_featured_img is a tag.
-							$img_success = $this->try_save_featured_image( $image_source_url, $new_post_id, $img_title, $import_errors, $import_info );
+							$img_success = $this->try_save_featured_image( $image_source_url, $new_post_id, $img_title, $import_info );
 
 							Feedzy_Rss_Feeds_Log::debug(
 								sprintf( 'Saved featured image for post ID %1$s: %2$s', $new_post_id, $image_source_url ),
@@ -2557,11 +2587,12 @@ class Feedzy_Rss_Feeds_Import {
 			update_post_meta( $new_post_id, 'feedzy_item_author', sanitize_text_field( $author ) );
 
 			Feedzy_Rss_Feeds_Log::debug(
-				sprintf( 'Update post meta for (%s)', $new_post_id ),
+				sprintf( 'Update post meta for "%s"', $new_post['post_title'] ),
 				array(
 					'feedzy_item_url'    => esc_url_raw( $item['item_url'] ),
 					'feedzy_item_author' => sanitize_text_field( $author ),
 					'feedzy_job'         => $job->ID,
+					'post_id'            => $new_post_id,
 				)
 			);
 
@@ -2591,46 +2622,38 @@ class Feedzy_Rss_Feeds_Import {
 		update_post_meta( $job->ID, 'imported_items_count', $count );
 
 		if ( $import_image_errors > 0 ) {
-			$import_errors[] = sprintf(
-				// translators: %1$d is the number of items without images, %2$d is the total number of items imported.
-				__( 'Unable to find an image for %1$d out of %2$d items imported', 'feedzy-rss-feeds' ),
-				$import_image_errors,
-				$count
-			);
-		}
-
-		if ( ! empty( $themeisle_log_event ) ) {
-			$import_errors = array_merge( $themeisle_log_event, $import_errors );
-		}
-		update_post_meta( $job->ID, 'import_errors', $import_errors );
-
-		if ( ! empty( $import_errors ) ) {
 			Feedzy_Rss_Feeds_Log::error(
-				'Import ended with errors: ' . implode( ', ', $import_errors ),
+				sprintf(
+					// translators: %1$d is the number of items without images, %2$d is the total number of items imported.
+					__( 'Unable to find an image for %1$d out of %2$d items imported', 'feedzy-rss-feeds' ),
+					$import_image_errors,
+					$count
+				),
 				array(
-					'job_id'        => $job->ID,
-					'import_errors' => $import_errors,
+					'job_id' => $job->ID,
 				)
 			);
 		}
-
+		
 		// the order of these matters in how they are finally shown in the summary.
 		$import_info['total']      = $items_found;
 		$import_info['duplicates'] = $duplicates;
 
+		$import_errors = Feedzy_Rss_Feeds_Log::get_instance()->get_error_messages_accumulator();
+		Feedzy_Rss_Feeds_Log::get_instance()->disable_error_messages_retention();
+		
 		update_post_meta( $job->ID, 'import_info', $import_info );
+		update_post_meta( $job->ID, 'import_errors', $import_errors );
 
 		Feedzy_Rss_Feeds_Log::info(
 			sprintf(
-				'Import ended with %d items imported, %d items found, %d duplicates found, %d items without images.',
-				$count,
-				$items_found,
-				$duplicates,
-				$import_image_errors
+				'Import completed for job ID (%1$s).',
+				$job->ID
 			),
 			array(
-				'job_id'      => $job->ID,
-				'import_info' => $import_info,
+				'job_id'        => $job->ID,
+				'import_info'   => $import_info,
+				'import_errors' => $import_errors,
 			)
 		);
 		
@@ -2802,7 +2825,6 @@ class Feedzy_Rss_Feeds_Import {
 	 * @param string  $img_source_url The download source URL for the image.
 	 * @param integer $post_id The post ID.
 	 * @param string  $post_title Post title.
-	 * @param array   $import_errors Array of import error messages.
 	 * @param array   $import_info Array of import information messages.
 	 * @param array   $post_data Additional post data.
 	 * 
@@ -2811,7 +2833,7 @@ class Feedzy_Rss_Feeds_Import {
 	 * @since 1.2.0
 	 * @access private
 	 */
-	private function try_save_featured_image( $img_source_url, $post_id, $post_title, &$import_errors, &$import_info, $post_data = array() ) {
+	private function try_save_featured_image( $img_source_url, $post_id, $post_title, &$import_info, $post_data = array() ) {
 		if ( ! function_exists( 'post_exists' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/post.php';
 		}
@@ -2824,11 +2846,28 @@ class Feedzy_Rss_Feeds_Import {
 			// This is necessary because FILTER_VALIDATE_URL only validates against ASCII URLs.
 			$escaped_url = $this->convert_url_to_ascii( $img_source_url );
 			if ( filter_var( $escaped_url, FILTER_VALIDATE_URL ) === false ) {
-				$import_errors[] = 'Invalid Featured Image URL: ' . $img_source_url;
+				Feedzy_Rss_Feeds_Log::error(
+					// translators: %s is the invalid image URL.
+					sprintf( __( 'Invalid image URL: %s', 'feedzy-rss-feeds' ), $img_source_url ),
+					array(
+						'post_id'    => $post_id,
+						'post_title' => $post_title,
+					)
+				);
+				
 				return false;
 			}
 
-			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Trying to save the featured image for %s and postID %d', $img_source_url, $post_id ), 'debug', __FILE__, __LINE__ );
+			Feedzy_Rss_Feeds_Log::debug(
+				sprintf( 'Save the image as featured image with upload in Media Library for post ID' ),
+				array(
+					'post_id'        => $post_id,
+					'post_title'     => $post_title,
+					'img_source_url' => $img_source_url,
+					'escaped_url'    => $escaped_url,
+					'post_data'      => $post_data,
+				)
+			);
 
 			require_once ABSPATH . 'wp-admin/includes/image.php';
 			require_once ABSPATH . 'wp-admin/includes/file.php';
@@ -2838,7 +2877,14 @@ class Feedzy_Rss_Feeds_Import {
 			$img_source_url = trim( $img_source_url, chr( 0xC2 ) . chr( 0xA0 ) );
 			$local_file     = download_url( $img_source_url );
 			if ( is_wp_error( $local_file ) ) {
-				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to download file = %s and postID %d', print_r( $local_file, true ), $post_id ), 'error', __FILE__, __LINE__ );
+				Feedzy_Rss_Feeds_Log::error(
+					// translators: %s is the image source URL.
+					sprintf( __( 'Unable to download image: %s', 'feedzy-rss-feeds' ), $img_source_url ),
+					array(
+						'post_id' => $post_id,
+						'errors'  => $local_file->get_error_messages(),
+					)
+				);
 
 				return false;
 			}
@@ -2877,7 +2923,14 @@ class Feedzy_Rss_Feeds_Import {
 
 			$id = media_handle_sideload( $file_array, $post_id, $post_title, $post_data );
 			if ( is_wp_error( $id ) ) {
-				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to attach file for postID %d = %s', $post_id, print_r( $id, true ) ), 'error', __FILE__, __LINE__ );
+				Feedzy_Rss_Feeds_Log::error(
+					// translators: %s is the image source URL.
+					sprintf( __( 'Cannot upload the image to Media Library: %s', 'feedzy-rss-feeds' ), $img_source_url ),
+					array(
+						'post_id' => $post_id,
+						'errors'  => $id->get_error_messages(),
+					)
+				);
 
 				// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
 				unlink( $file_array['tmp_name'] );
@@ -2885,7 +2938,14 @@ class Feedzy_Rss_Feeds_Import {
 				return false;
 			}
 		} else {
-			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Found an existing attachment(ID: %d) image for %s and postID %d', $id, $img_source_url, $post_id ), 'debug', __FILE__, __LINE__ );
+			Feedzy_Rss_Feeds_Log::debug(
+				sprintf( 'Reusing existing attachment image for post ID %d', $post_id ),
+				array(
+					'post_id'        => $post_id,
+					'img_source_url' => $img_source_url,
+					'attachment_id'  => $id,
+				)
+			);
 		}
 
 		if ( ! empty( $post_data ) ) {
@@ -2894,9 +2954,24 @@ class Feedzy_Rss_Feeds_Import {
 
 		$success = set_post_thumbnail( $post_id, $id );
 		if ( false === $success ) {
-			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to attach file for postID %d for no apparent reason', $post_id ), 'error', __FILE__, __LINE__ );
+			Feedzy_Rss_Feeds_Log::error(
+				// translators: %s is the post title.
+				sprintf( __( 'Could not set the thumbnail for: %s', 'feedzy-rss-feeds' ), get_the_title( $post_id ) ),
+				array(
+					'post_id'          => $post_id,
+					'attachment_id'    => $id,
+					'image_source_url' => $img_source_url,
+				)
+			);
 		} else {
-			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Attached file as featured image for postID %d', $post_id ), 'info', __FILE__, __LINE__ );
+			Feedzy_Rss_Feeds_Log::debug(
+				sprintf( 'Attached image with ID (%d) to post ID (%d)', $id, $post_id ),
+				array(
+					'post_id'          => $post_id,
+					'attachment_id'    => $id,
+					'image_source_url' => $img_source_url,
+				)
+			);
 		}
 
 		return $success;
@@ -2945,7 +3020,17 @@ class Feedzy_Rss_Feeds_Import {
 			)
 		);
 
+		
 		if ( ! empty( $import_job_crons ) ) {
+			Feedzy_Rss_Feeds_Log::debug(
+				sprintf( 'Registering cron job with schedule: %s', $schedule ),
+				array(
+					'job_id'           => 0,
+					'schedule'         => $schedule,
+					'import_job_crons' => $import_job_crons,
+				)
+			);
+
 			foreach ( $import_job_crons as $job_id ) {
 				$fz_cron_schedule = get_post_meta( $job_id, 'fz_cron_schedule', true );
 				if ( false === Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'feedzy_cron', array( 100, $job_id ) ) ) {
