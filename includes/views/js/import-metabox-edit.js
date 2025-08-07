@@ -796,6 +796,13 @@
 					}
 				},
 				{
+					text: window.feedzy.i10n.goToLogsTab,
+					class: 'button button-secondary',
+					click: () => {
+						window.location.href = window.feedzy.pages.logs;
+					}
+				},
+				{
 					text: feedzy.i10n.okButton,
 					class: 'alignright',
 					click: function () {
