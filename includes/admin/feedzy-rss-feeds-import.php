@@ -129,7 +129,8 @@ class Feedzy_Rss_Feeds_Import {
 			'feedzy_categories' === $screen->post_type ||
 			'feedzy_page_feedzy-integration' === $screen->id ||
 			'feedzy_page_feedzy-settings' === $screen->id ||
-			'feedzy_page_feedzy-support' === $screen->id
+			'feedzy_page_feedzy-support' === $screen->id ||
+			'feedzy_page_feedzy-setup-wizard' === $screen->id
 		) {
 			wp_enqueue_style( $this->plugin_name, FEEDZY_ABSURL . 'css/feedzy-rss-feed-import.css', array(), $this->version, 'all' );
 			wp_register_style( $this->plugin_name . '_chosen', FEEDZY_ABSURL . 'includes/views/css/chosen.css', array(), $this->version, 'all' );
