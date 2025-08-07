@@ -978,15 +978,22 @@
 
 	function feedzyTab() {
 		$(".fz-tabs-menu a").click(function () {
-			$(".fz-tabs-menu a").removeClass("active");
+			$(this).parents(".fz-tabs-menu").find("a").removeClass("active");
 			$(this).addClass("active");
 			var tagid = $(this).data("id");
-			$(".fz-tab-content").hide();
+			$(this)
+				.parents(".feedzy-accordion-item__content")
+				.find(".fz-tabs-content .fz-tab-content")
+				.hide();
 			$("#" + tagid).show();
 		});
 		$(".fz-tabs-content .fz-tab-content").hide();
-		$(".fz-tabs-menu a").first().addClass("active");
-		$(".fz-tabs-content .fz-tab-content").first().show();
+		$(".fz-tabs-menu").each(function() {
+			$(this).find("a").first().addClass("active");
+		});
+		$(".fz-tabs-content").each(function() {
+			$(this).find(".fz-tab-content").first().show();
+		});
 	}
 
 	function feedzyMediaUploader() {
