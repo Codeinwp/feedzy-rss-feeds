@@ -73,6 +73,8 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			array(
 				'imagepath'    => esc_url( FEEDZY_ABSURL . 'img/' ),
 				'defaultImage' => esc_url( FEEDZY_ABSURL . 'img/feedzy.svg' ),
+				'url'          => admin_url( 'admin-ajax.php' ),
+				'nonce'        => wp_create_nonce( FEEDZY_BASEFILE ),
 				'isPro'        => feedzy_is_pro(),
 			)
 		);
