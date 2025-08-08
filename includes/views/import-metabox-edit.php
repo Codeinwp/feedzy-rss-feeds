@@ -160,7 +160,7 @@ global $post;
 										<label class="form-label"><?php esc_html_e( 'The post type you want to use for the generated post.', 'feedzy-rss-feeds' ); ?></label>
 										<div class="mx-320">
 											<select id="feedzy_post_type" class="form-control feedzy-chosen" name="feedzy_meta_data[import_post_type]"
-												data-tax="<?php echo esc_attr( $import_post_term ); ?>">
+												data-tax="<?php echo esc_attr( $import_post_term ); ?>" data-custom-tag="<?php echo esc_attr( isset( $custom_post_term ) ? $custom_post_term : '' ); ?>">
 												<?php
 												foreach ( $post_types as $_post_type ) {
 													?>
@@ -181,57 +181,44 @@ global $post;
 								</div>
 								<div class="fz-right">
 									<div class="fz-form-group">
-										<label class="form-label"><?php esc_html_e( 'Assigns the post to a Category', 'feedzy-rss-feeds' ); ?></label>
 										<div class="mx-320">
 											<select id="feedzy_post_terms" multiple class="form-control feedzy-chosen<?php echo feedzy_is_pro() ? ' fz-chosen-custom-tag' : ''; ?>"
 												name="feedzy_meta_data[import_post_term][]">
 											</select>
 										</div>
 										<div class="help-text pt-8">
-											<?php esc_html_e( 'The imported post will be assigned to a selected taxonomy. Leave it blank if you don\'t need a taxonomy.', 'feedzy-rss-feeds' ); ?>
+											<?php esc_html_e( 'If you don\'t select at least one taxonomy, posts will be assigned to Uncategorized by default.', 'feedzy-rss-feeds' ); ?>
 										</div>
 									</div>
-									<?php if ( ! feedzy_is_pro() ) : ?>
-										<div class="upgrade-alert">
+									<?php if ( feedzy_is_pro() ) : ?>
+										<div class="help-text pt-8">
 											<?php
 												echo wp_kses_post(
 													sprintf(
-														// translators: %1$s: opening anchor tag, %2$s: closing anchor tag.
-														__( 'Add more advanced tags, like item categories and custom field, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ),
-														'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'moreadvanced' ) ) ) . '" target="_blank">',
+														// translators: %1$s: magic tag, %2$s: opening anchor tag, %3$s: closing anchor tag.
+														__( 'Auto-create categories from source: %1$s %2$s Learn More %3$s', 'feedzy-rss-feeds' ),
+														'<strong>[#item_categories]</strong>',
+														'<a href="' . esc_url( 'https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#dynamic-post-taxonomy' ) . '" target="_blank">',
+														'</a>'
+													)
+												);
+											?>
+										</div>
+										<div class="help-text pt-8">
+											<?php
+												// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+												echo wp_kses_post(
+													sprintf(
+														// translators: %1$s: magic tag, %2$s: opening anchor tag, %3$s: closing anchor tag.
+														__( 'Auto-assign by title keywords: %1$s %2$s Configure %3$s', 'feedzy-rss-feeds' ),
+														'<strong>[#auto_categories]</strong>',
+														'<a href="' . esc_url( get_admin_url( null, 'admin.php?page=feedzy-settings' ) ) . '" target="_blank">',
 														'</a>'
 													)
 												);
 											?>
 										</div>
 									<?php endif; ?>
-									<div class="help-text pt-8">
-										<?php
-											echo wp_kses_post(
-												sprintf(
-													// translators: %1$s: magic tag, %2$s: opening anchor tag, %3$s: closing anchor tag.
-													__( 'You can automatically create categories with a magic tag %1$s or use custom tag parsing %2$s Read More %3$s .', 'feedzy-rss-feeds' ),
-													'<strong>[#item_categories]</strong>',
-													'<a href="' . esc_url( 'https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#dynamic-post-taxonomy' ) . '" target="_blank">',
-													'</a>'
-												)
-											);
-											?>
-									</div>
-									<div class="help-text pt-8">
-										<?php
-											// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
-											echo wp_kses_post(
-												sprintf(
-													// translators: %1$s: magic tag, %2$s: opening anchor tag, %3$s: closing anchor tag.
-													__( 'You can automatically assign categories with a magic tag %1$s by the keywords used in title. Configure it %2$s here%3$s .', 'feedzy-rss-feeds' ),
-													'<strong>[#auto_categories]</strong>',
-													'<a href="' . esc_url( get_admin_url( null, 'admin.php?page=feedzy-settings' ) ) . '" target="_blank">',
-													'</a>'
-												)
-											);
-											?>
-									</div>
 								</div>
 							</div>
 

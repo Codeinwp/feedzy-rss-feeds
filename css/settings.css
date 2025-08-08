@@ -560,10 +560,39 @@ fieldset[disabled] .form-control {
 }
 .fz-form-wrap .chosen-container .chosen-results li{
 	padding: 8px;
-	font-weight: 500;
+	font-weight: 600;
 	font-size: 16px;
 	line-height: 19px;
 	color: #050505;
+}
+.fz-form-wrap .chosen-container .chosen-results li.group-result{
+	font-weight: normal;
+	text-transform: uppercase;
+	color: #000000bd;
+	pointer-events: none;
+}
+.fz-form-wrap .chosen-container .chosen-results li.feedzy-pro-terms{
+	pointer-events: none;
+	font-weight: 500;
+}
+.fz-form-wrap .chosen-container .chosen-results li.feedzy-separator{
+	font-size: 0;
+	padding: 0;
+	border-bottom: 1px solid #757575;
+	height: 0;
+}
+.fz-form-wrap .chosen-container .chosen-results li.feedzy-pro-term{
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	color: #757575;
+	pointer-events: none;
+}
+.fz-form-wrap .chosen-container .chosen-results li.feedzy-pro-term .pro-label{
+	background: #80a2ff;
+	padding-left: 7px;
+	padding-right: 7px;
+	border-radius: 5px;
 }
 .fz-form-wrap .chosen-container .chosen-results li:hover,
 .fz-form-wrap .chosen-container .chosen-results li.result-selected{

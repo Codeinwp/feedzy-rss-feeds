@@ -188,6 +188,7 @@ class Feedzy_Rss_Feeds_Import {
 							feedzy_is_pro() ? 'dashicons-upload' : 'dashicons-lock',
 							esc_html__( 'Upload Import', 'feedzy-rss-feeds' )
 						),
+						'is_pro'              => feedzy_is_pro(),
 					),
 				)
 			);
@@ -502,6 +503,19 @@ class Feedzy_Rss_Feeds_Import {
 			$import_post_term = '[#auto_categories]';
 		}
 
+		if ( feedzy_is_pro() ) {
+			$custom_terms = array(
+				'[#item_categories]' => __( 'Item Categories', 'feedzy-rss-feeds' ),
+				'[#auto_categories]' => __( 'Auto Categories by keyword', 'feedzy-rss-feeds' ),
+			);
+		} elseif ( ! feedzy_is_pro() ) {
+			$custom_terms = array(
+				'[#item_categories]' => __( 'Item Categories', 'feedzy-rss-feeds' ) . sprintf( '<span class="pro-label">%s</span>', __( 'PRO', 'feedzy-rss-feeds' ) ),
+				'[#auto_categories]' => __( 'Auto Categories by keyword', 'feedzy-rss-feeds' ) . sprintf( '<span class="pro-label">%s</span>', __( 'PRO', 'feedzy-rss-feeds' ) ),
+			);
+		}
+		$custom_post_term = wp_json_encode( $custom_terms );
+
 		$import_link_author_admin  = get_post_meta( $post->ID, 'import_link_author_admin', true );
 		$import_link_author_public = get_post_meta( $post->ID, 'import_link_author_public', true );
 
@@ -661,6 +675,7 @@ class Feedzy_Rss_Feeds_Import {
 			$data_meta['import_use_external_image'] = isset( $data_meta['import_use_external_image'] ) ? $data_meta['import_use_external_image'] : 'no';
 			// Check feeds remove html checkbox checked OR not.
 			$data_meta['import_remove_html'] = isset( $data_meta['import_remove_html'] ) ? $data_meta['import_remove_html'] : 'no';
+			$data_meta['import_post_term']   = isset( $data_meta['import_post_term'] ) ? $data_meta['import_post_term'] : '';
 
 			// If it is filter_conditions we want to escape it.
 			if ( isset( $data_meta['filter_conditions'] ) ) {
