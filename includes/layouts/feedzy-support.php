@@ -27,9 +27,29 @@
 									class="<?php echo 'feedzy-pro' === $active_tab ? 'active' : ''; ?>"><?php esc_html_e( 'Free vs Pro', 'feedzy-rss-feeds' ); ?></a>
 							</li>
 						<?php endif; ?>
+						<?php if ( defined( 'FEEDZY_PRO_VERSION' ) && has_action( 'feedzy_dashboard_license_content' ) ) : ?>
+							<li>
+								<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-support&tab=license' ) ); ?>"
+									class="<?php echo 'license' === $active_tab ? 'active' : ''; ?>"><?php esc_html_e( 'License', 'feedzy-rss-feeds' ); ?></a>
+							</li>
+						<?php endif; ?>
 						<li>
 							<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-support&tab=improve' ) ); ?>"
 								class="<?php echo 'improve' === $active_tab ? 'active' : ''; ?>"><?php esc_html_e( 'Help us improve!', 'feedzy-rss-feeds' ); ?></a>
+						</li>
+						<li>
+							<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings' ) ); ?>"
+								class="<?php echo 'settings' === $active_tab ? 'active' : ''; ?>">
+								<?php esc_html_e( 'Settings', 'feedzy-rss-feeds' ); ?>
+								<span class="dashicons dashicons-external"></span>
+							</a>
+						</li>
+						<li>
+							<a href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-integration' ) ); ?>"
+								class="<?php echo 'integration' === $active_tab ? 'active' : ''; ?>">
+								<?php esc_html_e( 'Integration', 'feedzy-rss-feeds' ); ?>
+								<span class="dashicons dashicons-external"></span>
+							</a>
 						</li>
 						<?php $support_tab_heading = apply_filters( 'feedzy_support_tab_heading', '', $active_tab ); ?>
 						<?php if ( ! empty( $support_tab_heading ) ) : ?>
@@ -53,6 +73,9 @@
 						break;
 					case 'improve':
 						load_template( FEEDZY_ABSPATH . '/includes/layouts/feedzy-improve.php' );
+						break;
+					case 'license':
+						load_template( FEEDZY_ABSPATH . '/includes/layouts/feedzy-license.php' );
 						break;
 					default:
 						$template = apply_filters( 'feedzy_support_tab_content', '', $active_tab );

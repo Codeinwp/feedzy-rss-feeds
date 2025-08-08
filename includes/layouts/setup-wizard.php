@@ -7,11 +7,11 @@
 
 $dashboard_url = add_query_arg(
 	array(
-		'post_type' => 'feedzy_imports',
-		'action'    => 'feedzy_dismiss_wizard',
-		'status'    => 0,
+		'page'   => 'feedzy-support',
+		'action' => 'feedzy_dismiss_wizard',
+		'status' => 0,
 	),
-	admin_url( 'edit.php' )
+	admin_url( 'admin.php' )
 );
 // phpcs:ignore WordPress.Security.NonceVerification
 $integrate_with     = ! empty( $_GET['integrate-with'] ) ? sanitize_text_field( wp_unslash( $_GET['integrate-with'] ) ) : '';
