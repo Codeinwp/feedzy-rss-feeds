@@ -53,6 +53,7 @@ class Editor extends Component {
 		this.onThumb = this.onThumb.bind(this);
 		this.onDefault = this.onDefault.bind(this);
 		this.onSize = this.onSize.bind(this);
+		this.onAspectRatio = this.onAspectRatio.bind(this);
 		this.onReferralURL = this.onReferralURL.bind(this);
 		this.onColumns = this.onColumns.bind(this);
 		this.onTemplate = this.onTemplate.bind(this);
@@ -325,6 +326,9 @@ class Editor extends Component {
 	}
 	onSize(value) {
 		this.props.setAttributes({ size: !value ? 150 : Number(value) });
+	}
+	onAspectRatio(value) {
+		this.props.setAttributes({ aspectRatio: value });
 	}
 	onReferralURL(value) {
 		window.tiTrk?.with('feedzy').add({ feature: 'block-referral-url' });
@@ -669,9 +673,9 @@ class Editor extends Component {
 											<div
 												className="rss_image"
 												style={{
-													width:
+													aspectRatio:
 														this.props.attributes
-															.size + 'px',
+															.aspectRatio,
 													height:
 														this.props.attributes
 															.size + 'px',
@@ -684,11 +688,10 @@ class Editor extends Component {
 															item.title
 														)}
 														style={{
-															width:
+															aspectRatio:
 																this.props
 																	.attributes
-																	.size +
-																'px',
+																	.aspectRatio,
 															height:
 																this.props
 																	.attributes
@@ -696,29 +699,26 @@ class Editor extends Component {
 																'px',
 														}}
 													>
-														<span
-															className="fetched"
+														<img
+															src={this.getImageURL(
+																item,
+																false
+															)}
+															alt={unescapeHTML(
+																item.title
+															)}
 															style={{
-																width:
+																aspectRatio:
 																	this.props
 																		.attributes
-																		.size +
-																	'px',
+																		.aspectRatio,
 																height:
 																	this.props
 																		.attributes
 																		.size +
 																	'px',
-																backgroundImage:
-																	this.getImageURL(
-																		item,
-																		true
-																	),
 															}}
-															title={unescapeHTML(
-																item.title
-															)}
-														></span>
+														/>
 													</a>
 												</Disabled>
 											</div>
