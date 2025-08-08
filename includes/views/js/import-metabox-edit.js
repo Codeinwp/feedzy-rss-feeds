@@ -159,6 +159,7 @@
 	function update_taxonomy() {
 		var selected = $(this).val();
 		var tax_selected = $(this).data("tax");
+		const custom_tag = $(this).data('custom-tag');
 		if (typeof tax_selected !== "undefined") {
 			tax_selected = tax_selected.split(",");
 		} else {
@@ -216,10 +217,32 @@
 					}
 				});
 				tax_selected = tax_selected.filter( function(item) { return '' !== item; } );
-				if ( tax_selected.length > 0 && $("#feedzy_post_terms").hasClass('fz-chosen-custom-tag') ) {
+				const selected_tax_length = tax_selected.length;
+				if ( ! feedzy.i10n.is_pro ) {
+					options += '<optgroup class="feedzy-pro-terms" label="Pro">';
+				}
+				options += '<option class="feedzy-separator">separator</option>'
+				$.each(custom_tag, function (key, customTag) {
+					let is_selected = '';
+					if ( in_array(key, tax_selected) ) {
+						is_selected = 'selected';
+						const index = tax_selected.indexOf(key);
+
+						if (-1 !== index) {
+							tax_selected.splice(index, 1);
+						}
+					}
+					options += '<option class="' + ( ! feedzy.i10n.is_pro ? 'feedzy-pro-term' : '' ) + '" value="' + key + '"' + is_selected  +'>' + customTag + '</option></a>';
+				} );
+
+				if ( selected_tax_length > 0 && $("#feedzy_post_terms").hasClass('fz-chosen-custom-tag') ) {
 					$.each(tax_selected, function (index, customTag) {
 						options += '<option value="' + customTag + '" selected>' + customTag + '</option>';
 					} );
+				}
+
+				if ( ! feedzy.i10n.is_pro ) {
+					options += "</optgroup>";
 				}
 			} else {
 				show_terms = false;
