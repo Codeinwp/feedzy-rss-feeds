@@ -239,7 +239,7 @@ $published_status = array( 'publish', 'draft' );
 														<div class="fz-shortcode-preview">
 															<h4 class="h4 pb-8"><?php esc_html_e( 'Basic Shortcode', 'feedzy-rss-feeds' ); ?></h4>
 															<div class="fz-code-box">
-																<input type="text" redonly value='[feedzy-rss feeds={{feed_source}}]' id="basic_shortcode">
+																<input type="text" redonly value='[feedzy-rss feeds={{feed_source}} max="6" meta="author, date" columns="3" summary="yes" summarylength="160" thumb="yes" target="_blank"]' id="basic_shortcode">
 																<button type="button" class="fz-copy-code-btn" data-clipboard-target="#basic_shortcode"><?php esc_html_e( 'click to copy', 'feedzy-rss-feeds' ); ?> <img src="<?php echo esc_url( FEEDZY_ABSURL . 'img/copy.svg' ); ?>" alt="">
 																</button>
 															</div>
