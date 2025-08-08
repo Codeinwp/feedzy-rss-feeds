@@ -110,8 +110,8 @@
 								<?php do_action( 'feedzy_general_setting_before' ); ?>	
 								<div class="form-block">
 									<div class="fz-form-group">
-										<label for="feed-post-default-thumbnail" class="form-label"><?php echo esc_html_e( 'Fallback image for imported posts', 'feedzy-rss-feeds' ); ?></label>
-										<div class="help-text pb-8"><?php esc_html_e( 'Select an image to be the fallback featured image(Feed2Post).', 'feedzy-rss-feeds' ); ?></div>
+										<label for="feed-post-default-thumbnail" class="form-label"><?php echo esc_html_e( 'Fallback Featured Image Settings', 'feedzy-rss-feeds' ); ?></label>
+										<div class="help-text pb-8"><?php esc_html_e( 'Choose a default image to display when RSS feeds don\'t include images.', 'feedzy-rss-feeds' ); ?></div>
 										<?php
 										$btn_label = esc_html__( 'Choose image', 'feedzy-rss-feeds' );
 										if ( $default_thumbnail_id ) :
@@ -129,13 +129,13 @@
 										<div class="help-text">
 											<?php
 											echo wp_kses(
-												__( 'This image will be used for the <strong>imported posts</strong> and Feedzy Blocks if an image is not available in the source XML Feed.', 'feedzy-rss-feeds' ),
+												__( '<strong>How it works:</strong> When importing posts from RSS feeds, some items may not include images. This fallback image ensures all your <strong>imported posts</strong> have visual content by automatically applying this image as the featured image when needed.', 'feedzy-rss-feeds' ),
 												array(
 													'strong' => true,
 												)
 											);
 											?>
-											</div>
+										</div>
 									</div>
 								</div>
 								<div class="form-block">
