@@ -215,21 +215,6 @@ This plugin is maintained and supported by Themeisle, check out some of the othe
 
 == Frequently Asked Questions ==
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 = Is it responsive friendly? =
 
 Yes it is.
@@ -252,9 +237,6 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
 = How to change the blacklist image name =
 [http://docs.themeisle.com/article/552-how-to-change-the-blacklist-image-name](http://docs.themeisle.com/article/552-how-to-change-the-blacklist-image-name)
-
-= How to decode item title =
-[http://docs.themeisle.com/article/548-how-to-decode-item-title-with](http://docs.themeisle.com/article/548-how-to-decode-item-title-with)
 
 = How to keep html in feed items content =
 [http://docs.themeisle.com/article/542-how-to-keep-html-in-feed-items-content](http://docs.themeisle.com/article/542-how-to-keep-html-in-feed-items-content)
