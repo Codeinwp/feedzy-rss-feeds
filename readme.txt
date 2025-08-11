@@ -412,9 +412,6 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = How to check whether the RSS feed is valid or not in Feedzy =
  [https://docs.themeisle.com/article/716-feedzy-how-to-check-whether-the-rss-feed-is-valid-or-not](https://docs.themeisle.com/article/716-feedzy-how-to-check-whether-the-rss-feed-is-valid-or-not)
 
- = How to change thumbs size and aspect ratio in Feedzy =
- [https://docs.themeisle.com/article/551-how-to-change-thumbs-size-and-aspect-ratio](https://docs.themeisle.com/article/551-how-to-change-thumbs-size-and-aspect-ratio)
-
  = How to use proxy settings in Feedzy =
  [https://docs.themeisle.com/article/714-how-to-use-proxy-settings-in-feezy](https://docs.themeisle.com/article/714-how-to-use-proxy-settings-in-feezy)
 
