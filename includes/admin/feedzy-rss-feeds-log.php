@@ -490,15 +490,15 @@ class Feedzy_Rss_Feeds_Log {
 				}
 				$line = fgets( $handle );
 				if ( false !== $line ) {
-					$text[ $lines - $line_counter - 1 ] = $line;
+					$text[] = $line;
 				}
 				if ( $beginning ) {
 					break;
 				}
 			}
 			fclose( $handle );
-
-			return array_reverse( $text );
+		
+			return $text;
 		} catch ( Throwable $e ) {
 			return new WP_Error( 'error_reading_log_file', $e->getMessage() );
 		}
@@ -529,7 +529,7 @@ class Feedzy_Rss_Feeds_Log {
 			}
 		);
 
-		return array_slice( $lines, -$lines_count );
+		return array_reverse( array_slice( $lines, -$lines_count ) );
 	}
 
 	/**
@@ -846,7 +846,7 @@ class Feedzy_Rss_Feeds_Log {
 			return;
 		}
 
-		if ( 200 >= count( $this->error_messages_accumulator ) ) {
+		if ( 200 <= count( $this->error_messages_accumulator ) ) {
 			return;
 		}
 
