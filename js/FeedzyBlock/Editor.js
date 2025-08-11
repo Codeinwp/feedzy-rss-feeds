@@ -226,7 +226,7 @@ class Editor extends Component {
 
 	getImageURL(item, background) {
 		let url;
-		if (item.thumbnail) {
+		if (item.thumbnail && this.props.attributes.thumb === 'auto') {
 			url = item.thumbnail;
 		} else if (this.props.attributes.default) {
 			url = this.props.attributes.default.url;
