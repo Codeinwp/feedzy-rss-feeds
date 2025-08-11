@@ -2912,7 +2912,16 @@ class Feedzy_Rss_Feeds_Import {
 				if ( $renamed ) {
 					$local_file = $new_local_file;
 				} else {
-					do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to rename file for postID %d', $post_id ), 'error', __FILE__, __LINE__ );
+
+					Feedzy_Rss_Feeds_Log::error(
+						// translators: %s the name of the post.
+						sprintf( __( 'Could not rename temporary file for %s', 'feedzy-rss-feeds' ), get_the_title( $post_id ) ),
+						array(
+							'post_id'        => $post_id,
+							'local_file'     => $local_file,
+							'new_local_file' => $new_local_file,
+						)
+					);
 
 					return false;
 				}

@@ -1378,7 +1378,13 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( $settings && isset( $settings['proxy'] ) && is_array( $settings['proxy'] ) && ! empty( $settings['proxy'] ) ) {
 			// if even one constant is defined, escape.
 			if ( defined( 'WP_PROXY_HOST' ) || defined( 'WP_PROXY_PORT' ) || defined( 'WP_PROXY_USERNAME' ) || defined( 'WP_PROXY_PASSWORD' ) ) {
-				do_action( 'themeisle_log_event', FEEDZY_NAME, 'Some proxy constants already defined; ignoring proxy settings', 'info', __FILE__, __LINE__ );
+				Feedzy_Rss_Feeds_Log::info(
+					'Some proxy constants already defined; ignoring proxy settings',
+					array(
+						'url'      => $url,
+						'settings' => $settings['proxy'],
+					)
+				);
 
 				return;
 			}
@@ -1435,7 +1441,14 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	public function add_user_agent( $ua ) {
 		$settings = apply_filters( 'feedzy_get_settings', null );
 		if ( $settings && isset( $settings['header']['user-agent'] ) && ! empty( $settings['header']['user-agent'] ) ) {
-			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Override user-agent from %s to %s', $ua, $settings['header']['user-agent'] ), 'info', __FILE__, __LINE__ );
+			Feedzy_Rss_Feeds_Log::info(
+				'Overriding user-agent',
+				array(
+					'old_user_agent' => $ua,
+					'new_user_agent' => $settings['header']['user-agent'],
+				)
+			);
+
 			$ua = $settings['header']['user-agent'];
 		}
 
@@ -1454,7 +1467,14 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	public function send_through_proxy( $return_value, $uri, $check, $home ) {
 		$proxied = defined( 'FEEZY_URL_THRU_PROXY' ) ? FEEZY_URL_THRU_PROXY : null;
 		if ( $proxied && ( ( is_array( $proxied ) && in_array( $uri, $proxied, true ) ) || $uri === $proxied ) ) {
-			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'sending %s through proxy', $uri ), 'info', __FILE__, __LINE__ );
+			Feedzy_Rss_Feeds_Log::info(
+				'Sending through proxy',
+				array(
+					'uri'   => $uri,
+					'check' => $check,
+					'home'  => $home,
+				)
+			);
 
 			return true;
 		}

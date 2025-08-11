@@ -284,9 +284,7 @@ class Feedzy_Rss_Feeds_Log {
 	private function write_log( $level, $message, array $context = array() ) {
 		if ( self::ERROR === $level ) {
 			$this->increment_log_stat( 'error_count' );
-			if ( $this->retain_error_messages ) {
-				$this->error_messages_accumulator[] = $message;
-			}
+			$this->try_accumulate_error_message( $message );
 		}
 		
 		if ( ! $this->filesystem ) {
@@ -835,5 +833,23 @@ class Feedzy_Rss_Feeds_Log {
 	 */
 	public function get_error_messages_accumulator() {
 		return $this->error_messages_accumulator;
+	}
+
+	/**
+	 * Add an error message to the accumulator.
+	 * 
+	 * @param string $message The error message to accumulate.
+	 * @return void
+	 */
+	public function try_accumulate_error_message( $message ) {
+		if ( ! $this->retain_error_messages ) {
+			return;
+		}
+
+		if ( 200 >= count( $this->error_messages_accumulator ) ) {
+			return;
+		}
+
+		$this->error_messages_accumulator[] = $message;
 	}
 }
