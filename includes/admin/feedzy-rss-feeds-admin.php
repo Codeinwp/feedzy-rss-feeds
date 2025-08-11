@@ -248,12 +248,13 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				$this->plugin_name . '_action_popup',
 				'feedzyData',
 				array(
-					'isPro'            => feedzy_is_pro(),
-					'isBusinessPlan'   => apply_filters( 'feedzy_is_license_of_type', false, 'business' ),
-					'isAgencyPlan'     => apply_filters( 'feedzy_is_license_of_type', false, 'agency' ),
-					'apiLicenseStatus' => $this->api_license_status(),
-					'isHighPrivileges' => current_user_can( 'manage_options' ),
-					'languageList'     => $this->get_lang_list(),
+					'isPro'               => feedzy_is_pro(),
+					'isBusinessPlan'      => apply_filters( 'feedzy_is_license_of_type', false, 'business' ),
+					'isAgencyPlan'        => apply_filters( 'feedzy_is_license_of_type', false, 'agency' ),
+					'apiLicenseStatus'    => $this->api_license_status(),
+					'isHighPrivileges'    => current_user_can( 'manage_options' ),
+					'languageList'        => $this->get_lang_list(),
+					'integrationSettings' => get_option( 'feedzy-rss-feeds-settings' ),
 				)
 			);
 
