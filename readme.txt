@@ -331,6 +331,9 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = How to fix images that are not showing in the feed =
  [https://docs.themeisle.com/article/666-how-to-fix-images-that-are-not-showing-in-the-feed](https://docs.themeisle.com/article/666-how-to-fix-images-that-are-not-showing-in-the-feed)
 
+= How to change thumbs size and aspect ratio in Feedzy =
+[https://docs.themeisle.com/article/551-how-to-change-thumbs-size-and-aspect-ratio](https://docs.themeisle.com/article/551-how-to-change-thumbs-size-and-aspect-ratio)
+
  = How to display items in a random order =
  [https://docs.themeisle.com/article/550-how-to-display-items-in-a-random-order](https://docs.themeisle.com/article/550-how-to-display-items-in-a-random-order)
 
