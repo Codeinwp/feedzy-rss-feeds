@@ -73,7 +73,6 @@ class Test_Image_Import extends WP_UnitTestCase {
 		$try_save_featured_image = $reflector->getMethod( 'try_save_featured_image' );
 		$try_save_featured_image->setAccessible( true );
 
-		$import_errors = array();
 		$import_info = array();
 
 		$arguments = array( 'https://example.com/path_to_image/çöp.jpg?itok=ZYU_ihPB', 0, 'Post Title', &$import_info, array() );

@@ -64,7 +64,7 @@ $logs_entries = isset( $logs ) && is_array( $logs ) ? $logs : array();
 		
 		if ( is_wp_error( $logs ) ) {
 			printf(
-				'<p>%$1s(%2$s)</p>',
+				'<p>%1$s (%2$s)</p>',
 				esc_html__( 'An error occurred while fetching logs.', 'feedzy-rss-feeds' ),
 				esc_html( $logs->get_error_message() )
 			);
