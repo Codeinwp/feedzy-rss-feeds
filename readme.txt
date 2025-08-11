@@ -25,7 +25,46 @@ The Ultimate WordPress RSS aggregator, helping you Curate content, Autoblog, Imp
 
 With FEEDZY RSS Aggregator, you can sit back, let your site autoblog and always stay fresh with new content, which in return helps improve content marketing, boost your SEO, increase audience engagement, and probably earn more money.
 
-FEEDZY RSS Aggregator helps you aggregate unlimited RSS feeds and automatically publish them on your site within a few minutes.
+One of the most popular ways our users keep their sites fresh is with Feedzy’s Feed to Post feature. It lets you bring full RSS feed items into WordPress as fully editable posts, pages, or custom post types. Whether it’s daily news, curated blog content, or product listings, Feedzy takes care of fetching, importing, and publishing, so your site updates itself while you focus on bigger goals.
+
+### 📥 Import RSS Feeds as WordPress Posts
+
+Need to turn your favorite feeds into WordPress content? Feedzy makes it easy to import RSS feeds as posts, pages, or custom post types automatically and with a custom import schedule in the PRO version.
+
+With just a few clicks, you can:
+
+* Automatically import RSS feed items into WordPress and publish them instantly or as drafts.
+
+* Map feeds to posts, pages, or any custom post type you need.
+
+* Auto-publish RSS articles with images, categories, and tags.
+
+* Embed RSS content anywhere using shortcodes, blocks, or widgets.
+
+Whether you need a reliable feed importer for news, an RSS fetcher for blog updates, or an automated RSS importer for affiliate products, Feedzy handles it all in one lightweight plugin.
+
+####💬 Real Feedback from Real Sites
+
+> ★★★★★
+> "Makes posting from RSS feeds a breeze! We have tried others, but Feedzy has given us the best results!"  
+> – mlg@gaa.com
+
+Feedzy’s Feed to Post feature is one of the most-loved parts of the plugin, making it effortless to bring RSS feed content into WordPress as posts, pages, or products with just a few clicks.
+
+####⚡ Advanced Import Controls with Feedzy PRO
+
+Take your “Feed to Post” automation to the next level with powerful Pro-only options:
+
+* **Unlimited Imports:** With Feedzy Pro, you can create unlimited import projects, compared to just one project in the free version.  
+* **Custom Duplication Key:** Define exactly how Feedzy detects unique items and avoids duplicates even across multiple feeds.  
+* **Auto-Delete Old Posts:** Remove outdated or time-sensitive imports automatically after a set number of days.  
+* **Fallback Image:** Assign a default image for feed items without images to maintain a consistent site layout.  
+* **Import Item Count Control:** Decide how many feed items to fetch from each source every run.  
+* **Scheduled Imports:** Run imports automatically on your preferred schedule, such as hourly, daily, or weekly.  
+* **Custom Post Author:** Assign imported posts to a specific author profile.  
+* **Post Excerpts and Custom Fields:** Map feed data to post excerpts or custom fields for richer content display.  
+
+These advanced controls give you full editorial power over your imported content, whether you are curating news, running an affiliate store, or managing multiple client sites. [Get Feedzy Pro](https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=readme&utm_campaign=feedzy)
 
 ## 🤔 WHAT YOU CAN DO WITH FEEDZY RSS AGGREGATOR: ##
 
