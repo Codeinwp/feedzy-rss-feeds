@@ -19,12 +19,12 @@ class Feedzy_Rss_Feeds_Task_Manager {
 	 */
 	public function register_actions() {
 		add_action(
-			'feedzy_send_error_report',
+			'task_feedzy_send_error_report',
 			array( $this, 'send_error_report' )
 		);
 		
 		add_action(
-			'feedzy_cleanup_logs',
+			'task_feedzy_cleanup_logs',
 			function () {
 				Feedzy_Rss_Feeds_Log::get_instance()->should_clean_logs();
 			} 
@@ -34,7 +34,7 @@ class Feedzy_Rss_Feeds_Task_Manager {
 			'init',
 			function () {
 				$this->schedule_weekly_tasks();
-				$this->schedule_daily_tasks();
+				$this->schedule_hourly_tasks();
 			}
 		);
 	}
@@ -64,14 +64,14 @@ class Feedzy_Rss_Feeds_Task_Manager {
 	 * @since 5.1.0
 	 * @return void
 	 */
-	public function schedule_daily_tasks() {
+	public function schedule_hourly_tasks() {
 		if (
 			false !== Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'task_feedzy_cleanup_logs' )
 		) {
 			return;
 		}
 
-		Feedzy_Rss_Feeds_Util_Scheduler::schedule_event( time(), 'twicedaily', 'task_feedzy_cleanup_logs' );
+		Feedzy_Rss_Feeds_Util_Scheduler::schedule_event( time(), 'hourly', 'task_feedzy_cleanup_logs' );
 	}
 
 	/**
