@@ -2027,10 +2027,6 @@ class Feedzy_Rss_Feeds_Import {
 				);
 			}
 
-			Feedzy_Rss_Feeds_Log::error(
-				'Check error reported. Remove on done'
-			);
-
 			// Used as a new line character in import content.
 			$import_content = rawurldecode( $import_content );
 			$import_content = str_replace( PHP_EOL, "\r\n", $import_content );
