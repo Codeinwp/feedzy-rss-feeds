@@ -92,6 +92,9 @@ const UpgradeNotice = ({ higherPlanNotice, utmCampaign }) => {
 const aiModels = {
 	openai: {
 		latest: [
+			{ label: 'GPT-5 Nano', value: 'gpt-nano' },
+			{ label: 'GPT-5 Mini', value: 'gpt-5-mini' },
+			{ label: 'GPT-5', value: 'gpt-5' },
 			{ label: 'GPT-4.1 Nano', value: 'gpt-4.1-nano' },
 			{ label: 'GPT-4.1 Mini', value: 'gpt-4.1-mini' },
 			{ label: 'GPT-4.1', value: 'gpt-4.1' },
@@ -110,19 +113,6 @@ const aiModels = {
 			},
 			{ label: 'Babbage-002', value: 'babbage-002' },
 			{ label: 'Davinci-002', value: 'davinci-002' },
-		],
-	},
-	openrouter: {
-		latest: [
-			{ label: 'Claude Opus 4.1', value: 'anthropic/claude-opus-4.1' },
-			{ label: 'Claude Sonnet 4', value: 'anthropic/claude-sonnet-4' },
-		],
-		older: [
-			{
-				label: 'Claude Sonnet 3.7',
-				value: 'anthropic/claude-sonnet-3.7',
-			},
-			{ label: 'Claude 3.5', value: 'anthropic/claude-3.5' },
 		],
 	},
 };
