@@ -325,9 +325,6 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = What actions and filters are available in Feedzy =
  [https://docs.themeisle.com/article/540-what-actions-and-filters-are-available-in-feedzy](https://docs.themeisle.com/article/540-what-actions-and-filters-are-available-in-feedzy)
 
- = How to change thumbs size and aspect ratio in Feedzy =
- [https://docs.themeisle.com/article/551-how-to-change-thumbs-size-and-aspect-ratio-feedzy](https://docs.themeisle.com/article/551-how-to-change-thumbs-size-and-aspect-ratio-feedzy)
-
  = How to display RSS feed time and date in local time =
  [https://docs.themeisle.com/article/567-how-to-display-rss-feed-time-and-date-in-local-time](https://docs.themeisle.com/article/567-how-to-display-rss-feed-time-and-date-in-local-time)
 
@@ -335,16 +332,13 @@ You have to check first if your feed is valid. Please test it here: https://vali
  [https://docs.themeisle.com/article/544-how-to-add-a-read-more-link-to-feedzy](https://docs.themeisle.com/article/544-how-to-add-a-read-more-link-to-feedzy)
 
  = How to use Feedzy categories =
- [https://docs.themeisle.com/article/640-how-to-use-feedzy-categories](https://docs.themeisle.com/article/640-how-to-use-feedzy-categories)
+ [https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#dynamic-post-taxonomy](https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#dynamic-post-taxonomy)
 
  = How to use your own inline css =
  [https://docs.themeisle.com/article/546-how-to-use-your-own-inline-css](https://docs.themeisle.com/article/546-how-to-use-your-own-inline-css)
 
  = How to change cache lifetime for a specific feed =
  [https://docs.themeisle.com/article/547-how-to-change-cache-lifetime-for-a-specific-feed](https://docs.themeisle.com/article/547-how-to-change-cache-lifetime-for-a-specific-feed)
-
- = How to remove featured image from blog feed =
- [https://docs.themeisle.com/article/554-how-to-remove-featured-image-from-blog-feed](https://docs.themeisle.com/article/554-how-to-remove-featured-image-from-blog-feed)
 
  = How to handle publication date and author content =
  [https://docs.themeisle.com/article/549-how-to-handle-publication-date-and-author-content](https://docs.themeisle.com/article/549-how-to-handle-publication-date-and-author-content)
@@ -357,9 +351,6 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  = How to display items in a random order =
  [https://docs.themeisle.com/article/550-how-to-display-items-in-a-random-order](https://docs.themeisle.com/article/550-how-to-display-items-in-a-random-order)
-
- = How to remove links =
- [https://docs.themeisle.com/article/541-how-to-remove-links](https://docs.themeisle.com/article/541-how-to-remove-links)
 
  = How to move Feedzy templates to your theme =
  [https://docs.themeisle.com/article/573-how-to-move-feedzy-templates-to-your-theme](https://docs.themeisle.com/article/573-how-to-move-feedzy-templates-to-your-theme)
@@ -394,17 +385,11 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = How to use proxy settings in Feedzy =
  [https://docs.themeisle.com/article/714-how-to-use-proxy-settings-in-feedzy](https://docs.themeisle.com/article/714-how-to-use-proxy-settings-in-feedzy)
 
- = Where can I find the import posts options in Feedzy =
- [https://docs.themeisle.com/article/743-where-can-i-find-the-import-posts-options-in-feedzy](https://docs.themeisle.com/article/743-where-can-i-find-the-import-posts-options-in-feedzy)
-
  = How to change user agent in Feedzy =
  [https://docs.themeisle.com/article/713-how-to-change-user-agent-in-feedzy](https://docs.themeisle.com/article/713-how-to-change-user-agent-in-feedzy)
 
  = How to use WordAI to Rephrase RSS content in Feedzy =
  [https://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy](https://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy)
-
- = Install and use the premium version of Feedzy RSS Feeds =
- [https://docs.themeisle.com/article/783-install-and-use-the-premium-version-of-feedzy-rss-feeds](https://docs.themeisle.com/article/783-install-and-use-the-premium-version-of-feedzy-rss-feeds)
 
  = How to sort feed items by date =
  [https://docs.themeisle.com/article/817-how-to-sort-feed-items-by-date](https://docs.themeisle.com/article/817-how-to-sort-feed-items-by-date)
@@ -450,9 +435,6 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  = How to use proxy settings in Feedzy =
  [https://docs.themeisle.com/article/714-how-to-use-proxy-settings-in-feezy](https://docs.themeisle.com/article/714-how-to-use-proxy-settings-in-feezy)
-
- = How to decode item title =
- [https://docs.themeisle.com/article/548-how-to-decode-item-title-with](https://docs.themeisle.com/article/548-how-to-decode-item-title-with)
 
  = How to add affiliate referrals to feed URLs in Feedzy =
  [https://docs.themeisle.com/article/715-feedzy-how-to-add-affiliate-referrals-to-feed-urls](https://docs.themeisle.com/article/715-feedzy-how-to-add-affiliate-referrals-to-feed-urls)
