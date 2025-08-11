@@ -24,7 +24,7 @@ class Test_Image_Import extends WP_UnitTestCase {
 
 		// Check that NON-IMAGE URL returns invalid
 		$import_info = array();
-		$arguments = array( 'a random string', 0, 'Post Title', $import_info, array() );
+		$arguments = array( 'a random string', 0, 'Post Title', &$import_info, array() );
 		$response = $try_save_featured_image->invokeArgs( $feedzy, $arguments );
 
 		$this->assertFalse( $response );
@@ -52,14 +52,14 @@ class Test_Image_Import extends WP_UnitTestCase {
 		}, 10, 5 );
 
 		$import_info = array();
-		$arguments = array( 'https://example.com/path_to_image/image.jpeg', 0, 'Post Title', $import_info, array() );
+		$arguments = array( 'https://example.com/path_to_image/image.jpeg', 0, 'Post Title', &$import_info, array() );
 		$response = $try_save_featured_image->invokeArgs( $feedzy, $arguments );
 
 		// expected response is false because the image does not exist, but the URL is valid so no errors should be logged for URL validation
 		$this->assertFalse( $response );
 
 		$import_info = array();
-		$arguments = array( 'https://example.com/path_to_image/image w space in name.jpeg', 0, 'Post Title', $import_info, array() );
+		$arguments = array( 'https://example.com/path_to_image/image w space in name.jpeg', 0, 'Post Title', &$import_info, array() );
 		$response = $try_save_featured_image->invokeArgs( $feedzy, $arguments );
 
 		// expected response is false because the image does not exist, but the URL is valid so no errors should be logged for URL validation
@@ -76,7 +76,7 @@ class Test_Image_Import extends WP_UnitTestCase {
 		$import_errors = array();
 		$import_info = array();
 
-		$arguments = array( 'https://example.com/path_to_image/çöp.jpg?itok=ZYU_ihPB', 0, 'Post Title', &$import_errors, &$import_info, array() );
+		$arguments = array( 'https://example.com/path_to_image/çöp.jpg?itok=ZYU_ihPB', 0, 'Post Title', &$import_info, array() );
 		$response = $try_save_featured_image->invokeArgs( $feedzy, $arguments );
 
 		// expected response is false because the image does not exist, but the URL is valid so no $import_errors should be set.
