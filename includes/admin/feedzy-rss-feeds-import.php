@@ -524,16 +524,12 @@ class Feedzy_Rss_Feeds_Import {
 			$import_feed_limit = 10;
 		}
 
-		$default_thumbnail_id = 0;
+		$default_thumbnail_id   = 0;
+		$inherited_thumbnail_id = ! empty( $this->free_settings['general']['default-thumbnail-id'] ) ? (int) $this->free_settings['general']['default-thumbnail-id'] : 0;
 		if ( feedzy_is_pro() ) {
 			$default_thumbnail_id = get_post_meta( $post->ID, 'default_thumbnail_id', true );
-			if (
-				empty( $default_thumbnail_id ) &&
-				'0' !== $default_thumbnail_id // Can use the fallback image from Global Settings.
-			) {
-				$default_thumbnail_id = ! empty( $this->free_settings['general']['default-thumbnail-id'] ) ? (int) $this->free_settings['general']['default-thumbnail-id'] : 0;
-			}
 		}
+
 		$import_schedule = array(
 			'fz_cron_schedule' => ! empty( $this->free_settings['general']['fz_cron_schedule'] ) ? $this->free_settings['general']['fz_cron_schedule'] : '',
 		);
