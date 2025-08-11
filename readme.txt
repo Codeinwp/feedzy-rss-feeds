@@ -419,7 +419,7 @@ You have to check first if your feed is valid. Please test it here: https://vali
  [https://docs.themeisle.com/article/715-feedzy-how-to-add-affiliate-referrals-to-feed-urls](https://docs.themeisle.com/article/715-feedzy-how-to-add-affiliate-referrals-to-feed-urls)
 
  = How to add rel="nofollow" to feed links =
- [https://docs.themeisle.com/article/839-how-to-add-rel-nofollow-to-feed-links](https://docs.themeisle.com/article/839-how-to-add-rel-nofollow-to-feed-links)
+ [https://docs.themeisle.com/article/942-in-feedzy-how-do-i#convert-links](https://docs.themeisle.com/article/942-in-feedzy-how-do-i#convert-links)
 
  = How to import iTunes audio feed =
  [https://docs.themeisle.com/article/1682-how-to-import-embedded-audios-to-posts](https://docs.themeisle.com/article/1682-how-to-import-embedded-audios-to-posts)
