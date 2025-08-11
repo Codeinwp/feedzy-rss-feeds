@@ -462,13 +462,38 @@ class Test_Logger extends WP_UnitTestCase {
 		// Create a log file
 		Feedzy_Rss_Feeds_Log::error( 'Test error' );
 		$this->assertTrue( $this->logger->log_file_exists() );
-		
+
+		$file_path = $this->logger->get_log_file_path();
+
+		// Simulate an old log file by setting its modification time far in the past
+		$this->assertTrue( file_exists( $file_path ), 'Log file should exist before aging it' );
+		$old_time = time() - ( defined( 'YEAR_IN_SECONDS' ) ? YEAR_IN_SECONDS : 365 * 24 * 60 * 60 );
+		$this->assertTrue( touch( $file_path, $old_time ), 'Should be able to update mtime to an old timestamp' );
+		clearstatcache( true, $file_path );
+
+		// Old file should be cleaned
+		$this->logger->should_clean_logs();
+		$this->assertFalse( $this->logger->log_file_exists(), 'Old log file should be cleaned (deleted)' );
+
+		// Create a fresh small log again
+		Feedzy_Rss_Feeds_Log::error( 'Recent small error' );
+		$this->assertTrue( $this->logger->log_file_exists(), 'Recent log file should exist' );
+
 		// File is small and recent, should not be cleaned
 		$this->logger->should_clean_logs();
-		$this->assertTrue( $this->logger->log_file_exists() );
-		
-		// Manually modify file time to be old (would require file manipulation)
-		// This is a simplified test - in practice you'd need to mock filemtime()
+		$this->assertTrue( $this->logger->log_file_exists(), 'Recent small log should not be cleaned' );
+
+		// Enlarge the log to exceed the max size and ensure it gets cleaned
+		$fp = fopen( $file_path, 'r+' );
+		$this->assertNotFalse( $fp, 'Should be able to open log file for resizing' );
+		$target_size = Feedzy_Rss_Feeds_Log::DEFAULT_MAX_FILE_SIZE + 1;
+		$this->assertTrue( ftruncate( $fp, $target_size ), 'Should be able to enlarge log file' );
+		fclose( $fp );
+		clearstatcache( true, $file_path );
+		$this->assertGreaterThan( Feedzy_Rss_Feeds_Log::DEFAULT_MAX_FILE_SIZE, filesize( $file_path ), 'Log size should exceed max size' );
+
+		$this->logger->should_clean_logs();
+		$this->assertFalse( $this->logger->log_file_exists(), 'Oversized log file should be cleaned (deleted)' );
 	}
 
 	/**

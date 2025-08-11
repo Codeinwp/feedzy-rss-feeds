@@ -536,18 +536,21 @@ class Feedzy_Rss_Feeds_Log {
 	 * Delete the log file if it is older than 14 days or if the size exceeds the maximum allowed size.
 	 *
 	 * @since 5.1.0
-	 * @return void
+	 * @return bool
 	 */
 	public function should_clean_logs() {
-		if (
-			! file_exists( $this->filepath ) ||
-			self::DEFAULT_MAX_FILE_SIZE > $this->get_log_file_size() ||
-			strtotime( '-14 days' ) < filemtime( $this->filepath )
-		) {
-			return;
+		if ( ! file_exists( $this->filepath ) ) {
+			return false;
 		}
-		
-		$this->delete_log_file();
+
+		$is_too_big = $this->get_log_file_size() > self::DEFAULT_MAX_FILE_SIZE;
+		$is_too_old = filemtime( $this->filepath ) < strtotime( '-14 days' );
+
+		if ( $is_too_big || $is_too_old ) {
+			return $this->delete_log_file();
+		}
+
+		return false;
 	}
 
 	/**
@@ -801,7 +804,7 @@ class Feedzy_Rss_Feeds_Log {
 	 * @since 5.1.0
 	 * @return string The full path to the log file.
 	 */
-	private function get_log_file_path() {
+	public function get_log_file_path() {
 		$upload_dir = wp_upload_dir();
 		$log_dir    = $upload_dir['basedir'] . '/feedzy-logs';
 		return $log_dir . '/' . self::FILE_NAME . self::FILE_EXT;
