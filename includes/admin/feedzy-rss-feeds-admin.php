@@ -1880,7 +1880,12 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$segment  = 1;
 			$response = array(
 				'status'      => 1,
-				'redirect_to' => add_query_arg( 'post_type', 'feedzy_imports', admin_url( 'edit.php' ) ),
+				'redirect_to' => add_query_arg(
+					array(
+						'page' => 'feedzy-support',
+					),
+					admin_url( 'admin.php' )
+				),
 				'message'     => __( 'Redirecting to Feedzy dashboard', 'feedzy-rss-feeds' ),
 			);
 
@@ -1905,30 +1910,48 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			} else {
 				$response = array(
 					'status'      => 1,
-					'redirect_to' => add_query_arg( 'post_type', 'feedzy_imports', admin_url( 'edit.php' ) ),
+					'redirect_to' => add_query_arg(
+						array(
+							'page' => 'feedzy-support',
+						),
+						admin_url( 'admin.php' )
+					),
 					'message'     => __( 'Redirecting to Feedzy dashboard', 'feedzy-rss-feeds' ),
 				);
 			}
 		} elseif ( 'page_builder' === $integrate_with ) {
-			$post_edit_link = get_edit_post_link( $page_id, 'db' );
-			// Get elementor edit page link.
-			if ( defined( 'ELEMENTOR_PATH' ) && class_exists( 'Elementor\Widget_Base' ) ) {
-				$segment        = 3;
-				$post_edit_link = add_query_arg(
-					array(
-						'post'   => $page_id,
-						'action' => 'elementor',
+			if ( empty( $page_id ) ) {
+				$response = array(
+					'status'      => 1,
+					'redirect_to' => add_query_arg(
+						array(
+							'page' => 'feedzy-support',
+						),
+						admin_url( 'admin.php' )
 					),
-					admin_url( 'post.php' )
+					'message'     => __( 'Redirecting to Feedzy dashboard', 'feedzy-rss-feeds' ),
 				);
 			} else {
-				$segment = 4;
+				$post_edit_link = get_edit_post_link( $page_id, 'db' );
+				// Get elementor edit page link.
+				if ( defined( 'ELEMENTOR_PATH' ) && class_exists( 'Elementor\Widget_Base' ) ) {
+					$segment        = 3;
+					$post_edit_link = add_query_arg(
+						array(
+							'post'   => $page_id,
+							'action' => 'elementor',
+						),
+						admin_url( 'post.php' )
+					);
+				} else {
+					$segment = 4;
+				}
+				$response = array(
+					'status'      => 1,
+					'redirect_to' => $post_edit_link,
+					'message'     => __( 'Redirecting to draft page', 'feedzy-rss-feeds' ),
+				);
 			}
-			$response = array(
-				'status'      => 1,
-				'redirect_to' => $post_edit_link,
-				'message'     => __( 'Redirecting to draft page', 'feedzy-rss-feeds' ),
-			);
 		}
 		if ( $with_subscribe && is_email( $email ) ) {
 			update_option( 'feedzy_rss_feeds_logger_flag', 'yes' );
