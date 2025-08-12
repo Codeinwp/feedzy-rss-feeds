@@ -5,9 +5,9 @@
  * @package Feedzy_Rss_Feeds
  */
 
-$dashboard_url = add_query_arg(
+// Note: It will be redirect to dashboard by `feedzy_dismiss_wizard` action.
+$skip_onboarding_url_callback = add_query_arg(
 	array(
-		'page'   => 'feedzy-support',
 		'action' => 'feedzy_dismiss_wizard',
 		'status' => 0,
 	),
@@ -34,7 +34,7 @@ $published_status = array( 'publish', 'draft' );
 				</div>
 			</div>
 			<div class="back-btn">
-				<a href="<?php echo esc_url( $dashboard_url ); ?>" class="btn-link"><span class="dashicons dashicons-arrow-left-alt"></span> <?php esc_html_e( 'Go to dashboard', 'feedzy-rss-feeds' ); ?></a>
+				<a href="<?php echo esc_url( $skip_onboarding_url_callback ); ?>" class="btn-link"><span class="dashicons dashicons-arrow-left-alt"></span> <?php esc_html_e( 'Go to dashboard', 'feedzy-rss-feeds' ); ?></a>
 			</div>
 		</div>
 	</div>

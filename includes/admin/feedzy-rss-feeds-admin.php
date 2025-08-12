@@ -1663,7 +1663,20 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		update_option( 'feedzy_fresh_install', $status );
 		delete_option( 'feedzy_wizard_data' );
 		if ( false !== $redirect_to_dashboard ) {
-			wp_safe_redirect( remove_query_arg( array( 'action', 'status' ) ) );
+
+			$cleaned_url = remove_query_arg( array( 'page', 'action', 'status' ) );
+			$parsed_url  = wp_parse_url( $cleaned_url );
+
+			// Default to dashboard if no page is set.
+			if (
+				isset( $parsed_url['path'] ) && 
+				strpos( $parsed_url['path'], '/wp-admin/admin.php' ) !== false && 
+				empty( $parsed_url['query'] )
+			) {
+				$cleaned_url = add_query_arg( 'page', 'feedzy-support', $cleaned_url );
+			}
+		
+			wp_safe_redirect( $cleaned_url );
 			exit;
 		}
 		return true;
