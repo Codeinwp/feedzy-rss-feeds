@@ -170,6 +170,7 @@
 	function update_taxonomy() {
 		const selected = $(this).val();
 		let tax_selected = $(this).data('tax');
+		const custom_tag = $(this).data('custom-tag');
 		if (typeof tax_selected !== 'undefined') {
 			tax_selected = tax_selected.split(',');
 		} else {
@@ -239,8 +240,37 @@
 					tax_selected = tax_selected.filter(function (item) {
 						return '' !== item;
 					});
+					const selected_tax_length = tax_selected.length;
+					if (!feedzy.i10n.is_pro) {
+						options +=
+							'<optgroup class="feedzy-pro-terms" label="Pro">';
+					}
+					options +=
+						'<option class="feedzy-separator">separator</option>';
+					$.each(custom_tag, function (key, customTag) {
+						let is_selected = '';
+						if (in_array(key, tax_selected)) {
+							is_selected = 'selected';
+							const index = tax_selected.indexOf(key);
+
+							if (-1 !== index) {
+								tax_selected.splice(index, 1);
+							}
+						}
+						options +=
+							'<option class="' +
+							(!feedzy.i10n.is_pro ? 'feedzy-pro-term' : '') +
+							'" value="' +
+							key +
+							'"' +
+							is_selected +
+							'>' +
+							customTag +
+							'</option></a>';
+					});
+
 					if (
-						tax_selected.length > 0 &&
+						selected_tax_length > 0 &&
 						$('#feedzy_post_terms').hasClass('fz-chosen-custom-tag')
 					) {
 						$.each(tax_selected, function (index, customTag) {
@@ -251,6 +281,10 @@
 								customTag +
 								'</option>';
 						});
+					}
+
+					if (!feedzy.i10n.is_pro) {
+						options += '</optgroup>';
 					}
 				} else {
 					show_terms = false;
@@ -1146,22 +1180,22 @@
 	}
 
 	function feedzyTab() {
-		$(".fz-tabs-menu a").click(function () {
-			$(this).parents(".fz-tabs-menu").find("a").removeClass("active");
-			$(this).addClass("active");
-			var tagid = $(this).data("id");
+		$('.fz-tabs-menu a').click(function () {
+			$(this).parents('.fz-tabs-menu').find('a').removeClass('active');
+			$(this).addClass('active');
+			const tagid = $(this).data('id');
 			$(this)
-				.parents(".feedzy-accordion-item__content")
-				.find(".fz-tabs-content .fz-tab-content")
+				.parents('.feedzy-accordion-item__content')
+				.find('.fz-tabs-content .fz-tab-content')
 				.hide();
-			$("#" + tagid).show();
+			$('#' + tagid).show();
 		});
-		$(".fz-tabs-content .fz-tab-content").hide();
-		$(".fz-tabs-menu").each(function() {
-			$(this).find("a").first().addClass("active");
+		$('.fz-tabs-content .fz-tab-content').hide();
+		$('.fz-tabs-menu').each(function () {
+			$(this).find('a').first().addClass('active');
 		});
-		$(".fz-tabs-content").each(function() {
-			$(this).find(".fz-tab-content").first().show();
+		$('.fz-tabs-content').each(function () {
+			$(this).find('.fz-tab-content').first().show();
 		});
 	}
 
@@ -1279,7 +1313,7 @@
 
 		$('.feedzy-remove-media').on('click', function () {
 			if (
-				$('#use-inherited-thumbnail').length && 
+				$('#use-inherited-thumbnail').length &&
 				$('#use-inherited-thumbnail').is(':checked')
 			) {
 				return false;
@@ -1290,25 +1324,39 @@
 			'change',
 			function () {
 				const selectedValue = $(this).val();
-				const thumbnailValue = $('input[name="feedzy_meta_data[default_thumbnail_id]"]').val();
-				const hasImagePreview = $('#custom-fallback-section .feedzy-media-preview').length > 0;
-				const hasThumbnails = (thumbnailValue && thumbnailValue !== '' && thumbnailValue !== '0') || hasImagePreview;
+				const thumbnailValue = $(
+					'input[name="feedzy_meta_data[default_thumbnail_id]"]'
+				).val();
+				const hasImagePreview =
+					$('#custom-fallback-section .feedzy-media-preview').length >
+					0;
+				const hasThumbnails =
+					(thumbnailValue &&
+						thumbnailValue !== '' &&
+						thumbnailValue !== '0') ||
+					hasImagePreview;
 
 				if (selectedValue === 'custom') {
 					$('#custom-fallback-section').show();
 					$('#general-fallback-preview').hide();
-					
+
 					if (hasThumbnails) {
-						$('.feedzy-open-media').html(feedzy.i10n.action_btn_text_2);
+						$('.feedzy-open-media').html(
+							feedzy.i10n.action_btn_text_2
+						);
 						$('.feedzy-remove-media').addClass('is-show');
 					} else {
-						$('.feedzy-open-media').html(feedzy.i10n.action_btn_text_1);
+						$('.feedzy-open-media').html(
+							feedzy.i10n.action_btn_text_1
+						);
 						$('.feedzy-remove-media').removeClass('is-show');
 					}
 				} else if (selectedValue === 'general') {
 					$('#custom-fallback-section').hide();
 					$('#general-fallback-preview').show();
-					$('input[name="feedzy_meta_data[default_thumbnail_id]"]').val('');
+					$(
+						'input[name="feedzy_meta_data[default_thumbnail_id]"]'
+					).val('');
 				}
 			}
 		);
