@@ -15,6 +15,7 @@ import Inspector from './inspector';
 import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { Component, Fragment } from '@wordpress/element';
+import { InspectorControls } from '@wordpress/block-editor';
 import {
 	unescapeHTML,
 	filterData,
@@ -425,9 +426,17 @@ class Editor extends Component {
 	render() {
 		return (
 			<Fragment>
-				{'fetched' === this.state.route && (
-					<Inspector edit={this} state={this.state} {...this.props} />
-				)}
+				<InspectorControls key="inspector">
+					<div>
+						{'fetched' === this.state.route && (
+							<Inspector
+								edit={this}
+								state={this.state}
+								{...this.props}
+							/>
+						)}
+					</div>
+				</InspectorControls>
 				{'home' === this.state.route && (
 					<div className={this.props.className}>
 						<Placeholder
