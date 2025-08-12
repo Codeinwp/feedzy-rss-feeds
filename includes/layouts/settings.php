@@ -261,11 +261,11 @@
 						case 'headers':
 							?>
 							<div class="fz-form-wrap">
-								<div class="feedzy_helper_notice">
-									<p class="feedzy_helper_notice_title">
+								<div class="feedzy-helper-notice">
+									<h5 class="feedzy-helper-notice__title">
 										<?php esc_html_e( 'Headers Configuration', 'feedzy-rss-feeds' ); ?>
-									</p>
-									<p style="font-size: 14px">
+									</h5>
+									<p>
 										<?php 
 											esc_html_e(
 												'Use this section to add custom HTTP headers (e.g., User-Agent). This can help bypass feed access restrictions, simulate browser requests, or resolve issues where feeds return incomplete or blocked content.',
@@ -295,11 +295,11 @@
 						case 'proxy':
 							?>
 							<div class="fz-form-wrap">
-								<div class="feedzy_helper_notice">
-									<p class="feedzy_helper_notice_title">
+								<div class="feedzy-helper-notice">
+									<h5 class="feedzy-helper-notice__title">
 										<?php esc_html_e( 'Proxy Configuration', 'feedzy-rss-feeds' ); ?>
-									</p>
-									<p style="font-size: 14px">
+									</h5>
+									<p>
 										<?php esc_html_e( 'Use a proxy to bypass firewalls, geographic restrictions, or IP blocks from feed sources. This ensures you can reliably access restricted RSS feeds.', 'feedzy-rss-feeds' ); ?>
 										<a href="<?php echo esc_url( $help_btn_url ); ?>" target="_blank" >
 											<?php esc_html_e( 'View proxy setup guide', 'feedzy-rss-feeds' ); ?>
