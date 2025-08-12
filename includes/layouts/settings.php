@@ -261,6 +261,22 @@
 						case 'headers':
 							?>
 							<div class="fz-form-wrap">
+								<div class="feedzy-helper-notice">
+									<h5 class="feedzy-helper-notice__title">
+										<?php esc_html_e( 'Headers Configuration', 'feedzy-rss-feeds' ); ?>
+									</h5>
+									<p>
+										<?php 
+											esc_html_e(
+												'Use this section to add custom HTTP headers (e.g., User-Agent). This can help bypass feed access restrictions, simulate browser requests, or resolve issues where feeds return incomplete or blocked content.',
+												'feedzy-rss-feeds' 
+											);
+										?>
+										<a href="<?php echo esc_url( $help_btn_url ); ?>" target="_blank">
+											<?php esc_html_e( 'Learn more about headers here.', 'feedzy-rss-feeds' ); ?>
+										</a>
+									</p>
+								</div>
 								<div class="form-block">
 									<div class="fz-form-group">
 										<label class="form-label"><?php esc_html_e( 'User Agent', 'feedzy-rss-feeds' ); ?></label>
@@ -279,6 +295,17 @@
 						case 'proxy':
 							?>
 							<div class="fz-form-wrap">
+								<div class="feedzy-helper-notice">
+									<h5 class="feedzy-helper-notice__title">
+										<?php esc_html_e( 'Proxy Configuration', 'feedzy-rss-feeds' ); ?>
+									</h5>
+									<p>
+										<?php esc_html_e( 'Use a proxy to bypass firewalls, geographic restrictions, or IP blocks from feed sources. This ensures you can reliably access restricted RSS feeds.', 'feedzy-rss-feeds' ); ?>
+										<a href="<?php echo esc_url( $help_btn_url ); ?>" target="_blank" >
+											<?php esc_html_e( 'View proxy setup guide', 'feedzy-rss-feeds' ); ?>
+										</a>
+									</p>
+								</div>
 								<div class="form-block pb-0">
 									<div class="fz-form-row">
 										<div class="fz-form-col-6">
@@ -359,8 +386,10 @@
 			</div>
 		</div>
 
-		<div class="cta pt-30">
-			<a href="<?php echo esc_url( $help_btn_url ); ?>" class="btn btn-ghost" target="_blank"><?php esc_html_e( 'Need help?', 'feedzy-rss-feeds' ); ?></a>
-		</div>
+		<?php if ( 'proxy' !== $active_tab && 'headers' !== $active_tab ) : ?>
+			<div class="cta pt-30">
+				<a href="<?php echo esc_url( $help_btn_url ); ?>" class="btn btn-ghost" target="_blank"><?php esc_html_e( 'Need help?', 'feedzy-rss-feeds' ); ?></a>
+			</div>
+		<?php endif; ?>
 	</div>
 </div>
