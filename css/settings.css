@@ -1895,10 +1895,12 @@ span.error-message .components-external-link .components-visually-hidden{
 	border-radius: 8px;
 }
 .popover-action-list ul{
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
 	margin: 0;
 }
 .popover-action-list ul li{
-	padding-bottom: 13px;
 	margin-bottom: 0;
 	font-size: 16px;
 	font-weight: 400;
@@ -2210,6 +2212,7 @@ li.draggable-item .components-panel__body-toggle.components-button{
 }
 .popover-action-list ul li.fz-action-disabled {
 	cursor: not-allowed !important;
+    color: #757575;
 }
 
 .fz-action-panel .fz-chat-cpt-action .fz-notice-wrap,
@@ -2659,4 +2662,15 @@ li.draggable-item .components-panel__body-toggle.components-button{
     font-weight: 600;
     font-size: 16px;
     margin-bottom: 8px;
+}
+
+button.feedzy-action-button {
+	padding: 0;
+	font-size: 16px;
+	font-weight: 400;
+	background: none;
+	border: none;
+	width: 100%;
+	cursor: pointer;
+	height: unset;
 }
