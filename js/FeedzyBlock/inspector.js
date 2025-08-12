@@ -25,6 +25,7 @@ import {
 	SelectControl,
 	ResponsiveWrapper,
 	Dashicon,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalHStack as HStack,
 } from '@wordpress/components';
 
