@@ -1,5 +1,4 @@
 <?php
-$plan    = apply_filters( 'product_feedzy_license_plan', 0 );
 $content = ! apply_filters( 'feedzy_is_license_of_type', false, 'business' ) ? __( 'Your current plan does not include support for this feature.', 'feedzy-rss-feeds' ) . ' ' : __( 'You are using Feedzy Lite.', 'feedzy-rss-feeds' ) . ' ';
 ?>
 
