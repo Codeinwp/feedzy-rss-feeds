@@ -391,7 +391,9 @@ const ActionModal = () => {
 		<Fragment>
 			{isOpen && (
 				<Modal
-					isDismissible={false} onRequestClose={ closeModal } className="fz-action-popup"
+					isDismissible={false}
+					onRequestClose={closeModal}
+					className="fz-action-popup"
 					overlayClassName="fz-popup-wrap"
 				>
 					<div className="fz-action-content">
@@ -505,7 +507,7 @@ const ActionModal = () => {
 															) : (
 																<li
 																	key="action-1-disabled"
-																	className="pro-disabled-item"
+																	className="fz-action-disabled"
 																>
 																	{__(
 																		'Generate with OpenAI',
@@ -555,7 +557,7 @@ const ActionModal = () => {
 															) : (
 																<li
 																	key="action-3-disabled"
-																	className="pro-disabled-item"
+																	className="fz-action-disabled"
 																>
 																	{__(
 																		'Translate with Feedzy',
@@ -604,7 +606,7 @@ const ActionModal = () => {
 																) : (
 																	<li
 																		key="action-5-disabled"
-																		className="pro-disabled-item"
+																		className="fz-action-disabled"
 																	>
 																		{__(
 																			'Modify Links',
@@ -644,7 +646,7 @@ const ActionModal = () => {
 																) : (
 																	<li
 																		key="action-6-disabled"
-																		className="pro-disabled-item"
+																		className="fz-action-disabled"
 																	>
 																		{__(
 																			'Paraphrase with Feedzy',
@@ -681,7 +683,7 @@ const ActionModal = () => {
 																) : (
 																	<li
 																		key="action-7-disabled"
-																		className="pro-disabled-item"
+																		className="fz-action-disabled"
 																	>
 																		{__(
 																			'Spin using SpinnerChief',
@@ -718,7 +720,7 @@ const ActionModal = () => {
 																) : (
 																	<li
 																		key="action-8-disabled"
-																		className="pro-disabled-item"
+																		className="fz-action-disabled"
 																	>
 																		{__(
 																			'Spin using WordAI',
@@ -758,7 +760,7 @@ const ActionModal = () => {
 																) : (
 																	<li
 																		key="action-9-disabled"
-																		className="pro-disabled-item"
+																		className="fz-action-disabled"
 																	>
 																		{__(
 																			'Rewrite with AI',

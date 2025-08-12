@@ -111,10 +111,6 @@
 	vertical-align: super;
 }
 
-.fz-pro-disabled-item {
-    opacity: 0.6;
-}
-
 .post-type-feedzy_imports:not(.edit-post) .wrap div#side-sortables{
 	display: none;
 }
@@ -2216,6 +2212,7 @@ li.draggable-item .components-panel__body-toggle.components-button{
 }
 .popover-action-list ul li.fz-action-disabled {
 	cursor: not-allowed !important;
+    color: #757575;
 }
 
 .fz-action-panel .fz-chat-cpt-action .fz-notice-wrap,
