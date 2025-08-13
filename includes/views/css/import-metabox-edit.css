@@ -150,42 +150,6 @@ span.feedzy-spinner {
 	gap: 8px;
 }
 
-#fz_import_export_upsell .modal-content {
-	background: #fff;
-	border-radius: 3px;]
-	width: auto;
-	margin: 1.75rem auto  ;
-}
-#fz_import_export_upsell .modal-body {
-	text-align: center;
-}
-#fz_import_export_upsell .modal-header {
-	padding-bottom: 10px;
-	margin-bottom: 10px;
-	position: relative;
-}
-#fz_import_export_upsell .modal-header .dashicons {
-	font-size: 1.3em;
-	line-height: inherit;
-}
-#fz_import_export_upsell .modal-header h2 {
-	text-align: center;
-}
-#fz_import_export_upsell .close-modal {
-	position: absolute;
-	top: 0;
-	right: 0;
-}
-#fz_import_export_upsell .modal-footer .dashicons{
-
-	vertical-align: middle;
-	font-size: initial;
-}
-#fz_import_export_upsell .modal-footer {
-	padding-top: 10px;
-	margin-top: 10px;
-	text-align: center;
-}
 .fz-import-field {
 	background-color: #fff;
 	max-width: 400px;

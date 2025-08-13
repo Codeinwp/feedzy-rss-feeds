@@ -3683,39 +3683,7 @@ class Feedzy_Rss_Feeds_Import {
 	 * Add import export section.
 	 */
 	public function add_import_export_section() {
-		if ( ! feedzy_is_pro() ) :
-			?>
-			<div id="fz_import_export_upsell" class="hidden" style="max-width:450px">
-				<div class="modal-content">
-					<span class="notice-dismiss fz-notice close-modal">
-						<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this dialog', 'feedzy-rss-feeds' ); ?></span>
-					</span>
-					<div class="modal-header">
-						<h2>
-							<span class="dashicons dashicons-lock"></span>
-							<?php esc_html_e( 'Upload/Export is a PRO feature', 'feedzy-rss-feeds' ); ?>
-						</h2>
-					</div>
-					<div class="modal-body">
-						<p>
-							<?php esc_html_e( 'We\'re sorry, upload/export of import configuration is not available on your plan. Please upgrade to the Pro plan to unlock all these features.', 'feedzy-rss-feeds' ); ?>
-						</p>
-					</div>
-					<div class="modal-footer">
-						<div class="button-container">
-							<a
-								href="<?php echo esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'importExport' ) ) ); ?>"
-								target="_blank" rel="noopener "
-								class="button button-primary button-large"
-							>
-								<?php esc_html_e( 'Upgrade to PRO', 'feedzy-rss-feeds' ); ?>
-								<span aria-hidden="true" class="dashicons dashicons-external"></span>
-							</a>
-						</div>
-					</div>
-				</div>
-			</div>
-		<?php endif; ?>
+		?>
 		<script type="template/text" id="fz_import_field_section">
 			<div class="fz-import-field hidden">
 				<form method="post" enctype="multipart/form-data" action="<?php echo esc_url( add_query_arg( array( 'action' => 'fz_import_job' ), admin_url( 'admin.php' ) ) ); ?>">

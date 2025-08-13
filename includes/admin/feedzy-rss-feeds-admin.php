@@ -463,7 +463,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 						openModal('#feedzy-add-new-import');
 						event.preventDefault();
 					});
-
+					
 					// Function to open the modal
 					function openModal(modal) {
 						jQuery(modal).show();
@@ -488,26 +488,50 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			</script>
 			<div id="feedzy-add-new-import" class="wp-core-ui feedzy-modal" style="display:none;">
 				<div class="modal-content">
-					<button type="button" class="notice-dismiss fz-notice close-modal">
-						<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this dialog', 'feedzy-rss-feeds' ); ?></span>
+					<button type="button" class="fz-notice close-modal">
+						<span class="dashicons dashicons-no-alt"></span>
+						<span class="screen-reader-text">
+							<?php esc_html_e( 'Dismiss this dialog', 'feedzy-rss-feeds' ); ?>
+						</span>
 					</button>
 					<div class="modal-header">
 						<h2>
-							<span class="dashicons dashicons-lock"></span> <?php esc_html_e( 'Upgrade to Use Unlimited Imports', 'feedzy-rss-feeds' ); ?>
+							<?php esc_html_e( 'Upgrade to Use Unlimited Imports', 'feedzy-rss-feeds' ); ?>
 						</h2>
+						<p style="color: red;">
+							<?php esc_html_e( 'Import limit reached', 'feedzy-rss-feeds' ); ?>
+							<span>
+								<?php
+								// translators: %1$s is the number of imports used, %2$s is the total number of imports allowed.
+								echo esc_html( '(' . sprintf( __( '%1$s/%2$s used', 'feedzy-rss-feeds' ), '1', '1' ) . ')' );
+								?>
+							</span>
+						</p>
 					</div>
 					<div class="modal-body">
-						<p><?php esc_html_e( 'We’re sorry, but your current plan supports only one import setup. Upgrade to unlock unlimited import configurations and make the most of Feedzy’s powerful features!', 'feedzy-rss-feeds' ); ?></p>
+						<p>
+							<?php esc_html_e( 'Your current plan supports only one import setup. Upgrade to unlock unlimited import configurations and make the most of Feedzy\'s powerful features!', 'feedzy-rss-feeds' ); ?>
+						</p>
 					</div>
 					<div class="modal-footer">
-						<div class="button-container"><a
-									href="<?php echo esc_url( tsdk_utmify( tsdk_translate_link( FEEDZY_UPSELL_LINK ), 'add-new-import' ) ); ?>"
-									target="_blank" rel="noopener "
-									class="button button-primary button-large"><?php esc_html_e( 'Upgrade to PRO', 'feedzy-rss-feeds' ); ?>
-								<span aria-hidden="true" class="dashicons dashicons-external"></span></a></div>
+						<div class="button-container">
+							<a
+								href="<?php echo esc_url( tsdk_utmify( tsdk_translate_link( FEEDZY_UPSELL_LINK ), 'add-new-import' ) ); ?>"
+								target="_blank" rel="noopener "
+								class="button button-primary button-large"
+							>
+								<?php esc_html_e( 'Upgrade to PRO', 'feedzy-rss-feeds' ); ?>
+							</a>
+						</div>
+						<span>
+							<?php
+							esc_html_e( '30-day money-back guarantee. No questions asked.', 'feedzy-rss-feeds' );
+							?>
+						</span>
 					</div>
 				</div>
 			</div>
+			
 		<?php
 		$license_key       = apply_filters( 'product_feedzy_license_key', '' );
 		$renew_license_url = tsdk_utmify( tsdk_translate_link( FEEDZY_UPSELL_LINK ), 'renew' );
@@ -518,48 +542,115 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		?>
 			<div id="feedzy-renew-edit" class="wp-core-ui feedzy-modal" style="display:none;">
 				<div class="modal-content">
-					<button type="button" class="notice-dismiss fz-notice close-modal">
+					<button type="button" class="fz-notice close-modal">
+						<span class="dashicons dashicons-no-alt"></span>
 						<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this dialog', 'feedzy-rss-feeds' ); ?></span>
 					</button>
 					<div class="modal-header">
 						<h2>
-							<span class="dashicons dashicons-lock"></span> <?php esc_html_e( 'Alert!', 'feedzy-rss-feeds' ); ?>
+							<?php esc_html_e( 'Alert!', 'feedzy-rss-feeds' ); ?>
 						</h2>
 					</div>
 					<div class="modal-body">
-						<p><?php esc_html_e( 'In order to edit premium import setups, benefit from updates and support for Feedzy Premium plugin, please renew your license code or activate it.', 'feedzy-rss-feeds' ); ?></p>
+						<p>
+							<?php esc_html_e( 'In order to edit premium import setups, benefit from updates and support for Feedzy Premium plugin, please renew your license code or activate it.', 'feedzy-rss-feeds' ); ?>
+						</p>
 					</div>
 					<div class="modal-footer">
 						<div class="button-container">
-							<a href="<?php echo esc_url( $renew_license_url ); ?>" target="_blank" rel="noopener "
-								class="button button-primary button-large"><?php esc_html_e( 'Renew License', 'feedzy-rss-feeds' ); ?><span
-										aria-hidden="true" class="dashicons dashicons-external"></span></a>
-							<a href="<?php echo esc_url( admin_url( 'options-general.php#feedzy_rss_feeds_pro_license' ) ); ?>" target="_blank"
+							<a
+								href="<?php echo esc_url( $renew_license_url ); ?>"
+								target="_blank"
 								rel="noopener "
-								class="button button-secondary button-large"><?php esc_html_e( 'Activate License', 'feedzy-rss-feeds' ); ?></a>
-							</div>
+								class="button button-primary button-large"
+							>
+								<?php esc_html_e( 'Renew License', 'feedzy-rss-feeds' ); ?><span aria-hidden="true" class="dashicons dashicons-external"></span>
+							</a>
+							<a
+								href="<?php echo esc_url( admin_url( 'options-general.php#feedzy_rss_feeds_pro_license' ) ); ?>"
+								target="_blank"
+								rel="noopener "
+								class="button button-secondary button-large"
+							>
+								<?php esc_html_e( 'Activate License', 'feedzy-rss-feeds' ); ?>
+							</a>
+						</div>
 					</div>
 				</div>
 			</div>
 			<div id="feedzy-clone-modal" class="wp-core-ui feedzy-modal" style="display:none;">
 				<div class="modal-content">
-					<button type="button" class="notice-dismiss fz-notice close-modal">
+					<button type="button" class="fz-notice close-modal">
+						<span class="dashicons dashicons-no-alt"></span>
 						<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this dialog', 'feedzy-rss-feeds' ); ?></span>
 					</button>
 					<div class="modal-header">
 						<h2>
-							<span class="dashicons dashicons-lock"></span> <?php esc_html_e( 'Cloning import setups is a PRO feature', 'feedzy-rss-feeds' ); ?>
+							<?php esc_html_e( 'Unlock Cloning with Feedzy PRO', 'feedzy-rss-feeds' ); ?>
 						</h2>
+						<p>
+							<?php esc_html_e( 'Duplicate your imports with one click', 'feedzy-rss-feeds' ); ?>
+						</p>
 					</div>
 					<div class="modal-body">
-						<p><?php esc_html_e( 'We\'re sorry, cloning import setups is not available on your plan. Upgrade to the Pro plan to unlock this feature and streamline your import setup process.', 'feedzy-rss-feeds' ); ?></p>
+						<p>
+							<?php esc_html_e( 'Cloning import setups are not available on your plan. Upgrade to the Pro plan to unlock this feature and streamline your import setup process.', 'feedzy-rss-feeds' ); ?>
+						</p>
 					</div>
 					<div class="modal-footer">
-						<div class="button-container"><a
-									href="<?php echo esc_url( tsdk_utmify( tsdk_translate_link( FEEDZY_UPSELL_LINK ), 'clone' ) ); ?>"
-									target="_blank" rel="noopener "
-									class="button button-primary button-large"><?php esc_html_e( 'Upgrade to PRO', 'feedzy-rss-feeds' ); ?>
-								<span aria-hidden="true" class="dashicons dashicons-external"></span></a></div>
+						<div class="button-container">
+							<a
+								href="<?php echo esc_url( tsdk_utmify( tsdk_translate_link( FEEDZY_UPSELL_LINK ), 'clone' ) ); ?>"
+								target="_blank" rel="noopener "
+								class="button button-primary button-large"
+							>
+								<?php esc_html_e( 'Upgrade to PRO', 'feedzy-rss-feeds' ); ?>
+							</a>
+						</div>
+						<span>
+							<?php
+							esc_html_e( '30-day money-back guarantee. No questions asked.', 'feedzy-rss-feeds' );
+							?>
+						</span>
+					</div>
+				</div>
+			</div>
+			<div id="fz_import_export_upsell" class="wp-core-ui feedzy-modal" style="display:none;">
+				<div class="modal-content">
+					<span class="fz-notice close-modal">
+						<span class="dashicons dashicons-no-alt"></span>
+						<span class="screen-reader-text">
+							<?php esc_html_e( 'Dismiss this dialog', 'feedzy-rss-feeds' ); ?>
+						</span>
+					</span>
+					<div class="modal-header">
+						<h2>
+							<?php esc_html_e( 'Unlock Upload & Export with Feedzy PRO', 'feedzy-rss-feeds' ); ?>
+						</h2>
+						<p>
+							<?php esc_html_e( 'Save time by reusing your import setups', 'feedzy-rss-feeds' ); ?>
+						</p>
+					</div>
+					<div class="modal-body">
+						<p>
+							<?php esc_html_e( 'Upload/export of import configuration is not available on your plan. Please upgrade to the Pro plan to unlock all these features.', 'feedzy-rss-feeds' ); ?>
+						</p>
+					</div>
+					<div class="modal-footer">
+						<div class="button-container">
+							<a
+								href="<?php echo esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'importExport' ) ) ); ?>"
+								target="_blank" rel="noopener "
+								class="button button-primary button-large"
+							>
+								<?php esc_html_e( 'Upgrade to PRO', 'feedzy-rss-feeds' ); ?>
+							</a>
+						</div>
+						<span>
+							<?php
+							esc_html_e( '30-day money-back guarantee. No questions asked.', 'feedzy-rss-feeds' );
+							?>
+						</span>
 					</div>
 				</div>
 			</div>
@@ -594,21 +685,34 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				.feedzy-modal .modal-content {
 					position: relative;
 					background: #fff;
-					padding: 20px;
-					border-radius: 3px;
+					padding: 0;
+					border-radius: 8px;
 					max-width: 500px;
 					width: auto;
 					margin: 6.75rem auto;
 				}
 
 				.feedzy-modal .modal-body {
-					text-align: center;
+					padding: 0 25px;
+					padding-top: 25px;
+				}
+
+				.feedzy-modal .modal-body p {
+					margin: 0;
+					font-size: 16px;
+					line-height: 1.2;
 				}
 
 				.feedzy-modal .modal-header {
-					padding-bottom: 10px;
-					margin-bottom: 10px;
+					display: flex;
+					flex-direction: column;
+					align-items: flex-start;
+					gap: 0.5rem;
+
 					position: relative;
+					background-color: rgb(248, 250, 252);
+					padding: 20px 25px;
+					border-radius: 8px;
 				}
 
 				.feedzy-modal .modal-header .dashicons {
@@ -616,14 +720,24 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					line-height: inherit;
 				}
 
+				.feedzy-modal .modal-header :is(h2,p) {
+					margin: 0;
+					font-weight: 500;
+				}
+
 				.feedzy-modal .modal-header h2 {
-					text-align: center;
+					font-size: 20px;
 				}
 
 				.feedzy-modal .close-modal {
 					position: absolute;
 					top: 0;
 					right: 0;
+					z-index: 10;
+					background: transparent;
+					border: none;
+					cursor: pointer;
+					padding: 10px;
 				}
 
 				.feedzy-modal .modal-footer .dashicons {
@@ -633,10 +747,23 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				}
 
 				.feedzy-modal .modal-footer {
-					padding-top: 10px;
-					margin-top: 10px;
+					padding: 25px;
 					text-align: center;
+					flex-direction: column;
+					display: flex;
+					gap: 1rem;
 				}
+
+				.feedzy-modal .modal-footer a {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					background-color: rgb(89, 127, 230);
+					padding: 10px;
+					border-radius: 6px;
+					font-size: medium;
+				}
+
 				#toplevel_page_feedzy-admin-menu span.tsdk-upg-menu-item{
 					color:#fff;
 				}
