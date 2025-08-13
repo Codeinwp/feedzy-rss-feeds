@@ -179,7 +179,6 @@ test.describe('Feed Import', () => {
 			.getByPlaceholder('Add a name for your import')
 			.fill(importName);
 		await addFeeds(page, [FEED_URL]);
-		await setItemLimit(page, 1);
 		await page
 			.getByRole('button', { name: 'Save & Activate importing' })
 			.click({ force: true });
@@ -204,7 +203,6 @@ test.describe('Feed Import', () => {
 			.fill(importName);
 		await addFeeds(page, [FEED_URL]);
 		await addFeaturedImage(page, '[#item_image]');
-		await setItemLimit(page, 1);
 		await page
 			.getByRole('button', { name: 'Save & Activate importing' })
 			.click({ force: true });
@@ -257,7 +255,6 @@ test.describe('Feed Import', () => {
 			)
 		);
 		await addFeaturedImage(page, getEmptyChainedActions('item_image'));
-		await setItemLimit(page, 1);
 
 		await page
 			.getByRole('button', { name: 'Save & Activate importing' })
