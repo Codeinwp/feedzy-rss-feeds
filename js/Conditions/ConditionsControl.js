@@ -149,7 +149,7 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 				);
 				const operators = Object.keys(
 					window?.feedzyConditionsData?.operators
-				).filter((key) => !field.unsupportedOperators?.includes(key));
+				).filter((key) => !field?.unsupportedOperators?.includes(key));
 
 				return (
 					<PanelTab
