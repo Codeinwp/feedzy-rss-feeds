@@ -631,11 +631,6 @@ parameters:
 			path: includes/admin/feedzy-rss-feeds-admin.php
 
 		-
-			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:feedzy_menu_pages\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: includes/admin/feedzy-rss-feeds-admin.php
-
-		-
 			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:feedzy_remove_elementor_feature\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: includes/admin/feedzy-rss-feeds-admin.php

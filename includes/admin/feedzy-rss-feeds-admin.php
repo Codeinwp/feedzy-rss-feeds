@@ -128,6 +128,34 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 		wp_register_style( $this->plugin_name, FEEDZY_ABSURL . 'css/feedzy-rss-feeds.css', array(), $this->version, 'all' );
 	}
+	
+	/**
+	 * Helper function to enqueue the license script with localization
+	 *
+	 * @access  public
+	 * @return  void
+	 */
+	private function enqueue_license_script() {
+		wp_enqueue_script( 
+			$this->plugin_name . '_license', 
+			FEEDZY_ABSURL . 'js/feedzy-license.js', 
+			array( 'jquery' ), 
+			$this->version, 
+			true 
+		);
+
+		wp_localize_script(
+			$this->plugin_name . '_license',
+			'feedzyLicense',
+			array(
+				'l10n' => array(
+					'licenseKey' => __( 'License Key', 'feedzy-rss-feeds' ),
+					'checkBtn'   => __( 'Check License', 'feedzy-rss-feeds' ),
+					'errorMsg'   => __( 'An error occurred while checking the license. Please try again.', 'feedzy-rss-feeds' ),
+				),
+			)
+		);
+	}
 
 	/**
 	 * Register the stylesheets for the admin area.
@@ -206,6 +234,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					),
 				)
 			);
+
+			$this->enqueue_license_script();
 		}
 
 		$upsell_screens = array( 'feedzy-rss_page_feedzy-settings', 'feedzy-rss_page_feedzy-admin-menu-pro-upsell' );
@@ -278,8 +308,15 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		if ( 'feedzy_page_feedzy-support' === $screen->base && ( ( isset( $_GET['tab'] ) && 'improve' === $_GET['tab'] ) || ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type ) ) ) {
+		$tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
 
+		if ( 'feedzy_page_feedzy-support' === $screen->base &&
+			(
+				( 'improve' === $tab )
+				|| ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type )
+				|| ( 'license' === $tab )
+			) 
+		) {
 			$asset_file = include FEEDZY_ABSPATH . '/build/feedback/index.asset.php';
 			wp_enqueue_script( $this->plugin_name . '_feedback', FEEDZY_ABSURL . 'build/feedback/index.js', array_merge( $asset_file['dependencies'], array( 'wp-editor', 'wp-api', 'lodash' ) ), $asset_file['version'], true );
 			wp_enqueue_style( 'wp-block-editor' );
@@ -292,6 +329,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					'pluginVersion' => $this->version,
 				)
 			);
+
+			$this->enqueue_license_script();
 
 			wp_set_script_translations( $this->plugin_name . '_feedback', 'feedzy-rss-feeds' );
 		}
@@ -923,6 +962,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @since   3.0.12
 	 * @access  public
+	 * @return  void
 	 */
 	public function feedzy_menu_pages() {
 		$capability = feedzy_current_user_can();
@@ -932,6 +972,17 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$svg_base64_icon = 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNzdweCIgaGVpZ2h0PSI3N3B4IiB2aWV3Qm94PSIwIDAgNzcgNzciIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjYgKDY3NDkxKSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5Db21iaW5lZC1TaGFwZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQcm9kdWN0LVBhZ2UiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJXb3JkUHJlc3MtcGx1Z2lucyIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE5Ni4wMDAwMDAsIC05NTcuMDAwMDAwKSIgZmlsbD0iIzQyNjhDRiI+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik0yMzQuNSwxMDM0IEMyMTMuMjM3MDM3LDEwMzQgMTk2LDEwMTYuNzYyOTYgMTk2LDk5NS41IEMxOTYsOTc0LjIzNzAzNyAyMTMuMjM3MDM3LDk1NyAyMzQuNSw5NTcgQzI1NS43NjI5NjMsOTU3IDI3Myw5NzQuMjM3MDM3IDI3Myw5OTUuNSBDMjczLDEwMTYuNzYyOTYgMjU1Ljc2Mjk2MywxMDM0IDIzNC41LDEwMzQgWiBNMjM4LjM4OTA4NywxMDAzLjYxMDkxIEMyMzYuMjQxMjU2LDEwMDEuNDYzMDggMjMyLjc1ODg1MSwxMDAxLjQ2Mjk3IDIzMC42MTA5NDMsMTAwMy42MTA4OCBDMjI4LjQ2MzAzNSwxMDA1Ljc1ODc5IDIyOC40NjMwMjEsMTAwOS4yNDEyIDIzMC42MTA5MTMsMTAxMS4zODkwOSBDMjMyLjc1ODgwNCwxMDEzLjUzNjk4IDIzNi4yNDExNDksMTAxMy41MzcwMyAyMzguMzg5MDU3LDEwMTEuMzg5MTIgQzI0MC41MzY5NjUsMTAwOS4yNDEyMSAyNDAuNTM2OTc5LDEwMDUuNzU4OCAyMzguMzg5MDg3LDEwMDMuNjEwOTEgWiBNMjUxLjE5OTE5Niw5OTYuNTI0MjY5IEMyNDEuNzE2MDEsOTg4LjAxMzQwOSAyMjcuMjk0MTQzLDk4OC4wMDQzMDcgMjE3LjgwMDg1OSw5OTYuNTI0MjE0IEMyMTcuMjQwNDk2LDk5Ny4wMjcwNzkgMjE3LjIyMjEwOCw5OTcuODk5Nzc3IDIxNy43NTQ0OCw5OTguNDMyMTUgTDIyMC41NTE4NzksMTAwMS4yMjk1NSBDMjIxLjA0MTU5NCwxMDAxLjcxOTI2IDIyMS44Mjk5NjcsMTAwMS43NTIyNiAyMjIuMzUwNDA4LDEwMDEuMjk1MzcgQzIyOS4yODI0MDEsOTk1LjIxMTE3IDIzOS43MDI4MSw5OTUuMTk4MjA5IDI0Ni42NDk1NDYsMTAwMS4yOTU0MSBDMjQ3LjE3MDA0NywxMDAxLjc1MjI1IDI0Ny45NTg0MiwxMDAxLjcxOTI1IDI0OC40NDgwNzUsMTAwMS4yMjk1OSBMMjUxLjI0NTQ2NSw5OTguNDMyMjA1IEMyNTEuNzc3OTUyLDk5Ny44OTk4MzQgMjUxLjc1OTU2MSw5OTcuMDI3MTM2IDI1MS4xOTkxOTYsOTk2LjUyNDI2OSBaIE0yNTkuNTE3NDgxLDk4OC4wNjI4MTggQzI0NS43NTQ2NjIsOTc1LjI1MzkxIDIyNC4zMTI1MzEsOTc1LjE5MTM3NCAyMTAuNDgyNDY0LDk4OC4wNjI4NzMgQzIwOS45NTA5Niw5ODguNTU3NTU3IDIwOS45NDA4NDUsOTg5LjM5NjY4OSAyMTAuNDU0MjIyLDk4OS45MTAwNjYgTDIxMy4xODU0ODksOTkyLjY0MTMzMyBDMjEzLjY3NTU2OSw5OTMuMTMxNDEzIDIxNC40NjI4MjQsOTkzLjE0MTkyNCAyMTQuOTcyNjIyLDk5Mi42NzIzNTUgQzIyNi4yODEwMjksOTgyLjI1NDc4NiAyNDMuNzIwODA0LDk4Mi4yNTY0MTUgMjU5LjUxNzQ4MSw5ODguMDYyODE4IFoiIGlkPSJDb21iaW5lZC1TaGFwZSI+PC9wYXRoPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+';
 		add_menu_page( __( 'Feedzy', 'feedzy-rss-feeds' ), __( 'Feedzy', 'feedzy-rss-feeds' ), apply_filters( 'feedzy_admin_menu_capability', 'publish_posts' ), 'feedzy-admin-menu', '', $svg_base64_icon, 98.7666 );
 
+		add_submenu_page(
+			'feedzy-admin-menu',
+			__( 'Dashboard', 'feedzy-rss-feeds' ),
+			__( 'Dashboard', 'feedzy-rss-feeds' ),
+			'manage_options',
+			'feedzy-support',
+			array(
+				$this,
+				'render_support',
+			)
+		);
 		add_submenu_page(
 			'feedzy-admin-menu',
 			__( 'Settings', 'feedzy-rss-feeds' ),
@@ -954,17 +1005,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				'feedzy_integration_page',
 			)
 		);
-		add_submenu_page(
-			'feedzy-admin-menu',
-			__( 'Support', 'feedzy-rss-feeds' ),
-			__( 'Support', 'feedzy-rss-feeds' ) . '<span class="dashicons dashicons-editor-help more-features-icon" style="width: 17px; height: 17px; margin-left: 4px; color: #ffca54; font-size: 17px; vertical-align: -3px;"></span>',
-			'manage_options',
-			'feedzy-support',
-			array(
-				$this,
-				'render_support',
-			)
-		);
 
 		if ( ! feedzy_is_pro() && get_option( 'feedzy_fresh_install', false ) ) {
 			$hook = add_submenu_page(
@@ -981,37 +1021,55 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			add_action( "load-$hook", array( $this, 'feedzy_load_setup_wizard_page' ) );
 			add_action( 'adminmenu', array( $this, 'feedzy_hide_wizard_menu' ) );
 		}
-		if ( ! defined( 'REVIVE_NETWORK_VERSION' ) ) {
-			$rss_to_social = __( 'RSS to Social', 'feedzy-rss-feeds' ) . '<span id="feedzy-rn-menu" class="dashicons dashicons-external" style="font-size:initial;"></span>';
-			add_action(
-				'admin_footer',
-				function () {
-					?>
-					<script type="text/javascript">
-						jQuery(document).ready(function ($) {
-							$('#feedzy-rn-menu').parent().attr('target', '_blank');
-						});
-					</script>
-					<?php
-				}
-			);
+	}
 
-			global $submenu;
-			if ( isset( $submenu['feedzy-admin-menu'] ) ) {
+	/**
+	 * Handle the RSS to Social menu item.
+	 *
+	 * @access  public
+	 * @return  void
+	 */
+	public function rss_to_social_menu() {
+		$capability = feedzy_current_user_can();
+		if ( ! $capability ) {
+			return;
+		}
 
-				array_splice(
-					$submenu['feedzy-admin-menu'],
-					4,
-					0,
-					array(
-						array(
-							$rss_to_social,
-							'manage_options',
-							tsdk_utmify( 'https://revive.social/plugins/revive-network', 'feedzy-menu' ),
-						),
-					)
-				);
+		if ( defined( 'REVIVE_NETWORK_VERSION' ) && ! feedzy_is_pro() ) {
+			return;
+		}
+
+		$rss_to_social = __( 'RSS to Social', 'feedzy-rss-feeds' ) . '<span id="feedzy-rn-menu" class="dashicons dashicons-external" style="font-size:initial;"></span>';
+		add_action(
+			'admin_footer',
+			function () {
+				?>
+				<script type="text/javascript">
+					jQuery(document).ready(function ($) {
+						$('#feedzy-rn-menu').parent().attr('target', '_blank');
+					});
+				</script>
+				<?php
 			}
+		);
+
+		global $submenu;
+		if ( isset( $submenu['feedzy-admin-menu'] ) ) {
+			if ( isset( $submenu['feedzy-admin-menu'][0] ) ) {
+				unset( $submenu['feedzy-admin-menu'][0] );
+			}
+			array_splice(
+				$submenu['feedzy-admin-menu'],
+				5,
+				0,
+				array(
+					array(
+						$rss_to_social,
+						'manage_options',
+						tsdk_utmify( 'https://revive.social/plugins/revive-network', 'feedzy-menu' ),
+					),
+				)
+			);
 		}
 	}
 
@@ -1605,7 +1663,20 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		update_option( 'feedzy_fresh_install', $status );
 		delete_option( 'feedzy_wizard_data' );
 		if ( false !== $redirect_to_dashboard ) {
-			wp_safe_redirect( remove_query_arg( array( 'action', 'status' ) ) );
+
+			$cleaned_url = remove_query_arg( array( 'page', 'action', 'status' ) );
+			$parsed_url  = wp_parse_url( $cleaned_url );
+
+			// Default to dashboard if no page is set.
+			if (
+				isset( $parsed_url['path'] ) && 
+				strpos( $parsed_url['path'], '/wp-admin/admin.php' ) !== false && 
+				empty( $parsed_url['query'] )
+			) {
+				$cleaned_url = add_query_arg( 'page', 'feedzy-support', $cleaned_url );
+			}
+		
+			wp_safe_redirect( $cleaned_url );
 			exit;
 		}
 		return true;
@@ -1809,7 +1880,12 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$segment  = 1;
 			$response = array(
 				'status'      => 1,
-				'redirect_to' => add_query_arg( 'post_type', 'feedzy_imports', admin_url( 'edit.php' ) ),
+				'redirect_to' => add_query_arg(
+					array(
+						'page' => 'feedzy-support',
+					),
+					admin_url( 'admin.php' )
+				),
 				'message'     => __( 'Redirecting to Feedzy dashboard', 'feedzy-rss-feeds' ),
 			);
 
@@ -1834,30 +1910,48 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			} else {
 				$response = array(
 					'status'      => 1,
-					'redirect_to' => add_query_arg( 'post_type', 'feedzy_imports', admin_url( 'edit.php' ) ),
+					'redirect_to' => add_query_arg(
+						array(
+							'page' => 'feedzy-support',
+						),
+						admin_url( 'admin.php' )
+					),
 					'message'     => __( 'Redirecting to Feedzy dashboard', 'feedzy-rss-feeds' ),
 				);
 			}
 		} elseif ( 'page_builder' === $integrate_with ) {
-			$post_edit_link = get_edit_post_link( $page_id, 'db' );
-			// Get elementor edit page link.
-			if ( defined( 'ELEMENTOR_PATH' ) && class_exists( 'Elementor\Widget_Base' ) ) {
-				$segment        = 3;
-				$post_edit_link = add_query_arg(
-					array(
-						'post'   => $page_id,
-						'action' => 'elementor',
+			if ( empty( $page_id ) ) {
+				$response = array(
+					'status'      => 1,
+					'redirect_to' => add_query_arg(
+						array(
+							'page' => 'feedzy-support',
+						),
+						admin_url( 'admin.php' )
 					),
-					admin_url( 'post.php' )
+					'message'     => __( 'Redirecting to Feedzy dashboard', 'feedzy-rss-feeds' ),
 				);
 			} else {
-				$segment = 4;
+				$post_edit_link = get_edit_post_link( $page_id, 'db' );
+				// Get elementor edit page link.
+				if ( defined( 'ELEMENTOR_PATH' ) && class_exists( 'Elementor\Widget_Base' ) ) {
+					$segment        = 3;
+					$post_edit_link = add_query_arg(
+						array(
+							'post'   => $page_id,
+							'action' => 'elementor',
+						),
+						admin_url( 'post.php' )
+					);
+				} else {
+					$segment = 4;
+				}
+				$response = array(
+					'status'      => 1,
+					'redirect_to' => $post_edit_link,
+					'message'     => __( 'Redirecting to draft page', 'feedzy-rss-feeds' ),
+				);
 			}
-			$response = array(
-				'status'      => 1,
-				'redirect_to' => $post_edit_link,
-				'message'     => __( 'Redirecting to draft page', 'feedzy-rss-feeds' ),
-			);
 		}
 		if ( $with_subscribe && is_email( $email ) ) {
 			update_option( 'feedzy_rss_feeds_logger_flag', 'yes' );

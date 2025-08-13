@@ -176,7 +176,8 @@ class Feedzy_Rss_Feeds {
 		self::$instance->loader->add_action( 'feedzy_post_http_teardown', self::$instance->admin, 'post_http_teardown', 10, 1 );
 		self::$instance->loader->add_action( 'admin_init', self::$instance->admin, 'admin_init', 10, 1 );
 		self::$instance->loader->add_action( 'manage_feedzy_categories_posts_custom_column', self::$instance->admin, 'manage_feedzy_category_columns', 10, 2 );
-		self::$instance->loader->add_action( 'admin_menu', self::$instance->admin, 'feedzy_menu_pages' );
+		self::$instance->loader->add_action( 'admin_menu', self::$instance->admin, 'feedzy_menu_pages', 8 );
+		self::$instance->loader->add_action( 'admin_menu', self::$instance->admin, 'rss_to_social_menu', 20 );
 		self::$instance->loader->add_action( 'wp_ajax_get_tinymce_form', self::$instance->admin, 'get_tinymce_form' );
 		self::$instance->loader->add_action( 'wp_enqueue_scripts', self::$instance->admin, 'enqueue_styles' );
 		self::$instance->loader->add_action( 'admin_enqueue_scripts', self::$instance->admin, 'enqueue_styles_admin', 99 );
