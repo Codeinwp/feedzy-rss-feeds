@@ -295,11 +295,23 @@ class Feedzy_Rss_Feeds_Log {
 			return;
 		}
 
+		// Ensure the origin is present in the context so we know which function/method produced the log.
+		$merged_context = array_merge( $this->context, $context );
+		if ( ! isset( $merged_context['function'] ) || ! isset( $merged_context['line'] ) ) {
+			$origin = $this->get_calling_origin();
+			if ( ! isset( $merged_context['function'] ) ) {
+				$merged_context['function'] = is_array( $origin ) && isset( $origin['function'] ) ? $origin['function'] : (string) $origin;
+			}
+			if ( ! isset( $merged_context['line'] ) && is_array( $origin ) && isset( $origin['line'] ) ) {
+				$merged_context['line'] = $origin['line'];
+			}
+		}
+
 		$record = array(
 			'timestamp' => gmdate( 'c' ),
 			'level'     => isset( self::$levels[ $level ] ) ? self::$levels[ $level ] : 'UNKNOWN',
 			'message'   => $message,
-			'context'   => array_merge( $this->context, $context ),
+			'context'   => $merged_context,
 		);
 
 		if ( wp_doing_ajax() ) {
@@ -320,6 +332,39 @@ class Feedzy_Rss_Feeds_Log {
 		}
 
 		error_log( $formatted, 3, $this->filepath );
+	}
+
+	/**
+	 * Determine the caller origin (Class::method() or function()) for the current log entry,
+	 * returning both the function signature and source line number.
+	 *
+	 * @since 5.1.0
+	 * @return array{function:string,line:int|null}
+	 */
+	private function get_calling_origin() {
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
+		$trace = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS, 10 );
+		foreach ( $trace as $frame ) {
+			// Skip frames from this logger class.
+			if ( isset( $frame['class'] ) && __CLASS__ === $frame['class'] ) {
+				continue;
+			}
+			if ( isset( $frame['function'] ) ) {
+				$func = isset( $frame['class'] )
+					? ( $frame['class'] . ( isset( $frame['type'] ) ? $frame['type'] : '::' ) . $frame['function'] . '()' )
+					: ( $frame['function'] . '()' );
+				$line = isset( $frame['line'] ) ? (int) $frame['line'] : null;
+
+				return array(
+					'function' => $func,
+					'line'     => $line,
+				);
+			}
+		}
+		return array(
+			'function' => 'unknown',
+			'line'     => null,
+		);
 	}
 
 	/**
