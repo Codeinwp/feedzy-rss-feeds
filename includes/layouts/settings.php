@@ -33,7 +33,7 @@
 	$email_error_address_placeholder = ( ! empty( $email_error_address ) ) ? $email_error_address : get_option( 'admin_email' );
 
 	if ( 'logs' === $active_tab ) {
-		$logs_type = isset( $_REQUEST['logs_type'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_REQUEST['logs_type'] ) ) ) : null;// phpcs:ignore WordPress.Security.NonceVerification
+		$logs_type = isset( $_REQUEST['logs_type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['logs_type'] ) ) : null;// phpcs:ignore WordPress.Security.NonceVerification
 		$logs      = Feedzy_Rss_Feeds_Log::get_instance()->get_recent_logs( 50, $logs_type );
 	}
 

@@ -89,10 +89,10 @@ class Feedzy_Rss_Feeds_Log {
 	 * @var array<int, string> Log levels.
 	 */
 	private static $levels = array(
-		self::DEBUG   => 'DEBUG',
-		self::INFO    => 'INFO',
-		self::WARNING => 'WARNING',
-		self::ERROR   => 'ERROR',
+		self::DEBUG   => 'debug',
+		self::INFO    => 'info',
+		self::WARNING => 'warning',
+		self::ERROR   => 'error',
 	);
 
 	const PRIORITIES_MAPPING = array(
@@ -268,8 +268,13 @@ class Feedzy_Rss_Feeds_Log {
 	 * @return void
 	 */
 	public static function log( $level, $message, array $context = array() ) {
-		$instance = self::get_instance();
-		$instance->add_log_record( $level, $message, $context );
+		try {
+			$instance = self::get_instance();
+			if ( $instance ) {
+				$instance->add_log_record( $level, $message, $context );
+			}
+		} catch ( Throwable $e ) {
+		}
 	}
 
 	/**
@@ -305,7 +310,7 @@ class Feedzy_Rss_Feeds_Log {
 
 		$log_entry = array(
 			'timestamp' => gmdate( 'c' ),
-			'level'     => isset( self::$levels[ $level ] ) ? self::$levels[ $level ] : 'UNKNOWN',
+			'level'     => isset( self::$levels[ $level ] ) ? self::$levels[ $level ] : 'unknown',
 			'message'   => $message,
 			'context'   => $merged_context,
 		);
@@ -809,7 +814,7 @@ class Feedzy_Rss_Feeds_Log {
 	 * @return bool Whether there are logs or stats to report.
 	 */
 	public function has_reportable_data() {
-		$logs_entries = $this->get_recent_logs( 50, 'ERROR' );
+		$logs_entries = $this->get_recent_logs( 50, 'error' );
 		$stats        = get_option( self::STATS_OPTION_KEY, array() );
 
 		return ( ! empty( $logs_entries ) && is_array( $logs_entries ) ) || ! empty( $stats );
@@ -823,7 +828,7 @@ class Feedzy_Rss_Feeds_Log {
 	 * @return array<int, array<string, mixed>> The error log entries.
 	 */
 	public function get_error_logs_for_email( $limit = 50 ) {
-		$recent_logs = $this->get_recent_logs( $limit, 'ERROR' );
+		$recent_logs = $this->get_recent_logs( $limit, 'error' );
 		if ( is_wp_error( $recent_logs ) ) {
 			return array();
 		}

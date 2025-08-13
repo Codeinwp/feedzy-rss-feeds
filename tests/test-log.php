@@ -147,7 +147,7 @@ class Test_Logger extends WP_UnitTestCase {
 		
 		$logs = $this->logger->get_recent_logs( 1 );
 		$this->assertNotEmpty( $logs, 'Should have log entries' );
-		$this->assertEquals( 'DEBUG', $logs[0]['level'] );
+		$this->assertEquals( 'debug', $logs[0]['level'] );
 		$this->assertEquals( 'Test debug message', $logs[0]['message'] );
 		$this->assertEquals( 'debug_value', $logs[0]['context']['test_data'] );
 	}
@@ -163,7 +163,7 @@ class Test_Logger extends WP_UnitTestCase {
 		
 		$logs = $this->logger->get_recent_logs( 1 );
 		$this->assertNotEmpty( $logs );
-		$this->assertEquals( 'INFO', $logs[0]['level'] );
+		$this->assertEquals( 'info', $logs[0]['level'] );
 		$this->assertEquals( 'Test info message', $logs[0]['message'] );
 	}
 
@@ -178,7 +178,7 @@ class Test_Logger extends WP_UnitTestCase {
 		
 		$logs = $this->logger->get_recent_logs( 1 );
 		$this->assertNotEmpty( $logs );
-		$this->assertEquals( 'WARNING', $logs[0]['level'] );
+		$this->assertEquals( 'warning', $logs[0]['level'] );
 		$this->assertEquals( 'Test warning message', $logs[0]['message'] );
 	}
 
@@ -191,7 +191,7 @@ class Test_Logger extends WP_UnitTestCase {
 		
 		$logs = $this->logger->get_recent_logs( 1 );
 		$this->assertNotEmpty( $logs );
-		$this->assertEquals( 'ERROR', $logs[0]['level'] );
+		$this->assertEquals( 'error', $logs[0]['level'] );
 		$this->assertEquals( 'Test error message', $logs[0]['message'] );
 		
 		// Check that error count statistic is incremented
@@ -213,7 +213,7 @@ class Test_Logger extends WP_UnitTestCase {
 		
 		$logs = $this->logger->get_recent_logs( 10 );
 		$this->assertCount( 1, $logs, 'Only error message should be logged' );
-		$this->assertEquals( 'ERROR', $logs[0]['level'] );
+		$this->assertEquals( 'error', $logs[0]['level'] );
 		$this->assertEquals( 'Error message', $logs[0]['message'] );
 	}
 
@@ -293,9 +293,9 @@ class Test_Logger extends WP_UnitTestCase {
 		Feedzy_Rss_Feeds_Log::info( 'Info message' );
 		Feedzy_Rss_Feeds_Log::error( 'Error message' );
 		
-		$error_logs = $this->logger->get_recent_logs( 10, 'ERROR' );
+		$error_logs = $this->logger->get_recent_logs( 10, 'error' );
 		$this->assertCount( 1, $error_logs );
-		$this->assertEquals( 'ERROR', $error_logs[0]['level'] );
+		$this->assertEquals( 'error', $error_logs[0]['level'] );
 		$this->assertEquals( 'Error message', $error_logs[0]['message'] );
 	}
 
@@ -332,7 +332,7 @@ class Test_Logger extends WP_UnitTestCase {
 		$raw_content = $this->logger->get_all_logs_raw();
 		$this->assertIsType( 'string', $raw_content );
 		$this->assertStringContains( 'Test message', $raw_content );
-		$this->assertStringContains( '"level":"DEBUG"', $raw_content );
+		$this->assertStringContains( '"level":"debug"', $raw_content );
 	}
 
 	/**
@@ -431,7 +431,7 @@ class Test_Logger extends WP_UnitTestCase {
 		
 		$error_logs = $this->logger->get_error_logs_for_email( 10 );
 		$this->assertCount( 1, $error_logs );
-		$this->assertEquals( 'ERROR', $error_logs[0]['level'] );
+		$this->assertEquals( 'error', $error_logs[0]['level'] );
 		$this->assertEquals( 'Error for email', $error_logs[0]['message'] );
 	}
 

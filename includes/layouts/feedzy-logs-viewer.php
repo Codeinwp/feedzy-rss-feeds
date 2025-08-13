@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $all_filter_url = admin_url( 'admin.php?page=feedzy-settings&tab=logs' );
 
-$logs_type = isset( $_REQUEST['logs_type'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_REQUEST['logs_type'] ) ) ) : null; // phpcs:ignore WordPress.Security.NonceVerification
+$logs_type_filter = isset( $_REQUEST['logs_type'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_REQUEST['logs_type'] ) ) ) : null; // phpcs:ignore WordPress.Security.NonceVerification
 
 $log_types = array(
 	'debug'   => __( 'Debug', 'feedzy-rss-feeds' ),
@@ -40,7 +40,7 @@ $logs_entries = isset( $logs ) && is_array( $logs ) ? $logs : array();
 			</a>
 		</div>
 		<div class="fz-logs-header-actions">
-			<a href="<?php echo esc_url( $all_filter_url ); ?>" class="btn <?php echo esc_attr( is_null( $logs_type ) ? 'btn-primary' : 'btn-secondary' ); ?>">
+			<a href="<?php echo esc_url( $all_filter_url ); ?>" class="btn <?php echo esc_attr( is_null( $logs_type_filter ) ? 'btn-primary' : 'btn-secondary' ); ?>">
 				<?php esc_html_e( 'All', 'feedzy-rss-feeds' ); ?>
 			</a>
 			<?php foreach ( $log_types as $log_type => $label ) : ?>
@@ -51,7 +51,7 @@ $logs_entries = isset( $logs ) && is_array( $logs ) ? $logs : array();
 					),
 					$all_filter_url
 				);
-				$is_selected = strtoupper( $log_type ) === $logs_type;
+				$is_selected = $log_type === $logs_type_filter;
 				?>
 				<a href="<?php echo esc_url( $filter_url ); ?>" class="btn <?php echo esc_attr( $is_selected ? 'btn-primary' : 'btn-secondary' ); ?>">
 					<?php echo esc_html( $label ); ?>
@@ -86,7 +86,7 @@ $logs_entries = isset( $logs ) && is_array( $logs ) ? $logs : array();
 						[
 						<?php
 						if ( $log['level'] ) {
-							echo esc_html( $log['level'] );
+							echo esc_html( strtoupper( $log['level'] ) );
 						} else {
 							echo esc_html( '-' );
 						}
