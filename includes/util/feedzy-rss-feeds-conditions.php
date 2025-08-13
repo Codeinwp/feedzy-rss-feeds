@@ -299,6 +299,9 @@ class Feedzy_Rss_Feeds_Conditions {
 					$image    = $admin->feedzy_retrieve_image( $item, $attrs );
 					$value    = $image;
 					break;
+				case 'link':
+					$value = $item->get_link();
+					break;
 				default:
 					$value = '';
 					break;

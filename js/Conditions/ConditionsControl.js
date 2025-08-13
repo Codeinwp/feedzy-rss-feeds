@@ -53,6 +53,11 @@ const SUPPORTED_FIELDS = [
 		value: 'featured_image',
 		unsupportedOperators: ['greater_than', 'gte', 'less_than', 'lte'],
 	},
+	{
+		label: __('Link', 'feedzy-rss-feeds'),
+		value: 'link',
+		unsupportedOperators: ['greater_than', 'gte', 'less_than', 'lte'],
+	},
 ];
 const isPro = window.feedzyData.isPro;
 
@@ -144,7 +149,7 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 				);
 				const operators = Object.keys(
 					window?.feedzyConditionsData?.operators
-				).filter((key) => !field.unsupportedOperators?.includes(key));
+				).filter((key) => !field?.unsupportedOperators?.includes(key));
 
 				return (
 					<PanelTab
