@@ -26,7 +26,8 @@ jobs:
       - name: Create zip
         run: |
           npm ci
-          npm run build 
+          npm run build
+          npm version patch --no-git-tag-version
           CURRENT_VERSION=$(node -p -e "require('./package.json').version")
           COMMIT_HASH=$(git rev-parse --short HEAD)
           DEV_VERSION="${CURRENT_VERSION}-dev.${COMMIT_HASH}"
