@@ -177,12 +177,12 @@ jQuery(function ($) {
 		const originalText = _this.html();
 		_this.attr('disabled', true).addClass('fz-checking');
 
-		const deleteUrl = new URL(
-			`${window.wpApiSettings.root}feedzy/v1/logs/delete`
-		);
+		const deleteUrl = new URL(`${window.wpApiSettings.root}feedzy/v1/logs`);
 		deleteUrl.searchParams.append('_wpnonce', window.wpApiSettings.nonce);
 
-		fetch(deleteUrl)
+		fetch(deleteUrl, {
+			method: 'DELETE',
+		})
 			.then((response) => response.json())
 			.then((response) => {
 				if (!response.success) {

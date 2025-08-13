@@ -588,9 +588,9 @@ class Feedzy_Rss_Feeds_Log {
 		);
 		register_rest_route(
 			'feedzy/v1',
-			'/logs/delete',
+			'/logs',
 			array(
-				'methods'             => 'GET',
+				'methods'             => 'DELETE',
 				'callback'            => array( $this, 'delete_log_file_endpoint' ),
 				'permission_callback' => function () {
 					return current_user_can( 'manage_options' );
