@@ -2172,9 +2172,60 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				)
 			);
 		} else {
+			update_option( 'feedzy_rss_feeds_skip_subscribe', 'yes' );
 			$this->feedzy_dismiss_wizard( false );
 			wp_send_json( $response );
 		}
+	}
+
+	/**
+	 * AJAX method to subscribe user to Feedzy newsletter.
+	 *
+	 * @since 5.1.0
+	 * @access public
+	 */
+	public function feedzy_dashboard_subscribe() {
+		check_ajax_referer('feedzy_subscribe_nonce', '_wpnonce');
+		
+		$with_subscribe = !empty($_POST['with_subscribe']) ? (bool) $_POST['with_subscribe'] : false;
+		$email = !empty($_POST['email']) ? sanitize_email($_POST['email']) : '';
+		$integrate_with = !empty($_POST['integrate_with']) ? sanitize_text_field($_POST['integrate_with']) : '';
+		
+		if ($with_subscribe && is_email($email)) {
+			update_option('feedzy_rss_feeds_logger_flag', 'yes');
+			
+			$request_res = wp_remote_post(
+				FEEDZY_SUBSCRIBE_API,
+				array(
+					'timeout' => 100,
+					'headers' => array(
+						'Content-Type' => 'application/json',
+					),
+					'body' => wp_json_encode(
+						array(
+							'slug' => 'feedzy-rss-feeds',
+							'site' => home_url(),
+							'email' => $email,
+							'data' => array('integration' => $integrate_with),
+						)
+					),
+				)
+			);
+			
+			if (!is_wp_error($request_res)) {
+				$this->dismiss_subscribe_notice();
+				wp_send_json_success();
+			} else {
+				wp_send_json_error();
+			}
+		} else {
+			$this->dismiss_subscribe_notice();
+			wp_send_json_success();
+		}
+	}
+
+	public function dismiss_subscribe_notice() {
+		update_option( 'feedzy_rss_feeds_dismiss_subscribe_notice', 'yes' );
 	}
 
 	/**
