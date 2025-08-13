@@ -422,8 +422,13 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 * Paraphrase content with feedzy default service.
 		 */
 		private function paraphrase_content() {
-			$content = call_user_func( array( $this, $this->current_job->tag ) );
-			$content = apply_filters( 'feedzy_invoke_content_rewrite_services', $content, '[#content_feedzy_rewrite]', $this->job, $this->item );
+			if ( 'item_title' === $this->current_job->tag ) {
+				$content = call_user_func( array( $this, $this->current_job->tag ) );
+				$content = apply_filters( 'feedzy_invoke_content_rewrite_services', $content, '[#title_feedzy_rewrite]', $this->job, $this->item );
+			} else {
+				$content = call_user_func( array( $this, $this->current_job->tag ) );
+				$content = apply_filters( 'feedzy_invoke_content_rewrite_services', $content, '[#content_feedzy_rewrite]', $this->job, $this->item );
+			}
 			return $content;
 		}
 
