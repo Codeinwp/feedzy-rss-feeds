@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $all_filter_url = admin_url( 'admin.php?page=feedzy-settings&tab=logs' );
 
-$logs_type_filter = isset( $_REQUEST['logs_type'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_REQUEST['logs_type'] ) ) ) : null; // phpcs:ignore WordPress.Security.NonceVerification
+$logs_type_filter = isset( $_REQUEST['logs_type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['logs_type'] ) ) : null; // phpcs:ignore WordPress.Security.NonceVerification
 
 $log_types = array(
 	'debug'   => __( 'Debug', 'feedzy-rss-feeds' ),

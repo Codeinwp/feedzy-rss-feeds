@@ -270,9 +270,7 @@ class Feedzy_Rss_Feeds_Log {
 	public static function log( $level, $message, array $context = array() ) {
 		try {
 			$instance = self::get_instance();
-			if ( $instance ) {
-				$instance->add_log_record( $level, $message, $context );
-			}
+			$instance->add_log_record( $level, $message, $context );
 		} catch ( Throwable $e ) {
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 				error_log( sprintf( 'Feedzy_Rss_Feeds_Log error: %s', $e->getMessage() ) );
@@ -304,9 +302,9 @@ class Feedzy_Rss_Feeds_Log {
 		if ( ! isset( $merged_context['function'] ) || ! isset( $merged_context['line'] ) ) {
 			$origin = $this->get_calling_origin();
 			if ( ! isset( $merged_context['function'] ) ) {
-				$merged_context['function'] = is_array( $origin ) && isset( $origin['function'] ) ? $origin['function'] : (string) $origin;
+				$merged_context['function'] = $origin['function'];
 			}
-			if ( ! isset( $merged_context['line'] ) && is_array( $origin ) && isset( $origin['line'] ) ) {
+			if ( ! isset( $merged_context['line'] ) ) {
 				$merged_context['line'] = $origin['line'];
 			}
 		}
@@ -364,8 +362,9 @@ class Feedzy_Rss_Feeds_Log {
 			$formatted_message .= ' ' . wp_json_encode( $log_entry['context'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
 		}
 
-		$function_signature = isset( $log_entry['context']['function'] ) ? $log_entry['context']['function'] : 'unknown';
-		$line_number        = isset( $log_entry['context']['line'] ) ? $log_entry['context']['line'] : null;
+		$context            = isset( $log_entry['context'] ) && is_array( $log_entry['context'] ) ? $log_entry['context'] : array();
+		$function_signature = (string) ( $context['function'] ?? 'unknown' );
+		$line_number        = $context['line'] ?? null;
 
 		do_action( 'themeisle_log_event', FEEDZY_NAME, $formatted_message, $log_entry['level'], $function_signature, $line_number );
 	}
@@ -385,17 +384,17 @@ class Feedzy_Rss_Feeds_Log {
 			if ( isset( $frame['class'] ) && __CLASS__ === $frame['class'] ) {
 				continue;
 			}
-			if ( isset( $frame['function'] ) ) {
-				$func = isset( $frame['class'] )
-					? ( $frame['class'] . ( isset( $frame['type'] ) ? $frame['type'] : '::' ) . $frame['function'] . '()' )
-					: ( $frame['function'] . '()' );
-				$line = isset( $frame['line'] ) ? (int) $frame['line'] : null;
 
-				return array(
-					'function' => $func,
-					'line'     => $line,
-				);
-			}
+			$function_name = $frame['function'];
+			$func          = isset( $frame['class'] )
+				? ( $frame['class'] . ( isset( $frame['type'] ) ? $frame['type'] : '::' ) . $function_name . '()' )
+				: ( $function_name . '()' );
+			$line          = isset( $frame['line'] ) ? (int) $frame['line'] : null;
+
+			return array(
+				'function' => $func,
+				'line'     => $line,
+			);
 		}
 		return array(
 			'function' => 'unknown',
