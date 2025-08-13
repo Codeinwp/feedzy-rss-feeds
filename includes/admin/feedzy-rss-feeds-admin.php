@@ -251,7 +251,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$all_open_ai_models        = apply_filters( 'feedzy_openai_models', array() );
 			$deprecated_open_ai_models = apply_filters( 'feedzy_openai_deprecated_models', array() );
 			$active_open_ai_models     = array_values( array_diff( $all_open_ai_models, $deprecated_open_ai_models ) );
-			
+
 			if ( ! empty( $integration_settings['openai_api_model'] ) ) {
 				$openai_model = $integration_settings['openai_api_model'];
 			}
