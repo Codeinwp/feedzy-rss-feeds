@@ -1964,7 +1964,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		// Check if img url is set as an URL parameter.
 		$url_tab = wp_parse_url( $img_url );
 		if ( isset( $url_tab['query'] ) ) {
-			preg_match_all( '/(http|https):\/\/[^ ]+(\.gif|\.GIF|\.jpg|\.JPG|\.jpeg|\.JPEG|\.png|\.PNG)/', $url_tab['query'], $matches );
+			preg_match_all( '/(http|https):\/\/[^ ]+(\.gif|\.GIF|\.jpg|\.JPG|\.jpeg|\.JPEG|\.png|\.PNG|\.webp|\.WEBP|\.avif|\.AVIF)/', $url_tab['query'], $matches );
 			if ( isset( $matches[0][0] ) ) {
 				$img_url = $matches[0][0];
 			}
