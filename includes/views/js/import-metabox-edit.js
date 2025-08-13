@@ -39,28 +39,197 @@
 		return false;
 	}
 
-	function append_outside_tag() {
-		const outsideWrap = $(this).parents('.fz-form-group, .fz-input-group');
-		const tags = outsideWrap.find('.form-control').val();
+	/**
+	 * Lock a button with a spinner icon.
+	 * @param {HTMLElement} button The button to lock.
+	 * @return {{ release: () => void }} An object with a release method to unlock the button.
+	 */
+	function lock_btn_with_spinner(button) {
+		const $button = $(button);
+		const $icon = $button.find('i');
+		const originalClasses = $icon.attr('class');
+
+		$button.prop('disabled', true);
+		$icon.attr('class', 'spinner is-active');
+
+		return {
+			release() {
+				$button.prop('disabled', false);
+				$icon.attr('class', originalClasses);
+			},
+		};
+	}
+
+	/**
+	 * Add valid URLs to the tag list.
+	 *
+	 * @this {HTMLElement} this - The button that was clicked to trigger the function.
+	 *
+	 * @return {Promise<void>}
+	 */
+	async function add_valid_urls_to_tag_list() {
+		const parentFormGroup = $(this).parents(
+			'.fz-form-group, .fz-input-group'
+		);
+		const tags = parentFormGroup.find('.form-control').val();
+		const $input = parentFormGroup.find('.form-control');
 
 		if ('' === tags) {
 			return false;
 		}
 
-		outsideWrap.find('.form-control .tag-list')?.val('');
-		if (outsideWrap.next('.tag-list').length > 0) {
-			outsideWrap
-				.next('.tag-list')
-				.find('input.fz-tagify-outside, input.fz-tagify--outside')
-				.data('tagify')
-				.addTags(tags);
-		} else {
-			outsideWrap
-				.find('input.fz-tagify-outside, input.fz-tagify--outside')
-				.data('tagify')
-				.addTags(tags);
+		$('.fz-validation-message').remove();
+
+		const { release: unlockButton } = lock_btn_with_spinner(this);
+
+		try {
+			const validationResult = await validate_feed_url(tags);
+
+			handle_validation_response(validationResult);
+
+			if (!validationResult.success) {
+				return;
+			}
+
+			const results = validationResult.data.results || [];
+
+			const validUrls = results
+				.filter(({ status }) => status === 'success')
+				.map(({ url }) => url);
+			const invalidUrls = results
+				.filter(({ status }) => status !== 'success')
+				.map(({ url }) => url);
+
+			$input.val(invalidUrls.join(', ')); // Keep invalid URLs in the input field.
+
+			parentFormGroup.find('.form-control .tag-list')?.val(''); // Clear existing tags if any.
+
+			// Add valid URLs to the tag list.
+			const $tagifyInput =
+				parentFormGroup.next('.tag-list').length > 0
+					? parentFormGroup
+							.next('.tag-list')
+							.find(
+								'input.fz-tagify-outside, input.fz-tagify--outside'
+							)
+					: parentFormGroup.find(
+							'input.fz-tagify-outside, input.fz-tagify--outside'
+						);
+			$tagifyInput.data('tagify').addTags(validUrls.join(', '));
+		} catch (error) {
+			console.error(error);
+		} finally {
+			unlockButton();
 		}
-		return false;
+	}
+
+	/**
+	 * Validate the feed URL.
+	 *
+	 * @param {string} feedUrl
+	 * @return {Promise<{ success: boolean, message: string, data: { results: Array<{ url: string, status: string, message: string }> } }>} The API response object.
+	 */
+	async function validate_feed_url(feedUrl) {
+		if (!feedUrl) {
+			return {
+				success: false,
+				message:
+					window.feedzy.i10n.validation_messages.invalid_feed_url,
+			};
+		}
+
+		try {
+			const response = await $.ajax({
+				url: window.feedzy.ajax.url,
+				method: 'POST',
+				data: {
+					nonce: window.feedzy.ajax.security,
+					action: 'feedzy_validate_feed',
+					feed_url: feedUrl,
+				},
+			});
+
+			return response;
+		} catch (error) {
+			return {
+				success: false,
+				message:
+					window.feedzy.i10n.validation_messages
+						.error_validating_feed_url +
+					': ' +
+					(error.responseJSON?.message || error.statusText),
+			};
+		}
+	}
+
+	/**
+	 * Handle validation response and display appropriate messages
+	 * @param {Object} response - The validation response
+	 */
+	function handle_validation_response(response) {
+		if (!response || !response.data || !response.data.results) {
+			showMessage('✗ ' + response?.message, false);
+			return;
+		}
+
+		let validationSummaryHtml = '<div class="fz-validation-summary">';
+
+		response.data.results.forEach(({ url, status, message }) => {
+			const icon =
+				'<span class="dashicons dashicons-' +
+				(status === 'success'
+					? 'yes'
+					: status === 'error'
+						? 'no'
+						: 'warning') +
+				'"></span>';
+
+			validationSummaryHtml += `<div class="${'fz-feed-result fz-' + status}">`;
+			validationSummaryHtml += `${icon} <span class="fz-feed-url">${url}</span>`;
+			validationSummaryHtml += ` - ${message}`;
+			validationSummaryHtml += `</div>`;
+		});
+
+		validationSummaryHtml += '</div>';
+
+		const hasErrors = response.data.results.some(
+			({ status }) => status !== 'success'
+		);
+
+		showMessage(validationSummaryHtml, !hasErrors);
+	}
+
+	function showMessage(message, autoDismiss = true) {
+		const $container = $('.fz-validation-summary');
+		if (!$container.length) {
+			return;
+		}
+
+		$container.find('.fz-validation-message').remove();
+
+		const $message = $('<div>', {
+			class: 'fz-validation-message',
+			html: message,
+		});
+
+		$container.append($message);
+		if (autoDismiss) {
+			$message.delay(5000).fadeOut(300, () => $message.remove());
+		} else {
+			const $closeButton = $('<button>', {
+				type: 'button',
+				class: 'button button-primary',
+				text: '✕'
+			});
+
+			$message.append($closeButton);
+			$closeButton.on('click', function (e) {
+				e.preventDefault();
+				$(this)
+					.parent()
+					.fadeOut(300, () => $(this).remove());
+			});
+		}
 	}
 
 	function append_tag() {
@@ -334,42 +503,31 @@
 			return false;
 		});
 
-		$('#feedzy-import-source').on('blur', function (e) {
+		$('.feedzy-keyword-filter').on('keyup keypress', function (e) {
+			const keyCode = e.keyCode || e.which;
 			const addTagBtn = $(this)
 				.parents('.fz-input-icon')
 				.find('.add-outside-tags');
-			addTagBtn.trigger('click');
-			$(this).val('');
-		});
 
-		$('.feedzy-keyword-filter, #feedzy-import-source').on(
-			'keyup keypress',
-			function (e) {
-				const keyCode = e.keyCode || e.which;
-				const addTagBtn = $(this)
-					.parents('.fz-input-icon')
-					.find('.add-outside-tags');
-
-				if ('' === $(this).val()) {
-					addTagBtn.attr('disabled', true);
-				} else if (addTagBtn.hasClass('fz-plus-btn')) {
-					addTagBtn.removeAttr('disabled');
-				}
-
-				if (keyCode === 13) {
-					e.preventDefault();
-					addTagBtn.trigger('click');
-					$(this).val('');
-					return false;
-				}
+			if ('' === $(this).val()) {
+				addTagBtn.attr('disabled', true);
+			} else if (addTagBtn.hasClass('fz-plus-btn')) {
+				addTagBtn.removeAttr('disabled');
 			}
-		);
+
+			if (keyCode === 13) {
+				e.preventDefault();
+				addTagBtn.trigger('click');
+				$(this).val('');
+				return false;
+			}
+		});
 
 		$('a.dropdown-item:not(.source,[data-action_popup])').on(
 			'click',
 			append_tag
 		);
-		$('.add-outside-tags').on('click', append_outside_tag);
+		$('.add-outside-tags').on('click', add_valid_urls_to_tag_list);
 		$('a.dropdown-item.source').on('click', add_source);
 		$(document).on('click', '.btn-remove-fields', remove_row);
 		$('#new_custom_fields').on('click', new_row);
@@ -568,14 +726,6 @@
 					// scroll window to beginning of the form
 					scroll_to_class($('.f1'), 20);
 				});
-		});
-
-		$('#feedzy-validate-feed').on('click', function (e) {
-			let $url = $('#feedzy-source-tags').val();
-			$url = $url.split(',');
-			$url = $.trim($url.pop());
-			const $anchor = $(this);
-			$anchor.attr('href', $anchor.attr('data-href-base') + $url);
 		});
 
 		$('#preflight').on('click', function (e) {

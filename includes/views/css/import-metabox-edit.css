@@ -202,3 +202,33 @@ span.feedzy-spinner {
 .fz-import-field.hidden {
 	display: none;
 }
+
+.feedzy-wrap .fz-validation-message {
+    margin: 10px 0;
+    padding: 12px 15px;
+    border-radius: 4px;
+    font-size: 14px;
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    border: 1px solid #5555559c;
+}
+
+.feedzy-wrap .fz-validation-message button {
+	margin-left: auto;
+}
+
+.fz-validation-message .fz-success {
+    color: #155724;
+}
+
+.fz-validation-message .fz-error {
+    color: #721c24;
+}
+
+.fz-validation-message  .fz-warning {
+    color: #856404;
+}
