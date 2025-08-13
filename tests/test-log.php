@@ -55,18 +55,31 @@ class Test_Logger extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Reset the logger singleton to ensure fresh state per test.
+	 */
+	private function reset_logger_singleton() {
+		if ( class_exists( 'Feedzy_Rss_Feeds_Log' ) ) {
+			$ref  = new ReflectionClass( 'Feedzy_Rss_Feeds_Log' );
+			if ( $ref->hasProperty( 'instance' ) ) {
+				$prop = $ref->getProperty( 'instance' );
+				$prop->setAccessible( true );
+				$prop->setValue( null, null );
+			}
+		}
+	}
+
+	/**
 	 * Set up test environment.
 	 */
 	public function setUp(): void {
 		parent::setUp();
 		
-		// Create a fresh logger instance for each test
+		// Ensure fresh singleton for each test.
+		$this->reset_logger_singleton();
 		$this->logger = Feedzy_Rss_Feeds_Log::get_instance();
 		
-		// Set up test log directory
-		$upload_dir = wp_upload_dir();
-		$test_log_dir = $upload_dir['basedir'] . '/feedzy-logs';
-		$this->test_log_path = $test_log_dir . '/feedzy.jsonl';
+		// Use the class API to determine the log path.
+		$this->test_log_path = $this->logger->get_log_file_path();
 		
 		// Clean up any existing log files
 		if ( file_exists( $this->test_log_path ) ) {
@@ -92,6 +105,9 @@ class Test_Logger extends WP_UnitTestCase {
 		// Reset options
 		delete_option( Feedzy_Rss_Feeds_Log::STATS_OPTION_KEY );
 		delete_option( 'feedzy-settings' );
+
+		// Reset the singleton to avoid side effects between tests.
+		$this->reset_logger_singleton();
 		
 		parent::tearDown();
 	}
@@ -219,6 +235,10 @@ class Test_Logger extends WP_UnitTestCase {
 		$logs = $this->logger->get_recent_logs( 1 );
 		$this->assertEquals( 123, $logs[0]['context']['import_id'] );
 		$this->assertEquals( 'https://example.com/feed.xml', $logs[0]['context']['feed_url'] );
+
+		// New: origin should be auto-injected.
+		$this->assertArrayHasKey( 'function', $logs[0]['context'] );
+		$this->assertArrayHasKey( 'line', $logs[0]['context'] );
 	}
 
 	/**
@@ -237,8 +257,8 @@ class Test_Logger extends WP_UnitTestCase {
 		$this->assertArrayHasKey( 'message', $log );
 		$this->assertArrayHasKey( 'context', $log );
 		
-		// Validate timestamp format (ISO 8601)
-		$this->assertMatchesRegularExpression( '/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\+\d{2}:\d{2}$/', $log['timestamp'] );
+		// Validate timestamp format (ISO 8601, allow Z or explicit offset)
+		$this->assertMatchesRegularExpression( '/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\+\d{2}:\d{2}|Z)$/', $log['timestamp'] );
 	}
 
 	/**
@@ -376,8 +396,9 @@ class Test_Logger extends WP_UnitTestCase {
 		);
 		update_option( 'feedzy-settings', $settings );
 		
-		// Recreate logger to pick up new settings
-		$this->logger = new Feedzy_Rss_Feeds_Log();
+		// Recreate logger singleton to pick up new settings
+		$this->reset_logger_singleton();
+		$this->logger = Feedzy_Rss_Feeds_Log::get_instance();
 		
 		$this->assertTrue( $this->logger->can_send_email() );
 		$this->assertEquals( 'test@example.com', $this->logger->get_email_address() );
@@ -428,7 +449,8 @@ class Test_Logger extends WP_UnitTestCase {
 		update_option( 'feedzy-settings', $settings );
 		
 		// Create new logger instance to test initialization
-		$logger = new Feedzy_Rss_Feeds_Log();
+		$this->reset_logger_singleton();
+		$logger = Feedzy_Rss_Feeds_Log::get_instance();
 		
 		$this->assertEquals( Feedzy_Rss_Feeds_Log::DEBUG, $logger->level_threshold );
 		$this->assertTrue( $logger->can_send_email );
@@ -447,7 +469,8 @@ class Test_Logger extends WP_UnitTestCase {
 		);
 		update_option( 'feedzy-settings', $settings );
 		
-		$logger = new Feedzy_Rss_Feeds_Log();
+		$this->reset_logger_singleton();
+		$logger = Feedzy_Rss_Feeds_Log::get_instance();
 		
 		// Should fallback to default ERROR level
 		$this->assertEquals( Feedzy_Rss_Feeds_Log::ERROR, $logger->level_threshold );

@@ -269,7 +269,7 @@ class Feedzy_Rss_Feeds_Log {
 	 */
 	public static function log( $level, $message, array $context = array() ) {
 		$instance = self::get_instance();
-		$instance->write_log( $level, $message, $context );
+		$instance->add_log_record( $level, $message, $context );
 	}
 
 	/**
@@ -281,14 +281,10 @@ class Feedzy_Rss_Feeds_Log {
 	 * @param array<string, mixed> $context The log context.
 	 * @return void
 	 */
-	private function write_log( $level, $message, array $context = array() ) {
+	private function add_log_record( $level, $message, array $context = array() ) {
 		if ( self::ERROR === $level ) {
 			$this->increment_log_stat( 'error_count' );
 			$this->try_accumulate_error_message( $message );
-		}
-		
-		if ( ! $this->filesystem ) {
-			return;
 		}
 
 		if ( $this->level_threshold > $level ) {
@@ -307,7 +303,7 @@ class Feedzy_Rss_Feeds_Log {
 			}
 		}
 
-		$record = array(
+		$log_entry = array(
 			'timestamp' => gmdate( 'c' ),
 			'level'     => isset( self::$levels[ $level ] ) ? self::$levels[ $level ] : 'UNKNOWN',
 			'message'   => $message,
@@ -315,15 +311,26 @@ class Feedzy_Rss_Feeds_Log {
 		);
 
 		if ( wp_doing_ajax() ) {
-			$record['doing_ajax'] = true;
+			$log_entry['doing_ajax'] = true;
 		}
 
 		if ( wp_doing_cron() ) {
-			$record['doing_cron'] = true;
+			$log_entry['doing_cron'] = true;
 		}
-		
-		// Write log entry
-		$formatted = wp_json_encode( $record, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . PHP_EOL;
+
+		$this->append_log_to_file( $log_entry );
+	}
+
+	/**
+	 * Append the log to the log file.
+	 * 
+	 * @param array<string, mixed> $log_entry The log entry to append.
+	 * @return void
+	 */
+	public function append_log_to_file( $log_entry ) {
+		if ( ! $this->filesystem ) {
+			return;
+		}
 
 		// Ensure the directory exists before writing.
 		$log_dir = dirname( $this->filepath );
@@ -331,7 +338,28 @@ class Feedzy_Rss_Feeds_Log {
 			$this->setup_log_directory();
 		}
 
+		$formatted = wp_json_encode( $log_entry, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . PHP_EOL;
+
 		error_log( $formatted, 3, $this->filepath );
+	}
+
+	/**
+	 * Fallback method to append log to ThemeIsle's logging system.
+	 *
+	 * @param array<string, mixed> $log_entry Log entry to append.
+	 * @return void
+	 */
+	public function append_to_themeisle_log( $log_entry ) {
+
+		$formatted_message = $log_entry['message'];
+		if ( ! empty( $log_entry['context'] ) ) {
+			$formatted_message .= ' ' . wp_json_encode( $log_entry['context'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+		}
+
+		$function_signature = isset( $log_entry['context']['function'] ) ? $log_entry['context']['function'] : 'unknown';
+		$line_number        = isset( $log_entry['context']['line'] ) ? $log_entry['context']['line'] : null;
+
+		do_action( 'themeisle_log_event', FEEDZY_NAME, $formatted_message, $log_entry['level'], $function_signature, $line_number );
 	}
 
 	/**
