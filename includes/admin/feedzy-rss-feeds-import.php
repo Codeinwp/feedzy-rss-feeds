@@ -1858,6 +1858,7 @@ class Feedzy_Rss_Feeds_Import {
 				$title_feedzy_rewrite = apply_filters( 'feedzy_invoke_content_rewrite_services', $item['item_title'], '[#title_feedzy_rewrite]', $job, $item );
 				$post_title           = str_replace( '[#title_feedzy_rewrite]', $title_feedzy_rewrite, $post_title );
 			}
+			$post_title = wp_strip_all_tags( $post_title );
 
 			$image_html = '';
 			if ( ! empty( $item['item_img_path'] ) ) {
