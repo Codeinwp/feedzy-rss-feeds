@@ -274,6 +274,9 @@ class Feedzy_Rss_Feeds_Log {
 				$instance->add_log_record( $level, $message, $context );
 			}
 		} catch ( Throwable $e ) {
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				error_log( sprintf( 'Feedzy_Rss_Feeds_Log error: %s', $e->getMessage() ) );
+			}
 		}
 	}
 

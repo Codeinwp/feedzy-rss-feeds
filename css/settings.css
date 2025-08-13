@@ -2859,3 +2859,9 @@ button.feedzy-action-button {
 .fz-hidden {
 	display: none;
 }
+
+.fz-quick-link-actions {
+	display: flex;
+	gap: 1rem;
+	margin-bottom: 20px;
+}
