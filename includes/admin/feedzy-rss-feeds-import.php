@@ -3252,7 +3252,7 @@ class Feedzy_Rss_Feeds_Import {
 		) {
 			return array();
 		}
-		
+
 		if ( 'misc' === $tab ) {
 			$settings['canonical']               = isset( $_POST['canonical'] ) ? absint( $_POST['canonical'] ) : 0;
 			$settings['general']['rss-feeds']    = isset( $_POST['rss-feeds'] ) ? absint( $_POST['rss-feeds'] ) : '';
