@@ -18,9 +18,7 @@ test.describe('Logger', () => {
 			page.locator('select[name="logs-logging-level"]')
 		).toBeVisible();
 
-		await expect(
-			page.getByText('Report errors via email (Once')
-		).toBeVisible();
+		await expect(page.getByText('Report errors via email')).toBeVisible();
 	});
 
 	test('check logs tabs', async ({ page, admin }) => {
