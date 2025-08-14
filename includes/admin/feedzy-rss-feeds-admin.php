@@ -485,6 +485,11 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					jQuery(document).on('keyup', function (e) {
 						if (e.key === "Escape") closeModal();
 					});
+
+					jQuery('.fz-conditions').on('click', '.fz-action-btn.is-upsell', function (event) {
+						openModal('#feedzy-add-filter-condition');
+						event.preventDefault();
+					});
 				});
 			</script>
 			<div id="feedzy-add-new-import" class="wp-core-ui feedzy-modal" style="display:none;">
