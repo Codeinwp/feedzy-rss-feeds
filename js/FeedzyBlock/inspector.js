@@ -258,21 +258,14 @@ class Inspector extends Component {
 						<PanelBody
 							title={[
 								__('Filter items', 'feedzy-rss-feeds'),
-								!window.feedzyjs.isPro && (
-									<span className="fz-pro-label">Pro</span>
-								),
 							]}
 							initialOpen={false}
-							className={
-								window.feedzyjs.isPro
-									? 'feedzy-item-filter'
-									: 'feedzy-item-filter fz-locked'
-							}
+							className='feedzy-item-filter'
 						>
 							{!window.feedzyjs.isPro && (
 								<div className="fz-upsell-notice">
 									{__(
-										'Unlock this feature and more advanced options with',
+										'Unlock more advanced options with',
 										'feedzy-rss-feeds'
 									)}{' '}
 									<ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=keywordsfilter&utm_content=feedzy-rss-feeds">
@@ -307,6 +300,7 @@ class Inspector extends Component {
 									{
 										label: __('Author', 'feedzy-rss-feeds'),
 										value: 'author',
+										disabled: !window.feedzyjs.isPro,
 									},
 									{
 										label: __(
@@ -314,6 +308,7 @@ class Inspector extends Component {
 											'feedzy-rss-feeds'
 										),
 										value: 'description',
+										disabled: !window.feedzyjs.isPro,
 									},
 								]}
 								onChange={this.props.edit.onKeywordsIncludeOn}
@@ -345,6 +340,7 @@ class Inspector extends Component {
 									{
 										label: __('Author', 'feedzy-rss-feeds'),
 										value: 'author',
+										disabled: !window.feedzyjs.isPro,
 									},
 									{
 										label: __(
@@ -352,28 +348,37 @@ class Inspector extends Component {
 											'feedzy-rss-feeds'
 										),
 										value: 'description',
+										disabled: !window.feedzyjs.isPro,
 									},
 								]}
 								onChange={this.props.edit.onKeywordsExcludeOn}
 							/>
-							<p className="fz-main-label">
-								{__(
-									'Filter feed item by date range.',
-									'feedzy-rss-feeds'
-								)}
-							</p>
-							<TextControl
-								type="datetime-local"
-								label={__('From:', 'feedzy-rss-feeds')}
-								value={this.props.attributes.from_datetime}
-								onChange={this.props.edit.onFromDateTime}
-							/>
-							<TextControl
-								type="datetime-local"
-								label={__('To:', 'feedzy-rss-feeds')}
-								value={this.props.attributes.to_datetime}
-								onChange={this.props.edit.onToDateTime}
-							/>
+							
+							<div className={
+								!window.feedzyjs.isPro
+									? 'fz-locked'
+									: ''
+								}
+							>
+								<p className="fz-main-label">
+									{__(
+										'Filter feed item by date range.',
+										'feedzy-rss-feeds'
+									)}
+								</p>
+								<TextControl
+									type="datetime-local"
+									label={__('From:', 'feedzy-rss-feeds')}
+									value={this.props.attributes.from_datetime}
+									onChange={this.props.edit.onFromDateTime}
+								/>
+								<TextControl
+									type="datetime-local"
+									label={__('To:', 'feedzy-rss-feeds')}
+									value={this.props.attributes.to_datetime}
+									onChange={this.props.edit.onToDateTime}
+								/>
+							</div>
 						</PanelBody>
 					</Fragment>
 				)}

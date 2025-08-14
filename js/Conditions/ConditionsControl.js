@@ -17,6 +17,7 @@ import { Icon, plus } from '@wordpress/icons';
  */
 import PanelTab from './PanelTab';
 import DateTimeControl from './DateTimeControl';
+import { cond } from 'lodash';
 
 const SUPPORTED_FIELDS = [
 	{
@@ -70,6 +71,10 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 	};
 
 	const addCondition = () => {
+		if (!isPro && 1 <= conditions.conditions.length) {
+			return;
+		}
+
 		const conditionsCopy = [...conditions.conditions];
 
 		conditionsCopy.push({
@@ -122,9 +127,7 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 
 	return (
 		<div
-			className={classNames('fz-condition-control', {
-				'is-upsell': !isPro,
-			})}
+			className='fz-condition-control'
 		>
 			<SelectControl
 				label={__('Include If', 'feedzy-rss-feeds')}
@@ -140,7 +143,6 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 					},
 				]}
 				onChange={onChangeMatch}
-				disabled={!isPro}
 			/>
 
 			{conditions.conditions.map((condition, index) => {
@@ -165,7 +167,6 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 							onChange={(value) =>
 								onChangeCondition(index, value, 'field')
 							}
-							disabled={!isPro}
 						/>
 
 						<SelectControl
@@ -190,7 +191,6 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 							onChange={(value) =>
 								onChangeCondition(index, value, 'operator')
 							}
-							disabled={!isPro}
 						/>
 
 						{!['has_value', 'empty'].includes(
@@ -209,7 +209,6 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 												'value'
 											)
 										}
-										disabled={!isPro}
 									/>
 								) : (
 									<TextControl
@@ -222,7 +221,6 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 												'value'
 											)
 										}
-										disabled={!isPro}
 									/>
 								)}
 							</>
@@ -231,7 +229,10 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 				);
 			})}
 
-			<div className="fz-action-btn mt-24">
+			<div className={classNames("fz-action-btn mt-24", {
+				'is-upsell': !isPro && 1 <= conditions.conditions.length
+			})}
+			>
 				<Button
 					variant="secondary"
 					onClick={addCondition}

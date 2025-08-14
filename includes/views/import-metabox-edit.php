@@ -106,11 +106,11 @@ global $post;
 		</div>
 		<!-- Sources configuration Step End -->
 		<!-- Filters Step Start -->
-		<div class="feedzy-accordion-item <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
+		<div class="feedzy-accordion-item">
 			<div class="feedzy-accordion-item__title" id="fz-import-filters">
 				<button type="button" class="feedzy-accordion-item__button">
 					<div class="feedzy-accordion__step-number help-text"><?php esc_html_e( 'Step 2', 'feedzy-rss-feeds' ); ?></div>
-					<div class="feedzy-accordion__step-title h2"><?php esc_html_e( 'Filters', 'feedzy-rss-feeds' ); ?><?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></div>
+					<div class="feedzy-accordion__step-title h2"><?php esc_html_e( 'Filters', 'feedzy-rss-feeds' ); ?></div>
 					<div class="feedzy-accordion__icon"><span class="dashicons dashicons-arrow-down-alt2"></span></div>
 				</button>
 			</div>
@@ -630,15 +630,14 @@ global $post;
 								</div>
 							</div>
 
-							<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
-								<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'schedule-import-job', 'import' ) ); ?>
+							<div class="form-block form-block-two-column">
 								<div class="fz-left">
-									<h4 class="h4"><?php esc_html_e( 'Schedule', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
+									<h4 class="h4"><?php esc_html_e( 'Schedule', 'feedzy-rss-feeds' ); ?></h4>
 								</div>
 								<div class="fz-right">
 									<div class="fz-form-group">
 										<label class="form-label"><?php esc_html_e( 'Import schedule', 'feedzy-rss-feeds' ); ?></label>
-										<select id="fz-event-schedule" class="form-control fz-select-control" name="feedzy_meta_data[fz_cron_schedule]"<?php disabled( true, ! feedzy_is_pro() ); ?>>
+										<select id="fz-event-schedule" class="form-control fz-select-control" name="feedzy_meta_data[fz_cron_schedule]">
 											<?php
 											$save_schedule = ! empty( $import_schedule['fz_cron_schedule'] ) ? $import_schedule['fz_cron_schedule'] : '';
 
@@ -662,6 +661,7 @@ global $post;
 												}
 												?>
 												<option data-slug="<?php echo esc_attr( $slug ); ?>" value="<?php echo esc_attr( $slug ); ?>"<?php selected( $save_schedule, $slug ); ?>
+												<?php disabled( ! feedzy_is_pro() && 'daily' !== $slug ); ?>
 												>
 													<?php echo esc_html( $display_text ); ?>
 												</option>
@@ -674,11 +674,10 @@ global $post;
 								</div>
 							</div>
 
-							<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
-								<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'fallback-image', 'import' ) ); ?>
+							<div class="form-block form-block-two-column">
 								<div class="fz-left">
 									<h4 class="h4">
-										<?php esc_html_e( 'Fallback Image', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?>
+										<?php esc_html_e( 'Fallback Image', 'feedzy-rss-feeds' ); ?>
 									</h4>
 								</div>
 								<div class="fz-right">

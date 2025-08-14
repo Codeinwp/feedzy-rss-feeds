@@ -563,11 +563,10 @@ class Feedzy_Rss_Feeds_Import {
 		$inherited_thumbnail_id = ! empty( $this->free_settings['general']['default-thumbnail-id'] ) ? (int) $this->free_settings['general']['default-thumbnail-id'] : 0;
 		if ( feedzy_is_pro() ) {
 			$default_thumbnail_id = get_post_meta( $post->ID, 'default_thumbnail_id', true );
+			$import_schedule      = array(
+				'fz_cron_schedule' => ! empty( $this->free_settings['general']['fz_cron_schedule'] ) ? $this->free_settings['general']['fz_cron_schedule'] : '',
+			);
 		}
-
-		$import_schedule = array(
-			'fz_cron_schedule' => ! empty( $this->free_settings['general']['fz_cron_schedule'] ) ? $this->free_settings['general']['fz_cron_schedule'] : '',
-		);
 
 		$fz_cron_schedule = get_post_meta( $post->ID, 'fz_cron_schedule', true );
 		if ( ! empty( $fz_cron_schedule ) ) {

@@ -20,8 +20,11 @@ test.describe( 'Upsell', () => {
         // Hover over text named Filter by Keyword
         const filtersTab = page.locator('#feedzy-import-form > div.feedzy-accordion > div:nth-child(2)');
 
-        // It should have 1 elements with .only-pro-content class.
-        await expect( filtersTab.locator('.pro-label').count() ).resolves.toBe(1);
+        // It should have 1 elements with .fz-panel-tab class.
+        await expect( filtersTab.locator('.fz-panel-tab').count() ).resolves.toBe(1);
+
+        // 'Add condition' action button has .is-upsell class.
+        await expect(filtersTab.locator('.fz-action-btn.is-upsell')).toHaveCount(1);
 
     } );
 
@@ -29,22 +32,21 @@ test.describe( 'Upsell', () => {
     test( 'general settings', async({ editor, page }) => {
         await page.getByRole('button', { name: 'Step 4 General feed settings' }).click({ force: true });
 
-
-
-        await page.locator('.fz-form-group:has( #feed-post-default-thumbnail )').hover({ force: true });
-        let upgradeAlert = page.locator('#feedzy-import-form a[href*="utm_campaign=fallback-image"]');
-        await expect( upgradeAlert ).toBeVisible();
-
         await page.locator('.fz-form-group:has( #fz-event-schedule )').scrollIntoViewIfNeeded()
-        await page.locator('.fz-form-group:has( #fz-event-schedule )').hover({ force: true });
-        upgradeAlert = page.locator('#feedzy-import-form a[href*="utm_campaign=schedule-import-job"]');
-        await expect( upgradeAlert ).toBeVisible();
+
+        // check all the option expect daily is disabled.
+        const otherOptions = page.locator('#fz-event-schedule option:not([value="daily"])');
+        const count = await otherOptions.count();
+
+        for (let i = 0; i < count; i++) {
+            await expect(otherOptions.nth(i)).toBeDisabled();
+        }
 
         // Click the advanced settings tab.
         await page.click('[data-id="fz-advanced-settings"]');
 
         await page.locator('.fz-form-group:has( #feedzy_mark_duplicate )').hover({ force: true });
-        upgradeAlert = page.locator('#feedzy-import-form a[href*="utm_campaign=remove-duplicates"]');
+        const upgradeAlert = page.locator('#feedzy-import-form a[href*="utm_campaign=remove-duplicates"]');
         await expect( upgradeAlert ).toBeVisible();
     } );
 });
