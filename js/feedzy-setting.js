@@ -209,6 +209,12 @@ jQuery(function ($) {
 	$('#fz-add-schedule').on('click', function (e) {
 		e.preventDefault();
 
+		const formElem = document.querySelector('form:has(.fz-form-wrap)');
+		if (formElem && formElem.checkValidity() === false) {
+			formElem.reportValidity();
+			return;
+		}
+
 		const interval = $('#fz-schedule-interval').val();
 		const display = $('#fz-schedule-display').val();
 		const name = $('#fz-schedule-name').val();
@@ -219,26 +225,53 @@ jQuery(function ($) {
 
 		const scheduleTable = $('.fz-schedules-table tbody');
 
-		const newRow = $(`
-			<tr data-schedule="${name}">
-				<td class="fz-schedule-attributes">
-					<strong>${name}</strong>
-				</td>
-				<td class="fz-schedule-attributes">
-					${interval}
-				</td>
-				<td class="fz-schedule-attributes">
-					${display}
-				</td>
-				<td class="fz-schedule-attributes">
-					<button type="button" class="btn btn-outline-primary fz-delete-schedule fz-is-destructive" data-schedule="${name}">
-						Delete
-					</button>
-				</td>
-				<input type="hidden" value="${interval}" name="fz-custom-schedule-interval[${name}][interval]">
-				<input type="hidden" value="${display}" name="fz-custom-schedule-interval[${name}][display]">
-			</tr>
-		`);
+		const newRow = $('<tr>').attr('data-schedule', name);
+
+		const nameCell = $('<td>')
+			.addClass('fz-schedule-attributes')
+			.append($('<strong>').text(name));
+
+		const intervalCell = $('<td>')
+			.addClass('fz-schedule-attributes')
+			.text(interval);
+		const displayCell = $('<td>')
+			.addClass('fz-schedule-attributes')
+			.text(display);
+
+		const deleteButton = $('<button>')
+			.attr({
+				type: 'button',
+				'data-schedule': name,
+			})
+			.addClass(
+				'btn btn-outline-primary fz-delete-schedule fz-is-destructive'
+			)
+			.text(window.feedzy_setting.l10n.delete_btn_label);
+
+		const actionCell = $('<td>')
+			.addClass('fz-schedule-attributes')
+			.append(deleteButton);
+
+		const intervalInput = $('<input>').attr({
+			type: 'hidden',
+			value: interval,
+			name: `fz-custom-schedule-interval[${name}][interval]`,
+		});
+
+		const displayInput = $('<input>').attr({
+			type: 'hidden',
+			value: display,
+			name: `fz-custom-schedule-interval[${name}][display]`,
+		});
+
+		newRow.append(
+			nameCell,
+			intervalCell,
+			displayCell,
+			actionCell,
+			intervalInput,
+			displayInput
+		);
 
 		scheduleTable.append(newRow);
 
