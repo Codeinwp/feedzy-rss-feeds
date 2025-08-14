@@ -268,7 +268,7 @@
 														unset( $schedules['hourly'] );
 														$schedules = array_merge( array( 'hourly' => $hourly ), $schedules );
 													}
-													$standard_schedules = array(
+													$wp_standard_schedules = array(
 														'hourly',
 														'twicedaily', 
 														'daily',
@@ -279,17 +279,25 @@
 														<?php
 														$duplicate_schedule = array();
 														foreach ( $schedules as $slug => $schedule ) :
-															if ( empty( $schedule['interval'] ) || in_array( $schedule['interval'], $duplicate_schedule, true ) ) {
+															if (
+																empty( $schedule['interval'] ) ||
+																in_array( $schedule['interval'], $duplicate_schedule, true )
+															) {
 																continue;
 															}
 															$duplicate_schedule[] = $schedule['interval'];
+															$display_text         = esc_html( $schedule['display'] );
 															
-															$display_text = esc_html( $schedule['display'] );
-															if ( ! in_array( $slug, $standard_schedules, true ) ) {
+															if ( ! in_array( $slug, $wp_standard_schedules, true ) ) {
 																$display_text .= ' ' . esc_html__( '(externally created)', 'feedzy-rss-feeds' );
 															}
 															?>
-															<option value="<?php echo esc_attr( $slug ); ?>"<?php selected( $save_schedule, $slug ); ?>><?php echo esc_html( $display_text ); ?></option>
+															<option
+																value="<?php echo esc_attr( $slug ); ?>"
+																<?php selected( $save_schedule, $slug ); ?>
+															>
+																<?php echo esc_html( $display_text ); ?>
+															</option>
 														<?php endforeach; ?>
 													</select>
 												</div>
