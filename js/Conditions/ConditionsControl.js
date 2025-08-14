@@ -6,7 +6,7 @@ import classNames from 'classnames';
 /**
  * WordPress dependencies.
  */
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 
 import { Button, SelectControl, TextControl } from '@wordpress/components';
 
@@ -18,6 +18,7 @@ import { Icon, plus } from '@wordpress/icons';
 import PanelTab from './PanelTab';
 import DateTimeControl from './DateTimeControl';
 import { cond } from 'lodash';
+import { useState } from 'react';
 
 const SUPPORTED_FIELDS = [
 	{
@@ -63,6 +64,7 @@ const SUPPORTED_FIELDS = [
 const isPro = window.feedzyData.isPro;
 
 const ConditionsControl = ({ conditions, setConditions }) => {
+	const [modalOpen, setModelOpen] = useState(false);
 	const onChangeMatch = (value) => {
 		setConditions({
 			...conditions,
@@ -72,6 +74,10 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 
 	const addCondition = () => {
 		if (!isPro && 1 <= conditions.conditions.length) {
+			// the Inspector panel use sticky position with their own stacking context,
+			// which causes them to appear above our popup overlay. We set their z-index to 0 so the popup covers them.
+			document.querySelector('.editor-sidebar__panel-tabs').style.zIndex = 0;
+			setModelOpen(true);
 			return;
 		}
 
@@ -125,124 +131,174 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 		});
 	};
 
+	const closeModal = () => {
+		document.querySelector('.editor-sidebar__panel-tabs').style.zIndex = 1;
+		setModelOpen(false)
+	}
+
 	return (
-		<div
-			className='fz-condition-control'
-		>
-			<SelectControl
-				label={__('Include If', 'feedzy-rss-feeds')}
-				value={conditions.match}
-				options={[
-					{
-						label: __('All conditions are met', 'feedzy-rss-feeds'),
-						value: 'all',
-					},
-					{
-						label: __('Any condition is met', 'feedzy-rss-feeds'),
-						value: 'any',
-					},
-				]}
-				onChange={onChangeMatch}
-			/>
-
-			{conditions.conditions.map((condition, index) => {
-				const field = SUPPORTED_FIELDS.find(
-					(i) => i.value === condition.field
-				);
-				const operators = Object.keys(
-					window?.feedzyConditionsData?.operators
-				).filter((key) => !field?.unsupportedOperators?.includes(key));
-
-				return (
-					<PanelTab
-						key={index}
-						label={`${field?.label} ${window.feedzyConditionsData.operators[condition.operator]} ${condition?.value || ''}`}
-						onDelete={() => removeCondition(index)}
-						initialOpen={index === 0}
-					>
-						<SelectControl
-							label={__('Field', 'feedzy-rss-feeds')}
-							value={condition?.field}
-							options={SUPPORTED_FIELDS}
-							onChange={(value) =>
-								onChangeCondition(index, value, 'field')
-							}
-						/>
-
-						<SelectControl
-							label={__('Compare Operator', 'feedzy-rss-feeds')}
-							options={operators.map((key) => ({
-								label: window.feedzyConditionsData.operators[
-									key
-								],
-								value: key,
-							}))}
-							help={
-								['contains', 'not_contains'].includes(
-									condition?.operator
-								)
-									? __(
-											'You can use comma(,) and plus(+) keyword.',
-											'feedzy-rss-feeds'
-										)
-									: ''
-							}
-							value={condition?.operator}
-							onChange={(value) =>
-								onChangeCondition(index, value, 'operator')
-							}
-						/>
-
-						{!['has_value', 'empty'].includes(
-							condition?.operator
-						) && (
-							<>
-								{condition?.field === 'date' ? (
-									<DateTimeControl
-										id={index}
-										label={__('Value', 'feedzy-rss-feeds')}
-										value={condition?.value}
-										onChange={(value) =>
-											onChangeCondition(
-												index,
-												value,
-												'value'
-											)
-										}
-									/>
-								) : (
-									<TextControl
-										label={__('Value', 'feedzy-rss-feeds')}
-										value={condition?.value}
-										onChange={(value) =>
-											onChangeCondition(
-												index,
-												value,
-												'value'
-											)
-										}
-									/>
-								)}
-							</>
-						)}
-					</PanelTab>
-				);
-			})}
-
-			<div className={classNames("fz-action-btn mt-24", {
-				'is-upsell': !isPro && 1 <= conditions.conditions.length
-			})}
+		<>
+			<div
+				className='fz-condition-control'
 			>
-				<Button
-					variant="secondary"
-					onClick={addCondition}
-					className="fz-new-action"
+				<SelectControl
+					label={__('Include If', 'feedzy-rss-feeds')}
+					value={conditions.match}
+					options={[
+						{
+							label: __('All conditions are met', 'feedzy-rss-feeds'),
+							value: 'all',
+						},
+						{
+							label: __('Any condition is met', 'feedzy-rss-feeds'),
+							value: 'any',
+						},
+					]}
+					onChange={onChangeMatch}
+				/>
+
+				{conditions.conditions.map((condition, index) => {
+					const field = SUPPORTED_FIELDS.find(
+						(i) => i.value === condition.field
+					);
+					const operators = Object.keys(
+						window?.feedzyConditionsData?.operators
+					).filter((key) => !field?.unsupportedOperators?.includes(key));
+
+					return (
+						<PanelTab
+							key={index}
+							label={`${field?.label} ${window.feedzyConditionsData.operators[condition.operator]} ${condition?.value || ''}`}
+							onDelete={() => removeCondition(index)}
+							initialOpen={index === 0}
+						>
+							<SelectControl
+								label={__('Field', 'feedzy-rss-feeds')}
+								value={condition?.field}
+								options={SUPPORTED_FIELDS}
+								onChange={(value) =>
+									onChangeCondition(index, value, 'field')
+								}
+							/>
+
+							<SelectControl
+								label={__('Compare Operator', 'feedzy-rss-feeds')}
+								options={operators.map((key) => ({
+									label: window.feedzyConditionsData.operators[
+										key
+									],
+									value: key,
+								}))}
+								help={
+									['contains', 'not_contains'].includes(
+										condition?.operator
+									)
+										? __(
+												'You can use comma(,) and plus(+) keyword.',
+												'feedzy-rss-feeds'
+											)
+										: ''
+								}
+								value={condition?.operator}
+								onChange={(value) =>
+									onChangeCondition(index, value, 'operator')
+								}
+							/>
+
+							{!['has_value', 'empty'].includes(
+								condition?.operator
+							) && (
+								<>
+									{condition?.field === 'date' ? (
+										<DateTimeControl
+											id={index}
+											label={__('Value', 'feedzy-rss-feeds')}
+											value={condition?.value}
+											onChange={(value) =>
+												onChangeCondition(
+													index,
+													value,
+													'value'
+												)
+											}
+										/>
+									) : (
+										<TextControl
+											label={__('Value', 'feedzy-rss-feeds')}
+											value={condition?.value}
+											onChange={(value) =>
+												onChangeCondition(
+													index,
+													value,
+													'value'
+												)
+											}
+										/>
+									)}
+								</>
+							)}
+						</PanelTab>
+					);
+				})}
+
+				<div className={classNames("fz-action-btn mt-24", {
+					'is-upsell': !isPro && 1 <= conditions.conditions.length
+				})}
 				>
-					{__('Add Condition', 'feedzy-rss-feeds')}{' '}
-					<Icon icon={plus} />
-				</Button>
+					<Button
+						variant="secondary"
+						onClick={addCondition}
+						className="fz-new-action"
+					>
+						{__('Add Condition', 'feedzy-rss-feeds')}{' '}
+						<Icon icon={plus} />
+					</Button>
+				</div>
 			</div>
-		</div>
+			{ modalOpen &&
+				<div id="feedzy-add-filter-condition" className="wp-core-ui feedzy-modal">
+					<div className="modal-content">
+					<button className="fz-notice close-modal" onClick={closeModal}>
+						<span className="dashicons dashicons-no-alt"></span>
+						<span className="screen-reader-text">
+							{ __( 'Dismiss this dialog', 'feedzy-rss-feeds' ) }
+						</span>
+					</button>
+						<div className="modal-header">
+							<h2>
+								{ __( 'Upgrade to Use Unlimited Conditions', 'feedzy-rss-feeds' ) }
+							</h2>
+							<p style={{color:'red'}}>
+								{ __( 'Filter Condition limit reached', 'feedzy-rss-feeds' ) }
+								<span>
+									{/* translators: %1$s is the number of imports used, %2$s is the total number of imports allowed. */}
+									{ __( '(' + sprintf( __( '%1$s/%2$s used', 'feedzy-rss-feeds' ), '1', '1' ) + ')' ) }
+								</span>
+							</p>
+						</div>
+						<div className="modal-body">
+							<p>
+								{ __( 'Your current plan supports only one filter condition. Upgrade to unlock unlimited import configurations and make the most of Feedzy\'s powerful features!', 'feedzy-rss-feeds' ) }
+							</p>
+						</div>
+						<div className="modal-footer">
+							<div className="button-container">
+								<a
+									href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=post&utm_campaign=filterCondition&utm_content=feedzy-rss-feeds"
+									target="_blank" rel="noopener "
+									className="button button-primary button-large"
+								>
+									{ __( 'Upgrade to PRO', 'feedzy-rss-feeds' ) }
+								</a>
+							</div>
+							<span>
+								{ __( '30-day money-back guarantee. No questions asked.', 'feedzy-rss-feeds' ) }
+							</span>
+						</div>
+					</div>
+				</div>
+			}
+		</>
 	);
 };
 
