@@ -231,7 +231,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 						'media_iframe_button' => __( 'Set default image', 'feedzy-rss-feeds' ),
 						'action_btn_text_1'   => __( 'Choose image', 'feedzy-rss-feeds' ),
 						'action_btn_text_2'   => __( 'Replace image', 'feedzy-rss-feeds' ),
-						'delete_btn_label'   => __( 'Delete', 'feedzy-rss-feeds' ),
+						'delete_btn_label'    => __( 'Delete', 'feedzy-rss-feeds' ),
 					),
 				)
 			);
