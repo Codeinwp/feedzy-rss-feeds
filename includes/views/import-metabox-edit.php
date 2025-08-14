@@ -661,7 +661,7 @@ global $post;
 								</div>
 								<div class="fz-right">
 									<div class="fz-form-group">
-										<label class="form-label"><?php esc_html_e( 'Default Importing Schedule', 'feedzy-rss-feeds' ); ?></label>
+										<label class="form-label"><?php esc_html_e( 'Import schedule', 'feedzy-rss-feeds' ); ?></label>
 										<select id="fz-event-schedule" class="form-control fz-select-control" name="feedzy_meta_data[fz_cron_schedule]"<?php disabled( true, ! feedzy_is_pro() ); ?>>
 											<?php
 											$save_schedule = ! empty( $import_schedule['fz_cron_schedule'] ) ? $import_schedule['fz_cron_schedule'] : '';
@@ -685,6 +685,7 @@ global $post;
 												</option>
 											<?php endforeach; ?>
 										</select>
+										<div class="help-text pt-8"><?php esc_html_e( 'Choose how often Feedzy should import new items from your feeds.', 'feedzy-rss-feeds' ); ?></div>
 									</div>
 								</div>
 							</div>

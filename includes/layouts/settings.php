@@ -258,7 +258,7 @@
 										<div class="fz-form-row">
 											<div class="fz-form-col-6">
 												<div class="fz-form-group">
-													<label class="form-label"><?php esc_html_e( 'Schedule', 'feedzy-rss-feeds' ); ?></label>
+													<label class="form-label"><?php esc_html_e( 'Default Importing Schedule', 'feedzy-rss-feeds' ); ?></label>
 													<?php
 													$save_schedule = ! empty( $settings['general']['fz_cron_schedule'] ) ? $settings['general']['fz_cron_schedule'] : '';
 
@@ -268,6 +268,12 @@
 														unset( $schedules['hourly'] );
 														$schedules = array_merge( array( 'hourly' => $hourly ), $schedules );
 													}
+													$standard_schedules = array(
+														'hourly',
+														'twicedaily', 
+														'daily',
+														'weekly',
+													);
 													?>
 													<select id="fz-event-schedule" class="form-control fz-select-control" name="fz_cron_schedule">
 														<?php
@@ -277,11 +283,15 @@
 																continue;
 															}
 															$duplicate_schedule[] = $schedule['interval'];
+															
+															$display_text = esc_html( $schedule['display'] );
+															if ( ! in_array( $slug, $standard_schedules, true ) ) {
+																$display_text .= ' ' . esc_html__( '(externally created)', 'feedzy-rss-feeds' );
+															}
 															?>
-														<option value="<?php echo esc_attr( $slug ); ?>"<?php selected( $save_schedule, $slug ); ?>><?php echo esc_html( $schedule['display'] ); ?> (<?php echo esc_html( $slug ); ?>)</option>
+															<option value="<?php echo esc_attr( $slug ); ?>"<?php selected( $save_schedule, $slug ); ?>><?php echo esc_html( $display_text ); ?></option>
 														<?php endforeach; ?>
 													</select>
-													<div class="help-text pt-8"><?php esc_html_e( 'How often Feedzy will run the import.', 'feedzy-rss-feeds' ); ?></div>
 												</div>
 											</div>
 										</div>
