@@ -76,7 +76,7 @@ if ( isset( $settings['custom_schedules'] ) && is_array( $settings['custom_sched
 	>
 		<div
 			class="fz-schedules-table"
-			style="<?php echo empty( $custom_schedules ) ? 'display: none;' : ''; ?>"
+			style="<?php echo empty( $custom_schedules ) || ! $has_pro ? 'display: none;' : ''; ?>"
 		>
 			<div class="fz-schedule-counter">
 				<?php 
