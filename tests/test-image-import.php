@@ -31,7 +31,7 @@ class Test_Image_Import extends WP_UnitTestCase {
 
 		// Check that error was logged for invalid URL
 		$logger = Feedzy_Rss_Feeds_Log::get_instance();
-		$recent_logs = $logger->get_recent_logs( 5, 'ERROR' );
+		$recent_logs = $logger->get_recent_logs( 5, 'error' );
 		$this->assertNotEmpty( $recent_logs );
 		
 		// Find the error log for invalid image URL
