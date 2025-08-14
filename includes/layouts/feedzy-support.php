@@ -1,13 +1,16 @@
+<?php
+// phpcs:ignore WordPress.Security.NonceVerification
+$active_tab                  = isset( $_REQUEST['tab'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['tab'] ) ) : 'help';
+$onboarding_user_subscribed  = get_option( 'feedzy_onboarding_user_subscribed' );
+$subscribed_notice_dismissed = get_option( 'feedzy_dismiss_subscribe_notice_dashboard' );
+
+?>
 <div id="fz-features" class="feedzy-wrap">
 
-	<?php load_template( FEEDZY_ABSPATH . '/includes/layouts/header.php' ); ?>
-
 	<?php
-	// phpcs:ignore WordPress.Security.NonceVerification
-	$active_tab                  = isset( $_REQUEST['tab'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['tab'] ) ) : 'help';
-	$onboarding_user_subscribed  = get_option( 'feedzy_onboarding_user_subscribed' );
-	$subscribed_notice_dismissed = get_option( 'feedzy_dismiss_subscribe_notice_dashboard' );
 	
+	load_template( FEEDZY_ABSPATH . '/includes/layouts/header.php' );
+
 	if ( 'yes' !== $onboarding_user_subscribed && 'yes' !== $subscribed_notice_dismissed ) {
 		load_template( FEEDZY_ABSPATH . '/includes/layouts/feedzy-subscribe-notice.php' );
 	}

@@ -7,7 +7,7 @@
  */
 
 ?>
-<div class ="feedzy-container">
+<div class="feedzy-container">
 	<div class="feedzy-helper-notice" style="padding: 30px; position: relative">
 		<button
 			type="button" 
@@ -171,10 +171,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	const handleSubscription = async (button) => {
 		try {
 			hideError();
-			const withSubscribe = button.dataset.fz_subscribe || true;
 			const subscriptionForm = document.getElementById('feedzy-subscribe-form');
 
-			if (withSubscribe && !subscriptionForm.checkValidity()) {
+			if ( !subscriptionForm.checkValidity() ) {
 				subscriptionForm.reportValidity();
 				return;
 			}
