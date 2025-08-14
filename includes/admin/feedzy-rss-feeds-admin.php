@@ -2173,7 +2173,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				)
 			);
 		} else {
-			
 			$this->feedzy_dismiss_wizard( false );
 			wp_send_json( $response );
 		}
