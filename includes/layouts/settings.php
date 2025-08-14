@@ -268,12 +268,7 @@
 														unset( $schedules['hourly'] );
 														$schedules = array_merge( array( 'hourly' => $hourly ), $schedules );
 													}
-													$wp_standard_schedules = array(
-														'hourly',
-														'twicedaily', 
-														'daily',
-														'weekly',
-													);
+													$internal_cron_schedules = apply_filters( 'feedzy_internal_cron_schedule_slugs', array() );
 													?>
 													<select id="fz-event-schedule" class="form-control fz-select-control" name="fz_cron_schedule">
 														<?php
@@ -286,10 +281,11 @@
 																continue;
 															}
 															$duplicate_schedule[] = $schedule['interval'];
-															$display_text         = esc_html( $schedule['display'] );
+															$display_text         = $schedule['display'];
 															
-															if ( ! in_array( $slug, $wp_standard_schedules, true ) ) {
-																$display_text .= ' ' . esc_html__( '(externally created)', 'feedzy-rss-feeds' );
+															if ( ! in_array( $slug, $internal_cron_schedules, true ) ) {
+																// translators: (externally created) is used to indicate that the schedule is created by another plugin or manually.
+																$display_text .= ' (' . esc_html__( 'externally created', 'feedzy-rss-feeds' ) . ')';
 															}
 															?>
 															<option

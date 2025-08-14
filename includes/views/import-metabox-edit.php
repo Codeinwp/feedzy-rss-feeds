@@ -672,20 +672,28 @@ global $post;
 												unset( $schedules['daily'] );
 												$schedules = array_merge( array( 'daily' => $daily ), $schedules );
 											}
-											$duplicate_schedule = array();
+											$internal_cron_schedules = apply_filters( 'feedzy_internal_cron_schedule_slugs', array() );
+											$duplicate_schedule      = array();
 											foreach ( $schedules as $slug => $schedule ) :
 												if ( empty( $schedule['interval'] ) || in_array( $schedule['interval'], $duplicate_schedule, true ) ) {
 													continue;
 												}
 												$duplicate_schedule[] = $schedule['interval'];
+												$display_text         = $schedule['display'];
+
+												if ( ! in_array( $slug, $internal_cron_schedules, true ) ) {
+													$display_text .= ' (' . esc_html__( 'externally created)', 'feedzy-rss-feeds' ) . ')';
+												}
 												?>
 												<option data-slug="<?php echo esc_attr( $slug ); ?>" value="<?php echo esc_attr( $slug ); ?>"<?php selected( $save_schedule, $slug ); ?>
 												>
-													<?php echo esc_html( $schedule['display'] ); ?>
+													<?php echo esc_html( $display_text ); ?>
 												</option>
 											<?php endforeach; ?>
 										</select>
-										<div class="help-text pt-8"><?php esc_html_e( 'Choose how often Feedzy should import new items from your feeds.', 'feedzy-rss-feeds' ); ?></div>
+										<div class="help-text pt-8">
+											<?php esc_html_e( 'Choose how often Feedzy should import new items from your feeds.', 'feedzy-rss-feeds' ); ?>
+										</div>
 									</div>
 								</div>
 							</div>

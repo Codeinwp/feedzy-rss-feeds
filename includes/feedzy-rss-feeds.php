@@ -205,6 +205,7 @@ class Feedzy_Rss_Feeds {
 		self::$instance->loader->add_action( 'init', self::$instance->admin, 'register_settings' );
 		self::$instance->loader->add_action( 'wp_ajax_feedzy_validate_feed', self::$instance->admin, 'validate_feed' );
 		self::$instance->loader->add_action( 'wp_ajax_feedzy_dashboard_subscribe', self::$instance->admin, 'feedzy_dashboard_subscribe' );
+		self::$instance->loader->add_filter( 'feedzy_internal_cron_schedule_slugs', self::$instance->admin, 'internal_cron_schedule_slugs', 10, 1 );
 
 		// do not load this with the loader as this will need a corresponding remove_filter also.
 		add_filter( 'update_post_metadata', array( self::$instance->admin, 'validate_category_feeds' ), 10, 5 );
