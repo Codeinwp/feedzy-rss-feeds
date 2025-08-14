@@ -171,6 +171,27 @@ jQuery(function ($) {
 
 	initializeAutoCatActions();
 
+	// Disable the Add Schedule button until all fields are filled.
+	const validateScheduleForm = () => {
+		const interval = $('#fz-schedule-interval').val().trim();
+		const display = $('#fz-schedule-display').val().trim();
+		const name = $('#fz-schedule-name').val().trim();
+		const button = $('#fz-add-schedule');
+
+		const isValid = interval && display && name;
+		button.prop('disabled', !isValid);
+		button.toggleClass('disabled', !isValid);
+	};
+
+	// Initial validation check.
+	validateScheduleForm();
+
+	// Add event listeners to schedule form inputs.
+	$('#fz-schedule-interval, #fz-schedule-display, #fz-schedule-name').on(
+		'input keyup',
+		validateScheduleForm
+	);
+
 	$('#feedzy-delete-log-file').on('click', function (e) {
 		e.preventDefault();
 		const _this = $(this);
@@ -223,6 +244,7 @@ jQuery(function ($) {
 			return;
 		}
 
+		$('.fz-schedules-table').show();
 		const scheduleTable = $('.fz-schedules-table tbody');
 
 		const newRow = $('<tr>').attr('data-schedule', name);
@@ -275,9 +297,16 @@ jQuery(function ($) {
 
 		scheduleTable.append(newRow);
 
+		// Update counter
+		const currentCount = scheduleTable.children().length;
+		$('.fz-schedule-counter').text(`${currentCount} items`);
+
 		$('#fz-schedule-interval').val('');
 		$('#fz-schedule-display').val('');
 		$('#fz-schedule-name').val('');
+
+		// Re-validate form after clearing fields
+		validateScheduleForm();
 	});
 
 	$(document).on('click', '.fz-delete-schedule', function (e) {
@@ -285,9 +314,20 @@ jQuery(function ($) {
 
 		const $button = $(this);
 		const $row = $button.closest('tr');
+		const scheduleTable = $('.fz-schedules-table tbody');
 
 		$row.fadeOut(300, function () {
 			$(this).remove();
+
+			// Update counter
+			const currentCount = scheduleTable.children().length;
+			$('.fz-schedule-counter').text(`${currentCount} items`);
+
+			// Show empty state and hide table if no schedules left
+			if (currentCount === 0) {
+				$('.fz-schedules-table').hide();
+				$('.fz-empty-state').show();
+			}
 		});
 	});
 
