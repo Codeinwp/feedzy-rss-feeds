@@ -2229,7 +2229,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$this->dismiss_subscribe_notice();
 			wp_send_json_success();
 		} else {
-			wp_send_json_error( 
+			wp_send_json_error(
 				array(
 					'message' => $request_res->get_error_message(),
 				)
@@ -2241,7 +2241,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * Dismiss subscribe notice.
 	 *
 	 * @since 5.1.0
-	 * @access public
 	 * @return void
 	 */
 	public function dismiss_subscribe_notice() {
