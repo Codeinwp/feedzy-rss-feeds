@@ -231,6 +231,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 						'media_iframe_button' => __( 'Set default image', 'feedzy-rss-feeds' ),
 						'action_btn_text_1'   => __( 'Choose image', 'feedzy-rss-feeds' ),
 						'action_btn_text_2'   => __( 'Replace image', 'feedzy-rss-feeds' ),
+						'delete_btn_label'   => __( 'Delete', 'feedzy-rss-feeds' ),
 					),
 				)
 			);
@@ -3160,7 +3161,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	public function append_custom_cron_schedules( $schedules ) {
 
 		$saved_settings = apply_filters( 'feedzy_get_settings', array() );
-		if ( ! empty( $saved_settings['custom_schedules'] ) || ! is_array( $saved_settings['custom_schedules'] ) ) {
+		if ( ! empty( $saved_settings['custom_schedules'] ) && is_array( $saved_settings['custom_schedules'] ) ) {
 			$custom_schedules = $saved_settings['custom_schedules'];
 
 			foreach ( $custom_schedules as $key => $value ) {

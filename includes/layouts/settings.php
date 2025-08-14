@@ -533,21 +533,28 @@
 													<label class="form-label" for="fz-schedule-interval">
 														<?php esc_html_e( 'Interval (seconds)', 'feedzy-rss-feeds' ); ?>
 													</label>
-													<input type="number" class="form-control" id="fz-schedule-interval" placeholder="3600" min="0" />
+													<input
+														type="number"
+														class="form-control"
+														id="fz-schedule-interval"
+														placeholder="3600"
+														required
+														min="<?php echo esc_attr( defined( 'WP_CRON_LOCK_TIMEOUT' ) ? WP_CRON_LOCK_TIMEOUT : 60 ); ?>"
+													/>
 												</div>
 
 												<div class="fz-form-group">
 													<label class="form-label" for="fz-schedule-display">
 														<?php esc_html_e( 'Display Name', 'feedzy-rss-feeds' ); ?>
 													</label>
-													<input type="text" class="form-control" id="fz-schedule-display" placeholder="Once Hourly" />
+													<input required type="text" class="form-control" id="fz-schedule-display" placeholder="Once Hourly" />
 												</div>
 
 												<div class="fz-form-group">
 													<label class="form-label" for="fz-schedule-name">
 														<?php esc_html_e( 'Internal Name', 'feedzy-rss-feeds' ); ?>
 													</label>
-													<input type="text" class="form-control" id="fz-schedule-name" placeholder="hourly" />
+													<input required type="text" class="form-control" id="fz-schedule-name" placeholder="hourly" />
 												</div>
 												<div class="fz-form-group">
 													<button class="btn btn-primary" id="fz-add-schedule">
