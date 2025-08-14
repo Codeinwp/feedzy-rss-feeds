@@ -1464,6 +1464,23 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					'pass' => isset( $_POST['proxy-pass'] ) ? sanitize_text_field( wp_unslash( $_POST['proxy-pass'] ) ) : '',
 				);
 				break;
+			case 'schedules':
+				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+				$custom_schedules             = isset( $_POST['fz-custom-schedule-interval'] ) ? (array) wp_unslash( $_POST['fz-custom-schedule-interval'] ) : array();
+				$settings['custom_schedules'] = array();
+				if ( ! empty( $custom_schedules ) ) {
+					foreach ( $custom_schedules as $key => $value ) {
+						$interval = isset( $value['interval'] ) ? absint( $value['interval'] ) : 0;
+						$display  = isset( $value['display'] ) ? sanitize_text_field( $value['display'] ) : '';
+						if ( ! empty( $interval ) && ! empty( $display ) ) {
+							$settings['custom_schedules'][ $key ] = array(
+								'interval' => $interval,
+								'display'  => $display,
+							);
+						}
+					}
+				}
+				break;
 			default:
 				$settings = apply_filters( 'feedzy_save_tab_settings', $settings, $post_tab );
 		}
@@ -3131,6 +3148,32 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				)
 			);
 		}
+	}
+
+	/**
+	 * Append custom schedules to the existing schedules.
+	 * 
+	 * @since 5.1.0
+	 * @param array<string,array{interval:int,display:string}> $schedules Existing schedules.
+	 * @return array<string,array{interval:int,display:string}> Modified schedules with custom schedules appended.
+	 */
+	public function append_custom_cron_schedules( $schedules ) {
+
+		$saved_settings = apply_filters( 'feedzy_get_settings', array() );
+		if ( ! empty( $saved_settings['custom_schedules'] ) || ! is_array( $saved_settings['custom_schedules'] ) ) {
+			$custom_schedules = $saved_settings['custom_schedules'];
+
+			foreach ( $custom_schedules as $key => $value ) {
+				if ( ! empty( $value['interval'] ) && ! empty( $value['display'] ) ) {
+					$schedules[ $key ] = array(
+						'interval' => intval( $value['interval'] ),
+						'display'  => sanitize_text_field( $value['display'] ),
+					);
+				}
+			}
+		}
+		
+		return $schedules;
 	}
 
 	/**
