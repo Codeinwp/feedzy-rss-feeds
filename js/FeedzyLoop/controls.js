@@ -195,9 +195,6 @@ const Controls = ({
 				<PanelBody
 					title={[
 						__('Filter items', 'feedzy-rss-feeds'),
-						!window.feedzyData.isPro && (
-							<span className="fz-pro-label">Pro</span>
-						),
 					]}
 					initialOpen={false}
 					key="filters"
@@ -206,7 +203,7 @@ const Controls = ({
 					{!window.feedzyData.isPro && (
 						<div className="fz-upsell-notice">
 							{__(
-								'Unlock this feature and more advanced options with',
+								'Unlock more advanced options with',
 								'feedzy-rss-feeds'
 							)}{' '}
 							<ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=keywordsfilter&utm_content=feedzy-rss-feeds">
@@ -222,7 +219,7 @@ const Controls = ({
 										conditions: [],
 										match: 'all',
 									}
-								: {
+								: attributes?.conditions || {
 										match: 'all',
 										conditions: [
 											{
