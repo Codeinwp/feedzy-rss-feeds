@@ -271,8 +271,15 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 							<p style={{color:'red'}}>
 								{ __( 'Filter Condition limit reached', 'feedzy-rss-feeds' ) }
 								<span>
-									{/* translators: %1$s is the number of imports used, %2$s is the total number of imports allowed. */}
-									{ __( '(' + sprintf( __( '%1$s/%2$s used', 'feedzy-rss-feeds' ), '1', '1' ) + ')' ) }
+									{
+										'(' +
+										sprintf(
+										// translators: %1$s is the number of imports used, %2$s is the total number of imports allowed.
+										__( '%1$s/%2$s used', 'feedzy-rss-feeds'),
+										'1',
+										'1' ) +
+										')'
+									}
 								</span>
 							</p>
 						</div>
@@ -285,7 +292,7 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 							<div className="button-container">
 								<a
 									href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=post&utm_campaign=filterCondition&utm_content=feedzy-rss-feeds"
-									target="_blank" rel="noopener "
+									target="_blank" rel="noreferrer "
 									className="button button-primary button-large"
 								>
 									{ __( 'Upgrade to PRO', 'feedzy-rss-feeds' ) }
