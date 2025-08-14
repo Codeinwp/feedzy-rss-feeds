@@ -45,10 +45,10 @@
 
 					<div class="mb-20">
 						<div class="feedzy-helper-info">
-							Get tips, updates & unlock exclusive guides
+							<?php esc_html_e( 'Get tips, updates & unlock exclusive guides', 'feedzy-rss-feeds' ); ?>
 						</div>
 						<div style="font-size: 16px;">
-							Help improve Feedzy with anonymous usage insights
+							<?php esc_html_e( 'Help improve Feedzy with anonymous usage insights', 'feedzy-rss-feeds' ); ?>
 						</div>
 					</div>
 					
@@ -57,7 +57,7 @@
 						name="feedzy_subscribe_button"
 						class="feedzy-subscribe"
 					>
-						Get Started →
+						<?php esc_html_e( 'Get Started →', 'feedzy-rss-feeds' ); ?>
 					</button>
 					
 				</form>
