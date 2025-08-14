@@ -206,6 +206,58 @@ jQuery(function ($) {
 			});
 	});
 
+	$('#fz-add-schedule').on('click', function (e) {
+		e.preventDefault();
+
+		const interval = $('#fz-schedule-interval').val();
+		const display = $('#fz-schedule-display').val();
+		const name = $('#fz-schedule-name').val();
+
+		if (!interval || !display || !name) {
+			return;
+		}
+
+		const scheduleTable = $('.fz-schedules-table tbody');
+
+		const newRow = $(`
+			<tr data-schedule="${name}">
+				<td class="fz-schedule-attributes">
+					<strong>${name}</strong>
+				</td>
+				<td class="fz-schedule-attributes">
+					${interval}
+				</td>
+				<td class="fz-schedule-attributes">
+					${display}
+				</td>
+				<td class="fz-schedule-attributes">
+					<button type="button" class="btn btn-outline-primary fz-delete-schedule fz-is-destructive" data-schedule="${name}">
+						Delete
+					</button>
+				</td>
+				<input type="hidden" value="${interval}" name="fz-custom-schedule-interval[${name}][interval]">
+				<input type="hidden" value="${display}" name="fz-custom-schedule-interval[${name}][display]">
+			</tr>
+		`);
+
+		scheduleTable.append(newRow);
+
+		$('#fz-schedule-interval').val('');
+		$('#fz-schedule-display').val('');
+		$('#fz-schedule-name').val('');
+	});
+
+	$(document).on('click', '.fz-delete-schedule', function (e) {
+		e.preventDefault();
+
+		const $button = $(this);
+		const $row = $button.closest('tr');
+
+		$row.fadeOut(300, function () {
+			$(this).remove();
+		});
+	});
+
 	/**
 	 * Toggle visibility of the email error address field based on email error enabled checkbox.
 	 */
