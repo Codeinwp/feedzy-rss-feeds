@@ -1312,6 +1312,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				$settings['general']['auto-categories']       = array_values( $auto_categories );
 				$settings['general']['feedzy-telemetry']      = isset( $_POST['feedzy-telemetry'] ) ? absint( wp_unslash( $_POST['feedzy-telemetry'] ) ) : '';
 				$settings['general']['feedzy-delete-media']   = isset( $_POST['feedzy-delete-media'] ) ? absint( wp_unslash( $_POST['feedzy-delete-media'] ) ) : '';
+
+				$settings['logs']['level']             = isset( $_POST['logs-logging-level'] ) ? sanitize_text_field( wp_unslash( $_POST['logs-logging-level'] ) ) : '';
+				$settings['logs']['email']             = isset( $_POST['feedzy-email-error-address'] ) ? sanitize_email( wp_unslash( $_POST['feedzy-email-error-address'] ) ) : '';
+				$settings['logs']['send_email_report'] = isset( $_POST['feedzy-email-error-enabled'] ) ? absint( wp_unslash( $_POST['feedzy-email-error-enabled'] ) ) : '';
 				break;
 			case 'headers':
 				$settings['header']['user-agent'] = isset( $_POST['user-agent'] ) ? sanitize_text_field( wp_unslash( $_POST['user-agent'] ) ) : '';
@@ -1374,7 +1378,13 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( $settings && isset( $settings['proxy'] ) && is_array( $settings['proxy'] ) && ! empty( $settings['proxy'] ) ) {
 			// if even one constant is defined, escape.
 			if ( defined( 'WP_PROXY_HOST' ) || defined( 'WP_PROXY_PORT' ) || defined( 'WP_PROXY_USERNAME' ) || defined( 'WP_PROXY_PASSWORD' ) ) {
-				do_action( 'themeisle_log_event', FEEDZY_NAME, 'Some proxy constants already defined; ignoring proxy settings', 'info', __FILE__, __LINE__ );
+				Feedzy_Rss_Feeds_Log::info(
+					'Some proxy constants already defined; ignoring proxy settings',
+					array(
+						'url'      => $url,
+						'settings' => $settings['proxy'],
+					)
+				);
 
 				return;
 			}
@@ -1431,7 +1441,14 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	public function add_user_agent( $ua ) {
 		$settings = apply_filters( 'feedzy_get_settings', null );
 		if ( $settings && isset( $settings['header']['user-agent'] ) && ! empty( $settings['header']['user-agent'] ) ) {
-			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Override user-agent from %s to %s', $ua, $settings['header']['user-agent'] ), 'info', __FILE__, __LINE__ );
+			Feedzy_Rss_Feeds_Log::info(
+				'Overriding user-agent',
+				array(
+					'old_user_agent' => $ua,
+					'new_user_agent' => $settings['header']['user-agent'],
+				)
+			);
+
 			$ua = $settings['header']['user-agent'];
 		}
 
@@ -1450,7 +1467,14 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	public function send_through_proxy( $return_value, $uri, $check, $home ) {
 		$proxied = defined( 'FEEZY_URL_THRU_PROXY' ) ? FEEZY_URL_THRU_PROXY : null;
 		if ( $proxied && ( ( is_array( $proxied ) && in_array( $uri, $proxied, true ) ) || $uri === $proxied ) ) {
-			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'sending %s through proxy', $uri ), 'info', __FILE__, __LINE__ );
+			Feedzy_Rss_Feeds_Log::info(
+				'Sending through proxy',
+				array(
+					'uri'   => $uri,
+					'check' => $check,
+					'home'  => $home,
+				)
+			);
 
 			return true;
 		}

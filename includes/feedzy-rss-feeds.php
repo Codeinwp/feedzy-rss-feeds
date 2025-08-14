@@ -281,6 +281,32 @@ class Feedzy_Rss_Feeds {
 
 		$plugin_slug = FEEDZY_DIRNAME . '/' . basename( FEEDZY_BASEFILE );
 		$this->loader->add_filter( "plugin_action_links_$plugin_slug", self::$instance->admin, 'plugin_actions', 10, 2 );
+
+		add_action(
+			'feedzy_log',
+			function ( $log_data ) {
+				$level   = isset( $log_data['level'] ) ? $log_data['level'] : 'debug';
+				$message = isset( $log_data['message'] ) ? $log_data['message'] : '';
+				$context = isset( $log_data['context'] ) ? $log_data['context'] : array();
+
+				if ( ! isset( Feedzy_Rss_Feeds_Log::PRIORITIES_MAPPING[ $level ] ) ) {
+					return;
+				}
+			
+				Feedzy_Rss_Feeds_Log::log( Feedzy_Rss_Feeds_Log::PRIORITIES_MAPPING[ $level ], $message, $context );
+			} 
+		);
+		( new Feedzy_Rss_Feeds_Task_Manager() )->register_actions();
+
+		add_filter(
+			'feedzy_disable_db_cache',
+			function ( $a, $b ) {
+				return true;
+			}, 
+			10,
+			2 
+		);
+
 		if ( ! defined( 'TI_UNIT_TESTING' ) ) {
 			add_action(
 				'plugins_loaded',

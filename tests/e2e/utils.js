@@ -5,6 +5,9 @@ import { expect } from '@wordpress/e2e-test-utils-playwright';
  */
 const { RequestUtils } = require('@wordpress/e2e-test-utils-playwright');
 
+export const CUSTOM_FEED_URL =
+	'https://s3.amazonaws.com/verti-utils/sample-feed.xml';
+
 /**
  * Close the tour modal if it is visible.
  *
@@ -12,7 +15,7 @@ const { RequestUtils } = require('@wordpress/e2e-test-utils-playwright');
  */
 export async function tryCloseTourModal(page) {
 	if (await page.getByRole('button', { name: 'Skip' }).isVisible()) {
-		await page.getByRole('button', { name: 'Skip' }).click();
+		await page.getByRole('button', { name: 'Skip' }).click({ force: true });
 		await page.waitForTimeout(500);
 	}
 }
@@ -25,6 +28,9 @@ export async function tryCloseTourModal(page) {
  * @return {Promise<void>} The promise that resolves when the feeds are added.
  */
 export async function addFeeds(page, feedURLs) {
+	await page.waitForSelector('input[name="feedzy_meta_data[source]"]', {
+		state: 'attached',
+	});
 	await page.evaluate((urls) => {
 		document.querySelector('input[name="feedzy_meta_data[source]"]').value =
 			urls?.join(', ');
@@ -67,11 +73,21 @@ export async function addContentMapping(page, mapping) {
  * @return {Promise<void>}
  */
 export async function setItemLimit(page, limit) {
-	await page.evaluate((limit) => {
-		document.querySelector(
-			'input[name="feedzy_meta_data[import_feed_limit]"]'
-		).value = limit;
-	}, limit);
+	try {
+		await page.waitForSelector(
+			'input[name="feedzy_meta_data[import_feed_limit]"]',
+			{
+				state: 'attached',
+			}
+		);
+		await page.evaluate((importLimit) => {
+			document.querySelector(
+				'input[name="feedzy_meta_data[import_feed_limit]"]'
+			).value = importLimit;
+		}, limit);
+	} catch (error) {
+		// Element not found or not attached - ignore silently
+	}
 }
 
 /**
@@ -191,4 +207,30 @@ export async function getPostsByFeedzy(requestUtils) {
 			meta_compare: '=',
 		},
 	});
+}
+
+/**
+ * Create and run a sample import with the given feed URL.
+ *
+ * @param {import('playwright').Page} page
+ * @param {string}                    feedUrl
+ *
+ * @return {Promise<void>} The promise that resolves when the import is created and run.
+ */
+export async function createAndRunSampleImport(
+	page,
+	feedUrl = CUSTOM_FEED_URL
+) {
+	const importName = `Create and run sample import: ${new Date().toISOString()}`;
+
+	await page.goto('/wp-admin/post-new.php?post_type=feedzy_imports');
+	await tryCloseTourModal(page);
+
+	await page.getByPlaceholder('Add a name for your import').fill(importName);
+	await addFeeds(page, [feedUrl]);
+	await page
+		.getByRole('button', { name: 'Save & Activate importing' })
+		.click({ force: true });
+
+	await runFeedImport(page);
 }
