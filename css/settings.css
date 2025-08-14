@@ -317,6 +317,8 @@
 	min-height: 48px;
 	padding-top: 2px;
 	line-height: 0;
+	display: flex;
+	align-items: center;
 }
 
 .fz-form-wrap .form-control:focus {
@@ -1004,13 +1006,6 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 }
 .tag-list .tagify{
 	border: 0;
-}
-.fz-form-wrap .tagify>.tagify__tag{
-	margin: 5px 7px 7px;
-}
-.fz-form-wrap .tagify .tagify__tag .tagify__input,
-.fz-form-wrap .tagify .tagify__input{
-	padding: 5px;
 }
 .fz-form-wrap .tagify__tag{
 	position: relative;
