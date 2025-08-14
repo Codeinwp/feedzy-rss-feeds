@@ -3,11 +3,12 @@
  * Register and manage scheduled tasks for Feedzy RSS Feeds.
  *
  * @package Feedzy_Rss_Feeds_Task_Manager
- * @version 5.1.0
  */
 
 /**
  * Class Feedzy_Rss_Feeds_Task_Manager.
+ * 
+ * @since 5.1.0
  */
 class Feedzy_Rss_Feeds_Task_Manager {
 
@@ -22,19 +23,23 @@ class Feedzy_Rss_Feeds_Task_Manager {
 			'task_feedzy_send_error_report',
 			array( $this, 'send_error_report' )
 		);
+
+		add_action(
+			'update_option_feedzy-settings',
+			array( $this, 'maybe_reschedule_email_report' ),
+			10,
+			3
+		);
 		
 		add_action(
 			'task_feedzy_cleanup_logs',
-			function () {
-				Feedzy_Rss_Feeds_Log::get_instance()->should_clean_logs();
-			} 
+			array( $this, 'check_and_clean_logs' )
 		);
 
 		add_action(
 			'init',
 			function () {
-				$this->schedule_weekly_tasks();
-				$this->schedule_hourly_tasks();
+				$this->schedule_tasks();
 			}
 		);
 	}
@@ -45,17 +50,13 @@ class Feedzy_Rss_Feeds_Task_Manager {
 	 * @since 5.1.0
 	 * @return void
 	 */
-	public function schedule_weekly_tasks() {
-		$log_instance = Feedzy_Rss_Feeds_Log::get_instance();
-		
+	public function schedule_tasks() {
 		if (
-			! $log_instance->can_send_email() ||
-			false !== Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'task_feedzy_send_error_report' )
+			false === Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'task_feedzy_cleanup_logs' )
 		) {
-			return;
+			Feedzy_Rss_Feeds_Util_Scheduler::schedule_event( time(), 'hourly', 'task_feedzy_cleanup_logs' );
 		}
-			
-		Feedzy_Rss_Feeds_Util_Scheduler::schedule_event( time(), 'weekly', 'task_feedzy_send_error_report' );
+		$this->schedule_email_report();
 	}
 
 	/**
@@ -64,14 +65,64 @@ class Feedzy_Rss_Feeds_Task_Manager {
 	 * @since 5.1.0
 	 * @return void
 	 */
-	public function schedule_hourly_tasks() {
+	public function schedule_email_report() {
+		$log_instance = Feedzy_Rss_Feeds_Log::get_instance();
+		
 		if (
-			false !== Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'task_feedzy_cleanup_logs' )
+			! $log_instance->can_send_email() ||
+			false !== Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'task_feedzy_send_error_report' )
 		) {
 			return;
 		}
 
-		Feedzy_Rss_Feeds_Util_Scheduler::schedule_event( time(), 'hourly', 'task_feedzy_cleanup_logs' );
+		$frequency = $log_instance->email_frequency;
+		if ( ! in_array( $frequency, array( 'daily', 'weekly' ), true ) ) {
+			$frequency = 'weekly';
+		}
+
+		Feedzy_Rss_Feeds_Util_Scheduler::schedule_event( time(), $frequency, 'task_feedzy_send_error_report' );
+	}
+
+	/**
+	 * When feedzy settings are updated, ensure the error report schedule matches the new frequency.
+	 *
+	 * @since 5.1.0
+	 * @param array<string, mixed> $old_value Previous option value.
+	 * @param array<string, mixed> $value     New option value.
+	 * @param string               $option    Option name (unused).
+	 * @return void
+	 */
+	public function maybe_reschedule_email_report( $old_value, $value, $option ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+
+		$old_freq = isset( $old_value['logs']['email_frequency'] ) ? sanitize_text_field( $old_value['logs']['email_frequency'] ) : '';
+		$new_freq = isset( $value['logs']['email_frequency'] ) ? sanitize_text_field( $value['logs']['email_frequency'] ) : '';
+
+		if ( $old_freq === $new_freq ) {
+			return;
+		}
+		
+		Feedzy_Rss_Feeds_Util_Scheduler::clear_scheduled_hook( 'task_feedzy_send_error_report' );
+		
+		if ( ! in_array( $new_freq, array( 'daily', 'weekly' ), true ) ) {
+			$new_freq = 'weekly';
+		}
+		
+		$send_reports = ! empty( $value['logs']['send_email_report'] );
+		$to_email     = isset( $value['logs']['email'] ) ? sanitize_email( $value['logs']['email'] ) : '';
+
+		if ( $send_reports && ! empty( $to_email ) ) {
+			Feedzy_Rss_Feeds_Util_Scheduler::schedule_event( time(), $new_freq, 'task_feedzy_send_error_report' );
+		}
+	}
+
+	/**
+	 * Check and clean logs if necessary.
+	 * 
+	 * @since 5.1.0
+	 * @return void
+	 */
+	public function check_and_clean_logs() {
+		Feedzy_Rss_Feeds_Log::get_instance()->should_clean_logs();
 	}
 
 	/**

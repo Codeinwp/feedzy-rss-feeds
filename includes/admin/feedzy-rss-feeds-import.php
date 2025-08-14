@@ -3248,14 +3248,15 @@ class Feedzy_Rss_Feeds_Import {
 	public function save_tab_settings( $settings, $tab ) {
 		if (
 			! isset( $_POST['nonce'] ) ||
-			! wp_verify_nonce( sanitize_text_field( wp_unslash( 'nonce' ) ), $tab )
+			! wp_verify_nonce( sanitize_text_field( $_POST['nonce'] ), $tab )
 		) {
 			return array();
 		}
-
+		
 		if ( 'misc' === $tab ) {
-			$settings['canonical']            = isset( $_POST['canonical'] ) ? absint( $_POST['canonical'] ) : 0;
-			$settings['general']['rss-feeds'] = isset( $_POST['rss-feeds'] ) ? absint( $_POST['rss-feeds'] ) : '';
+			$settings['canonical']               = isset( $_POST['canonical'] ) ? absint( $_POST['canonical'] ) : 0;
+			$settings['general']['rss-feeds']    = isset( $_POST['rss-feeds'] ) ? absint( $_POST['rss-feeds'] ) : '';
+			$settings['logs']['email_frequency'] = isset( $_POST['logs-email-frequency'] ) ? sanitize_text_field( wp_unslash( $_POST['logs-email-frequency'] ) ) : '';
 		}
 
 		return $settings;

@@ -360,10 +360,11 @@
 													class="form-label"
 												>
 													<?php esc_html_e( 'Report errors via email', 'feedzy-rss-feeds' ); ?>
-													(<?php esc_html_e( 'Once per week', 'feedzy-rss-feeds' ); ?>)
 												</label>
 											</div>
-
+											<div class="help-text pt-8">
+												<?php esc_html_e( 'Send an email with the errors encountered. The frequency can be changed (once per week is the default).', 'feedzy-rss-feeds' ); ?>
+											</div>
 										</div>
 										<div
 											class="fz-form-group <?php echo esc_attr( ! $email_error_enabled ? 'fz-hidden' : '' ); ?>"
