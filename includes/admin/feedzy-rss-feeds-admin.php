@@ -1466,18 +1466,26 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				);
 				break;
 			case 'schedules':
-				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-				$custom_schedules             = isset( $_POST['fz-custom-schedule-interval'] ) ? (array) wp_unslash( $_POST['fz-custom-schedule-interval'] ) : array();
-				$settings['custom_schedules'] = array();
-				if ( ! empty( $custom_schedules ) ) {
-					foreach ( $custom_schedules as $key => $value ) {
-						$interval = isset( $value['interval'] ) ? absint( $value['interval'] ) : 0;
-						$display  = isset( $value['display'] ) ? sanitize_text_field( $value['display'] ) : '';
-						if ( ! empty( $interval ) && ! empty( $display ) ) {
-							$settings['custom_schedules'][ $key ] = array(
-								'interval' => $interval,
-								'display'  => $display,
-							);
+				if ( feedzy_is_pro() ) {
+					// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+					$custom_schedules             = isset( $_POST['fz-custom-schedule-interval'] ) ? (array) wp_unslash( $_POST['fz-custom-schedule-interval'] ) : array();
+					$settings['custom_schedules'] = array();
+					if ( ! empty( $custom_schedules ) ) {
+						$cron_timout = defined( 'WP_CRON_LOCK_TIMEOUT' ) ? WP_CRON_LOCK_TIMEOUT : 60;
+
+						foreach ( $custom_schedules as $key => $value ) {
+							$interval = isset( $value['interval'] ) ? absint( $value['interval'] ) : $cron_timout;
+							$display  = isset( $value['display'] ) ? sanitize_text_field( $value['display'] ) : '';
+
+							if (
+								is_numeric( $interval ) && $cron_timout <= $interval &&
+								! empty( $display )
+							) {
+								$settings['custom_schedules'][ $key ] = array(
+									'interval' => $interval,
+									'display'  => $display,
+								);
+							}
 						}
 					}
 				}
@@ -3159,6 +3167,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return array<string,array{interval:int,display:string}> Modified schedules with custom schedules appended.
 	 */
 	public function append_custom_cron_schedules( $schedules ) {
+		if ( ! feedzy_is_pro() ) {
+			return $schedules;
+		}
 
 		$saved_settings = apply_filters( 'feedzy_get_settings', array() );
 		if ( ! empty( $saved_settings['custom_schedules'] ) && is_array( $saved_settings['custom_schedules'] ) ) {
