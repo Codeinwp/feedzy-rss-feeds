@@ -2313,6 +2313,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			if ( ! is_wp_error( $request_res ) ) {
 				$body = json_decode( wp_remote_retrieve_body( $request_res ) );
 				if ( 'success' === $body->code ) {
+					update_option( 'feedzy_onboarding_user_subscribed', 'yes' );
 					$this->feedzy_dismiss_wizard( false );
 					wp_send_json( $response );
 				}
@@ -2328,6 +2329,74 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$this->feedzy_dismiss_wizard( false );
 			wp_send_json( $response );
 		}
+	}
+
+	/**
+	 * AJAX method to subscribe user to Feedzy newsletter via dashboard notice.
+	 *
+	 * @since 5.1.0
+	 * @access public
+	 * @return void
+	 */
+	public function feedzy_dashboard_subscribe() {
+		check_ajax_referer( 'feedzy_subscribe_nonce', '_wpnonce' );
+		
+		$email = ! empty( $_POST['email'] ) ? sanitize_email( $_POST['email'] ) : '';
+		$skip  = ! empty( $_POST['skip'] ) ? sanitize_text_field( wp_unslash( $_POST['skip'] ) ) : '';
+
+		if ( 'yes' === $skip ) {
+			$this->dismiss_subscribe_notice();
+			wp_send_json_success();
+		}
+
+		if ( empty( $email ) || ! is_email( $email ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Validation failed', 'feedzy-rss-feeds' ),
+				)
+			);
+		}
+		
+		update_option( 'feedzy_rss_feeds_logger_flag', 'yes' );
+		
+		$request_res = wp_remote_post(
+			FEEDZY_SUBSCRIBE_API,
+			array(
+				'timeout' => 100, // phpcs:ignore WordPressVIPMinimum.Performance.RemoteRequestTimeout.timeout_timeout
+				'headers' => array(
+					'Content-Type' => 'application/json',
+				),
+				'body'    => wp_json_encode(
+					array(
+						'slug'  => 'feedzy-rss-feeds',
+						'site'  => home_url(),
+						'email' => $email,
+						'data'  => array( 'source' => 'dashboard-notice' ),
+					)
+				),
+			)
+		);
+		
+		if ( ! is_wp_error( $request_res ) ) {
+			$this->dismiss_subscribe_notice();
+			wp_send_json_success();
+		} else {
+			wp_send_json_error(
+				array(
+					'message' => $request_res->get_error_message(),
+				)
+			);
+		}
+	}
+
+	/**
+	 * Dismiss subscribe notice.
+	 *
+	 * @since 5.1.0
+	 * @return void
+	 */
+	public function dismiss_subscribe_notice() {
+		update_option( 'feedzy_dismiss_subscribe_notice_dashboard', 'yes' );
 	}
 
 	/**
