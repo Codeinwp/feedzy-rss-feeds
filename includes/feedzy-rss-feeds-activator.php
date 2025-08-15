@@ -82,7 +82,15 @@ class Feedzy_Rss_Feeds_Activator {
 
 		$news_group = wp_insert_post( $group_args );
 
-		$feed_groups = 'https://themeisle.com/blog/feed/, https://wptavern.com/feed/, https://www.wpbeginner.com/feed/, https://wpshout.com/feed/, https://planet.wordpress.org/feed/';
+		$default_feed_urls = array(
+			'https://themeisle.com/blog/feed/',
+			'https://wptavern.com/feed/',
+			'https://www.wpbeginner.com/feed/',
+			'https://wpshout.com/feed/',
+			'https://planet.wordpress.org/feed/',
+		);
+
+		$feed_groups = implode( ', ', array_map( 'esc_url', $default_feed_urls ) );
 
 		add_post_meta( $news_group, 'feedzy_category_feed', $feed_groups );
 

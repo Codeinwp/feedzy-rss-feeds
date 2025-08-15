@@ -37,16 +37,12 @@
     // validate feeds group.
     function validateFeeds() {
         $('#feedzy_category_feeds textarea[name="feedzy_category_feed"]').on('input', function() {
-            if ($(this).val().length < 1) {
-                $('.validate-feeds').attr('disabled', true);
-            } else {
-                $('.validate-feeds').attr('disabled', false);
-            }
+            $('.validate-feeds').attr('disabled', 1 > $(this).val().length );
         });
 
         $('#feedzy_category_feeds .button.validate-feeds').on('click', function(e) {
             e.preventDefault();
-            var button = $(this);
+            const button = $(this);
             button.attr('disabled', true);
             $('#feedzy_category_feeds .spinner').addClass('is-active');
             $.ajax({

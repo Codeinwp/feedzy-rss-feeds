@@ -1138,11 +1138,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		$new_columns = $this->array_insert_before( 'slug', $columns, 'source', __( 'Source', 'feedzy-rss-feeds' ) );
-		if ( $new_columns ) {
-			$columns = $new_columns;
-		} else {
-			$columns['Source'] = __( 'source', 'feedzy-rss-feeds' );
-		}
 
 		return $columns;
 	}
@@ -1191,7 +1186,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			case 'source':
 				$src = get_post_meta( $post_id, 'feedzy_category_feed', true );
 				if ( empty( $src ) ) {
-							$src = __( 'No Source Configured', 'feedzy-rss-feeds' );
+					$src = __( 'No Source Configured', 'feedzy-rss-feeds' );
 				} else {
 					$urls = $this->normalize_urls( $src );
 					$src  = '';
