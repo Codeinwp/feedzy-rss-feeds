@@ -5,13 +5,13 @@
  * @package Feedzy_Rss_Feeds
  */
 
-$dashboard_url = add_query_arg(
+// Note: It will be redirect to dashboard by `feedzy_dismiss_wizard` action.
+$skip_onboarding_url_callback = add_query_arg(
 	array(
-		'post_type' => 'feedzy_imports',
-		'action'    => 'feedzy_dismiss_wizard',
-		'status'    => 0,
+		'action' => 'feedzy_dismiss_wizard',
+		'status' => 0,
 	),
-	admin_url( 'edit.php' )
+	admin_url( 'admin.php' )
 );
 // phpcs:ignore WordPress.Security.NonceVerification
 $integrate_with     = ! empty( $_GET['integrate-with'] ) ? sanitize_text_field( wp_unslash( $_GET['integrate-with'] ) ) : '';
@@ -34,7 +34,7 @@ $published_status = array( 'publish', 'draft' );
 				</div>
 			</div>
 			<div class="back-btn">
-				<a href="<?php echo esc_url( $dashboard_url ); ?>" class="btn-link"><span class="dashicons dashicons-arrow-left-alt"></span> <?php esc_html_e( 'Go to dashboard', 'feedzy-rss-feeds' ); ?></a>
+				<a href="<?php echo esc_url( $skip_onboarding_url_callback ); ?>" class="btn-link"><span class="dashicons dashicons-arrow-left-alt"></span> <?php esc_html_e( 'Go to dashboard', 'feedzy-rss-feeds' ); ?></a>
 			</div>
 		</div>
 	</div>
@@ -239,7 +239,7 @@ $published_status = array( 'publish', 'draft' );
 														<div class="fz-shortcode-preview">
 															<h4 class="h4 pb-8"><?php esc_html_e( 'Basic Shortcode', 'feedzy-rss-feeds' ); ?></h4>
 															<div class="fz-code-box">
-																<input type="text" redonly value='[feedzy-rss feeds={{feed_source}}]' id="basic_shortcode">
+																<input type="text" readonly value='[feedzy-rss feeds={{feed_source}} max="6" meta="author, date" columns="3" summary="yes" summarylength="160" thumb="yes" target="_blank"]' id="basic_shortcode">
 																<button type="button" class="fz-copy-code-btn" data-clipboard-target="#basic_shortcode"><?php esc_html_e( 'click to copy', 'feedzy-rss-feeds' ); ?> <img src="<?php echo esc_url( FEEDZY_ABSURL . 'img/copy.svg' ); ?>" alt="">
 																</button>
 															</div>

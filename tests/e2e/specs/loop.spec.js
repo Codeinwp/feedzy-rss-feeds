@@ -106,4 +106,40 @@ test.describe('Feedzy Loop', () => {
 		const feedzyLoopChildren = await feedzyLoop.$$(':scope > *');
 		expect(feedzyLoopChildren.length).toBe(5);
 	});
+
+	test('check validation for invalid URL', async ({ editor, page, admin }) => {
+		await admin.createNewPost();
+
+		await editor.insertBlock({
+			name: 'feedzy-rss-feeds/loop',
+		});
+
+		await page.getByPlaceholder('Enter URLs or select a Feed').fill(
+			'http://invalid-url.com/feed'
+		);
+		await page.getByRole('button', { name: 'Load Feed' }).click();
+
+		await page.waitForSelector('.feedzy-validation-results');
+
+		await expect( page.locator('.feedzy-validation-results .is-error').getByText('http://invalid-url.com/feed', { exact: true }) ).toBeVisible();
+	});
+
+	test('check validation for invalid and valid url', async ({ editor, page, admin }) => {
+		await admin.createNewPost();
+
+		await editor.insertBlock({
+			name: 'feedzy-rss-feeds/loop',
+		});
+
+		await page.getByPlaceholder('Enter URLs or select a Feed').fill(
+			'http://invalid-url.com/feed, https://www.nasa.gov/feeds/iotd-feed/'
+		);
+		await page.getByRole('button', { name: 'Load Feed' }).click();
+
+		await page.waitForSelector('.feedzy-validation-results');
+
+		await expect( page.locator('.feedzy-validation-results .is-error').getByText('http://invalid-url.com/feed', { exact: true }) ).toBeVisible();
+
+		await expect( page.locator('.feedzy-validation-results .is-success').getByText('https://www.nasa.gov/feeds/iotd-feed/', { exact: true }) ).toBeVisible();
+	});
 });

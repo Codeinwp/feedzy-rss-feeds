@@ -493,13 +493,25 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			$content        = wp_strip_all_tags( $content );
 			$content        = substr( $content, 0, apply_filters( 'feedzy_chat_gpt_content_limit', 3000 ) );
 			$prompt_content = $this->current_job->data->ChatGPT;
-			$ai_provider    = 'openai';
+
+			$additional_data = array(
+				'ai_provider' => 'openai',
+			);
+
 			if ( isset( $this->current_job->data ) && isset( $this->current_job->data->aiProvider ) ) {
-				$ai_provider = $this->current_job->data->aiProvider;
+				$additional_data['ai_provider'] = $this->current_job->data->aiProvider;
 			}
+
+			if (
+				'openai' === $additional_data['ai_provider'] &&
+				isset( $this->current_job->data ) && isset( $this->current_job->data->aiModel )
+			) {
+				$additional_data['ai_model'] = $this->current_job->data->aiModel;
+			}
+
 			$content         = str_replace( array( '{content}' ), array( $content ), $prompt_content );
 			$openai          = new \Feedzy_Rss_Feeds_Pro_Openai();
-			$rewrite_content = $openai->call_api( $this->settings, $content, '', array( 'ai_provider' => $ai_provider ) );
+			$rewrite_content = $openai->call_api( $this->settings, $content, '', $additional_data );
 			// Replace prompt content string for specific cases.
 			$rewrite_content = str_replace( explode( '{content}', $prompt_content ), '', trim( $rewrite_content, '"' ) );
 			return $rewrite_content;

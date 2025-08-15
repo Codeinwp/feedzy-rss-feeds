@@ -98,50 +98,6 @@ jQuery(function ($) {
 		}
 	});
 
-
-	// License key.
-	jQuery('.fz-license-section #license_key').on('input', function () {
-		const licenseKey = jQuery(this).val();
-		if (licenseKey !== '') {
-			jQuery('#check_ti_license').removeAttr('disabled');
-		} else {
-			jQuery('#check_ti_license').attr('disabled', true);
-		}
-		jQuery('.fz-license-section input[name="license_key"]').val(licenseKey);
-	});
-
-	jQuery('.fz-license-section #check_ti_license').on('click', function (e) {
-		e.preventDefault();
-		const _this = jQuery(this);
-		_this.attr('disabled', true).addClass('fz-checking');
-
-		_this.parents('.fz-license-section').find('.feedzy-api-error').remove();
-
-		const LicenseData = _this
-			.parent('.fz-input-group-btn')
-			.find('input')
-			.serialize();
-
-		jQuery.post(
-			ajaxurl,
-			LicenseData,
-			function (response) {
-				if (!response.success) {
-					jQuery(
-						'<p class="feedzy-api-error">' +
-							response.message +
-							'</p>'
-					).insertAfter(
-						jQuery('.fz-license-section').find('.help-text')
-					);
-					_this.removeAttr('disabled').removeClass('fz-checking');
-				} else {
-					window.location.reload();
-				}
-			},
-			'json'
-		);
-	});
 	snackbarNotice();
 
 	const initializeAutoCatActions = () => {
@@ -214,4 +170,53 @@ jQuery(function ($) {
 	};
 
 	initializeAutoCatActions();
+
+	$('#feedzy-delete-log-file').on('click', function (e) {
+		e.preventDefault();
+		const _this = $(this);
+		const originalText = _this.html();
+		_this.attr('disabled', true).addClass('fz-checking');
+
+		const deleteUrl = new URL(`${window.wpApiSettings.root}feedzy/v1/logs`);
+		deleteUrl.searchParams.append('_wpnonce', window.wpApiSettings.nonce);
+
+		fetch(deleteUrl, {
+			method: 'DELETE',
+		})
+			.then((response) => response.json())
+			.then((response) => {
+				if (!response.success) {
+					_this.html(
+						'<span class="dashicons dashicons-no-alt"></span>'
+					);
+					setTimeout(function () {
+						_this.html(originalText);
+						_this.removeAttr('disabled').removeClass('fz-checking');
+					}, 3000);
+				} else {
+					window.location.reload();
+				}
+			})
+			.catch((error) => {
+				_this.html('<span class="dashicons dashicons-no-alt"></span>');
+				setTimeout(function () {
+					_this.html(originalText);
+					_this.removeAttr('disabled').removeClass('fz-checking');
+				}, 3000);
+			});
+	});
+
+	/**
+	 * Toggle visibility of the email error address field based on email error enabled checkbox.
+	 */
+	const toggleEmailErrorField = () => {
+		const checkbox = $('#feedzy-email-error-enabled');
+		const emailField = checkbox
+			.closest('.fz-form-group')
+			.next('.fz-form-group');
+
+		emailField.toggleClass('fz-hidden', !checkbox.is(':checked'));
+	};
+
+	$('#feedzy-email-error-enabled').on('change', toggleEmailErrorField);
 });
