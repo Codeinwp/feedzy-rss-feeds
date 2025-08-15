@@ -113,9 +113,6 @@
 	color: #ffffff;
 	vertical-align: super;
 }
-.feedzy-wrap .feedzy-accordion-item .pro-label{
-	font-size: 0.55rem !important;
-}
 
 .post-type-feedzy_imports:not(.edit-post) .wrap div#side-sortables{
 	display: none;
@@ -146,9 +143,30 @@
 }
 
 /* feedzy accordion style start */
-.feedzy-accordion-item,
-.feedzy-accordion-item *{
-	font-size: 15px !important;
+.feedzy-accordion-item .fz-form-wrap .form-label,
+.feedzy-accordion-item .fz-form-wrap .form-control,
+.feedzy-accordion-item .feedzy-accordion__step-title,
+.feedzy-accordion-item .btn,
+.feedzy-accordion-item .cta-text a,
+.feedzy-accordion-item .fz-tabs-menu ul li a,
+.feedzy-accordion-item .fz-form-wrap .chosen-container .chosen-single,
+.feedzy-accordion-item .fz-form-wrap .chosen-container .chosen-choices,
+.feedzy-accordion-item .fz-form-wrap .chosen-container-multi .chosen-choices li.search-choice,
+.feedzy-accordion-item .dashicons,
+.feedzy-accordion-item .h1,
+.feedzy-accordion-item .h2,
+.feedzy-accordion-item .h3,
+.feedzy-accordion-item .h4,
+.feedzy-accordion-item .h5,
+.feedzy-accordion-item .h6,
+.feedzy-accordion-item .fz-condition-control .components-input-control__label,
+.feedzy-accordion-item .fz-condition-control .components-select-control__input,
+.feedzy-accordion-item .fz-condition-control input,
+.feedzy-accordion-item .fz-condition-control button,
+.feedzy-accordion-item .fz-panel-tab__header__label,
+.feedzy-accordion-item .fz-form-wrap .chosen-container-multi .chosen-choices li.search-field input[type="text"],
+.feedzy-accordion-item .fz-form-wrap .form-control .tagify__tag-text{
+    font-size: 15px;
 }
 .feedzy-accordion-item{
 	background: #ffffff;
@@ -250,7 +268,7 @@
 	-moz-transition: all 0.3s ease-in-out;
 	-o-transition: all 0.3s ease-in-out;
 	transition: all 0.3s ease-in-out;
-	font-size: 10px !important;
+	font-size: 10px;
 	margin-right: 5px;
 }
 .feedzy-accordion .feedzy-accordion-item .is-active .feedzy-accordion__step-number{
