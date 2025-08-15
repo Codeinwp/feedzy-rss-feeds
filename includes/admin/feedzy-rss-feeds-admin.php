@@ -484,6 +484,11 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					jQuery(document).on('keyup', function (e) {
 						if (e.key === "Escape") closeModal();
 					});
+
+					jQuery('.fz-conditions').on('click', '.fz-action-btn.is-upsell', function (event) {
+						openModal('#feedzy-add-filter-condition');
+						event.preventDefault();
+					});
 				});
 			</script>
 			<div id="feedzy-add-new-import" class="wp-core-ui feedzy-modal" style="display:none;">
@@ -640,6 +645,51 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 						<div class="button-container">
 							<a
 								href="<?php echo esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'importExport' ) ) ); ?>"
+								target="_blank" rel="noopener "
+								class="button button-primary button-large"
+							>
+								<?php esc_html_e( 'Upgrade to PRO', 'feedzy-rss-feeds' ); ?>
+							</a>
+						</div>
+						<span>
+							<?php
+							esc_html_e( '30-day money-back guarantee. No questions asked.', 'feedzy-rss-feeds' );
+							?>
+						</span>
+					</div>
+				</div>
+			</div>
+			<div id="feedzy-add-filter-condition" class="wp-core-ui feedzy-modal" style="display:none;">
+				<div class="modal-content">
+					<span class="fz-notice close-modal">
+						<span class="dashicons dashicons-no-alt"></span>
+						<span class="screen-reader-text">
+							<?php esc_html_e( 'Dismiss this dialog', 'feedzy-rss-feeds' ); ?>
+						</span>
+					</span>
+					<div class="modal-header">
+						<h2>
+							<?php esc_html_e( 'Upgrade to Use Unlimited Conditions', 'feedzy-rss-feeds' ); ?>
+						</h2>
+						<p style="color: red;">
+							<?php esc_html_e( 'Filter Condition limit reached', 'feedzy-rss-feeds' ); ?>
+							<span>
+								<?php
+								// translators: %1$s is the number of imports used, %2$s is the total number of imports allowed.
+								echo esc_html( '(' . sprintf( __( '%1$s/%2$s used', 'feedzy-rss-feeds' ), '1', '1' ) . ')' );
+								?>
+							</span>
+						</p>
+					</div>
+					<div class="modal-body">
+						<p>
+							<?php esc_html_e( 'Your current plan supports only one filter condition. Upgrade to unlock unlimited import configurations and make the most of Feedzy\'s powerful features!', 'feedzy-rss-feeds' ); ?>
+						</p>
+					</div>
+					<div class="modal-footer">
+						<div class="button-container">
+							<a
+								href="<?php echo esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'filterCondition' ) ) ); ?>"
 								target="_blank" rel="noopener "
 								class="button button-primary button-large"
 							>
