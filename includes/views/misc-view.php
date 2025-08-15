@@ -46,4 +46,45 @@
 			<div class="help-text pb-8"><?php esc_html_e( 'This setting controls whether there are featured images available in the RSS XML Feed of your own website.', 'feedzy-rss-feeds' ); ?></div>
 		</div>
 	</div>
+	<div class="form-block">
+		<div class="fz-form-row">
+			<div class="fz-form-col-6">
+				<div class="fz-form-group">
+					<label class="form-label" for="fz-logs-email-frequency">
+						<?php esc_html_e( 'Email Reporting Frequency', 'feedzy-rss-feeds' ); ?>
+					</label>
+					<?php
+					$email_error_frequency = isset( $this->free_settings['logs'], $this->free_settings['logs']['email_frequency'] ) ? $this->free_settings['logs']['email_frequency'] : '';
+
+					$registered_schedules = wp_get_schedules();
+					$schedules            = array();
+
+					if ( isset( $registered_schedules['weekly'] ) ) {
+						$schedules['weekly'] = $registered_schedules['weekly'];
+					}
+
+					if ( isset( $registered_schedules['daily'] ) ) {
+						$schedules['daily'] = $registered_schedules['daily'];
+					}
+					
+					?>
+					<select id="fz-logs-email-frequency" class="form-control fz-select-control" name="logs-email-frequency">
+						<?php
+						foreach ( $schedules as $slug => $schedule ) :
+							if ( empty( $schedule['interval'] ) ) {
+								continue;
+							}
+							?>
+							<option
+								value="<?php echo esc_attr( $slug ); ?>"
+								<?php selected( $email_error_frequency, $slug ); ?>
+							>
+								<?php echo esc_html( $schedule['display'] ); ?>
+							</option>
+						<?php endforeach; ?>
+					</select>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

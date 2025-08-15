@@ -11,10 +11,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Extract variables that should be available
-$site_name      = isset( $site_name ) ? $site_name : get_bloginfo( 'name' );
-$generated_date = isset( $generated_date ) ? $generated_date : date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) );
-$stats          = isset( $stats ) ? $stats : array();
-$logs_entries   = isset( $logs_entries ) ? $logs_entries : array();
+$site_name         = isset( $site_name ) ? $site_name : get_bloginfo( 'name' );
+$generated_date    = isset( $generated_date ) ? $generated_date : date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) );
+$stats             = isset( $stats ) ? $stats : array();
+$logs_entries      = isset( $logs_entries ) ? $logs_entries : array();
+$see_all_logs_link = add_query_arg(
+	array(
+		'page' => 'feedzy-settings',
+		'tab'  => 'logs',
+	),
+	admin_url( 'admin.php' )
+);
 
 ?>
 <!DOCTYPE html>
@@ -29,6 +36,9 @@ $logs_entries   = isset( $logs_entries ) ? $logs_entries : array();
 		.timestamp { color: #6c757d; font-size: 0.9em; }
 		.level { font-weight: bold; color: #dc3545; }
 		.context { color: #6c757d; font-style: italic; font-size: 0.9em; margin-top: 5px; }
+		.logs-link { text-align: center; margin-top: 20px; }
+		.logs-link a { color: #0073aa; text-decoration: none; font-weight: bold; }
+		.logs-link a:hover { text-decoration: underline; }
 	</style>
 </head>
 <body>
@@ -72,6 +82,7 @@ $logs_entries   = isset( $logs_entries ) ? $logs_entries : array();
 <?php if ( empty( $logs_entries ) ) : ?>
 	<p><?php esc_html_e( 'No recent error entries found.', 'feedzy-rss-feeds' ); ?></p>
 <?php else : ?>
+	
 	<?php foreach ( $logs_entries as $entry ) : ?>
 		<div class="log-entry">
 			<div class="timestamp"><?php echo esc_html( $entry['timestamp'] ); ?></div>
@@ -88,6 +99,14 @@ $logs_entries   = isset( $logs_entries ) ? $logs_entries : array();
 		</div>
 	<?php endforeach; ?>
 <?php endif; ?>
+
+<div class="logs-link">
+	<p>
+		<a href="<?php echo esc_url( $see_all_logs_link ); ?>">
+			<?php esc_html_e( 'See all the logs', 'feedzy-rss-feeds' ); ?>
+		</a>
+	</p>
+</div>
 
 </body>
 </html>

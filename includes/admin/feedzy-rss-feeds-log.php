@@ -16,6 +16,7 @@ class Feedzy_Rss_Feeds_Log {
 	/**
 	 * Option key for storing log statistics.
 	 *
+	 * @since 5.1.0
 	 * @var string Option key for storing log statistics.
 	 */
 	const STATS_OPTION_KEY = 'feedzy_log_stats'; 
@@ -23,6 +24,7 @@ class Feedzy_Rss_Feeds_Log {
 	/**
 	 * Debug level.
 	 *
+	 * @since 5.1.0
 	 * @var int Debug level.
 	 */
 	const DEBUG = 100;
@@ -30,6 +32,7 @@ class Feedzy_Rss_Feeds_Log {
 	/**
 	 * Info level.
 	 *
+	 * @since 5.1.0
 	 * @var int Info level.
 	 */
 	const INFO = 200;
@@ -37,6 +40,7 @@ class Feedzy_Rss_Feeds_Log {
 	/**
 	 * Warning level.
 	 *
+	 * @since 5.1.0
 	 * @var int Warning level.
 	 */
 	const WARNING = 300;
@@ -44,6 +48,7 @@ class Feedzy_Rss_Feeds_Log {
 	/**
 	 * Error level.
 	 *
+	 * @since 5.1.0
 	 * @var int Error level.
 	 */
 	const ERROR = 400;
@@ -51,6 +56,7 @@ class Feedzy_Rss_Feeds_Log {
 	/**
 	 * Ignore level.
 	 *
+	 * @since 5.1.0
 	 * @var int Ignore level.
 	 */
 	const NONE = 500;
@@ -58,6 +64,7 @@ class Feedzy_Rss_Feeds_Log {
 	/**
 	 * Log file name.
 	 *
+	 * @since 5.1.0
 	 * @var string Default log name.
 	 */
 	const FILE_NAME = 'feedzy';
@@ -65,6 +72,7 @@ class Feedzy_Rss_Feeds_Log {
 	/**
 	 * Log file extension.
 	 *
+	 * @since 5.1.0
 	 * @var string Log file extension.
 	 */
 	const FILE_EXT = '.jsonl';
@@ -72,6 +80,7 @@ class Feedzy_Rss_Feeds_Log {
 	/**
 	 * Default max file size.
 	 *
+	 * @since 5.1.0
 	 * @var int Default max file size in bytes (50MB).
 	 */
 	const DEFAULT_MAX_FILE_SIZE = 50 * 1024 * 1024;
@@ -79,6 +88,7 @@ class Feedzy_Rss_Feeds_Log {
 	/**
 	 * Default max files.
 	 *
+	 * @since 5.1.0
 	 * @var int Default max number of log files.
 	 */
 	const DEFAULT_MAX_FILES = 3;
@@ -86,6 +96,7 @@ class Feedzy_Rss_Feeds_Log {
 	/**
 	 * Log levels.
 	 *
+	 * @since 5.1.0
 	 * @var array<int, string> Log levels.
 	 */
 	private static $levels = array(
@@ -95,6 +106,12 @@ class Feedzy_Rss_Feeds_Log {
 		self::ERROR   => 'error',
 	);
 
+	/**
+	 * Priorities mapping.
+	 *
+	 * @since 5.1.0
+	 * @var array<string, int> Priorities mapping.
+	 */
 	const PRIORITIES_MAPPING = array(
 		'debug'   => self::DEBUG,
 		'info'    => self::INFO,
@@ -106,6 +123,7 @@ class Feedzy_Rss_Feeds_Log {
 	/**
 	 * The single instance of the class.
 	 *
+	 * @since 5.1.0
 	 * @var ?self The single instance of the class.
 	 */
 	private static $instance = null;
@@ -113,6 +131,7 @@ class Feedzy_Rss_Feeds_Log {
 	/**
 	 * The path to the log file.
 	 *
+	 * @since 5.1.0
 	 * @var string The path to the log file.
 	 */
 	private $filepath;
@@ -120,6 +139,7 @@ class Feedzy_Rss_Feeds_Log {
 	/**
 	 * The WordPress filesystem instance.
 	 *
+	 * @since 5.1.0
 	 * @var \WP_Filesystem_Base|null The WordPress filesystem instance.
 	 */
 	private $filesystem;
@@ -127,6 +147,7 @@ class Feedzy_Rss_Feeds_Log {
 	/**
 	 * The context for the logger.
 	 *
+	 * @since 5.1.0
 	 * @var array<string, mixed> The context for the logger.
 	 */
 	private $context = array();
@@ -134,6 +155,7 @@ class Feedzy_Rss_Feeds_Log {
 	/**
 	 * The minimum log level threshold for logging messages.
 	 *
+	 * @since 5.1.0
 	 * @var int The minimum log level threshold.
 	 */
 	public $level_threshold = self::ERROR;
@@ -141,6 +163,7 @@ class Feedzy_Rss_Feeds_Log {
 	/**
 	 * Whether to retain error messages for import run errors meta.
 	 *
+	 * @since 5.1.0
 	 * @var string[]
 	 */
 	private $error_messages_accumulator = array();
@@ -148,6 +171,7 @@ class Feedzy_Rss_Feeds_Log {
 	/**
 	 * Whether to retain error messages for import run errors meta.
 	 *
+	 * @since 5.1.0
 	 * @var bool Whether to retain error messages.
 	 */
 	private $retain_error_messages = false;
@@ -155,13 +179,23 @@ class Feedzy_Rss_Feeds_Log {
 	/**
 	 * Whether email reports can be sent.
 	 *
+	 * @since 5.1.0
 	 * @var bool Whether email reports can be sent.
 	 */
 	public $can_send_email = false;
 
 	/**
+	 * The email frequency for sending reports.
+	 * 
+	 * @since 5.1.0
+	 * @var string
+	 */
+	public $email_frequency = 'weekly';
+
+	/**
 	 * The email address to send reports to.
 	 *
+	 * @since 5.1.0
 	 * @var string The email address to send reports to.
 	 */
 	public $to_email = '';
@@ -233,7 +267,7 @@ class Feedzy_Rss_Feeds_Log {
 	 * @return void
 	 */
 	private function init_saved_settings() {
-		$feedzy_settings = get_option( 'feedzy-settings', array() );
+		$feedzy_settings = apply_filters( 'feedzy_get_settings', array() );
 		if ( ! isset( $feedzy_settings['logs'] ) ) {
 			return;
 		}
@@ -242,8 +276,9 @@ class Feedzy_Rss_Feeds_Log {
 			$this->level_threshold = self::PRIORITIES_MAPPING[ $feedzy_settings['logs']['level'] ];
 		}
 
-		$this->can_send_email = isset( $feedzy_settings['logs']['send_email_report'] ) && $feedzy_settings['logs']['send_email_report'];
-		$this->to_email       = isset( $feedzy_settings['logs']['email'] ) ? sanitize_email( $feedzy_settings['logs']['email'] ) : '';
+		$this->can_send_email  = isset( $feedzy_settings['logs']['send_email_report'] ) && $feedzy_settings['logs']['send_email_report'];
+		$this->to_email        = isset( $feedzy_settings['logs']['email'] ) ? sanitize_email( $feedzy_settings['logs']['email'] ) : '';
+		$this->email_frequency = isset( $feedzy_settings['logs']['email_frequency'] ) ? sanitize_text_field( $feedzy_settings['logs']['email_frequency'] ) : 'weekly';
 	}
 
 	/**
