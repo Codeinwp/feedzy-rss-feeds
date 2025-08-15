@@ -3132,4 +3132,21 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			);
 		}
 	}
+
+	/**
+	 * Add slugs for internal cron schedules.
+	 * 
+	 * @param string[] $cron_slugs The cron slugs to be modified.
+	 * @return string[]
+	 */
+	public function internal_cron_schedule_slugs( $cron_slugs ) {
+		$wp_standard_schedules = array(
+			'hourly',
+			'twicedaily', 
+			'daily',
+			'weekly',
+		);
+
+		return array_merge( $wp_standard_schedules, $cron_slugs );
+	}
 }
