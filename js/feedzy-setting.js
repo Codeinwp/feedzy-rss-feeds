@@ -171,6 +171,27 @@ jQuery(function ($) {
 
 	initializeAutoCatActions();
 
+	// Disable the Add Schedule button until all fields are filled.
+	const validateScheduleForm = () => {
+		const interval = $('#fz-schedule-interval').val().trim();
+		const display = $('#fz-schedule-display').val().trim();
+		const name = $('#fz-schedule-name').val().trim();
+		const button = $('#fz-add-schedule');
+
+		const isValid = interval && display && name;
+		button.prop('disabled', !isValid);
+		button.toggleClass('disabled', !isValid);
+	};
+
+	// Initial validation check.
+	validateScheduleForm();
+
+	// Add event listeners to schedule form inputs.
+	$('#fz-schedule-interval, #fz-schedule-display, #fz-schedule-name').on(
+		'input keyup',
+		validateScheduleForm
+	);
+
 	$('#feedzy-delete-log-file').on('click', function (e) {
 		e.preventDefault();
 		const _this = $(this);
@@ -204,6 +225,110 @@ jQuery(function ($) {
 					_this.removeAttr('disabled').removeClass('fz-checking');
 				}, 3000);
 			});
+	});
+
+	$('#fz-add-schedule').on('click', function (e) {
+		e.preventDefault();
+
+		const formElem = document.querySelector('form:has(.fz-form-wrap)');
+		if (formElem && formElem.checkValidity() === false) {
+			formElem.reportValidity();
+			return;
+		}
+
+		const interval = $('#fz-schedule-interval').val();
+		const display = $('#fz-schedule-display').val();
+		const name = $('#fz-schedule-name').val();
+
+		if (!interval || !display || !name) {
+			return;
+		}
+
+		$('.fz-schedules-table').show();
+		const scheduleTable = $('.fz-schedules-table tbody');
+
+		const newRow = $('<tr>').attr('data-schedule', name);
+
+		const nameCell = $('<td>')
+			.addClass('fz-schedule-attributes')
+			.append($('<strong>').text(name));
+
+		const intervalCell = $('<td>')
+			.addClass('fz-schedule-attributes')
+			.text(interval);
+		const displayCell = $('<td>')
+			.addClass('fz-schedule-attributes')
+			.text(display);
+
+		const deleteButton = $('<button>')
+			.attr({
+				type: 'button',
+				'data-schedule': name,
+			})
+			.addClass(
+				'btn btn-outline-primary fz-delete-schedule fz-is-destructive'
+			)
+			.text(window.feedzy_setting.l10n.delete_btn_label);
+
+		const actionCell = $('<td>')
+			.addClass('fz-schedule-attributes')
+			.append(deleteButton);
+
+		const intervalInput = $('<input>').attr({
+			type: 'hidden',
+			value: interval,
+			name: `fz-custom-schedule-interval[${name}][interval]`,
+		});
+
+		const displayInput = $('<input>').attr({
+			type: 'hidden',
+			value: display,
+			name: `fz-custom-schedule-interval[${name}][display]`,
+		});
+
+		newRow.append(
+			nameCell,
+			intervalCell,
+			displayCell,
+			actionCell,
+			intervalInput,
+			displayInput
+		);
+
+		scheduleTable.append(newRow);
+
+		// Update counter
+		const currentCount = scheduleTable.children().length;
+		$('.fz-schedule-counter').text(`${currentCount} items`);
+
+		$('#fz-schedule-interval').val('');
+		$('#fz-schedule-display').val('');
+		$('#fz-schedule-name').val('');
+
+		// Re-validate form after clearing fields
+		validateScheduleForm();
+	});
+
+	$(document).on('click', '.fz-delete-schedule', function (e) {
+		e.preventDefault();
+
+		const $button = $(this);
+		const $row = $button.closest('tr');
+		const scheduleTable = $('.fz-schedules-table tbody');
+
+		$row.fadeOut(300, function () {
+			$(this).remove();
+
+			// Update counter
+			const currentCount = scheduleTable.children().length;
+			$('.fz-schedule-counter').text(`${currentCount} items`);
+
+			// Show empty state and hide table if no schedules left
+			if (currentCount === 0) {
+				$('.fz-schedules-table').hide();
+				$('.fz-empty-state').show();
+			}
+		});
 	});
 
 	/**
