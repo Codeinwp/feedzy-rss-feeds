@@ -3951,6 +3951,8 @@ class Feedzy_Rss_Feeds_Import {
 
 		$post_type                = ! empty( $_POST['post_type'] ) ? sanitize_text_field( wp_unslash( $_POST['post_type'] ) ) : '';
 		$post_status              = ! empty( $_POST['post_status'] ) ? sanitize_text_field( wp_unslash( $_POST['post_status'] ) ) : '';
+		$fallback_image           = ! empty( $_POST['fallback_image'] ) ? sanitize_text_field( wp_unslash( $_POST['fallback_image'] ) ) : '';
+		$excluded_post_title      = ! empty( $_POST['excluded_post_title'] ) ? sanitize_text_field( wp_unslash( $_POST['excluded_post_title'] ) ) : ''; 
 		$wizard_data              = get_option( 'feedzy_wizard_data', array() );
 		$wizard_data              = ! empty( $wizard_data ) ? $wizard_data : array();
 		$wizard_data['post_type'] = $post_type;
@@ -3994,7 +3996,25 @@ class Feedzy_Rss_Feeds_Import {
 			// Update wizard data.
 			$wizard_data['job_id'] = $job_id;
 			update_option( 'feedzy_wizard_data', $wizard_data );
-		
+
+			$filter_conditions = array(
+				'match'      => 'all',
+				'conditions' => array(),
+			);
+
+			if ( ! empty( $excluded_post_title ) ) {
+				$filter_conditions['conditions'] = array(
+					array(
+						'field'    => 'title',
+						'operator' => 'not_contains',
+						'value'    => $excluded_post_title,
+					),
+				);
+			}
+
+			update_post_meta( $job_id, 'filter_conditions', wp_json_encode( $filter_conditions ) );
+			update_post_meta( $job_id, 'default_thumbnail_id', $fallback_image );
+
 			$response = array(
 				'status' => true,
 			);
