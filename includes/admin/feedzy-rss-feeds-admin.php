@@ -897,6 +897,19 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				'low'
 			);
 		}
+
+		if ( 'publish' === get_post_status() ) {
+			add_meta_box(
+				'feedzy_category_feeds_preview',
+				__( 'Feed Preview', 'feedzy-rss-feeds' ),
+				array(
+					$this,
+					'render_feed_preview',
+				),
+				'feedzy_categories',
+				'side'
+			);
+		}
 	}
 
 	/**
@@ -939,10 +952,104 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			)
 			. '</strong><br/><br/>'
 			. $invalid
-			. '<textarea name="feedzy_category_feed" rows="15" class="widefat" placeholder="' . __( 'Place your URL\'s here followed by a comma.', 'feedzy-rss-feeds' ) . '" >' . $feed . '</textarea>
-			<p><a href="' . esc_url( 'https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation#categories' ) . '" target="_blank">' . __( 'Learn how to organize feeds in Groups', 'feedzy-rss-feeds' ) . '</a></p>
+			. '<textarea name="feedzy_category_feed" rows="10" class="widefat" placeholder="themeisle.com/blog/feed/, https://wptavern.com/feed/, https://www.wpbeginner.com/feed/, https://wpshout.com/feed/, https://planet.wordpress.org/feed/" >' . $feed . '</textarea>
+			<div class="validate-feeds-actions">
+			<span class="spinner"></span>
+			<button class="button validate-feeds" ' . esc_attr( empty( $feed ) ? 'disabled' : '' ) . '>' . __( 'Validate & Remove Invalid Feeds', 'feedzy-rss-feeds' ) . '</button>
+			</div>
         ';
 		echo wp_kses( $output, apply_filters( 'feedzy_wp_kses_allowed_html', array() ) );
+	}
+
+	/**
+	 * Render the feed preview metabox.
+	 *
+	 * @return void
+	 */
+	public function render_feed_preview() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_GET['action'] ) && 'edit' !== $_GET['action'] ) {
+			return;
+		}
+		$feeds     = get_post_meta( get_the_ID(), 'feedzy_category_feed', true );
+		$feed_urls = $this->normalize_urls( $feeds );
+		if ( empty( $feed_urls ) ) {
+			echo '<p>' . esc_html__( 'No feeds available for preview.', 'feedzy-rss-feeds' ) . '</p>';
+			return;
+		}
+		$shortcode   = array(
+			'sort'  => 'date_desc',
+			'thumb' => 'no',
+			'max'   => 0,
+		);
+		$atts        = $this->get_short_code_attributes( $shortcode );
+		$atts        = $this->sanitize_attr( $atts, $feed_urls );
+		$sizes       = array(
+			'width'  => 0,
+			'height' => 0,
+		);
+		$feed        = $this->fetch_feed( $feed_urls, $atts['refresh'], $atts );
+		$feed_items  = apply_filters( 'feedzy_get_feed_array', array(), $atts, $feed, $feed_urls, $sizes );
+		$total_items = count( $feed_items );
+
+		$max_items_preview_count = 5;
+		$preview_feed_items      = array_slice( $feed_items, 0, $max_items_preview_count );
+		?>
+		<strong>
+			<?php
+				echo esc_html(
+					sprintf(
+						// translators: %1$s the number of maximum displayed items, %2$s is the total number of items available in the feed.
+						__( 'Latest %1$s feed items out of %2$s available from', 'feedzy-rss-feeds' ),
+						$max_items_preview_count,
+						$total_items
+					)
+				);
+			?>
+		</strong>
+		<div>
+			<ul class="feedzy-preview-list">
+			<?php
+			foreach ( $preview_feed_items as $item ) {
+				$datetime     = date_i18n( 'c', $item['item_date'] );
+				$time_content = date_i18n( 'Y-m-d', $item['item_date'] );
+				?>
+					<li <?php echo esc_attr( $item['itemAttr'] ); ?>>
+						<a href="<?php echo esc_url( $item['item_url'] ); ?>" target="_blank">
+							<?php echo esc_html( $item['item_title'] ); ?>
+						</a>
+						<br/>
+						<time
+							datetime="<?php echo esc_attr( $datetime ); ?>"
+							content="<?php echo esc_attr( $time_content ); ?>"
+						>
+							<?php echo esc_html( $this->get_humman_readable_time_diff( $item['item_date'] ) ); ?>
+						</time>
+					</li>
+				<?php
+			}
+			?>
+			</ul>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Get human readable time difference.
+	 *
+	 * @param int $item_publish_time The item publish time.
+	 *
+	 * @return string
+	 */
+	private function get_humman_readable_time_diff( $item_publish_time ) {
+		$array     = current_datetime();
+		$localtime = $array->getTimestamp() + $array->getOffset();
+
+		return sprintf(
+			// translators: %s is the time difference.
+			__( '%s ago', 'feedzy-rss-feeds' ),
+			human_time_diff( $item_publish_time, $localtime )
+		);
 	}
 
 	/**
@@ -1030,6 +1137,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$columns['actions'] = __( 'Actions', 'feedzy-rss-feeds' );
 		}
 
+		$new_columns = $this->array_insert_before( 'slug', $columns, 'source', __( 'Source', 'feedzy-rss-feeds' ) );
+
 		return $columns;
 	}
 
@@ -1073,6 +1182,33 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				break;
 			case 'actions':
 				echo wp_kses_post( sprintf( '<button class="button button-primary validate-category" title="%s" data-category-id="%d">%s</button>', __( 'Click to remove invalid URLs from this category', 'feedzy-rss-feeds' ), $post_id, __( 'Validate & Clean', 'feedzy-rss-feeds' ) ) );
+				break;
+			case 'source':
+				$src = get_post_meta( $post_id, 'feedzy_category_feed', true );
+				if ( empty( $src ) ) {
+					$src = __( 'No Source Configured', 'feedzy-rss-feeds' );
+				} else {
+					$urls = $this->normalize_urls( $src );
+					$src  = '';
+					if ( is_array( $urls ) ) {
+
+						foreach ( $urls as $key => $url ) {
+							$too_long = 130;
+							if ( strlen( $src ) > $too_long ) {
+								$src .= '...';
+								break;
+							} else {
+								$src .= '<a href="' . $url . '" target="_blank" title="' . __( 'Click to view', 'feedzy-rss-feeds' ) . '">' . $url . '</a>';
+								if ( count( $urls ) > $key + 1 ) {
+									$src .= ', ';
+								}
+							}
+						}
+					} else {
+						$src .= '<a href="' . esc_url( $urls ) . '" target="_blank" title="' . __( 'Click to view', 'feedzy-rss-feeds' ) . '">' . esc_html( $urls ) . '</a>';
+					}
+				}
+				echo wp_kses_post( $src );
 				break;
 			default:
 				break;
@@ -1709,6 +1845,23 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				}
 				wp_send_json_success( array( 'invalid' => count( $invalid ) ) );
 				break;
+			case 'validate_feeds_group':
+				$feeds = isset( $_POST['feeds'] ) ? sanitize_text_field( wp_unslash( $_POST['feeds'] ) ) : '';
+				if ( empty( $feeds ) ) {
+					wp_send_json_error( __( 'No feeds provided for validation.', 'feedzy-rss-feeds' ) );
+				}
+				$feeds = $this->normalize_urls( $feeds );
+				if ( ! is_array( $feeds ) ) {
+					$feeds = array( $feeds );
+				}
+				$valid   = $this->get_valid_source_urls( $feeds, '1_mins', false );
+				$invalid = array_diff( $feeds, $valid );
+				wp_send_json_success(
+					array(
+						'valid'   => $valid,
+						'invalid' => $invalid,
+					)
+				);
 		}
 	}
 

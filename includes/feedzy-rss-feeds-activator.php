@@ -57,5 +57,43 @@ class Feedzy_Rss_Feeds_Activator {
 				)
 			);
 		}
+		self::add_feeds_group();
+	}
+
+	/**
+	 * Adds a default feeds group with some popular WordPress-related feeds.
+	 *
+	 * This method checks if a feeds group already exists, and if not, creates one
+	 * with a set of predefined feeds.
+	 *
+	 * @return void
+	 */
+	public static function add_feeds_group() {
+		if ( get_option( '_feedzy_news_group_id', false ) ) {
+			return;
+		}
+
+		$group_args = array(
+			'post_title'   => __( 'News sites', 'feedzy-rss-feeds' ),
+			'post_type'    => 'feedzy_categories',
+			'post_status'  => 'publish',
+			'post_content' => '',
+		);
+
+		$news_group = wp_insert_post( $group_args );
+
+		$default_feed_urls = array(
+			'https://themeisle.com/blog/feed/',
+			'https://wptavern.com/feed/',
+			'https://www.wpbeginner.com/feed/',
+			'https://wpshout.com/feed/',
+			'https://planet.wordpress.org/feed/',
+		);
+
+		$feed_groups = implode( ', ', array_map( 'esc_url', $default_feed_urls ) );
+
+		add_post_meta( $news_group, 'feedzy_category_feed', $feed_groups );
+
+		update_option( '_feedzy_news_group_id', $news_group );
 	}
 }

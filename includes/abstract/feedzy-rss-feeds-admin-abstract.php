@@ -1663,7 +1663,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'item_url_follow'       => isset( $sc['follow'] ) && 'yes' === $sc['follow'] ? 'nofollow' : '',
 			'item_url_title'        => $item->get_title(),
 			'item_img'              => $content_thumb,
-			'item_img_path'         => $this->feedzy_retrieve_image( $item, $sc ),
+			'item_img_path'         => isset( $sc['thumb'] ) && ( 'yes' === $sc['thumb'] || 'auto' === $sc['thumb'] ) ? $this->feedzy_retrieve_image( $item, $sc ) : '',
 			'item_title'            => $content_title,
 			'item_content_class'    => 'rss_content',
 			'item_content_style'    => '',
