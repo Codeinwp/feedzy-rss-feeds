@@ -49,7 +49,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		$this->version = Feedzy_Rss_Feeds::get_version();
 		$this->admin   = Feedzy_Rss_Feeds::instance()->get_admin();
 		add_action( 'init', array( $this, 'register_block' ) );
-		add_filter( 'feedzy_loop_item', array( $this, 'apply_magic_tags' ), 10, 2 );
+		add_filter( 'feedzy_loop_item', array( $this, 'apply_magic_tags' ), 10, 3 );
 	}
 
 	/**
@@ -168,7 +168,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		$loop = '';
 
 		foreach ( $feed_items as $key => $item ) {
-			$loop .= apply_filters( 'feedzy_loop_item', $content, $item );
+			$loop .= apply_filters( 'feedzy_loop_item', $content, $item, $attributes );
 		}
 
 		return sprintf(
@@ -187,10 +187,11 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	 *
 	 * @param string $content The content.
 	 * @param array  $item The item.
+	 * @param array  $attributes Loop block attributes.
 	 *
 	 * @return string The content.
 	 */
-	public function apply_magic_tags( $content, $item ) {
+	public function apply_magic_tags( $content, $item, $attributes ) {
 		$pattern = '/\{\{feedzy_([^}]+)\}\}/';
 		$content = str_replace(
 			array(
@@ -206,8 +207,8 @@ class Feedzy_Rss_Feeds_Loop_Block {
 
 		return preg_replace_callback(
 			$pattern,
-			function ( $matches ) use ( $item ) {
-				return isset( $matches[1] ) ? $this->get_value( $matches[1], $item ) : '';
+			function ( $matches ) use ( $item, $attributes ) {
+				return isset( $matches[1] ) ? $this->get_value( $matches[1], $item, $attributes ) : '';
 			},
 			$content 
 		);
@@ -218,15 +219,17 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	 *
 	 * @param string $key The key.
 	 * @param array  $item Feed item.
+	 * @param array  $attributes Loop block attributes.
 	 *
 	 * @return string The value.
 	 */
-	public function get_value( $key, $item ) {
+	public function get_value( $key, $item, $attributes ) {
 		switch ( $key ) {
 			case 'title':
 				return isset( $item['item_title'] ) ? $item['item_title'] : '';
 			case 'url':
-				return isset( $item['item_url'] ) ? $item['item_url'] : '';
+				$item_link = apply_filters( 'feedzy_item_url_filter', isset( $item['item_url'] ) ? $item['item_url'] : '', $attributes );
+				return $item_link;
 			case 'date':
 				$item_date = isset( $item['item_date'] ) ? wp_date( get_option( 'date_format' ), $item['item_date'] ) : '';
 				return $item_date;
