@@ -1411,8 +1411,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			return;
 		}
 		$post_tab = isset( $_POST['tab'] ) ? sanitize_text_field( wp_unslash( $_POST['tab'] ) ) : '';
-
 		$settings = apply_filters( 'feedzy_get_settings', array() );
+
 		switch ( $post_tab ) {
 			case 'general':
 				$auto_categories_raw = array();
