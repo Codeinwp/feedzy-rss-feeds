@@ -664,9 +664,6 @@ global $post;
 												</option>
 											<?php endforeach; ?>
 										</select>
-										<div class="help-text pt-8">
-											<?php esc_html_e( 'Choose how often Feedzy should import new items from your feeds.', 'feedzy-rss-feeds' ); ?>
-										</div>
 									</div>
 								</div>
 							</div>

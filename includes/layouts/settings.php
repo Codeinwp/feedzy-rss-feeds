@@ -557,7 +557,7 @@
 			</div>
 		</div>
 
-		<?php if ( 'proxy' !== $active_tab && 'headers' !== $active_tab && 'schedules' !== $active_tab ) : ?>
+		<?php if ( 'proxy' !== $active_tab && 'headers' !== $active_tab && 'schedules' !== $active_tab && 'logs' !== $active_tab ) : ?>
 			<div class="cta pt-30">
 				<a href="<?php echo esc_url( $help_btn_url ); ?>" class="btn btn-ghost" target="_blank"><?php esc_html_e( 'Need help?', 'feedzy-rss-feeds' ); ?></a>
 			</div>
