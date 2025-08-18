@@ -185,9 +185,9 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	/**
 	 * Magic Tags Replacement.
 	 *
-	 * @param string $content The content.
-	 * @param array  $item The item.
-	 * @param array  $attributes Loop block attributes.
+	 * @param string               $content The content.
+	 * @param array                $item The item.
+	 * @param array<string, mixed> $attributes The block attributes.
 	 *
 	 * @return string The content.
 	 */
@@ -217,9 +217,9 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	/**
 	 * Get Dynamic Value.
 	 *
-	 * @param string $key The key.
-	 * @param array  $item Feed item.
-	 * @param array  $attributes Loop block attributes.
+	 * @param string               $key The key.
+	 * @param array                $item Feed item.
+	 * @param array<string, mixed> $attributes The block attributes.
 	 *
 	 * @return string The value.
 	 */
