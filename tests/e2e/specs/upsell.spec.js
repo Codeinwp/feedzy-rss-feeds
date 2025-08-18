@@ -20,9 +20,7 @@ test.describe( 'Upsell', () => {
         // Hover over text named Filter by Keyword
         const filtersTab = page.locator('#feedzy-import-form > div.feedzy-accordion > div:nth-child(2)');
 
-        // It should have 1 elements with .fz-panel-tab class.
-        await expect( filtersTab.locator('.fz-panel-tab').count() ).resolves.toBe(1);
-
+        await page.locator('.fz-action-btn').click();
         // 'Add condition' action button has .is-upsell class.
         await expect(filtersTab.locator('.fz-action-btn.is-upsell')).toHaveCount(1);
 

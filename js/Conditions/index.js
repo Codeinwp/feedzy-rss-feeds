@@ -32,9 +32,9 @@ const App = () => {
 		if (field && field.value) {
 			const parsedConditions = JSON.parse(field.value);
 			setConditions(
-				parsedConditions && parsedConditions.conditions.length
+				parsedConditions && parsedConditions.conditions
 					? parsedConditions
-					: dummyConditions
+					: { conditions: [], match: 'all' }
 			);
 		}
 	}, []);
