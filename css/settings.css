@@ -2944,3 +2944,7 @@ button.feedzy-action-button {
 	gap: 1rem;
 	margin-bottom: 20px;
 }
+
+#feedzy-validate-feed .dashicons {
+	font-size: 20px;
+}
