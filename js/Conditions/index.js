@@ -28,27 +28,18 @@ const App = () => {
 	});
 
 	useEffect(() => {
-		if (!feedzyData.isPro) {
-			setConditions(dummyConditions);
-			return;
-		}
-
 		const field = document.getElementById('feed-post-filters-conditions');
 		if (field && field.value) {
 			const parsedConditions = JSON.parse(field.value);
 			setConditions(
-				parsedConditions && parsedConditions.conditions
+				parsedConditions && parsedConditions.conditions.length
 					? parsedConditions
-					: { conditions: [], match: 'all' }
+					: dummyConditions
 			);
 		}
 	}, []);
 
 	useEffect(() => {
-		if (!feedzyData.isPro) {
-			return;
-		}
-
 		document.getElementById('feed-post-filters-conditions').value =
 			JSON.stringify(conditions);
 	}, [conditions]);

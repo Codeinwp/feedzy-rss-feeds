@@ -72,11 +72,14 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 		});
 	};
 
+	const el = document.querySelector('.editor-sidebar__panel-tabs');
 	const addCondition = () => {
 		if (!isPro && 1 <= conditions.conditions.length) {
 			// the Inspector panel use sticky position with their own stacking context,
 			// which causes them to appear above our popup overlay. We set their z-index to 0 so the popup covers them.
-			document.querySelector('.editor-sidebar__panel-tabs').style.zIndex = 0;
+			if (el) {
+				el.style.zIndex = 0;
+			}
 			setModelOpen(true);
 			return;
 		}
@@ -132,7 +135,9 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 	};
 
 	const closeModal = () => {
-		document.querySelector('.editor-sidebar__panel-tabs').style.zIndex = 1;
+		if (el) {
+			el.style.zIndex = 0;
+		}
 		setModelOpen(false)
 	}
 
