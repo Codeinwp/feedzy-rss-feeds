@@ -2948,3 +2948,35 @@ button.feedzy-action-button {
 #feedzy-validate-feed .dashicons {
 	font-size: 20px;
 }
+
+.fz-schedule-counter {
+	text-align: right;
+	margin-bottom: 10px;
+	color: #757575;
+	font-size: 13px;
+}
+ 
+.fz-schedules-table {
+	border-collapse: collapse;
+}
+
+.fz-schedules-table th {
+	font-weight: 600;
+	background: #f6f7f7;
+}
+
+.fz-schedules-table td {
+	padding: 10px;
+}
+
+.fz-schedule-attributes {
+	color: #050505;
+}
+
+.fz-delete-schedule.fz-is-destructive {
+    background: #dc3545;
+    border-color: #dc3545;
+    color: #ffffff;
+    font-size: 12px;
+    padding: 4px 12px;
+}

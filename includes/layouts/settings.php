@@ -99,6 +99,17 @@
 								<?php esc_html_e( 'Logs', 'feedzy-rss-feeds' ); ?>
 							</a>
 						</li>
+						<li>
+							<a
+								href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=schedules' ) ); ?>"
+								class="<?php echo 'schedules' === $active_tab ? esc_attr( 'active' ) : ''; ?>"
+							>
+								<?php esc_html_e( 'Schedules', 'feedzy-rss-feeds' ); ?>
+								<?php if ( ! feedzy_is_pro() ) : ?>
+									<span class="pro-label">PRO</span>
+								<?php endif; ?>
+							</a>
+						</li>
 						<?php
 						$_tabs = apply_filters( 'feedzy_settings_tabs', array() );
 						if ( $_tabs ) {
@@ -506,6 +517,9 @@
 						case 'logs':
 							$show_button = false;
 							break;
+						case 'schedules':
+							load_template( FEEDZY_ABSPATH . '/includes/layouts/feedzy-schedules.php' );
+							break;
 						default:
 							$fields = apply_filters( 'feedzy_display_tab_settings', array(), $active_tab );
 							if ( $fields ) {
@@ -543,7 +557,7 @@
 			</div>
 		</div>
 
-		<?php if ( 'proxy' !== $active_tab && 'headers' !== $active_tab ) : ?>
+		<?php if ( 'proxy' !== $active_tab && 'headers' !== $active_tab && 'schedules' !== $active_tab ) : ?>
 			<div class="cta pt-30">
 				<a href="<?php echo esc_url( $help_btn_url ); ?>" class="btn btn-ghost" target="_blank"><?php esc_html_e( 'Need help?', 'feedzy-rss-feeds' ); ?></a>
 			</div>
