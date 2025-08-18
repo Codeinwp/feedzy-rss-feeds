@@ -28,7 +28,7 @@ class Feedzy_Rss_Feeds_Task_Manager {
 			'update_option_feedzy-settings',
 			array( $this, 'maybe_reschedule_email_report' ),
 			10,
-			3
+			2
 		);
 		
 		add_action(
@@ -89,11 +89,9 @@ class Feedzy_Rss_Feeds_Task_Manager {
 	 * @since 5.1.0
 	 * @param array<string, mixed> $old_value Previous option value.
 	 * @param array<string, mixed> $value     New option value.
-	 * @param string               $option    Option name (unused).
 	 * @return void
 	 */
-	public function maybe_reschedule_email_report( $old_value, $value, $option ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
-
+	public function maybe_reschedule_email_report( $old_value, $value ) {
 		$old_freq = isset( $old_value['logs']['email_frequency'] ) ? sanitize_text_field( $old_value['logs']['email_frequency'] ) : '';
 		$new_freq = isset( $value['logs']['email_frequency'] ) ? sanitize_text_field( $value['logs']['email_frequency'] ) : '';
 
