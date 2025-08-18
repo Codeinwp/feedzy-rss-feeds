@@ -1392,7 +1392,8 @@ class Feedzy_Rss_Feeds_Import {
 	private function dry_run() {
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
 
-		$fields = urldecode( isset( $_POST['fields'] ) ? sanitize_url( $_POST['fields'] ) : '' );
+		$fields      = urldecode( isset( $_POST['fields'] ) ? sanitize_url( $_POST['fields'] ) : '' );
+		$environment = isset( $_POST['environment'] ) ? sanitize_text_field( $_POST['environment'] ) : 'default';
 		parse_str( $fields, $data );
 
 		$feedzy_meta_data = $data['feedzy_meta_data'];
@@ -1472,8 +1473,8 @@ class Feedzy_Rss_Feeds_Import {
 			$feedzy_meta_data['import_feed_limit'],
 			'', // should be empty.
 			$feedzy_meta_data['inc_key'],
-			feedzy_is_pro() ? 'keywords_exc' : '',
-			feedzy_is_pro() ? $feedzy_meta_data['exc_key'] : '',
+			feedzy_is_pro() || 'wizard' === $environment ? 'keywords_exc' : '',
+			feedzy_is_pro() || 'wizard' === $environment ? $feedzy_meta_data['exc_key'] : '',
 			feedzy_is_pro() ? 'keywords_ban' : '',
 			feedzy_is_pro() ? $feedzy_meta_data['exc_key'] : '',
 			implode( ',', $tags )

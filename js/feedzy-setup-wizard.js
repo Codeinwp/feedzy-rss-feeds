@@ -35,7 +35,7 @@ jQuery(function ($) {
 		const feedUrl = $(this).attr('href');
 		$(this).parents('.fz-row').find('input:text').val(feedUrl);
 
-		$('[data-step_number="2"]').removeClass('disabled');
+		$('[data-step_number="2"], #preflight').removeClass('disabled');
 		return false;
 	});
 
@@ -212,7 +212,7 @@ jQuery(function ($) {
 					'select[name="feedzy_meta_data[import_post_status]"]'
 				).val(),
 				fallback_image: $('input[name="feedzy_meta_data[default_thumbnail_id]"]').val(),
-				excluded_post_title: $('input[name="feedzy_meta_data[exclude_post_title]"]').val(),
+				excluded_post_title: $('input[name="feedzy_meta_data[exc_key]"]').val(),
 				action: 'feedzy',
 				_action: 'wizard_import_feed',
 			},
@@ -331,9 +331,9 @@ jQuery(function ($) {
 	// Remove disabled class from save button.
 	$(document).on('input', '#wizard_feed_source', function () {
 		if ('' === $(this).val()) {
-			$('[data-step_number="2"]').addClass('disabled');
+			$('[data-step_number="2"], #preflight').addClass('disabled');
 		} else {
-			$('[data-step_number="2"]').removeClass('disabled');
+			$('[data-step_number="2"], #preflight').removeClass('disabled');
 		}
 	});
 
@@ -466,6 +466,7 @@ jQuery(function ($) {
 				fields: $.param($fields),
 				action: 'feedzy',
 				_action: 'dry_run',
+				environment: 'wizard',
 			},
 			function(data) {
 				$('#TB_ajaxContent').addClass('loaded');

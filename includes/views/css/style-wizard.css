@@ -471,7 +471,11 @@
 .feedzy-accordion-item__title h2 {
 	margin-bottom: 0;
 }
-
+.btn-ghost.disabled {
+	cursor: none;
+	pointer-events: none;
+	color: #757575;
+}
 #TB_ajaxContent ul {
 	list-style: decimal;
 	margin-left: 20px;

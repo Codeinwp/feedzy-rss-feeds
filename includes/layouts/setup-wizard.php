@@ -139,6 +139,11 @@ add_thickbox();
 												</div>
 											</div>
 											<div class="form-block">
+												<?php if ( 'page_builder' !== $integrate_with ) : ?>
+													<button class="btn btn-ghost<?php echo empty( $feed_source ) ? ' disabled' : ''; ?>" id="preflight">
+														<?php esc_html_e( 'Preview Import', 'feedzy-rss-feeds' ); ?>
+													</button>
+												<?php endif; ?>
 												<button class="btn btn-primary<?php echo empty( $feed_source ) ? ' disabled' : ''; ?>" data-step_number="2">
 													<?php
 													if ( 'page_builder' === $integrate_with ) {
@@ -223,16 +228,13 @@ add_thickbox();
 													<?php esc_html_e( 'Exclude posts with title not containing', 'feedzy-rss-feeds' ); ?>
 												</label>
 												<div class="fz-form-group">
-													<input type="text" id="feedzy_exclude_title" name="feedzy_meta_data[exclude_post_title]" class="form-control" value="" />
+													<input type="text" id="feedzy_exclude_title" name="feedzy_meta_data[exc_key]" class="form-control" value="" />
 													<div class="help-text pt-8">
 														<?php esc_html_e( 'Posts will not be imported if their title includes these keywords.', 'feedzy-rss-feeds' ); ?>
 													</div>
 												</div>
 											</div>
 											<div class="form-block">
-												<button class="btn btn-ghost" id="preflight">
-													<?php esc_html_e( 'Preview Import', 'feedzy-rss-feeds' ); ?>
-												</button>
 												<button class="btn btn-primary fz-wizard-feed-import">
 													<?php esc_html_e( 'Create a draft import', 'feedzy-rss-feeds' ); ?> <span class="dashicons dashicons-arrow-right-alt"></span>
 												</button>
