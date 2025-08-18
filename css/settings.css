@@ -143,29 +143,34 @@
 }
 
 /* feedzy accordion style start */
-.feedzy-accordion-item .fz-form-wrap .form-label,
-.feedzy-accordion-item .fz-form-wrap .form-control,
-.feedzy-accordion-item .feedzy-accordion__step-title,
-.feedzy-accordion-item .btn,
-.feedzy-accordion-item .cta-text a,
-.feedzy-accordion-item .fz-tabs-menu ul li a,
-.feedzy-accordion-item .fz-form-wrap .chosen-container .chosen-single,
-.feedzy-accordion-item .fz-form-wrap .chosen-container .chosen-choices,
-.feedzy-accordion-item .fz-form-wrap .chosen-container-multi .chosen-choices li.search-choice,
-.feedzy-accordion-item .dashicons,
-.feedzy-accordion-item .h1,
-.feedzy-accordion-item .h2,
-.feedzy-accordion-item .h3,
-.feedzy-accordion-item .h4,
-.feedzy-accordion-item .h5,
-.feedzy-accordion-item .h6,
-.feedzy-accordion-item .fz-condition-control .components-input-control__label,
-.feedzy-accordion-item .fz-condition-control .components-select-control__input,
-.feedzy-accordion-item .fz-condition-control input,
-.feedzy-accordion-item .fz-condition-control button,
-.feedzy-accordion-item .fz-panel-tab__header__label,
-.feedzy-accordion-item .fz-form-wrap .chosen-container-multi .chosen-choices li.search-field input[type="text"],
-.feedzy-accordion-item .fz-form-wrap .form-control .tagify__tag-text{
+.feedzy-accordion-item :is(
+    .feedzy-accordion__step-title,
+    .btn,
+    .cta-text a,
+    .dashicons,
+    .h1, .h2, .h3, .h4, .h5, .h6,
+    .fz-panel-tab__header__label,
+    .fz-tabs-menu ul li a,
+    .fz-form-wrap :is(
+        .form-label,
+        .form-control,
+        .form-control .tagify__tag-text,
+        .chosen-container :is(
+            .chosen-single,
+            .chosen-choices
+        ),
+        .chosen-container-multi .chosen-choices :is(
+            li.search-choice,
+            li.search-field input[type="text"]
+        )
+    ),
+    .fz-condition-control :is(
+        .components-input-control__label,
+        .components-select-control__input,
+        input,
+        button
+    )
+) {
     font-size: 15px;
 }
 .feedzy-accordion-item{
