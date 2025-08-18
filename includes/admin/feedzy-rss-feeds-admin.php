@@ -2016,7 +2016,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				),
 				'dryRun'              => array(
 					'loading' => '<p class="hide-when-loaded">' . __( 'Processing the source and loading the items that will be imported when it runs', 'feedzy-rss-feeds' ) . '...</p>'
-							. '<p><b>' . __( 'Note: Preview does not display filtered results. Filters will be applied when posts are imported.', 'feedzy-rss-feeds' ) . '</b></p>'
 							. '<p class="loading-img hide-when-loaded"><img src="' . includes_url( 'images/wpspin-2x.gif' ) . '"></p><div></div>',
 					'title'   => __( 'Importable Items', 'feedzy-rss-feeds' ),
 				),
