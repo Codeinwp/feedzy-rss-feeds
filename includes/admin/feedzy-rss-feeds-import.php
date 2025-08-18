@@ -543,6 +543,12 @@ class Feedzy_Rss_Feeds_Import {
 			$import_link_author[1] = 'checked';
 		}
 
+		// default values when creating a import.
+		if ( 'post-new.php' === $pagenow ) {
+			$import_date         = '[#item_date]';
+			$import_featured_img = '[[{"value":"%5B%7B%22id%22%3A%22%22%2C%22tag%22%3A%22item_image%22%2C%22data%22%3A%7B%7D%7D%5D"}]]';    
+		}
+
 		// maybe more options are required from pro?
 		$pro_options = apply_filters( 'feedzy_metabox_options', array(), $post->ID );
 

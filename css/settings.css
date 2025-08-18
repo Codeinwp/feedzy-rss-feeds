@@ -93,6 +93,9 @@
 .mx-320{
 	max-width: 320px;
 }
+.position-relative{position: relative;}
+.position-absolute{position: absolute;}
+
 .feedzy-wrap a:not(#fz-feedback-btn):focus{
 	box-shadow: none;
 	outline: 0;
@@ -140,12 +143,43 @@
 }
 
 /* feedzy accordion style start */
+.feedzy-accordion-item :is(
+    .feedzy-accordion__step-title,
+    .btn,
+    .cta-text a,
+    .dashicons,
+    .h1, .h2, .h3, .h4, .h5, .h6,
+    .fz-panel-tab__header__label,
+    .fz-tabs-menu ul li a,
+    .fz-form-wrap :is(
+        .form-label,
+        .form-control,
+        .form-control .tagify__tag-text,
+        .chosen-container :is(
+            .chosen-single,
+            .chosen-choices
+        ),
+        .chosen-container-multi .chosen-choices :is(
+            li.search-choice,
+            li.search-field input[type="text"]
+        )
+    ),
+    .fz-condition-control :is(
+        .components-input-control__label,
+        .components-select-control__input,
+        input,
+        button
+    )
+) {
+    font-size: 15px;
+}
 .feedzy-accordion-item{
 	background: #ffffff;
 	border: 1px solid #D9D9D9;
 }
 .feedzy-accordion-item__title{
 	position: relative;
+	padding: 8px 15px;
 }
 .fdz-upgrade-link{
 	width: 100%;
@@ -169,33 +203,37 @@
 	border: 0;
 	background: transparent;
 	outline: 0;
-	padding: 30px 90px 30px 30px;
+	padding: 10px;
 }
 .feedzy-accordion-item .feedzy-accordion__step-number{
 	padding-bottom: 10px;
 }
 .feedzy-accordion-item .feedzy-accordion__step-title{
 	color: #050505;
+	line-height: 1.3;
 }
 .feedzy-accordion-item .feedzy-accordion__icon{
 	position: absolute;
 	right: 30px;
 	top: 50%;
-	margin-top: -24px;
-	width: 48px;
-	height: 48px;
+	margin-top: -15px;
+	width: 30px;
+	height: 30px;
 	background: #F0F2F5;
 	border-radius: 24px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	font-size: 20px;
-	line-height: 1;
+	line-height: 1.5;
 	color: #757575;
 	-webkit-transition: all 0.3s ease-in-out;
 	-moz-transition: all 0.3s ease-in-out;
 	-o-transition: all 0.3s ease-in-out;
 	transition: all 0.3s ease-in-out;
+}
+.feedzy-accordion-item .feedzy-accordion__icon .dashicons{
+	line-height: 1.5;
 }
 .feedzy-accordion-item .feedzy-accordion__icon.feedzy-accordion__icon--success{
 	width: 24px;
@@ -235,6 +273,8 @@
 	-moz-transition: all 0.3s ease-in-out;
 	-o-transition: all 0.3s ease-in-out;
 	transition: all 0.3s ease-in-out;
+	font-size: 10px;
+	margin-right: 5px;
 }
 .feedzy-accordion .feedzy-accordion-item .is-active .feedzy-accordion__step-number{
 	opacity: 1;
@@ -299,6 +339,9 @@
 	height: auto;
 	min-height: 48px;
 	padding-top: 2px;
+	line-height: 0;
+	display: flex;
+	align-items: center;
 }
 
 .fz-form-wrap .form-control:focus {
@@ -378,6 +421,16 @@ fieldset[disabled] .form-control {
 }
 .fz-input-group .fz-input-group-right .dropdown-toggle{
 	min-width: 150px;
+}
+.fz-input-group .fz-insert-tags{
+	top: 7px;
+	right: 10px;
+}
+.fz-input-group .fz-insert-tags button.dropdown-toggle {
+	padding: 5px 20px;
+	border: 2px solid;
+	border-radius: 5px;
+	min-width: auto;
 }
 .fz-input-group .help-text{
 	padding-top: 8px;
@@ -2643,6 +2696,9 @@ li.draggable-item .components-panel__body-toggle.components-button{
 	font-weight: 500;
 	color: #757575;
 }
+span.dashicons {
+	line-height: 1.3;
+}
 @-webkit-keyframes spin { 
     100% { -webkit-transform: rotate(360deg); } 
 }
@@ -2887,4 +2943,8 @@ button.feedzy-action-button {
 	display: flex;
 	gap: 1rem;
 	margin-bottom: 20px;
+}
+
+#feedzy-validate-feed .dashicons {
+	font-size: 20px;
 }

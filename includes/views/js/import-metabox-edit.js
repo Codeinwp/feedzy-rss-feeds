@@ -805,7 +805,7 @@
 
 		// Tagify for normal textbox.
 		$(
-			'.fz-input-tagify:not(.fz-tagify-image):not([name="feedzy_meta_data[import_post_title]"])'
+			'.fz-input-tagify:not(.fz-tagify-image):not([name="feedzy_meta_data[import_post_title]"]):not([name="feedzy_meta_data[import_post_content]"])'
 		).tagify({
 			editTags: false,
 			originalInputValueFormat(valuesArr) {
@@ -856,7 +856,7 @@
 		});
 
 		// Tagify for normal mix content field.
-		const mixContent = $('.fz-textarea-tagify').tagify({
+		const mixContent = $('.fz-input-tagify[name="feedzy_meta_data[import_post_content]"]:not(.fz-tagify-image)').tagify({
 			mode: 'mix',
 			editTags: false,
 			templates: {
