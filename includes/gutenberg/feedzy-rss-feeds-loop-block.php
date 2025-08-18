@@ -119,6 +119,27 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			return '<div>' . esc_html__( 'No feeds to display', 'feedzy-rss-feeds' ) . '</div>';
 		}
 
+		$thumb                 = 'auto';
+		$default_thumbnail_img = '';
+
+		if ( isset( $attributes['thumb'] ) && ! empty( $attributes['thumb'] ) ) {
+			$thumb = $attributes['thumb'];
+		}
+
+		if (
+			'yes' === $thumb &&
+			isset( $attributes['fallbackImage'], $attributes['fallbackImage']['url'] ) &&
+			! empty( $attributes['fallbackImage']['url'] )
+		) {
+			$default_thumbnail_img = $attributes['fallbackImage']['url'];
+		}
+
+		$get_thumbnail_callback = function () use ( $default_thumbnail_img ) {
+			return $default_thumbnail_img;
+		};
+		add_filter( 'feedzy_loop_default_thumbnail', $get_thumbnail_callback );
+
+
 		$column_count = isset( $attributes['layout'] ) && isset( $attributes['layout']['columnCount'] ) && ! empty( $attributes['layout']['columnCount'] ) ? $attributes['layout']['columnCount'] : 1;
 		$referral_url = isset( $attributes['referral_url'] ) ? $attributes['referral_url'] : '';
 
@@ -139,8 +160,8 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			'target'        => '_blank',
 			'keywords_ban'  => '',
 			'columns'       => '1',
-			'thumb'         => 'auto',
-			'default'       => '',
+			'thumb'         => $thumb,
+			'default'       => $default_thumbnail_img,
 			'title'         => '',
 			'meta'          => 'yes',
 			'multiple_meta' => 'no',
@@ -172,6 +193,8 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		foreach ( $feed_items as $key => $item ) {
 			$loop .= apply_filters( 'feedzy_loop_item', $content, $item );
 		}
+		
+		remove_filter( 'feedzy_loop_default_thumbnail', $get_thumbnail_callback );
 
 		return sprintf(
 			'<div %1$s>%2$s</div>',
@@ -257,15 +280,18 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			case 'categories':
 				return isset( $item['item_categories'] ) ? $item['item_categories'] : '';
 			case 'image':
-				$settings = apply_filters( 'feedzy_get_settings', array() );
-				if ( $settings && ! empty( $settings['general']['default-thumbnail-id'] ) ) {
-					$default_img = wp_get_attachment_image_src( $settings['general']['default-thumbnail-id'], 'full' );
-					$default_img = ! empty( $default_img ) ? reset( $default_img ) : '';
-				} else {
-					$default_img = FEEDZY_ABSURL . 'img/feedzy.svg';
+				$settings    = apply_filters( 'feedzy_get_settings', array() );
+				$default_img = apply_filters( 'feedzy_loop_default_thumbnail', '' );
+				if ( empty( $default_img ) ) {
+					if ( $settings && ! empty( $settings['general']['default-thumbnail-id'] ) ) {
+						$default_img = wp_get_attachment_image_src( $settings['general']['default-thumbnail-id'], 'full' );
+						$default_img = ! empty( $default_img ) ? reset( $default_img ) : '';
+					} else {
+						$default_img = FEEDZY_ABSURL . 'img/feedzy.svg';
+					}
 				}
 
-				return isset( $item['item_img_path'] ) ? $item['item_img_path'] : $default_img;
+				return isset( $item['item_img_path'] ) && ! empty( $item['item_img_path'] ) ? $item['item_img_path'] : $default_img;
 			case 'media':
 				return isset( $item['item_media']['src'] ) ? $item['item_media']['src'] : '';
 			case 'price':

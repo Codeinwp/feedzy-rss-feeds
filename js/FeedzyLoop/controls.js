@@ -17,10 +17,13 @@ import {
 	BaseControl,
 } from '@wordpress/components';
 
+import { Fragment } from '@wordpress/element';
+
 /**
  * Internal dependencies.
  */
 import ConditionsControl from '../Conditions/ConditionsControl';
+import FallbackImageLoader from './components/FallbackImageLoader.jsx';
 
 const Controls = ({
 	attributes,
@@ -133,11 +136,67 @@ const Controls = ({
 						</Button>
 					</PanelBody>
 				)}
-
 				<PanelBody
-					title={[
-						__('Filter items', 'feedzy-rss-feeds'),
-					]}
+					title={__('Item Image Options', 'feedzy-rss-feeds')}
+					initialOpen={false}
+					className="feedzy-image-options"
+				>
+					<SelectControl
+						label={__(
+							'Display first image if available?',
+							'feedzy-rss-feeds'
+						)}
+						value={attributes.thumb}
+						options={[
+							{
+								label: __(
+									'Yes (without a fallback image)',
+									'feedzy-rss-feeds'
+								),
+								value: 'auto',
+							},
+							{
+								label: __(
+									'Yes (with a fallback image)',
+									'feedzy-rss-feeds'
+								),
+								value: 'yes',
+							},
+							{
+								label: __('No', 'feedzy-rss-feeds'),
+								value: 'no',
+							},
+						]}
+						onChange={(value) => setAttributes({ thumb: value })}
+						className="feedzy-thumb"
+					/>
+
+					{attributes?.thumb !== 'no' && (
+						<Fragment>
+							{attributes?.thumb !== 'auto' && (
+								<FallbackImageLoader
+									imageValue={attributes?.fallbackImage}
+									onChangeImage={(imageData) =>
+										setAttributes({
+											fallbackImage: imageData,
+										})
+									}
+									onRemoveImage={() =>
+										setAttributes({
+											fallbackImage: undefined,
+										})
+									}
+									label={__(
+										'Fallback image if no image is found.',
+										'feedzy-rss-feeds'
+									)}
+								/>
+							)}
+						</Fragment>
+					)}
+				</PanelBody>
+				<PanelBody
+					title={[__('Filter items', 'feedzy-rss-feeds')]}
 					initialOpen={false}
 					key="filters"
 					className="feedzy-item-filter"
