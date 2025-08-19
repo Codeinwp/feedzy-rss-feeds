@@ -17,9 +17,9 @@ import { Icon, plus } from '@wordpress/icons';
  */
 import PanelTab from './PanelTab';
 import DateTimeControl from './DateTimeControl';
-import { cond } from 'lodash';
 import { useState } from 'react';
 
+const isPro = window.feedzyData.isPro;
 const SUPPORTED_FIELDS = [
 	{
 		label: __('Title', 'feedzy-rss-feeds'),
@@ -28,15 +28,18 @@ const SUPPORTED_FIELDS = [
 	{
 		label: __('Description', 'feedzy-rss-feeds'),
 		value: 'description',
+		disabled: !isPro,
 	},
 	{
 		label: __('Full Content', 'feedzy-rss-feeds'),
 		value: 'fullcontent',
+		disabled: !isPro,
 	},
 	{
 		label: __('Author', 'feedzy-rss-feeds'),
 		value: 'author',
 		unsupportedOperators: ['greater_than', 'gte', 'less_than', 'lte'],
+		disabled: !isPro,
 	},
 	{
 		label: __('Date', 'feedzy-rss-feeds'),
@@ -49,19 +52,21 @@ const SUPPORTED_FIELDS = [
 			'contains',
 			'not_contains',
 		],
+		disabled: !isPro,
 	},
 	{
 		label: __('Featured Image', 'feedzy-rss-feeds'),
 		value: 'featured_image',
 		unsupportedOperators: ['greater_than', 'gte', 'less_than', 'lte'],
+		disabled: !isPro,
 	},
 	{
 		label: __('Link', 'feedzy-rss-feeds'),
 		value: 'link',
 		unsupportedOperators: ['greater_than', 'gte', 'less_than', 'lte'],
+		disabled: !isPro,
 	},
 ];
-const isPro = window.feedzyData.isPro;
 
 const ConditionsControl = ({ conditions, setConditions }) => {
 	const [modalOpen, setModelOpen] = useState(false);
