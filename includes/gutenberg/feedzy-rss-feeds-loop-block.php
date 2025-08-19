@@ -128,12 +128,21 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			'refresh' => '12_hours',
 		);
 
-		$query   = isset( $attributes['query'] ) ? wp_parse_args( $attributes['query'], $default_query ) : $default_query;
-		$filters = isset( $attributes['conditions'] ) ? $attributes['conditions'] : array();
-		$thumb   = 'auto';
+		$query             = isset( $attributes['query'] ) ? wp_parse_args( $attributes['query'], $default_query ) : $default_query;
+		$filters           = isset( $attributes['conditions'] ) ? $attributes['conditions'] : array();
+		$thumb             = 'auto';
+		$default_thumbnail = '';
 	
 		if ( isset( $attributes['thumb'] ) && ! empty( $attributes['thumb'] ) ) {
 			$thumb = $attributes['thumb'];
+
+			if (
+				'yes' === $thumb &&
+				isset( $attributes['fallbackImage'], $attributes['fallbackImage']['url'] ) &&
+				! empty( $attributes['fallbackImage']['url'] )
+			) {
+				$default_thumbnail = $attributes['fallbackImage']['url'];
+			}
 		}
 
 		$options = array(
@@ -145,7 +154,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			'keywords_ban'  => '',
 			'columns'       => '1',
 			'thumb'         => $thumb,
-			'default'       => '',
+			'default'       => $default_thumbnail,
 			'title'         => '',
 			'meta'          => 'yes',
 			'multiple_meta' => 'no',
