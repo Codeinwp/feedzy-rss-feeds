@@ -229,3 +229,12 @@ input[type="text"].fz-input-field:disabled {
         outline: 1px solid #0000001a;
     }
 }
+
+.fz-block-variation {
+    .block-editor-block-variation-picker__variations {
+        flex-wrap: nowrap;
+    }
+    .block-editor-block-variation-picker__variations>li {
+        width: 35%;
+    }
+}

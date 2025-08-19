@@ -85,6 +85,44 @@ const Controls = ({
 			</BlockControls>
 
 			<InspectorControls>
+				<PanelBody
+					title={__('Settings', 'feedzy-rss-feeds')}
+					key="settings"
+				>
+					<div className='fz-block-variation'>
+						<BlockVariationPicker
+							variations={variations}
+							onSelect={setVariations}
+						/>
+					</div>
+					<RangeControl
+						label={__('Column Count', 'feedzy-rss-feeds')}
+						value={attributes?.layout?.columnCount || 1}
+						onChange={(value) =>
+							onChangeLayout({ type: 'columnCount', value })
+						}
+						min={1}
+						max={5}
+					/>
+
+					<RangeControl
+						label={__('Number of Items', 'feedzy-rss-feeds')}
+						value={attributes?.query?.max || 5}
+						onChange={(value) =>
+							onChangeQuery({ type: 'max', value })
+						}
+						min={1}
+						max={20}
+					/>
+
+					<ExternalLink
+						href="https://docs.themeisle.com/article/2217-feedzy-loop#magic_tags"
+						target="_blank"
+					>
+						{__('Feedzy Loop Documentation', 'feedzy-rss-feeds')}
+					</ExternalLink>
+				</PanelBody>
+
 				{!isEditing && (
 					<PanelBody
 						initialOpen={false}
@@ -104,19 +142,52 @@ const Controls = ({
 					</PanelBody>
 				)}
 
-				{!isEditing && (
-					<PanelBody
-						initialOpen={false}
-						title={__('Feed Layout', 'feedzy-rss-feeds')}
-						key="source"
-					>
-						<BlockVariationPicker
-							variations={variations}
-							onSelect={setVariations}
-						/>
-					</PanelBody>
-				)}
+				<PanelBody
+					title={[
+						__('Filter items', 'feedzy-rss-feeds'),
+						!window.feedzyData.isPro && (
+							<span className="fz-pro-label">Pro</span>
+						),
+					]}
+					initialOpen={false}
+					key="filters"
+					className="feedzy-item-filter"
+				>
+					{!window.feedzyData.isPro && (
+						<div className="fz-upsell-notice">
+							{__(
+								'Unlock this feature and more advanced options with',
+								'feedzy-rss-feeds'
+							)}{' '}
+							<ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=keywordsfilter&utm_content=feedzy-rss-feeds">
+								{__('Feedzy Pro', 'feedzy-rss-feeds')}
+							</ExternalLink>
+						</div>
+					)}
 
+					<ConditionsControl
+						conditions={
+							window.feedzyData.isPro
+								? attributes?.conditions || {
+										conditions: [],
+										match: 'all',
+									}
+								: {
+										match: 'all',
+										conditions: [
+											{
+												field: 'title',
+												operator: 'contains',
+												value: 'Sports',
+											},
+										],
+									}
+						}
+						setConditions={(conditions) => {
+							setAttributes({ conditions });
+						}}
+					/>
+				</PanelBody>
 				<PanelBody
 					title={[
 						__('Referral URL', 'feedzy-rss-feeds'),
@@ -172,85 +243,6 @@ const Controls = ({
 						onChange={(value) => {
 							window.tiTrk?.with('feedzy').add({ feature: 'block-referral-url' });
 							setAttributes({ referral_url: value });
-						}}
-					/>
-				</PanelBody>
-
-				<PanelBody
-					title={__('Settings', 'feedzy-rss-feeds')}
-					key="settings"
-				>
-					<RangeControl
-						label={__('Column Count', 'feedzy-rss-feeds')}
-						value={attributes?.layout?.columnCount || 1}
-						onChange={(value) =>
-							onChangeLayout({ type: 'columnCount', value })
-						}
-						min={1}
-						max={5}
-					/>
-
-					<RangeControl
-						label={__('Number of Items', 'feedzy-rss-feeds')}
-						value={attributes?.query?.max || 5}
-						onChange={(value) =>
-							onChangeQuery({ type: 'max', value })
-						}
-						min={1}
-						max={20}
-					/>
-
-					<ExternalLink
-						href="https://docs.themeisle.com/article/2217-feedzy-loop#magic_tags"
-						target="_blank"
-					>
-						{__('Feedzy Loop Documentation', 'feedzy-rss-feeds')}
-					</ExternalLink>
-				</PanelBody>
-
-				<PanelBody
-					title={[
-						__('Filter items', 'feedzy-rss-feeds'),
-						!window.feedzyData.isPro && (
-							<span className="fz-pro-label">Pro</span>
-						),
-					]}
-					initialOpen={false}
-					key="filters"
-					className="feedzy-item-filter"
-				>
-					{!window.feedzyData.isPro && (
-						<div className="fz-upsell-notice">
-							{__(
-								'Unlock this feature and more advanced options with',
-								'feedzy-rss-feeds'
-							)}{' '}
-							<ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=keywordsfilter&utm_content=feedzy-rss-feeds">
-								{__('Feedzy Pro', 'feedzy-rss-feeds')}
-							</ExternalLink>
-						</div>
-					)}
-
-					<ConditionsControl
-						conditions={
-							window.feedzyData.isPro
-								? attributes?.conditions || {
-										conditions: [],
-										match: 'all',
-									}
-								: {
-										match: 'all',
-										conditions: [
-											{
-												field: 'title',
-												operator: 'contains',
-												value: 'Sports',
-											},
-										],
-									}
-						}
-						setConditions={(conditions) => {
-							setAttributes({ conditions });
 						}}
 					/>
 				</PanelBody>
