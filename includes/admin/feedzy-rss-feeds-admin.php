@@ -485,6 +485,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					jQuery(document).on('keyup', function (e) {
 						if (e.key === "Escape") closeModal();
 					});
+
 				});
 			</script>
 			<div id="feedzy-add-new-import" class="wp-core-ui feedzy-modal" style="display:none;">
@@ -726,8 +727,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					font-weight: 500;
 				}
 
-				.feedzy-modal .modal-header h2 {
+				:is( .feedzy-modal, #poststuff ) .modal-header h2 {
 					font-size: 20px;
+					margin: 0;
+					padding: 0;
 				}
 
 				.feedzy-modal .close-modal {

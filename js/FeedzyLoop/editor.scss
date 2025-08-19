@@ -13,16 +13,16 @@
 .fz-condition-control {
     padding: 0;
 
-    &.is-upsell {
-        opacity: 0.6;
-    }
-
     .components-button {
         width: 100%;
         margin: 0;
         padding: 6px 12px;
         justify-content: center;
     }
+}
+
+.is-upsell {
+    opacity: 0.6;
 }
 
 .fz-panel-tab {
