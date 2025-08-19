@@ -49,7 +49,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		$this->version = Feedzy_Rss_Feeds::get_version();
 		$this->admin   = Feedzy_Rss_Feeds::instance()->get_admin();
 		add_action( 'init', array( $this, 'register_block' ) );
-		add_filter( 'feedzy_loop_item', array( $this, 'apply_magic_tags' ), 10, 3 );
+		add_filter( 'feedzy_loop_item', array( $this, 'apply_magic_tags' ), 10, 2 );
 	}
 
 	/**
@@ -121,6 +121,11 @@ class Feedzy_Rss_Feeds_Loop_Block {
 
 		$column_count = isset( $attributes['layout'] ) && isset( $attributes['layout']['columnCount'] ) && ! empty( $attributes['layout']['columnCount'] ) ? $attributes['layout']['columnCount'] : 1;
 
+		$referral_url = function () use ( $attributes ) {
+			return isset( $attributes['referral_url'] ) ? $attributes['referral_url'] : '';
+		};
+		add_filter( 'feedzy_loop_referral_url', $referral_url );
+
 		$default_query = array(
 			'max'     => 5,
 			'sort'    => 'default',
@@ -168,8 +173,10 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		$loop = '';
 
 		foreach ( $feed_items as $key => $item ) {
-			$loop .= apply_filters( 'feedzy_loop_item', $content, $item, $attributes );
+			$loop .= apply_filters( 'feedzy_loop_item', $content, $item );
 		}
+
+		remove_filter( 'feedzy_loop_referral_url', $referral_url );
 
 		return sprintf(
 			'<div %1$s>%2$s</div>',
@@ -185,13 +192,12 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	/**
 	 * Magic Tags Replacement.
 	 *
-	 * @param string               $content The content.
-	 * @param array                $item The item.
-	 * @param array<string, mixed> $attributes The block attributes.
+	 * @param string $content The content.
+	 * @param array  $item The item.
 	 *
 	 * @return string The content.
 	 */
-	public function apply_magic_tags( $content, $item, $attributes ) {
+	public function apply_magic_tags( $content, $item ) {
 		$pattern = '/\{\{feedzy_([^}]+)\}\}/';
 		$content = str_replace(
 			array(
@@ -207,8 +213,8 @@ class Feedzy_Rss_Feeds_Loop_Block {
 
 		return preg_replace_callback(
 			$pattern,
-			function ( $matches ) use ( $item, $attributes ) {
-				return isset( $matches[1] ) ? $this->get_value( $matches[1], $item, $attributes ) : '';
+			function ( $matches ) use ( $item ) {
+				return isset( $matches[1] ) ? $this->get_value( $matches[1], $item ) : '';
 			},
 			$content 
 		);
@@ -217,18 +223,18 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	/**
 	 * Get Dynamic Value.
 	 *
-	 * @param string               $key The key.
-	 * @param array                $item Feed item.
-	 * @param array<string, mixed> $attributes The block attributes.
+	 * @param string $key The key.
+	 * @param array  $item Feed item.
 	 *
 	 * @return string The value.
 	 */
-	public function get_value( $key, $item, $attributes ) {
+	public function get_value( $key, $item ) {
 		switch ( $key ) {
 			case 'title':
 				return isset( $item['item_title'] ) ? $item['item_title'] : '';
 			case 'url':
-				$item_link = apply_filters( 'feedzy_item_url_filter', isset( $item['item_url'] ) ? $item['item_url'] : '', $attributes );
+				$attr['referral_url'] = apply_filters( 'feedzy_loop_referral_url', '' );
+				$item_link            = apply_filters( 'feedzy_item_url_filter', isset( $item['item_url'] ) ? $item['item_url'] : '', $attr );
 				return $item_link;
 			case 'date':
 				$item_date = isset( $item['item_date'] ) ? wp_date( get_option( 'date_format' ), $item['item_date'] ) : '';

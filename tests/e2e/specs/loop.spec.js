@@ -56,7 +56,7 @@ test.describe('Feedzy Loop', () => {
 		await loadFeedButton.click();
 		await page.waitForTimeout(1000);
 
-		await page.getByLabel('Display curated RSS content').click();
+		await page.getByLabel('Display curated RSS content').first().click();
 		await page.waitForTimeout(1000);
 
 		// Now that we have tested we can insert URL, we can test the Feed Group.
