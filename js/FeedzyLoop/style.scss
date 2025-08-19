@@ -23,4 +23,9 @@
     .wp-block-image.is-style-rounded img {
         border-radius: 9999px;
     }
+
+    // Note: Hide generated invalid Core Image blocks
+    .wp-block-image:has( :is( img:not([src]), img[src=""] ) ) {
+        display: none;
+    }
 }
