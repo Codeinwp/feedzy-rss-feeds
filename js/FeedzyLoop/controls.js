@@ -17,13 +17,10 @@ import {
 	BaseControl,
 } from '@wordpress/components';
 
-import { Fragment, useState } from '@wordpress/element';
-
 /**
  * Internal dependencies.
  */
 import ConditionsControl from '../Conditions/ConditionsControl';
-import PatternSelector from './components/PatternSelector';
 
 const Controls = ({
 	attributes,
@@ -37,8 +34,6 @@ const Controls = ({
 	variations,
 	setVariations,
 }) => {
-	const [isPatternModalOpen, setIsPatternModalOpen] = useState(false);
-
 	const decodeHtmlEntities = (str) => {
 		if (typeof str !== 'string') {
 			return str;
@@ -50,10 +45,6 @@ const Controls = ({
 
 	return (
 		<>
-			{isPatternModalOpen && (
-				<PatternSelector setOpen={setIsPatternModalOpen} />
-			)}
-
 			<BlockControls>
 				<ToolbarGroup>
 					<ToolbarButton
@@ -61,12 +52,6 @@ const Controls = ({
 						title={__('Edit Feed', 'feedzy-rss-feeds')}
 						onClick={() => setIsEditing(true)}
 					/>
-				</ToolbarGroup>
-
-				<ToolbarGroup>
-					<ToolbarButton onClick={() => setIsPatternModalOpen(true)}>
-						{__('Replace', 'feedzy-rss-feeds')}
-					</ToolbarButton>
 				</ToolbarGroup>
 
 				<ToolbarGroup>
