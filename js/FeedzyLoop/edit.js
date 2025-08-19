@@ -149,6 +149,26 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 		);
 	}
 
+	const setVariations = (nextVariation = defaultVariation) => {
+		if (nextVariation) {
+			setAttributes({
+				layout: {
+					name: nextVariation.name,
+				} ,
+				...nextVariation.attributes
+			});
+
+			replaceInnerBlocks(
+				clientId,
+				createBlocksFromInnerBlocksTemplate(
+					nextVariation.innerBlocks
+				),
+				true
+			);
+			clearSelectedBlock();
+		}
+	}
+
 	return (
 		<>
 			<Controls
@@ -160,6 +180,8 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 				onChangeQuery={onChangeQuery}
 				setIsEditing={setIsEditing}
 				setIsPreviewing={setIsPreviewing}
+				variations={variations}
+				setVariations={setVariations}
 			/>
 
 			<div {...blockProps}>
@@ -168,19 +190,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 				) : (
 					<BlockVariationPicker
 						variations={variations}
-						onSelect={(nextVariation = defaultVariation) => {
-							if (nextVariation) {
-								setAttributes(nextVariation.attributes);
-								replaceInnerBlocks(
-									clientId,
-									createBlocksFromInnerBlocksTemplate(
-										nextVariation.innerBlocks
-									),
-									true
-								);
-								clearSelectedBlock();
-							}
-						}}
+						onSelect={setVariations}
 					/>
 				)}
 			</div>

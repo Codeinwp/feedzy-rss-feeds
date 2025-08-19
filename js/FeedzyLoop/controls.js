@@ -13,15 +13,14 @@ import {
 	SelectControl,
 	ToolbarButton,
 	ToolbarGroup,
+	TextControl,
+	BaseControl,
 } from '@wordpress/components';
-
-import { useState } from '@wordpress/element';
 
 /**
  * Internal dependencies.
  */
 import ConditionsControl from '../Conditions/ConditionsControl';
-import PatternSelector from './components/PatternSelector';
 
 const Controls = ({
 	attributes,
@@ -32,15 +31,20 @@ const Controls = ({
 	onChangeQuery,
 	setIsEditing,
 	setIsPreviewing,
+	variations,
+	setVariations,
 }) => {
-	const [isPatternModalOpen, setIsPatternModalOpen] = useState(false);
+	const decodeHtmlEntities = (str) => {
+		if (typeof str !== 'string') {
+			return str;
+		}
+		const textarea = document.createElement('textarea');
+		textarea.innerHTML = str;
+		return textarea.value;
+	};
 
 	return (
 		<>
-			{isPatternModalOpen && (
-				<PatternSelector setOpen={setIsPatternModalOpen} />
-			)}
-
 			<BlockControls>
 				<ToolbarGroup>
 					<ToolbarButton
@@ -48,12 +52,6 @@ const Controls = ({
 						title={__('Edit Feed', 'feedzy-rss-feeds')}
 						onClick={() => setIsEditing(true)}
 					/>
-				</ToolbarGroup>
-
-				<ToolbarGroup>
-					<ToolbarButton onClick={() => setIsPatternModalOpen(true)}>
-						{__('Replace', 'feedzy-rss-feeds')}
-					</ToolbarButton>
 				</ToolbarGroup>
 
 				<ToolbarGroup>
@@ -68,29 +66,27 @@ const Controls = ({
 			</BlockControls>
 
 			<InspectorControls>
-				{!isEditing && (
-					<PanelBody
-						initialOpen={false}
-						title={__('Feed Source', 'feedzy-rss-feeds')}
-						key="source"
-					>
-						<Button
-							variant="secondary"
-							onClick={() => setIsEditing(true)}
-							style={{
-								width: '100%',
-								justifyContent: 'center',
-							}}
-						>
-							{__('Edit Feed', 'feedzy-rss-feeds')}
-						</Button>
-					</PanelBody>
-				)}
-
 				<PanelBody
 					title={__('Settings', 'feedzy-rss-feeds')}
 					key="settings"
 				>
+					<BaseControl
+						label={__('Layout', 'feedzy-rss-feeds')}
+						id="feedzy-loop-layout"
+					>
+						<div className="fz-block-variation-picker">
+							{variations?.map((variation) => (
+								<Button
+									key={variation.name}
+									variant={'link'}
+									onClick={() => setVariations(variation)}
+								>
+									{variation.icon?.()}
+								</Button>
+							))}
+						</div>
+					</BaseControl>
+
 					<RangeControl
 						label={__('Column Count', 'feedzy-rss-feeds')}
 						value={attributes?.layout?.columnCount || 1}
@@ -117,80 +113,26 @@ const Controls = ({
 					>
 						{__('Feedzy Loop Documentation', 'feedzy-rss-feeds')}
 					</ExternalLink>
-
-					<SelectControl
-						label={__('Sorting Order', 'feedzy-rss-feeds')}
-						value={attributes?.query?.sort}
-						options={[
-							{
-								label: __('Default', 'feedzy-rss-feeds'),
-								value: 'default',
-							},
-							{
-								label: __(
-									'Date Descending',
-									'feedzy-rss-feeds'
-								),
-								value: 'date_desc',
-							},
-							{
-								label: __('Date Ascending', 'feedzy-rss-feeds'),
-								value: 'date_asc',
-							},
-							{
-								label: __(
-									'Title Descending',
-									'feedzy-rss-feeds'
-								),
-								value: 'title_desc',
-							},
-							{
-								label: __(
-									'Title Ascending',
-									'feedzy-rss-feeds'
-								),
-								value: 'title_asc',
-							},
-						]}
-						onChange={(value) =>
-							onChangeQuery({ type: 'sort', value })
-						}
-					/>
-
-					<SelectControl
-						label={__('Feed Caching Time', 'feedzy-rss-feeds')}
-						value={attributes?.query?.refresh || '12_hours'}
-						options={[
-							{
-								label: __('1 Hour', 'feedzy-rss-feeds'),
-								value: '1_hours',
-							},
-							{
-								label: __('2 Hours', 'feedzy-rss-feeds'),
-								value: '3_hours',
-							},
-							{
-								label: __('12 Hours', 'feedzy-rss-feeds'),
-								value: '12_hours',
-							},
-							{
-								label: __('1 Day', 'feedzy-rss-feeds'),
-								value: '1_days',
-							},
-							{
-								label: __('3 Days', 'feedzy-rss-feeds'),
-								value: '3_days',
-							},
-							{
-								label: __('15 Days', 'feedzy-rss-feeds'),
-								value: '15_days',
-							},
-						]}
-						onChange={(value) =>
-							onChangeQuery({ type: 'refresh', value })
-						}
-					/>
 				</PanelBody>
+
+				{!isEditing && (
+					<PanelBody
+						initialOpen={false}
+						title={__('Feed Source', 'feedzy-rss-feeds')}
+						key="source"
+					>
+						<Button
+							variant="secondary"
+							onClick={() => setIsEditing(true)}
+							style={{
+								width: '100%',
+								justifyContent: 'center',
+							}}
+						>
+							{__('Edit Feed', 'feedzy-rss-feeds')}
+						</Button>
+					</PanelBody>
+				)}
 
 				<PanelBody
 					title={[
@@ -235,6 +177,119 @@ const Controls = ({
 						}}
 					/>
 				</PanelBody>
+				<PanelBody
+					title={[
+						__('Referral URL', 'feedzy-rss-feeds'),
+						!window.feedzyjs.isPro && (
+							<span className="fz-pro-label">Pro</span>
+						),
+					]}
+					initialOpen={false}
+					className={
+						window.feedzyjs.isPro
+							? 'feedzy-pro-options'
+							: 'feedzy-pro-options fz-locked'
+					}
+				>
+					{!window.feedzyjs.isPro && (
+						<div className="fz-upsell-notice">
+							{__(
+								'Unlock this feature and more advanced options with',
+								'feedzy-rss-feeds'
+							)}{' '}
+							<ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=refferal&utm_content=feedzy-rss-feeds">
+								{__('Feedzy Pro', 'feedzy-rss-feeds')}
+							</ExternalLink>
+						</div>
+					)}
+					<TextControl
+						label={__(
+							'Referral URL parameters.',
+							'feedzy-rss-feeds'
+						)}
+						help={__('Without ("?")', 'feedzy-rss-feeds')}
+						placeholder={decodeHtmlEntities(
+							'(' +
+								sprintf(
+									// translators: %s is the list of examples.
+									__('eg: %s', 'feedzy-rss-feeds'),
+									'promo_code=feedzy_is_awesome'
+								) +
+								')'
+						)}
+						value={attributes.referral_url}
+						onChange={(value) => {
+							window.tiTrk
+								?.with('feedzy')
+								.add({ feature: 'block-referral-url' });
+							setAttributes({ referral_url: value });
+						}}
+					/>
+				</PanelBody>
+			</InspectorControls>
+
+			<InspectorControls group="advanced">
+				<SelectControl
+					label={__('Sorting Order', 'feedzy-rss-feeds')}
+					value={attributes?.query?.sort}
+					options={[
+						{
+							label: __('Default', 'feedzy-rss-feeds'),
+							value: 'default',
+						},
+						{
+							label: __('Date Descending', 'feedzy-rss-feeds'),
+							value: 'date_desc',
+						},
+						{
+							label: __('Date Ascending', 'feedzy-rss-feeds'),
+							value: 'date_asc',
+						},
+						{
+							label: __('Title Descending', 'feedzy-rss-feeds'),
+							value: 'title_desc',
+						},
+						{
+							label: __('Title Ascending', 'feedzy-rss-feeds'),
+							value: 'title_asc',
+						},
+					]}
+					onChange={(value) => onChangeQuery({ type: 'sort', value })}
+				/>
+
+				<SelectControl
+					label={__('Feed Caching Time', 'feedzy-rss-feeds')}
+					value={attributes?.query?.refresh || '12_hours'}
+					options={[
+						{
+							label: __('1 Hour', 'feedzy-rss-feeds'),
+							value: '1_hours',
+						},
+						{
+							label: __('2 Hours', 'feedzy-rss-feeds'),
+							value: '3_hours',
+						},
+						{
+							label: __('12 Hours', 'feedzy-rss-feeds'),
+							value: '12_hours',
+						},
+						{
+							label: __('1 Day', 'feedzy-rss-feeds'),
+							value: '1_days',
+						},
+						{
+							label: __('3 Days', 'feedzy-rss-feeds'),
+							value: '3_days',
+						},
+						{
+							label: __('15 Days', 'feedzy-rss-feeds'),
+							value: '15_days',
+						},
+					]}
+					onChange={(value) =>
+						onChangeQuery({ type: 'refresh', value })
+					}
+				/>
 			</InspectorControls>
 		</>
 	);

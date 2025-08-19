@@ -120,6 +120,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		}
 
 		$column_count = isset( $attributes['layout'] ) && isset( $attributes['layout']['columnCount'] ) && ! empty( $attributes['layout']['columnCount'] ) ? $attributes['layout']['columnCount'] : 1;
+		$referral_url = isset( $attributes['referral_url'] ) ? $attributes['referral_url'] : '';
 
 		$default_query = array(
 			'max'     => 5,
@@ -146,6 +147,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			'summary'       => 'yes',
 			'summarylength' => '',
 			'filters'       => wp_json_encode( $filters ),
+			'referral_url'  => $referral_url,
 		);
 
 		$sizes = array(
