@@ -138,10 +138,15 @@ class Feedzy_Rss_Feeds_Loop_Block {
 
 			if (
 				'yes' === $thumb &&
-				isset( $attributes['fallbackImage'], $attributes['fallbackImage']['url'] ) &&
-				! empty( $attributes['fallbackImage']['url'] )
+				isset( $attributes['fallbackImage'], $attributes['fallbackImage']['id'] ) &&
+				! empty( $attributes['fallbackImage']['id'] )
 			) {
-				$default_thumbnail = $attributes['fallbackImage']['url'];
+				$image_id  = $attributes['fallbackImage']['id'];
+				$media_img = wp_get_attachment_image_src( $image_id );
+
+				if ( is_array( $media_img ) && ! empty( $media_img[0] ) ) {
+					$default_thumbnail = $media_img[0];
+				}
 			}
 		}
 
@@ -320,8 +325,14 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			isset( $attributes['fallbackImage'], $attributes['fallbackImage']['url'] ) &&
 			! empty( $attributes['fallbackImage']['url'] )
 		) {
-			return $attributes['fallbackImage']['url'];
-		} elseif (
+			$image_id  = $attributes['fallbackImage']['id'];
+			$media_img = wp_get_attachment_image_src( $image_id );
+			if ( is_array( $media_img ) && ! empty( $media_img[0] ) ) {
+				return $media_img[0];
+			}
+		}
+		
+		if (
 			isset( $settings, $settings['general'], $settings['general']['default-thumbnail-id'] ) &&
 			! empty( $settings['general']['default-thumbnail-id'] )
 		) {
