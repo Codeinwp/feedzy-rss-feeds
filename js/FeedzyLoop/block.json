@@ -57,7 +57,7 @@
 		},
 		"thumb": {
 			"type": "string",
-			"default": "yes"
+			"default": "auto"
 		},
 		"fallbackImage": {
 			"type": "object"

@@ -130,6 +130,11 @@ class Feedzy_Rss_Feeds_Loop_Block {
 
 		$query   = isset( $attributes['query'] ) ? wp_parse_args( $attributes['query'], $default_query ) : $default_query;
 		$filters = isset( $attributes['conditions'] ) ? $attributes['conditions'] : array();
+		$thumb   = 'auto';
+	
+		if ( isset( $attributes['thumb'] ) && ! empty( $attributes['thumb'] ) ) {
+			$thumb = $attributes['thumb'];
+		}
 
 		$options = array(
 			'feeds'         => implode( ',', $feed_urls ),
@@ -139,7 +144,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			'target'        => '_blank',
 			'keywords_ban'  => '',
 			'columns'       => '1',
-			'thumb'         => 'no',
+			'thumb'         => $thumb,
 			'default'       => '',
 			'title'         => '',
 			'meta'          => 'yes',
