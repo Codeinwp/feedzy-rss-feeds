@@ -139,8 +139,8 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			'target'        => '_blank',
 			'keywords_ban'  => '',
 			'columns'       => '1',
-			'thumb'         => $thumb,
-			'default'       => $default_thumbnail_img,
+			'thumb'         => 'no',
+			'default'       => '',
 			'title'         => '',
 			'meta'          => 'yes',
 			'multiple_meta' => 'no',
@@ -297,7 +297,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			return $item['item_img_path'];
 		} 
 		
-		if ( 'yes' !== $thumb ) {
+		if ( 'auto' === $thumb ) {
 			return '';
 		}
 
@@ -311,7 +311,12 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			isset( $settings, $settings['general'], $settings['general']['default-thumbnail-id'] ) &&
 			! empty( $settings['general']['default-thumbnail-id'] )
 		) {
-			return wp_get_attachment_image_src( $settings['general']['default-thumbnail-id'], 'full' );
+			$media_img = wp_get_attachment_image_src( $settings['general']['default-thumbnail-id'], 'full' );
+			if (
+				is_array( $media_img ) && ! empty( $media_img[0] )
+			) {
+				return $media_img[0];
+			}
 		}
 		
 		return FEEDZY_ABSURL . 'img/feedzy.svg';
