@@ -374,37 +374,20 @@ jQuery(function ($) {
 			button: {
 				text: feedzySetupWizardData.mediaUploadText.iframeButton
 			},
-			multiple: true
+			multiple: false
 		} ).on( 'select', function() { // it also has "open" and "close" events
 			const selectedAttachments = wp_media_uploader.state().get( 'selection' );
-			const countSelected = selectedAttachments?.toJSON()?.length;
 			button.parents( '.fz-form-group' ).find( '.feedzy-media-preview' ).remove();
 			// Display image preview when a single image is selected.
-			if ( 1 === countSelected ) {
-				const attachment = selectedAttachments.first().toJSON();
-				let attachmentUrl = attachment.url;
-				if ( attachment.sizes.thumbnail ) {
-					attachmentUrl = attachment.sizes.thumbnail.url;
-				}
-				if ( $( '.feedzy-media-preview' ).length ) {
-					$( '.feedzy-media-preview' ).find( 'img' ).attr( 'src', attachmentUrl );
-				} else {
-					$( '<div class="fz-form-group mb-20 feedzy-media-preview"><img src="' + attachmentUrl + '"></div>' ).insertBefore( button.parent() );
-				}
+			const attachment = selectedAttachments.first().toJSON();
+			let attachmentUrl = attachment.url;
+			if ( attachment.sizes.thumbnail ) {
+				attachmentUrl = attachment.sizes.thumbnail.url;
+			}
+			if ( $( '.feedzy-media-preview' ).length ) {
+				$( '.feedzy-media-preview' ).find( 'img' ).attr( 'src', attachmentUrl );
 			} else {
-				$(
-				'<div class="fz-form-group mb-20 feedzy-media-preview fz-fallback-images pb-8">' +
-					selectedAttachments
-						?.toJSON()
-						?.map(({ url, sizes }) => {
-							if (sizes?.thumbnail) {
-								url = sizes.thumbnail.url;
-							}
-							return `<img width="150" height="150" src="${url}" class="attachment-thumbnail size-thumbnail" alt="" decoding="async" loading="lazy">`;
-						})
-						.join('') +
-				'</div>'
-				).insertBefore(button.parent());
+				$( '<div class="fz-form-group mb-20 feedzy-media-preview"><img src="' + attachmentUrl + '"></div>' ).insertBefore( button.parent() );
 			}
 			// Get all selected attachment ids.
 			const ids = selectedAttachments.map( function( image ) {
