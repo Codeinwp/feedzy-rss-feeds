@@ -304,4 +304,61 @@ test.describe('Feed Import', () => {
 			page.locator('.attachment').count()
 		).resolves.toBeGreaterThan(0); // We should have some imported images.
 	});
+
+	test('close popup when clicking outside', async ({ page }) => {
+		await page.goto('/wp-admin/post-new.php?post_type=feedzy_imports');
+		await tryCloseTourModal(page);
+
+		await page
+			.getByRole('button', { name: 'Step 3 Map content ' })
+			.click();
+
+		await expect(
+			page.getByText('Post Title item title Item')
+		).toBeVisible();
+
+		await page.getByTitle('item title').getByRole('link').click();
+
+		await expect(
+			page.getByRole('heading', { name: 'Add actions to this tag' })
+		).toBeVisible();
+
+		await page.locator('body').click({ position: { x: 0, y: 0 } });
+
+		await expect(
+			page.getByRole('heading', { name: 'Add actions to this tag' })
+		).not.toBeVisible();
+	});
+
+	test('taxonomy settings for free', async ({ page }) => {
+		await page.goto('/wp-admin/post-new.php?post_type=feedzy_imports');
+		await tryCloseTourModal(page);
+
+		await page
+			.getByRole('button', { name: 'Step 3 Map content ' })
+			.click();
+
+		await page
+			.locator('#feedzy_post_terms_chosen')
+			.getByRole('list')
+			.first()
+			.click();
+
+		await expect(
+			page.getByText(
+				'CategoryUncategorizedProseparatorItem CategoriesPROAuto Categories by keywordPRO'
+			)
+		).toBeVisible();
+	});
+
+	test('check if user can add pro features in free', async ({ page }) => {
+		await page.goto('/wp-admin/post-new.php?post_type=feedzy_imports');
+		await tryCloseTourModal(page);
+
+		await page.getByRole('button', { name: 'Step 2 Filters ' }).click();
+
+		await page.waitForTimeout(1000);
+
+		await expect(page.getByLabel('Include If')).toBeDisabled();
+	});
 });
