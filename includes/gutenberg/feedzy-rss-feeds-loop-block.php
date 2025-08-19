@@ -172,7 +172,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		foreach ( $feed_items as $key => $item ) {
 			$loop .= apply_filters( 'feedzy_loop_item', $content, $item );
 		}
-		
+
 		return sprintf(
 			'<div %1$s>%2$s</div>',
 			$wrapper_attributes = get_block_wrapper_attributes(
