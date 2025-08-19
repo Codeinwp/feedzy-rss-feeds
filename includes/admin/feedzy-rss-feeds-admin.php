@@ -1978,6 +1978,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * Enqueue setup wizard required scripts.
 	 */
 	public function feedzy_enqueue_setup_wizard_scripts() {
+		if ( ! did_action( 'wp_enqueue_media' ) ) {
+			wp_enqueue_media();
+		}
+
 		wp_enqueue_style( $this->plugin_name . '_chosen' );
 		wp_enqueue_style( $this->plugin_name . '_smart_wizard', FEEDZY_ABSURL . 'css/smart_wizard_all.min.css', array(), $this->version );
 		wp_enqueue_style( $this->plugin_name . '_setup_wizard', FEEDZY_ABSURL . 'includes/views/css/style-wizard.css', array( $this->plugin_name . '-settings' ), $this->version, 'all' );
@@ -2002,6 +2006,18 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				'draftPageButtonText' => array(
 					'firstButtonText'  => __( 'Create Page', 'feedzy-rss-feeds' ),
 					'secondButtonText' => __( 'Do not create', 'feedzy-rss-feeds' ),
+				),
+				'mediaUploadText'     => array(
+					'iframeTitle'           => __( 'Select image', 'feedzy-rss-feeds' ),
+					'iframeButton'          => __( 'Set default image', 'feedzy-rss-feeds' ),
+					'actionButtonTextOne'   => __( 'Choose image', 'feedzy-rss-feeds' ),
+					'actionButtonTextTwo'   => __( 'Replace image', 'feedzy-rss-feeds' ),
+					'actionButtonTextThree' => __( 'Remove image', 'feedzy-rss-feeds' ),
+				),
+				'dryRun'              => array(
+					'loading' => '<p class="hide-when-loaded">' . __( 'Processing the source and loading the items that will be imported when it runs', 'feedzy-rss-feeds' ) . '...</p>'
+							. '<p class="loading-img hide-when-loaded"><img src="' . includes_url( 'images/wpspin-2x.gif' ) . '"></p><div></div>',
+					'title'   => __( 'Importable Items', 'feedzy-rss-feeds' ),
 				),
 			)
 		);

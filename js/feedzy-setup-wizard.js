@@ -35,7 +35,7 @@ jQuery(function ($) {
 		const feedUrl = $(this).attr('href');
 		$(this).parents('.fz-row').find('input:text').val(feedUrl);
 
-		$('[data-step_number="2"]').removeClass('disabled');
+		$('[data-step_number="2"], #preflight').removeClass('disabled');
 		return false;
 	});
 
@@ -211,6 +211,8 @@ jQuery(function ($) {
 				post_status: $(
 					'select[name="feedzy_meta_data[import_post_status]"]'
 				).val(),
+				fallback_image: $('input[name="feedzy_meta_data[default_thumbnail_id]"]').val(),
+				excluded_post_title: $('input[name="feedzy_meta_data[exc_key]"]').val(),
 				action: 'feedzy',
 				_action: 'wizard_import_feed',
 			},
@@ -329,9 +331,9 @@ jQuery(function ($) {
 	// Remove disabled class from save button.
 	$(document).on('input', '#wizard_feed_source', function () {
 		if ('' === $(this).val()) {
-			$('[data-step_number="2"]').addClass('disabled');
+			$('[data-step_number="2"], #preflight').addClass('disabled');
 		} else {
-			$('[data-step_number="2"]').removeClass('disabled');
+			$('[data-step_number="2"], #preflight').removeClass('disabled');
 		}
 	});
 
@@ -359,4 +361,100 @@ jQuery(function ($) {
 
 	// Init chosen selectbox.
 	$('.feedzy-chosen').chosen({ width: '100%' });
+
+	// on upload button click
+	$( 'body' ).on( 'click', '.feedzy-open-media', function( e ) {
+		e.preventDefault();
+		const button = $( this ),
+		wp_media_uploader = wp.media( {
+			title: feedzySetupWizardData.mediaUploadText.iframeTitle,
+			library : {
+				type : 'image'
+			},
+			button: {
+				text: feedzySetupWizardData.mediaUploadText.iframeButton
+			},
+			multiple: false
+		} ).on( 'select', function() { // it also has "open" and "close" events
+			const selectedAttachments = wp_media_uploader.state().get( 'selection' );
+			button.parents( '.fz-form-group' ).find( '.feedzy-media-preview' ).remove();
+			// Display image preview when a single image is selected.
+			const attachment = selectedAttachments.first().toJSON();
+			let attachmentUrl = attachment.url;
+			if ( attachment.sizes.thumbnail ) {
+				attachmentUrl = attachment.sizes.thumbnail.url;
+			}
+			if ( $( '.feedzy-media-preview' ).length ) {
+				$( '.feedzy-media-preview' ).find( 'img' ).attr( 'src', attachmentUrl );
+			} else {
+				$( '<div class="fz-form-group mb-20 feedzy-media-preview"><img src="' + attachmentUrl + '"></div>' ).insertBefore( button.parent() );
+			}
+			// Get all selected attachment ids.
+			const ids = selectedAttachments.map( function( image ) {
+				return image.id;
+			} ).join( ',' );
+
+			button.parent().find( '.feedzy-remove-media' ).addClass( 'is-show' );
+			button.parent().find( 'input:hidden' ).val( ids ).trigger( 'change' );
+			$( '.feedzy-open-media' ).html( feedzySetupWizardData.mediaUploadText.actionButtonTextTwo );
+		} );
+
+		wp_media_uploader.on(' open', function() {
+			const selectedVal = button.parent().find( 'input:hidden' ).val();
+			if ( '' === selectedVal ) {
+				return;
+			}
+			const selection = wp_media_uploader.state().get('selection');
+
+			selectedVal.split(',').forEach(function( id ) {
+				const attachment = wp.media.attachment( id );
+				attachment.fetch();
+				selection.add(attachment ? [attachment] : []);
+			});
+		} );
+
+		wp_media_uploader.open();
+	});
+
+	$(document).on( 'click', '.feedzy-remove-media', function( e ) {
+		$(this)
+		e.preventDefault();
+		$('.feedzy-media-preview').remove();
+		$(this).removeClass('is-show');
+
+		// Reset the input.
+		$('input[name="feedzy_meta_data[default_thumbnail_id]"]').val(0);
+		$('.feedzy-open-media').html(feedzySetupWizardData.mediaUploadText.actionButtonTextOne);
+	} );
+
+	$('#preflight').on('click', function (e) {
+		e.preventDefault();
+		const $fields = {};
+		// collect all elements.
+		$('#smartwizard')
+			.find(':input')
+			.each(function (index, element) {
+				if ('undefined' === typeof $(element).attr('name')) {
+					return;
+				}
+				$fields[$(element).attr('name')] = $(element).val();
+			});
+		$fields['feedzy_meta_data[source]'] = $('#wizard_feed_source').val();
+		tb_show(feedzySetupWizardData.dryRun.title, 'TB_inline?');
+		$('#TB_ajaxContent').html(feedzySetupWizardData.dryRun.loading);
+		$.post(
+			ajaxurl,
+			{
+				security: window.feedzySetupWizardData.ajax.security,
+				fields: $.param($fields),
+				action: 'feedzy',
+				_action: 'dry_run',
+				environment: 'wizard',
+			},
+			function(data) {
+				$('#TB_ajaxContent').addClass('loaded');
+				$('#TB_ajaxContent div').html(data.data.output);
+			},
+		);
+	});
 });
