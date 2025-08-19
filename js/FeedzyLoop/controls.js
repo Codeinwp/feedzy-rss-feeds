@@ -3,12 +3,7 @@
  */
 import { __ } from '@wordpress/i18n';
 
-import {
-	BlockControls,
-	InspectorControls,
-	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
-	__experimentalBlockVariationPicker as BlockVariationPicker,
-} from '@wordpress/block-editor';
+import { BlockControls, InspectorControls } from '@wordpress/block-editor';
 
 import {
 	Button,
@@ -19,6 +14,7 @@ import {
 	ToolbarButton,
 	ToolbarGroup,
 	TextControl,
+	BaseControl,
 } from '@wordpress/components';
 
 import { Fragment, useState } from '@wordpress/element';
@@ -89,12 +85,23 @@ const Controls = ({
 					title={__('Settings', 'feedzy-rss-feeds')}
 					key="settings"
 				>
-					<div className='fz-block-variation'>
-						<BlockVariationPicker
-							variations={variations}
-							onSelect={setVariations}
-						/>
-					</div>
+					<BaseControl
+						label={__('Layout', 'feedzy-rss-feeds')}
+						id="feedzy-loop-layout"
+					>
+						<div className="fz-block-variation-picker">
+							{variations?.map((variation) => (
+								<Button
+									key={variation.name}
+									variant={'link'}
+									onClick={() => setVariations(variation)}
+								>
+									{variation.icon?.()}
+								</Button>
+							))}
+						</div>
+					</BaseControl>
+
 					<RangeControl
 						label={__('Column Count', 'feedzy-rss-feeds')}
 						value={attributes?.layout?.columnCount || 1}
@@ -192,9 +199,7 @@ const Controls = ({
 					title={[
 						__('Referral URL', 'feedzy-rss-feeds'),
 						!window.feedzyjs.isPro && (
-							<span className="fz-pro-label">
-								Pro
-							</span>
+							<span className="fz-pro-label">Pro</span>
 						),
 					]}
 					initialOpen={false}
@@ -211,10 +216,7 @@ const Controls = ({
 								'feedzy-rss-feeds'
 							)}{' '}
 							<ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=refferal&utm_content=feedzy-rss-feeds">
-								{__(
-									'Feedzy Pro',
-									'feedzy-rss-feeds'
-								)}
+								{__('Feedzy Pro', 'feedzy-rss-feeds')}
 							</ExternalLink>
 						</div>
 					)}
@@ -223,32 +225,28 @@ const Controls = ({
 							'Referral URL parameters.',
 							'feedzy-rss-feeds'
 						)}
-						help={__(
-							'Without ("?")',
-							'feedzy-rss-feeds'
-						)}
+						help={__('Without ("?")', 'feedzy-rss-feeds')}
 						placeholder={decodeHtmlEntities(
 							'(' +
 								sprintf(
 									// translators: %s is the list of examples.
-									__(
-										'eg: %s',
-										'feedzy-rss-feeds'
-									),
+									__('eg: %s', 'feedzy-rss-feeds'),
 									'promo_code=feedzy_is_awesome'
 								) +
 								')'
 						)}
 						value={attributes.referral_url}
 						onChange={(value) => {
-							window.tiTrk?.with('feedzy').add({ feature: 'block-referral-url' });
+							window.tiTrk
+								?.with('feedzy')
+								.add({ feature: 'block-referral-url' });
 							setAttributes({ referral_url: value });
 						}}
 					/>
 				</PanelBody>
 			</InspectorControls>
 
-			<InspectorControls group='advanced'>
+			<InspectorControls group="advanced">
 				<SelectControl
 					label={__('Sorting Order', 'feedzy-rss-feeds')}
 					value={attributes?.query?.sort}
@@ -258,10 +256,7 @@ const Controls = ({
 							value: 'default',
 						},
 						{
-							label: __(
-								'Date Descending',
-								'feedzy-rss-feeds'
-							),
+							label: __('Date Descending', 'feedzy-rss-feeds'),
 							value: 'date_desc',
 						},
 						{
@@ -269,23 +264,15 @@ const Controls = ({
 							value: 'date_asc',
 						},
 						{
-							label: __(
-								'Title Descending',
-								'feedzy-rss-feeds'
-							),
+							label: __('Title Descending', 'feedzy-rss-feeds'),
 							value: 'title_desc',
 						},
 						{
-							label: __(
-								'Title Ascending',
-								'feedzy-rss-feeds'
-							),
+							label: __('Title Ascending', 'feedzy-rss-feeds'),
 							value: 'title_asc',
 						},
 					]}
-					onChange={(value) =>
-						onChangeQuery({ type: 'sort', value })
-					}
+					onChange={(value) => onChangeQuery({ type: 'sort', value })}
 				/>
 
 				<SelectControl

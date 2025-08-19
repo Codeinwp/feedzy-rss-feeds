@@ -238,3 +238,12 @@ input[type="text"].fz-input-field:disabled {
         width: 35%;
     }
 }
+
+.fz-block-variation-picker {
+    display: flex;
+    justify-content: space-between;
+
+    &> .components-button svg {
+       max-width: 70px;
+    }
+}
