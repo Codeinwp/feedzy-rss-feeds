@@ -107,39 +107,156 @@ test.describe('Feedzy Loop', () => {
 		expect(feedzyLoopChildren.length).toBe(5);
 	});
 
-	test('check validation for invalid URL', async ({ editor, page, admin }) => {
+	test('check validation for invalid URL', async ({
+		editor,
+		page,
+		admin,
+	}) => {
 		await admin.createNewPost();
 
 		await editor.insertBlock({
 			name: 'feedzy-rss-feeds/loop',
 		});
 
-		await page.getByPlaceholder('Enter URLs or select a Feed').fill(
-			'http://invalid-url.com/feed'
-		);
+		await page
+			.getByPlaceholder('Enter URLs or select a Feed')
+			.fill('http://invalid-url.com/feed');
 		await page.getByRole('button', { name: 'Load Feed' }).click();
 
 		await page.waitForSelector('.feedzy-validation-results');
 
-		await expect( page.locator('.feedzy-validation-results .is-error').getByText('http://invalid-url.com/feed', { exact: true }) ).toBeVisible();
+		await expect(
+			page
+				.locator('.feedzy-validation-results .is-error')
+				.getByText('http://invalid-url.com/feed', { exact: true })
+		).toBeVisible();
 	});
 
-	test('check validation for invalid and valid url', async ({ editor, page, admin }) => {
+	test('check validation for invalid and valid url', async ({
+		editor,
+		page,
+		admin,
+	}) => {
 		await admin.createNewPost();
 
 		await editor.insertBlock({
 			name: 'feedzy-rss-feeds/loop',
 		});
 
-		await page.getByPlaceholder('Enter URLs or select a Feed').fill(
-			'http://invalid-url.com/feed, https://www.nasa.gov/feeds/iotd-feed/'
-		);
+		await page
+			.getByPlaceholder('Enter URLs or select a Feed')
+			.fill(
+				'http://invalid-url.com/feed, https://www.nasa.gov/feeds/iotd-feed/'
+			);
 		await page.getByRole('button', { name: 'Load Feed' }).click();
 
 		await page.waitForSelector('.feedzy-validation-results');
 
-		await expect( page.locator('.feedzy-validation-results .is-error').getByText('http://invalid-url.com/feed', { exact: true }) ).toBeVisible();
+		await expect(
+			page
+				.locator('.feedzy-validation-results .is-error')
+				.getByText('http://invalid-url.com/feed', { exact: true })
+		).toBeVisible();
 
-		await expect( page.locator('.feedzy-validation-results .is-success').getByText('https://www.nasa.gov/feeds/iotd-feed/', { exact: true }) ).toBeVisible();
+		await expect(
+			page
+				.locator('.feedzy-validation-results .is-success')
+				.getByText('https://www.nasa.gov/feeds/iotd-feed/', {
+					exact: true,
+				})
+		).toBeVisible();
+	});
+
+	test('check thumbnail display', async ({ editor, page, admin }) => {
+		await admin.createNewPost();
+
+		await editor.insertBlock({
+			name: 'feedzy-rss-feeds/loop',
+			attributes: {
+				feed: {
+					type: 'url',
+					source: 'https://www.nasa.gov/feeds/iotd-feed/',
+				},
+				query: {
+					max: 1,
+				},
+			},
+		});
+
+		await page
+			.getByLabel('Display curated RSS content')
+			.click({ force: true });
+
+		await page.waitForSelector('.feedzy-loop-columns-1');
+
+		expect(
+			await page
+				.locator(`.wp-block-feedzy-rss-feeds-loop img[src*="https"]`)
+				.count()
+		).toBeGreaterThan(0);
+	});
+
+	test('check no thumbnail display', async ({ editor, page, admin }) => {
+		await admin.createNewPost();
+
+		await editor.insertBlock({
+			name: 'feedzy-rss-feeds/loop',
+			attributes: {
+				feed: {
+					type: 'url',
+					source: 'https://www.nasa.gov/feeds/iotd-feed/',
+				},
+				query: {
+					max: 1,
+				},
+				thumb: 'no',
+			},
+		});
+
+		await page
+			.getByLabel('Display curated RSS content')
+			.click({ force: true });
+
+		await page.waitForSelector('.feedzy-loop-columns-1');
+
+		expect(
+			await page
+				.locator(`.wp-block-feedzy-rss-feeds-loop img[src*="https"]`)
+				.count()
+		).toBe(0);
+	});
+
+	test('check default SVG thumbnail display', async ({
+		editor,
+		page,
+		admin,
+	}) => {
+		await admin.createNewPost();
+
+		await editor.insertBlock({
+			name: 'feedzy-rss-feeds/loop',
+			attributes: {
+				feed: {
+					type: 'url',
+					source: 'https://fasterthanli.me/index.xml',
+				},
+				query: {
+					max: 1,
+				},
+				thumb: 'yes',
+			},
+		});
+
+		await page
+			.getByLabel('Display curated RSS content')
+			.click({ force: true });
+
+		await page.waitForSelector('.feedzy-loop-columns-1');
+
+		expect(
+			await page
+				.locator(`.wp-block-feedzy-rss-feeds-loop img[src*=".svg"]`)
+				.count()
+		).toBeGreaterThan(0);
 	});
 });

@@ -12,7 +12,6 @@ import RadioImageControl from './radio-image-control/';
 import classnames from 'classnames';
 import { __, sprintf } from '@wordpress/i18n';
 import { applyFilters } from '@wordpress/hooks';
-import { MediaUpload } from '@wordpress/block-editor';
 import {
 	BaseControl,
 	ExternalLink,
@@ -23,11 +22,9 @@ import {
 	Button,
 	ToggleControl,
 	SelectControl,
-	ResponsiveWrapper,
 	Dashicon,
-	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
-	__experimentalHStack as HStack,
 } from '@wordpress/components';
+import { FallbackImageLoader } from '../FeedzyLoop/components/FallbackImageLoader';
 
 /**
  * Create an Inspector Controls wrapper Component
@@ -429,7 +426,22 @@ class Inspector extends Component {
 										{this.props.attributes.thumb !==
 											'auto' && (
 											<FallbackImageLoader
-												props={this.props}
+												imageValue={
+													this.props.attributes
+														.default
+												}
+												onChangeImage={
+													this.props.edit.onDefault
+												}
+												onRemoveImage={() =>
+													this.props.edit.onDefault(
+														undefined
+													)
+												}
+												label={__(
+													'Fallback image if no image is found.',
+													'feedzy-rss-feeds'
+												)}
 											/>
 										)}
 										<TextControl
@@ -938,77 +950,6 @@ class Inspector extends Component {
 			</Fragment>
 		);
 	}
-}
-
-function FallbackImageLoader({ props }) {
-	return (
-		<div className="feedzy-blocks-base-control">
-			<label
-				className="blocks-base-control__label"
-				htmlFor="inspector-media-upload"
-			>
-				{__('Fallback image if no image is found.', 'feedzy-rss-feeds')}
-			</label>
-			<MediaUpload
-				type="image"
-				id="inspector-media-upload"
-				value={props.attributes.default}
-				onSelect={props.edit.onDefault}
-				render={({ open }) => (
-					<Fragment>
-						{props.attributes.default !== undefined && (
-							<ResponsiveWrapper
-								naturalWidth={props.attributes.default.width}
-								naturalHeight={props.attributes.default.height}
-							>
-								<img
-									src={props.attributes.default.url}
-									alt={__(
-										'Featured image',
-										'feedzy-rss-feeds'
-									)}
-								/>
-							</ResponsiveWrapper>
-						)}
-
-						<HStack>
-							{props.attributes.default !== undefined && (
-								<Button
-									isLarge
-									isSecondary
-									onClick={() =>
-										props.setAttributes({
-											default: undefined,
-										})
-									}
-									style={{
-										marginTop: '10px',
-									}}
-								>
-									{__('Remove Image', 'feedzy-rss-feeds')}
-								</Button>
-							)}
-
-							<Button
-								isLarge
-								isPrimary
-								onClick={open}
-								style={{
-									marginTop: '10px',
-								}}
-								className={
-									props.attributes.default === undefined &&
-									'feedzy_image_upload'
-								}
-							>
-								{__('Upload Image', 'feedzy-rss-feeds')}
-							</Button>
-						</HStack>
-					</Fragment>
-				)}
-			/>
-		</div>
-	);
 }
 
 export default Inspector;

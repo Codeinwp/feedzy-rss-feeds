@@ -8,6 +8,11 @@
             width: 100%;
         }
     }
+
+    // Note: Hide generated invalid Core Image blocks
+    .wp-block-image:has( :is( img:not([src]), img[src=""] ) ) {
+        display: none;
+    }
 }
 
 .fz-condition-control {
