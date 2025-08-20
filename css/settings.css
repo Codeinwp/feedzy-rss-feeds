@@ -2681,9 +2681,11 @@ li.draggable-item .components-panel__body-toggle.components-button{
 	font-weight: 500;
 	color: #757575;
 }
-span.dashicons {
+
+#wpbody-content span.dashicons {
 	line-height: 1.3;
 }
+
 @-webkit-keyframes spin { 
     100% { -webkit-transform: rotate(360deg); } 
 }
