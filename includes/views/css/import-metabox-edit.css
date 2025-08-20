@@ -142,7 +142,7 @@ span.feedzy-spinner {
 .wp-core-ui .fz-export-import-btn,
 .wp-core-ui .feedzy-import-limit{
 	display: inline-flex !important;
-	align-items: center;
+	align-items: stretch;
 }
 
 .wp-core-ui .fz-header-action {
