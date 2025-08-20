@@ -179,16 +179,6 @@
 											<a href="javascript:;" class="feedzy-remove-media btn btn-outline-primary <?php echo $default_thumbnail_id ? esc_attr( 'is-show' ) : ''; ?>"><?php esc_html_e( 'Remove', 'feedzy-rss-feeds' ); ?></a>
 											<input type="hidden" name="default-thumbnail-id" id="feed-post-default-thumbnail" value="<?php echo esc_attr( $default_thumbnail_id ); ?>">
 										</div>
-										<div class="help-text">
-											<?php
-											echo wp_kses(
-												__( '<strong>How it works:</strong> When importing posts from RSS feeds, some items may not include images. This fallback image ensures all your <strong>imported posts</strong> have visual content by automatically applying this image as the featured image when needed.', 'feedzy-rss-feeds' ),
-												array(
-													'strong' => true,
-												)
-											);
-											?>
-										</div>
 									</div>
 								</div>
 								<div class="form-block">
@@ -388,11 +378,11 @@
 												</label>
 											</div>
 											<div class="help-text pt-8">
-												<?php esc_html_e( 'Send an email with the errors encountered. The frequency can be changed (once per week is the default).', 'feedzy-rss-feeds' ); ?>
+												<?php esc_html_e( 'Enable email alerts for feed errors.', 'feedzy-rss-feeds' ); ?>
 											</div>
 										</div>
 										<div
-											class="fz-form-group <?php echo esc_attr( ! $email_error_enabled ? 'fz-hidden' : '' ); ?>"
+											class="fz-form-group fz-log-email-address <?php echo esc_attr( ! $email_error_enabled ? 'fz-hidden' : '' ); ?>"
 										>
 											<label class="form-label fz-email-error-text">
 												<?php esc_html_e( 'Email address', 'feedzy-rss-feeds' ); ?>
@@ -406,7 +396,7 @@
 											>
 										</div>
 										<div
-											class="fz-form-group <?php echo esc_attr( ! $email_error_enabled ? 'fz-hidden' : '' ); ?>"
+											class="fz-form-group fz-log-email-freq <?php echo esc_attr( ! $email_error_enabled ? 'fz-hidden' : '' ); ?>"
 										>
 											<label class="form-label" for="fz-logs-email-frequency">
 												<?php esc_html_e( 'Email Reporting Frequency', 'feedzy-rss-feeds' ); ?>

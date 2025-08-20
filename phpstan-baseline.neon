@@ -1656,11 +1656,6 @@ parameters:
 			path: includes/layouts/settings.php
 
 		-
-			message: "#^Parameter \\#2 \\$allowed_html of function wp_kses expects array\\<array\\>\\|string, array\\<string, true\\> given\\.$#"
-			count: 1
-			path: includes/layouts/settings.php
-
-		-
 			message: "#^Variable \\$this might not be defined\\.$#"
 			count: 4
 			path: includes/layouts/settings.php

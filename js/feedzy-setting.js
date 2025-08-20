@@ -173,10 +173,15 @@ jQuery(function ($) {
 
 	// Disable the Add Schedule button until all fields are filled.
 	const validateScheduleForm = () => {
+		const button = $('#fz-add-schedule');
+
+		if (!button.length) {
+			return;
+		}
+
 		const interval = $('#fz-schedule-interval').val().trim();
 		const display = $('#fz-schedule-display').val().trim();
 		const name = $('#fz-schedule-name').val().trim();
-		const button = $('#fz-add-schedule');
 
 		const isValid = interval && display && name;
 		button.prop('disabled', !isValid);
@@ -336,11 +341,15 @@ jQuery(function ($) {
 	 */
 	const toggleEmailErrorField = () => {
 		const checkbox = $('#feedzy-email-error-enabled');
-		const emailField = checkbox
-			.closest('.fz-form-group')
-			.next('.fz-form-group');
 
-		emailField.toggleClass('fz-hidden', !checkbox.is(':checked'));
+		$('.fz-log-email-address').toggleClass(
+			'fz-hidden',
+			!checkbox.is(':checked')
+		);
+		$('.fz-log-email-freq').toggleClass(
+			'fz-hidden',
+			!checkbox.is(':checked')
+		);
 	};
 
 	$('#feedzy-email-error-enabled').on('change', toggleEmailErrorField);

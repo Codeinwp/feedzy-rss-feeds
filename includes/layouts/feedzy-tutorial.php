@@ -47,7 +47,7 @@ $logs_link         = add_query_arg(
 				</ul>
 				<br/>
 				<div>
-					<a href="<?php echo esc_url( add_query_arg( 'post_type', 'feedzy_imports', admin_url( 'post-new.php' ) ) ); ?>" class="btn btn-outline-primary" target="_blank">
+					<a href="<?php echo esc_url( add_query_arg( 'post_type', 'feedzy_imports', admin_url( 'post-new.php' ) ) ); ?>" class="btn btn-outline-primary">
 						<?php esc_html_e( 'Import your first feed', 'feedzy-rss-feeds' ); ?>
 					</a>
 				</div> 
