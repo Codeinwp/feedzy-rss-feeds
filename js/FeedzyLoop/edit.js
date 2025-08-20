@@ -141,20 +141,74 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 		}
 	};
 
+	let blockContent;
+
 	if (isEditing) {
-		return (
-			<div {...blockProps}>
-				<Placeholder
-					attributes={attributes}
-					setAttributes={setAttributes}
-					onSaveFeed={onSaveFeed}
-				/>
-			</div>
+		blockContent = (
+			<Placeholder
+				attributes={attributes}
+				setAttributes={setAttributes}
+				onSaveFeed={onSaveFeed}
+			/>
 		);
+	} else if ((!isSelected || isPreviewing) && innerBlocksContent) {
+		blockContent = (
+			<Fragment>
+				{showPreviewNotice && (
+					<Notice
+						status="info"
+						isDismissible={true}
+						onRemove={() => {
+							setShowPreviewNotice(false);
+							localStorage.setItem(
+								'feedzy-hide-preview-notice',
+								'true'
+							);
+						}}
+					>
+						<p>
+							<strong>
+								{__(
+									"You're in Preview Mode – This shows how your feed will look to visitors.",
+									'feedzy-rss-feeds'
+								)}
+							</strong>
+						</p>
+						<p>
+							{sprintf(
+								// translators: %1$s is button label "Hide Preview".
+								__(
+									'To customize each element (title, meta, description) and adjust layouts, spacing, colors, and typography, click "%1$s" in the toolbar above to enter the advanced editor.',
+									'feedzy-rss-feeds'
+								),
+								__('Hide Preview', 'feedzy-rss-feeds')
+							)}
+						</p>
+					</Notice>
+				)}
+				<ServerSideRender
+					block="feedzy-rss-feeds/loop"
+					attributes={{
+						...attributes,
+						innerBlocksContent,
+					}}
+					LoadingResponsePlaceholder={LoadingResponsePlaceholder}
+				/>
+			</Fragment>
+		);
+	} else if (!hasInnerBlocks && !isEditing) {
+		blockContent = (
+			<BlockVariationPicker
+				variations={variations}
+				onSelect={setVariations}
+			/>
+		);
+	} else {
+		blockContent = <InnerBlocks />;
 	}
 
 	return (
-		<>
+		<Fragment>
 			<Controls
 				attributes={attributes}
 				isEditing={isEditing}
@@ -167,73 +221,8 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 				variations={variations}
 				setVariations={setVariations}
 			/>
-			<div {...blockProps}>
-				{(() => {
-					if ((!isSelected || isPreviewing) && innerBlocksContent) {
-						return (
-							<Fragment>
-								{showPreviewNotice && (
-									<Notice
-										status="info"
-										isDismissible={true}
-										onRemove={() => {
-											setShowPreviewNotice(false);
-											localStorage.setItem(
-												'feedzy-hide-preview-notice',
-												'true'
-											);
-										}}
-									>
-										<p>
-											<strong>
-												{__(
-													"You're in Preview Mode – This shows how your feed will look to visitors.",
-													'feedzy-rss-feeds'
-												)}
-											</strong>
-										</p>
-										<p>
-											{sprintf(
-												// translators: %1$s is button label "Hide Preview".
-												__(
-													'To customize each element (title, meta, description) and adjust layouts, spacing, colors, and typography, click "%1$s" in the toolbar above to enter the advanced editor.',
-													'feedzy-rss-feeds'
-												),
-												__(
-													'Hide Preview',
-													'feedzy-rss-feeds'
-												)
-											)}
-										</p>
-									</Notice>
-								)}
-								<ServerSideRender
-									block="feedzy-rss-feeds/loop"
-									attributes={{
-										...attributes,
-										innerBlocksContent,
-									}}
-									LoadingResponsePlaceholder={
-										LoadingResponsePlaceholder
-									}
-								/>
-							</Fragment>
-						);
-					}
-
-					if (hasInnerBlocks) {
-						return <InnerBlocks />;
-					}
-
-					return (
-						<BlockVariationPicker
-							variations={variations}
-							onSelect={setVariations}
-						/>
-					);
-				})()}
-			</div>
-		</>
+			<div {...blockProps}>{blockContent}</div>
+		</Fragment>
 	);
 };
 
