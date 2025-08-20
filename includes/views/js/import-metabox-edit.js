@@ -219,7 +219,7 @@
 			const $closeButton = $('<button>', {
 				type: 'button',
 				class: 'button button-primary',
-				text: '✕'
+				text: '✕',
 			});
 
 			$message.append($closeButton);
@@ -856,7 +856,9 @@
 		});
 
 		// Tagify for normal mix content field.
-		const mixContent = $('.fz-input-tagify[name="feedzy_meta_data[import_post_content]"]:not(.fz-tagify-image)').tagify({
+		const mixContent = $(
+			'.fz-input-tagify[name="feedzy_meta_data[import_post_content]"]:not(.fz-tagify-image)'
+		).tagify({
 			mode: 'mix',
 			editTags: false,
 			templates: {
@@ -1121,7 +1123,7 @@
 					class: 'button button-secondary',
 					click: () => {
 						window.location.href = window.feedzy.pages.logs;
-					}
+					},
 				},
 				{
 					text: feedzy.i10n.okButton,
@@ -1496,6 +1498,8 @@
 		$(
 			'input[name="feedzy_meta_data[fallback_image_option]"]:checked'
 		).trigger('change');
+
+		initNewPostActions();
 	}
 })(jQuery, feedzy);
 
@@ -1518,4 +1522,15 @@ function initRemoveFallbackImageBtn() {
 		document.querySelector('.feedzy-open-media').innerHTML =
 			feedzy.i10n.action_btn_text_1;
 	});
+}
+
+function initNewPostActions() {
+	// Focus on the post title field when creating a new post.
+	if (window.location.href.indexOf('post-new.php') > -1) {
+		const postTitle = document.querySelector('#post_title');
+		if (postTitle) {
+			postTitle.focus();
+			postTitle.select();
+		}
+	}
 }
