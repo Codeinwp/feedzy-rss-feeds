@@ -92,6 +92,11 @@ class Feedzy_Rss_Feeds_Task_Manager {
 	 * @return void
 	 */
 	public function maybe_reschedule_email_report( $old_value, $value ) {
+		if ( ! isset( $value['logs'], $value['logs']['send_email_report'] ) || ! boolval( $value['logs']['send_email_report'] ) ) {
+			Feedzy_Rss_Feeds_Util_Scheduler::clear_scheduled_hook( 'task_feedzy_send_error_report' );
+			return;
+		}
+
 		$old_freq = isset( $old_value['logs']['email_frequency'] ) ? sanitize_text_field( $old_value['logs']['email_frequency'] ) : '';
 		$new_freq = isset( $value['logs']['email_frequency'] ) ? sanitize_text_field( $value['logs']['email_frequency'] ) : '';
 

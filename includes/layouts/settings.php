@@ -405,6 +405,43 @@
 												placeholder="<?php echo esc_attr( $email_error_address_placeholder ); ?>"
 											>
 										</div>
+										<div
+											class="fz-form-group <?php echo esc_attr( ! $email_error_enabled ? 'fz-hidden' : '' ); ?>"
+										>
+											<label class="form-label" for="fz-logs-email-frequency">
+												<?php esc_html_e( 'Email Reporting Frequency', 'feedzy-rss-feeds' ); ?>
+											</label>
+											<?php
+											$email_error_frequency = isset( $settings['logs'], $settings['logs']['email_frequency'] ) ? $settings['logs']['email_frequency'] : '';
+
+											$registered_schedules = wp_get_schedules();
+											$schedules            = array();
+
+											if ( isset( $registered_schedules['weekly'] ) ) {
+												$schedules['weekly'] = $registered_schedules['weekly'];
+											}
+
+											if ( isset( $registered_schedules['daily'] ) ) {
+												$schedules['daily'] = $registered_schedules['daily'];
+											}
+											
+											?>
+											<select id="fz-logs-email-frequency" class="form-control fz-select-control" name="logs-email-frequency">
+												<?php
+												foreach ( $schedules as $slug => $schedule ) :
+													if ( empty( $schedule['interval'] ) ) {
+														continue;
+													}
+													?>
+													<option
+														value="<?php echo esc_attr( $slug ); ?>"
+														<?php selected( $email_error_frequency, $slug ); ?>
+													>
+														<?php echo esc_html( $schedule['display'] ); ?>
+													</option>
+												<?php endforeach; ?>
+											</select>
+										</div>
 									</div>
 									<div class="form-block">
 										<div class="fz-form-switch pb-0">

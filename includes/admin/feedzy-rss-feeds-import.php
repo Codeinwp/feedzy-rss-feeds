@@ -3356,9 +3356,8 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		if ( 'misc' === $tab ) {
-			$settings['canonical']               = isset( $_POST['canonical'] ) ? absint( $_POST['canonical'] ) : 0;
-			$settings['general']['rss-feeds']    = isset( $_POST['rss-feeds'] ) ? absint( $_POST['rss-feeds'] ) : '';
-			$settings['logs']['email_frequency'] = isset( $_POST['logs-email-frequency'] ) ? sanitize_text_field( wp_unslash( $_POST['logs-email-frequency'] ) ) : '';
+			$settings['canonical']            = isset( $_POST['canonical'] ) ? absint( $_POST['canonical'] ) : 0;
+			$settings['general']['rss-feeds'] = isset( $_POST['rss-feeds'] ) ? absint( $_POST['rss-feeds'] ) : '';
 		}
 
 		return $settings;

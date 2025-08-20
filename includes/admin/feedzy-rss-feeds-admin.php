@@ -1456,6 +1456,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				$settings['logs']['level']             = isset( $_POST['logs-logging-level'] ) ? sanitize_text_field( wp_unslash( $_POST['logs-logging-level'] ) ) : '';
 				$settings['logs']['email']             = isset( $_POST['feedzy-email-error-address'] ) ? sanitize_email( wp_unslash( $_POST['feedzy-email-error-address'] ) ) : '';
 				$settings['logs']['send_email_report'] = isset( $_POST['feedzy-email-error-enabled'] ) ? absint( wp_unslash( $_POST['feedzy-email-error-enabled'] ) ) : '';
+				$settings['logs']['email_frequency']   = isset( $_POST['logs-email-frequency'] ) ? sanitize_text_field( wp_unslash( $_POST['logs-email-frequency'] ) ) : '';
 				break;
 			case 'headers':
 				$settings['header']['user-agent'] = isset( $_POST['user-agent'] ) ? sanitize_text_field( wp_unslash( $_POST['user-agent'] ) ) : '';
