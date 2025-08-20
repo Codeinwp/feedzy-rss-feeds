@@ -156,11 +156,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$shortcodes = $wpdb->get_var( "SELECT count(*) FROM {$wpdb->prefix}posts WHERE post_status IN ('publish', 'private') AND post_content LIKE '%[feedzy-rss %'" ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		$data = array(
-			'categories'         => $categories,
-			'imports'            => $imports,
-			'shortcodes'         => $shortcodes,
-			'license'            => $license,
-			'days_since_install' => round( ( time() - get_option( 'feedzy_rss_feeds_install', time() ) ) / DAY_IN_SECONDS ),
+			'categories' => $categories,
+			'imports'    => $imports,
+			'shortcodes' => $shortcodes,
+			'license'    => $license,
 		);
 
 		$settings = apply_filters( 'feedzy_get_settings', null );
@@ -168,7 +167,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! is_array( $settings ) || empty( $settings ) ) {
 			return $data;
 		}
-
 		$general_settings = array();
 		$config           = array();
 
@@ -196,6 +194,17 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$data['general'] = $general_settings;
 			}
 		}
+
+		if ( isset( $settings['custom_schedules'] ) && is_array( $settings['custom_schedules'] ) ) {
+			$data['custom_schedules_count'] = count( $settings['custom_schedules'] );
+		}
+
+		$logger         = Feedzy_Rss_Feeds_Log::get_instance();
+		$data['logger'] = array(
+			'can_send_email' => $logger->can_send_email(),
+			'has_email'      => ! empty( $logger->get_email_address() ),
+			'file_size'      => $logger->get_log_file_size(),
+		);
 
 		return $data;
 	}
