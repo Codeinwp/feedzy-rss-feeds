@@ -1573,6 +1573,7 @@ class Feedzy_Rss_Feeds_Import {
 				}
 
 				Feedzy_Rss_Feeds_Log::error(
+					// translators: %1$s is the import job title, %2$s is the error message.
 					sprintf( __( 'Error when running "%1$s": %2$s', 'feedzy-rss-feeds' ), $job->post_title, $e->getMessage() ),
 					array(
 						'job_id' => $job->ID,
@@ -2607,6 +2608,7 @@ class Feedzy_Rss_Feeds_Import {
 						}
 					} else {
 						Feedzy_Rss_Feeds_Log::error(
+							// translators: %1$s is the item URL, %2$s is the error message.
 							sprintf( __( 'Error fetching image from Graby for item "%1$s": %2$s', 'feedzy-rss-feeds' ), $item['item_url'], $response->get_error_message() ),
 							array(
 								'job_id'   => $job->ID,

@@ -912,7 +912,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		if ( ! empty( $error ) ) {
 			Feedzy_Rss_Feeds_Log::error(
-				sprintf( __( 'Error while parsing feed URL: %s', 'feedzy-rss-rds' ), $error ),
+				// translators: %1$s is the feed URL, %2$s is the error message.
+				sprintf( __( 'Error while parsing feed URL "%1$s": %2$s', 'feedzy-rss-feeds' ), $feed_url, $error ),
 				array(
 					'feed_url' => $feed_url,
 					'cache'    => $cache,
