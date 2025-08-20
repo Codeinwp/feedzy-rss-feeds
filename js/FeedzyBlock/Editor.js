@@ -713,17 +713,14 @@ class Editor extends Component {
 								const categories =
 									unescapeHTML(item.categories) || '';
 								if (this.metaExists('tz=local')) {
-									let itemDateTimeObj = new Date(
-										itemDateTime
+									const itemDateTimeObj = window.moment(
+										itemDateTime,
+										'MMMM D, YYYY h:mm a [UTC] Z'
 									);
-									itemDateTimeObj =
-										itemDateTimeObj.toUTCString();
-									itemDate = window.moment
-										.utc(itemDateTimeObj)
-										.format('MMMM D, YYYY');
-									itemTime = window.moment
-										.utc(itemDateTimeObj)
-										.format('h:mm A');
+
+									itemDate =
+										itemDateTimeObj.format('MMMM D, YYYY');
+									itemTime = itemDateTimeObj.format('h:mm A');
 								}
 
 								let author =
