@@ -1276,7 +1276,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		add_submenu_page(
 			'feedzy-admin-menu',
 			__( 'Settings', 'feedzy-rss-feeds' ),
-			__( 'Settings', 'feedzy-rss-feeds' ),
+			'↳ ' . __( 'Settings', 'feedzy-rss-feeds' ),
 			'manage_options',
 			'feedzy-settings',
 			array(
@@ -1287,7 +1287,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		add_submenu_page(
 			'feedzy-admin-menu',
 			__( 'Integration', 'feedzy-rss-feeds' ),
-			__( 'Integration', 'feedzy-rss-feeds' ),
+			'↳ ' . __( 'Integration', 'feedzy-rss-feeds' ),
 			'manage_options',
 			'feedzy-integration',
 			array(

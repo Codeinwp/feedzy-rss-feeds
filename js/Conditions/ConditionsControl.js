@@ -178,6 +178,11 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 					).filter(
 						(key) => !field?.unsupportedOperators?.includes(key)
 					);
+					const fieldOptions = SUPPORTED_FIELDS.map((f) => ({
+						label: `${f.label}${f.disabled ? ' (PRO)' : ''}`,
+						value: f.value,
+						disabled: f.disabled,
+					}));
 
 					return (
 						<PanelTab
@@ -189,7 +194,7 @@ const ConditionsControl = ({ conditions, setConditions }) => {
 							<SelectControl
 								label={__('Field', 'feedzy-rss-feeds')}
 								value={condition?.field}
-								options={SUPPORTED_FIELDS}
+								options={fieldOptions}
 								onChange={(value) =>
 									onChangeCondition(index, value, 'field')
 								}
