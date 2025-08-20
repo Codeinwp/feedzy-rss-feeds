@@ -1524,13 +1524,18 @@ function initRemoveFallbackImageBtn() {
 	});
 }
 
+/**
+ * Run actions when creating a new post.
+ */
 function initNewPostActions() {
+	if (-1 === window.location.href.indexOf('post-new.php')) {
+		return;
+	}
+
 	// Focus on the post title field when creating a new post.
-	if (window.location.href.indexOf('post-new.php') > -1) {
-		const postTitle = document.querySelector('#post_title');
-		if (postTitle) {
-			postTitle.focus();
-			postTitle.select();
-		}
+	const postTitle = document.querySelector('#post_title');
+	if (postTitle) {
+		postTitle.focus();
+		postTitle.select();
 	}
 }
