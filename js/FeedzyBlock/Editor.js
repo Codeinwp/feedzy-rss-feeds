@@ -311,8 +311,6 @@ class Editor extends Component {
 
 	getImageURL(item, background) {
 		let url;
-		window.console.log(this.props.attributes);
-		window.console.log(item);
 		if (
 			item.thumbnail &&
 			this.props.attributes.thumb === 'auto' &&
