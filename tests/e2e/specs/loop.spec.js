@@ -61,11 +61,7 @@ test.describe('Feedzy Loop', () => {
 
 		// Now that we have tested we can insert URL, we can test the Feed Group.
 
-		await page
-			.getByLabel('Block: Feedzy Loop')
-			.locator('div')
-			.nth(1)
-			.click();
+		await page.locator('.wp-block-feedzy-rss-feeds-loop').nth(1).click();
 		await page.getByRole('button', { name: 'Edit Feed' }).click();
 
 		await page.getByRole('button', { name: 'Select Feed Group' }).click();
