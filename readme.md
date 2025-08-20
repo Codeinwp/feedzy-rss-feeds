@@ -4,7 +4,7 @@
 **Requires at least:** 6.0  
 **Requires PHP:** 7.2  
 **Tested up to:** 6.8  
-**Stable tag:** 5.0.10  
+**Stable tag:** 5.1.0  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -25,7 +25,46 @@ The Ultimate WordPress RSS aggregator, helping you Curate content, Autoblog, Imp
 
 With FEEDZY RSS Aggregator, you can sit back, let your site autoblog and always stay fresh with new content, which in return helps improve content marketing, boost your SEO, increase audience engagement, and probably earn more money.
 
-FEEDZY RSS Aggregator helps you aggregate unlimited RSS feeds and automatically publish them on your site within a few minutes.
+One of the most popular ways our users keep their sites fresh is with Feedzy’s Feed to Post feature. It lets you bring full RSS feed items into WordPress as fully editable posts, pages, or custom post types. Whether it’s daily news, curated blog content, or product listings, Feedzy takes care of fetching, importing, and publishing, so your site updates itself while you focus on bigger goals.
+
+### 📥 Import RSS Feeds as WordPress Posts
+
+Need to turn your favorite feeds into WordPress content? Feedzy makes it easy to import RSS feeds as posts, pages, or custom post types automatically and with a custom import schedule in the PRO version.
+
+With just a few clicks, you can:
+
+* Automatically import RSS feed items into WordPress and publish them instantly or as drafts.
+
+* Map feeds to posts, pages, or any custom post type you need.
+
+* Auto-publish RSS articles with images, categories, and tags.
+
+* Embed RSS content anywhere using shortcodes, blocks, or widgets.
+
+Whether you need a reliable feed importer for news, an RSS fetcher for blog updates, or an automated RSS importer for affiliate products, Feedzy handles it all in one lightweight plugin.
+
+####💬 Real Feedback from Real Sites
+
+> ★★★★★
+> "Makes posting from RSS feeds a breeze! We have tried others, but Feedzy has given us the best results!"  
+> – mlg@gaa.com
+
+Feedzy’s Feed to Post feature is one of the most-loved parts of the plugin, making it effortless to bring RSS feed content into WordPress as posts, pages, or products with just a few clicks.
+
+####⚡ Advanced Import Controls with Feedzy PRO
+
+Take your “Feed to Post” automation to the next level with powerful Pro-only options:
+
+* **Unlimited Imports:** With Feedzy Pro, you can create unlimited import projects, compared to just one project in the free version.  
+* **Custom Duplication Key:** Define exactly how Feedzy detects unique items and avoids duplicates even across multiple feeds.  
+* **Auto-Delete Old Posts:** Remove outdated or time-sensitive imports automatically after a set number of days.  
+* **Fallback Image:** Assign a default image for feed items without images to maintain a consistent site layout.  
+* **Import Item Count Control:** Decide how many feed items to fetch from each source every run.  
+* **Scheduled Imports:** Run imports automatically on your preferred schedule, such as hourly, daily, or weekly.  
+* **Custom Post Author:** Assign imported posts to a specific author profile.  
+* **Post Excerpts and Custom Fields:** Map feed data to post excerpts or custom fields for richer content display.  
+
+These advanced controls give you full editorial power over your imported content, whether you are curating news, running an affiliate store, or managing multiple client sites. [Get Feedzy Pro](https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=readme&utm_campaign=feedzy)
 
 ## 🤔 WHAT YOU CAN DO WITH FEEDZY RSS AGGREGATOR: ##
 
@@ -176,21 +215,6 @@ This plugin is maintained and supported by Themeisle, check out some of the othe
 
 ## Frequently Asked Questions ##
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### Is it responsive friendly? ###
 
 Yes it is.
@@ -208,29 +232,17 @@ You have to check first if your feed is valid. Please test it here: https://vali
 ### How to change cache lifetime for a specific feed ###
 [http://docs.themeisle.com/article/547-how-to-change-cache-lifetime-for-a-specific-feed](http://docs.themeisle.com/article/547-how-to-change-cache-lifetime-for-a-specific-feed)
 
-### How to change thumbs size and aspect ratio ###
-[http://docs.themeisle.com/article/551-how-to-change-thumbs-size-and-aspect-ratio](http://docs.themeisle.com/article/551-how-to-change-thumbs-size-and-aspect-ratio)
-
 ### What hooks and filters are available in Feedzy ###
 [http://docs.themeisle.com/article/540-what-hooks-and-filters-are-available-in-feedzy](http://docs.themeisle.com/article/540-what-hooks-and-filters-are-available-in-feedzy)
 
 ### How to change the blacklist image name ###
 [http://docs.themeisle.com/article/552-how-to-change-the-blacklist-image-name](http://docs.themeisle.com/article/552-how-to-change-the-blacklist-image-name)
 
-### How to decode item title ###
-[http://docs.themeisle.com/article/548-how-to-decode-item-title-with](http://docs.themeisle.com/article/548-how-to-decode-item-title-with)
-
-### How to remove featured image from blog feed ###
-[http://docs.themeisle.com/article/554-how-to-remove-featured-image-from-blog-feed](http://docs.themeisle.com/article/554-how-to-remove-featured-image-from-blog-feed)
-
 ### How to keep html in feed items content ###
 [http://docs.themeisle.com/article/542-how-to-keep-html-in-feed-items-content](http://docs.themeisle.com/article/542-how-to-keep-html-in-feed-items-content)
 
 ### How to remove plugin css ###
 [http://docs.themeisle.com/article/545-how-to-remove-plugin-css](http://docs.themeisle.com/article/545-how-to-remove-plugin-css)
-
-### How to remove links ###
-[https://docs.themeisle.com/article/1049-how-to-remove-links-in-feedzy](https://docs.themeisle.com/article/1049-how-to-remove-links-in-feedzy)
 
 ### How to add a read more link ###
 [http://docs.themeisle.com/article/544-how-to-add-a-read-more-link](http://docs.themeisle.com/article/544-how-to-add-a-read-more-link)
@@ -263,7 +275,7 @@ You have to check first if your feed is valid. Please test it here: https://vali
 [http://docs.themeisle.com/article/638-how-to-eliminate-duplicate-feed-item](http://docs.themeisle.com/article/638-how-to-eliminate-duplicate-feed-item)
 
 ### How to use Feedzy categories ###
-[http://docs.themeisle.com/article/640-how-to-use-feedzy-categories](http://docs.themeisle.com/article/640-how-to-use-feedzy-categories)
+[https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#dynamic-post-taxonomy](https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#dynamic-post-taxonomy)
 
 ### How to add a read more link to Feedzy ###
  [http://docs.themeisle.com/article/544-how-to-add-a-read-more-link-to-feedzy](http://docs.themeisle.com/article/544-how-to-add-a-read-more-link-to-feedzy)
@@ -286,23 +298,14 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = How to import posts from feeds in Feedzy =
  [http://docs.themeisle.com/article/742-how-to-import-posts-from-feeds-in-feedzy](http://docs.themeisle.com/article/742-how-to-import-posts-from-feeds-in-feedzy)
 
- = Where can I find the import posts options in Feedzy =
- [http://docs.themeisle.com/article/743-where-can-i-find-the-import-posts-options-in-feedzy](http://docs.themeisle.com/article/743-where-can-i-find-the-import-posts-options-in-feedzy)
-
  = How to use WordAI to Rephrase RSS content in Feedzy =
  [http://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy](http://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy)
-
- = Install and use the premium version of Feedzy RSS Feeds =
- [http://docs.themeisle.com/article/783-install-and-use-the-premium-version-of-feedzy-rss-feeds](http://docs.themeisle.com/article/783-install-and-use-the-premium-version-of-feedzy-rss-feeds)
 
  = Feedzy RSS Feeds Documentation =
  [https://docs.themeisle.com/article/658-feedzy-rss-feeds-documentation](https://docs.themeisle.com/article/658-feedzy-rss-feeds-documentation)
 
  = What actions and filters are available in Feedzy =
  [https://docs.themeisle.com/article/540-what-actions-and-filters-are-available-in-feedzy](https://docs.themeisle.com/article/540-what-actions-and-filters-are-available-in-feedzy)
-
- = How to change thumbs size and aspect ratio in Feedzy =
- [https://docs.themeisle.com/article/551-how-to-change-thumbs-size-and-aspect-ratio-feedzy](https://docs.themeisle.com/article/551-how-to-change-thumbs-size-and-aspect-ratio-feedzy)
 
  = How to display RSS feed time and date in local time =
  [https://docs.themeisle.com/article/567-how-to-display-rss-feed-time-and-date-in-local-time](https://docs.themeisle.com/article/567-how-to-display-rss-feed-time-and-date-in-local-time)
@@ -311,16 +314,13 @@ You have to check first if your feed is valid. Please test it here: https://vali
  [https://docs.themeisle.com/article/544-how-to-add-a-read-more-link-to-feedzy](https://docs.themeisle.com/article/544-how-to-add-a-read-more-link-to-feedzy)
 
  = How to use Feedzy categories =
- [https://docs.themeisle.com/article/640-how-to-use-feedzy-categories](https://docs.themeisle.com/article/640-how-to-use-feedzy-categories)
+ [https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#dynamic-post-taxonomy](https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#dynamic-post-taxonomy)
 
  = How to use your own inline css =
  [https://docs.themeisle.com/article/546-how-to-use-your-own-inline-css](https://docs.themeisle.com/article/546-how-to-use-your-own-inline-css)
 
  = How to change cache lifetime for a specific feed =
  [https://docs.themeisle.com/article/547-how-to-change-cache-lifetime-for-a-specific-feed](https://docs.themeisle.com/article/547-how-to-change-cache-lifetime-for-a-specific-feed)
-
- = How to remove featured image from blog feed =
- [https://docs.themeisle.com/article/554-how-to-remove-featured-image-from-blog-feed](https://docs.themeisle.com/article/554-how-to-remove-featured-image-from-blog-feed)
 
  = How to handle publication date and author content =
  [https://docs.themeisle.com/article/549-how-to-handle-publication-date-and-author-content](https://docs.themeisle.com/article/549-how-to-handle-publication-date-and-author-content)
@@ -331,11 +331,11 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = How to fix images that are not showing in the feed =
  [https://docs.themeisle.com/article/666-how-to-fix-images-that-are-not-showing-in-the-feed](https://docs.themeisle.com/article/666-how-to-fix-images-that-are-not-showing-in-the-feed)
 
+### How to change thumbs size and aspect ratio in Feedzy ###
+[https://docs.themeisle.com/article/551-how-to-change-thumbs-size-and-aspect-ratio](https://docs.themeisle.com/article/551-how-to-change-thumbs-size-and-aspect-ratio)
+
  = How to display items in a random order =
  [https://docs.themeisle.com/article/550-how-to-display-items-in-a-random-order](https://docs.themeisle.com/article/550-how-to-display-items-in-a-random-order)
-
- = How to remove links =
- [https://docs.themeisle.com/article/541-how-to-remove-links](https://docs.themeisle.com/article/541-how-to-remove-links)
 
  = How to move Feedzy templates to your theme =
  [https://docs.themeisle.com/article/573-how-to-move-feedzy-templates-to-your-theme](https://docs.themeisle.com/article/573-how-to-move-feedzy-templates-to-your-theme)
@@ -348,9 +348,6 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  = How to remove the end hellip =
  [https://docs.themeisle.com/article/543-how-to-remove-the-end-hellip](https://docs.themeisle.com/article/543-how-to-remove-the-end-hellip)
-
- = How to decode item title =
- [https://docs.themeisle.com/article/548-how-to-decode-item-title](https://docs.themeisle.com/article/548-how-to-decode-item-title)
 
  = How to sort feed items by title =
  [https://docs.themeisle.com/article/633-how-to-sort-feed-items-by-title](https://docs.themeisle.com/article/633-how-to-sort-feed-items-by-title)
@@ -373,35 +370,23 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = How to use proxy settings in Feedzy =
  [https://docs.themeisle.com/article/714-how-to-use-proxy-settings-in-feedzy](https://docs.themeisle.com/article/714-how-to-use-proxy-settings-in-feedzy)
 
- = Where can I find the import posts options in Feedzy =
- [https://docs.themeisle.com/article/743-where-can-i-find-the-import-posts-options-in-feedzy](https://docs.themeisle.com/article/743-where-can-i-find-the-import-posts-options-in-feedzy)
-
  = How to change user agent in Feedzy =
  [https://docs.themeisle.com/article/713-how-to-change-user-agent-in-feedzy](https://docs.themeisle.com/article/713-how-to-change-user-agent-in-feedzy)
 
  = How to use WordAI to Rephrase RSS content in Feedzy =
  [https://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy](https://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy)
 
- = Install and use the premium version of Feedzy RSS Feeds =
- [https://docs.themeisle.com/article/783-install-and-use-the-premium-version-of-feedzy-rss-feeds](https://docs.themeisle.com/article/783-install-and-use-the-premium-version-of-feedzy-rss-feeds)
-
  = How to sort feed items by date =
  [https://docs.themeisle.com/article/817-how-to-sort-feed-items-by-date](https://docs.themeisle.com/article/817-how-to-sort-feed-items-by-date)
 
  = How to add rel="nofollow" to feed links =
- [https://docs.themeisle.com/article/839-how-to-add-relnofollow-to-feed-links](https://docs.themeisle.com/article/839-how-to-add-relnofollow-to-feed-links)
-
- = What to do when you get Warning: ./cache is not writeable =
- [https://docs.themeisle.com/article/840-what-to-do-when-you-get-warning-cache-is-not-writeable](https://docs.themeisle.com/article/840-what-to-do-when-you-get-warning-cache-is-not-writeable)
+ [https://docs.themeisle.com/article/942-in-feedzy-how-do-i#convert-links](https://docs.themeisle.com/article/942-in-feedzy-how-do-i#convert-links)
 
  = How to exclude feeds with certain words in it =
- [https://docs.themeisle.com/article/850-how-to-exclude-feeds-with-certain-words-in-it](https://docs.themeisle.com/article/850-how-to-exclude-feeds-with-certain-words-in-it)
+ [https://docs.themeisle.com/article/2217-feedzy-loop#filtering](https://docs.themeisle.com/article/2217-feedzy-loop#filtering)
 
  = How to add canonical tags for imported posts =
  [https://docs.themeisle.com/article/841-how-to-add-canonical-tags-for-imported-posts](https://docs.themeisle.com/article/841-how-to-add-canonical-tags-for-imported-posts)
-
- = How to display thumbnail image from the feeds =
- [https://docs.themeisle.com/article/871-how-to-display-thumbnail-image-from-the-feeds](https://docs.themeisle.com/article/871-how-to-display-thumbnail-image-from-the-feeds)
 
  = How to change feed items order =
  [https://docs.themeisle.com/article/864-how-to-change-feed-items-order](https://docs.themeisle.com/article/864-how-to-change-feed-items-order)
@@ -430,26 +415,17 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = How to check whether the RSS feed is valid or not in Feedzy =
  [https://docs.themeisle.com/article/716-feedzy-how-to-check-whether-the-rss-feed-is-valid-or-not](https://docs.themeisle.com/article/716-feedzy-how-to-check-whether-the-rss-feed-is-valid-or-not)
 
- = How to change thumbs size and aspect ratio in Feedzy =
- [https://docs.themeisle.com/article/551-how-to-change-thumbs-size-and-aspect-ratio](https://docs.themeisle.com/article/551-how-to-change-thumbs-size-and-aspect-ratio)
-
  = How to use proxy settings in Feedzy =
  [https://docs.themeisle.com/article/714-how-to-use-proxy-settings-in-feezy](https://docs.themeisle.com/article/714-how-to-use-proxy-settings-in-feezy)
-
- = How to decode item title =
- [https://docs.themeisle.com/article/548-how-to-decode-item-title-with](https://docs.themeisle.com/article/548-how-to-decode-item-title-with)
 
  = How to add affiliate referrals to feed URLs in Feedzy =
  [https://docs.themeisle.com/article/715-feedzy-how-to-add-affiliate-referrals-to-feed-urls](https://docs.themeisle.com/article/715-feedzy-how-to-add-affiliate-referrals-to-feed-urls)
 
  = How to add rel="nofollow" to feed links =
- [https://docs.themeisle.com/article/839-how-to-add-rel-nofollow-to-feed-links](https://docs.themeisle.com/article/839-how-to-add-rel-nofollow-to-feed-links)
+ [https://docs.themeisle.com/article/942-in-feedzy-how-do-i#convert-links](https://docs.themeisle.com/article/942-in-feedzy-how-do-i#convert-links)
 
  = How to import iTunes audio feed =
- [https://docs.themeisle.com/article/1041-import-itunes-audio-feed](https://docs.themeisle.com/article/1041-import-itunes-audio-feed)
-
- = How to link featured image to original post in Slider Revolution =
- [https://docs.themeisle.com/article/1069-how-to-link-featured-image-to-original-post-in-slider-revolution](https://docs.themeisle.com/article/1069-how-to-link-featured-image-to-original-post-in-slider-revolution)
+ [https://docs.themeisle.com/article/1682-how-to-import-embedded-audios-to-posts](https://docs.themeisle.com/article/1682-how-to-import-embedded-audios-to-posts)
 
  = How to display author, date, time (or a combination) from the feed =
  [https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed](https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed)
@@ -493,9 +469,37 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
-##### [Version 5.0.10](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.9...v5.0.10) (2025-07-31)
+#### [Version 5.1.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.10...v5.1.0) (2025-08-20)
 
-- Fixed URL processing error for images containing optimization parameters.
+### New Features
+
+- Added debug logging system for better troubleshooting
+- Custom cron schedules - create and manage custom import schedules (PRO)
+- OpenAI model selection per action in the Importer for granular control
+- URL-based filtering to exclude specific domains from feeds
+- YouTube Shorts embedding support in imported posts
+- Aspect ratio controls for thumbnail images
+- Improved fallback image options per import job
+
+### Improvements
+
+- Major UI overhaul for the importer with tabbed interface and better organization
+- Enhanced feed validation system
+- Redesigned Dashboard (formerly Support page)
+- Improved onboarding and import setup experience
+- Better feed groups management interface
+- More features available in the free version
+- Added helper text for proxy and user-agent settings
+
+### Bug Fixes
+
+- Fixed categories settings changing when installing the PRO version
+- Fixed action popup not closing when clicking outside
+- Fixed HTML tags in post titles when using paraphrasing
+- Fixed fallback images being ignored in classic block
+- Fixed integration tab showing incorrect license status
+- Fixed broken images in Feedzy Loop
+- Fixed various UI alignment and layout issues
 
 
 
