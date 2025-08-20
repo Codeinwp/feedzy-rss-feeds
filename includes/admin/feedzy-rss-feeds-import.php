@@ -1372,8 +1372,20 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	private function run_now() {
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
+	
+		$job_id = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
+		$job    = get_post( $job_id );
 
-		$job   = get_post( filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT ) );
+		Feedzy_Rss_Feeds_Log::info(
+			sprintf(
+				'Manual run for import: %s',
+				isset( $job->post_title ) ? $job->post_title : 'Unknown Job'
+			),
+			array(
+				'job_id' => $job_id,
+			)
+		);
+
 		$count = $this->run_job( $job, 100 );
 
 		$msg  = 0 < $count ? __( 'Successfully run!', 'feedzy-rss-feeds' ) : __( 'Nothing imported!', 'feedzy-rss-feeds' );
@@ -1484,6 +1496,13 @@ class Feedzy_Rss_Feeds_Import {
 			implode( ',', $tags )
 		);
 
+		Feedzy_Rss_Feeds_Log::debug(
+			'Dry run shortcode generated',
+			array(
+				'shortcode' => $shortcode,
+			)
+		);
+
 		wp_send_json_success( array( 'output' => do_shortcode( $shortcode ) ) );
 	}
 
@@ -1527,14 +1546,39 @@ class Feedzy_Rss_Feeds_Import {
 		foreach ( $feedzy_imports as $job ) {
 			try {
 				$result = $this->run_job( $job, $max );
+
+				Feedzy_Rss_Feeds_Log::debug(
+					'Cron job run for: ' . $job->post_title,
+					array(
+						'job_id' => $job->ID,
+						'result' => $result,
+					)
+				);
+
 				if ( empty( $result ) ) {
 					$this->run_job( $job, $max );
+
+					Feedzy_Rss_Feeds_Log::debug(
+						'Previous run did not return any results, running again for job: ' . $job->post_title,
+						array(
+							'job_id' => $job->ID,
+							'result' => $result,
+						)
+					);
 				}
 				do_action( 'feedzy_run_cron_extra', $job );
 			} catch ( Exception $e ) {
 				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 					error_log( '[Feedzy Run Cron][Post title: ' . ( ! empty( $job->post_title ) ? $job->post_title : '' ) . '] Error: ' . $e->getMessage() );
 				}
+
+				Feedzy_Rss_Feeds_Log::error(
+					sprintf( __( 'Error when running "%1$s": %2$s', 'feedzy-rss-feeds' ), $job->post_title, $e->getMessage() ),
+					array(
+						'job_id' => $job->ID,
+						'error'  => $e->getMessage(),
+					)
+				);
 			}
 		}
 	}
@@ -1747,6 +1791,7 @@ class Feedzy_Rss_Feeds_Import {
 					'job_id'  => $job->ID,
 					'errors'  => $results->get_error_messages(),
 					'options' => $options,
+					'source'  => $source,
 				)
 			);
 
@@ -1775,8 +1820,8 @@ class Feedzy_Rss_Feeds_Import {
 			$import_errors[] = __( 'Title & Content are both empty.', 'feedzy-rss-feeds' );
 			$start_import    = false;
 
-			Feedzy_Rss_Feeds_Log::error(
-				'Import job cannot start because both title and content are empty.',
+			Feedzy_Rss_Feeds_Log::warning(
+				'Import job cannot start because both Title and Content mapping are empty.',
 				array(
 					'job_id' => $job->ID,
 				)
@@ -1848,6 +1893,14 @@ class Feedzy_Rss_Feeds_Import {
 						$found_duplicates[ $item_hash ]  = get_post_meta( $p, 'feedzy_' . $mark_duplicate_key, true );
 						$duplicates[ $item['item_url'] ] = $item['item_title'];
 						wp_delete_post( $p, true );
+						Feedzy_Rss_Feeds_Log::debug(
+							sprintf( 'Deleted a duplicate post: %1$s', $item['item_title'] ),
+							array(
+								'item_url' => $item['item_url'],
+								'post_id'  => $p,
+								'hash'     => $item_hash,
+							)
+						);
 					}
 				}
 			}
@@ -2087,10 +2140,16 @@ class Feedzy_Rss_Feeds_Import {
 						);
 
 						Feedzy_Rss_Feeds_Log::error(
-							sprintf( 'Full content is empty for item %1$s. Error: %2$s', $item['item_url'], $full_content_error ),
+							sprintf(
+								// translators: %s: Error message for empty full content.
+								__( 'Full content is empty. Error: %s', 'feedzy-rss-feeds' ),
+								$full_content_error
+							),
 							array(
 								'job_id'        => $job->ID,
 								'import_errors' => $import_errors,
+								'item_url'      => $item['item_url'],
+								'source'        => $source,
 							)
 						);
 					}
@@ -2123,18 +2182,47 @@ class Feedzy_Rss_Feeds_Import {
 			if ( $import_auto_translation && false !== strpos( $post_content, '[#translated_full_content]' ) ) {
 				$translated_full_content = apply_filters( 'feedzy_invoke_auto_translate_services', $item['item_url'], '[#translated_full_content]', $import_translation_lang, $job, $language_code, $item );
 				$post_content            = str_replace( '[#translated_full_content]', rtrim( $translated_full_content, '.' ), $post_content );
+
+				Feedzy_Rss_Feeds_Log::debug(
+					sprintf( 'Using auto-translation service for item full content: %1$s', $item['item_url'] ),
+					array(
+						'job_id'         => $job->ID,
+						'service'        => 'feedzy_invoke_auto_translate_services',
+						'service_output' => $translated_full_content,
+						'language_code'  => $language_code,
+					)
+				);
 			}
 			// Rewriter item content from feedzy API.
 			if ( $rewrite_service_endabled && false !== strpos( $post_content, '[#content_feedzy_rewrite]' ) ) {
 				$item_content           = ! empty( $item['item_content'] ) ? $item['item_content'] : $item['item_description'];
 				$content_feedzy_rewrite = apply_filters( 'feedzy_invoke_content_rewrite_services', $item_content, '[#content_feedzy_rewrite]', $job, $item );
 				$post_content           = str_replace( '[#content_feedzy_rewrite]', $content_feedzy_rewrite, $post_content );
+
+				Feedzy_Rss_Feeds_Log::debug(
+					sprintf( 'Using Feedzy rewrite service for item content: %1$s', $item['item_url'] ),
+					array(
+						'job_id'         => $job->ID,
+						'service'        => 'feedzy_invoke_content_rewrite_services',
+						'service_input'  => $item_content,
+						'service_output' => $content_feedzy_rewrite,
+					)
+				);
 			}
 
 			// Rewriter item full content from feedzy API.
 			if ( $rewrite_service_endabled && false !== strpos( $post_content, '[#full_content_feedzy_rewrite]' ) ) {
 				$full_content_feedzy_rewrite = apply_filters( 'feedzy_invoke_content_rewrite_services', $item['item_url'], '[#full_content_feedzy_rewrite]', $job, $item );
 				$post_content                = str_replace( '[#full_content_feedzy_rewrite]', $full_content_feedzy_rewrite, $post_content );
+
+				Feedzy_Rss_Feeds_Log::debug(
+					sprintf( 'Using Feedzy rewrite service for item full content: %1$s', $item['item_url'] ),
+					array(
+						'job_id'         => $job->ID,
+						'service'        => 'feedzy_invoke_content_rewrite_services',
+						'service_output' => $full_content_feedzy_rewrite,
+					)
+				);
 			}
 
 			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
@@ -2313,7 +2401,7 @@ class Feedzy_Rss_Feeds_Import {
 					Feedzy_Rss_Feeds_Log::error(
 						sprintf(
 							// translators: %1$s is the item URL, %2$s is the error message.
-							'Error while inserting post for %1$s: %2$s',
+							__( 'Could not save the "%1$s" as post: %2$s', 'feedzy-rss-feeds' ),
 							esc_url( $item['item_url'] ),
 							$new_post_id->get_error_message()
 						),
@@ -2331,8 +2419,9 @@ class Feedzy_Rss_Feeds_Import {
 			Feedzy_Rss_Feeds_Log::info(
 				'Created a new post: ' . $new_post['post_title'],
 				array(
-					'job_id'  => $job->ID,
-					'post_id' => $new_post_id,
+					'job_id'    => $job->ID,
+					'post_id'   => $new_post_id,
+					'post_link' => get_permalink( $new_post_id ),
 				)
 			);
 
@@ -2518,10 +2607,12 @@ class Feedzy_Rss_Feeds_Import {
 						}
 					} else {
 						Feedzy_Rss_Feeds_Log::error(
-							sprintf( 'Error fetching image from Graby for item %1$s: %2$s', $item['item_url'], $response->get_error_message() ),
+							sprintf( __( 'Error fetching image from Graby for item "%1$s": %2$s', 'feedzy-rss-feeds' ), $item['item_url'], $response->get_error_message() ),
 							array(
 								'job_id'   => $job->ID,
 								'response' => $response,
+								'item_url' => $item['item_url'],
+								'source'   => $source,
 							)
 						);
 					}
@@ -2637,6 +2728,7 @@ class Feedzy_Rss_Feeds_Import {
 				),
 				array(
 					'job_id' => $job->ID,
+					'source' => $source,
 				)
 			);
 		}
@@ -2921,7 +3013,7 @@ class Feedzy_Rss_Feeds_Import {
 
 					Feedzy_Rss_Feeds_Log::error(
 						// translators: %s the name of the post.
-						sprintf( __( 'Could not rename temporary file for %s', 'feedzy-rss-feeds' ), get_the_title( $post_id ) ),
+						sprintf( __( 'Could not rename temporary file for: %s', 'feedzy-rss-feeds' ), get_the_title( $post_id ) ),
 						array(
 							'post_id'        => $post_id,
 							'local_file'     => $local_file,

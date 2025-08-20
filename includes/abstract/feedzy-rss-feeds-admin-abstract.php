@@ -863,7 +863,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			if ( ! $wp_filesystem->exists( $dir ) ) {
 				$done = $wp_filesystem->mkdir( $dir );
 				if ( false === $done ) {
-					Feedzy_Rss_Feeds_Log::error(
+					Feedzy_Rss_Feeds_Log::warning(
 						sprintf( 'Unable to create SimplePie cache directory: %s', $dir ),
 						array(
 							'feed_url' => $feed_url,
@@ -912,7 +912,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		if ( ! empty( $error ) ) {
 			Feedzy_Rss_Feeds_Log::error(
-				sprintf( 'Error while parsing feed: %s', $error ),
+				sprintf( __( 'Error while parsing feed URL: %s', 'feedzy-rss-rds' ), $error ),
 				array(
 					'feed_url' => $feed_url,
 					'cache'    => $cache,
@@ -922,7 +922,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 			// curl: (60) SSL certificate problem: unable to get local issuer certificate.
 			if ( strpos( $error, 'SSL certificate' ) !== false ) {
-				Feedzy_Rss_Feeds_Log::error(
+				Feedzy_Rss_Feeds_Log::warning(
 					sprintf( 'Got an SSL Error (%s), retrying by ignoring SSL', $error ),
 					array(
 						'feed_url' => $feed_url,
@@ -951,7 +951,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				}
 			} else {
 				Feedzy_Rss_Feeds_Log::debug(
-					'Cannot use raw data as this is a multifeed URL',
+					'Cannot use raw data as this is a multi-feed URL',
 					array(
 						'feed_url' => $feed_url,
 						'cache'    => $cache,
