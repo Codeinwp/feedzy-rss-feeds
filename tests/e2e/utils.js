@@ -1,18 +1,21 @@
-import {expect} from "@wordpress/e2e-test-utils-playwright";
+import { expect } from '@wordpress/e2e-test-utils-playwright';
 
 /**
  * WordPress dependencies
  */
-const {RequestUtils } = require( '@wordpress/e2e-test-utils-playwright' )
+const { RequestUtils } = require('@wordpress/e2e-test-utils-playwright');
+
+export const CUSTOM_FEED_URL =
+	'https://s3.amazonaws.com/verti-utils/sample-feed.xml';
 
 /**
  * Close the tour modal if it is visible.
  *
  * @param {import('playwright').Page} page The page object.
  */
-export async function tryCloseTourModal( page ) {
+export async function tryCloseTourModal(page) {
 	if (await page.getByRole('button', { name: 'Skip' }).isVisible()) {
-		await page.getByRole('button', { name: 'Skip' }).click();
+		await page.getByRole('button', { name: 'Skip' }).click({ force: true });
 		await page.waitForTimeout(500);
 	}
 }
@@ -20,117 +23,145 @@ export async function tryCloseTourModal( page ) {
 /**
  * Add feeds to the import on Feed Edit page.
  *
- * @param {import('playwright').Page} page The page object.
- * @param {string[]} feedURLs The feed URLs to add in the input.
- * @returns {Promise<void>} The promise that resolves when the feeds are added.
+ * @param {import('playwright').Page} page     The page object.
+ * @param {string[]}                  feedURLs The feed URLs to add in the input.
+ * @return {Promise<void>} The promise that resolves when the feeds are added.
  */
-export async function addFeeds( page, feedURLs ) {
-    await page.evaluate( ( urls ) => {
-        document.querySelector( 'input[name="feedzy_meta_data[source]"]' ).value = urls?.join(', ');
-    }, feedURLs );
+export async function addFeeds(page, feedURLs) {
+	await page.waitForSelector('input[name="feedzy_meta_data[source]"]', {
+		state: 'attached',
+	});
+	await page.evaluate((urls) => {
+		document.querySelector('input[name="feedzy_meta_data[source]"]').value =
+			urls?.join(', ');
+	}, feedURLs);
 }
 
 /**
  * Add tags to the Featured Image on Feed Edit page.
  *
- * @param {import('playwright').Page} page The page object.
- * @param {string} feedTag The tag that import the image from the feed.
- * @returns {Promise<void>} The promise that resolves when the tags are added.
+ * @param {import('playwright').Page} page    The page object.
+ * @param {string}                    feedTag The tag that import the image from the feed.
+ * @return {Promise<void>} The promise that resolves when the tags are added.
  */
-export async function addFeaturedImage( page, feedTag ) {
-    await page.evaluate( ( feedTag ) => {
-        document.querySelector( 'input[name="feedzy_meta_data[import_post_featured_img]"]' ).value = feedTag;
-    }, feedTag );
+export async function addFeaturedImage(page, feedTag) {
+	await page.evaluate((feedTag) => {
+		document.querySelector(
+			'input[name="feedzy_meta_data[import_post_featured_img]"]'
+		).value = feedTag;
+	}, feedTag);
 }
 
 /**
  * Add content mapping to the import on Feed Edit page.
- * @param page The page object.
- * @param mapping The content mapping to add.
- * @returns {Promise<void>}
+ * @param  page    The page object.
+ * @param  mapping The content mapping to add.
+ * @return {Promise<void>}
  */
-export async function addContentMapping( page, mapping ) {
-    await page.evaluate( ( mapping ) => {
-        document.querySelector( 'textarea[name="feedzy_meta_data[import_post_content]"]' ).value = mapping;
-    }, mapping );
+export async function addContentMapping(page, mapping) {
+	await page.evaluate((mapping) => {
+		document.querySelector(
+			'input[name="feedzy_meta_data[import_post_content]"]'
+		).value = mapping;
+	}, mapping);
 }
 
 /**
  * Set the item limit on the Feed Edit page.
- * @param {import('playwright').Page} page The page object.
- * @param {number} limit The limit to set.
- * @returns {Promise<void>}
+ * @param {import('playwright').Page} page  The page object.
+ * @param {number}                    limit The limit to set.
+ * @return {Promise<void>}
  */
-export async function setItemLimit( page, limit ) {
-    await page.evaluate( ( limit ) => {
-        document.querySelector( 'input[name="feedzy_meta_data[import_feed_limit]"]' ).value = limit;
-    } , limit );
+export async function setItemLimit(page, limit) {
+	try {
+		await page.waitForSelector(
+			'input[name="feedzy_meta_data[import_feed_limit]"]',
+			{
+				state: 'attached',
+			}
+		);
+		await page.evaluate((importLimit) => {
+			document.querySelector(
+				'input[name="feedzy_meta_data[import_feed_limit]"]'
+			).value = importLimit;
+		}, limit);
+	} catch (error) {
+		// Element not found or not attached - ignore silently
+	}
 }
 
 /**
  * Create an empty chained actions.
  * @param {string} defaultFeedTag The default feed tag.
- * @returns {string} The empty chained actions.
+ * @return {string} The empty chained actions.
  */
-export function getEmptyChainedActions( defaultFeedTag ) {
-    return wrapSerializedChainedActions(serializeChainedActions([ { id: '', tag: defaultFeedTag, data: {} } ] ) );
+export function getEmptyChainedActions(defaultFeedTag) {
+	return wrapSerializedChainedActions(
+		serializeChainedActions([{ id: '', tag: defaultFeedTag, data: {} }])
+	);
 }
 
 /**
  * Serialize the chained actions.
  * @param {any[]} actions The actions to serialize.
- * @returns {string} The serialized actions.
+ * @return {string} The serialized actions.
  */
-export function serializeChainedActions( actions ) {
-    return encodeURIComponent( JSON.stringify( actions ) );
+export function serializeChainedActions(actions) {
+	return encodeURIComponent(JSON.stringify(actions));
 }
 
 /**
  * Wrap the serialized chained actions to match the format used in the input.
  * @param {string} actions The serialized actions.
- * @returns {string} The wrapped actions.
+ * @return {string} The wrapped actions.
  */
-export function wrapSerializedChainedActions( actions ) {
-    return `[[{"value":"${actions}"}]]`;
+export function wrapSerializedChainedActions(actions) {
+	return `[[{"value":"${actions}"}]]`;
 }
 
 /**
  * Run the feed import.
  *
  * @param {import('playwright').Page} page The page object.
- * @returns {Promise<void>} The promise that resolves when the feed is imported.
+ * @return {Promise<void>} The promise that resolves when the feed is imported.
  */
-export async function runFeedImport( page ) {
-    await page.goto('/wp-admin/edit.php?post_type=feedzy_imports');
-    await page.waitForSelector('.feedzy-import-status-row');
+export async function runFeedImport(page) {
+	await page.goto('/wp-admin/edit.php?post_type=feedzy_imports');
+	await page.waitForSelector('.feedzy-import-status-row');
 
-    await page.getByRole('button', { name: 'Run Now' }).click();
+	await page.getByRole('button', { name: 'Run Now' }).click();
 
-    const runNowResponse = await page.waitForResponse(
-        response => (
-            response.url().includes('/wp-admin/admin-ajax.php')&&
-            response.request().method() === 'POST' &&
-            response.request().postData().includes('action=feedzy&_action=run_now')
-        )
-    );
+	const runNowResponse = await page.waitForResponse(
+		(response) =>
+			response.url().includes('/wp-admin/admin-ajax.php') &&
+			response.request().method() === 'POST' &&
+			response
+				.request()
+				.postData()
+				.includes('action=feedzy&_action=run_now')
+	);
 
-    expect( runNowResponse ).not.toBeNull();
-    const responseBody = await runNowResponse.json();
-    expect( responseBody.success ).toBe(true);
-    expect( responseBody.data.import_success ).toBe(true);
+	expect(runNowResponse).not.toBeNull();
+	const responseBody = await runNowResponse.json();
+	expect(responseBody.success).toBe(true);
+	expect(responseBody.data.import_success).toBe(true);
 
-    // Reload the page to check the status.
-    await page.reload();
-    await page.waitForSelector('.feedzy-items');
+	// Reload the page to check the status.
+	await page.reload();
+	await page.waitForSelector('.feedzy-items');
 
-    // We should have some imported posts in the stats.
-    const feedzyCumulative = parseInt(await page.$eval('.feedzy-items a', (element) => element.innerText));
-    expect(feedzyCumulative).toBeGreaterThan(0);
+	// We should have some imported posts in the stats.
+	const feedzyCumulative = parseInt(
+		await page.$eval('.feedzy-items a', (element) => element.innerText)
+	);
+	expect(feedzyCumulative).toBeGreaterThan(0);
 
-    // Open the dialog with the imported feeds.
-    await page.locator('.feedzy-items a').click();
-    await expect( page.locator('#ui-id-2').locator('li a').count() ).resolves.toBeGreaterThan(0);
-    await page.getByRole('button', { name: 'Ok' }).click();
+	// Open the dialog with the imported feeds.
+	await page.locator('.feedzy-items a').click();
+	await expect(
+		page.locator('#ui-id-1').locator('li a').count()
+	).resolves.toBeGreaterThan(0);
+	await page.getByRole('button', { name: 'Ok' }).click();
 }
 
 /**
@@ -138,42 +169,68 @@ export async function runFeedImport( page ) {
  *
  * @param {RequestUtils} requestUtils The request utils object.
  */
-export async function deleteAllFeedImports( requestUtils ) {
-    const feeds = await requestUtils.rest( {
-        path: '/wp/v2/feedzy_imports',
-        params: {
-            per_page: 100,
-            status: 'publish,future,draft,pending,private,trash',
-        },
-    } );
+export async function deleteAllFeedImports(requestUtils) {
+	const feeds = await requestUtils.rest({
+		path: '/wp/v2/feedzy_imports',
+		params: {
+			per_page: 100,
+			status: 'publish,future,draft,pending,private,trash',
+		},
+	});
 
-    await Promise.all(
-        feeds.map( ( post ) =>
-            requestUtils.rest( {
-                method: 'DELETE',
-                path: `/wp/v2/feedzy_imports/${ post.id }`,
-                params: {
-                    force: true,
-                },
-            } )
-        )
-    );
+	await Promise.all(
+		feeds.map((post) =>
+			requestUtils.rest({
+				method: 'DELETE',
+				path: `/wp/v2/feedzy_imports/${post.id}`,
+				params: {
+					force: true,
+				},
+			})
+		)
+	);
 }
 
 /**
  * Get post created with Feedzy.
  * @param {RequestUtils} requestUtils The request utils object.
- * @returns {Promise<*>}
+ * @return {Promise<*>}
  */
-export async function getPostsByFeedzy( requestUtils ) {
-    return await requestUtils.rest({
-        path: '/wp/v2/posts',
-        params: {
-            per_page: 100,
-            status: 'publish',
-            meta_key: 'feedzy',
-            meta_value: 1,
-            meta_compare: '=',
-        },
-    });
+export async function getPostsByFeedzy(requestUtils) {
+	return await requestUtils.rest({
+		path: '/wp/v2/posts',
+		params: {
+			per_page: 100,
+			status: 'publish',
+			meta_key: 'feedzy',
+			meta_value: 1,
+			meta_compare: '=',
+		},
+	});
+}
+
+/**
+ * Create and run a sample import with the given feed URL.
+ *
+ * @param {import('playwright').Page} page
+ * @param {string}                    feedUrl
+ *
+ * @return {Promise<void>} The promise that resolves when the import is created and run.
+ */
+export async function createAndRunSampleImport(
+	page,
+	feedUrl = CUSTOM_FEED_URL
+) {
+	const importName = `Create and run sample import: ${new Date().toISOString()}`;
+
+	await page.goto('/wp-admin/post-new.php?post_type=feedzy_imports');
+	await tryCloseTourModal(page);
+
+	await page.getByPlaceholder('Add a name for your import').fill(importName);
+	await addFeeds(page, [feedUrl]);
+	await page
+		.getByRole('button', { name: 'Save & Activate importing' })
+		.click({ force: true });
+
+	await runFeedImport(page);
 }

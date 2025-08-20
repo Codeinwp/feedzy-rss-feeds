@@ -24,6 +24,7 @@
  * Class Feedzy_Rss_Feeds_Import
  */
 class Feedzy_Rss_Feeds_Import {
+
 	/**
 	 * The ID of this plugin.
 	 *
@@ -121,11 +122,22 @@ class Feedzy_Rss_Feeds_Import {
 	 * @access      public
 	 */
 	public function enqueue_styles() {
-		wp_enqueue_style( $this->plugin_name, FEEDZY_ABSURL . 'css/feedzy-rss-feed-import.css', array(), $this->version, 'all' );
-		wp_register_style( $this->plugin_name . '_chosen', FEEDZY_ABSURL . 'includes/views/css/chosen.css', array(), $this->version, 'all' );
-		wp_register_script( $this->plugin_name . '_chosen_script', FEEDZY_ABSURL . 'includes/views/js/chosen.js', array( 'jquery' ), $this->version, true );
+		$screen = get_current_screen();
 
-		if ( get_current_screen()->post_type === 'feedzy_imports' ) {
+		if (
+			'feedzy_imports' === $screen->post_type ||
+			'feedzy_categories' === $screen->post_type ||
+			'feedzy_page_feedzy-integration' === $screen->id ||
+			'feedzy_page_feedzy-settings' === $screen->id ||
+			'feedzy_page_feedzy-support' === $screen->id ||
+			'feedzy_page_feedzy-setup-wizard' === $screen->id
+		) {
+			wp_enqueue_style( $this->plugin_name, FEEDZY_ABSURL . 'css/feedzy-rss-feed-import.css', array(), $this->version, 'all' );
+			wp_register_style( $this->plugin_name . '_chosen', FEEDZY_ABSURL . 'includes/views/css/chosen.css', array(), $this->version, 'all' );
+			wp_register_script( $this->plugin_name . '_chosen_script', FEEDZY_ABSURL . 'includes/views/js/chosen.js', array( 'jquery' ), $this->version, true );
+		}
+
+		if ( 'feedzy_imports' === $screen->post_type ) {
 			if ( ! did_action( 'wp_enqueue_media' ) ) {
 				wp_enqueue_media();
 			}
@@ -149,15 +161,25 @@ class Feedzy_Rss_Feeds_Import {
 				$this->plugin_name . '_metabox_edit_script',
 				'feedzy',
 				array(
-					'ajax' => array(
+					'ajax'  => array(
 						'security' => wp_create_nonce( FEEDZY_BASEFILE ),
+						'url'      => admin_url( 'admin-ajax.php' ),
 					),
-					'i10n' => array(
+					'pages' => array(
+						'logs' => add_query_arg(
+							array(
+								'page' => 'feedzy-settings',
+								'tab'  => 'logs',
+							),
+							admin_url( 'admin.php' )
+						),
+					),
+					'i10n'  => array(
 						'importing'           => __( 'Importing', 'feedzy-rss-feeds' ) . '...',
 						'run_now'             => __( 'Run Now', 'feedzy-rss-feeds' ),
 						'dry_run_loading'     => '<p class="hide-when-loaded">' . __( 'Processing the source and loading the items that will be imported when it runs', 'feedzy-rss-feeds' ) . '...</p>'
-											. '<p><b>' . __( 'Please note that if some of these items have already have been imported in previous runs with the same filters, they may be shown here but will not be imported again.', 'feedzy-rss-feeds' ) . '</b></p>'
-											. '<p class="loading-img hide-when-loaded"><img src="' . includes_url( 'images/wpspin-2x.gif' ) . '"></p><div></div>',
+							. '<p><b>' . __( 'Please note that if some of these items have already have been imported in previous runs with the same filters, they may be shown here but will not be imported again.', 'feedzy-rss-feeds' ) . '</b></p>'
+							. '<p class="loading-img hide-when-loaded"><img src="' . includes_url( 'images/wpspin-2x.gif' ) . '"></p><div></div>',
 						'dry_run_title'       => __( 'Importable Items', 'feedzy-rss-feeds' ),
 						'delete_post_message' => __( 'Would you also like to delete all the imported posts for this import job?', 'feedzy-rss-feeds' ),
 						'media_iframe_title'  => __( 'Select image', 'feedzy-rss-feeds' ),
@@ -166,6 +188,7 @@ class Feedzy_Rss_Feeds_Import {
 						'action_btn_text_2'   => __( 'Replace image', 'feedzy-rss-feeds' ),
 						'author_helper'       => __( 'We display up to 100 users. If the desired username isn’t listed, type the exact existing username manually to save it.', 'feedzy-rss-feeds' ),
 						'clearLogButton'      => __( 'Clear Log', 'feedzy-rss-feeds' ),
+						'goToLogsTab'         => __( 'See more details', 'feedzy-rss-feeds' ),
 						'okButton'            => __( 'Ok', 'feedzy-rss-feeds' ),
 						'removeErrorLogsMsg'  => __( 'Removed all error logs.', 'feedzy-rss-feeds' ),
 						// translators: %d select images count.
@@ -176,6 +199,11 @@ class Feedzy_Rss_Feeds_Import {
 							feedzy_is_pro() ? 'dashicons-upload' : 'dashicons-lock',
 							esc_html__( 'Upload Import', 'feedzy-rss-feeds' )
 						),
+						'is_pro'              => feedzy_is_pro(),
+						'validation_messages' => array(
+							'invalid_feed_url'          => __( 'Invalid feed URL.', 'feedzy-rss-feeds' ),
+							'error_validating_feed_url' => __( 'Error validating feed URL.', 'feedzy-rss-feeds' ),
+						),
 					),
 				)
 			);
@@ -185,11 +213,11 @@ class Feedzy_Rss_Feeds_Import {
 	/**
 	 * Add attributes to $item_array.
 	 *
-	 * @param array  $item_array The item attributes array.
-	 * @param object $item The feed item.
-	 * @param array  $sc The shortcode attributes array.
-	 * @param int    $index The item number.
-	 * @param int    $item_index The real index of this item in the feed.
+	 * @param array          $item_array The item attributes array.
+	 * @param SimplePie\Item $item The feed item.
+	 * @param array          $sc The shortcode attributes array.
+	 * @param int            $index The item number.
+	 * @param int            $item_index The real index of this item in the feed.
 	 * @return mixed
 	 * @since 1.0.0
 	 * @access public
@@ -204,17 +232,84 @@ class Feedzy_Rss_Feeds_Import {
 		$item_array['item']       = $item;
 		$item_array['item_index'] = $item_index;
 
+		$item_array = $this->handle_youtube_content( $item_array, $item, $sc );
+
+		return $item_array;
+	}
+
+	/**
+	 * Fetches additional information for each item.
+	 *
+	 * @param array<string, string > $item_array The item attributes array.
+	 * @param SimplePie\Item         $item The feed item.
+	 * @param array<string, mixed>   $sc The shortcode attributes array. This will be empty through the block editor.
+	 * 
+	 * @return array<string, string>
+	 */
+	private function handle_youtube_content( $item_array, $item, $sc ) {
+		$url = '';
+		if ( array_key_exists( 'item_url', $item_array ) ) {
+			$url = $item_array['item_url'];
+		} elseif ( $item ) {
+			$url = $item->get_permalink();
+		}
+
+		if ( empty( $url ) ) {
+			return $item_array;
+		}
+
+		$host = wp_parse_url( $url, PHP_URL_HOST );
+
+		// Remove all dots in the hostname so that shortforms such as youtu.be can also be resolved.
+		$host = str_replace( array( '.', 'www' ), '', $host );
+		
+		if ( ! in_array( $host, array( 'youtubecom', 'youtube' ), true ) ) {
+			// Not a YouTube link, return the item array as is.
+			return $item_array;
+		}
+
+		$tags = $item->get_item_tags( \SimplePie\SimplePie::NAMESPACE_MEDIARSS, 'group' );
+		$desc = '';
+		if ( $tags ) {
+			$desc_tag = $tags[0]['child'][ \SimplePie\SimplePie::NAMESPACE_MEDIARSS ]['description'];
+			if ( $desc_tag ) {
+				$desc = $desc_tag[0]['data'];
+			}
+		}
+
+		if ( ! empty( $desc ) ) {
+			if ( empty( $item_array['item_content'] ) ) {
+				$item_array['item_content'] = $desc;
+			}
+
+			if (
+				( empty( $sc ) || 'yes' === $sc['summary'] ) &&
+				empty( $item_array['item_description'] )
+			) {
+				if (
+					is_numeric( $sc['summarylength'] ) &&
+					strlen( $desc ) > $sc['summarylength']
+				) {
+					$desc = preg_replace( '/\s+?(\S+)?$/', '', substr( $desc, 0, $sc['summarylength'] ) ) . ' [&hellip;]';
+				}
+				$item_array['item_description'] = $desc;
+			}
+		}
+
+		$embed_video_shortcode      = '[embed]' . $url . '[/embed]';
+		$should_overwrite           = str_contains( $item_array['item_content'], 'Post Content' );
+		$item_array['item_content'] = ( $should_overwrite ? '' : $item_array['item_content'] ) . $embed_video_shortcode;
+		
 		return $item_array;
 	}
 
 	/**
 	 * Retrieve the categories.
 	 *
-	 * @param string $dumb The initial categories (only a placeholder argument for the filter).
-	 * @param object $item The feed item.
+	 * @param string         $dumb The initial categories (only a placeholder argument for the filter).
+	 * @param SimplePie\Item $item The feed item.
 	 *
 	 * @return string
-	 * @since   ?
 	 * @access  public
 	 */
 	public function retrieve_categories( $dumb, $item ) {
@@ -222,11 +317,7 @@ class Feedzy_Rss_Feeds_Import {
 		$categories = $item->get_categories();
 		if ( $categories ) {
 			foreach ( $categories as $category ) {
-				if ( is_string( $category ) ) {
-					$cats[] = $category;
-				} else {
-					$cats[] = $category->get_label();
-				}
+				$cats[] = $category->get_label();
 			}
 		}
 
@@ -384,6 +475,9 @@ class Feedzy_Rss_Feeds_Import {
 		$mark_duplicate_tag       = get_post_meta( $post->ID, 'mark_duplicate_tag', true );
 		$import_post_author       = get_post_meta( $post->ID, 'import_post_author', true );
 		$filter_conditions        = get_post_meta( $post->ID, 'filter_conditions', true );
+		$import_remove_html       = get_post_meta( $post->ID, 'import_remove_html', true );
+		$import_remove_html       = 'yes' === $import_remove_html ? 'checked' : '';
+		$import_order             = get_post_meta( $post->ID, 'import_order', true );
 
 		if ( empty( $filter_conditions ) ) {
 			$filter_conditions = apply_filters(
@@ -420,9 +514,22 @@ class Feedzy_Rss_Feeds_Import {
 			$import_content = '[[{"value":"%5B%7B%22id%22%3A%22%22%2C%22tag%22%3A%22item_content%22%2C%22data%22%3A%7B%7D%7D%5D"}]]';
 		}
 
-		if ( feedzy_is_pro() && empty( $import_post_term ) ) {
+		if ( feedzy_is_pro() && empty( $import_post_term ) && 'post-new.php' === $pagenow ) {
 			$import_post_term = '[#auto_categories]';
 		}
+
+		if ( feedzy_is_pro() ) {
+			$custom_terms = array(
+				'[#item_categories]' => __( 'Item Categories', 'feedzy-rss-feeds' ),
+				'[#auto_categories]' => __( 'Auto Categories by keyword', 'feedzy-rss-feeds' ),
+			);
+		} elseif ( ! feedzy_is_pro() ) {
+			$custom_terms = array(
+				'[#item_categories]' => __( 'Item Categories', 'feedzy-rss-feeds' ) . sprintf( '<span class="pro-label">%s</span>', __( 'PRO', 'feedzy-rss-feeds' ) ),
+				'[#auto_categories]' => __( 'Auto Categories by keyword', 'feedzy-rss-feeds' ) . sprintf( '<span class="pro-label">%s</span>', __( 'PRO', 'feedzy-rss-feeds' ) ),
+			);
+		}
+		$custom_post_term = wp_json_encode( $custom_terms );
 
 		$import_link_author_admin  = get_post_meta( $post->ID, 'import_link_author_admin', true );
 		$import_link_author_public = get_post_meta( $post->ID, 'import_link_author_public', true );
@@ -436,6 +543,12 @@ class Feedzy_Rss_Feeds_Import {
 			$import_link_author[1] = 'checked';
 		}
 
+		// default values when creating a import.
+		if ( 'post-new.php' === $pagenow ) {
+			$import_date         = '[#item_date]';
+			$import_featured_img = '[[{"value":"%5B%7B%22id%22%3A%22%22%2C%22tag%22%3A%22item_image%22%2C%22data%22%3A%7B%7D%7D%5D"}]]';    
+		}
+
 		// maybe more options are required from pro?
 		$pro_options = apply_filters( 'feedzy_metabox_options', array(), $post->ID );
 
@@ -445,30 +558,20 @@ class Feedzy_Rss_Feeds_Import {
 		if ( empty( $import_feed_limit ) ) {
 			$import_feed_limit = 10;
 		}
-		$import_feed_delete_days = intval( get_post_meta( $post->ID, 'import_feed_delete_days', true ) );
-		if ( empty( $import_feed_delete_days ) ) {
-			$import_feed_delete_days = ! empty( $this->free_settings['general']['feedzy-delete-days'] ) ? (int) $this->free_settings['general']['feedzy-delete-days'] : 0;
+
+		$default_thumbnail_id   = 0;
+		$inherited_thumbnail_id = ! empty( $this->free_settings['general']['default-thumbnail-id'] ) ? (int) $this->free_settings['general']['default-thumbnail-id'] : 0;
+		$custom_thumbnail_id    = get_post_meta( $post->ID, 'default_thumbnail_id', true );
+
+		if ( is_numeric( $custom_thumbnail_id ) ) {
+			$default_thumbnail_id = $custom_thumbnail_id;
 		}
 
-		$import_feed_delete_media = get_post_meta( $post->ID, 'import_feed_delete_media', true );
-		if ( empty( $import_feed_delete_media ) ) {
-			$import_feed_delete_media = ! empty( $this->free_settings['general']['feedzy-delete-media'] ) ? 'yes' : 'no';
-		}
-		$import_feed_delete_media = 'yes' === $import_feed_delete_media ? 'checked' : '';
-
-		$default_thumbnail_id = 0;
 		if ( feedzy_is_pro() ) {
-			$default_thumbnail_id = get_post_meta( $post->ID, 'default_thumbnail_id', true );
-			if (
-				empty( $default_thumbnail_id ) &&
-				'0' !== $default_thumbnail_id // Can use the fallback image from Global Settings.
-			) {
-				$default_thumbnail_id = ! empty( $this->free_settings['general']['default-thumbnail-id'] ) ? (int) $this->free_settings['general']['default-thumbnail-id'] : 0;
-			}
+			$import_schedule = array(
+				'fz_cron_schedule' => ! empty( $this->free_settings['general']['fz_cron_schedule'] ) ? $this->free_settings['general']['fz_cron_schedule'] : '',
+			);
 		}
-		$import_schedule = array(
-			'fz_cron_schedule' => ! empty( $this->free_settings['general']['fz_cron_schedule'] ) ? $this->free_settings['general']['fz_cron_schedule'] : '',
-		);
 
 		$fz_cron_schedule = get_post_meta( $post->ID, 'fz_cron_schedule', true );
 		if ( ! empty( $fz_cron_schedule ) ) {
@@ -495,7 +598,8 @@ class Feedzy_Rss_Feeds_Import {
 	 * 
 	 * @return int The range. Capped if the user is not PRO.
 	 */
-	public function items_limit( $range, $post ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	public function items_limit( $range, $post ) {
+	 // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		if ( ! feedzy_is_pro() ) {
 			$range = range( 10, 10, 10 );
 		}
@@ -594,14 +698,14 @@ class Feedzy_Rss_Feeds_Import {
 			$data_meta['import_auto_translation'] = isset( $data_meta['import_auto_translation'] ) ? $data_meta['import_auto_translation'] : 'no';
 			// Check feeds external image URL checkbox checked OR not.
 			$data_meta['import_use_external_image'] = isset( $data_meta['import_use_external_image'] ) ? $data_meta['import_use_external_image'] : 'no';
+			// Check feeds remove html checkbox checked OR not.
+			$data_meta['import_remove_html'] = isset( $data_meta['import_remove_html'] ) ? $data_meta['import_remove_html'] : 'no';
+			$data_meta['import_post_term']   = isset( $data_meta['import_post_term'] ) ? $data_meta['import_post_term'] : '';
 
 			// If it is filter_conditions we want to escape it.
 			if ( isset( $data_meta['filter_conditions'] ) ) {
 				$data_meta['filter_conditions'] = wp_slash( $data_meta['filter_conditions'] );
 			}
-
-			// Check feeds remove attached media checkbox checked OR not.
-			$data_meta['import_feed_delete_media'] = isset( $data_meta['import_feed_delete_media'] ) ? $data_meta['import_feed_delete_media'] : 'no';
 
 			// $data_meta['feedzy_post_author'] should be the author username. We convert it to the author ID.
 			if ( ! empty( $data_meta['import_post_author'] ) ) {
@@ -786,7 +890,7 @@ class Feedzy_Rss_Feeds_Import {
 							$src = sprintf( '%s: %s%s%s', __( 'Feed Group', 'feedzy-rss-feeds' ), '<a href="' . admin_url( 'edit.php?post_type=feedzy_categories' ) . '" target="_blank">', $src, '</a>' );
 						}
 					} elseif ( empty( $src ) ) {
-							$src = __( 'No Source Configured', 'feedzy-rss-feeds' );
+						$src = __( 'No Source Configured', 'feedzy-rss-feeds' );
 					} else {
 						$src = sprintf( '%s: %s%s%s', __( 'Feed Group', 'feedzy-rss-feeds' ), '<a href="' . admin_url( 'edit.php?post_type=feedzy_categories' ) . '" target="_blank">', $src, '</a>' );
 					}
@@ -834,7 +938,7 @@ class Feedzy_Rss_Feeds_Import {
 				}
 
 				$msg .= $this->get_last_run_details( $post_id );
-				echo( $msg ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo ( $msg ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 				if ( 'publish' === $post->post_status ) {
 					printf( '<p><input type="button" class="button button-primary feedzy-run-now" data-id="%d" value="%s"></p>', esc_attr( $post_id ), esc_attr__( 'Run Now', 'feedzy-rss-feeds' ) );
@@ -1268,8 +1372,20 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	private function run_now() {
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
+	
+		$job_id = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
+		$job    = get_post( $job_id );
 
-		$job   = get_post( filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT ) );
+		Feedzy_Rss_Feeds_Log::info(
+			sprintf(
+				'Manual run for import: %s',
+				isset( $job->post_title ) ? $job->post_title : 'Unknown Job'
+			),
+			array(
+				'job_id' => $job_id,
+			)
+		);
+
 		$count = $this->run_job( $job, 100 );
 
 		$msg  = 0 < $count ? __( 'Successfully run!', 'feedzy-rss-feeds' ) : __( 'Nothing imported!', 'feedzy-rss-feeds' );
@@ -1279,7 +1395,7 @@ class Feedzy_Rss_Feeds_Import {
 			array(
 				'msg'            => $msg,
 				'import_success' => 0 < $count,
-			) 
+			)
 		);
 	}
 
@@ -1380,6 +1496,13 @@ class Feedzy_Rss_Feeds_Import {
 			implode( ',', $tags )
 		);
 
+		Feedzy_Rss_Feeds_Log::debug(
+			'Dry run shortcode generated',
+			array(
+				'shortcode' => $shortcode,
+			)
+		);
+
 		wp_send_json_success( array( 'output' => do_shortcode( $shortcode ) ) );
 	}
 
@@ -1423,14 +1546,40 @@ class Feedzy_Rss_Feeds_Import {
 		foreach ( $feedzy_imports as $job ) {
 			try {
 				$result = $this->run_job( $job, $max );
+
+				Feedzy_Rss_Feeds_Log::debug(
+					'Cron job run for: ' . $job->post_title,
+					array(
+						'job_id' => $job->ID,
+						'result' => $result,
+					)
+				);
+
 				if ( empty( $result ) ) {
 					$this->run_job( $job, $max );
+
+					Feedzy_Rss_Feeds_Log::debug(
+						'Previous run did not return any results, running again for job: ' . $job->post_title,
+						array(
+							'job_id' => $job->ID,
+							'result' => $result,
+						)
+					);
 				}
 				do_action( 'feedzy_run_cron_extra', $job );
 			} catch ( Exception $e ) {
 				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 					error_log( '[Feedzy Run Cron][Post title: ' . ( ! empty( $job->post_title ) ? $job->post_title : '' ) . '] Error: ' . $e->getMessage() );
 				}
+
+				Feedzy_Rss_Feeds_Log::error(
+					// translators: %1$s is the import job title, %2$s is the error message.
+					sprintf( __( 'Error when running "%1$s": %2$s', 'feedzy-rss-feeds' ), $job->post_title, $e->getMessage() ),
+					array(
+						'job_id' => $job->ID,
+						'error'  => $e->getMessage(),
+					)
+				);
 			}
 		}
 	}
@@ -1448,6 +1597,7 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	private function run_job( $job, $max ) {
 		Feedzy_Rss_Feeds_Usage::get_instance()->track_rss_import();
+		Feedzy_Rss_Feeds_Log::get_instance()->enable_error_messages_retention();
 
 		global $themeisle_log_event;
 		$source                   = get_post_meta( $job->ID, 'source', true );
@@ -1478,6 +1628,38 @@ class Feedzy_Rss_Feeds_Import {
 		$mark_duplicate_tag       = get_post_meta( $job->ID, 'mark_duplicate_tag', true );
 		$mark_duplicate_tag       = feedzy_is_pro() && ! empty( $mark_duplicate_tag ) ? preg_replace( '/[\[\]#]/', '', $mark_duplicate_tag ) : '';
 		$max                      = $import_feed_limit;
+		$import_remove_html       = get_post_meta( $job->ID, 'import_remove_html', true );
+		$import_order             = get_post_meta( $job->ID, 'import_order', true );
+
+		Feedzy_Rss_Feeds_Log::info(
+			'Running import job: ' . $job->post_title . ' (ID: ' . $job->ID . ')',
+			array(
+				'job_id'                   => $job->ID,
+				'source'                   => $source,
+				'max'                      => $max,
+				'status'                   => $job->post_status,
+				'exc_key'                  => $exc_key,
+				'inc_key'                  => $inc_key,
+				'inc_on'                   => $inc_on,
+				'exc_on'                   => $exc_on,
+				'import_title'             => $import_title,
+				'import_date'              => $import_date,
+				'post_excerpt'             => $post_excerpt,
+				'import_content'           => $import_content,
+				'import_featured_img'      => $import_featured_img,
+				'import_post_type'         => $import_post_type,
+				'import_post_term'         => $import_post_term,
+				'import_feed_limit'        => $import_feed_limit,
+				'import_item_img_url'      => $import_item_img_url,
+				'import_remove_duplicates' => $import_remove_duplicates,
+				'import_selected_language' => $import_selected_language,
+				'from_datetime'            => $from_datetime,
+				'mark_duplicate_tag'       => $mark_duplicate_tag,
+				'filter_conditions'        => $filter_conditions,
+				'import_auto_translation'  => $import_auto_translation,
+				'import_translation_lang'  => $import_translation_lang,
+			)
+		);
 
 		if ( empty( $filter_conditions ) ) {
 			$filter_conditions = apply_filters(
@@ -1552,8 +1734,17 @@ class Feedzy_Rss_Feeds_Import {
 				'multiple_meta' => 'no',
 				'refresh'       => '55_mins',
 				'filters'       => $filter_conditions,
+				'sort'          => $import_order,
 			),
 			$job
+		);
+
+		Feedzy_Rss_Feeds_Log::info(
+			'Running job options via feedzy_shortcode_options',
+			array(
+				'job_id'  => $job->ID,
+				'options' => $options,
+			)
 		);
 
 		$admin   = Feedzy_Rss_Feeds::instance()->get_admin();
@@ -1583,18 +1774,35 @@ class Feedzy_Rss_Feeds_Import {
 		$import_info   = array();
 		$results       = $this->get_job_feed( $options, $import_content, true );
 		$language_code = $results['feed']->get_language();
-
+		
 		$xml_results = '';
 		if ( str_contains( $import_content, '_full_content' ) ) {
 			$xml_results = $this->get_job_feed( $options, '[#item_content]', true );
 		}
-
+		
 		if ( is_wp_error( $results ) ) {
-			$import_errors[] = $results->get_error_message();
+			// BUG: If $results is error, the import run details will not show the results even if the errors are set.
+			Feedzy_Rss_Feeds_Log::error(
+				sprintf(
+					// translators: %s is the error message.
+					__( 'Error when fetching the feed items: %s', 'feedzy-rss-feeds' ),
+					$results->get_error_message()
+				),
+				array(
+					'job_id'  => $job->ID,
+					'errors'  => $results->get_error_messages(),
+					'options' => $options,
+					'source'  => $source,
+				)
+			);
+
+			$import_errors = Feedzy_Rss_Feeds_Log::get_instance()->get_error_messages_accumulator();
+			Feedzy_Rss_Feeds_Log::get_instance()->disable_error_messages_retention();
+
 			update_post_meta( $job->ID, 'import_errors', $import_errors );
 			update_post_meta( $job->ID, 'imported_items_count', 0 );
 
-			return;
+			return 0;
 		}
 
 		$result = $results['items'];
@@ -1612,6 +1820,13 @@ class Feedzy_Rss_Feeds_Import {
 		if ( empty( $import_title ) && empty( $import_content ) ) {
 			$import_errors[] = __( 'Title & Content are both empty.', 'feedzy-rss-feeds' );
 			$start_import    = false;
+
+			Feedzy_Rss_Feeds_Log::warning(
+				'Import job cannot start because both Title and Content mapping are empty.',
+				array(
+					'job_id' => $job->ID,
+				)
+			);
 		}
 
 		if ( ! $start_import ) {
@@ -1625,7 +1840,16 @@ class Feedzy_Rss_Feeds_Import {
 		$duplicates       = array();
 		$items_found      = array();
 		$found_duplicates = array();
+		$result_count     = count( $result );
+
 		foreach ( $result as $key => $item ) {
+			Feedzy_Rss_Feeds_Log::debug(
+				sprintf( 'Processing item %1$s/%2$s', $key, $result_count ),
+				array(
+					'item_url' => $item['item_url'],
+				)
+			);
+			
 			$item_obj = $item;
 			// find item index key when import full content.
 			if ( ! empty( $xml_results ) ) {
@@ -1670,11 +1894,30 @@ class Feedzy_Rss_Feeds_Import {
 						$found_duplicates[ $item_hash ]  = get_post_meta( $p, 'feedzy_' . $mark_duplicate_key, true );
 						$duplicates[ $item['item_url'] ] = $item['item_title'];
 						wp_delete_post( $p, true );
+						Feedzy_Rss_Feeds_Log::debug(
+							sprintf( 'Deleted a duplicate post: %1$s', $item['item_title'] ),
+							array(
+								'item_url' => $item['item_url'],
+								'post_id'  => $p,
+								'hash'     => $item_hash,
+							)
+						);
 					}
 				}
 			}
 			if ( $is_duplicate ) {
-				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Ignoring %s as it is a duplicate (%s hash).', $item_hash, $use_new_hash ? 'new' : 'old' ), 'warn', __FILE__, __LINE__ );
+				do_action(
+					'feedzy_log_event',
+					array(
+						'type'   => 'info',
+						'output' => sprintf( 'Ignoring URl %1$s with hash %2$s as it is a duplicate (%3$s hash).', $item['item_url'], $item_hash, $use_new_hash ? 'new' : 'old' ),
+						'file'   => __FILE__,
+						'line'   => __LINE__,
+					) 
+				);
+				Feedzy_Rss_Feeds_Log::debug(
+					sprintf( 'Ignoring item %1$s as it is a duplicate (%2$s hash).', $item['item_url'], $use_new_hash ? 'new' : 'old' )
+				);
 				++$index;
 				$duplicates[ $item['item_url'] ] = $item['item_title'];
 				continue;
@@ -1690,9 +1933,16 @@ class Feedzy_Rss_Feeds_Import {
 						$author = $item['item_author']->get_email();
 					}
 				}
-			} else {
-				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Author is empty for %s.', $item['item_title'] ), 'warn', __FILE__, __LINE__ );
+
+				Feedzy_Rss_Feeds_Log::debug(
+					sprintf( 'Found author: %s', $author ),
+					array(
+						'item_author' => $item['item_author'],
+						'item_url'    => $item['item_url'],
+					)
+				);
 			}
+
 
 			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 			$item_date = wp_date( get_option( 'date_format' ) . ' at ' . get_option( 'time_format' ), $item['item_date'] );
@@ -1790,8 +2040,20 @@ class Feedzy_Rss_Feeds_Import {
 			if ( $rewrite_service_endabled && false !== strpos( $post_title, '[#title_feedzy_rewrite]' ) ) {
 				$title_feedzy_rewrite = apply_filters( 'feedzy_invoke_content_rewrite_services', $item['item_title'], '[#title_feedzy_rewrite]', $job, $item );
 				$post_title           = str_replace( '[#title_feedzy_rewrite]', $title_feedzy_rewrite, $post_title );
+				Feedzy_Rss_Feeds_Log::debug(
+					sprintf( 'Using Feedzy rewrite service for item title: %1$s', $item['item_title'] ),
+					array(
+						'job_id'         => $job->ID,
+						'service'        => 'feedzy_invoke_content_rewrite_services',
+						'service_output' => $title_feedzy_rewrite,
+					)
+				);
 			}
 
+			if ( is_string( $post_title ) ) {
+				$post_title = wp_strip_all_tags( $post_title );
+			}
+			
 			$image_html = '';
 			if ( ! empty( $item['item_img_path'] ) ) {
 				$image_html = '<img src="' . $item['item_img_path'] . '" title="' . $item['item_title'] . '" />';
@@ -1801,6 +2063,16 @@ class Feedzy_Rss_Feeds_Import {
 			$translated_description = '';
 			if ( $import_auto_translation && ( false !== strpos( $import_content, '[#translated_description]' ) || false !== strpos( $post_excerpt, '[#translated_description]' ) ) ) {
 				$translated_description = apply_filters( 'feedzy_invoke_auto_translate_services', $item['item_full_description'], '[#translated_description]', $import_translation_lang, $job, $language_code, $item );
+
+				Feedzy_Rss_Feeds_Log::debug(
+					sprintf( 'Using auto-translation service for item description: %1$s', $item['item_full_description'] ),
+					array(
+						'job_id'         => $job->ID,
+						'service'        => 'feedzy_invoke_auto_translate_services',
+						'service_output' => $translated_description,
+						'language_code'  => $language_code,
+					)
+				);
 			}
 
 			// Get translated item content.
@@ -1808,6 +2080,15 @@ class Feedzy_Rss_Feeds_Import {
 			if ( $import_auto_translation && ( false !== strpos( $import_content, '[#translated_content]' ) || false !== strpos( $post_excerpt, '[#translated_content]' ) ) ) {
 				$translated_content = ! empty( $item['item_content'] ) ? $item['item_content'] : $item['item_description'];
 				$translated_content = apply_filters( 'feedzy_invoke_auto_translate_services', $translated_content, '[#translated_content]', $import_translation_lang, $job, $language_code, $item );
+
+				Feedzy_Rss_Feeds_Log::debug(
+					sprintf( 'Using auto-translation service for item content: %1$s', $item['item_content'] ),
+					array(
+						'job_id'         => $job->ID,
+						'service'        => 'feedzy_invoke_auto_translate_services',
+						'service_output' => $translated_description,
+					)
+				);
 			}
 
 			// Used as a new line character in import content.
@@ -1858,6 +2139,20 @@ class Feedzy_Rss_Feeds_Import {
 							__( 'Full content is empty. Error: %s', 'feedzy-rss-feeds' ),
 							$full_content_error
 						);
+
+						Feedzy_Rss_Feeds_Log::error(
+							sprintf(
+								// translators: %s: Error message for empty full content.
+								__( 'Full content is empty. Error: %s', 'feedzy-rss-feeds' ),
+								$full_content_error
+							),
+							array(
+								'job_id'        => $job->ID,
+								'import_errors' => $import_errors,
+								'item_url'      => $item['item_url'],
+								'source'        => $source,
+							)
+						);
 					}
 
 					$post_content = str_replace(
@@ -1888,18 +2183,47 @@ class Feedzy_Rss_Feeds_Import {
 			if ( $import_auto_translation && false !== strpos( $post_content, '[#translated_full_content]' ) ) {
 				$translated_full_content = apply_filters( 'feedzy_invoke_auto_translate_services', $item['item_url'], '[#translated_full_content]', $import_translation_lang, $job, $language_code, $item );
 				$post_content            = str_replace( '[#translated_full_content]', rtrim( $translated_full_content, '.' ), $post_content );
+
+				Feedzy_Rss_Feeds_Log::debug(
+					sprintf( 'Using auto-translation service for item full content: %1$s', $item['item_url'] ),
+					array(
+						'job_id'         => $job->ID,
+						'service'        => 'feedzy_invoke_auto_translate_services',
+						'service_output' => $translated_full_content,
+						'language_code'  => $language_code,
+					)
+				);
 			}
 			// Rewriter item content from feedzy API.
 			if ( $rewrite_service_endabled && false !== strpos( $post_content, '[#content_feedzy_rewrite]' ) ) {
 				$item_content           = ! empty( $item['item_content'] ) ? $item['item_content'] : $item['item_description'];
 				$content_feedzy_rewrite = apply_filters( 'feedzy_invoke_content_rewrite_services', $item_content, '[#content_feedzy_rewrite]', $job, $item );
 				$post_content           = str_replace( '[#content_feedzy_rewrite]', $content_feedzy_rewrite, $post_content );
+
+				Feedzy_Rss_Feeds_Log::debug(
+					sprintf( 'Using Feedzy rewrite service for item content: %1$s', $item['item_url'] ),
+					array(
+						'job_id'         => $job->ID,
+						'service'        => 'feedzy_invoke_content_rewrite_services',
+						'service_input'  => $item_content,
+						'service_output' => $content_feedzy_rewrite,
+					)
+				);
 			}
 
 			// Rewriter item full content from feedzy API.
 			if ( $rewrite_service_endabled && false !== strpos( $post_content, '[#full_content_feedzy_rewrite]' ) ) {
 				$full_content_feedzy_rewrite = apply_filters( 'feedzy_invoke_content_rewrite_services', $item['item_url'], '[#full_content_feedzy_rewrite]', $job, $item );
 				$post_content                = str_replace( '[#full_content_feedzy_rewrite]', $full_content_feedzy_rewrite, $post_content );
+
+				Feedzy_Rss_Feeds_Log::debug(
+					sprintf( 'Using Feedzy rewrite service for item full content: %1$s', $item['item_url'] ),
+					array(
+						'job_id'         => $job->ID,
+						'service'        => 'feedzy_invoke_content_rewrite_services',
+						'service_output' => $full_content_feedzy_rewrite,
+					)
+				);
 			}
 
 			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
@@ -1951,6 +2275,11 @@ class Feedzy_Rss_Feeds_Import {
 
 			$post_author = ! empty( $import_post_author ) ? $import_post_author : $job->post_author;
 
+			// strip all HTML tag when remove html option is enabled.
+			if ( 'yes' === $import_remove_html ) {
+				$post_content = wp_strip_all_tags( $post_content );
+			}
+
 			$new_post = apply_filters(
 				'feedzy_insert_post_args',
 				array(
@@ -1972,9 +2301,15 @@ class Feedzy_Rss_Feeds_Import {
 
 			// no point creating a post if either the title or the content is null.
 			if ( is_null( $post_title ) || is_null( $post_content ) ) {
-				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'NOT creating a new post as title (%s) or content (%s) is null.', $post_title, $post_content ), 'info', __FILE__, __LINE__ );
 				++$index;
-				$import_errors[] = __( 'Title or Content is empty.', 'feedzy-rss-feeds' );
+
+				Feedzy_Rss_Feeds_Log::error(
+					__( 'Title or Content is empty.', 'feedzy-rss-feeds' ),
+					array(
+						'job_id'   => $job->ID,
+						'new_post' => $new_post,
+					)
+				);
 				continue;
 			}
 
@@ -1992,7 +2327,18 @@ class Feedzy_Rss_Feeds_Import {
 					} else {
 						$img_success = false;
 					}
+
+					Feedzy_Rss_Feeds_Log::debug(
+						'Set the image source URL from item image tag for attachment post type.',
+						array(
+							'job_id'           => $job->ID,
+							'feed_img_tag'     => $feed_img_tag,
+							'image_source_url' => $image_source_url,
+							'item_img_path'    => $item['item_img_path'],
+						)
+					);
 				} elseif ( strpos( $feed_img_tag, '[#item_custom' ) !== false ) {
+					$value = '';
 					if ( $this->feedzy_is_business() || $this->feedzy_is_personal() ) {
 						$value = apply_filters( 'feedzy_parse_custom_tags', $feed_img_tag, $item_obj );
 					}
@@ -2002,14 +2348,39 @@ class Feedzy_Rss_Feeds_Import {
 					} else {
 						$img_success = false;
 					}
+
+					Feedzy_Rss_Feeds_Log::debug(
+						'Set the image source URL from custom tag for attachment post type.',
+						array(
+							'job_id'           => $job->ID,
+							'feed_img_tag'     => $feed_img_tag,
+							'image_source_url' => $image_source_url,
+							'item_custom'      => $value,
+							'is_business'      => $this->feedzy_is_business(),
+							'is_personal'      => $this->feedzy_is_personal(),
+						)
+					);
 				} else {
 					$image_source_url = $feed_img_tag;
 					$img_title        = pathinfo( basename( $image_source_url ), PATHINFO_FILENAME );
 				}
 
 				if ( ! empty( $image_source_url ) ) {
-					$img_success = $this->try_save_featured_image( $image_source_url, 0, $img_title, $import_errors, $import_info, $new_post );
+					$img_success = $this->try_save_featured_image( $image_source_url, 0, $img_title, $import_info, $new_post );
 					$new_post_id = $img_success;
+
+					Feedzy_Rss_Feeds_Log::debug(
+						'Try to save featured image for attachment post type.',
+						array(
+							'job_id'           => $job->ID,
+							'feed_img_tag'     => $feed_img_tag,
+							'img_title'        => $img_title,
+							'post_id'          => $new_post_id,
+							'image_source_url' => $image_source_url,
+							'is_business'      => $this->feedzy_is_business(),
+							'is_personal'      => $this->feedzy_is_personal(),
+						)
+					);
 				}
 
 				if ( ! $img_success ) {
@@ -2027,18 +2398,34 @@ class Feedzy_Rss_Feeds_Import {
 			}
 
 			if ( 0 === $new_post_id || is_wp_error( $new_post_id ) ) {
-				$error_reason = 'N/A';
 				if ( is_wp_error( $new_post_id ) ) {
-					$error_reason = $new_post_id->get_error_message();
-					if ( ! empty( $error_reason ) ) {
-						$import_errors[] = $error_reason;
-					}
+					Feedzy_Rss_Feeds_Log::error(
+						sprintf(
+							// translators: %1$s is the item URL, %2$s is the error message.
+							__( 'Could not save the "%1$s" as post: %2$s', 'feedzy-rss-feeds' ),
+							esc_url( $item['item_url'] ),
+							$new_post_id->get_error_message()
+						),
+						array(
+							'job_id'   => $job->ID,
+							'new_post' => $new_post,
+						)
+					);
 				}
-				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to create a new post with params %s. Error: %s', print_r( $new_post, true ), $error_reason ), 'error', __FILE__, __LINE__ );
+
 				++$index;
 				continue;
 			}
-			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'created new post with ID %d with post_content %s', $new_post_id, $post_content ), 'debug', __FILE__, __LINE__ );
+
+			Feedzy_Rss_Feeds_Log::info(
+				'Created a new post: ' . $new_post['post_title'],
+				array(
+					'job_id'    => $job->ID,
+					'post_id'   => $new_post_id,
+					'post_link' => get_permalink( $new_post_id ),
+				)
+			);
+
 			if ( ! in_array( $item_hash, $found_duplicates, true ) ) {
 				$imported_items[] = $item_hash;
 				++$count;
@@ -2081,7 +2468,13 @@ class Feedzy_Rss_Feeds_Import {
 					}
 
 					$result = wp_set_object_terms( $new_post_id, intval( $term_id ), $taxonomy, true );
-					do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'After creating post in %s/%d, result = %s', $taxonomy, $term_id, print_r( $result, true ) ), 'debug', __FILE__, __LINE__ );
+
+					Feedzy_Rss_Feeds_Log::info(
+						sprintf( 'Set term "%1$s" with ID %2$s for feedzy import ID %3$s', $taxonomy, $term_id, $new_post_id ),
+						array(
+							'job_id' => $job->ID,
+						)
+					);
 				}
 
 				// If the default category is not used, remove it.
@@ -2105,13 +2498,13 @@ class Feedzy_Rss_Feeds_Import {
 				$job,
 				$item_obj,
 				$new_post_id,
-				$import_errors,
+				Feedzy_Rss_Feeds_Log::get_instance()->get_error_messages_accumulator(),
 				$import_info,
 				array(
 					'translation_lang' => $import_translation_lang,
 					'language_code'    => $language_code,
 					'item'             => $item,
-				) 
+				)
 			);
 
 			if ( ! empty( $import_featured_img ) && 'attachment' !== $import_post_type ) {
@@ -2128,6 +2521,16 @@ class Feedzy_Rss_Feeds_Import {
 					} else {
 						$img_success = false;
 					}
+
+					Feedzy_Rss_Feeds_Log::debug(
+						'Found an image for [#item_image]',
+						array(
+							'job_id'           => $job->ID,
+							'feed_img_tag'     => $feed_img_tag,
+							'image_source_url' => $image_source_url,
+							'item_img_path'    => $item['item_img_path'],
+						)
+					);
 				} elseif (
 					( $this->feedzy_is_business() || $this->feedzy_is_personal() ) && // PRO feature.
 					false !== strpos( $feed_img_tag, '[#item_custom' )
@@ -2138,6 +2541,18 @@ class Feedzy_Rss_Feeds_Import {
 					} else {
 						$img_success = false;
 					}
+
+					Feedzy_Rss_Feeds_Log::debug(
+						'Set the image source URL from custom tag for created post.',
+						array(
+							'job_id'           => $job->ID,
+							'feed_img_tag'     => $feed_img_tag,
+							'image_source_url' => $image_source_url,
+							'item_custom'      => $value,
+							'is_business'      => $this->feedzy_is_business(),
+							'is_personal'      => $this->feedzy_is_personal(),
+						)
+					);
 				} elseif ( wp_http_validate_url( $import_featured_img ) ) {
 					$image_source_url = $import_featured_img;
 					$img_title        = pathinfo( basename( $image_source_url ), PATHINFO_FILENAME );
@@ -2167,24 +2582,41 @@ class Feedzy_Rss_Feeds_Import {
 						)
 					);
 
+					Feedzy_Rss_Feeds_Log::debug(
+						sprintf( 'Fetching image from Graby for item %1$s with URL %2$s', $item['item_url'], FEEDZY_PRO_FETCH_ITEM_IMG_URL ),
+						array(
+							'job_id'   => $job->ID,
+							'response' => $response,
+						)
+					);
+
 					if ( ! is_wp_error( $response ) ) {
-						if ( array_key_exists( 'response', $response ) && array_key_exists( 'code', $response['response'] ) && intval( $response['response']['code'] ) !== 200 ) {
-							// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
-							do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'error in response = %s', print_r( $response, true ) ), 'error', __FILE__, __LINE__ );
-						}
 						$body = wp_remote_retrieve_body( $response );
 						if ( ! is_wp_error( $body ) ) {
 							$response_data = json_decode( $body, true );
 							if ( isset( $response_data['url'] ) ) {
 								$image_source_url = $response_data['url'];
+
+								Feedzy_Rss_Feeds_Log::debug(
+									sprintf( 'Fetched image from Graby for item %1$s with URL %2$s', $item['item_url'], $image_source_url ),
+									array(
+										'job_id'           => $job->ID,
+										'image_source_url' => $image_source_url,
+									)
+								);
 							}
-						} else {
-							// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
-							do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'error in body = %s', print_r( $body, true ) ), 'error', __FILE__, __LINE__ );
 						}
 					} else {
-						// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
-						do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'error in request = %s', print_r( $response, true ) ), 'error', __FILE__, __LINE__ );
+						Feedzy_Rss_Feeds_Log::error(
+							// translators: %1$s is the item URL, %2$s is the error message.
+							sprintf( __( 'Error fetching image from Graby for item "%1$s": %2$s', 'feedzy-rss-feeds' ), $item['item_url'], $response->get_error_message() ),
+							array(
+								'job_id'   => $job->ID,
+								'response' => $response,
+								'item_url' => $item['item_url'],
+								'source'   => $source,
+							)
+						);
 					}
 				}
 
@@ -2200,9 +2632,24 @@ class Feedzy_Rss_Feeds_Import {
 						if ( 'yes' === $import_item_img_url ) {
 							// Set external image URL.
 							update_post_meta( $new_post_id, 'feedzy_item_external_url', $image_source_url );
+
+							Feedzy_Rss_Feeds_Log::debug(
+								sprintf( 'Replaced image URL with external URL for post ID %1$s: %2$s', $new_post_id, $image_source_url ),
+								array(
+									'job_id' => $job->ID,
+								)
+							);
 						} else {
 							// if import_featured_img is a tag.
-							$img_success = $this->try_save_featured_image( $image_source_url, $new_post_id, $img_title, $import_errors, $import_info );
+							$img_success = $this->try_save_featured_image( $image_source_url, $new_post_id, $img_title, $import_info );
+
+							Feedzy_Rss_Feeds_Log::debug(
+								sprintf( 'Saved featured image for post ID %1$s: %2$s', $new_post_id, $image_source_url ),
+								array(
+									'job_id'           => $job->ID,
+									'image_source_url' => $image_source_url,
+								)
+							);
 						}
 					}
 				}
@@ -2216,6 +2663,13 @@ class Feedzy_Rss_Feeds_Import {
 						$default_thumbnail_id = $default_thumbnail;
 					}
 					$img_success = set_post_thumbnail( $new_post_id, $default_thumbnail_id );
+					
+					Feedzy_Rss_Feeds_Log::debug(
+						sprintf( 'Try to set default thumbnail for post ID %1$s with ID %2$s. Success: %3$s', $new_post_id, $default_thumbnail_id, $img_success ? 'yes' : 'no' ),
+						array(
+							'job_id' => $job->ID,
+						)
+					);
 				}
 
 				if ( ! $img_success ) {
@@ -2231,9 +2685,26 @@ class Feedzy_Rss_Feeds_Import {
 			update_post_meta( $new_post_id, 'feedzy_job', $job->ID );
 			update_post_meta( $new_post_id, 'feedzy_item_author', sanitize_text_field( $author ) );
 
+			Feedzy_Rss_Feeds_Log::debug(
+				sprintf( 'Update post meta for "%s"', $new_post['post_title'] ),
+				array(
+					'feedzy_item_url'    => esc_url_raw( $item['item_url'] ),
+					'feedzy_item_author' => sanitize_text_field( $author ),
+					'feedzy_job'         => $job->ID,
+					'post_id'            => $new_post_id,
+				)
+			);
+
 			// Verify that the `$mark_duplicate_key` does not match `'item_url'` to ensure the condition applies only when a different tag is specified.
 			if ( $mark_duplicate_key && 'item_url' !== $mark_duplicate_key ) {
 				update_post_meta( $new_post_id, 'feedzy_' . $mark_duplicate_key, $duplicate_tag_value );
+
+				Feedzy_Rss_Feeds_Log::debug(
+					sprintf( 'Mark post (%s) as duplicated', $new_post_id ),
+					array(
+						'feedzy_' . $mark_duplicate_key => $duplicate_tag_value,
+					)
+				);
 			}
 
 			// we can use this to associate the items that were imported in a particular run.
@@ -2250,25 +2721,42 @@ class Feedzy_Rss_Feeds_Import {
 		update_post_meta( $job->ID, 'imported_items_count', $count );
 
 		if ( $import_image_errors > 0 ) {
-			$import_errors[] = sprintf(
-				// translators: %1$d is the number of items without images, %2$d is the total number of items imported.
-				__( 'Unable to find an image for %1$d out of %2$d items imported', 'feedzy-rss-feeds' ),
-				$import_image_errors,
-				$count
+			Feedzy_Rss_Feeds_Log::error(
+				sprintf(
+					// translators: %1$d is the number of items without images, %2$d is the total number of items imported.
+					__( 'Unable to find an image for %1$d out of %2$d items imported', 'feedzy-rss-feeds' ),
+					$import_image_errors,
+					$count
+				),
+				array(
+					'job_id' => $job->ID,
+					'source' => $source,
+				)
 			);
 		}
-
-		if ( ! empty( $themeisle_log_event ) ) {
-			$import_errors = array_merge( $themeisle_log_event, $import_errors );
-		}
-		update_post_meta( $job->ID, 'import_errors', $import_errors );
-
+		
 		// the order of these matters in how they are finally shown in the summary.
 		$import_info['total']      = $items_found;
 		$import_info['duplicates'] = $duplicates;
 
+		$import_errors = Feedzy_Rss_Feeds_Log::get_instance()->get_error_messages_accumulator();
+		Feedzy_Rss_Feeds_Log::get_instance()->disable_error_messages_retention();
+		
 		update_post_meta( $job->ID, 'import_info', $import_info );
+		update_post_meta( $job->ID, 'import_errors', $import_errors );
 
+		Feedzy_Rss_Feeds_Log::info(
+			sprintf(
+				'Import completed for job ID (%1$s).',
+				$job->ID
+			),
+			array(
+				'job_id'        => $job->ID,
+				'import_info'   => $import_info,
+				'import_errors' => $import_errors,
+			)
+		);
+		
 		return $count;
 	}
 
@@ -2311,7 +2799,7 @@ class Feedzy_Rss_Feeds_Import {
 			$feed = $admin->fetch_feed( $feed_url, isset( $options['refresh'] ) ? $options['refresh'] : '12_hours', $options );
 
 			$feed->force_feed( true );
-			$feed->enable_order_by_date( false );
+			$feed->enable_order_by_date( isset( $options['sort'] ) && ! empty( $options['sort'] ) );
 
 			if ( is_string( $feed ) ) {
 				return array();
@@ -2437,7 +2925,6 @@ class Feedzy_Rss_Feeds_Import {
 	 * @param string  $img_source_url The download source URL for the image.
 	 * @param integer $post_id The post ID.
 	 * @param string  $post_title Post title.
-	 * @param array   $import_errors Array of import error messages.
 	 * @param array   $import_info Array of import information messages.
 	 * @param array   $post_data Additional post data.
 	 * 
@@ -2446,7 +2933,7 @@ class Feedzy_Rss_Feeds_Import {
 	 * @since 1.2.0
 	 * @access private
 	 */
-	private function try_save_featured_image( $img_source_url, $post_id, $post_title, &$import_errors, &$import_info, $post_data = array() ) {
+	private function try_save_featured_image( $img_source_url, $post_id, $post_title, &$import_info, $post_data = array() ) {
 		if ( ! function_exists( 'post_exists' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/post.php';
 		}
@@ -2459,11 +2946,28 @@ class Feedzy_Rss_Feeds_Import {
 			// This is necessary because FILTER_VALIDATE_URL only validates against ASCII URLs.
 			$escaped_url = $this->convert_url_to_ascii( $img_source_url );
 			if ( filter_var( $escaped_url, FILTER_VALIDATE_URL ) === false ) {
-				$import_errors[] = 'Invalid Featured Image URL: ' . $img_source_url;
+				Feedzy_Rss_Feeds_Log::error(
+					// translators: %s is the invalid image URL.
+					sprintf( __( 'Invalid image URL: %s', 'feedzy-rss-feeds' ), $img_source_url ),
+					array(
+						'post_id'    => $post_id,
+						'post_title' => $post_title,
+					)
+				);
+				
 				return false;
 			}
 
-			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Trying to save the featured image for %s and postID %d', $img_source_url, $post_id ), 'debug', __FILE__, __LINE__ );
+			Feedzy_Rss_Feeds_Log::debug(
+				sprintf( 'Save the image as featured image with upload in Media Library for post ID' ),
+				array(
+					'post_id'        => $post_id,
+					'post_title'     => $post_title,
+					'img_source_url' => $img_source_url,
+					'escaped_url'    => $escaped_url,
+					'post_data'      => $post_data,
+				)
+			);
 
 			require_once ABSPATH . 'wp-admin/includes/image.php';
 			require_once ABSPATH . 'wp-admin/includes/file.php';
@@ -2473,7 +2977,14 @@ class Feedzy_Rss_Feeds_Import {
 			$img_source_url = trim( $img_source_url, chr( 0xC2 ) . chr( 0xA0 ) );
 			$local_file     = download_url( $img_source_url );
 			if ( is_wp_error( $local_file ) ) {
-				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to download file = %s and postID %d', print_r( $local_file, true ), $post_id ), 'error', __FILE__, __LINE__ );
+				Feedzy_Rss_Feeds_Log::error(
+					// translators: %s is the image source URL.
+					sprintf( __( 'Unable to download image: %s', 'feedzy-rss-feeds' ), $img_source_url ),
+					array(
+						'post_id' => $post_id,
+						'errors'  => $local_file->get_error_messages(),
+					)
+				);
 
 				return false;
 			}
@@ -2501,7 +3012,16 @@ class Feedzy_Rss_Feeds_Import {
 				if ( $renamed ) {
 					$local_file = $new_local_file;
 				} else {
-					do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to rename file for postID %d', $post_id ), 'error', __FILE__, __LINE__ );
+
+					Feedzy_Rss_Feeds_Log::error(
+						// translators: %s the name of the post.
+						sprintf( __( 'Could not rename temporary file for: %s', 'feedzy-rss-feeds' ), get_the_title( $post_id ) ),
+						array(
+							'post_id'        => $post_id,
+							'local_file'     => $local_file,
+							'new_local_file' => $new_local_file,
+						)
+					);
 
 					return false;
 				}
@@ -2512,7 +3032,14 @@ class Feedzy_Rss_Feeds_Import {
 
 			$id = media_handle_sideload( $file_array, $post_id, $post_title, $post_data );
 			if ( is_wp_error( $id ) ) {
-				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to attach file for postID %d = %s', $post_id, print_r( $id, true ) ), 'error', __FILE__, __LINE__ );
+				Feedzy_Rss_Feeds_Log::error(
+					// translators: %s is the image source URL.
+					sprintf( __( 'Cannot upload the image to Media Library: %s', 'feedzy-rss-feeds' ), $img_source_url ),
+					array(
+						'post_id' => $post_id,
+						'errors'  => $id->get_error_messages(),
+					)
+				);
 
 				// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
 				unlink( $file_array['tmp_name'] );
@@ -2520,7 +3047,14 @@ class Feedzy_Rss_Feeds_Import {
 				return false;
 			}
 		} else {
-			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Found an existing attachment(ID: %d) image for %s and postID %d', $id, $img_source_url, $post_id ), 'debug', __FILE__, __LINE__ );
+			Feedzy_Rss_Feeds_Log::debug(
+				sprintf( 'Reusing existing attachment image for post ID %d', $post_id ),
+				array(
+					'post_id'        => $post_id,
+					'img_source_url' => $img_source_url,
+					'attachment_id'  => $id,
+				)
+			);
 		}
 
 		if ( ! empty( $post_data ) ) {
@@ -2529,9 +3063,24 @@ class Feedzy_Rss_Feeds_Import {
 
 		$success = set_post_thumbnail( $post_id, $id );
 		if ( false === $success ) {
-			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to attach file for postID %d for no apparent reason', $post_id ), 'error', __FILE__, __LINE__ );
+			Feedzy_Rss_Feeds_Log::error(
+				// translators: %s is the post title.
+				sprintf( __( 'Could not set the thumbnail for: %s', 'feedzy-rss-feeds' ), get_the_title( $post_id ) ),
+				array(
+					'post_id'          => $post_id,
+					'attachment_id'    => $id,
+					'image_source_url' => $img_source_url,
+				)
+			);
 		} else {
-			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Attached file as featured image for postID %d', $post_id ), 'info', __FILE__, __LINE__ );
+			Feedzy_Rss_Feeds_Log::debug(
+				sprintf( 'Attached image with ID (%d) to post ID (%d)', $id, $post_id ),
+				array(
+					'post_id'          => $post_id,
+					'attachment_id'    => $id,
+					'image_source_url' => $img_source_url,
+				)
+			);
 		}
 
 		return $success;
@@ -2580,7 +3129,17 @@ class Feedzy_Rss_Feeds_Import {
 			)
 		);
 
+		
 		if ( ! empty( $import_job_crons ) ) {
+			Feedzy_Rss_Feeds_Log::debug(
+				sprintf( 'Registering cron job with schedule: %s', $schedule ),
+				array(
+					'job_id'           => 0,
+					'schedule'         => $schedule,
+					'import_job_crons' => $import_job_crons,
+				)
+			);
+
 			foreach ( $import_job_crons as $job_id ) {
 				$fz_cron_schedule = get_post_meta( $job_id, 'fz_cron_schedule', true );
 				if ( false === Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'feedzy_cron', array( 100, $job_id ) ) ) {
@@ -2607,16 +3166,16 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		if ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) {
-			echo wp_kses_post( '<div class="notice notice-error feedzy-error-critical is-dismissible"><p>' . __( 'WP Cron is disabled. Your feeds would not get updated. Please contact your hosting provider or system administrator', 'feedzy-rss-feeds' ) . '</p></div>' );
+			echo wp_kses_post( '<div class="notice notice-error fz-notice feedzy-error-critical is-dismissible"><p>' . __( 'WP Cron is disabled. Your feeds would not get updated. Please contact your hosting provider or system administrator', 'feedzy-rss-feeds' ) . '</p></div>' );
 		}
 
 		if ( false === Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'feedzy_cron' ) ) {
-			echo wp_kses_post( '<div class="notice notice-error"><p>' . __( 'Unable to register cron job. Your feeds might not get updated', 'feedzy-rss-feeds' ) . '</p></div>' );
+			echo wp_kses_post( '<div class="notice notice-error fz-notice"><p>' . __( 'Unable to register cron job. Your feeds might not get updated', 'feedzy-rss-feeds' ) . '</p></div>' );
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( ! empty( $_GET['imported'] ) ) {
-			echo wp_kses_post( '<div class="notice notice-success is-dismissible"><p>' . __( 'Successfully imported.', 'feedzy-rss-feeds' ) . '</p></div>' );
+			echo wp_kses_post( '<div class="notice notice-success fz-notice is-dismissible"><p>' . __( 'Successfully imported.', 'feedzy-rss-feeds' ) . '</p></div>' );
 		}
 	}
 
@@ -2793,14 +3352,17 @@ class Feedzy_Rss_Feeds_Import {
 	public function save_tab_settings( $settings, $tab ) {
 		if (
 			! isset( $_POST['nonce'] ) ||
-			! wp_verify_nonce( sanitize_text_field( wp_unslash( 'nonce' ) ), $tab )
+			! wp_verify_nonce( sanitize_text_field( $_POST['nonce'] ), $tab )
 		) {
 			return array();
 		}
 
 		if ( 'misc' === $tab ) {
-			$settings['canonical']            = isset( $_POST['canonical'] ) ? absint( $_POST['canonical'] ) : 0;
-			$settings['general']['rss-feeds'] = isset( $_POST['rss-feeds'] ) ? absint( $_POST['rss-feeds'] ) : '';
+			$settings['canonical']                      = isset( $_POST['canonical'] ) ? absint( $_POST['canonical'] ) : 0;
+			$settings['general']['rss-feeds']           = isset( $_POST['rss-feeds'] ) ? absint( $_POST['rss-feeds'] ) : '';
+			$settings['header']['user-agent']           = isset( $_POST['user-agent'] ) ? sanitize_text_field( wp_unslash( $_POST['user-agent'] ) ) : '';
+			$settings['general']['feedzy-delete-days']  = isset( $_POST['feedzy-delete-days'] ) ? absint( wp_unslash( $_POST['feedzy-delete-days'] ) ) : '';
+			$settings['general']['feedzy-delete-media'] = isset( $_POST['feedzy-delete-media'] ) ? absint( wp_unslash( $_POST['feedzy-delete-media'] ) ) : '';
 		}
 
 		return $settings;
@@ -3299,7 +3861,7 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		// phpcs:ignore
-		$query_result = $wpdb->get_results( $wpdb->prepare( "SELECT DISTINCT($wpdb->postmeta.meta_key) FROM $wpdb->posts LEFT JOIN $wpdb->postmeta ON $wpdb->posts.ID = $wpdb->postmeta.post_id WHERE $wpdb->posts.post_type = '%s' AND $wpdb->postmeta.meta_key != '' AND $wpdb->postmeta.meta_key NOT RegExp '(^[_0-9].+$)' AND $wpdb->postmeta.meta_key NOT RegExp '(^[_feedzy].+$)' AND $wpdb->postmeta.meta_key NOT RegExp '(^[0-9]+$)'$like LIMIT 0, 9999", $post_type ), ARRAY_A );
+		$query_result = $wpdb->get_results($wpdb->prepare("SELECT DISTINCT($wpdb->postmeta.meta_key) FROM $wpdb->posts LEFT JOIN $wpdb->postmeta ON $wpdb->posts.ID = $wpdb->postmeta.post_id WHERE $wpdb->posts.post_type = '%s' AND $wpdb->postmeta.meta_key != '' AND $wpdb->postmeta.meta_key NOT RegExp '(^[_0-9].+$)' AND $wpdb->postmeta.meta_key NOT RegExp '(^[_feedzy].+$)' AND $wpdb->postmeta.meta_key NOT RegExp '(^[0-9]+$)'$like LIMIT 0, 9999", $post_type), ARRAY_A);
 
 		$acf_fields = array();
 		if ( function_exists( 'acf_get_field_groups' ) ) {
@@ -3458,9 +4020,9 @@ class Feedzy_Rss_Feeds_Import {
 		// Display success notice if clone succeed.
 		if ( isset( $_GET['saved'] ) && 'fz_duplicate_import_job_created' === $_GET['saved'] ) { // phpcs:ignore WordPress.Security.NonceVerification
 			?>
-<div class="notice notice-success is-dismissible">
-	<p><?php esc_html_e( 'Duplicate import job created', 'feedzy-rss-feeds' ); ?></p>
-</div>
+			<div class="notice notice-success fz-notice is-dismissible">
+				<p><?php esc_html_e( 'Duplicate import job created', 'feedzy-rss-feeds' ); ?></p>
+			</div>
 			<?php
 		}
 	}
@@ -3490,6 +4052,8 @@ class Feedzy_Rss_Feeds_Import {
 
 		$post_type                = ! empty( $_POST['post_type'] ) ? sanitize_text_field( wp_unslash( $_POST['post_type'] ) ) : '';
 		$post_status              = ! empty( $_POST['post_status'] ) ? sanitize_text_field( wp_unslash( $_POST['post_status'] ) ) : '';
+		$fallback_image           = ! empty( $_POST['fallback_image'] ) ? sanitize_text_field( wp_unslash( $_POST['fallback_image'] ) ) : '';
+		$excluded_post_title      = ! empty( $_POST['excluded_post_title'] ) ? sanitize_text_field( wp_unslash( $_POST['excluded_post_title'] ) ) : ''; 
 		$wizard_data              = get_option( 'feedzy_wizard_data', array() );
 		$wizard_data              = ! empty( $wizard_data ) ? $wizard_data : array();
 		$wizard_data['post_type'] = $post_type;
@@ -3533,7 +4097,25 @@ class Feedzy_Rss_Feeds_Import {
 			// Update wizard data.
 			$wizard_data['job_id'] = $job_id;
 			update_option( 'feedzy_wizard_data', $wizard_data );
-		
+
+			$filter_conditions = array(
+				'match'      => 'all',
+				'conditions' => array(),
+			);
+
+			if ( ! empty( $excluded_post_title ) ) {
+				$filter_conditions['conditions'] = array(
+					array(
+						'field'    => 'title',
+						'operator' => 'not_contains',
+						'value'    => $excluded_post_title,
+					),
+				);
+			}
+
+			update_post_meta( $job_id, 'filter_conditions', wp_json_encode( $filter_conditions ) );
+			update_post_meta( $job_id, 'default_thumbnail_id', $fallback_image );
+
 			$response = array(
 				'status' => true,
 			);
@@ -3587,25 +4169,7 @@ class Feedzy_Rss_Feeds_Import {
 	 * Add import export section.
 	 */
 	public function add_import_export_section() {
-		if ( ! feedzy_is_pro() ) :
-			?>
-		<div id="fz_import_export_upsell" class="hidden" style="max-width:450px">
-			<div class="modal-content">
-				<span class="notice-dismiss close-modal">
-					<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this dialog', 'feedzy-rss-feeds' ); ?></span>
-				</span>
-				<div class="modal-header">
-					<h2><span class="dashicons dashicons-lock"></span> <?php esc_html_e( 'Upload/Export is a PRO feature', 'feedzy-rss-feeds' ); ?></h2>
-				</div>
-				<div class="modal-body">
-					<p><?php esc_html_e( 'We\'re sorry, upload/export of import configuration is not available on your plan. Please upgrade to the Pro plan to unlock all these features.', 'feedzy-rss-feeds' ); ?></p>
-				</div>
-				<div class="modal-footer">
-					<div class="button-container"><a href="<?php echo esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'importExport' ) ) ); ?>" target="_blank" rel="noopener " class="button button-primary button-large"><?php esc_html_e( 'Upgrade to PRO', 'feedzy-rss-feeds' ); ?><span aria-hidden="true" class="dashicons dashicons-external"></span></a></div>
-				</div>
-			</div>
-		</div>
-		<?php endif; ?>
+		?>
 		<script type="template/text" id="fz_import_field_section">
 			<div class="fz-import-field hidden">
 				<form method="post" enctype="multipart/form-data" action="<?php echo esc_url( add_query_arg( array( 'action' => 'fz_import_job' ), admin_url( 'admin.php' ) ) ); ?>">

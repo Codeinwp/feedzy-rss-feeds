@@ -6,6 +6,26 @@ Layout For Tutorial Page of Feedzy RSS Feeds
 -->
 <?php
 $is_pro = feedzy_is_pro();
+
+$settings_link     = add_query_arg(
+	[
+		'page' => 'feedzy-settings',
+	],
+	admin_url( 'admin.php' )
+);
+$feed_imports_link = add_query_arg(
+	[
+		'post_type' => 'feedzy_imports',
+	],
+	admin_url( 'edit.php' )
+);
+$logs_link         = add_query_arg(
+	[
+		'tab' => 'logs',
+	],
+	$settings_link
+);
+
 ?>
 <div class="support-box-list">
 	<ul>
@@ -27,7 +47,7 @@ $is_pro = feedzy_is_pro();
 				</ul>
 				<br/>
 				<div>
-					<a href="<?php echo esc_url( add_query_arg( 'post_type', 'feedzy_imports', admin_url( 'post-new.php' ) ) ); ?>" class="btn btn-outline-primary" target="_blank">
+					<a href="<?php echo esc_url( add_query_arg( 'post_type', 'feedzy_imports', admin_url( 'post-new.php' ) ) ); ?>" class="btn btn-outline-primary">
 						<?php esc_html_e( 'Import your first feed', 'feedzy-rss-feeds' ); ?>
 					</a>
 				</div> 
@@ -35,8 +55,35 @@ $is_pro = feedzy_is_pro();
 		</li>
 		<li>
 			<div class="support-box quick-links-box">
-				<h3 class="h3"><?php esc_html_e( 'Quick Links', 'feedzy-rss-feeds' ); ?></h3>
-				<p><?php esc_html_e( 'New here? Learn how to use Feedzy by following our tips and tricks:', 'feedzy-rss-feeds' ); ?></p>
+				<h3 class="h3">
+					<?php esc_html_e( 'Quick Links', 'feedzy-rss-feeds' ); ?>
+				</h3>
+				<div class="fz-quick-link-actions">
+					<a
+						href="<?php echo esc_url( $settings_link ); ?>"
+						class="btn btn-primary"
+					>
+						<span class="dashicons dashicons-admin-generic"></span>
+						<?php esc_html_e( 'Settings', 'feedzy-rss-feeds' ); ?>
+					</a>
+					<a
+						href="<?php echo esc_url( $feed_imports_link ); ?>"
+						class="btn btn-primary"
+					>
+						<span class="dashicons dashicons-rss"></span>
+						<?php esc_html_e( 'Import Posts', 'feedzy-rss-feeds' ); ?>
+					</a>
+					<a
+						href="<?php echo esc_url( $logs_link ); ?>"
+						class="btn btn-primary"
+					>
+						<span class="dashicons dashicons-edit"></span>
+						<?php esc_html_e( 'Logs', 'feedzy-rss-feeds' ); ?>
+					</a>
+				</div>
+				<p>
+					<?php esc_html_e( 'New here? Learn how to use Feedzy by following our tips and tricks:', 'feedzy-rss-feeds' ); ?>
+				</p>
 				<div class="quick-link-list">
 					<ul>
 						<li><a href="https://docs.themeisle.com/category/712-feedzy" target="_blank"><?php esc_html_e( 'General Guide', 'feedzy-rss-feeds' ); ?></a></li>

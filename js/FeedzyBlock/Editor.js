@@ -8,6 +8,7 @@ import {
 	Button,
 	Spinner,
 	Disabled,
+	Notice,
 } from '@wordpress/components';
 
 import queryString from 'query-string';
@@ -15,6 +16,7 @@ import Inspector from './inspector';
 import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { Component, Fragment } from '@wordpress/element';
+import { InspectorControls } from '@wordpress/block-editor';
 import {
 	unescapeHTML,
 	filterData,
@@ -53,6 +55,7 @@ class Editor extends Component {
 		this.onThumb = this.onThumb.bind(this);
 		this.onDefault = this.onDefault.bind(this);
 		this.onSize = this.onSize.bind(this);
+		this.onAspectRatio = this.onAspectRatio.bind(this);
 		this.onReferralURL = this.onReferralURL.bind(this);
 		this.onColumns = this.onColumns.bind(this);
 		this.onTemplate = this.onTemplate.bind(this);
@@ -77,7 +80,7 @@ class Editor extends Component {
 			// reload: when the feed needs to be refetched
 			route: this.props.attributes.route,
 			loading: false,
-			error: false,
+			validationResults: [],
 		};
 	}
 
@@ -103,12 +106,81 @@ class Editor extends Component {
 		}
 	}
 
-	loadFeed() {
-		let url = this.props.attributes.feeds;
+	async loadFeed() {
+		const url = this.props.attributes.feeds;
 		if (url === undefined) {
 			return;
 		}
 
+		this.setState({
+			route: 'home',
+			loading: true,
+			validationResults: [],
+		});
+
+		if (inArray(url, this.props.attributes.categories)) {
+			this.loadFeedData(url);
+			return;
+		}
+
+		try {
+			const formData = new FormData();
+			formData.append('action', 'feedzy_validate_feed');
+			formData.append('feed_url', url);
+			formData.append('nonce', window.feedzyjs?.nonce);
+
+			const validationResponse = await fetch(window.feedzyjs?.url, {
+				method: 'POST',
+				body: formData,
+			});
+
+			const validationData = await validationResponse.json();
+
+			if (validationData.success && validationData.data?.results) {
+				const results = validationData.data.results;
+
+				this.setState({
+					validationResults: results,
+					loading: false,
+				});
+
+				const hasErrors = results.some(
+					(result) => result.status === 'error'
+				);
+
+				if (!hasErrors) {
+					this.loadFeedData(url);
+				}
+			} else if (!validationData.success) {
+				this.setState({
+					validationResults: [
+						{
+							status: 'error',
+							message:
+								validationData.data?.message ||
+								__('Validation failed', 'feedzy-rss-feeds'),
+						},
+					],
+					loading: false,
+				});
+			}
+		} catch (error) {
+			this.setState({
+				validationResults: [
+					{
+						status: 'error',
+						message: __(
+							'Failed to validate feed. Please check your connection and try again.',
+							'feedzy-rss-feeds'
+						),
+					},
+				],
+				loading: false,
+			});
+		}
+	}
+
+	loadFeedData(url) {
 		if (inArray(url, this.props.attributes.categories)) {
 			const category = url;
 			url = queryString.stringify(
@@ -122,11 +194,6 @@ class Editor extends Component {
 				.filter((item) => item !== '');
 			url = queryString.stringify({ url }, { arrayFormat: 'bracket' });
 		}
-
-		this.setState({
-			route: 'home',
-			loading: true,
-		});
 
 		apiFetch({
 			path: `/feedzy/v1/feed?${url}`,
@@ -142,13 +209,24 @@ class Editor extends Component {
 					this.setState({
 						route: 'fetched',
 						loading: false,
+						validationResults: [],
 					});
 					return data;
 				}
 				this.setState({
 					route: 'home',
 					loading: false,
-					error: true,
+					validationResults: [
+						{
+							status: 'error',
+							message:
+								data.message ||
+								__(
+									'Feed URL is invalid or unreachable',
+									'feedzy-rss-feeds'
+								),
+						},
+					],
 				});
 				return data;
 			})
@@ -156,7 +234,15 @@ class Editor extends Component {
 				this.setState({
 					route: 'home',
 					loading: false,
-					error: true,
+					validationResults: [
+						{
+							status: 'error',
+							message: __(
+								'Error loading feed. Please check your feed URL and try again.',
+								'feedzy-rss-feeds'
+							),
+						},
+					],
 				});
 				return err;
 			});
@@ -225,7 +311,7 @@ class Editor extends Component {
 
 	getImageURL(item, background) {
 		let url;
-		if (item.thumbnail) {
+		if (item.thumbnail && this.props.attributes.thumb === 'auto') {
 			url = item.thumbnail;
 		} else if (this.props.attributes.default) {
 			url = this.props.attributes.default.url;
@@ -247,6 +333,9 @@ class Editor extends Component {
 			featureValue: value,
 		});
 		this.props.setAttributes({ feeds: value });
+		this.setState({
+			validationResults: [],
+		});
 	}
 	onChangeMax(value) {
 		this.props.setAttributes({ max: !value ? 5 : Number(value) });
@@ -325,6 +414,9 @@ class Editor extends Component {
 	}
 	onSize(value) {
 		this.props.setAttributes({ size: !value ? 150 : Number(value) });
+	}
+	onAspectRatio(value) {
+		this.props.setAttributes({ aspectRatio: value });
 	}
 	onReferralURL(value) {
 		window.tiTrk?.with('feedzy').add({ feature: 'block-referral-url' });
@@ -418,12 +510,49 @@ class Editor extends Component {
 		}
 	}
 
+	renderValidationResults() {
+		if (
+			!this.state.validationResults ||
+			this.state.validationResults.length === 0
+		) {
+			return null;
+		}
+
+		return (
+			<div className="feedzy-validation-results">
+				{this.state.validationResults.map((result, index) => (
+					<Notice
+						key={`result-${index}`}
+						status={result.status}
+						isDismissible={false}
+					>
+						{result.url && (
+							<>
+								<strong>{result.url}</strong>
+								<br />
+							</>
+						)}
+						{result.message}
+					</Notice>
+				))}
+			</div>
+		);
+	}
+
 	render() {
 		return (
 			<Fragment>
-				{'fetched' === this.state.route && (
-					<Inspector edit={this} state={this.state} {...this.props} />
-				)}
+				<InspectorControls key="inspector">
+					<div>
+						{'fetched' === this.state.route && (
+							<Inspector
+								edit={this}
+								state={this.state}
+								{...this.props}
+							/>
+						)}
+					</div>
+				</InspectorControls>
 				{'home' === this.state.route && (
 					<div className={this.props.className}>
 						<Placeholder
@@ -437,61 +566,68 @@ class Editor extends Component {
 									className="wp-block-embed is-loading"
 								>
 									<Spinner />
-									<p>{__('Fetching…', 'feedzy-rss-feeds')}</p>
-								</div>
-							) : (
-								<Fragment>
-									<div className="feedzy-source-wrap">
-										<TextControl
-											type="url"
-											className="feedzy-source"
-											placeholder={__(
-												'Enter URL or group of your feed here…',
-												'feedzy-rss-feeds'
-											)}
-											onChange={this.onChangeFeed}
-											onKeyUp={this.handleKeyUp}
-											value={this.props.attributes.feeds}
-										/>
-										{this.props.attributes.categories &&
-											this.props.attributes.categories
-												.length > 0 && (
-												// eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-												<span
-													className="dashicons dashicons-arrow-down-alt2"
-													onClick={
-														this
-															.feedzyCategoriesList
-													}
-												></span>
-											)}
-									</div>
-									<Button
-										isLarge
-										isPrimary
-										type="submit"
-										onClick={this.loadFeed}
-									>
-										{__('Load Feed', 'feedzy-rss-feeds')}
-									</Button>
-									<ExternalLink
-										href={this.getValidateURL()}
-										title={__(
-											'Validate Feed',
+									<p>
+										{__(
+											'Validating and fetching feed…',
 											'feedzy-rss-feeds'
 										)}
+									</p>
+								</div>
+							) : (
+								<div
+									style={{
+										display: 'flex',
+										flexDirection: 'column',
+									}}
+								>
+									<div
+										style={{
+											display: 'flex',
+											flexDirection: 'row',
+										}}
 									>
-										{__('Validate', 'feedzy-rss-feeds')}
-									</ExternalLink>
-
-									{this.state.error && (
-										<div>
+										<div className="feedzy-source-wrap">
+											<TextControl
+												type="url"
+												className="feedzy-source"
+												placeholder={__(
+													'Enter URL or group of your feed here…',
+													'feedzy-rss-feeds'
+												)}
+												onChange={this.onChangeFeed}
+												onKeyUp={this.handleKeyUp}
+												value={
+													this.props.attributes.feeds
+												}
+											/>
+											{this.props.attributes.categories &&
+												this.props.attributes.categories
+													.length > 0 && (
+													// eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+													<span
+														className="dashicons dashicons-arrow-down-alt2"
+														onClick={
+															this
+																.feedzyCategoriesList
+														}
+													></span>
+												)}
+										</div>
+										<Button
+											isLarge
+											isPrimary
+											type="submit"
+											onClick={this.loadFeed}
+										>
 											{__(
-												'Feed URL is invalid or unreachable by WordPress SimplePie and will NOT display items.',
+												'Load Feed',
 												'feedzy-rss-feeds'
 											)}
-										</div>
-									)}
+										</Button>
+									</div>
+
+									{this.renderValidationResults()}
+
 									<p>
 										{__(
 											"Enter the full URL of the feed source you wish to display here, or the name of a group you've created. Also you can add multiple URLs just separate them with a comma. You can manage your groups feed from",
@@ -508,7 +644,7 @@ class Editor extends Component {
 											{__('here', 'feedzy-rss-feeds')}
 										</a>
 									</p>
-								</Fragment>
+								</div>
 							)}
 						</Placeholder>
 					</div>
@@ -577,17 +713,14 @@ class Editor extends Component {
 								const categories =
 									unescapeHTML(item.categories) || '';
 								if (this.metaExists('tz=local')) {
-									let itemDateTimeObj = new Date(
-										itemDateTime
+									const itemDateTimeObj = window.moment(
+										itemDateTime,
+										'MMMM D, YYYY h:mm a [UTC] Z'
 									);
-									itemDateTimeObj =
-										itemDateTimeObj.toUTCString();
-									itemDate = window.moment
-										.utc(itemDateTimeObj)
-										.format('MMMM D, YYYY');
-									itemTime = window.moment
-										.utc(itemDateTimeObj)
-										.format('h:mm A');
+
+									itemDate =
+										itemDateTimeObj.format('MMMM D, YYYY');
+									itemTime = itemDateTimeObj.format('h:mm A');
 								}
 
 								let author =
@@ -669,9 +802,9 @@ class Editor extends Component {
 											<div
 												className="rss_image"
 												style={{
-													width:
+													aspectRatio:
 														this.props.attributes
-															.size + 'px',
+															.aspectRatio,
 													height:
 														this.props.attributes
 															.size + 'px',
@@ -684,11 +817,10 @@ class Editor extends Component {
 															item.title
 														)}
 														style={{
-															width:
+															aspectRatio:
 																this.props
 																	.attributes
-																	.size +
-																'px',
+																	.aspectRatio,
 															height:
 																this.props
 																	.attributes
@@ -696,29 +828,26 @@ class Editor extends Component {
 																'px',
 														}}
 													>
-														<span
-															className="fetched"
+														<img
+															src={this.getImageURL(
+																item,
+																false
+															)}
+															alt={unescapeHTML(
+																item.title
+															)}
 															style={{
-																width:
+																aspectRatio:
 																	this.props
 																		.attributes
-																		.size +
-																	'px',
+																		.aspectRatio,
 																height:
 																	this.props
 																		.attributes
 																		.size +
 																	'px',
-																backgroundImage:
-																	this.getImageURL(
-																		item,
-																		true
-																	),
 															}}
-															title={unescapeHTML(
-																item.title
-															)}
-														></span>
+														/>
 													</a>
 												</Disabled>
 											</div>

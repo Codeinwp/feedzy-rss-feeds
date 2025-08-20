@@ -176,7 +176,8 @@ class Feedzy_Rss_Feeds {
 		self::$instance->loader->add_action( 'feedzy_post_http_teardown', self::$instance->admin, 'post_http_teardown', 10, 1 );
 		self::$instance->loader->add_action( 'admin_init', self::$instance->admin, 'admin_init', 10, 1 );
 		self::$instance->loader->add_action( 'manage_feedzy_categories_posts_custom_column', self::$instance->admin, 'manage_feedzy_category_columns', 10, 2 );
-		self::$instance->loader->add_action( 'admin_menu', self::$instance->admin, 'feedzy_menu_pages' );
+		self::$instance->loader->add_action( 'admin_menu', self::$instance->admin, 'feedzy_menu_pages', 8 );
+		self::$instance->loader->add_action( 'admin_menu', self::$instance->admin, 'rss_to_social_menu', 20 );
 		self::$instance->loader->add_action( 'wp_ajax_get_tinymce_form', self::$instance->admin, 'get_tinymce_form' );
 		self::$instance->loader->add_action( 'wp_enqueue_scripts', self::$instance->admin, 'enqueue_styles' );
 		self::$instance->loader->add_action( 'admin_enqueue_scripts', self::$instance->admin, 'enqueue_styles_admin', 99 );
@@ -202,6 +203,10 @@ class Feedzy_Rss_Feeds {
 		self::$instance->loader->add_filter( 'admin_footer', self::$instance->admin, 'handle_upgrade_submenu' );
 		self::$instance->loader->add_action( 'current_screen', self::$instance->admin, 'handle_legacy' );
 		self::$instance->loader->add_action( 'init', self::$instance->admin, 'register_settings' );
+		self::$instance->loader->add_action( 'wp_ajax_feedzy_validate_feed', self::$instance->admin, 'validate_feed' );
+		self::$instance->loader->add_action( 'wp_ajax_feedzy_dashboard_subscribe', self::$instance->admin, 'feedzy_dashboard_subscribe' );
+		self::$instance->loader->add_filter( 'feedzy_internal_cron_schedule_slugs', self::$instance->admin, 'internal_cron_schedule_slugs', 10, 1 );
+		self::$instance->loader->add_filter( 'cron_schedules', self::$instance->admin, 'append_custom_cron_schedules' );
 
 		// do not load this with the loader as this will need a corresponding remove_filter also.
 		add_filter( 'update_post_metadata', array( self::$instance->admin, 'validate_category_feeds' ), 10, 5 );
@@ -279,6 +284,32 @@ class Feedzy_Rss_Feeds {
 
 		$plugin_slug = FEEDZY_DIRNAME . '/' . basename( FEEDZY_BASEFILE );
 		$this->loader->add_filter( "plugin_action_links_$plugin_slug", self::$instance->admin, 'plugin_actions', 10, 2 );
+
+		add_action(
+			'feedzy_log',
+			function ( $log_data ) {
+				$level   = isset( $log_data['level'] ) ? $log_data['level'] : 'debug';
+				$message = isset( $log_data['message'] ) ? $log_data['message'] : '';
+				$context = isset( $log_data['context'] ) ? $log_data['context'] : array();
+
+				if ( ! isset( Feedzy_Rss_Feeds_Log::PRIORITIES_MAPPING[ $level ] ) ) {
+					return;
+				}
+			
+				Feedzy_Rss_Feeds_Log::log( Feedzy_Rss_Feeds_Log::PRIORITIES_MAPPING[ $level ], $message, $context );
+			} 
+		);
+		( new Feedzy_Rss_Feeds_Task_Manager() )->register_actions();
+
+		add_filter(
+			'feedzy_disable_db_cache',
+			function ( $a, $b ) {
+				return true;
+			}, 
+			10,
+			2 
+		);
+
 		if ( ! defined( 'TI_UNIT_TESTING' ) ) {
 			add_action(
 				'plugins_loaded',

@@ -247,10 +247,6 @@ class Feedzy_Rss_Feeds_Conditions {
 	 * @return bool True if the conditions are met, false otherwise.
 	 */
 	public function evaluate_conditions( $default_value, $attrs, $item, $feed_url, $index ): bool {
-		if ( feedzy_is_new() && ! feedzy_is_pro() ) {
-			return $default_value;
-		}
-
 		if ( ! isset( $attrs['filters'] ) || empty( $attrs['filters'] ) ) {
 			return $default_value;
 		}
@@ -298,6 +294,9 @@ class Feedzy_Rss_Feeds_Conditions {
 					$admin    = $instance->get_admin();
 					$image    = $admin->feedzy_retrieve_image( $item, $attrs );
 					$value    = $image;
+					break;
+				case 'link':
+					$value = $item->get_link();
 					break;
 				default:
 					$value = '';

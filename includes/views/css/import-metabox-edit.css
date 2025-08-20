@@ -142,7 +142,7 @@ span.feedzy-spinner {
 .wp-core-ui .fz-export-import-btn,
 .wp-core-ui .feedzy-import-limit{
 	display: inline-flex !important;
-	align-items: center;
+	align-items: stretch;
 }
 
 .wp-core-ui .fz-header-action {
@@ -150,42 +150,6 @@ span.feedzy-spinner {
 	gap: 8px;
 }
 
-#fz_import_export_upsell .modal-content {
-	background: #fff;
-	border-radius: 3px;]
-	width: auto;
-	margin: 1.75rem auto  ;
-}
-#fz_import_export_upsell .modal-body {
-	text-align: center;
-}
-#fz_import_export_upsell .modal-header {
-	padding-bottom: 10px;
-	margin-bottom: 10px;
-	position: relative;
-}
-#fz_import_export_upsell .modal-header .dashicons {
-	font-size: 1.3em;
-	line-height: inherit;
-}
-#fz_import_export_upsell .modal-header h2 {
-	text-align: center;
-}
-#fz_import_export_upsell .close-modal {
-	position: absolute;
-	top: 0;
-	right: 0;
-}
-#fz_import_export_upsell .modal-footer .dashicons{
-
-	vertical-align: middle;
-	font-size: initial;
-}
-#fz_import_export_upsell .modal-footer {
-	padding-top: 10px;
-	margin-top: 10px;
-	text-align: center;
-}
 .fz-import-field {
 	background-color: #fff;
 	max-width: 400px;
@@ -201,4 +165,34 @@ span.feedzy-spinner {
 }
 .fz-import-field.hidden {
 	display: none;
+}
+
+.feedzy-wrap .fz-validation-message {
+    margin: 10px 0;
+    padding: 12px 15px;
+    border-radius: 4px;
+    font-size: 14px;
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    border: 1px solid #5555559c;
+}
+
+.feedzy-wrap .fz-validation-message button {
+	margin-left: auto;
+}
+
+.fz-validation-message .fz-success {
+    color: #155724;
+}
+
+.fz-validation-message .fz-error {
+    color: #721c24;
+}
+
+.fz-validation-message  .fz-warning {
+    color: #856404;
 }

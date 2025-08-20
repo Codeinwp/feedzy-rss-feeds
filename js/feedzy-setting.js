@@ -98,50 +98,6 @@ jQuery(function ($) {
 		}
 	});
 
-
-	// License key.
-	jQuery('.fz-license-section #license_key').on('input', function () {
-		const licenseKey = jQuery(this).val();
-		if (licenseKey !== '') {
-			jQuery('#check_ti_license').removeAttr('disabled');
-		} else {
-			jQuery('#check_ti_license').attr('disabled', true);
-		}
-		jQuery('.fz-license-section input[name="license_key"]').val(licenseKey);
-	});
-
-	jQuery('.fz-license-section #check_ti_license').on('click', function (e) {
-		e.preventDefault();
-		const _this = jQuery(this);
-		_this.attr('disabled', true).addClass('fz-checking');
-
-		_this.parents('.fz-license-section').find('.feedzy-api-error').remove();
-
-		const LicenseData = _this
-			.parent('.fz-input-group-btn')
-			.find('input')
-			.serialize();
-
-		jQuery.post(
-			ajaxurl,
-			LicenseData,
-			function (response) {
-				if (!response.success) {
-					jQuery(
-						'<p class="feedzy-api-error">' +
-							response.message +
-							'</p>'
-					).insertAfter(
-						jQuery('.fz-license-section').find('.help-text')
-					);
-					_this.removeAttr('disabled').removeClass('fz-checking');
-				} else {
-					window.location.reload();
-				}
-			},
-			'json'
-		);
-	});
 	snackbarNotice();
 
 	const initializeAutoCatActions = () => {
@@ -214,4 +170,187 @@ jQuery(function ($) {
 	};
 
 	initializeAutoCatActions();
+
+	// Disable the Add Schedule button until all fields are filled.
+	const validateScheduleForm = () => {
+		const button = $('#fz-add-schedule');
+
+		if (!button.length) {
+			return;
+		}
+
+		const interval = $('#fz-schedule-interval').val().trim();
+		const display = $('#fz-schedule-display').val().trim();
+		const name = $('#fz-schedule-name').val().trim();
+
+		const isValid = interval && display && name;
+		button.prop('disabled', !isValid);
+		button.toggleClass('disabled', !isValid);
+	};
+
+	// Initial validation check.
+	validateScheduleForm();
+
+	// Add event listeners to schedule form inputs.
+	$('#fz-schedule-interval, #fz-schedule-display, #fz-schedule-name').on(
+		'input keyup',
+		validateScheduleForm
+	);
+
+	$('#feedzy-delete-log-file').on('click', function (e) {
+		e.preventDefault();
+		const _this = $(this);
+		const originalText = _this.html();
+		_this.attr('disabled', true).addClass('fz-checking');
+
+		const deleteUrl = new URL(`${window.wpApiSettings.root}feedzy/v1/logs`);
+		deleteUrl.searchParams.append('_wpnonce', window.wpApiSettings.nonce);
+
+		fetch(deleteUrl, {
+			method: 'DELETE',
+		})
+			.then((response) => response.json())
+			.then((response) => {
+				if (!response.success) {
+					_this.html(
+						'<span class="dashicons dashicons-no-alt"></span>'
+					);
+					setTimeout(function () {
+						_this.html(originalText);
+						_this.removeAttr('disabled').removeClass('fz-checking');
+					}, 3000);
+				} else {
+					window.location.reload();
+				}
+			})
+			.catch((error) => {
+				_this.html('<span class="dashicons dashicons-no-alt"></span>');
+				setTimeout(function () {
+					_this.html(originalText);
+					_this.removeAttr('disabled').removeClass('fz-checking');
+				}, 3000);
+			});
+	});
+
+	$('#fz-add-schedule').on('click', function (e) {
+		e.preventDefault();
+
+		const formElem = document.querySelector('form:has(.fz-form-wrap)');
+		if (formElem && formElem.checkValidity() === false) {
+			formElem.reportValidity();
+			return;
+		}
+
+		const interval = $('#fz-schedule-interval').val();
+		const display = $('#fz-schedule-display').val();
+		const name = $('#fz-schedule-name').val();
+
+		if (!interval || !display || !name) {
+			return;
+		}
+
+		$('.fz-schedules-table').show();
+		const scheduleTable = $('.fz-schedules-table tbody');
+
+		const newRow = $('<tr>').attr('data-schedule', name);
+
+		const nameCell = $('<td>')
+			.addClass('fz-schedule-attributes')
+			.append($('<strong>').text(name));
+
+		const intervalCell = $('<td>')
+			.addClass('fz-schedule-attributes')
+			.text(interval);
+		const displayCell = $('<td>')
+			.addClass('fz-schedule-attributes')
+			.text(display);
+
+		const deleteButton = $('<button>')
+			.attr({
+				type: 'button',
+				'data-schedule': name,
+			})
+			.addClass(
+				'btn btn-outline-primary fz-delete-schedule fz-is-destructive'
+			)
+			.text(window.feedzy_setting.l10n.delete_btn_label);
+
+		const actionCell = $('<td>')
+			.addClass('fz-schedule-attributes')
+			.append(deleteButton);
+
+		const intervalInput = $('<input>').attr({
+			type: 'hidden',
+			value: interval,
+			name: `fz-custom-schedule-interval[${name}][interval]`,
+		});
+
+		const displayInput = $('<input>').attr({
+			type: 'hidden',
+			value: display,
+			name: `fz-custom-schedule-interval[${name}][display]`,
+		});
+
+		newRow.append(
+			nameCell,
+			intervalCell,
+			displayCell,
+			actionCell,
+			intervalInput,
+			displayInput
+		);
+
+		scheduleTable.append(newRow);
+
+		// Update counter
+		const currentCount = scheduleTable.children().length;
+		$('.fz-schedule-counter').text(`${currentCount} items`);
+
+		$('#fz-schedule-interval').val('');
+		$('#fz-schedule-display').val('');
+		$('#fz-schedule-name').val('');
+
+		// Re-validate form after clearing fields
+		validateScheduleForm();
+	});
+
+	$(document).on('click', '.fz-delete-schedule', function (e) {
+		e.preventDefault();
+
+		const $button = $(this);
+		const $row = $button.closest('tr');
+		const scheduleTable = $('.fz-schedules-table tbody');
+
+		$row.fadeOut(300, function () {
+			$(this).remove();
+
+			// Update counter
+			const currentCount = scheduleTable.children().length;
+			$('.fz-schedule-counter').text(`${currentCount} items`);
+
+			// Show empty state and hide table if no schedules left
+			if (currentCount === 0) {
+				$('.fz-schedules-table').hide();
+				$('.fz-empty-state').show();
+			}
+		});
+	});
+
+	/**
+	 * Toggle visibility of the email error address field based on email error enabled checkbox.
+	 */
+	const toggleEmailErrorField = () => {
+		const checkbox = $('#feedzy-email-error-enabled');
+
+		$('.fz-log-email-address').toggleClass(
+			'fz-hidden',
+			!checkbox.is(':checked')
+		);
+		$('.fz-log-email-freq').toggleClass(
+			'fz-hidden',
+			!checkbox.is(':checked')
+		);
+	};
+
+	$('#feedzy-email-error-enabled').on('change', toggleEmailErrorField);
 });

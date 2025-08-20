@@ -1,6 +1,5 @@
 <?php // phpcs:disable ?>
 <div class="fz-pro-features-wrap">
-    <h2 class="h2"><?php esc_html_e( 'Powerful features available only with Feedzy Pro', 'feedzy-rss-feeds' ); ?></h2>
     <div class="fz-pro-features-table mb-30">
         <div class="fz-pro-features-table-header">
             <ul class="fz-pro-features-table-row">

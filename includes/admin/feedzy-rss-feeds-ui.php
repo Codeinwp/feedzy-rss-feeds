@@ -237,7 +237,7 @@ class Feedzy_Rss_Feeds_Ui {
 							$upgrade_url = tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'post_title', 'import-screen' ) );
 
 							$content = __( 'You are using Feedzy Lite.', 'feedzy-rss-feeds' ) . ' ';
-							// translators: %1$s: opening anchor tag, %2$s: closing anchor tag
+							// translators: %1$s: opening anchor tag, %2$s: closing anchor tag.
 							$content .= wp_sprintf( __( 'Unlock more powerful features, by %1$s upgrading to Feedzy Pro %2$s and get 50%% off.', 'feedzy-rss-feeds' ), '<a href="' . esc_url( $upgrade_url ) . '" target="_blank">', '</a>' );
 
 							echo wp_kses_post( $content );

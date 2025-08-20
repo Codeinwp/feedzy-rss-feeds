@@ -156,11 +156,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$shortcodes = $wpdb->get_var( "SELECT count(*) FROM {$wpdb->prefix}posts WHERE post_status IN ('publish', 'private') AND post_content LIKE '%[feedzy-rss %'" ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		$data = array(
-			'categories'         => $categories,
-			'imports'            => $imports,
-			'shortcodes'         => $shortcodes,
-			'license'            => $license,
-			'days_since_install' => round( ( time() - get_option( 'feedzy_rss_feeds_install', time() ) ) / DAY_IN_SECONDS ),
+			'categories' => $categories,
+			'imports'    => $imports,
+			'shortcodes' => $shortcodes,
+			'license'    => $license,
 		);
 
 		$settings = apply_filters( 'feedzy_get_settings', null );
@@ -168,7 +167,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! is_array( $settings ) || empty( $settings ) ) {
 			return $data;
 		}
-
 		$general_settings = array();
 		$config           = array();
 
@@ -196,6 +194,17 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$data['general'] = $general_settings;
 			}
 		}
+
+		if ( isset( $settings['custom_schedules'] ) && is_array( $settings['custom_schedules'] ) ) {
+			$data['custom_schedules_count'] = count( $settings['custom_schedules'] );
+		}
+
+		$logger         = Feedzy_Rss_Feeds_Log::get_instance();
+		$data['logger'] = array(
+			'can_send_email' => $logger->can_send_email(),
+			'has_email'      => ! empty( $logger->get_email_address() ),
+			'file_size'      => $logger->get_log_file_size(),
+		);
 
 		return $data;
 	}
@@ -527,6 +536,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				),
 			)
 		);
+
+		Feedzy_Rss_Feeds_Log::get_instance()->register_endpoints();
 	}
 
 	/**
@@ -620,6 +631,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'default'               => '',
 				// thumbs pixel size.
 				'size'                  => '',
+				// default aspect ratio for the image.
+				'aspectRatio'           => '1',
 				// only display item if title contains specific keywords (Use comma(,) and plus(+) keyword).
 				'keywords_title'        => '',
 				// only display item if title OR content contains specific keywords (Use comma(,) and plus(+) keyword).
@@ -859,7 +872,14 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			if ( ! $wp_filesystem->exists( $dir ) ) {
 				$done = $wp_filesystem->mkdir( $dir );
 				if ( false === $done ) {
-					do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Unable to create directory %s', $dir ), 'error', __FILE__, __LINE__ );
+					Feedzy_Rss_Feeds_Log::warning(
+						sprintf( 'Unable to create SimplePie cache directory: %s', $dir ),
+						array(
+							'feed_url' => $feed_url,
+							'cache'    => $cache,
+							'sc'       => $sc,
+						)
+					);
 				}
 			}
 			$feed->set_cache_location( $dir );
@@ -900,14 +920,36 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		if ( ! empty( $error ) ) {
-			do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Error while parsing feed: %s', $error ), 'error', __FILE__, __LINE__ );
+			Feedzy_Rss_Feeds_Log::error(
+				// translators: %1$s is the feed URL, %2$s is the error message.
+				sprintf( __( 'Error while parsing feed URL "%1$s": %2$s', 'feedzy-rss-feeds' ), $feed_url, $error ),
+				array(
+					'feed_url' => $feed_url,
+					'cache'    => $cache,
+					'sc'       => $sc,
+				)
+			);
 
 			// curl: (60) SSL certificate problem: unable to get local issuer certificate.
 			if ( strpos( $error, 'SSL certificate' ) !== false ) {
-				do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Got an SSL Error (%s), retrying by ignoring SSL', $error ), 'debug', __FILE__, __LINE__ );
+				Feedzy_Rss_Feeds_Log::warning(
+					sprintf( 'Got an SSL Error (%s), retrying by ignoring SSL', $error ),
+					array(
+						'feed_url' => $feed_url,
+						'cache'    => $cache,
+						'sc'       => $sc,
+					)
+				);
 				$feed = $this->init_feed( $feed_url, $cache, $sc, false );
 			} elseif ( is_string( $feed_url ) || ( is_array( $feed_url ) && 1 === count( $feed_url ) ) ) {
-				do_action( 'themeisle_log_event', FEEDZY_NAME, 'Trying to use raw data', 'debug', __FILE__, __LINE__ );
+				Feedzy_Rss_Feeds_Log::debug(
+					sprintf( 'Using raw data for feed: %s', $feed_url ),
+					array(
+						'cache' => $cache,
+						'sc'    => $sc,
+					)
+				);
+
 				$data = wp_remote_retrieve_body( wp_safe_remote_get( $feed_url, array( 'user-agent' => $default_agent ) ) );
 				$cloned_feed->set_raw_data( $data );
 				$cloned_feed->init();
@@ -918,7 +960,14 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 					$feed = $cloned_feed;
 				}
 			} else {
-				do_action( 'themeisle_log_event', FEEDZY_NAME, 'Cannot use raw data as this is a multifeed URL', 'debug', __FILE__, __LINE__ );
+				Feedzy_Rss_Feeds_Log::debug(
+					'Cannot use raw data as this is a multi-feed URL',
+					array(
+						'feed_url' => $feed_url,
+						'cache'    => $cache,
+						'sc'       => $sc,
+					)
+				);
 			}
 		}
 		return $feed;
@@ -1404,44 +1453,54 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$item_link = $item->get_feed()->get_permalink();
 			}
 		}
-		$new_link = apply_filters( 'feedzy_item_url_filter', $item_link, $sc, $item );
+		$new_link      = apply_filters( 'feedzy_item_url_filter', $item_link, $sc, $item );
+		$amp_running   = function_exists( 'amp_is_request' ) && amp_is_request();
+		$content_thumb = '';
 
-		// Fetch image thumbnail.
+		$thumbnail_to_use = '';
 		if ( 'yes' === $sc['thumb'] || 'auto' === $sc['thumb'] ) {
-			$the_thumbnail = $this->feedzy_retrieve_image( $item, $sc );
-			$content_thumb = '';
+			// Fetch image thumbnail.
+			$thumbnail_to_use = $this->feedzy_retrieve_image( $item, $sc );
+			$thumbnail_to_use = $this->feedzy_image_encode( $thumbnail_to_use );
+
+			if ( empty( $thumbnail_to_use ) && 'yes' === $sc['thumb'] ) {
+				$thumbnail_to_use = $sc['default'];
+			}
+		} else {
+			$thumbnail_to_use = $sc['default'];
+		}
+		
+		if ( ! empty( $thumbnail_to_use ) && is_string( $thumbnail_to_use ) ) {
+			$img_style = '';
+
+			if ( isset( $sizes['height'] ) && is_numeric( $sizes['height'] ) ) {
+				$img_style .= 'height:' . $sizes['height'] . 'px;';
+			}
+
+			if ( isset( $sc['aspectRatio'] ) && '1' !== $sc['aspectRatio'] ) {
+				$img_style .= 'aspect-ratio:' . $sc['aspectRatio'] . '; object-fit: fill;';
+			}
+			
 			if (
-				is_string( $the_thumbnail ) && ! empty( $the_thumbnail ) &&
+				isset( $sizes['width'] ) && is_numeric( $sizes['width'] ) && 
 				(
-					'yes' === $sc['thumb'] ||
+					$sizes['width'] !== $sizes['height'] || // Note: Custom modification via filters.
 					(
-						'auto' === $sc['thumb'] &&
-						! strpos( $the_thumbnail, 'img/feedzy.svg' )
+						isset( $sc['aspectRatio'] ) &&
+						(
+							( 'auto' === $sc['aspectRatio'] && $amp_running ) || // Note: AMP compatibility. Auto without `height` breaks the layout.
+							'1' === $sc['aspectRatio'] // Note: Backward compatiblity.
+						)
 					)
 				)
 			) {
-				$the_thumbnail  = $this->feedzy_image_encode( $the_thumbnail );
-				$content_thumb .= '<span class="fetched" style="background-image:  url(\'' . $the_thumbnail . '\');" title="' . esc_attr( $item->get_title() ) . '"></span>';
-				if ( ! isset( $sc['amp'] ) || 'no' !== $sc['amp'] ) {
-					$content_thumb .= '<amp-img width="' . $sizes['width'] . '" height="' . $sizes['height'] . '" src="' . $the_thumbnail . '">';
-				}
+				$img_style .= 'width:' . $sizes['width'] . 'px;';
 			}
 
-			if ( empty( $the_thumbnail ) && 'yes' === $sc['thumb'] ) {
-				$content_thumb .= '<span class="default" style="background-image:url(' . $sc['default'] . ');" title="' . esc_attr( $item->get_title() ) . '"></span>';
-				if ( ! isset( $sc['amp'] ) || 'no' !== $sc['amp'] ) {
-					$content_thumb .= '<amp-img width="' . $sizes['width'] . '" height="' . $sizes['height'] . '" src="' . $sc['default'] . '">';
-				}
-			}
-			$content_thumb = apply_filters( 'feedzy_thumb_output', $content_thumb, $feed_url, $sizes, $item );
-		} else {
-			$content_thumb  = '';
-			$content_thumb .= '<span class="default" style="width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px; background-image:url(' . $sc['default'] . ');" title="' . $item->get_title() . '"></span>';
-			if ( ! isset( $sc['amp'] ) || 'no' !== $sc['amp'] ) {
-				$content_thumb .= '<amp-img width="' . $sizes['width'] . '" height="' . $sizes['height'] . '" src="' . $sc['default'] . '">';
-			}
-			$content_thumb = apply_filters( 'feedzy_thumb_output', $content_thumb, $feed_url, $sizes, $item );
+			$content_thumb .= '<img decoding="async" src="' . $thumbnail_to_use . '" title="' . esc_attr( $item->get_title() ) . '" style="' . $img_style . '">';
+			$content_thumb  = apply_filters( 'feedzy_thumb_output', $content_thumb, $feed_url, $sizes, $item );
 		}
+
 		$content_title = html_entity_decode( $item->get_title(), ENT_QUOTES, 'UTF-8' );
 		if ( is_numeric( $sc['title'] ) ) {
 			$length = intval( $sc['title'] );
@@ -1593,17 +1652,28 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( empty( $item_content ) ) {
 			$item_content = esc_html__( 'Post Content', 'feedzy-rss-feeds' );
 		}
+
+		$img_style = '';
+		if ( isset( $sizes['height'] ) ) {
+			$img_style = 'height:' . $sizes['height'] . 'px;';
+			if ( isset( $sc['aspectRatio'] ) && '1' !== $sc['aspectRatio'] ) {  
+				$img_style .= 'aspect-ratio:' . $sc['aspectRatio'] . ';';
+			} elseif ( isset( $sizes['width'] ) ) {
+				$img_style .= 'width:' . $sizes['width'] . 'px;';
+			}
+		}
+
 		$item_array = array(
 			'feed_url'              => $item->get_feed()->subscribe_url(),
 			'item_unique_hash'      => wp_hash( $item->get_permalink() ),
 			'item_img_class'        => 'rss_image',
-			'item_img_style'        => 'width:' . $sizes['width'] . 'px; height:' . $sizes['height'] . 'px;',
+			'item_img_style'        => $img_style,
 			'item_url'              => $new_link,
 			'item_url_target'       => $sc['target'],
 			'item_url_follow'       => isset( $sc['follow'] ) && 'yes' === $sc['follow'] ? 'nofollow' : '',
 			'item_url_title'        => $item->get_title(),
 			'item_img'              => $content_thumb,
-			'item_img_path'         => $this->feedzy_retrieve_image( $item, $sc ),
+			'item_img_path'         => isset( $sc['thumb'] ) && ( 'yes' === $sc['thumb'] || 'auto' === $sc['thumb'] ) ? $this->feedzy_retrieve_image( $item, $sc ) : '',
 			'item_title'            => $content_title,
 			'item_content_class'    => 'rss_content',
 			'item_content_style'    => '',
@@ -1911,7 +1981,15 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		$filtered_url = apply_filters( 'feedzy_image_encode', esc_url( $img_url ), $img_url );
-		do_action( 'themeisle_log_event', FEEDZY_NAME, sprintf( 'Changing image URL from %s to %s', $img_url, $filtered_url ), 'debug', __FILE__, __LINE__ );
+
+		Feedzy_Rss_Feeds_Log::debug(
+			'Change featured image via feedzy_image_encode',
+			array(
+				'old_url' => $img_url,
+				'new_url' => $filtered_url,
+			)
+		);
+
 		return $filtered_url;
 	}
 

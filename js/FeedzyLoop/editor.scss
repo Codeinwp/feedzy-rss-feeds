@@ -8,14 +8,15 @@
             width: 100%;
         }
     }
+
+    // Note: Hide generated invalid Core Image blocks
+    .wp-block-image:has( :is( img:not([src]), img[src=""] ) ) {
+        display: none;
+    }
 }
 
 .fz-condition-control {
     padding: 0;
-
-    &.is-upsell {
-        opacity: 0.6;
-    }
 
     .components-button {
         width: 100%;
@@ -23,6 +24,10 @@
         padding: 6px 12px;
         justify-content: center;
     }
+}
+
+.is-upsell {
+    opacity: 0.6;
 }
 
 .fz-panel-tab {
@@ -227,5 +232,23 @@ input[type="text"].fz-input-field:disabled {
     .block-editor-block-preview__container {
         border-radius: 4px;
         outline: 1px solid #0000001a;
+    }
+}
+
+.fz-block-variation {
+    .block-editor-block-variation-picker__variations {
+        flex-wrap: nowrap;
+    }
+    .block-editor-block-variation-picker__variations>li {
+        width: 35%;
+    }
+}
+
+.fz-block-variation-picker {
+    display: flex;
+    justify-content: space-between;
+
+    &> .components-button svg {
+       max-width: 70px;
     }
 }

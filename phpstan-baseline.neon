@@ -631,11 +631,6 @@ parameters:
 			path: includes/admin/feedzy-rss-feeds-admin.php
 
 		-
-			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:feedzy_menu_pages\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: includes/admin/feedzy-rss-feeds-admin.php
-
-		-
 			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:feedzy_remove_elementor_feature\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: includes/admin/feedzy-rss-feeds-admin.php
@@ -926,17 +921,7 @@ parameters:
 			path: includes/admin/feedzy-rss-feeds-import.php
 
 		-
-			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:run_job\\(\\) should return int but empty return statement found\\.$#"
-			count: 1
-			path: includes/admin/feedzy-rss-feeds-import.php
-
-		-
 			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:set_wpml_element_language_details\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: includes/admin/feedzy-rss-feeds-import.php
-
-		-
-			message: "#^Method Feedzy_Rss_Feeds_Import\\:\\:try_save_featured_image\\(\\) has parameter \\$import_errors with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: includes/admin/feedzy-rss-feeds-import.php
 
@@ -1022,11 +1007,6 @@ parameters:
 
 		-
 			message: "#^Property Feedzy_Rss_Feeds_Import\\:\\:\\$settings type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: includes/admin/feedzy-rss-feeds-import.php
-
-		-
-			message: "#^Result of && is always true\\.$#"
 			count: 1
 			path: includes/admin/feedzy-rss-feeds-import.php
 
@@ -1656,17 +1636,7 @@ parameters:
 			path: includes/gutenberg/feedzy-rss-feeds-loop-block.php
 
 		-
-			message: "#^Method Feedzy_Rss_Feeds_Loop_Block\\:\\:get_value\\(\\) has parameter \\$item with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: includes/gutenberg/feedzy-rss-feeds-loop-block.php
-
-		-
 			message: "#^Method Feedzy_Rss_Feeds_Loop_Block\\:\\:register_block\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: includes/gutenberg/feedzy-rss-feeds-loop-block.php
-
-		-
-			message: "#^Method Feedzy_Rss_Feeds_Loop_Block\\:\\:render_callback\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: includes/gutenberg/feedzy-rss-feeds-loop-block.php
 
@@ -1683,11 +1653,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$text of function esc_attr expects string, int given\\.$#"
 			count: 2
-			path: includes/layouts/settings.php
-
-		-
-			message: "#^Parameter \\#2 \\$allowed_html of function wp_kses expects array\\<array\\>\\|string, array\\<string, true\\> given\\.$#"
-			count: 1
 			path: includes/layouts/settings.php
 
 		-
@@ -1757,7 +1722,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$text of function esc_attr expects string, int given\\.$#"
-			count: 2
+			count: 1
 			path: includes/views/import-metabox-edit.php
 
 		-
@@ -1792,16 +1757,6 @@ parameters:
 
 		-
 			message: "#^Variable \\$import_featured_img might not be defined\\.$#"
-			count: 1
-			path: includes/views/import-metabox-edit.php
-
-		-
-			message: "#^Variable \\$import_feed_delete_days might not be defined\\.$#"
-			count: 1
-			path: includes/views/import-metabox-edit.php
-
-		-
-			message: "#^Variable \\$import_feed_delete_media might not be defined\\.$#"
 			count: 1
 			path: includes/views/import-metabox-edit.php
 

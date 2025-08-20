@@ -49,7 +49,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		$this->version = Feedzy_Rss_Feeds::get_version();
 		$this->admin   = Feedzy_Rss_Feeds::instance()->get_admin();
 		add_action( 'init', array( $this, 'register_block' ) );
-		add_filter( 'feedzy_loop_item', array( $this, 'apply_magic_tags' ), 10, 2 );
+		add_filter( 'feedzy_loop_item', array( $this, 'apply_magic_tags' ), 10, 3 );
 	}
 
 	/**
@@ -73,6 +73,8 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			array(
 				'imagepath'    => esc_url( FEEDZY_ABSURL . 'img/' ),
 				'defaultImage' => esc_url( FEEDZY_ABSURL . 'img/feedzy.svg' ),
+				'url'          => admin_url( 'admin-ajax.php' ),
+				'nonce'        => wp_create_nonce( FEEDZY_BASEFILE ),
 				'isPro'        => feedzy_is_pro(),
 			)
 		);
@@ -93,8 +95,8 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	/**
 	 * Render Callback
 	 *
-	 * @param array  $attributes The block attributes.
-	 * @param string $content The block content.
+	 * @param array<string, mixed> $attributes The block attributes.
+	 * @param string               $content The block content.
 	 * @return string The block content.
 	 */
 	public function render_callback( $attributes, $content ) {
@@ -118,6 +120,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		}
 
 		$column_count = isset( $attributes['layout'] ) && isset( $attributes['layout']['columnCount'] ) && ! empty( $attributes['layout']['columnCount'] ) ? $attributes['layout']['columnCount'] : 1;
+		$referral_url = isset( $attributes['referral_url'] ) ? $attributes['referral_url'] : '';
 
 		$default_query = array(
 			'max'     => 5,
@@ -125,8 +128,27 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			'refresh' => '12_hours',
 		);
 
-		$query   = isset( $attributes['query'] ) ? wp_parse_args( $attributes['query'], $default_query ) : $default_query;
-		$filters = isset( $attributes['conditions'] ) ? $attributes['conditions'] : array();
+		$query             = isset( $attributes['query'] ) ? wp_parse_args( $attributes['query'], $default_query ) : $default_query;
+		$filters           = isset( $attributes['conditions'] ) ? $attributes['conditions'] : array();
+		$thumb             = 'auto';
+		$default_thumbnail = '';
+	
+		if ( isset( $attributes['thumb'] ) && ! empty( $attributes['thumb'] ) ) {
+			$thumb = $attributes['thumb'];
+
+			if (
+				'yes' === $thumb &&
+				isset( $attributes['fallbackImage'], $attributes['fallbackImage']['id'] ) &&
+				! empty( $attributes['fallbackImage']['id'] )
+			) {
+				$image_id  = $attributes['fallbackImage']['id'];
+				$media_img = wp_get_attachment_image_src( $image_id );
+
+				if ( is_array( $media_img ) && ! empty( $media_img[0] ) ) {
+					$default_thumbnail = $media_img[0];
+				}
+			}
+		}
 
 		$options = array(
 			'feeds'         => implode( ',', $feed_urls ),
@@ -136,14 +158,15 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			'target'        => '_blank',
 			'keywords_ban'  => '',
 			'columns'       => '1',
-			'thumb'         => 'auto',
-			'default'       => '',
+			'thumb'         => $thumb,
+			'default'       => $default_thumbnail,
 			'title'         => '',
 			'meta'          => 'yes',
 			'multiple_meta' => 'no',
 			'summary'       => 'yes',
 			'summarylength' => '',
 			'filters'       => wp_json_encode( $filters ),
+			'referral_url'  => $referral_url,
 		);
 
 		$sizes = array(
@@ -166,7 +189,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		$loop = '';
 
 		foreach ( $feed_items as $key => $item ) {
-			$loop .= apply_filters( 'feedzy_loop_item', $content, $item );
+			$loop .= apply_filters( 'feedzy_loop_item', $content, $item, $attributes );
 		}
 
 		return sprintf(
@@ -183,12 +206,13 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	/**
 	 * Magic Tags Replacement.
 	 *
-	 * @param string $content The content.
-	 * @param array  $item The item.
+	 * @param string               $content The content.
+	 * @param array                $item The item.
+	 * @param array<string, mixed> $attributes The block attributes.
 	 *
 	 * @return string The content.
 	 */
-	public function apply_magic_tags( $content, $item ) {
+	public function apply_magic_tags( $content, $item, $attributes ) {
 		$pattern = '/\{\{feedzy_([^}]+)\}\}/';
 		$content = str_replace(
 			array(
@@ -204,8 +228,8 @@ class Feedzy_Rss_Feeds_Loop_Block {
 
 		return preg_replace_callback(
 			$pattern,
-			function ( $matches ) use ( $item ) {
-				return isset( $matches[1] ) ? $this->get_value( $matches[1], $item ) : '';
+			function ( $matches ) use ( $item, $attributes ) {
+				return isset( $matches[1] ) ? $this->get_value( $matches[1], $item, $attributes ) : '';
 			},
 			$content 
 		);
@@ -214,12 +238,13 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	/**
 	 * Get Dynamic Value.
 	 *
-	 * @param string $key The key.
-	 * @param array  $item Feed item.
+	 * @param string               $key The key.
+	 * @param array<string, mixed> $item Feed item.
+	 * @param array<string, mixed> $attributes The block attributes.
 	 *
 	 * @return string The value.
 	 */
-	public function get_value( $key, $item ) {
+	public function get_value( $key, $item, $attributes ) {
 		switch ( $key ) {
 			case 'title':
 				return isset( $item['item_title'] ) ? $item['item_title'] : '';
@@ -253,15 +278,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			case 'categories':
 				return isset( $item['item_categories'] ) ? $item['item_categories'] : '';
 			case 'image':
-				$settings = apply_filters( 'feedzy_get_settings', array() );
-				if ( $settings && ! empty( $settings['general']['default-thumbnail-id'] ) ) {
-					$default_img = wp_get_attachment_image_src( $settings['general']['default-thumbnail-id'], 'full' );
-					$default_img = ! empty( $default_img ) ? reset( $default_img ) : '';
-				} else {
-					$default_img = FEEDZY_ABSURL . 'img/feedzy.svg';
-				}
-
-				return isset( $item['item_img_path'] ) ? $item['item_img_path'] : $default_img;
+				return $this->get_thumbnail( $item, $attributes );
 			case 'media':
 				return isset( $item['item_media']['src'] ) ? $item['item_media']['src'] : '';
 			case 'price':
@@ -271,5 +288,62 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			default:
 				return '';
 		}
+	}
+
+	/**
+	 * Get Thumbnail of feed item.
+	 * 
+	 * Fallback to default thumbnail if not set. The Fallback image can be set in the block attributes or in the plugin settings.
+	 *
+	 * @param array<string, mixed> $item The feed item.
+	 * @param array<string, mixed> $attributes The block attributes.
+	 *
+	 * @return string The thumbnail URL.
+	 */
+	private function get_thumbnail( $item, $attributes ) {
+		$settings = apply_filters( 'feedzy_get_settings', array() );
+		$thumb    = 'yes';
+	
+		if ( isset( $attributes['thumb'] ) && ! empty( $attributes['thumb'] ) ) {
+			$thumb = $attributes['thumb'];
+		}
+	
+		if ( 'no' === $thumb ) {
+			return '';
+		}
+	
+		if ( isset( $item['item_img_path'] ) && ! empty( $item['item_img_path'] ) ) {
+			return $item['item_img_path'];
+		} 
+		
+		if ( 'auto' === $thumb ) {
+			return '';
+		}
+
+		// Try to find the fallback image.
+		if (
+			isset( $attributes['fallbackImage'], $attributes['fallbackImage']['url'] ) &&
+			! empty( $attributes['fallbackImage']['url'] )
+		) {
+			$image_id  = $attributes['fallbackImage']['id'];
+			$media_img = wp_get_attachment_image_src( $image_id );
+			if ( is_array( $media_img ) && ! empty( $media_img[0] ) ) {
+				return $media_img[0];
+			}
+		}
+		
+		if (
+			isset( $settings, $settings['general'], $settings['general']['default-thumbnail-id'] ) &&
+			! empty( $settings['general']['default-thumbnail-id'] )
+		) {
+			$media_img = wp_get_attachment_image_src( $settings['general']['default-thumbnail-id'], 'full' );
+			if (
+				is_array( $media_img ) && ! empty( $media_img[0] )
+			) {
+				return $media_img[0];
+			}
+		}
+		
+		return FEEDZY_ABSURL . 'img/feedzy.svg';
 	}
 }

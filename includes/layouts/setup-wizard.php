@@ -5,13 +5,13 @@
  * @package Feedzy_Rss_Feeds
  */
 
-$dashboard_url = add_query_arg(
+// Note: It will be redirect to dashboard by `feedzy_dismiss_wizard` action.
+$skip_onboarding_url_callback = add_query_arg(
 	array(
-		'post_type' => 'feedzy_imports',
-		'action'    => 'feedzy_dismiss_wizard',
-		'status'    => 0,
+		'action' => 'feedzy_dismiss_wizard',
+		'status' => 0,
 	),
-	admin_url( 'edit.php' )
+	admin_url( 'admin.php' )
 );
 // phpcs:ignore WordPress.Security.NonceVerification
 $integrate_with     = ! empty( $_GET['integrate-with'] ) ? sanitize_text_field( wp_unslash( $_GET['integrate-with'] ) ) : '';
@@ -24,6 +24,7 @@ if ( ! empty( $integrate_with ) ) {
 }
 $published_status = array( 'publish', 'draft' );
 
+add_thickbox();
 ?>
 <div class="feedzy-wizard-wrap feedzy-wrap">
 	<div class="feedzy-header--small">
@@ -34,7 +35,7 @@ $published_status = array( 'publish', 'draft' );
 				</div>
 			</div>
 			<div class="back-btn">
-				<a href="<?php echo esc_url( $dashboard_url ); ?>" class="btn-link"><span class="dashicons dashicons-arrow-left-alt"></span> <?php esc_html_e( 'Go to dashboard', 'feedzy-rss-feeds' ); ?></a>
+				<a href="<?php echo esc_url( $skip_onboarding_url_callback ); ?>" class="btn-link"><span class="dashicons dashicons-arrow-left-alt"></span> <?php esc_html_e( 'Go to dashboard', 'feedzy-rss-feeds' ); ?></a>
 			</div>
 		</div>
 	</div>
@@ -138,6 +139,11 @@ $published_status = array( 'publish', 'draft' );
 												</div>
 											</div>
 											<div class="form-block">
+												<?php if ( 'page_builder' !== $integrate_with ) : ?>
+													<button class="btn btn-ghost<?php echo empty( $feed_source ) ? ' disabled' : ''; ?>" id="preflight">
+														<?php esc_html_e( 'Preview Import', 'feedzy-rss-feeds' ); ?>
+													</button>
+												<?php endif; ?>
 												<button class="btn btn-primary<?php echo empty( $feed_source ) ? ' disabled' : ''; ?>" data-step_number="2">
 													<?php
 													if ( 'page_builder' === $integrate_with ) {
@@ -178,21 +184,54 @@ $published_status = array( 'publish', 'draft' );
 												</div>
 											</div>
 											<div class="form-block">
+												<div class="fz-form-row">
+													<div class="fz-form-col-6">
+														<label class="form-label">
+															<?php esc_html_e( 'Post status', 'feedzy-rss-feeds' ); ?>
+														</label>
+														<div class="mx-320">
+															<select id="feedzy_post_status" class="form-control feedzy-chosen" name="feedzy_meta_data[import_post_status]">
+																<?php
+																foreach ( $published_status as $_status ) {
+																	?>
+																	<option value="<?php echo esc_attr( $_status ); ?>">
+																		<?php echo esc_html( ucfirst( $_status ) ); ?>
+																	</option>
+																	<?php
+																}
+																?>
+															</select>
+														</div>
+													</div>
+													<div class="fz-form-col-6">
+														<label class="form-label">
+															<?php esc_html_e( 'Fallback Image', 'feedzy-rss-feeds' ); ?>
+														</label>
+														<div class="fz-cta-group pb-8">
+															<a 
+																href="javascript:;"
+																class="feedzy-open-media btn btn-outline-primary"
+															>
+															<?php esc_html_e( 'Choose image', 'feedzy-rss-feeds' ); ?>
+															</a>
+															<a href="javascript:;" class="feedzy-remove-media btn btn-outline-primary"><?php esc_html_e( 'Remove', 'feedzy-rss-feeds' ); ?></a>
+															<input type="hidden" name="feedzy_meta_data[default_thumbnail_id]" id="feed-post-default-thumbnail" value="">
+															<div class="help-text pt-8">
+																<?php esc_html_e( 'Optional. Used as fallback for imported posts without images.', 'feedzy-rss-feeds' ); ?>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="form-block">
 												<label class="form-label">
-													<?php esc_html_e( 'Post status', 'feedzy-rss-feeds' ); ?>
+													<?php esc_html_e( 'Exclude posts with title not containing', 'feedzy-rss-feeds' ); ?>
 												</label>
-												<div class="mx-320">
-													<select id="feedzy_post_status" class="form-control feedzy-chosen" name="feedzy_meta_data[import_post_status]">
-														<?php
-														foreach ( $published_status as $_status ) {
-															?>
-															<option value="<?php echo esc_attr( $_status ); ?>">
-																<?php echo esc_html( ucfirst( $_status ) ); ?>
-															</option>
-															<?php
-														}
-														?>
-													</select>
+												<div class="fz-form-group">
+													<input type="text" id="feedzy_exclude_title" name="feedzy_meta_data[exc_key]" class="form-control" value="" />
+													<div class="help-text pt-8">
+														<?php esc_html_e( 'Posts will not be imported if their title includes these keywords.', 'feedzy-rss-feeds' ); ?>
+													</div>
 												</div>
 											</div>
 											<div class="form-block">
@@ -239,7 +278,7 @@ $published_status = array( 'publish', 'draft' );
 														<div class="fz-shortcode-preview">
 															<h4 class="h4 pb-8"><?php esc_html_e( 'Basic Shortcode', 'feedzy-rss-feeds' ); ?></h4>
 															<div class="fz-code-box">
-																<input type="text" redonly value='[feedzy-rss feeds={{feed_source}}]' id="basic_shortcode">
+																<input type="text" readonly value='[feedzy-rss feeds={{feed_source}} max="6" meta="author, date" columns="3" summary="yes" summarylength="160" thumb="yes" target="_blank"]' id="basic_shortcode">
 																<button type="button" class="fz-copy-code-btn" data-clipboard-target="#basic_shortcode"><?php esc_html_e( 'click to copy', 'feedzy-rss-feeds' ); ?> <img src="<?php echo esc_url( FEEDZY_ABSURL . 'img/copy.svg' ); ?>" alt="">
 																</button>
 															</div>

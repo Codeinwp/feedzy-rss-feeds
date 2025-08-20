@@ -81,20 +81,6 @@ Layout For Document Page of Feedzy RSS Feeds
 		<li>
 			<div class="fz-document-box">
 				<div class="fz-document-box-img">
-					<img src="<?php echo esc_url( FEEDZY_ABSURL . 'img/feedzy-demo.jpg' ); ?>" alt="">
-				</div>
-				<div class="fz-document-box-content">
-					<h3 class="h3"><?php esc_html_e( 'Feedzy Demo', 'feedzy-rss-feeds' ); ?></h3>
-					<p><?php esc_html_e( 'See how Feedzy can integrate with your website by browsing our examples.', 'feedzy-rss-feeds' ); ?></p>
-					<div class="cta">
-						<a href="https://demo.themeisle.com/feedzy-rss-feeds/" class="btn btn-outline-primary" target="_blank"><?php esc_html_e( 'Learn more', 'feedzy-rss-feeds' ); ?></a>
-					</div>
-				</div>
-			</div>
-		</li>
-		<li>
-			<div class="fz-document-box">
-				<div class="fz-document-box-img">
 					<img src="<?php echo esc_url( FEEDZY_ABSURL . 'img/in-feedzy.jpg' ); ?>" alt="">
 				</div>
 				<div class="fz-document-box-content">
