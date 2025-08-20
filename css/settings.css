@@ -1132,9 +1132,10 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 }
 
 /* FZ tab style start */
-.fz-tabs-menu ul{
+.fz-tabs-menu ul {
 	display: flex;
 	flex-wrap: wrap;
+	align-items: flex-end;
 	border-bottom: 1px solid #D9D9D9;
 }
 
@@ -1147,40 +1148,26 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 	padding: 15px 16px;
 	text-decoration: none;
 	position: relative;
-	margin-bottom: 8px;
 	-webkit-transition: all 0.3s ease-in-out;
 	-moz-transition: all 0.3s ease-in-out;
 	-o-transition: all 0.3s ease-in-out;
 	transition: all 0.3s ease-in-out;
+
+	border-bottom: 4px solid transparent;
 }
 
 .fz-tabs-menu ul li {
 	margin-bottom: 0;
 }
 
-.fz-tabs-menu ul li a:after{
-	content: "";
-	width: 100%;
-	height: 4px;
-	position: absolute;
-	bottom: -8px;
-	left: 0;
-	background: #4268CF;
-	opacity: 0;
-	-webkit-transition: all 0.3s ease-in-out;
-	-moz-transition: all 0.3s ease-in-out;
-	-o-transition: all 0.3s ease-in-out;
-	transition: all 0.3s ease-in-out;
-}
 .fz-tabs-menu ul li a:not(.active):hover{
 	background: rgba(66, 104, 207, .1);
 }
 .fz-tabs-menu ul li a.active{
 	color: #4268CF;
+	border-bottom-color: #4268CF;
 }
-.fz-tabs-menu ul li a.active:after{
-	opacity: 1;
-}
+
 .fz-tabs-menu ul li a .pro-label{
 	font-size: 10px;
 	line-height: 1;
@@ -1190,9 +1177,7 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 }
 .fz-tabs-menu ul li a:focus {
 	color: #4268CF;
-}
-.fz-tabs-menu ul li a:focus:after {
-	opacity: 1;
+	border-bottom-color: #4268CF;
 }
 
 .fz-tabs-content .fz-tab-content{
