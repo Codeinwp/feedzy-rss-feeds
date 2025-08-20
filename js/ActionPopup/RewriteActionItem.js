@@ -284,7 +284,7 @@ const RewriteActionItem = ({ counter, item, loopIndex, propRef }) => {
 				<PanelBody
 					title={__('Rewrite with AI', 'feedzy-rss-feeds')}
 					icon={DragHandle}
-					initialOpen={false}
+					initialOpen={loopIndex === propRef?.lastAddedActionIdx}
 				>
 					<PanelRow>
 						<UpgradeNotice

@@ -124,6 +124,7 @@ const getCurrentLanguage = () => {
 
 const SortableItem = ({ propRef, loopIndex, item }) => {
 	const counter = loopIndex + 1;
+	const isInitialOpen = loopIndex === propRef?.lastAddedActionIdx;
 
 	if ('trim' === item.id) {
 		return (
@@ -132,7 +133,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 					<PanelBody
 						title={__('Trim Content', 'feedzy-rss-feeds')}
 						icon={DragHandle}
-						initialOpen={false}
+						initialOpen={isInitialOpen}
 					>
 						<PanelRow>
 							<BaseControl>
@@ -194,7 +195,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 					<PanelBody
 						title={__('Search and Replace', 'feedzy-rss-feeds')}
 						icon={DragHandle}
-						initialOpen={false}
+						initialOpen={isInitialOpen}
 					>
 						<PanelRow>
 							<BaseControl>
@@ -322,7 +323,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 					<PanelBody
 						title={__('Paraphrase with Feedzy', 'feedzy-rss-feeds')}
 						icon={DragHandle}
-						initialOpen={false}
+						initialOpen={isInitialOpen}
 						className="fz-hide-icon"
 					>
 						<UpgradeNotice
@@ -380,7 +381,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 					<PanelBody
 						title={__('Translate with Feedzy', 'feedzy-rss-feeds')}
 						icon={DragHandle}
-						initialOpen={false}
+						initialOpen={isInitialOpen}
 						className="fz-hide-icon"
 					>
 						<PanelRow>
@@ -472,7 +473,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 							'feedzy-rss-feeds'
 						)}
 						icon={DragHandle}
-						initialOpen={false}
+						initialOpen={isInitialOpen}
 						className="fz-hide-icon"
 					>
 						<UpgradeNotice
@@ -535,7 +536,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 					<PanelBody
 						title={__('Spin using WordAI', 'feedzy-rss-feeds')}
 						icon={DragHandle}
-						initialOpen={false}
+						initialOpen={isInitialOpen}
 						className="fz-hide-icon"
 					>
 						<UpgradeNotice
@@ -605,7 +606,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 							'feedzy-rss-feeds'
 						)}
 						icon={DragHandle}
-						initialOpen={false}
+						initialOpen={isInitialOpen}
 					>
 						<PanelRow>
 							<UpgradeNotice
@@ -716,7 +717,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 					<PanelBody
 						title={__('Modify Links', 'feedzy-rss-feeds')}
 						icon={DragHandle}
-						initialOpen={false}
+						initialOpen={isInitialOpen}
 					>
 						<PanelRow>
 							<UpgradeNotice

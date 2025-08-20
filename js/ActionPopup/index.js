@@ -31,6 +31,7 @@ const ActionModal = () => {
 	const [isDisabledAddNew, setDisabledAddNew] = useState(false);
 	const [isLoading, setLoading] = useState(false);
 	const [currentCustomRow, setcurrentCustomRow] = useState(null);
+	const [lastAddedActionIdx, setLastAddedActionIdx] = useState(-1);
 
 	// Close the popup when click on outside the modal.
 	const exitModalOnOutsideClick = useCallback(
@@ -114,6 +115,7 @@ const ActionModal = () => {
 		setAction([]);
 		setLoading(false);
 		setcurrentCustomRow(null);
+		setLastAddedActionIdx(-1);
 	};
 	const hideIntroMessage = (status) => setHideMeg(status);
 	const removeAction = (index) => {
@@ -160,6 +162,7 @@ const ActionModal = () => {
 		setDisabledAddNew(() => 'item_image' === shortCode);
 		setAction((prevState) => [...prevState, ...newAction]);
 		toggleVisible(false);
+		setLastAddedActionIdx(action.length);
 	};
 
 	const onSortEnd = ({ oldIndex, newIndex }) => {
@@ -252,7 +255,9 @@ const ActionModal = () => {
 		return document.querySelector('.fz-action-popup .fz-action-panel ul');
 	};
 
-	const actionButtonTitle = action.length ? __( 'Save Actions', 'feedzy-rss-feeds' ) : __( 'Skip Actions', 'feedzy-rss-feeds' );
+	const actionButtonTitle = action.length
+		? __('Save Actions', 'feedzy-rss-feeds')
+		: __('Skip Actions', 'feedzy-rss-feeds');
 
 	// Click to open action popup.
 	document.querySelectorAll('[data-action_popup]').forEach((actionItem) => {
@@ -464,6 +469,7 @@ const ActionModal = () => {
 									distance={1}
 									lockToContainerEdges={true}
 									lockOffset="0%"
+									lastAddedActionIdx={lastAddedActionIdx}
 								/>
 							)}
 
@@ -794,7 +800,7 @@ const ActionModal = () => {
 											saveAction();
 										}}
 									>
-										{ actionButtonTitle }
+										{actionButtonTitle}
 									</Button>
 								)}
 							</div>
