@@ -77,14 +77,6 @@
 						</li>
 						<li>
 							<a
-								href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=headers' ) ); ?>"
-								class="<?php echo 'headers' === $active_tab ? esc_attr( 'active' ) : ''; ?>"
-							>
-								<?php esc_html_e( 'Headers', 'feedzy-rss-feeds' ); ?>
-							</a>
-						</li>
-						<li>
-							<a
 								href="<?php echo esc_url( admin_url( 'admin.php?page=feedzy-settings&tab=proxy' ) ); ?>"
 								class="<?php echo 'proxy' === $active_tab ? esc_attr( 'active' ) : ''; ?>"
 							>
@@ -136,12 +128,7 @@
 					if ( isset( $settings['general']['disable-default-style'] ) && 1 === intval( $settings['general']['disable-default-style'] ) ) {
 						$disble_default_style = 1;
 					}
-					$delete_media = 0;
-					if ( isset( $settings['general']['feedzy-delete-media'] ) && 1 === intval( $settings['general']['feedzy-delete-media'] ) ) {
-						$delete_media = 1;
-					}
-
-					$feedzy_delete_days   = isset( $settings['general']['feedzy-delete-days'] ) ? $settings['general']['feedzy-delete-days'] : 0;
+					
 					$default_thumbnail_id = isset( $settings['general']['default-thumbnail-id'] ) ? $settings['general']['default-thumbnail-id'] : 0;
 					$mapped_categories    = isset( $settings['general']['auto-categories'] ) && ! empty( $settings['general']['auto-categories'] ) ? $settings['general']['auto-categories'] : array(
 						array(
@@ -238,23 +225,6 @@
 									</div>
 								</div>
 								<?php if ( feedzy_is_pro() ) : ?>
-									<div class="form-block">
-										<div class="fz-form-group">
-											<label class="form-label"><?php esc_html_e( 'Delete the posts created from all feeds, after a number of days', 'feedzy-rss-feeds' ); ?></label>
-											<input type="number" min="0" max="9999" id="feedzy_delete_days" name="feedzy-delete-days" class="form-control" value="<?php echo esc_attr( $feedzy_delete_days ); ?>"/>
-											<div class="help-text pt-8"><?php esc_html_e( 'Helpful if you want to remove stale or old items automatically. If you choose 0, it will be considered the individual import setting.', 'feedzy-rss-feeds' ); ?></div>
-										</div>
-									</div>
-									<div class="form-block">
-										<div class="fz-form-switch pb-0">
-											<input type="checkbox" id="feedzy-delete-media" class="fz-switch-toggle" name="feedzy-delete-media"
-											value="1" <?php checked( 1, $delete_media ); ?> />
-											<label for="feedzy-delete-media" class="form-label"><?php esc_html_e( 'Delete attached featured image', 'feedzy-rss-feeds' ); ?></label>
-										</div>
-										<div class="fz-form-group">
-											<div class="help-text pt-8"><?php esc_html_e( 'Helpful if you want to delete attached featured image when posts are automatically deleted.', 'feedzy-rss-feeds' ); ?></div>
-										</div>
-									</div>
 									<div class="form-block">
 										<div class="fz-form-row">
 											<div class="fz-form-col-6">
@@ -443,40 +413,6 @@
 											<div class="help-text pt-8"><?php esc_html_e( 'Send data about plugin settings to measure the usage of the features. The data is private and not shared with third-party entities. Only plugin data is collected without sensitive information.', 'feedzy-rss-feeds' ); ?></div>
 										</div>
 									</div>
-							</div>
-							<?php
-							break;
-						case 'headers':
-							?>
-							<div class="fz-form-wrap">
-								<div class="feedzy-helper-notice">
-									<h5 class="feedzy-helper-notice__title">
-										<?php esc_html_e( 'Headers Configuration', 'feedzy-rss-feeds' ); ?>
-									</h5>
-									<p>
-										<?php 
-											esc_html_e(
-												'Use this section to add custom HTTP headers (e.g., User-Agent). This can help bypass feed access restrictions, simulate browser requests, or resolve issues where feeds return incomplete or blocked content.',
-												'feedzy-rss-feeds' 
-											);
-										?>
-										<a href="<?php echo esc_url( $help_btn_url ); ?>" target="_blank">
-											<?php esc_html_e( 'Learn more about headers here.', 'feedzy-rss-feeds' ); ?>
-										</a>
-									</p>
-								</div>
-								<div class="form-block">
-									<div class="fz-form-group">
-										<label class="form-label"><?php esc_html_e( 'User Agent', 'feedzy-rss-feeds' ); ?></label>
-										<input
-											type="text"
-											class="form-control"
-											name="user-agent"
-											placeholder="<?php esc_attr_e( 'Add the user agent string', 'feedzy-rss-feeds' ); ?>"
-											value="<?php echo isset( $settings['header']['user-agent'] ) ? esc_attr( $settings['header']['user-agent'] ) : ''; ?>"
-										>
-									</div>
-								</div>
 							</div>
 							<?php
 							break;

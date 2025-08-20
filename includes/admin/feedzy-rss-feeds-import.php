@@ -3358,8 +3358,11 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		if ( 'misc' === $tab ) {
-			$settings['canonical']            = isset( $_POST['canonical'] ) ? absint( $_POST['canonical'] ) : 0;
-			$settings['general']['rss-feeds'] = isset( $_POST['rss-feeds'] ) ? absint( $_POST['rss-feeds'] ) : '';
+			$settings['canonical']                      = isset( $_POST['canonical'] ) ? absint( $_POST['canonical'] ) : 0;
+			$settings['general']['rss-feeds']           = isset( $_POST['rss-feeds'] ) ? absint( $_POST['rss-feeds'] ) : '';
+			$settings['header']['user-agent']           = isset( $_POST['user-agent'] ) ? sanitize_text_field( wp_unslash( $_POST['user-agent'] ) ) : '';
+			$settings['general']['feedzy-delete-days']  = isset( $_POST['feedzy-delete-days'] ) ? absint( wp_unslash( $_POST['feedzy-delete-days'] ) ) : '';
+			$settings['general']['feedzy-delete-media'] = isset( $_POST['feedzy-delete-media'] ) ? absint( wp_unslash( $_POST['feedzy-delete-media'] ) ) : '';
 		}
 
 		return $settings;
