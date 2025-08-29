@@ -124,4 +124,30 @@ test.describe('Feedzy Classic Block', () => {
 		const image = page.locator('.feedzy-rss .rss_image img');
 		await expect(image).toHaveAttribute('style', /aspect-ratio:\s*auto;/i);
 	});
+
+	test('embed youtube video', async ({ editor, page, admin }) => {
+		await admin.createNewPost();
+
+		await editor.insertBlock({
+			name: 'feedzy-rss-feeds/feedzy-block',
+			attributes: {
+				feeds: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCSHmNs-_UuU1CfPhSbilTZQ',
+				max: 1,
+			},
+		});
+
+		const postId = await editor.publishPost();
+		await page.goto(`/?p=${postId}`);
+
+		const rssContainer = page.locator('.rss_item').first();
+		await expect(rssContainer).toBeVisible();
+
+		const youtubeLink = rssContainer
+			.locator('a[href*="youtube.com/"]')
+			.first();
+		await expect(youtubeLink).toBeVisible();
+
+		const image = rssContainer.locator('img').first();
+		await expect(image).toBeVisible();
+	});
 });
