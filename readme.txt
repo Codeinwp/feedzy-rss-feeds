@@ -37,6 +37,8 @@ With just a few clicks, you can:
 
 * Map feeds to posts, pages, or any custom post type you need.
 
+* Filter posts by Title with one condition (e.g., contains, equals, does not contain, etc) and import only the ones that match.
+
 * Auto-publish RSS articles with images, categories, and tags.
 
 * Embed RSS content anywhere using shortcodes, blocks, or widgets.
