@@ -285,7 +285,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 				'methods'             => 'POST',
 				'callback'            => array( $this, 'feedzy_rest_route' ),
 				'permission_callback' => function () {
-					return is_user_logged_in();
+					return current_user_can( 'manage_options' );
 				},
 				'args'                => array(
 					'url'      => array(
@@ -398,12 +398,12 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 	 */
 	public function feedzy_sanitize_feeds( $input ) {
 		if ( count( $input ) === 1 ) {
-			$feed = esc_url( $input[0] );
+			$feed = wp_http_validate_url( $input[0] );
 			return $feed;
 		} else {
 			$feeds = array();
 			foreach ( $input as $item ) {
-				$feeds[] = esc_url( $item );
+				$feeds[] = wp_http_validate_url( $item );
 			}
 			return $feeds;
 		}
