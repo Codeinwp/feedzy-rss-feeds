@@ -285,7 +285,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 				'methods'             => 'POST',
 				'callback'            => array( $this, 'feedzy_rest_route' ),
 				'permission_callback' => function ( WP_REST_Request $request ) {
-					$post_id = $request->get_param( 'postId' );
+					$post_id = absint( $request->get_param( 'postId' ) );
 					return current_user_can( 'edit_post', $post_id );
 				},
 				'args'                => array(
