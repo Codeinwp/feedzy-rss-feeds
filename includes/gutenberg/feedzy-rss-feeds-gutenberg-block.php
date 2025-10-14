@@ -404,7 +404,9 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		} else {
 			$feeds = array();
 			foreach ( $input as $item ) {
-				$feeds[] = wp_http_validate_url( $item );
+				if( wp_http_validate_url( $item ) ) {
+					$feeds[] = esc_url_raw( $item );
+				}
 			}
 			return $feeds;
 		}
