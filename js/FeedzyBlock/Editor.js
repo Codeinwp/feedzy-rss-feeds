@@ -194,11 +194,12 @@ class Editor extends Component {
 				.filter((item) => item !== '');
 			url = queryString.stringify({ url }, { arrayFormat: 'bracket' });
 		}
+		const postId = wp.data.select('core/editor').getCurrentPostId();
 
 		apiFetch({
 			path: `/feedzy/v1/feed?${url}`,
 			method: 'POST',
-			data: this.props.attributes,
+			data: {...this.props.attributes, postId: postId},
 		})
 			.then((data) => {
 				if (this.unmounting) {
