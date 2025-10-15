@@ -4,7 +4,7 @@
 **Requires at least:** 6.0  
 **Requires PHP:** 7.2  
 **Tested up to:** 6.8  
-**Stable tag:** 5.1.0  
+**Stable tag:** 5.1.1  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -37,6 +37,8 @@ With just a few clicks, you can:
 
 * Map feeds to posts, pages, or any custom post type you need.
 
+* Filter posts by Title with one condition (e.g., contains, equals, does not contain, etc) and import only the ones that match.
+
 * Auto-publish RSS articles with images, categories, and tags.
 
 * Embed RSS content anywhere using shortcodes, blocks, or widgets.
@@ -55,12 +57,13 @@ Feedzy’s Feed to Post feature is one of the most-loved parts of the plugin, ma
 
 Take your “Feed to Post” automation to the next level with powerful Pro-only options:
 
-* **Unlimited Imports:** With Feedzy Pro, you can create unlimited import projects, compared to just one project in the free version.  
+* **Unlimited Imports:** With Feedzy Pro, you can create unlimited import projects, compared to just one project in the free version. 
+* **Multiple Filter Conditions:** Go beyond the single-filter limit and combine multiple rules (by keyword, time range, URL, etc) to control exactly what gets imported.
 * **Custom Duplication Key:** Define exactly how Feedzy detects unique items and avoids duplicates even across multiple feeds.  
 * **Auto-Delete Old Posts:** Remove outdated or time-sensitive imports automatically after a set number of days.  
 * **Fallback Image:** Assign a default image for feed items without images to maintain a consistent site layout.  
 * **Import Item Count Control:** Decide how many feed items to fetch from each source every run.  
-* **Scheduled Imports:** Run imports automatically on your preferred schedule, such as hourly, daily, or weekly.  
+* **Scheduled Imports:** Run imports automatically on your preferred schedule with default options like hourly, daily, or weekly, or create custom cron schedules for complete flexibility.  
 * **Custom Post Author:** Assign imported posts to a specific author profile.  
 * **Post Excerpts and Custom Fields:** Map feed data to post excerpts or custom fields for richer content display.  
 
@@ -69,7 +72,7 @@ These advanced controls give you full editorial power over your imported content
 ## 🤔 WHAT YOU CAN DO WITH FEEDZY RSS AGGREGATOR: ##
 
 * **[Feed to post](https://docs.themeisle.com/article/742-how-to-import-posts-from-feeds-in-feedzy)** (our most loved feature 💕): automatically convert RSS feed items to Wordpress pages, posts, and custom post type.
-* **Automatically import** and aggregate unlimited RSS feeds from unlimited sources
+* **Automatically import** and aggregate RSS feeds from unlimited sources.
 * **Bulk import and organize** multiple feed sources of similar topics into Categories. See how our user, **Barry Seward**, loves this feature [here](https://wordpress.org/support/topic/works-great-6051/)
 * **Easily display RSS feeds** using shortcodes, Gutenberg blocks, or widgets in your third-party page builders like Elementor
 * **Import images** with your RSS feeds or use your own image/logo for feeds without image. We know visuals are important and do not want your site to have a boring list of text and links.
@@ -77,7 +80,7 @@ These advanced controls give you full editorial power over your imported content
 * Worried if the imported feed articles’ titles are too long and might not look nice on your site? Change them with the **Title Character Limit** function.
 * Choose your own **caching** time and how often you want to pull RSS feeds to ensure the **best performance** for your site.
 * Create a **sidebar** of your imported feed items.
-* **Control which meta** 🎛️ fields you want to display, such as author, date and time of the RSS feed.
+* **Control which meta** 🎛️ fields you want to display, such as date and time of the RSS feed.
 * **Responsive** content 📱 across platforms.
 
 ## CHECK OUT A QUICK OVERVIEW OF FEEDZY ##
@@ -85,12 +88,14 @@ https://youtu.be/YcMn_yicgGg
 
 ## ✨ YOU SHOULD USE FEEDZY RSS AGGREGATOR IF: ##
 
-* [You own a news site](https://themeisle.com/blog/wordpress-news-aggregator-website/); you want a WP news aggregator to make sure your site always updated with the latest news
-* You own a blog; you need a [WP content aggregator to autoblog](https://themeisle.com/blog/create-an-autoblogging-site-wordpress/) and keep your audience engaged with fresh content
+* [You own a news site](https://themeisle.com/blog/wordpress-news-aggregator-website/); you want a WP news aggregator to make sure your site always updated with the latest news.
+* You own a blog; you need a [WP content aggregator to autoblog](https://themeisle.com/blog/create-an-autoblogging-site-wordpress/) and keep your audience engaged with fresh content.
 * You want to improve your SEO rankings. See how the SEO expert, MOZ, talked about 10 reasons “[How Fresh Content May Influence Google Rankings](https://moz.com/blog/google-fresh-factor-new)”
 * You develop a site for your client and just want to quickly demo a news feed of frequently  updated content
 * You build a company website and want a news/blog page to enhance the company’s reputation and SEO. Focus on your business and leave the content marketing work to FEEDZY RSS Aggregator.
-* You run an affiliate business or want to earn extra from RSS affiliate marketing feeds
+* You have a YouTube channel and want your videos or Shorts automatically imported to your website to boost engagement.
+* You want to curate and display relevant YouTube videos from your niche to enrich your site’s content.
+* You run an affiliate business or want to earn extra from RSS affiliate marketing feeds.
 * You need a simple but comprehensive solution to curate anything in your niche, such as property listing for a real estate website, product listing for an affiliated e-commerce site, etc.
 * Your goal is to generate increased revenue, thanks to the advantages outlined above.
 
@@ -469,37 +474,10 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
-#### [Version 5.1.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.10...v5.1.0) (2025-08-20)
+##### [Version 5.1.1](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.1.0...v5.1.1) (2025-10-15)
 
-### New Features
-
-- Added debug logging system for better troubleshooting
-- Custom cron schedules - create and manage custom import schedules (PRO)
-- OpenAI model selection per action in the Importer for granular control
-- URL-based filtering to exclude specific domains from feeds
-- YouTube Shorts embedding support in imported posts
-- Aspect ratio controls for thumbnail images
-- Improved fallback image options per import job
-
-### Improvements
-
-- Major UI overhaul for the importer with tabbed interface and better organization
-- Enhanced feed validation system
-- Redesigned Dashboard (formerly Support page)
-- Improved onboarding and import setup experience
-- Better feed groups management interface
-- More features available in the free version
-- Added helper text for proxy and user-agent settings
-
-### Bug Fixes
-
-- Fixed categories settings changing when installing the PRO version
-- Fixed action popup not closing when clicking outside
-- Fixed HTML tags in post titles when using paraphrasing
-- Fixed fallback images being ignored in classic block
-- Fixed integration tab showing incorrect license status
-- Fixed broken images in Feedzy Loop
-- Fixed various UI alignment and layout issues
+- Enhanced security
+- Updated dependencies
 
 
 
