@@ -312,15 +312,19 @@ class Editor extends Component {
 
 	getImageURL(item, background) {
 		let url;
-		if (item.thumbnail && this.props.attributes.thumb === 'auto') {
-			url = item.thumbnail;
+		if (
+			item.thumbnail &&
+			this.props.attributes.thumb === 'auto' &&
+			item.thumbnail !== item.default_img
+		) {
+			url = item.thumbnail.replace(/http:/g, 'https:');
 		} else if (this.props.attributes.default) {
 			url = this.props.attributes.default.url;
+		} else if (item.default_img) {
+			url = item.default_img;
 		} else {
 			url = window.feedzyjs.imagepath + 'feedzy.svg';
 		}
-
-		url = url.replace(/http:/g, 'https:');
 
 		if (background) {
 			url = 'url("' + url + '")';
