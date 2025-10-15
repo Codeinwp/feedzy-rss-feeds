@@ -4,7 +4,7 @@ Tags: rss aggregator, news aggregator, autoblogging, feed to post, rss import
 Requires at least: 6.0
 Requires PHP: 7.2
 Tested up to: 6.8
-Stable tag: 5.1.0
+Stable tag: 5.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -474,37 +474,10 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
-#### [Version 5.1.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.0.10...v5.1.0) (2025-08-20)
+##### [Version 5.1.1](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.1.0...v5.1.1) (2025-10-15)
 
-### New Features
-
-- Added debug logging system for better troubleshooting
-- Custom cron schedules - create and manage custom import schedules (PRO)
-- OpenAI model selection per action in the Importer for granular control
-- URL-based filtering to exclude specific domains from feeds
-- YouTube Shorts embedding support in imported posts
-- Aspect ratio controls for thumbnail images
-- Improved fallback image options per import job
-
-### Improvements
-
-- Major UI overhaul for the importer with tabbed interface and better organization
-- Enhanced feed validation system
-- Redesigned Dashboard (formerly Support page)
-- Improved onboarding and import setup experience
-- Better feed groups management interface
-- More features available in the free version
-- Added helper text for proxy and user-agent settings
-
-### Bug Fixes
-
-- Fixed categories settings changing when installing the PRO version
-- Fixed action popup not closing when clicking outside
-- Fixed HTML tags in post titles when using paraphrasing
-- Fixed fallback images being ignored in classic block
-- Fixed integration tab showing incorrect license status
-- Fixed broken images in Feedzy Loop
-- Fixed various UI alignment and layout issues
+- Enhanced security
+- Updated dependencies
 
 
 
