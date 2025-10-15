@@ -304,4 +304,31 @@ test.describe('Feed Import', () => {
 			page.locator('.attachment').count()
 		).resolves.toBeGreaterThan(0); // We should have some imported images.
 	});
+
+	test('close Feedzy Action modal when clicking outside', async ({
+		page,
+	}) => {
+		await page.goto('/wp-admin/post-new.php?post_type=feedzy_imports');
+		await tryCloseTourModal(page);
+
+		await page
+			.getByRole('button', { name: 'Step 3 Map content ' })
+			.click();
+
+		await expect(
+			page.getByText('Post Title item title Item')
+		).toBeVisible();
+
+		await page.getByTitle('item title').getByRole('link').click();
+
+		await expect(
+			page.getByRole('heading', { name: 'Add actions to this tag' })
+		).toBeVisible();
+
+		await page.locator('body').click({ position: { x: 0, y: 0 } });
+
+		await expect(
+			page.getByRole('heading', { name: 'Add actions to this tag' })
+		).not.toBeVisible();
+	});
 });
