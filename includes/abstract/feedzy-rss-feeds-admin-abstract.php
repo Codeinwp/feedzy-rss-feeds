@@ -697,10 +697,14 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$feed_url = apply_filters( 'feedzy_get_feed_url', $feeds );
 		if ( is_array( $feed_url ) ) {
 			foreach ( $feed_url as $index => $url ) {
-				$feed_url[ $index ] = trim( $this->smart_convert( $url ) );
+				if ( wp_http_validate_url( $url ) ) {
+					$feed_url[ $index ] = trim( $this->smart_convert( esc_url_raw( $url ) ) );
+				}
 			}
+		} elseif ( wp_http_validate_url( $feed_url ) ) {
+			$feed_url = trim( $this->smart_convert( esc_url_raw( $feed_url ) ) );
 		} else {
-			$feed_url = trim( $this->smart_convert( $feed_url ) );
+			$feed_url = '';
 		}
 
 		return $feed_url;
