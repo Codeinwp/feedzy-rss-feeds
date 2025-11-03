@@ -17,6 +17,7 @@ $subscribed_notice_dismissed = get_option( 'feedzy_dismiss_subscribe_notice_dash
 	
 	?>
 	<div class="feedzy-container">
+		<div id="tsdk_banner" class="feedzy-banner"></div>
 		<div class="feedzy-accordion-item mb-30">
 			<div class="feedzy-accordion-item__content">
 				<div class="fz-tabs-menu">
