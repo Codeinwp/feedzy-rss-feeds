@@ -40,6 +40,8 @@
                 success: function(data){
                     if(data.success){
                         $feedzy_block.empty().append(data.data.content);
+                    } else {
+                        $feedzy_block.empty().append(data.data.message);
                     }
                 },
                 complete: function(){
