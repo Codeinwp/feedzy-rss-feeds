@@ -4,7 +4,7 @@
 **Requires at least:** 6.0  
 **Requires PHP:** 7.2  
 **Tested up to:** 6.8  
-**Stable tag:** 5.1.1  
+**Stable tag:** 5.1.2  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -474,10 +474,9 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
-##### [Version 5.1.1](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.1.0...v5.1.1) (2025-10-15)
+##### [Version 5.1.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.1.1...v5.1.2) (2025-11-20)
 
 - Enhanced security
-- Updated dependencies
 
 
 
