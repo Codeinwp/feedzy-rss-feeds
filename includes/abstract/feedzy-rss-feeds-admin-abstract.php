@@ -454,6 +454,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			} else {
 				$attributes .= 'data-has_valid_cache="true"';
 			}
+
+			// Add nonce based on feed url.
+			$attributes .= 'data-nonce="' . esc_attr( wp_create_nonce( $feed_url ) ) . '"';
+
 			$class = array_filter( apply_filters( 'feedzy_add_classes_block', array( $sc['classname'], 'feedzy-' . md5( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ) ), $sc, null, $feed_url ) );
 			$html  = "<div class='feedzy-lazy' $attributes>";
 			$html .= "$content</div>";
@@ -552,6 +556,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$atts     = $data['args'];
 		$sc       = $this->get_short_code_attributes( $atts );
 		$feed_url = $this->normalize_urls( $sc['feeds'] );
+		$nonce    = isset( $atts['nonce'] ) ? $atts['nonce'] : '';
+
+		if ( ! wp_verify_nonce( $nonce, 'https://codeinwp.test/proof.xml' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Security check failed.', 'feedzy-rss-feeds' ) ) );
+		}
 
 		if ( isset( $sc['filters'] ) && ! empty( $sc['filters'] ) && feedzy_is_pro() ) {
 			$sc['filters'] = apply_filters( 'feedzy_filter_conditions_attribute', $sc['filters'] );
