@@ -558,7 +558,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$feed_url = $this->normalize_urls( $sc['feeds'] );
 		$nonce    = isset( $atts['nonce'] ) ? $atts['nonce'] : '';
 
-		if ( ! wp_verify_nonce( $nonce, 'https://codeinwp.test/proof.xml' ) ) {
+		if ( ! wp_verify_nonce( $nonce, $feed_url ) ) {
 			wp_send_json_error( array( 'message' => __( 'Security check failed.', 'feedzy-rss-feeds' ) ) );
 		}
 
