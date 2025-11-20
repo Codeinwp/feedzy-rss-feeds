@@ -118,7 +118,7 @@
 	display: none;
 }
 
-:is(.feedzy-banner, .feedzy-banner-dashboard):not(.themeisle-sale) {
+:is(.feedzy-banner, .feedzy-banner-dashboard):not(#tsdk_banner) {
 	visibility: hidden;
 }
 
@@ -134,6 +134,10 @@
 .feedzy-banner .themeisle-sale {
 	width: 100%;
 	margin: 0;
+}
+
+.feedzy-container > #tsdk_banner {
+	padding: 0;
 }
 
 .feedzy-container{
