@@ -438,7 +438,7 @@ class Feedzy_Rss_Feeds_Import {
 			'posts_per_page' => 100,
 		);
 		$feed_categories  = get_posts( $args );
-		$post_types       = get_post_types( '', 'object' );
+		$post_types       = get_post_types( '', 'objects' );
 		$post_types       = array_diff_key(
 			$post_types,
 			array(
