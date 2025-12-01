@@ -15,7 +15,7 @@ import queryString from 'query-string';
 import Inspector from './inspector';
 import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
-import { Component, Fragment } from '@wordpress/element';
+import { Component, createInterpolateElement, Fragment } from '@wordpress/element';
 import { InspectorControls } from '@wordpress/block-editor';
 import {
 	unescapeHTML,
@@ -118,8 +118,19 @@ class Editor extends Component {
 			validationResults: [],
 		});
 
-		if (inArray(url, this.props.attributes.categories)) {
-			this.loadFeedData(url);
+		const categoriesLabel = this.props.attributes.categories
+			? this.props.attributes.categories.map((cat) => cat.label)
+			: [];
+
+		const categoriesValue = this.props.attributes.categories
+			? this.props.attributes.categories.map((cat) => cat.value)
+			: [];
+
+		// Check if the entered URL is a category label
+		if (inArray(url, categoriesLabel)) {
+			const index = categoriesLabel.indexOf(url);
+			const categoryValue = categoriesValue[index];
+			this.loadFeedData(categoryValue);
 			return;
 		}
 
@@ -181,7 +192,11 @@ class Editor extends Component {
 	}
 
 	loadFeedData(url) {
-		if (inArray(url, this.props.attributes.categories)) {
+		const categoriesValue = this.props.attributes.categories
+			? this.props.attributes.categories.map((cat) => cat.value)
+			: [];
+
+		if (inArray(url, categoriesValue)) {
 			const category = url;
 			url = queryString.stringify(
 				{ category },
@@ -258,7 +273,10 @@ class Editor extends Component {
 				let i = 0;
 				const categories = [];
 				data.forEach((item) => {
-					categories[i] = item.slug;
+					categories[i] = {
+						label: item.title?.rendered || item.name || item.slug,
+						value: item.slug
+					};
 					i = i + 1;
 				});
 				const _this = this;
@@ -634,20 +652,22 @@ class Editor extends Component {
 									{this.renderValidationResults()}
 
 									<p>
-										{__(
-											"Enter the full URL of the feed source you wish to display here, or the name of a group you've created. Also you can add multiple URLs just separate them with a comma. You can manage your groups feed from",
-											'feedzy-rss-feeds'
-										)}{' '}
-										<a
-											href="edit.php?post_type=feedzy_categories"
-											title={__(
-												'Feedzy Groups',
+
+										{createInterpolateElement(
+											__(
+												"Enter the full URL of the feed source you wish to display here, or the name of a group you've created. Also you can add multiple URLs just separate them with a comma. You can manage your groups feed from <a>here</a>.",
 												'feedzy-rss-feeds'
-											)}
-											target="_blank"
-										>
-											{__('here', 'feedzy-rss-feeds')}
-										</a>
+											),
+											{
+												a: (
+													<a
+														href="edit.php?post_type=feedzy_categories"
+														title={__('Feedzy Groups', 'feedzy-rss-feeds')}
+														target="_blank"
+													/>
+												),
+											}
+										)}
 									</p>
 								</div>
 							)}
