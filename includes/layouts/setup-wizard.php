@@ -22,7 +22,10 @@ if ( ! empty( $integrate_with ) ) {
 	$wizard_data = get_option( 'feedzy_wizard_data', array() );
 	$feed_source = ! empty( $wizard_data['feed'] ) ? $wizard_data['feed'] : '';
 }
-$published_status = array( 'publish', 'draft' );
+$published_status = array(
+	'publish' => __( 'Publish', 'feedzy-rss-feeds' ),
+	'draft'   => __( 'Draft', 'feedzy-rss-feeds' ),
+);
 
 add_thickbox();
 ?>
@@ -86,7 +89,7 @@ add_thickbox();
 													<label for="radio-3">
 														<?php
 														if ( defined( 'ELEMENTOR_PATH' ) && class_exists( 'Elementor\Widget_Base' ) ) {
-															esc_html_e( 'Display RSS feed using elementor', 'feedzy-rss-feeds' );
+															esc_html_e( 'Display RSS feed using Elementor', 'feedzy-rss-feeds' );
 														} else {
 															esc_html_e( 'Display RSS feed using block editor', 'feedzy-rss-feeds' );
 														}
@@ -128,7 +131,7 @@ add_thickbox();
 															echo wp_kses_post(
 																sprintf(
 																	// translators: %1$s and %2$s are HTML tags for the link to the demo URL.
-																	__( 'No Feed URL? %1$s Click here %2$s to use demo URL', 'feedzy-rss-feeds' ),
+																	__( 'No Feed URL? %1$sClick here%2$s to use demo URL', 'feedzy-rss-feeds' ),
 																	'<a target="_blank" class="feed-demo-link" href="' . esc_url( 'https://wpshout.com/feed/' ) . '" >',
 																	'</a>'
 																)
@@ -192,10 +195,10 @@ add_thickbox();
 														<div class="mx-320">
 															<select id="feedzy_post_status" class="form-control feedzy-chosen" name="feedzy_meta_data[import_post_status]">
 																<?php
-																foreach ( $published_status as $_status ) {
+																foreach ( $published_status as $_status => $_label ) {
 																	?>
 																	<option value="<?php echo esc_attr( $_status ); ?>">
-																		<?php echo esc_html( ucfirst( $_status ) ); ?>
+																		<?php echo esc_html( $_label ); ?>
 																	</option>
 																	<?php
 																}
@@ -338,7 +341,7 @@ add_thickbox();
 																					echo wp_kses_post(
 																						sprintf(
 																							// translators: %1$s is the percentage improvement, %2$s and %3$s are HTML tags for the link to the Optimole website.
-																							__( 'Improve your website speed and images by %1$s with %2$s Optimole %3$s', 'feedzy-rss-feeds' ),
+																							__( 'Improve your website speed and images by %1$s with %2$sOptimole%3$s', 'feedzy-rss-feeds' ),
 																							'80%',
 																							'<a target="_blank" href="' . esc_url( tsdk_translate_link( tsdk_utmify( 'https://optimole.com/pricing/', 'setupWizard' ) ) ) . '">',
 																							'</a>'

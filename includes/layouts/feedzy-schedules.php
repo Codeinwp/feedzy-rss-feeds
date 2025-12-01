@@ -40,7 +40,7 @@ if ( isset( $settings['custom_schedules'] ) && is_array( $settings['custom_sched
 							type="text"
 							class="form-control"
 							id="fz-schedule-display"
-							placeholder="Once Hourly"
+							placeholder=<?php esc_attr_e( 'Once hourly', 'feedzy-rss-feeds' ); ?>
 							<?php disabled( ! $has_pro ); ?>
 						/>
 					</div>
@@ -53,7 +53,7 @@ if ( isset( $settings['custom_schedules'] ) && is_array( $settings['custom_sched
 							type="text"
 							class="form-control"
 							id="fz-schedule-name"
-							placeholder="hourly"
+							placeholder=<?php esc_attr_e( 'Hourly', 'feedzy-rss-feeds' ); ?>
 							<?php disabled( ! $has_pro ); ?>
 						/>
 					</div>
@@ -83,7 +83,7 @@ if ( isset( $settings['custom_schedules'] ) && is_array( $settings['custom_sched
 				$schedule_count = count( $custom_schedules );
 
 				// translators: %s is the number of custom schedules.
-				echo esc_html( sprintf( __( '%s items', 'feedzy-rss-feeds' ), $schedule_count ) ); 
+				echo esc_html( sprintf( _n( '%d item', '%d items', $schedule_count, 'feedzy-rss-feeds' ) ) ); 
 				?>
 			</div>
 			

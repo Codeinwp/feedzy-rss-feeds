@@ -155,10 +155,11 @@ global $post;
 											<select id="feedzy_post_type" class="form-control feedzy-chosen" name="feedzy_meta_data[import_post_type]"
 												data-tax="<?php echo esc_attr( $import_post_term ); ?>" data-custom-tag="<?php echo esc_attr( isset( $custom_post_term ) ? $custom_post_term : '' ); ?>">
 												<?php
-												foreach ( $post_types as $_post_type ) {
+												foreach ( $post_types as $_post_type => $post_type_obj ) {
+													$label = isset( $post_type_obj->labels->name ) ? $post_type_obj->labels->name : $_post_type;
 													?>
 												<option value="<?php echo esc_attr( $_post_type ); ?>" <?php selected( $import_post_type, $_post_type ); ?>>
-													<?php echo esc_html( $_post_type ); ?></option>
+													<?php echo esc_html( $label ); ?></option>
 													<?php
 												}
 												?>
@@ -175,7 +176,7 @@ global $post;
 								<div class="fz-right">
 									<div class="fz-form-group">
 										<div class="mx-320">
-											<select id="feedzy_post_terms" multiple class="form-control feedzy-chosen<?php echo feedzy_is_pro() ? ' fz-chosen-custom-tag' : ''; ?>"
+											<select id="feedzy_post_terms" data-placeholder="<?php esc_attr_e( 'Select Some Options', 'feedzy-rss-feeds' ); ?>"  multiple class="form-control feedzy-chosen<?php echo feedzy_is_pro() ? ' fz-chosen-custom-tag' : ''; ?>"
 												name="feedzy_meta_data[import_post_term][]">
 											</select>
 										</div>
@@ -224,10 +225,10 @@ global $post;
 										<div class="mx-320">
 											<select id="feedzy_post_status" class="form-control feedzy-chosen" name="feedzy_meta_data[import_post_status]">
 												<?php
-												foreach ( $published_status as $_status ) {
+												foreach ( $published_status as $_status => $_label ) {
 													?>
 												<option value="<?php echo esc_attr( $_status ); ?>" <?php selected( $import_post_status, $_status ); ?>>
-													<?php echo esc_html( ucfirst( $_status ) ); ?></option>
+													<?php echo esc_html( $_label ); ?></option>
 													<?php
 												}
 												?>
@@ -359,7 +360,7 @@ global $post;
 												echo wp_kses_post(
 													sprintf(
 														// translators: %1$s: opening anchor tag, %2$s: closing anchor tag.
-														__( 'Add more advanced tags, like item price, rating and many more, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ),
+														__( 'Add more advanced tags, like item price, rating and many more, by %1$supgrading to Feedzy Pro%2$s', 'feedzy-rss-feeds' ),
 														'<a href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'moreadvanced' ) ) ) . '" target="_blank">',
 														'</a><button type="button" class="remove-alert"><span class="dashicons dashicons-no-alt"></span></button>'
 													)
@@ -654,7 +655,7 @@ global $post;
 												$display_text         = $schedule['display'];
 
 												if ( ! in_array( $slug, $internal_cron_schedules, true ) ) {
-													$display_text .= ' (' . esc_html__( 'externally created)', 'feedzy-rss-feeds' ) . ')';
+													$display_text .= ' (' . esc_html__( 'externally created', 'feedzy-rss-feeds' ) . ')';
 												}
 												?>
 												<option data-slug="<?php echo esc_attr( $slug ); ?>" value="<?php echo esc_attr( $slug ); ?>"<?php selected( $save_schedule, $slug ); ?>
@@ -847,8 +848,14 @@ global $post;
 										</div>
 									</div>
 									<div class="help-text">
-										<?php echo wp_sprintf( esc_html__( 'To understand how duplicates will be removed, check out our', 'feedzy-rss-feeds' ) ); ?>
-										<a href="<?php echo esc_url( 'https://docs.themeisle.com/article/638-how-to-eliminate-duplicate-feed-item' ); ?>" target="_blank"><?php esc_html_e( 'Documentation.', 'feedzy-rss-feeds' ); ?></a>
+										<?php
+										echo wp_sprintf(
+											// translators: %1$s and %2$s are HTML anchor tags for documentation.
+											esc_html__( 'To understand how duplicates will be removed, check out our %1$sDocumentation%2$s', 'feedzy-rss-feeds' ),
+											'<a href="https://docs.themeisle.com/article/638-how-to-eliminate-duplicate-feed-item" target="_blank">',
+											'</a>'
+										);
+										?>
 									</div>
 								</div>
 							</div>
@@ -878,7 +885,7 @@ global $post;
 											<input id="remove-html" name="feedzy_meta_data[import_remove_html]"
 													class="fz-switch-toggle" type="checkbox" value="yes"
 												<?php echo esc_attr( isset( $import_remove_html ) ? $import_remove_html : '' ); ?>>
-											<label class="feedzy-inline form-label" for="remove-html"><?php esc_html_e( 'Remove HTML tags from improted content', 'feedzy-rss-feeds' ); ?></label>
+											<label class="feedzy-inline form-label" for="remove-html"><?php esc_html_e( 'Remove HTML tags from imported content', 'feedzy-rss-feeds' ); ?></label>
 										</div>
 									</div>
 									<div class="help-text">

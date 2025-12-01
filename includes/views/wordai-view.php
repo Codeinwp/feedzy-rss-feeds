@@ -9,7 +9,7 @@ $content = ! apply_filters( 'feedzy_is_license_of_type', false, 'business' ) ? _
 				$upgrade_url = tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'wordai' ) );
 
 				// translators: %1$s: opening anchor tag, %2$s: closing anchor tag.
-				$content .= wp_sprintf( __( 'Unlock more powerful features, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ), '<a href="' . esc_url( $upgrade_url ) . '" target="_blank">', '</a>' );
+				$content .= wp_sprintf( __( 'Unlock more powerful features, by %1$supgrading to Feedzy Pro%2$s', 'feedzy-rss-feeds' ), '<a href="' . esc_url( $upgrade_url ) . '" target="_blank">', '</a>' );
 
 				echo wp_kses_post( $content );
 			?>
@@ -20,7 +20,7 @@ $content = ! apply_filters( 'feedzy_is_license_of_type', false, 'business' ) ? _
 				<input type="text" class="form-control" placeholder="<?php echo esc_attr( __( 'WordAi Email', 'feedzy-rss-feeds' ) ); ?>"/>
 			</div>
 			<div class="fz-form-group">
-				<label class="form-label"><?php esc_html_e( 'The WordAi account API key:', 'feedzy-rss-feeds' ); ?></label>
+				<label class="form-label"><?php esc_html_e( 'The WordAI account API key:', 'feedzy-rss-feeds' ); ?></label>
 				<div class="fz-input-group">
 					<div class="fz-input-group-left">
 						<input type="password" id="wordai_pass" class="form-control" placeholder="<?php echo esc_attr( __( 'WordAI API key', 'feedzy-rss-feeds' ) ); ?>"/>

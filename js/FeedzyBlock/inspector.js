@@ -3,7 +3,7 @@
 /**
  * Block dependencies
  */
-import { Component, Fragment } from '@wordpress/element';
+import { Component, createInterpolateElement, Fragment } from '@wordpress/element';
 import RadioImageControl from './radio-image-control/';
 
 /**
@@ -261,13 +261,17 @@ class Inspector extends Component {
 						>
 							{!window.feedzyjs.isPro && (
 								<div className="fz-upsell-notice">
-									{__(
-										'Unlock more advanced options with',
-										'feedzy-rss-feeds'
-									)}{' '}
-									<ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=keywordsfilter&utm_content=feedzy-rss-feeds">
-										{__('Feedzy Pro', 'feedzy-rss-feeds')}
-									</ExternalLink>
+									{createInterpolateElement(
+										__(
+											'Unlock more advanced options with <a>Feedzy Pro</a>',
+											'feedzy-rss-feeds'
+										),
+										{
+											a: (
+												<ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=keywordsfilter&utm_content=feedzy-rss-feeds" />
+											),
+										}
+									)}
 								</div>
 							)}
 							<TextControl
@@ -285,7 +289,7 @@ class Inspector extends Component {
 							/>
 							<SelectControl
 								label={__(
-									'Select a field if you want to inc keyword.',
+									'Select a field if you want to include keyword.',
 									'feedzy-rss-feeds'
 								)}
 								value={this.props.attributes.keywords_inc_on}
@@ -325,7 +329,7 @@ class Inspector extends Component {
 							/>
 							<SelectControl
 								label={__(
-									'Select a field if you want to exc keyword.',
+									'Select a field if you want to exclude keyword.',
 									'feedzy-rss-feeds'
 								)}
 								value={this.props.attributes.keywords_exc_on}
@@ -565,16 +569,17 @@ class Inspector extends Component {
 							>
 								{!window.feedzyjs.isPro && (
 									<div className="fz-upsell-notice">
-										{__(
-											'Unlock this feature and more advanced options with',
-											'feedzy-rss-feeds'
-										)}{' '}
-										<ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=layouts&utm_content=feedzy-rss-feeds">
-											{__(
-												'Feedzy Pro',
+										{createInterpolateElement(
+											__(
+												'Unlock this feature and more advanced options with <a>Feedzy Pro</a>',
 												'feedzy-rss-feeds'
-											)}
-										</ExternalLink>
+											),
+											{
+												a: (
+													<ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=layouts&utm_content=feedzy-rss-feeds" />
+												),
+											}
+										)}
 									</div>
 								)}
 
@@ -842,16 +847,17 @@ class Inspector extends Component {
 							>
 								{!window.feedzyjs.isPro && (
 									<div className="fz-upsell-notice">
-										{__(
-											'Unlock this feature and more advanced options with',
-											'feedzy-rss-feeds'
-										)}{' '}
-										<ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=refferal&utm_content=feedzy-rss-feeds">
-											{__(
-												'Feedzy Pro',
+										{createInterpolateElement(
+											__(
+												'Unlock this feature and more advanced options with <a>Feedzy Pro</a>',
 												'feedzy-rss-feeds'
-											)}
-										</ExternalLink>
+											),
+											{
+												a: (
+													<ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=refferal&utm_content=feedzy-rss-feeds" />
+												),
+											}
+										)}
 									</div>
 								)}
 								<TextControl

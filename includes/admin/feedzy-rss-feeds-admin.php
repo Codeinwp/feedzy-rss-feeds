@@ -950,7 +950,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			<strong>' .
 			sprintf(
 				// translators: %1$s and %2$s are placeholders for HTML anchor tags.
-				__( 'Please be aware that multiple feeds, when mashed together, may sometimes not work as expected as explained %1$s here %2$s.', 'feedzy-rss-feeds' ),
+				__( 'Please be aware that multiple feeds, when mashed together, may sometimes not work as expected as explained %1$shere%2$s.', 'feedzy-rss-feeds' ),
 				'<a href="' . esc_url( 'https://simplepie.org/wiki/faq/typical_multifeed_gotchas' ) . '" target="_blank">',
 				'</a>'
 			)

@@ -324,6 +324,35 @@ add_filter(
 			);
 		}
 
+		if ( isset( $labels['about_us'] ) ) {
+			$labels['about_us'] = array_merge(
+				$labels['about_us'],
+				array(
+					'title'            => __( 'About Us', 'feedzy-rss-feeds' ),
+					'heroHeader'       => __( 'Our Story', 'feedzy-rss-feeds' ),
+					'heroTextFirst'    => __( 'Themeisle was founded in 2012 by a group of passionate developers who wanted to create beautiful and functional WordPress themes and plugins. Since then, we have grown into a team of over 20 dedicated professionals who are committed to delivering the best possible products to our customers.', 'feedzy-rss-feeds' ),
+					'heroTextSecond'   => __( 'At Themeisle, we offer a wide range of WordPress themes and plugins that are designed to meet the needs of both beginners and advanced users. Our products are feature-rich, easy to use, and are designed to help you create beautiful and functional websites.', 'feedzy-rss-feeds' ),
+					'teamImageCaption' => __( 'Our team in WCEU2022 in Portugal', 'feedzy-rss-feeds' ),
+					'newsHeading'      => __( 'Stay connected for news & updates!', 'feedzy-rss-feeds' ),
+					'emailPlaceholder' => __( 'Your email address', 'feedzy-rss-feeds' ),
+					'signMeUp'         => __( 'Sign me up', 'feedzy-rss-feeds' ),
+					'installNow'       => __( 'Install Now', 'feedzy-rss-feeds' ),
+					'activate'         => __( 'Activate', 'feedzy-rss-feeds' ),
+					'learnMore'        => __( 'Learn More', 'feedzy-rss-feeds' ),
+					'installed'        => __( 'Installed', 'feedzy-rss-feeds' ),
+					'notInstalled'     => __( 'Not Installed', 'feedzy-rss-feeds' ),
+					'active'           => __( 'Active', 'feedzy-rss-feeds' ),
+					'others'           => array(
+						'optimole_desc'   => __( 'Optimole is an image optimization service that automatically optimizes your images and serves them to your visitors via a global CDN, making your website lighter, faster and helping you reduce your bandwidth usage.', 'feedzy-rss-feeds' ),
+						'neve_desc'       => __( 'A fast, lightweight, customizable WordPress theme offering responsive design, speed, and flexibility for various website types.', 'feedzy-rss-feeds' ),
+						'landingkit_desc' => __( 'Turn WordPress into a landing page powerhouse with Landing Kit, map domains to pages or any other published resource.', 'feedzy-rss-feeds' ),
+						'sparks_desc'     => __( 'Extend your store functionality with 8 ultra-performant features like product comparisons, variation swatches, wishlist, and more.', 'feedzy-rss-feeds' ),
+						'tpc_desc'        => __( 'Design, save, and revisit your templates anytime with your personal vault on Templates Cloud.', 'feedzy-rss-feeds' ),
+					),
+				)
+			);
+		}
+
 		return $labels;
 	}
 );
