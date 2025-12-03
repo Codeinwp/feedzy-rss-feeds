@@ -105,8 +105,12 @@ class Feedzy_Rss_Feeds_Import {
 			<div class="only-pro-content">
 				<div class="only-pro-container">
 					<div class="only-pro-inner upgrade-alert">
-						' . __( 'This feature is available in the Pro version.  Unlock more features, by', 'feedzy-rss-feeds' ) . '
-						<a target="_blank" href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, $area, $location ) ) ) . '" title="' . __( 'Buy Now', 'feedzy-rss-feeds' ) . '">' . __( 'upgrading to Feedzy Pro', 'feedzy-rss-feeds' ) . '</a>
+						' . sprintf(
+								// translators: %1$s and %2$s are HTML tags for the link to the upsell URL.
+				__( 'This feature is available in the Pro version. Unlock more features, by %1$supgrading to Feedzy Pro%2$s', 'feedzy-rss-feeds' ),
+				'<a target="_blank" href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, $area, $location ) ) ) . '" title="' . __( 'Buy Now', 'feedzy-rss-feeds' ) . '">',
+				'</a>'
+			) . '
 					</div>
 				</div>
 			</div>';
@@ -434,8 +438,14 @@ class Feedzy_Rss_Feeds_Import {
 			'posts_per_page' => 100,
 		);
 		$feed_categories  = get_posts( $args );
-		$post_types       = get_post_types( '', 'names' );
-		$post_types       = array_diff( $post_types, array( 'feedzy_imports', 'feedzy_categories' ) );
+		$post_types       = get_post_types( '', 'objects' );
+		$post_types       = array_diff_key(
+			$post_types,
+			array(
+				'feedzy_imports'    => array(),
+				'feedzy_categories' => array(),
+			) 
+		);
 		$published_status = array( 'publish', 'draft' );
 
 		$authors       = get_users( array( 'number' => 100 ) );
@@ -929,11 +939,27 @@ class Feedzy_Rss_Feeds_Import {
 					$then = new DateTime();
 					$then = $then->setTimestamp( $last );
 					$in   = $now->diff( $then );
-					$msg  = sprintf(
-						// translators: %1$d: number of hours, %2$d: number of minutes.
-						__( 'Ran %1$d hours %2$d minutes ago', 'feedzy-rss-feeds' ),
-						$in->format( '%h' ),
-						$in->format( '%i' )
+
+					$hours   = (int) $in->format( '%h' );
+					$minutes = (int) $in->format( '%i' );
+					
+					$hours_text = sprintf(
+						// translators: %d: number of hours.
+						_n( '%d hour', '%d hours', $hours, 'feedzy-rss-feeds' ),
+						$hours
+					);
+					
+					$minutes_text = sprintf(
+						// translators: %d: number of minutes.
+						_n( '%d minute', '%d minutes', $minutes, 'feedzy-rss-feeds' ),
+						$minutes
+					);
+					
+					$msg = sprintf(
+						// translators: %1$s: hours text, %2$s: minutes text.
+						__( 'Ran %1$s %2$s ago', 'feedzy-rss-feeds' ),
+						$hours_text,
+						$minutes_text
 					);
 				}
 
@@ -2724,7 +2750,12 @@ class Feedzy_Rss_Feeds_Import {
 			Feedzy_Rss_Feeds_Log::error(
 				sprintf(
 					// translators: %1$d is the number of items without images, %2$d is the total number of items imported.
-					__( 'Unable to find an image for %1$d out of %2$d items imported', 'feedzy-rss-feeds' ),
+					_n(
+						'Unable to find an image for %1$d out of %2$d item imported',
+						'Unable to find an image for %1$d out of %2$d items imported',
+						$count,
+						'feedzy-rss-feeds'
+					),
 					$import_image_errors,
 					$count
 				),
@@ -3663,7 +3694,11 @@ class Feedzy_Rss_Feeds_Import {
 		} elseif ( 1 === intval( get_post_meta( $post->ID, 'feedzy', true ) ) ) {
 			// show an unclickable action that mentions that it is imported by us so that users are aware.
 			$feedzy_job_id     = get_post_meta( $post->ID, 'feedzy_job', true );
-			$actions['feedzy'] = sprintf( '(%s %s)', __( 'Imported by Feedzy from', 'feedzy-rss-feeds' ), get_the_title( $feedzy_job_id ) );
+			$actions['feedzy'] = sprintf(
+				// translators: %s is the title of job.
+				__( 'Imported by Feedzy from %s', 'feedzy-rss-feeds' ),
+				get_the_title( $feedzy_job_id )
+			);
 		}
 
 		return $actions;
