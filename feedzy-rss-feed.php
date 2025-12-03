@@ -342,13 +342,6 @@ add_filter(
 					'installed'        => __( 'Installed', 'feedzy-rss-feeds' ),
 					'notInstalled'     => __( 'Not Installed', 'feedzy-rss-feeds' ),
 					'active'           => __( 'Active', 'feedzy-rss-feeds' ),
-					'others'           => array(
-						'optimole_desc'   => __( 'Optimole is an image optimization service that automatically optimizes your images and serves them to your visitors via a global CDN, making your website lighter, faster and helping you reduce your bandwidth usage.', 'feedzy-rss-feeds' ),
-						'neve_desc'       => __( 'A fast, lightweight, customizable WordPress theme offering responsive design, speed, and flexibility for various website types.', 'feedzy-rss-feeds' ),
-						'landingkit_desc' => __( 'Turn WordPress into a landing page powerhouse with Landing Kit, map domains to pages or any other published resource.', 'feedzy-rss-feeds' ),
-						'sparks_desc'     => __( 'Extend your store functionality with 8 ultra-performant features like product comparisons, variation swatches, wishlist, and more.', 'feedzy-rss-feeds' ),
-						'tpc_desc'        => __( 'Design, save, and revisit your templates anytime with your personal vault on Templates Cloud.', 'feedzy-rss-feeds' ),
-					),
 				)
 			);
 		}
