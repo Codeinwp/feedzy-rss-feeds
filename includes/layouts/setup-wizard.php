@@ -22,10 +22,7 @@ if ( ! empty( $integrate_with ) ) {
 	$wizard_data = get_option( 'feedzy_wizard_data', array() );
 	$feed_source = ! empty( $wizard_data['feed'] ) ? $wizard_data['feed'] : '';
 }
-$published_status = array(
-	'publish' => __( 'Publish', 'feedzy-rss-feeds' ),
-	'draft'   => __( 'Draft', 'feedzy-rss-feeds' ),
-);
+$published_status = array( 'publish', 'draft' );
 
 add_thickbox();
 ?>
@@ -195,7 +192,8 @@ add_thickbox();
 														<div class="mx-320">
 															<select id="feedzy_post_status" class="form-control feedzy-chosen" name="feedzy_meta_data[import_post_status]">
 																<?php
-																foreach ( $published_status as $_status => $_label ) {
+																foreach ( $published_status as $_status ) {
+																	$_label = get_post_status_object( $_status )->label;
 																	?>
 																	<option value="<?php echo esc_attr( $_status ); ?>">
 																		<?php echo esc_html( $_label ); ?>

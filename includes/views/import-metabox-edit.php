@@ -225,7 +225,8 @@ global $post;
 										<div class="mx-320">
 											<select id="feedzy_post_status" class="form-control feedzy-chosen" name="feedzy_meta_data[import_post_status]">
 												<?php
-												foreach ( $published_status as $_status => $_label ) {
+												foreach ( $published_status as $_status ) {
+													$_label = get_post_status_object( $_status )->label;
 													?>
 												<option value="<?php echo esc_attr( $_status ); ?>" <?php selected( $import_post_status, $_status ); ?>>
 													<?php echo esc_html( $_label ); ?></option>
