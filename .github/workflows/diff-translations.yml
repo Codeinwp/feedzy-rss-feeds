@@ -1,0 +1,52 @@
+name: Translations Diff
+
+on:
+  pull_request_review:
+  pull_request:
+    types: [opened, edited, synchronize, ready_for_review]
+    branches:
+      - development
+      - master
+
+jobs:
+  translation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Base Branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.base_ref }}
+          path: feedzy-base
+      - name: Setup node 16
+        uses: actions/setup-node@v4
+        with:
+          node-version: 16.x
+      - name: Build POT for Base Branch
+        run: |
+          cd feedzy-base
+          composer install --no-dev --prefer-dist --no-progress --no-suggest
+          npm ci
+          npm run build
+          npm run makepot
+          ls languages/
+      - name: Checkout PR Branch (Head)
+        uses: actions/checkout@v4
+        with:
+          path: feedzy-head
+      - name: Build POT for PR Branch
+        run: |
+          cd feedzy-head
+          composer install --no-dev --prefer-dist --no-progress --no-suggest
+          npm ci
+          npm run build
+          npm run makepot
+          ls languages/
+      - name: Compare POT files
+        uses: Codeinwp/action-i18n-string-reviewer@main
+        with:
+          fail-on-changes: 'true'
+          openrouter-key: ${{ secrets.OPEN_ROUTER_API_KEY }}
+          openrouter-model: 'google/gemini-2.5-flash'
+          base-pot-file: 'feedzy-base/languages/feedzy-rss-feeds.pot'
+          target-pot-file: 'feedzy-head/languages/feedzy-rss-feeds.pot'
+          github-token: ${{ secrets.BOT_TOKEN }}
