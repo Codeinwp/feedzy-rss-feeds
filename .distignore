@@ -44,3 +44,4 @@ docker-compose.ci.yml
 artifacts
 phpstan.neon
 phpstan-baseline.neon
+languages

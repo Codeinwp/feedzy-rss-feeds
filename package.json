@@ -18,6 +18,7 @@
   },
   "scripts": {
     "build": "npm-run-all build:*",
+    "makepot": "npm run dist && docker run --user root --rm --volume \"$(pwd)/dist/feedzy-rss-feeds:/var/www/html/feedzy-rss-feeds\" wordpress:cli bash -c 'php -d memory_limit=512M \"$(which wp)\" --version --allow-root && wp i18n make-pot ./feedzy-rss-feeds/ ./feedzy-rss-feeds/languages/feedzy-rss-feeds.pot  --allow-root  --domain=feedzy-rss-feeds --debug ' && mv ./dist/feedzy-rss-feeds/languages/feedzy-rss-feeds.pot ./languages/feedzy-rss-feeds.pot",
     "build:block": "wp-scripts build --webpack-src-dir=js/FeedzyBlock --output-path=build/block --output-filename=index.js",
     "build:loop": "wp-scripts build --webpack-src-dir=js/FeedzyLoop --output-path=build/loop --output-filename=index.js",
     "build:onboarding": "wp-scripts build --webpack-src-dir=js/Onboarding --output-path=build/onboarding --output-filename=index.js",
