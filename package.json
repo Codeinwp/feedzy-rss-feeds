@@ -1,7 +1,7 @@
 {
   "name": "feedzy-rss-feeds",
   "version": "5.1.2",
-  "description": "Feedzy RSS Feeds - lite version",
+  "description": "Feedzy RSS Feeds - lite version.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Codeinwp/feedzy-rss-feeds.git"
