@@ -446,10 +446,7 @@ class Feedzy_Rss_Feeds_Import {
 				'feedzy_categories' => array(),
 			) 
 		);
-		$published_status = array(
-			'publish' => __( 'Publish', 'feedzy-rss-feeds' ),
-			'draft'   => __( 'Draft', 'feedzy-rss-feeds' ),
-		);
+		$published_status = array( 'publish', 'draft' );
 
 		$authors       = get_users( array( 'number' => 100 ) );
 		$authors_array = array();
