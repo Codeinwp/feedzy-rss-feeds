@@ -24,7 +24,6 @@ jobs:
       - name: Build POT for Base Branch
         run: |
           cd feedzy-base
-          ls languages/
           composer install --no-dev --prefer-dist --no-progress --no-suggest
           npm ci
           npm run build
@@ -37,7 +36,6 @@ jobs:
       - name: Build POT for PR Branch
         run: |
           cd feedzy-head
-          ls languages/
           composer install --no-dev --prefer-dist --no-progress --no-suggest
           npm ci
           npm run build
