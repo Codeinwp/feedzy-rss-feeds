@@ -18,10 +18,10 @@ The Ultimate WordPress RSS aggregator, helping you Curate content, Autoblog, Imp
 
 ## 🔗 HELPFUL LINKS: ##
 
-* Want to see Feedzy in action before installing? [VIEW FEEDZY DEMO](https://demo.themeisle.com/feedzy-rss-feeds/?utm_source=wpadmin&utm_medium=readme&utm_campaign=feedzy)
+* Want to see Feedzy in action before installing? [VIEW FEEDZY DEMO](https://demo.themeisle.com/feedzy-rss-feeds/?utm_source=wordpressorg&utm_medium=readme&utm_campaign=feedzy)
 * Need any help with setup? [CHECK DOCUMENTATION](https://docs.themeisle.com/category/712-feedzy)
 * Don’t like reading? [CHECK YOUTUBE TUTORIALS](https://www.youtube.com/channel/UCAQcBsP3h6p5yXgFap4LEGA/search?query=feedzy)
-* Interested in Feedzy Pro? [KNOW MORE ABOUT FEEDZY PRO](https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=readme&utm_campaign=feedzy)
+* Interested in Feedzy Pro? [KNOW MORE ABOUT FEEDZY PRO](https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wordpressorg&utm_medium=readme&utm_campaign=feedzy)
 
 With FEEDZY RSS Aggregator, you can sit back, let your site autoblog and always stay fresh with new content, which in return helps improve content marketing, boost your SEO, increase audience engagement, and probably earn more money.
 
@@ -67,7 +67,7 @@ Take your “Feed to Post” automation to the next level with powerful Pro-only
 * **Custom Post Author:** Assign imported posts to a specific author profile.  
 * **Post Excerpts and Custom Fields:** Map feed data to post excerpts or custom fields for richer content display.  
 
-These advanced controls give you full editorial power over your imported content, whether you are curating news, running an affiliate store, or managing multiple client sites. [Get Feedzy Pro](https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=readme&utm_campaign=feedzy)
+These advanced controls give you full editorial power over your imported content, whether you are curating news, running an affiliate store, or managing multiple client sites. [Get Feedzy Pro](https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wordpressorg&utm_medium=readme&utm_campaign=feedzy)
 
 ## 🤔 WHAT YOU CAN DO WITH FEEDZY RSS AGGREGATOR: ##
 
@@ -123,7 +123,7 @@ If you love FEEDZY RSS Aggregator, why not bring your site to the next level wit
 
 **USE CASE:** Mike, an affiliate marketing expert, is all about maximizing profits. By seamlessly incorporating personalized referral links into his content using the "Add Affiliate Links and Referral Parameters" feature, he simplifies tracking and improves campaign efficiency. The result? Heightened conversions, enhanced earnings, and a stronger affiliate game.
 
-Unlock all these premium features with [Feedzy PRO!](https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=readme&utm_campaign=feedzy)
+Unlock all these premium features with [Feedzy PRO!](https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wordpressorg&utm_medium=readme&utm_campaign=feedzy)
 
 * Still skeptical? Ask your pre-sales questions [here](https://themeisle.com/contact/), and we will get back to you shortly, or purchase with peace of mind and try it yourself. We offer **30-day-no-questions-asked money-back guarantee.**
 
