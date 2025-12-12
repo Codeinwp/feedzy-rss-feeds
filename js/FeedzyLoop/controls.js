@@ -17,7 +17,7 @@ import {
 	BaseControl,
 } from '@wordpress/components';
 
-import { Fragment } from '@wordpress/element';
+import { createInterpolateElement, Fragment } from '@wordpress/element';
 
 /**
  * Internal dependencies.
@@ -246,13 +246,17 @@ function CustomInspectorControls({
 			>
 				{!window.feedzyData?.isPro && (
 					<div className="fz-upsell-notice">
-						{__(
-							'Unlock more advanced options with',
-							'feedzy-rss-feeds'
-						)}{' '}
-						<ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=keywordsfilter&utm_content=feedzy-rss-feeds">
-							{__('Feedzy Pro', 'feedzy-rss-feeds')}
-						</ExternalLink>
+						{createInterpolateElement(
+							__(
+								'Unlock more advanced options with <a>Feedzy Pro</a>',
+								'feedzy-rss-feeds'
+							),
+							{
+								a: (
+									<ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=keywordsfilter&utm_content=feedzy-rss-feeds" />
+								),
+							}
+						)}
 					</div>
 				)}
 
@@ -296,13 +300,17 @@ function CustomInspectorControls({
 			>
 				{!window.feedzyData?.isPro && (
 					<div className="fz-upsell-notice">
-						{__(
-							'Unlock this feature and more advanced options with',
-							'feedzy-rss-feeds'
-						)}{' '}
-						<ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=refferal&utm_content=feedzy-rss-feeds">
-							{__('Feedzy Pro', 'feedzy-rss-feeds')}
-						</ExternalLink>
+						{createInterpolateElement(
+							__(
+								'Unlock this feature and more advanced options with <a>Feedzy Pro</a>',
+								'feedzy-rss-feeds'
+							),
+							{
+								a: (
+									<ExternalLink href="https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=refferal&utm_content=feedzy-rss-feeds" />
+								),
+							}
+						)}
 					</div>
 				)}
 				<TextControl

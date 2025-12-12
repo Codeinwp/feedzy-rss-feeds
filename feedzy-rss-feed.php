@@ -324,6 +324,28 @@ add_filter(
 			);
 		}
 
+		if ( isset( $labels['about_us'] ) ) {
+			$labels['about_us'] = array_merge(
+				$labels['about_us'],
+				array(
+					'title'            => __( 'About Us', 'feedzy-rss-feeds' ),
+					'heroHeader'       => __( 'Our Story', 'feedzy-rss-feeds' ),
+					'heroTextFirst'    => __( 'Themeisle was founded in 2012 by a group of passionate developers who wanted to create beautiful and functional WordPress themes and plugins. Since then, we have grown into a team of over 20 dedicated professionals who are committed to delivering the best possible products to our customers.', 'feedzy-rss-feeds' ),
+					'heroTextSecond'   => __( 'At Themeisle, we offer a wide range of WordPress themes and plugins that are designed to meet the needs of both beginners and advanced users. Our products are feature-rich, easy to use, and are designed to help you create beautiful and functional websites.', 'feedzy-rss-feeds' ),
+					'teamImageCaption' => __( 'Our team in WCEU2022 in Portugal', 'feedzy-rss-feeds' ),
+					'newsHeading'      => __( 'Stay connected for news & updates!', 'feedzy-rss-feeds' ),
+					'emailPlaceholder' => __( 'Your email address', 'feedzy-rss-feeds' ),
+					'signMeUp'         => __( 'Sign me up', 'feedzy-rss-feeds' ),
+					'installNow'       => __( 'Install Now', 'feedzy-rss-feeds' ),
+					'activate'         => __( 'Activate', 'feedzy-rss-feeds' ),
+					'learnMore'        => __( 'Learn More', 'feedzy-rss-feeds' ),
+					'installed'        => __( 'Installed', 'feedzy-rss-feeds' ),
+					'notInstalled'     => __( 'Not Installed', 'feedzy-rss-feeds' ),
+					'active'           => __( 'Active', 'feedzy-rss-feeds' ),
+				)
+			);
+		}
+
 		return $labels;
 	}
 );

@@ -106,7 +106,7 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 				'type'        => Controls_Manager::TEXTAREA,
 				'description' => wp_sprintf(
 					// translators: %1$s: opening anchor tag, %2$s: closing anchor tag.
-					__( 'You can add multiple sources at once, by separating them with commas. %1$s Click here %2$s to check if the feed is valid. Invalid feeds may not import anything.', 'feedzy-rss-feeds' ),
+					__( 'You can add multiple sources at once, by separating them with commas. %1$sClick here%2$s to check if the feed is valid. Invalid feeds may not import anything.', 'feedzy-rss-feeds' ),
 					'<a href="' . esc_url( 'https://validator.w3.org/feed/' ) . '" class="feedzy-source" target="_blank">',
 					'</a>'
 				),
@@ -505,7 +505,7 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 				'description'  => wp_sprintf(
 					// translators: %1$s: opening anchor tag, %2$s: closing anchor tag.
 					__(
-						'Learn more about this feature in %1$s Feedzy docs %2$s .',
+						'Learn more about this feature in %1$sFeedzy docs%2$s.',
 						'feedzy-rss-feeds'
 					),
 					'<a target="_blank" href="' . esc_url( 'https://docs.themeisle.com/article/923-how-price-is-displayed-from-the-feed' ) . '">',
@@ -572,7 +572,7 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 					! feedzy_is_pro() ?
 						wp_sprintf(
 							// translators: %1$s: opening anchor tag, %2$s: closing anchor tag.
-							__( 'Unlock this feature and more advanced options with %1$s Feedzy Pro %1$s.', 'feedzy-rss-feeds' ),
+							__( 'Unlock this feature and more advanced options with %1$sFeedzy Pro%2$s.', 'feedzy-rss-feeds' ),
 							'<a target="_blank" href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'refferal', 'widget-area' ) ) ) . '">',
 							'</a>'
 						)

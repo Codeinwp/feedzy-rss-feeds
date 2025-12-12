@@ -3,7 +3,7 @@
  * WordPress dependencies.
  */
 import { __ } from '@wordpress/i18n';
-import { useState } from '@wordpress/element';
+import { createInterpolateElement, useState } from '@wordpress/element';
 import {
 	BaseControl,
 	Button,
@@ -180,17 +180,21 @@ const BlockPlaceholder = ({ attributes, setAttributes, onSaveFeed }) => {
 						{renderValidationResults()}
 
 						<p>
-							{__(
-								'Enter the full URL of the feed source you wish to display here, or select a Feed Group. Also you can add multiple URLs separated with a comma. You can manage your feed groups from',
-								'feedzy-rss-feeds'
-							)}{' '}
-							<a
-								href="edit.php?post_type=feedzy_categories"
-								title={__('Feedzy Groups', 'feedzy-rss-feeds')}
-								target="_blank"
-							>
-								{__('here', 'feedzy-rss-feeds')}
-							</a>
+							{createInterpolateElement(
+								__(
+									'Enter the full URL of the feed source you wish to display here, or select a Feed Group. Also you can add multiple URLs separated with a comma. You can manage your feed groups from <a>here</a>.',
+									'feedzy-rss-feeds'
+								),
+								{
+									a: (
+										<a
+											href="edit.php?post_type=feedzy_categories"
+											title={__('Feedzy Groups', 'feedzy-rss-feeds')}
+											target="_blank"
+										/>
+									),
+								}
+							)}
 						</p>
 					</BaseControl>
 
