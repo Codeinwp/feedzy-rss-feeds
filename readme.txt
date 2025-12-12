@@ -479,6 +479,4 @@ You have to check first if your feed is valid. Please test it here: https://vali
 - Enhanced security
 
 
-
-
 [See changelog for all versions](https://github.com/Codeinwp/feedzy-rss-feeds/blob/master/CHANGELOG.md).
