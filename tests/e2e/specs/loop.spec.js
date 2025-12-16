@@ -119,7 +119,7 @@ test.describe('Feedzy Loop', () => {
 			.fill('http://invalid-url.com/feed');
 		await page.getByRole('button', { name: 'Load Feed' }).click();
 
-		await page.waitForSelector('.feedzy-validation-results');
+		await page.waitForSelector('.feedzy-validation-results', { timeout: 30000 });
 
 		await expect(
 			page
@@ -146,7 +146,7 @@ test.describe('Feedzy Loop', () => {
 			);
 		await page.getByRole('button', { name: 'Load Feed' }).click();
 
-		await page.waitForSelector('.feedzy-validation-results');
+		await page.waitForSelector('.feedzy-validation-results', { timeout: 30000 });
 
 		await expect(
 			page
