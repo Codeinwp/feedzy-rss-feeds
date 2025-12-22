@@ -446,11 +446,11 @@ class Feedzy_Rss_Feeds_Import {
 
 		$import_post_type = get_post_meta( $post->ID, 'import_post_type', true );
 		$import_post_term = get_post_meta( $post->ID, 'import_post_term', true );
-		if ( metadata_exists( $import_post_type, $post->ID, 'import_post_status' ) ) {
-			$import_post_status = get_post_meta( $post->ID, 'import_post_status', true );
-		} else {
-			add_post_meta( $post->ID, 'import_post_status', 'publish' );
-			$import_post_status = get_post_meta( $post->ID, 'import_post_status', true );
+
+		$import_post_status = get_post_meta( $post->ID, 'import_post_status', true );
+		if ( empty( $import_post_status ) ) {
+			$import_post_status = 'publish';
+			update_post_meta( $post->ID, 'import_post_status', $import_post_status );
 		}
 		$source                   = get_post_meta( $post->ID, 'source', true );
 		$inc_key                  = get_post_meta( $post->ID, 'inc_key', true );
