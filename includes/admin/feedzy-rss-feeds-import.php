@@ -643,6 +643,7 @@ class Feedzy_Rss_Feeds_Import {
 					}
 				} else {
 					if ( 'import_post_content' === $key ) {
+						$val = escape_html_to_tag( $val );
 						$val = feedzy_custom_tag_escape( $val );
 					} elseif ( 'default_thumbnail_id' === $key && ! empty( $val ) ) {
 						$val = explode( ',', $val );

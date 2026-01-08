@@ -672,3 +672,72 @@ function feedzy_show_review_notice() {
 
 	return $imported_posts->have_posts();
 }
+
+/**
+ * Escape the HTML tag and convert it to the tagify tag value.
+ *
+ * @param string $content Content.
+ * @return string
+ */
+function escape_html_to_tag( $content ) {
+
+	$protected_blocks = array();
+	$placeholder_tpl  = '__TAG_%d__';
+
+	$content = preg_replace_callback(
+		'/\[\[\{[\s\S]*?\}\]\]/',
+		function ( $value ) use ( &$protected_blocks, $placeholder_tpl ) {
+			$index              = count( $protected_blocks );
+			$protected_blocks[] = $value[0];
+			return sprintf( $placeholder_tpl, $index );
+		},
+		$content
+	);
+
+	$base_content    = $content;
+	$html_tags       = array();
+	$converted_value = '';
+
+	if ( preg_match_all( '/<[^>]+>[\s\S]*?<\/[^>]+>/', $content, $matches ) ) {
+		foreach ( $matches[0] as $match ) {
+
+			$base_content = str_replace( $match, '', $base_content );
+			$html_tags[]  = array(
+				'value' => rawurlencode(
+					wp_json_encode(
+						array(
+							array(
+								'id'  => 'custom_html',
+								'tag' => $match,
+							),
+						)
+					)
+				),
+			);
+		}
+	}
+
+	foreach ( $protected_blocks as $i => $block ) {
+		$base_content = str_replace(
+			sprintf( $placeholder_tpl, $i ),
+			$block,
+			$base_content
+		);
+	}
+
+	foreach ( $html_tags as $tag ) {
+		$converted_value .= wp_json_encode(
+			array(
+				array(
+					$tag,
+				),
+			)
+		);
+	}
+
+	if ( ! empty( $converted_value ) ) {
+		$base_content .= $converted_value;
+	}
+
+	return $base_content;
+}
