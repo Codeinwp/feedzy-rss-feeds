@@ -115,6 +115,9 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 		$import_custom_fields = get_post_meta( $p->ID, 'imports_custom_fields', true );
 		$import_feed_limit    = get_post_meta( $p->ID, 'import_feed_limit', true );
 
+		// The import_post_content goes through escape_html_to_tag() which converts HTML tags to JSON format
+		$expected_content = escape_html_to_tag( $magic_tags );
+
 		if ( $check_duplicate ) {
 			$remove_duplicates  = get_post_meta( $p->ID, 'import_remove_duplicates', true );
 			$mark_duplicate_tag = get_post_meta( $p->ID, 'mark_duplicate_tag', true );
@@ -128,7 +131,7 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 		$this->assertEquals( '', $exc_key );
 		$this->assertEquals( '[#item_title]', $import_title );
 		$this->assertEquals( '[#item_date]', $import_date );
-		$this->assertEquals( "{$magic_tags}", $import_content );
+		$this->assertEquals( $expected_content, $import_content );
 		$this->assertEquals( '[#item_image]', $import_featured_img );
 		$this->assertEquals( '', $import_custom_fields );
 		$this->assertEquals( $num_items, $import_feed_limit );
