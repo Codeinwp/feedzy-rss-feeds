@@ -1614,7 +1614,7 @@ class Feedzy_Rss_Feeds_Import {
 		$import_featured_img      = get_post_meta( $job->ID, 'import_post_featured_img', true );
 		$import_post_type         = get_post_meta( $job->ID, 'import_post_type', true );
 		$import_post_term         = get_post_meta( $job->ID, 'import_post_term', true );
-		$import_feed_limit        = get_post_meta( $job->ID, 'import_feed_limit', true );
+		$import_feed_limit        = feedzy_is_pro() ? get_post_meta( $job->ID, 'import_feed_limit', true ) : '';
 		$import_item_img_url      = get_post_meta( $job->ID, 'import_use_external_image', true );
 		$import_remove_duplicates = get_post_meta( $job->ID, 'import_remove_duplicates', true );
 		$import_selected_language = get_post_meta( $job->ID, 'language', true );
