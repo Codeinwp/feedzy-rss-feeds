@@ -1627,9 +1627,13 @@ class Feedzy_Rss_Feeds_Import {
 		$import_post_author       = get_post_meta( $job->ID, 'import_post_author', true );
 		$mark_duplicate_tag       = get_post_meta( $job->ID, 'mark_duplicate_tag', true );
 		$mark_duplicate_tag       = feedzy_is_pro() && ! empty( $mark_duplicate_tag ) ? preg_replace( '/[\[\]#]/', '', $mark_duplicate_tag ) : '';
-		$max                      = $import_feed_limit;
+		$import_max               = $import_feed_limit;
 		$import_remove_html       = get_post_meta( $job->ID, 'import_remove_html', true );
 		$import_order             = get_post_meta( $job->ID, 'import_order', true );
+
+		if ( ! defined( 'TI_UNIT_TESTING' ) ) {
+			$max = $import_max;
+		}
 
 		Feedzy_Rss_Feeds_Log::info(
 			'Running import job: ' . $job->post_title . ' (ID: ' . $job->ID . ')',
