@@ -92,6 +92,56 @@ Layout For Document Page of Feedzy RSS Feeds
 				</div>
 			</div>
 		</li>
+		<li>
+			<div class="fz-document-box">
+				<div class="fz-document-box-img">
+					<img src="<?php echo esc_url( FEEDZY_ABSURL . 'img/youtube-to-wordpress.jpg' ); ?>" alt="">
+				</div>
+				<div class="fz-document-box-content">
+					<h3 class="h3"><?php esc_html_e( 'How to Add a YouTube Feed to WordPress in 3 Easy Ways.', 'feedzy-rss-feeds' ); ?></h3>
+					<div class="cta">
+						<a href="https://youtu.be/AV4UpR5GoXA?si=-rFNRwCWh_sQ7Rwi" class="btn btn-outline-primary" target="_blank"><?php esc_html_e( 'Learn more', 'feedzy-rss-feeds' ); ?></a>
+					</div>
+				</div>
+			</div>
+		</li>
+		<li>
+			<div class="fz-document-box">
+				<div class="fz-document-box-img">
+					<img src="<?php echo esc_url( FEEDZY_ABSURL . 'img/jobs-from-rss.jpg' ); ?>" alt="">
+				</div>
+				<div class="fz-document-box-content">
+					<h3 class="h3"><?php esc_html_e( 'How to Build a Job Board That Pulls Listings From RSS Feeds (on WordPress).', 'feedzy-rss-feeds' ); ?></h3>
+					<div class="cta">
+						<a href="https://youtu.be/Y_vxps6VEe8?si=aqxtJ3n0K7saE86r" class="btn btn-outline-primary" target="_blank"><?php esc_html_e( 'Learn more', 'feedzy-rss-feeds' ); ?></a>
+					</div>
+				</div>
+			</div>
+		</li><li>
+			<div class="fz-document-box">
+				<div class="fz-document-box-img">
+					<img src="<?php echo esc_url( FEEDZY_ABSURL . 'img/rss-to-wordpress.jpg' ); ?>" alt="">
+				</div>
+				<div class="fz-document-box-content">
+					<h3 class="h3"><?php esc_html_e( 'Can You Auto-Import Blog Posts From Any RSS Feed Into WordPress? Yes!', 'feedzy-rss-feeds' ); ?></h3>
+					<div class="cta">
+						<a href="https://youtu.be/vvC5gdrt38o?si=ZERVWfQ8G9v-FoTg" class="btn btn-outline-primary" target="_blank"><?php esc_html_e( 'Learn more', 'feedzy-rss-feeds' ); ?></a>
+					</div>
+				</div>
+			</div>
+		</li><li>
+			<div class="fz-document-box">
+				<div class="fz-document-box-img">
+					<img src="<?php echo esc_url( FEEDZY_ABSURL . 'img/import-full-rss-posts.jpg' ); ?>" alt="">
+				</div>
+				<div class="fz-document-box-content">
+					<h3 class="h3"><?php esc_html_e( 'Import Full RSS Posts with Images into WordPress.', 'feedzy-rss-feeds' ); ?></h3>
+					<div class="cta">
+						<a href="https://youtu.be/1b19_x6JZk8?si=zP_t2AGdOg_eq3hi" class="btn btn-outline-primary" target="_blank"><?php esc_html_e( 'Learn more', 'feedzy-rss-feeds' ); ?></a>
+					</div>
+				</div>
+			</div>
+		</li>
 	</ul>
 	<div class="cta">
 		<a href="https://docs.themeisle.com/category/712-feedzy" class="btn btn-ghost" target="blank"><?php esc_html_e( 'Open Feedzy Documentation page', 'feedzy-rss-feeds' ); ?></a>
