@@ -45,3 +45,4 @@ artifacts
 phpstan.neon
 phpstan-baseline.neon
 languages
+AGENTS.md
