@@ -1718,14 +1718,22 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return mixed
 	 */
 	public function validate_category_feeds( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
-		if ( 'feedzy_category_feed' === $meta_key && 'feedzy_categories' === get_post_type( $object_id ) ) {
-			remove_filter( current_filter(), array( $this, 'validate_category_feeds' ) );
-			$valid = $this->check_source_validity( $meta_value, $object_id, true, true );
-			update_post_meta( $object_id, $meta_key, empty( $valid ) ? '' : implode( ', ', $valid ) );
-			return true;
+		// Early return for non-feedzy meta keys to avoid interfering with other plugins.
+		if ( 'feedzy_category_feed' !== $meta_key ) {
+			return $check;
 		}
 
-		return $check;
+		// Only process feedzy_categories post type.
+		$post_type = get_post_type( $object_id );
+		if ( 'feedzy_categories' !== $post_type ) {
+			return $check;
+		}
+
+		// Remove filter to avoid infinite recursion when calling update_post_meta.
+		remove_filter( current_filter(), array( $this, 'validate_category_feeds' ) );
+		$valid = $this->check_source_validity( $meta_value, $object_id, true, true );
+		update_post_meta( $object_id, $meta_key, empty( $valid ) ? '' : implode( ', ', $valid ) );
+		return true;
 	}
 
 	/**
