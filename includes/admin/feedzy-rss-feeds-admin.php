@@ -1733,6 +1733,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		remove_filter( current_filter(), array( $this, 'validate_category_feeds' ) );
 		$valid = $this->check_source_validity( $meta_value, $object_id, true, true );
 		update_post_meta( $object_id, $meta_key, empty( $valid ) ? '' : implode( ', ', $valid ) );
+
+		// Re-add the filter to ensure subsequent metadata operations work correctly.
+		add_filter( current_filter(), array( $this, 'validate_category_feeds' ), 10, 5 );
+
 		return true;
 	}
 
@@ -1875,6 +1879,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				if ( ! empty( $valid ) ) {
 					remove_filter( 'update_post_metadata', array( $this, 'validate_category_feeds' ) );
 					update_post_meta( $post_id, 'feedzy_category_feed', implode( ', ', $valid ) );
+					add_filter( 'update_post_metadata', array( $this, 'validate_category_feeds' ), 10, 5 );
 				}
 				wp_send_json_success( array( 'invalid' => count( $invalid ) ) );
 				break;
