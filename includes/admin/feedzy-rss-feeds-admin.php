@@ -3013,29 +3013,35 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function add_black_friday_data( $configs ) {
 		$config = $configs['default'];
+		
+		$message   = __( 'Feed-to-post automation, keyword filters, full-text import. Stop copying content manually. Exclusively for existing Feedzy users.', 'feedzy-rss-feeds' );
+		$cta_label = __( 'Upgrade Now', 'feedzy-rss-feeds' );
 
-		// translators: %1$s - HTML tag, %2$s - discount, %3$s - HTML tag, %4$s - product name.
-		$message_template = __( 'Our biggest sale of the year: %1$sup to %2$s OFF%3$s on %4$s. Don\'t miss this limited-time offer.', 'feedzy-rss-feeds' );
-		$product_label    = 'Feedzy';
-		$discount         = '70%';
+		$license_status = apply_filters( 'product_feedzy_license_status', false );
+		$is_valid       = 'valid' === $license_status;
+		$is_expired     = 'expired' === $license_status || 'active-expired' === $license_status;
 
-		$is_pro = feedzy_is_pro();
-
-		if ( $is_pro ) {
-			// translators: %1$s - HTML tag, %2$s - discount, %3$s - HTML tag, %4$s - product name.
-			$message_template = __( 'Get %1$sup to %2$s off%3$s when you upgrade your %4$s plan or renew early.', 'feedzy-rss-feeds' );
-			$product_label    = 'Feedzy Pro';
-			$discount         = '30%';
+		if ( $is_valid ) {
+			// translators: %1$s is the discount percentage for the upgrade, %2$s is the discount percentage for early renewal.
+			$message   = sprintf( __( 'Upgrade your Feedzy Pro plan: %1$s off this week. Already on the plan you need? Renew early and save up to %2$s.', 'feedzy-rss-feeds' ), '30%', '20%' );
+			$cta_label = __( 'See your options', 'feedzy-rss-feeds' );
+		} elseif ( $is_expired ) {
+			$message   = __( 'Your Feedzy Pro features are still here, just locked. Renew at a reduced rate this week.', 'feedzy-rss-feeds' );
+			$cta_label = __( 'Reactivate now', 'feedzy-rss-feeds' );
+		} else {
+			// translators: %s is the discount percentage for the upgrade.
+			$config['title'] = sprintf( __( 'Feedzy Pro: %s off this week', 'feedzy-rss-feeds' ), '60%' );
 		}
 
-		$product_label = sprintf( '<strong>%s</strong>', $product_label );
-		$url_params    = array(
-			'utm_term' => $is_pro ? 'plan-' . apply_filters( 'product_feedzy_license_plan', 0 ) : 'free',
-			'lkey'     => $is_pro ? apply_filters( 'product_feedzy_license_key', false ) : false,
+		$url_params = array(
+			'utm_term' => $is_valid ? 'plan-' . apply_filters( 'product_feedzy_license_plan', 0 ) : 'free',
+			'lkey'     => $is_valid || $is_expired ? apply_filters( 'product_feedzy_license_key', false ) : false,
+			'expired'  => $is_expired ? '1' : false,
 		);
 
-		$config['message']  = sprintf( $message_template, '<strong>', $discount, '</strong>', $product_label );
-		$config['sale_url'] = add_query_arg(
+		$config['cta_label'] = $cta_label;
+		$config['message']   = $message;
+		$config['sale_url']  = add_query_arg(
 			$url_params,
 			tsdk_translate_link( tsdk_utmify( 'https://themeisle.link/feedzy-bf', 'bfcm', 'feedzy' ) )
 		);
