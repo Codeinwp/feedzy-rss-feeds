@@ -462,6 +462,11 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = How to install and activate Feedzy Pro =
  [https://docs.themeisle.com/article/1247-how-to-install-and-activate-feedzy-pro](https://docs.themeisle.com/article/1247-how-to-install-and-activate-feedzy-pro)
 
+ = How to report a security issue? =
+ 
+ Plugin security is a core priority for us. If you identify a potential vulnerability, we ask that you disclose it responsibly.
+ Please follow the reporting protocols outlined on our [Security Page](https://themeisle.com/security/).
+
  == Screenshots ==
 
 1. Add Categories
