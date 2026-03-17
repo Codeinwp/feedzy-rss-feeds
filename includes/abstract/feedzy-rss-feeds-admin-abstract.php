@@ -822,10 +822,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @since   3.1.7
 	 * @access  private
 	 *
-	 * @param   string $feed_url The feed URL.
-	 * @param   string $cache The cache string (eg. 1_hour, 30_min etc.).
-	 * @param   array  $sc The shortcode attributes.
-	 * @param   bool   $allow_https Defaults to constant FEEDZY_ALLOW_HTTPS.
+	 * @param   string|array<string> $feed_url The feed URL.
+	 * @param   string               $cache The cache string (eg. 1_hour, 30_min etc.).
+	 * @param   array                $sc The shortcode attributes.
+	 * @param   bool                 $allow_https Defaults to constant FEEDZY_ALLOW_HTTPS.
 	 *
 	 * @return SimplePie
 	 */
