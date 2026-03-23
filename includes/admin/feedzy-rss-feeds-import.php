@@ -876,6 +876,11 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	public function manage_feedzy_import_columns( $column, $post_id ) {
 		global $post;
+		// Cache date/time format to avoid repeated get_option calls per row.
+		static $datetime_format = null;
+		if ( null === $datetime_format ) {
+			$datetime_format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
+		}
 		switch ( $column ) {
 			case 'feedzy-source':
 				$src = get_post_meta( $post_id, 'source', true );
@@ -936,10 +941,8 @@ class Feedzy_Rss_Feeds_Import {
 						$in->format( '%i' )
 					);
 					// Add actual timestamp below relative time.
-					$date_format = get_option( 'date_format' );
-					$time_format = get_option( 'time_format' );
-					$timestamp   = date_i18n( $date_format . ' ' . $time_format, $last );
-					$msg        .= '<br><small style="color:#888;">' . esc_html( $timestamp ) . '</small>';
+					$timestamp = wp_date( $datetime_format, (int) $last );
+					$msg      .= '<br><small style="color:#888;">' . esc_html( $timestamp ) . '</small>';
 				}
 
 				$msg .= $this->get_last_run_details( $post_id );
@@ -956,12 +959,11 @@ class Feedzy_Rss_Feeds_Import {
 					$next = Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'feedzy_cron' );
 				}
 				if ( is_numeric( $next ) ) {
-					echo wp_kses_post( human_time_diff( $next, time() ) );
+					$relative_time = human_time_diff( $next, time() );
 					// Add actual timestamp below relative time.
-					$date_format = get_option( 'date_format' );
-					$time_format = get_option( 'time_format' );
-					$timestamp   = date_i18n( $date_format . ' ' . $time_format, $next );
-					echo '<br><small style="color:#888;">' . esc_html( $timestamp ) . '</small>';
+					$timestamp     = wp_date( $datetime_format, (int) $next );
+					$output        = $relative_time . '<br><small style="color:#888;">' . esc_html( $timestamp ) . '</small>';
+					echo wp_kses_post( $output );
 				} elseif ( $next ) {
 					echo esc_html__( 'in-progress', 'feedzy-rss-feeds' );
 				}
