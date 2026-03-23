@@ -48,13 +48,13 @@ add_filter( 'the_content_feed', 'feedzy_insert_thumbnail' );
  * @return string post thumbnail HTML.
  */
 function feedzy_display_external_post_image( $html, $post_id, $post_thumbnail_id, $size, $attr ) {
-	// Only process Feedzy-imported posts.
-	if ( ! get_post_meta( $post_id, 'feedzy', true ) ) {
+	// If the post already has a thumbnail, keep the existing HTML and avoid further processing.
+	if ( $post_thumbnail_id ) {
 		return $html;
 	}
 
-	// If check post thumbnail exists OR not.
-	if ( $post_thumbnail_id ) {
+	// Only process Feedzy-imported posts.
+	if ( ! get_post_meta( $post_id, 'feedzy', true ) ) {
 		return $html;
 	}
 
