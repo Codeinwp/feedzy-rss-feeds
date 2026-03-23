@@ -48,6 +48,11 @@ add_filter( 'the_content_feed', 'feedzy_insert_thumbnail' );
  * @return string post thumbnail HTML.
  */
 function feedzy_display_external_post_image( $html, $post_id, $post_thumbnail_id, $size, $attr ) {
+	// Only process Feedzy-imported posts.
+	if ( ! get_post_meta( $post_id, 'feedzy', true ) ) {
+		return $html;
+	}
+
 	// If check post thumbnail exists OR not.
 	if ( $post_thumbnail_id ) {
 		return $html;
@@ -184,6 +189,12 @@ function feedzy_enable_external_url_support( $has_thumbnail, $post, $thumbnail_i
 	} elseif ( $post && is_numeric( $post ) ) {
 		$post_id = $post;
 	}
+
+	// Only process Feedzy-imported posts.
+	if ( ! get_post_meta( $post_id, 'feedzy', true ) ) {
+		return $has_thumbnail;
+	}
+
 	$feedzy_item_external_url = get_post_meta( $post_id, 'feedzy_item_external_url', true );
 	// Check external URL exists OR not.
 	if ( ! empty( $feedzy_item_external_url ) ) {
@@ -204,9 +215,13 @@ add_filter( 'has_post_thumbnail', 'feedzy_enable_external_url_support', 10, 3 );
  */
 function feedzy_get_attachment_image_src( $image, $attachment_id, $size, $icon ) {
 	if ( 0 === $attachment_id ) {
-		$external_url = get_post_meta( get_the_ID(), 'feedzy_item_external_url', true );
-		if ( $external_url ) {
-			$image = array( $external_url, 0, 0, false );
+		$post_id = get_the_ID();
+		// Only process Feedzy-imported posts.
+		if ( get_post_meta( $post_id, 'feedzy', true ) ) {
+			$external_url = get_post_meta( $post_id, 'feedzy_item_external_url', true );
+			if ( $external_url ) {
+				$image = array( $external_url, 0, 0, false );
+			}
 		}
 	}
 	return $image;

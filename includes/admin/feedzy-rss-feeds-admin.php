@@ -449,6 +449,12 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * Add modals for the plugin.
 	 */
 	public function add_modals() {
+		// Only load modals on Feedzy admin screens.
+		$screen = get_current_screen();
+		if ( ! $screen || ! in_array( $screen->post_type, array( 'feedzy_categories', 'feedzy_imports' ), true ) ) {
+			return;
+		}
+
 		?>
 			<script type="text/javascript">
 				jQuery(function () {

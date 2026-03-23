@@ -599,15 +599,24 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 					$node->setAttribute( 'rel', 'nofollow' );
 				}
 			}
+
+			// Apply wp_targeted_link_rel filter temporarily if needed.
+			$callback = null;
 			if ( ! empty( $this->current_job->data->follow ) && 'yes' === $this->current_job->data->follow ) {
-				add_filter(
-					'wp_targeted_link_rel',
-					function () {
-						return 'nofollow';
-					}
-				);
+				$callback = function () {
+					return 'nofollow';
+				};
+				add_filter( 'wp_targeted_link_rel', $callback );
 			}
-			return $dom->saveHTML();
+
+			$html = $dom->saveHTML();
+
+			// Remove the filter immediately after use.
+			if ( $callback ) {
+				remove_filter( 'wp_targeted_link_rel', $callback );
+			}
+
+			return $html;
 		}
 
 		/**
