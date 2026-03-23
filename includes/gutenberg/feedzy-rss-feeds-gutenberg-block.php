@@ -103,7 +103,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 					),
 					'max'             => array(
 						'type'    => 'number',
-						'default' => '10',
+						'default' => 10,
 					),
 					'offset'          => array(
 						'type'    => 'number',
