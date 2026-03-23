@@ -935,6 +935,11 @@ class Feedzy_Rss_Feeds_Import {
 						$in->format( '%h' ),
 						$in->format( '%i' )
 					);
+					// Add actual timestamp below relative time.
+					$date_format = get_option( 'date_format' );
+					$time_format = get_option( 'time_format' );
+					$timestamp   = date_i18n( $date_format . ' ' . $time_format, $last );
+					$msg        .= '<br><small style="color:#888;">' . esc_html( $timestamp ) . '</small>';
 				}
 
 				$msg .= $this->get_last_run_details( $post_id );
@@ -952,6 +957,11 @@ class Feedzy_Rss_Feeds_Import {
 				}
 				if ( is_numeric( $next ) ) {
 					echo wp_kses_post( human_time_diff( $next, time() ) );
+					// Add actual timestamp below relative time.
+					$date_format = get_option( 'date_format' );
+					$time_format = get_option( 'time_format' );
+					$timestamp   = date_i18n( $date_format . ' ' . $time_format, $next );
+					echo '<br><small style="color:#888;">' . esc_html( $timestamp ) . '</small>';
 				} elseif ( $next ) {
 					echo esc_html__( 'in-progress', 'feedzy-rss-feeds' );
 				}
