@@ -613,7 +613,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				// comma separated feeds url.
 				'feeds'                 => '',
 				// number of feeds items (0 for unlimited).
-				'max'                   => '5',
+				'max'                   => '10',
 				// display feed title yes/no.
 				'feed_title'            => 'yes',
 				// _blank, _self
@@ -1144,7 +1144,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( '0' == $sc['max'] ) {
 			$sc['max'] = '999';
 		} elseif ( empty( $sc['max'] ) || ! is_numeric( $sc['max'] ) ) {
-			$sc['max'] = '5';
+			$sc['max'] = '10';
 		}
 
 		if ( empty( $sc['offset'] ) || ! is_numeric( $sc['offset'] ) ) {

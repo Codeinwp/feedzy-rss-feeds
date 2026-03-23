@@ -147,7 +147,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 					'max'                   => array(
 						'label'       => __( 'Number of items to display.', 'feedzy-rss-feeds' ),
 						// translators: %s is the list of examples.
-						'placeholder' => '(' . sprintf( __( 'eg: %s', 'feedzy-rss-feeds' ), '5' ) . ')',
+						'placeholder' => '(' . sprintf( __( 'eg: %s', 'feedzy-rss-feeds' ), '10' ) . ')',
 						'type'        => 'text',
 						'value'       => '',
 					),
