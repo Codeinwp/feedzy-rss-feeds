@@ -1544,6 +1544,24 @@ class Feedzy_Rss_Feeds_Import {
 
 		$feedzy_imports = get_posts( $args );
 		foreach ( $feedzy_imports as $job ) {
+			$lock_key = 'feedzy_import_lock_' . $job->ID;
+
+			// Check if job is already running
+			if ( get_transient( $lock_key ) ) {
+				Feedzy_Rss_Feeds_Log::info(
+					// translators: %1$s is the import job title, %2$d is the job ID.
+					sprintf( __( 'Skipping job "%1$s" (ID: %2$d) - already running', 'feedzy-rss-feeds' ), $job->post_title, $job->ID ),
+					array(
+						'job_id' => $job->ID,
+						'reason' => 'concurrent_execution_prevented',
+					)
+				);
+				continue;
+			}
+
+			// Set lock with 10-minute TTL
+			set_transient( $lock_key, time(), 10 * MINUTE_IN_SECONDS );
+
 			try {
 				$result = $this->run_job( $job, $max );
 
@@ -1580,6 +1598,9 @@ class Feedzy_Rss_Feeds_Import {
 						'error'  => $e->getMessage(),
 					)
 				);
+			} finally {
+				// Always release the lock, even on error
+				delete_transient( $lock_key );
 			}
 		}
 	}
