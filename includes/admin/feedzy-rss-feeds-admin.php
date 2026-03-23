@@ -3033,6 +3033,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		} else {
 			// translators: %s is the discount percentage for the upgrade.
 			$config['title'] = sprintf( __( 'Feedzy Pro: %s off this week', 'feedzy-rss-feeds' ), '60%' );
+			// translators: %s is the discount percentage.
+			$config['upgrade_menu_text'] = sprintf( __( 'BF Sale - %s off', 'feedzy-rss-feeds' ), '60%' );
 		}
 
 		$url_params = array(
