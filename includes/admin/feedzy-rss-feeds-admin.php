@@ -1519,7 +1519,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function pre_http_setup( $url ) {
 		$this->add_proxy( $url );
-		add_filter( 'http_headers_useragent', array( $this, 'add_user_agent' ) );
+		add_filter( 'http_headers_useragent', array( $this, 'add_user_agent' ), 10, 2 );
 
 		// phpcs:ignore WordPressVIPMinimum.Hooks.RestrictedHooks.http_request_args
 		add_filter( 'http_request_args', array( $this, 'http_request_args' ) );
@@ -1597,9 +1597,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * Add the user agent if specified in the settings.
 	 *
 	 * @param string $ua User agent.
+	 * @param string $url Feed URL (optional).
 	 * @return string
 	 */
-	public function add_user_agent( $ua ) {
+	public function add_user_agent( $ua, $url = '' ) {
 		$settings = apply_filters( 'feedzy_get_settings', null );
 		if ( $settings && isset( $settings['header']['user-agent'] ) && ! empty( $settings['header']['user-agent'] ) ) {
 			Feedzy_Rss_Feeds_Log::info(

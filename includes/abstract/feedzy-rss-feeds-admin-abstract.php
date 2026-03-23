@@ -860,7 +860,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$feed->set_file_class( 'WP_SimplePie_File' );
 		$default_agent = $this->get_default_user_agent( $feed_url );
-		$feed->set_useragent( apply_filters( 'http_headers_useragent', $default_agent ) );
+		$feed->set_useragent( apply_filters( 'http_headers_useragent', $default_agent, $feed_url ) );
 		if ( false === apply_filters( 'feedzy_disable_db_cache', false, $feed_url ) ) {
 			SimplePie_Cache::register( 'wp_transient', 'WP_Feed_Cache_Transient' );
 			$feed->set_cache_location( 'wp_transient' );
@@ -917,7 +917,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
 			// phpcs:ignore WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___SERVER__HTTP_USER_AGENT__
 			$set_server_agent = sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) . SIMPLEPIE_USERAGENT );
-			$feed->set_useragent( apply_filters( 'http_headers_useragent', $set_server_agent ) );
+			$feed->set_useragent( apply_filters( 'http_headers_useragent', $set_server_agent, $feed_url ) );
 		}
 
 		$feed->init();
@@ -998,9 +998,20 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$set = array();
 		if ( ! is_array( $urls ) ) {
 			$set[] = $urls;
+		} else {
+			$set = $urls;
 		}
 		foreach ( $set as $url ) {
 			if ( strpos( $url, 'medium.com' ) !== false ) {
+				return FEEDZY_USER_AGENT;
+			}
+			if ( strpos( $url, 'substack.com' ) !== false ) {
+				return FEEDZY_USER_AGENT;
+			}
+			if ( strpos( $url, '.edu' ) !== false ) {
+				return FEEDZY_USER_AGENT;
+			}
+			if ( strpos( $url, 'cloudflare' ) !== false ) {
 				return FEEDZY_USER_AGENT;
 			}
 		}
