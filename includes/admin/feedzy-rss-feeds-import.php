@@ -1567,7 +1567,7 @@ class Feedzy_Rss_Feeds_Import {
 					);
 				}
 				do_action( 'feedzy_run_cron_extra', $job );
-			} catch ( Exception $e ) {
+			} catch ( \Throwable $e ) {
 				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 					error_log( '[Feedzy Run Cron][Post title: ' . ( ! empty( $job->post_title ) ? $job->post_title : '' ) . '] Error: ' . $e->getMessage() );
 				}

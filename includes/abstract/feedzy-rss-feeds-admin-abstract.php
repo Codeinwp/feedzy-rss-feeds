@@ -920,7 +920,22 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$feed->set_useragent( apply_filters( 'http_headers_useragent', $set_server_agent ) );
 		}
 
-		$feed->init();
+		try {
+			$feed->init();
+		} catch ( \Throwable $e ) {
+			Feedzy_Rss_Feeds_Log::error(
+				// translators: %1$s is the feed URL, %2$s is the error message.
+				sprintf( __( 'Fatal error during SimplePie init for feed "%1$s": %2$s', 'feedzy-rss-feeds' ), $feed_url, $e->getMessage() ),
+				array(
+					'feed_url'    => $feed_url,
+					'cache'       => $cache,
+					'sc'          => $sc,
+					'error_trace' => $e->getTraceAsString(),
+				)
+			);
+			// Return the feed object in a degraded state
+			return $feed;
+		}
 
 		if ( ! $feed->get_type() ) {
 			return $feed;
@@ -965,7 +980,22 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 				$data = wp_remote_retrieve_body( wp_safe_remote_get( $feed_url, array( 'user-agent' => $default_agent ) ) );
 				$cloned_feed->set_raw_data( $data );
-				$cloned_feed->init();
+				try {
+					$cloned_feed->init();
+				} catch ( \Throwable $e ) {
+					Feedzy_Rss_Feeds_Log::error(
+						// translators: %1$s is the feed URL, %2$s is the error message.
+						sprintf( __( 'Fatal error during SimplePie init (raw data fallback) for feed "%1$s": %2$s', 'feedzy-rss-feeds' ), $feed_url, $e->getMessage() ),
+						array(
+							'feed_url'    => $feed_url,
+							'cache'       => $cache,
+							'sc'          => $sc,
+							'error_trace' => $e->getTraceAsString(),
+						)
+					);
+					// Continue with original feed object
+					return $feed;
+				}
 				$error_raw = $cloned_feed->error();
 				if ( empty( $error_raw ) ) {
 					// only if using the raw url produces no errors, will we consider the new feed as good to go.
