@@ -1546,11 +1546,17 @@ class Feedzy_Rss_Feeds_Import {
 		foreach ( $feedzy_imports as $job ) {
 			$lock_key = 'feedzy_import_lock_' . $job->ID;
 
-			// Check if job is already running
-			if ( get_transient( $lock_key ) ) {
+			// Determine lock TTL based on max execution time (plus buffer) and allow filtering.
+			$max_execution_time = (int) apply_filters( 'feedzy_max_execution_time', 500 );
+			if ( $max_execution_time <= 0 ) {
+				$max_execution_time = 300; // Fallback to 5 minutes if unlimited or not set.
+			}
+			$lock_ttl = (int) apply_filters( 'feedzy_import_lock_ttl', $max_execution_time + 60, $job );
+
+			// Atomically try to acquire lock - wp_cache_add returns false if key already exists.
+			if ( ! wp_cache_add( $lock_key, time(), 'feedzy_import_locks', $lock_ttl ) ) {
 				Feedzy_Rss_Feeds_Log::info(
-					// translators: %1$s is the import job title, %2$d is the job ID.
-					sprintf( __( 'Skipping job "%1$s" (ID: %2$d) - already running', 'feedzy-rss-feeds' ), $job->post_title, $job->ID ),
+					'Skipping job: ' . $job->post_title,
 					array(
 						'job_id' => $job->ID,
 						'reason' => 'concurrent_execution_prevented',
@@ -1558,9 +1564,6 @@ class Feedzy_Rss_Feeds_Import {
 				);
 				continue;
 			}
-
-			// Set lock with 10-minute TTL
-			set_transient( $lock_key, time(), 10 * MINUTE_IN_SECONDS );
 
 			try {
 				$result = $this->run_job( $job, $max );
@@ -1585,7 +1588,7 @@ class Feedzy_Rss_Feeds_Import {
 					);
 				}
 				do_action( 'feedzy_run_cron_extra', $job );
-			} catch ( Exception $e ) {
+			} catch ( Throwable $e ) {
 				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 					error_log( '[Feedzy Run Cron][Post title: ' . ( ! empty( $job->post_title ) ? $job->post_title : '' ) . '] Error: ' . $e->getMessage() );
 				}
@@ -1599,8 +1602,8 @@ class Feedzy_Rss_Feeds_Import {
 					)
 				);
 			} finally {
-				// Always release the lock, even on error
-				delete_transient( $lock_key );
+				// Always release the lock, even on error.
+				wp_cache_delete( $lock_key, 'feedzy_import_locks' );
 			}
 		}
 	}
