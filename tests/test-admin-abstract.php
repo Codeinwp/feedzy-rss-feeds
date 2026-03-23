@@ -618,10 +618,105 @@ class Test_Abstract_Admin extends WP_UnitTestCase {
             // URL with special characters - this should extract the image
             ['https://example.com/proxy?url=https://example.com/images/file%20name.jpg', 'https://example.com/images/file%20name.jpg'],
         );
-        
+
         foreach ($test_cases as [$input, $expected]) {
             $result = $this->feedzy_abstract->feedzy_image_encode($input);
             $this->assertEquals($expected, $result, "Failed for input: $input");
         }
     }
+
+	/**
+	 * Test get_short_code_attributes includes columns attribute with default value.
+	 */
+	public function test_get_short_code_attributes_includes_columns_default() {
+		$result = $this->feedzy_abstract->get_short_code_attributes(array());
+
+		$this->assertArrayHasKey('columns', $result);
+		$this->assertEquals('1', $result['columns']);
+	}
+
+	/**
+	 * Test get_short_code_attributes respects custom columns value.
+	 */
+	public function test_get_short_code_attributes_custom_columns() {
+		$result = $this->feedzy_abstract->get_short_code_attributes(array('columns' => '3'));
+
+		$this->assertArrayHasKey('columns', $result);
+		$this->assertEquals('3', $result['columns']);
+	}
+
+	/**
+	 * Test feedzy_classes_item with default columns (1).
+	 */
+	public function test_feedzy_classes_item_default_columns() {
+		$sc = array('columns' => '1');
+		$result = $this->feedzy_abstract->feedzy_classes_item('', '', '', '', $sc);
+
+		// Default columns=1 should only have rss_item class, no column class
+		$this->assertStringContainsString('rss_item', $result);
+		$this->assertStringNotContainsString('feedzy-rss-col-', $result);
+	}
+
+	/**
+	 * Test feedzy_classes_item with multiple columns.
+	 */
+	public function test_feedzy_classes_item_multiple_columns() {
+		$test_cases = array(
+			2 => 'feedzy-rss-col-2',
+			3 => 'feedzy-rss-col-3',
+			4 => 'feedzy-rss-col-4',
+			5 => 'feedzy-rss-col-5',
+			6 => 'feedzy-rss-col-6',
+		);
+
+		foreach ($test_cases as $columns => $expected_class) {
+			$sc = array('columns' => (string)$columns);
+			$result = $this->feedzy_abstract->feedzy_classes_item('', '', '', '', $sc);
+
+			$this->assertStringContainsString('rss_item', $result);
+			$this->assertStringContainsString($expected_class, $result);
+		}
+	}
+
+	/**
+	 * Test feedzy_classes_item with columns value out of range.
+	 */
+	public function test_feedzy_classes_item_columns_bounds() {
+		// Test value above maximum (should be capped at 6)
+		$sc = array('columns' => '10');
+		$result = $this->feedzy_abstract->feedzy_classes_item('', '', '', '', $sc);
+		$this->assertStringContainsString('feedzy-rss-col-6', $result);
+		$this->assertStringNotContainsString('feedzy-rss-col-10', $result);
+
+		// Test value of 0 (should not add column class since it's not > 1)
+		$sc = array('columns' => '0');
+		$result = $this->feedzy_abstract->feedzy_classes_item('', '', '', '', $sc);
+		$this->assertStringNotContainsString('feedzy-rss-col-', $result);
+
+		// Test negative value (should not add column class)
+		$sc = array('columns' => '-1');
+		$result = $this->feedzy_abstract->feedzy_classes_item('', '', '', '', $sc);
+		$this->assertStringNotContainsString('feedzy-rss-col-', $result);
+	}
+
+	/**
+	 * Test feedzy_classes_item without columns attribute.
+	 */
+	public function test_feedzy_classes_item_no_columns_attribute() {
+		$sc = array(); // No columns attribute
+		$result = $this->feedzy_abstract->feedzy_classes_item('', '', '', '', $sc);
+
+		$this->assertStringContainsString('rss_item', $result);
+		$this->assertStringNotContainsString('feedzy-rss-col-', $result);
+	}
+
+	/**
+	 * Test feedzy_classes_item with non-array sc parameter.
+	 */
+	public function test_feedzy_classes_item_non_array_sc() {
+		$result = $this->feedzy_abstract->feedzy_classes_item('', '', '', '', '');
+
+		$this->assertStringContainsString('rss_item', $result);
+		$this->assertStringNotContainsString('feedzy-rss-col-', $result);
+	}
 }

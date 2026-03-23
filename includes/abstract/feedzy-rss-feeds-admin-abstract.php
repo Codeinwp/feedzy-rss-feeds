@@ -311,6 +311,15 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function feedzy_classes_item( $item_attr = '', $sizes = '', $item = '', $feed_url = '', $sc = '' ) {
 		$classes = array( 'rss_item' );
+
+		// Add column class if columns > 1
+		if ( is_array( $sc ) && isset( $sc['columns'] ) && intval( $sc['columns'] ) > 1 ) {
+			$columns = intval( $sc['columns'] );
+			// Ensure columns is between 1 and 6
+			$columns = max( 1, min( 6, $columns ) );
+			$classes[] = 'feedzy-rss-col-' . $columns;
+		}
+
 		$classes = apply_filters( 'feedzy_add_classes_item', $classes, $sc );
 		$classes = ' class="' . implode( ' ', $classes ) . '"';
 
@@ -668,6 +677,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				'className'             => '',
 				// lazy loading of feeds?
 				'lazy'                  => 'no',
+				// number of columns for grid layout (1-6).
+				'columns'               => '1',
 				// these are only for internal purposes.
 				'_dryrun_'              => 'no',
 				'_dry_run_tags_'        => '',
