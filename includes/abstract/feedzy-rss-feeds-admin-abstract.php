@@ -923,15 +923,20 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		try {
 			$feed->init();
 		} catch ( \Throwable $e ) {
+			$feed_url_str = is_array( $feed_url ) ? implode( ', ', $feed_url ) : $feed_url;
+			$error_context = array(
+				'feed_url' => $feed_url,
+				'cache'    => $cache,
+				'sc'       => $sc,
+			);
+			// Only log stack trace when debugging to avoid exposing server paths.
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				$error_context['error_trace'] = $e->getTraceAsString();
+			}
 			Feedzy_Rss_Feeds_Log::error(
 				// translators: %1$s is the feed URL, %2$s is the error message.
-				sprintf( __( 'Fatal error during SimplePie init for feed "%1$s": %2$s', 'feedzy-rss-feeds' ), $feed_url, $e->getMessage() ),
-				array(
-					'feed_url'    => $feed_url,
-					'cache'       => $cache,
-					'sc'          => $sc,
-					'error_trace' => $e->getTraceAsString(),
-				)
+				sprintf( __( 'Error while parsing feed URL "%1$s": %2$s', 'feedzy-rss-feeds' ), $feed_url_str, $e->getMessage() ),
+				$error_context
 			);
 			// Return the feed object in a degraded state
 			return $feed;
@@ -983,15 +988,20 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				try {
 					$cloned_feed->init();
 				} catch ( \Throwable $e ) {
+					$feed_url_str = is_array( $feed_url ) ? implode( ', ', $feed_url ) : $feed_url;
+					$error_context = array(
+						'feed_url' => $feed_url,
+						'cache'    => $cache,
+						'sc'       => $sc,
+					);
+					// Only log stack trace when debugging to avoid exposing server paths.
+					if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+						$error_context['error_trace'] = $e->getTraceAsString();
+					}
 					Feedzy_Rss_Feeds_Log::error(
 						// translators: %1$s is the feed URL, %2$s is the error message.
-						sprintf( __( 'Fatal error during SimplePie init (raw data fallback) for feed "%1$s": %2$s', 'feedzy-rss-feeds' ), $feed_url, $e->getMessage() ),
-						array(
-							'feed_url'    => $feed_url,
-							'cache'       => $cache,
-							'sc'          => $sc,
-							'error_trace' => $e->getTraceAsString(),
-						)
+						sprintf( __( 'Error while parsing feed URL "%1$s": %2$s', 'feedzy-rss-feeds' ), $feed_url_str, $e->getMessage() ),
+						$error_context
 					);
 					// Continue with original feed object
 					return $feed;
