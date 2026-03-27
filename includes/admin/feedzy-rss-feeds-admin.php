@@ -128,7 +128,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 		wp_register_style( $this->plugin_name, FEEDZY_ABSURL . 'css/feedzy-rss-feeds.css', array(), $this->version, 'all' );
 	}
-	
+
 	/**
 	 * Helper function to enqueue the license script with localization
 	 *
@@ -136,12 +136,12 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return  void
 	 */
 	private function enqueue_license_script() {
-		wp_enqueue_script( 
-			$this->plugin_name . '_license', 
-			FEEDZY_ABSURL . 'js/feedzy-license.js', 
-			array( 'jquery' ), 
-			$this->version, 
-			true 
+		wp_enqueue_script(
+			$this->plugin_name . '_license',
+			FEEDZY_ABSURL . 'js/feedzy-license.js',
+			array( 'jquery' ),
+			$this->version,
+			true
 		);
 
 		wp_localize_script(
@@ -339,7 +339,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				( 'improve' === $tab )
 				|| ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type )
 				|| ( 'license' === $tab )
-			) 
+			)
 		) {
 			$asset_file = include FEEDZY_ABSPATH . '/build/feedback/index.asset.php';
 			wp_enqueue_script( $this->plugin_name . '_feedback', FEEDZY_ABSURL . 'build/feedback/index.js', array_merge( $asset_file['dependencies'], array( 'wp-editor', 'wp-api', 'lodash' ) ), $asset_file['version'], true );
@@ -464,7 +464,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 						openModal('#feedzy-add-new-import');
 						event.preventDefault();
 					});
-					
+
 					// Function to open the modal
 					function openModal(modal) {
 						jQuery(modal).show();
@@ -533,7 +533,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					</div>
 				</div>
 			</div>
-			
+
 		<?php
 		$license_key       = apply_filters( 'product_feedzy_license_key', '' );
 		$renew_license_url = tsdk_utmify( tsdk_translate_link( FEEDZY_UPSELL_LINK ), 'renew' );
@@ -1513,7 +1513,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 	/**
 	 * Set up the HTTP parameters/headers.
-	 * 
+	 *
 	 * @param string $url The URl.
 	 *
 	 * @access  public
@@ -1528,9 +1528,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 	/**
 	 * Add the proxy settings as specified in the settings.
-	 * 
+	 *
 	 * @param string $url The url.
-	 * 
+	 *
 	 * @return void
 	 *
 	 * @access  private
@@ -1646,9 +1646,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 	/**
 	 * Teardown the HTTP parameters/headers.
-	 * 
+	 *
 	 * @param string $url The URL.
-	 * 
+	 *
 	 * @return void
 	 *
 	 * @access  public
@@ -2038,13 +2038,13 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 			// Default to dashboard if no page is set.
 			if (
-				isset( $parsed_url['path'] ) && 
-				strpos( $parsed_url['path'], '/wp-admin/admin.php' ) !== false && 
+				isset( $parsed_url['path'] ) &&
+				strpos( $parsed_url['path'], '/wp-admin/admin.php' ) !== false &&
 				empty( $parsed_url['query'] )
 			) {
 				$cleaned_url = add_query_arg( 'page', 'feedzy-support', $cleaned_url );
 			}
-		
+
 			wp_safe_redirect( $cleaned_url );
 			exit;
 		}
@@ -2382,7 +2382,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function feedzy_dashboard_subscribe() {
 		check_ajax_referer( 'feedzy_subscribe_nonce', '_wpnonce' );
-		
+
 		$email = ! empty( $_POST['email'] ) ? sanitize_email( $_POST['email'] ) : '';
 		$skip  = ! empty( $_POST['skip'] ) ? sanitize_text_field( wp_unslash( $_POST['skip'] ) ) : '';
 
@@ -2398,9 +2398,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				)
 			);
 		}
-		
+
 		update_option( 'feedzy_rss_feeds_logger_flag', 'yes' );
-		
+
 		$request_res = wp_remote_post(
 			FEEDZY_SUBSCRIBE_API,
 			array(
@@ -2418,7 +2418,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				),
 			)
 		);
-		
+
 		if ( ! is_wp_error( $request_res ) ) {
 			$this->dismiss_subscribe_notice();
 			wp_send_json_success();
@@ -3024,13 +3024,21 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$pro_product_slug = defined( 'FEEDZY_PRO_BASEFILE' ) ? basename( dirname( FEEDZY_PRO_BASEFILE ) ) : '';
 
 		if ( $is_valid ) {
+			// translators: %s is the discount percentage.
+			$config['plugin_meta_message'] = sprintf( __( 'Black Friday Sale - up to %s off', 'feedzy-rss-feeds' ), '30%' );
 			// translators: %1$s is the discount percentage for the upgrade, %2$s is the discount percentage for early renewal.
 			$message   = sprintf( __( 'Upgrade your Feedzy Pro plan: %1$s off this week. Already on the plan you need? Renew early and save up to %2$s.', 'feedzy-rss-feeds' ), '30%', '20%' );
 			$cta_label = __( 'See your options', 'feedzy-rss-feeds' );
 		} elseif ( $is_expired ) {
-			$message   = __( 'Your Feedzy Pro features are still here, just locked. Renew at a reduced rate this week.', 'feedzy-rss-feeds' );
-			$cta_label = __( 'Reactivate now', 'feedzy-rss-feeds' );
+			// translators: %s is the discount percentage.
+			$config['upgrade_menu_text'] = sprintf( __( 'BF Sale - %s off', 'feedzy-rss-feeds' ), '50%' );
+			// translators: %s is the discount percentage.
+			$config['plugin_meta_message'] = sprintf( __( 'Black Friday Sale - %s off', 'feedzy-rss-feeds' ), '50%' );
+			$message                       = __( 'Your Feedzy Pro features are still here, just locked. Renew at a reduced rate this week.', 'feedzy-rss-feeds' );
+			$cta_label                     = __( 'Reactivate now', 'feedzy-rss-feeds' );
 		} else {
+			// translators: %s is the discount percentage.
+			$config['plugin_meta_message'] = sprintf( __( 'Black Friday Sale - %s off', 'feedzy-rss-feeds' ), '60%' );
 			// translators: %s is the discount percentage for the upgrade.
 			$config['title'] = sprintf( __( 'Feedzy Pro: %s off this week', 'feedzy-rss-feeds' ), '60%' );
 			// translators: %s is the discount percentage.
@@ -3044,12 +3052,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		);
 
 		if ( ( $is_valid || $is_expired ) && ! empty( $pro_product_slug ) ) {
-			// translators: %s is the discount percentage.
-			$config['plugin_meta_message'] = sprintf( __( 'Black Friday Sale - up to %s off', 'feedzy-rss-feeds' ), '30%' );
 			$config['plugin_meta_targets'] = array( $pro_product_slug );
-		} else {
-			// translators: %s is the discount percentage.
-			$config['plugin_meta_message'] = sprintf( __( 'Black Friday Sale - %s off', 'feedzy-rss-feeds' ), '60%' );
 		}
 
 		$config['cta_label'] = $cta_label;
@@ -3162,7 +3165,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 								$items,
 								'feedzy-rss-feeds'
 							),
-							$items 
+							$items
 						),
 						'items'   => $items,
 						'title'   => $title,
@@ -3195,7 +3198,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 	/**
 	 * Append custom schedules to the existing schedules.
-	 * 
+	 *
 	 * @since 5.1.0
 	 * @param array<string,array{interval:int,display:string}> $schedules Existing schedules.
 	 * @return array<string,array{interval:int,display:string}> Modified schedules with custom schedules appended.
@@ -3218,20 +3221,20 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				}
 			}
 		}
-		
+
 		return $schedules;
 	}
 
 	/**
 	 * Add slugs for internal cron schedules.
-	 * 
+	 *
 	 * @param string[] $cron_slugs The cron slugs to be modified.
 	 * @return string[]
 	 */
 	public function internal_cron_schedule_slugs( $cron_slugs ) {
 		$wp_standard_schedules = array(
 			'hourly',
-			'twicedaily', 
+			'twicedaily',
 			'daily',
 			'weekly',
 		);
