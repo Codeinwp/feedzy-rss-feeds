@@ -2971,3 +2971,7 @@ button.feedzy-action-button {
     font-size: 12px;
     padding: 4px 12px;
 }
+.tagify__tag .feedzy-custom-tag {
+	cursor: auto;
+	line-height: 1.5;
+}

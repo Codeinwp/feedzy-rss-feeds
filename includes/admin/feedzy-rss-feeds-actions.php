@@ -315,6 +315,8 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 					return $this->generate_image();
 				case 'modify_links':
 					return $this->modify_links();
+				case 'custom_html':
+					return $this->custom_html();
 				default:
 					return $this->default_content();
 			}
@@ -618,6 +620,15 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 				return $this->result;
 			}
 			return $this->default_value;
+		}
+
+		/**
+		 * Get Custom HTML tag.
+		 *
+		 * @return string
+		 */
+		private function custom_html() {
+			return $this->current_job->tag;
 		}
 	}
 }
