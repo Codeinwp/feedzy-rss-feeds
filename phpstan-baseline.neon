@@ -271,11 +271,6 @@ parameters:
 			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
 
 		-
-			message: "#^Parameter \\#1 \\$feed_url of method Feedzy_Rss_Feeds_Admin_Abstract\\:\\:init_feed\\(\\) expects string, array given\\.$#"
-			count: 2
-			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
-
-		-
 			message: "#^Parameter \\#1 \\$text of function esc_attr expects string, int\\<0, max\\>\\|false given\\.$#"
 			count: 1
 			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
@@ -297,17 +292,12 @@ parameters:
 
 		-
 			message: "#^Result of && is always false\\.$#"
-			count: 4
+			count: 2
 			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
 
 		-
 			message: "#^Result of \\|\\| is always true\\.$#"
-			count: 3
-			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between 1 and \\*NEVER\\* will always evaluate to false\\.$#"
-			count: 2
+			count: 1
 			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
 
 		-

@@ -822,10 +822,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @since   3.1.7
 	 * @access  private
 	 *
-	 * @param   string $feed_url The feed URL.
-	 * @param   string $cache The cache string (eg. 1_hour, 30_min etc.).
-	 * @param   array  $sc The shortcode attributes.
-	 * @param   bool   $allow_https Defaults to constant FEEDZY_ALLOW_HTTPS.
+	 * @param   string|array<string> $feed_url The feed URL.
+	 * @param   string               $cache The cache string (eg. 1_hour, 30_min etc.).
+	 * @param   array                $sc The shortcode attributes.
+	 * @param   bool                 $allow_https Defaults to constant FEEDZY_ALLOW_HTTPS.
 	 *
 	 * @return SimplePie
 	 */
@@ -860,7 +860,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$feed->get_registry()->register( SimplePie\File::class, 'WP_SimplePie_File', true );
 		$default_agent = $this->get_default_user_agent( $feed_url );
-		$feed->set_useragent( apply_filters( 'http_headers_useragent', $default_agent ) );
+		$feed->set_useragent( apply_filters( 'http_headers_useragent', $default_agent, is_array( $feed_url ) ? reset( $feed_url ) : $feed_url ) );
 		if ( false === apply_filters( 'feedzy_disable_db_cache', false, $feed_url ) ) {
 			SimplePie_Cache::register( 'wp_transient', 'WP_Feed_Cache_Transient' );
 			$feed->set_cache_location( 'wp_transient' );
@@ -917,7 +917,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
 			// phpcs:ignore WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___SERVER__HTTP_USER_AGENT__
 			$set_server_agent = sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) . SIMPLEPIE_USERAGENT );
-			$feed->set_useragent( apply_filters( 'http_headers_useragent', $set_server_agent ) );
+			$feed->set_useragent( apply_filters( 'http_headers_useragent', $set_server_agent, is_array( $feed_url ) ? reset( $feed_url ) : $feed_url ) );
 		}
 
 		$feed->init();
