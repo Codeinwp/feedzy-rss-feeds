@@ -1767,6 +1767,15 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$the_thumbnail = $data['0']['attribs']['']['href'];
 			}
 		}
+		// xmlns:media thumbnail.
+		if ( empty( $the_thumbnail ) ) {
+			$data = $item->get_item_tags( 'http://search.yahoo.com/mrss/', 'thumbnail' );
+			if ( isset( $data['0']['attribs']['']['url'] ) && ! empty( $data['0']['attribs']['']['url'] ) ) {
+				$the_thumbnail = $data['0']['attribs']['']['url'];
+			} elseif ( isset( $data['0']['data'] ) && ! empty( $data['0']['data'] ) ) {
+				$the_thumbnail = $data['0']['data'];
+			}
+		}
 		// Content image.
 		if ( empty( $the_thumbnail ) ) {
 			$feed_description  = $item->get_content();
