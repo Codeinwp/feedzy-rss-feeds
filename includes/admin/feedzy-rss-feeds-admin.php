@@ -88,10 +88,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					return;
 				}
 
-				if ( in_array( $page_slug, array( 'imports', 'categories' ), true ) ) {
-					$this->add_banner_anchor();
-				}
-
 				if (
 					in_array( $page_slug, array( 'imports', 'new-category', 'settings' ), true )
 					&& 'yes' === get_option( 'feedzy_rss_feeds_logger_flag', false )
@@ -2735,21 +2731,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		return $survey_data;
-	}
-
-	/**
-	 * Add banner anchor for promotions.
-	 *
-	 * @return void
-	 */
-	public function add_banner_anchor() {
-		add_action(
-			'admin_notices',
-			function () {
-				echo '<div id="tsdk_banner" class="notice fz-notice feedzy-banner-dashboard"></div>';
-			},
-			999
-		);
 	}
 
 	/**
