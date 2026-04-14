@@ -835,7 +835,6 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 	outline: 0;
 	cursor: pointer;
 	text-decoration: none;
-	text-transform: capitalize;
 	-webkit-transition: all 0.3s ease-in-out;
 	-moz-transition: all 0.3s ease-in-out;
 	-o-transition: all 0.3s ease-in-out;
@@ -1564,7 +1563,6 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 	background: transparent;
 	border-color: #4268CF;
 	color: #4268CF;
-	text-transform: capitalize;
   -webkit-transition: all 0.3s ease-in-out;
   -moz-transition: all 0.3s ease-in-out;
   -o-transition: all 0.3s ease-in-out;
@@ -2250,7 +2248,6 @@ li.draggable-item .components-panel__body-toggle.components-button{
 }
 .fz-content-action div .tagify__tag-text {
 	padding-right: 10px;
-	text-transform: capitalize;
 }
 .popover-action-list ul li.fz-action-disabled {
 	cursor: not-allowed !important;

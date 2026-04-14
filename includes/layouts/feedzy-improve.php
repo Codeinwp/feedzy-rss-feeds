@@ -8,9 +8,10 @@
 			<h3 class="h3 pb-16"><?php esc_html_e( 'Answer a few questions to help us improve Feedzy', 'feedzy-rss-feeds' ); ?></h3>
 			<p>
 				<?php
-				esc_html_e( 'We\'re always looking for suggestions to further improve Feedzy.', 'feedzy-rss-feeds' );
 				if ( ! feedzy_is_pro() ) {
-					esc_html_e( 'If your feedback is especially helpful and we choose to do an interview with you to discuss your suggestions, you will even gain a yearly membership for free for your trouble.', 'feedzy-rss-feeds' );
+					esc_html_e( 'We\'re always looking for suggestions to further improve Feedzy. If your feedback is especially helpful and we choose to do an interview with you to discuss your suggestions, you will even gain a yearly membership for free for your trouble.', 'feedzy-rss-feeds' );
+				} else {
+					esc_html_e( 'We\'re always looking for suggestions to further improve Feedzy.', 'feedzy-rss-feeds' );
 				}
 				?>
 			</p>
