@@ -1,0 +1,128 @@
+name: WordPress Plugin Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  plugin-check:
+    name: WordPress.org Guidelines Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --optimize-autoloader
+
+      - uses: wordpress/plugin-check-action@v1
+        id: plugin-check
+        with:
+          categories: plugin_repo,security,performance,general
+          exclude-directories: |
+            tests
+            bin
+            .github
+          ignore-codes: |
+            WordPress.WP.I18n.TextDomainMismatch
+            textdomain_mismatch
+            hidden_files
+            WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+            WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
+            WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
+            WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+            WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+            WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
+            WordPress.WP.EnqueuedResourceParameters.MissingVersion
+          include-experimental: true
+          repo-token: ''
+
+      - name: Plugin Check Summary
+        if: always()
+        run: |
+          RESULTS_FILE="${RUNNER_TEMP}/plugin-check-results.txt"
+
+          echo "## WordPress Plugin Check Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ ! -s "$RESULTS_FILE" ]; then
+            echo "No results file found or file is empty." >> $GITHUB_STEP_SUMMARY
+            echo "Check the action logs for details." >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+
+          # === HIGH RISK: Issues that can get your plugin closed or suspended ===
+          echo "### 🚨 HIGH RISK — Can cause plugin closure or suspension" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          HIGH_RISK_PATTERNS=(
+            "Plugin Updater detected"
+            "Missing.*License.*Plugin Header"
+            "restricted term"
+            "trademarked_term"
+            "trademarks"
+            "Unescaped parameter.*\\$wpdb"
+            "Use placeholders and.*\\$wpdb->prepare"
+            "code_obfuscation"
+            "plugin_updater"
+            "no_unfiltered_uploads"
+          )
+
+          HIGH_RISK_REGEX=$(IFS='|'; echo "${HIGH_RISK_PATTERNS[*]}")
+          HIGH_RISK_FOUND=$(grep -iE "$HIGH_RISK_REGEX" "$RESULTS_FILE" || true)
+
+          if [ -n "$HIGH_RISK_FOUND" ]; then
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            echo "$HIGH_RISK_FOUND" | sort -u >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ No high-risk issues found." >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # === MEDIUM RISK: Issues wordpress.org reviews flag ===
+          echo "### ⚠️ MEDIUM RISK — Commonly flagged in wordpress.org reviews" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          MEDIUM_RISK_PATTERNS=(
+            "missing_direct_file_access_protection"
+            "trunk_stable_tag"
+            "mismatched_plugin_name"
+            "Missing.*\\$domain.*parameter"
+            "has been deprecated"
+            "wp_get_sites"
+            "curl_curl_"
+            "WordPress.WP.AlternativeFunctions"
+            "application_detected"
+          )
+
+          MEDIUM_RISK_REGEX=$(IFS='|'; echo "${MEDIUM_RISK_PATTERNS[*]}")
+          MEDIUM_RISK_FOUND=$(grep -iE "$MEDIUM_RISK_REGEX" "$RESULTS_FILE" || true)
+
+          if [ -n "$MEDIUM_RISK_FOUND" ]; then
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            echo "$MEDIUM_RISK_FOUND" | sort -u >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ No medium-risk issues found." >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # === ALL OTHER ISSUES (collapsed) ===
+          TOTAL=$(wc -l < "$RESULTS_FILE" | tr -d ' ')
+          HIGH_COUNT=$(echo "$HIGH_RISK_FOUND" | grep -c '.' || echo "0")
+          MEDIUM_COUNT=$(echo "$MEDIUM_RISK_FOUND" | grep -c '.' || echo "0")
+          OTHER_COUNT=$((TOTAL - HIGH_COUNT - MEDIUM_COUNT))
+
+          echo "<details>" >> $GITHUB_STEP_SUMMARY
+          echo "<summary>📋 Other issues ($OTHER_COUNT) — click to expand</summary>" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          grep -ivE "$HIGH_RISK_REGEX|$MEDIUM_RISK_REGEX" "$RESULTS_FILE" >> $GITHUB_STEP_SUMMARY || true
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "</details>" >> $GITHUB_STEP_SUMMARY
