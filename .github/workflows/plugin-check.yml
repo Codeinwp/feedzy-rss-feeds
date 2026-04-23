@@ -42,9 +42,9 @@ jobs:
 
       - name: Plugin Check Summary
         if: always()
+        env:
+          RESULTS_FILE: ${{ runner.temp }}/plugin-check-results.txt
         run: |
-          RESULTS_FILE="${RUNNER_TEMP}/plugin-check-results.txt"
-
           echo "## WordPress Plugin Check Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
@@ -54,75 +54,157 @@ jobs:
             exit 0
           fi
 
-          # === HIGH RISK: Issues that can get your plugin closed or suspended ===
-          echo "### 🚨 HIGH RISK — Can cause plugin closure or suspension" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
+          PARSED=$(RESULTS_FILE="$RESULTS_FILE" python3 << 'PYEOF'
+          import json, os, re
 
-          HIGH_RISK_PATTERNS=(
-            "Plugin Updater detected"
-            "Missing.*License.*Plugin Header"
-            "restricted term"
-            "trademarked_term"
-            "trademarks"
-            "Unescaped parameter.*\\$wpdb"
-            "Use placeholders and.*\\$wpdb->prepare"
-            "code_obfuscation"
-            "plugin_updater"
-            "no_unfiltered_uploads"
+          results_path = os.environ["RESULTS_FILE"]
+
+          high_risk_codes = [
+              "plugin_updater", "code_obfuscation", "no_unfiltered_uploads",
+              "trademarked_term", "trademarks"
+          ]
+          high_risk_messages = [
+              r"Plugin Updater detected", r"Missing.*License.*Plugin Header",
+              r"restricted term", r"Unescaped parameter.*\$wpdb",
+              r"Use placeholders and.*\$wpdb->prepare"
+          ]
+          medium_risk_codes = [
+              "missing_direct_file_access_protection", "trunk_stable_tag",
+              "mismatched_plugin_name", "application_detected"
+          ]
+          medium_risk_messages = [
+              r"Missing.*\$domain.*parameter", r"has been deprecated",
+              r"wp_get_sites", r"cURL functions is highly discouraged"
+          ]
+
+          high, medium, other = [], [], []
+
+          try:
+              with open(results_path, "r") as f:
+                  content = f.read().strip()
+
+              all_issues = []
+              try:
+                  data = json.loads(content)
+                  if isinstance(data, list):
+                      all_issues = data
+                  elif isinstance(data, dict):
+                      for fp, issues in data.items():
+                          if isinstance(issues, list):
+                              for issue in issues:
+                                  issue['_file'] = fp
+                                  all_issues.append(issue)
+              except json.JSONDecodeError:
+                  for line in content.split('\n'):
+                      line = line.strip()
+                      if not line:
+                          continue
+                      try:
+                          parsed = json.loads(line)
+                          if isinstance(parsed, list):
+                              all_issues.extend(parsed)
+                          elif isinstance(parsed, dict):
+                              all_issues.append(parsed)
+                      except json.JSONDecodeError:
+                          continue
+
+              for issue in all_issues:
+                  code = issue.get('code', '')
+                  msg = issue.get('message', '')
+                  itype = issue.get('type', 'ERROR')
+                  line_num = issue.get('line', 0)
+                  file_path = issue.get('_file', '')
+
+                  prefix = "❌" if itype == "ERROR" else "⚠️"
+                  location = ""
+                  if file_path:
+                      location = f" ({file_path}"
+                      if line_num and line_num > 0:
+                          location += f", line {line_num}"
+                      location += ")"
+                  elif line_num and line_num > 0:
+                      location = f" (line {line_num})"
+
+                  readable = f"{prefix} {msg}{location}"
+
+                  is_high = code in high_risk_codes
+                  if not is_high:
+                      for p in high_risk_messages:
+                          if re.search(p, msg, re.IGNORECASE):
+                              is_high = True
+                              break
+
+                  is_medium = code in medium_risk_codes
+                  if not is_medium and not is_high:
+                      for p in medium_risk_messages:
+                          if re.search(p, msg, re.IGNORECASE):
+                              is_medium = True
+                              break
+
+                  if is_high:
+                      high.append(readable)
+                  elif is_medium:
+                      medium.append(readable)
+                  else:
+                      other.append(readable)
+
+              def dedup(lst):
+                  seen = set()
+                  result = []
+                  for item in lst:
+                      if item not in seen:
+                          seen.add(item)
+                          result.append(item)
+                  return result
+
+              high, medium, other = dedup(high), dedup(medium), dedup(other)
+
+              print("---HIGH---")
+              for i in high: print(i)
+              print("---MEDIUM---")
+              for i in medium: print(i)
+              print("---OTHER---")
+              for i in other: print(i)
+              print("---COUNTS---")
+              print(f"{len(high)}|{len(medium)}|{len(other)}")
+
+          except Exception as e:
+              print(f"Parse error: {e}", file=__import__('sys').stderr)
+              print("---HIGH---\n---MEDIUM---\n---OTHER---\n---COUNTS---\n0|0|0")
+          PYEOF
           )
 
-          HIGH_RISK_REGEX=$(IFS='|'; echo "${HIGH_RISK_PATTERNS[*]}")
-          HIGH_RISK_FOUND=$(grep -iE "$HIGH_RISK_REGEX" "$RESULTS_FILE" || true)
+          HIGH_SECTION=$(echo "$PARSED" | sed -n '/^---HIGH---$/,/^---MEDIUM---$/p' | sed '1d;$d')
+          MEDIUM_SECTION=$(echo "$PARSED" | sed -n '/^---MEDIUM---$/,/^---OTHER---$/p' | sed '1d;$d')
+          OTHER_SECTION=$(echo "$PARSED" | sed -n '/^---OTHER---$/,/^---COUNTS---$/p' | sed '1d;$d')
+          COUNTS=$(echo "$PARSED" | tail -1)
+          OTHER_COUNT=$(echo "$COUNTS" | cut -d'|' -f3)
 
-          if [ -n "$HIGH_RISK_FOUND" ]; then
-            echo '```' >> $GITHUB_STEP_SUMMARY
-            echo "$HIGH_RISK_FOUND" | sort -u >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "### 🚨 HIGH RISK — Can cause plugin closure or suspension" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -n "$HIGH_SECTION" ]; then
+            echo "$HIGH_SECTION" >> $GITHUB_STEP_SUMMARY
           else
             echo "✅ No high-risk issues found." >> $GITHUB_STEP_SUMMARY
           fi
-
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          # === MEDIUM RISK: Issues wordpress.org reviews flag ===
           echo "### ⚠️ MEDIUM RISK — Commonly flagged in wordpress.org reviews" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-
-          MEDIUM_RISK_PATTERNS=(
-            "missing_direct_file_access_protection"
-            "trunk_stable_tag"
-            "mismatched_plugin_name"
-            "Missing.*\\$domain.*parameter"
-            "has been deprecated"
-            "wp_get_sites"
-            "curl_curl_"
-            "WordPress.WP.AlternativeFunctions"
-            "application_detected"
-          )
-
-          MEDIUM_RISK_REGEX=$(IFS='|'; echo "${MEDIUM_RISK_PATTERNS[*]}")
-          MEDIUM_RISK_FOUND=$(grep -iE "$MEDIUM_RISK_REGEX" "$RESULTS_FILE" || true)
-
-          if [ -n "$MEDIUM_RISK_FOUND" ]; then
-            echo '```' >> $GITHUB_STEP_SUMMARY
-            echo "$MEDIUM_RISK_FOUND" | sort -u >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
+          if [ -n "$MEDIUM_SECTION" ]; then
+            echo "$MEDIUM_SECTION" >> $GITHUB_STEP_SUMMARY
           else
             echo "✅ No medium-risk issues found." >> $GITHUB_STEP_SUMMARY
           fi
-
           echo "" >> $GITHUB_STEP_SUMMARY
-
-          # === ALL OTHER ISSUES (collapsed) ===
-          TOTAL=$(wc -l < "$RESULTS_FILE" | tr -d ' ')
-          HIGH_COUNT=$(echo "$HIGH_RISK_FOUND" | grep -c '.' || echo "0")
-          MEDIUM_COUNT=$(echo "$MEDIUM_RISK_FOUND" | grep -c '.' || echo "0")
-          OTHER_COUNT=$((TOTAL - HIGH_COUNT - MEDIUM_COUNT))
 
           echo "<details>" >> $GITHUB_STEP_SUMMARY
           echo "<summary>📋 Other issues ($OTHER_COUNT) — click to expand</summary>" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          grep -ivE "$HIGH_RISK_REGEX|$MEDIUM_RISK_REGEX" "$RESULTS_FILE" >> $GITHUB_STEP_SUMMARY || true
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          if [ -n "$OTHER_SECTION" ]; then
+            echo "$OTHER_SECTION" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "No other issues." >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
           echo "</details>" >> $GITHUB_STEP_SUMMARY
