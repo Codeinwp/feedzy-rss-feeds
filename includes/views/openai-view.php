@@ -9,7 +9,7 @@ $content = ! apply_filters( 'feedzy_is_license_of_type', false, 'business' ) ? _
 				$upgrade_url = tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'openai' ) );
 
 				// translators: %1$s: opening anchor tag, %2$s: closing anchor tag.
-				$content .= wp_sprintf( __( 'Unlock more powerful features, by %1$s upgrading to Feedzy Pro %2$s', 'feedzy-rss-feeds' ), '<a href="' . esc_url( $upgrade_url ) . '" target="_blank">', '</a>' );
+				$content .= wp_sprintf( __( 'Unlock more powerful features, by %1$supgrading to Feedzy Pro%2$s', 'feedzy-rss-feeds' ), '<a href="' . esc_url( $upgrade_url ) . '" target="_blank">', '</a>' );
 				echo wp_kses_post( $content );
 			?>
 		</div>

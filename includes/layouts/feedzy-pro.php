@@ -14,10 +14,10 @@
                     <h3 class="h3"><?php esc_html_e( 'Import content from RSS feeds', 'feedzy-rss-feeds' ); ?></h3>
                     <p><?php esc_html_e( 'Create unlimited import routines for your RSS feeds and let them run on autopilot.', 'feedzy-rss-feeds' ); ?></p>
                 </li>
-                <li class="pro" data-label="Free">
+                <li class="pro" data-label="<?php esc_html_e( 'Free', 'feedzy-rss-feeds' ); ?>">
                     <span class="dashicons dashicons-saved"></span>
                 </li>
-                <li class="pro" data-label="Pro">
+                <li class="pro" data-label="<?php esc_html_e( 'Pro', 'feedzy-rss-feeds' ); ?>">
                     <span class="dashicons dashicons-saved"></span>
                 </li>
             </ul>
@@ -27,10 +27,10 @@
                     <p><?php esc_html_e( 'Filter and display RSS feeds items directly with your favourite page builders.', 'feedzy-rss-feeds' ); ?></p>
                 </li>
 
-                <li class="pro" data-label="Free">
+                <li class="pro" data-label="<?php esc_html_e( 'Free', 'feedzy-rss-feeds' ); ?>">
                     <span class="dashicons dashicons-saved"></span>
                 </li>
-                <li class="pro" data-label="Pro">
+                <li class="pro" data-label="<?php esc_html_e( 'Pro', 'feedzy-rss-feeds' ); ?>">
                     <span class="dashicons dashicons-saved"></span>
                 </li>
             </ul>
@@ -41,10 +41,10 @@
                         <?php esc_html_e( 'With robust filtering options, you can include items matching any condition, filter by fields like title, description, or custom fields, and use operators like contains, equals, or regex for precise control.', 'feedzy-rss-feeds' ); ?>
                     </p>
                 </li>
-                <li class="free" data-label="Free">
+                <li class="free" data-label="<?php esc_html_e( 'Free', 'feedzy-rss-feeds' ); ?>">
                     <span class="dashicons dashicons-no-alt"></span>
                 </li>
-                <li class="pro" data-label="Pro">
+                <li class="pro" data-label="<?php esc_html_e( 'Pro', 'feedzy-rss-feeds' ); ?>">
                     <span class="dashicons dashicons-saved"></span>
                 </li>
             </ul>
@@ -57,10 +57,10 @@
                         <?php esc_html_e( 'Choose the best template for each feed, such as standard grid layout, blog layout, online shop layout, or audio playback (soundcloud) layout.', 'feedzy-rss-feeds' ); ?>
                     </p>
                 </li>
-                <li class="free" data-label="Free">
+                <li class="free" data-label="<?php esc_html_e( 'Free', 'feedzy-rss-feeds' ); ?>">
                     <span class="dashicons dashicons-no-alt"></span>
                 </li>
-                <li class="pro" data-label="Pro">
+                <li class="pro" data-label="<?php esc_html_e( 'Pro', 'feedzy-rss-feeds' ); ?>">
                     <span class="dashicons dashicons-saved"></span>
                 </li>
             </ul>
@@ -74,10 +74,10 @@
                         <?php esc_html_e( 'Add referral parameters, and Feedzy will automatically configure affiliate links for each item in the feed. You can even import prices from product sources to create extra value for your readers.', 'feedzy-rss-feeds' ); ?>
                     </p>
                 </li>
-                <li class="free" data-label="Free">
+                <li class="free" data-label="<?php esc_html_e( 'Free', 'feedzy-rss-feeds' ); ?>">
                     <span class="dashicons dashicons-no-alt"></span>
                 </li>
-                <li class="pro" data-label="Pro">
+                <li class="pro" data-label="<?php esc_html_e( 'Pro', 'feedzy-rss-feeds' ); ?>">
                     <span class="dashicons dashicons-saved"></span>
                 </li>
             </ul>
@@ -89,13 +89,13 @@
                         <span class="pro-label"><?php esc_html_e( 'Developer & Agency plans', 'feedzy-rss-feeds' ); ?></span>
                     </h3>
                     <p>
-                        <?php esc_html_e( 'During the import, Feedzy will visit URLs of all items and parse the content directly from the website, importing ALL the content from a item , compared to #item_content tag which only imports the post excerpts.', 'feedzy-rss-feeds' ); ?>
+                        <?php esc_html_e( 'During the import, Feedzy will visit URLs of all items and parse the content directly from the website, importing ALL the content from a item, compared to #item_content tag which only imports the post excerpts.', 'feedzy-rss-feeds' ); ?>
                     </p>
                 </li>
-                <li class="free" data-label="Free">
+                <li class="free" data-label="<?php esc_html_e( 'Free', 'feedzy-rss-feeds' ); ?>">
                     <span class="dashicons dashicons-no-alt"></span>
                 </li>
-                <li class="pro" data-label="Pro">
+                <li class="pro" data-label="<?php esc_html_e( 'Pro', 'feedzy-rss-feeds' ); ?>">
                     <span class="dashicons dashicons-saved"></span>
                 </li>
             </ul>
@@ -109,10 +109,10 @@
                         <?php esc_html_e( 'Create customizable fields and fetch custom values from the feed such as date updated, rating, etc.', 'feedzy-rss-feeds' ); ?>
                     </p>
                 </li>
-                <li class="free" data-label="Free">
+                <li class="free" data-label="<?php esc_html_e( 'Free', 'feedzy-rss-feeds' ); ?>">
                     <span class="dashicons dashicons-no-alt"></span>
                 </li>
-                <li class="pro" data-label="Pro">
+                <li class="pro" data-label="<?php esc_html_e( 'Pro', 'feedzy-rss-feeds' ); ?>">
                     <span class="dashicons dashicons-saved"></span>
                 </li>
             </ul>
@@ -126,15 +126,14 @@
                     </h3>
                     <p>
                         <?php
-                        /* translators: %s: OpenAI (ChatGPT) or OpenRouter */
-                        echo sprintf( esc_html__( 'Using the %s integration, paraphrase, summarize, generate missing featured images, or apply your custom prompt to the imported content.', 'feedzy-rss-feeds' ), __( 'OpenAI (ChatGPT) or OpenRouter', 'feedzy-rss-feeds' ) );
+                        esc_html_e( 'Using the OpenAI (ChatGPT) or OpenRouter integration, paraphrase, summarize, generate missing featured images, or apply your custom prompt to the imported content.', 'feedzy-rss-feeds' );
                         ?>
                     </p>
                 </li>
-                <li class="free" data-label="Free">
+                <li class="free" data-label="<?php esc_html_e( 'Free', 'feedzy-rss-feeds' ); ?>">
                     <span class="dashicons dashicons-no-alt"></span>
                 </li>
-                <li class="pro" data-label="Pro">
+                <li class="pro" data-label="<?php esc_html_e( 'Pro', 'feedzy-rss-feeds' ); ?>">
                     <span class="dashicons dashicons-saved"></span>
                 </li>
             </ul>
@@ -156,10 +155,10 @@
                         ?>
                     </p>
                 </li>
-                <li class="free" data-label="Free">
+                <li class="free" data-label="<?php esc_html_e( 'Free', 'feedzy-rss-feeds' ); ?>">
                     <span class="dashicons dashicons-no-alt"></span>
                 </li>
-                <li class="pro" data-label="Pro">
+                <li class="pro" data-label="<?php esc_html_e( 'Pro', 'feedzy-rss-feeds' ); ?>">
                     <span class="dashicons dashicons-saved"></span>
                 </li>
             </ul>
@@ -173,10 +172,10 @@
                         <?php esc_html_e( 'Paraphrase or translate content before import using the built-in service, no separate subscription required.', 'feedzy-rss-feeds' ); ?>
                     </p>
                 </li>
-                <li class="free" data-label="Free">
+                <li class="free" data-label="<?php esc_html_e( 'Free', 'feedzy-rss-feeds' ); ?>">
                     <span class="dashicons dashicons-no-alt"></span>
                 </li>
-                <li class="pro" data-label="Pro">
+                <li class="pro" data-label="<?php esc_html_e( 'Pro', 'feedzy-rss-feeds' ); ?>">
                     <span class="dashicons dashicons-saved"></span>
                 </li>
             </ul>

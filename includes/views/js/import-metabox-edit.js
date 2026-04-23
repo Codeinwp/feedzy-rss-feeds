@@ -869,13 +869,23 @@
 							typeof tagData.value === 'string' &&
 							decodeTagData !== tagData.value;
 						let tagLabel = tagData.value;
+						let isCustomHTML = false;
 						if (isEncoded) {
 							decodeTagData = JSON.parse(decodeTagData);
 							decodeTagData = decodeTagData[0] || {};
 							tagLabel = decodeTagData.tag.replaceAll('_', ' ');
+							isCustomHTML = 'custom_html' === decodeTagData.id;
 							tagData['data-actions'] = tagData.value;
 							tagData['data-field_id'] = 'fz-content-action-tags';
 						}
+						if ( isCustomHTML ) {
+							tagLabel = escapeText(tagLabel);
+							return `
+							<tag spellcheck="false" class='tagify__tag'>
+								<span id="editable" class="feedzy-custom-tag tagify__tag-text" contenteditable='true'>${tagLabel}</span>
+							</tag>`;
+						}
+
 						return `
 						<tag title='${tagLabel}' contenteditable='false' spellcheck="false" class='tagify__tag ${isEncoded ? 'fz-content-action' : ''}'>
 							<x title='remove tag' class='tagify__tag__removeBtn'></x>
@@ -1050,6 +1060,29 @@
 			url.searchParams.delete('imported');
 			history.replaceState(history.state, '', url.href);
 		}
+
+		const tagify = mixContent.focus().data('tagify');
+
+		$(document).on('input', '.feedzy-post-content span', function () {
+			const tagElms = $(this).find('tag');
+			tagElms.each((i, ele) => {
+				if ( $(ele).find('.feedzy-custom-tag').length ) {
+					const newValue = ele.innerText;
+					const data = tagify.getSetTagData(ele);
+
+					let decodeTagData = decodeURIComponent(data.value);
+					decodeTagData = JSON.parse(decodeTagData);
+					decodeTagData = decodeTagData[0] || {};
+					decodeTagData.tag = newValue;
+					
+					let encodeTagData = [ decodeTagData ];
+					encodeTagData = JSON.stringify(encodeTagData, null, 0)
+					data.value = encodeURIComponent(encodeTagData);
+
+					tagify.updateValueByDOMTags();
+				}
+			});
+		});
 	}
 
 	function initSummary() {
@@ -1538,4 +1571,17 @@ function initNewPostActions() {
 		postTitle.focus();
 		postTitle.select();
 	}
+}
+
+/**
+ * Escape the text.
+ */
+function escapeText( label ) {
+	return label
+			.trim()
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#039;')
 }
