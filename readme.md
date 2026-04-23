@@ -3,8 +3,8 @@
 **Tags:** rss aggregator, news aggregator, autoblogging, feed to post, rss import  
 **Requires at least:** 6.0  
 **Requires PHP:** 7.2  
-**Tested up to:** 6.8  
-**Stable tag:** 5.1.2  
+**Tested up to:** 6.9  
+**Stable tag:** 5.1.3  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -18,10 +18,10 @@ The Ultimate WordPress RSS aggregator, helping you Curate content, Autoblog, Imp
 
 ## 🔗 HELPFUL LINKS: ##
 
-* Want to see Feedzy in action before installing? [VIEW FEEDZY DEMO](https://demo.themeisle.com/feedzy-rss-feeds/?utm_source=wpadmin&utm_medium=readme&utm_campaign=feedzy)
+* Want to see Feedzy in action before installing? [VIEW FEEDZY DEMO](https://demo.themeisle.com/feedzy-rss-feeds/?utm_source=wordpressorg&utm_medium=readme&utm_campaign=feedzy)
 * Need any help with setup? [CHECK DOCUMENTATION](https://docs.themeisle.com/category/712-feedzy)
 * Don’t like reading? [CHECK YOUTUBE TUTORIALS](https://www.youtube.com/channel/UCAQcBsP3h6p5yXgFap4LEGA/search?query=feedzy)
-* Interested in Feedzy Pro? [KNOW MORE ABOUT FEEDZY PRO](https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=readme&utm_campaign=feedzy)
+* Interested in Feedzy Pro? [KNOW MORE ABOUT FEEDZY PRO](https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wordpressorg&utm_medium=readme&utm_campaign=feedzy)
 
 With FEEDZY RSS Aggregator, you can sit back, let your site autoblog and always stay fresh with new content, which in return helps improve content marketing, boost your SEO, increase audience engagement, and probably earn more money.
 
@@ -67,11 +67,11 @@ Take your “Feed to Post” automation to the next level with powerful Pro-only
 * **Custom Post Author:** Assign imported posts to a specific author profile.  
 * **Post Excerpts and Custom Fields:** Map feed data to post excerpts or custom fields for richer content display.  
 
-These advanced controls give you full editorial power over your imported content, whether you are curating news, running an affiliate store, or managing multiple client sites. [Get Feedzy Pro](https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=readme&utm_campaign=feedzy)
+These advanced controls give you full editorial power over your imported content, whether you are curating news, running an affiliate store, or managing multiple client sites. [Get Feedzy Pro](https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wordpressorg&utm_medium=readme&utm_campaign=feedzy)
 
 ## 🤔 WHAT YOU CAN DO WITH FEEDZY RSS AGGREGATOR: ##
 
-* **[Feed to post](https://docs.themeisle.com/article/742-how-to-import-posts-from-feeds-in-feedzy)** (our most loved feature 💕): automatically convert RSS feed items to Wordpress pages, posts, and custom post type.
+* **[Feed to post](https://docs.themeisle.com/article/742-how-to-import-posts-from-feeds-in-feedzy)** (our most loved feature 💕): automatically convert RSS feed items to WordPress pages, posts, and custom post type.
 * **Automatically import** and aggregate RSS feeds from unlimited sources.
 * **Bulk import and organize** multiple feed sources of similar topics into Categories. See how our user, **Barry Seward**, loves this feature [here](https://wordpress.org/support/topic/works-great-6051/)
 * **Easily display RSS feeds** using shortcodes, Gutenberg blocks, or widgets in your third-party page builders like Elementor
@@ -112,10 +112,10 @@ If you love FEEDZY RSS Aggregator, why not bring your site to the next level wit
 **USE CASE:** 🔍 Mark, a content curator, maximizes efficiency with Keyword Filter. He effortlessly refines his RSS feed imports by specifying keywords like "AI" and "tech trends." This automatic sorting saves Mark hours of manual review, allowing him to focus on crafting engaging content and boosting his blog's SEO impact. 
 
 * **Map the imported feed elements to your post elements**: totally control and customize how your feed to post, such as using the feed’s image or your image as the featured image, importing only the feed’s content or both the content and image into the post content, creating post drafts first to review or publishing right away, and so many more.
-* **[Full-text RSS feeds import (with image)](https://docs.themeisle.com/article/742-how-to-import-posts-from-feeds-in-feedzy)** (with image): by extracting the entire HTML from each feed item, you can import full-text content to post, not just the feed excerpt.
+* **[Full-text RSS feeds import (with image)](https://docs.themeisle.com/article/742-how-to-import-posts-from-feeds-in-feedzy)** : by extracting the entire HTML from each feed item, you can import full-text content to post, not just the feed excerpt.
 * **Paraphrasing content before import**: Rewrite your content before RSS import with the built-in feature.
 * **Automatically translate the content on import**: Choose to translate the feed into various languages before import.
-* **[Multiple feed templates](https://demo.themeisle.com/feedzy-rss-feeds/)**: choose the best template for each feed, such as standard grid layout, blog layout, online shop layout, or audio playback (soundcloud) playout.
+* **[Multiple feed templates](https://demo.themeisle.com/feedzy-rss-feeds/)**: choose the best template for each feed, such as standard grid layout, blog layout, online shop layout, or audio playback (soundcloud) layout.
 * **OpenAI (ChatGPT) integration**: Use the OpenAI API feature to paraphrase, summarize, generate missing featured images, or apply your custom prompt to the imported content.
 * **[WordAI and SpinnerChief integration](https://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy)** to avoid duplicated content.
 * **[Parse and display pricings](https://docs.themeisle.com/article/923-how-price-is-displayed-from-the-feed)** for online shop and product feeds.
@@ -123,7 +123,7 @@ If you love FEEDZY RSS Aggregator, why not bring your site to the next level wit
 
 **USE CASE:** Mike, an affiliate marketing expert, is all about maximizing profits. By seamlessly incorporating personalized referral links into his content using the "Add Affiliate Links and Referral Parameters" feature, he simplifies tracking and improves campaign efficiency. The result? Heightened conversions, enhanced earnings, and a stronger affiliate game.
 
-Unlock all these premium features with [Feedzy PRO!](https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=readme&utm_campaign=feedzy)
+Unlock all these premium features with [Feedzy PRO!](https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wordpressorg&utm_medium=readme&utm_campaign=feedzy)
 
 * Still skeptical? Ask your pre-sales questions [here](https://themeisle.com/contact/), and we will get back to you shortly, or purchase with peace of mind and try it yourself. We offer **30-day-no-questions-asked money-back guarantee.**
 
@@ -462,6 +462,11 @@ You have to check first if your feed is valid. Please test it here: https://vali
  = How to install and activate Feedzy Pro =
  [https://docs.themeisle.com/article/1247-how-to-install-and-activate-feedzy-pro](https://docs.themeisle.com/article/1247-how-to-install-and-activate-feedzy-pro)
 
+ = How to report a security issue? =
+ 
+ Plugin security is a core priority for us. If you identify a potential vulnerability, we ask that you disclose it responsibly.
+ Please follow the reporting protocols outlined on our [Security Page](https://themeisle.com/security/).
+
  == Screenshots ==
 
 1. Add Categories
@@ -474,9 +479,14 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
-##### [Version 5.1.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.1.1...v5.1.2) (2025-11-20)
+##### [Version 5.1.3](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.1.2...v5.1.3) (2026-04-23)
 
-- Enhanced security
+- Added crons removal on uninstallation of the plugin
+- Fixed issue when Custom Fields were missing after import
+- Preserve HTML tags in “Content Area” When editing Import Jobs
+- Added Feedzy educational videos to dashboard
+- Made http_headers_useragent filter compatible with WP
+- Fixed issue with featured image not being assigned from some feeds
 
 
 

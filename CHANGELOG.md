@@ -1,3 +1,12 @@
+##### [Version 5.1.3](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.1.2...v5.1.3) (2026-04-23)
+
+- Added crons removal on uninstallation of the plugin
+- Fixed issue when Custom Fields were missing after import
+- Preserve HTML tags in “Content Area” When editing Import Jobs
+- Added Feedzy educational videos to dashboard
+- Made http_headers_useragent filter compatible with WP
+- Fixed issue with featured image not being assigned from some feeds
+
 ##### [Version 5.1.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.1.1...v5.1.2) (2025-11-20)
 
 - Enhanced security
