@@ -82,8 +82,8 @@ if ( isset( $settings['custom_schedules'] ) && is_array( $settings['custom_sched
 				<?php 
 				$schedule_count = count( $custom_schedules );
 
-				// translators: %s is the number of custom schedules.
-				echo esc_html( sprintf( _n( '%d item', '%d items', $schedule_count, 'feedzy-rss-feeds' ) ) ); 
+				// translators: %d is the number of custom schedules.
+				echo esc_html( sprintf( _n( '%d item', '%d items', $schedule_count, 'feedzy-rss-feeds' ), $schedule_count ) ); 
 				?>
 			</div>
 			
