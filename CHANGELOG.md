@@ -1,3 +1,7 @@
+##### [Version 5.1.5](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.1.4...v5.1.5) (2026-04-24)
+
+- Fixed issue when error appearing with Feedzy widget
+
 ##### [Version 5.1.4](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.1.3...v5.1.4) (2026-04-23)
 
 - Fixed error appearing in settings page when configuring custom crons
