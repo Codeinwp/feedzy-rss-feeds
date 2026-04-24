@@ -90,8 +90,8 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 	 */
 	public static function get_form_elements() {
 		$meta = sprintf(
-			// translators: 1: <code> tag for author, 2: closing </code> tag, 3: <a> tag for documentation link, 4: closing </a> tag.
-			__( 'Should we display additional meta fields out of %1$sauthor%2$s, %3$sdate%4$s and %5$stime%6$s? (comma-separated list, in order of display). View documentation %3$shere%4$s.', 'feedzy-rss-feeds' ),
+			// translators: %1$s is <code> tag, %2$s is closing </code> tag, %3$s is <a> tag for documentation link, %4$s is closing </a> tag.
+			__( 'Should we display additional meta fields out of %1$sauthor%2$s, %1$sdate%2$s and %1$stime%2$s? (comma-separated list, in order of display). View documentation %3$shere%4$s.', 'feedzy-rss-feeds' ),
 			'<code>',
 			'</code>',
 			'<a href="' . esc_url( 'https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed' ) . '" target="_new">',
