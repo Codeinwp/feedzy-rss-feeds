@@ -1656,11 +1656,6 @@ parameters:
 			path: includes/layouts/setup-wizard.php
 
 		-
-			message: "#^Constant SIMPLEPIE_NAMESPACE_ATOM_10 not found\\.$#"
-			count: 1
-			path: includes/util/feedzy-rss-feeds-conditions.php
-
-		-
 			message: "#^Method Feedzy_Rss_Feeds_Conditions\\:\\:migrate_conditions\\(\\) has parameter \\$conditions with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: includes/util/feedzy-rss-feeds-conditions.php
