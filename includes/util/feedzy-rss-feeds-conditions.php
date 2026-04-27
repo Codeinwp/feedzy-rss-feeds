@@ -275,12 +275,10 @@ class Feedzy_Rss_Feeds_Conditions {
 					$value = wp_strip_all_tags( $item->get_title(), true );
 					break;
 				case 'description':
-					$value = wp_strip_all_tags( $item->get_content(), true );
+					$value = wp_strip_all_tags( $item->get_description(), true );
 					break;
 				case 'fullcontent':
-					$content = $item->get_item_tags( SIMPLEPIE_NAMESPACE_ATOM_10, 'full-content' );
-					$content = ! empty( $content[0]['data'] ) ? $content[0]['data'] : '';
-					$value   = wp_strip_all_tags( $content, true );
+					$value = wp_strip_all_tags( $item->get_content(), true );
 					break;
 				case 'author':
 					$author = $item->get_author();
