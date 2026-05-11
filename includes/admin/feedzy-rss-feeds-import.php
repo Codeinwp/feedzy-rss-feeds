@@ -3061,6 +3061,23 @@ class Feedzy_Rss_Feeds_Import {
 
 					return false;
 				}
+			} elseif ( ! empty( $type ) ) {
+				// The file type is not allowed by WordPress (e.g., SVG).
+				// Skip the upload gracefully to avoid error log spam.
+				Feedzy_Rss_Feeds_Log::debug(
+					// translators: %1$s is the MIME type, %2$s is the image source URL.
+					sprintf( __( 'Skipping image upload — file type "%1$s" is not allowed by WordPress: %2$s', 'feedzy-rss-feeds' ), $type, $img_source_url ),
+					array(
+						'post_id'        => $post_id,
+						'img_source_url' => $img_source_url,
+						'mime_type'      => $type,
+					)
+				);
+
+				// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
+				unlink( $local_file );
+
+				return false;
 			}
 
 			$file_array['tmp_name'] = $local_file;
