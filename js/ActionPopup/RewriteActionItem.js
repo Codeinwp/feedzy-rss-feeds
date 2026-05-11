@@ -151,6 +151,12 @@ const ModelSelect = ({
 					});
 				}}
 				disabled={!isPro || !providerLicenseStatus}
+				help={
+					__(
+						'Tip: High-reasoning or heavier models may time out on massive articles. If results are not generated correctly, try selecting a faster, lightweight model from the list.',
+						'feedzy-rss-feeds'
+					)
+				}
 			>
 				{window.feedzyData.activeOpenAIModels.length > 0 && (
 					<optgroup label={__('Latest models', 'feedzy-rss-feeds')}>
