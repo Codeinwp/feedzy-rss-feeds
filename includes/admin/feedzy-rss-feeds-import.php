@@ -3036,6 +3036,11 @@ class Feedzy_Rss_Feeds_Import {
 				$type = $this->get_file_type_by_url( $img_source_url );
 			}
 
+			// Normalize the MIME type: lowercase and strip any parameters (e.g., "; charset=UTF-8").
+			if ( ! empty( $type ) ) {
+				$type = strtolower( trim( explode( ';', $type )[0] ) );
+			}
+
 			// the file is downloaded with a .tmp extension
 			// if the URL mentions the extension of the file, the upload succeeds
 			// but if the URL is like https://source.unsplash.com/random, then the upload fails
