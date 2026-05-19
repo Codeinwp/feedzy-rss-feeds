@@ -1,3 +1,8 @@
+##### [Version 5.1.6](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.1.5...v5.1.6) (2026-05-19)
+
+- Fixed issue with Import job showing Full Content filter for Personal plan users, causing silent import failures 
+- Updated dependencies
+
 ##### [Version 5.1.5](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.1.4...v5.1.5) (2026-04-24)
 
 - Fixed issue when error appearing with Feedzy widget
