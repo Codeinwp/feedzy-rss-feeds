@@ -1854,6 +1854,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$post_action = isset( $_POST['_action'] ) ? sanitize_text_field( wp_unslash( $_POST['_action'] ) ) : '';
 		$post_id     = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : '';
 
+		if ( ! feedzy_current_user_can() ) {
+			wp_send_json_error( array( 'msg' => __( 'You do not have permission to do this.', 'feedzy-rss-feeds' ) ), 403 );
+		}
+
 		switch ( $post_action ) {
 			case 'validate_clean':
 				// remove invalid URLs from this category.
