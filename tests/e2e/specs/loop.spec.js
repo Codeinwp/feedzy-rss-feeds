@@ -10,7 +10,7 @@ test.describe('Feedzy Loop', () => {
 
 	test('add Feedzy Loop Block', async ({ editor, page }) => {
 		await page.goto('/wp-admin/post-new.php?post_type=feedzy_categories');
-		await page.getByLabel('Add title').click();
+		await page.locator('#title').click();
 		await page.keyboard.type('Group One');
 
 		await page.locator('textarea[name="feedzy_category_feed"]').click();
@@ -32,22 +32,14 @@ test.describe('Feedzy Loop', () => {
 			);
 		}
 
-		await page.getByLabel('Add title').click();
+		await editor.canvas.getByLabel('Add title').click();
 		await page.keyboard.type(POST_TITLE);
 
-		await page.getByLabel('Add block').click();
-
-		await page.getByPlaceholder('Search').click();
-		await page.keyboard.type('Feedzy Loop');
-		await page.waitForTimeout(1000);
-
-		await page.getByRole('option', { name: ' Feedzy Loop' }).click();
-		await page.waitForTimeout(1000);
-
-		await page.getByPlaceholder('Enter URLs or select a').click();
+		await editor.insertBlock({ name: 'feedzy-rss-feeds/loop' });
+		await editor.canvas.getByPlaceholder('Enter URLs or select a').click();
 		await page.keyboard.type(FEED_URL);
 
-		const loadFeedButton = await page.getByRole('button', {
+		const loadFeedButton = await editor.canvas.getByRole('button', {
 			name: 'Load Feed',
 			exact: true,
 		});
@@ -56,18 +48,18 @@ test.describe('Feedzy Loop', () => {
 		await loadFeedButton.click();
 		await page.waitForTimeout(1000);
 
-		await page.getByLabel('Display curated RSS content').first().click();
+		await editor.canvas.getByLabel('Display curated RSS content').first().click();
 		await page.waitForTimeout(1000);
 
 		// Now that we have tested we can insert URL, we can test the Feed Group.
 
-		await page.locator('.wp-block-feedzy-rss-feeds-loop').nth(1).click();
+		await editor.canvas.locator('.wp-block-feedzy-rss-feeds-loop').nth(1).click();
 		await page.getByRole('button', { name: 'Edit Feed' }).click();
 
-		await page.getByRole('button', { name: 'Select Feed Group' }).click();
-		await page.locator('.fz-dropdown-item').first().click();
+		await editor.canvas.getByRole('button', { name: 'Select Feed Group' }).click();
+		await editor.canvas.locator('.fz-dropdown-item').first().click();
 
-		await page
+		await editor.canvas
 			.getByRole('button', { name: 'Load Feed', exact: true })
 			.click();
 		await page.waitForTimeout(1000);
@@ -114,15 +106,13 @@ test.describe('Feedzy Loop', () => {
 			name: 'feedzy-rss-feeds/loop',
 		});
 
-		await page
+		await editor.canvas
 			.getByPlaceholder('Enter URLs or select a Feed')
 			.fill('http://invalid-url.com/feed');
-		await page.getByRole('button', { name: 'Load Feed' }).click();
-
-		await page.waitForSelector('.feedzy-validation-results', { timeout: 30000 });
+		await editor.canvas.getByRole('button', { name: 'Load Feed' }).click();
 
 		await expect(
-			page
+			editor.canvas
 				.locator('.feedzy-validation-results .is-error')
 				.getByText('http://invalid-url.com/feed', { exact: true })
 		).toBeVisible();
@@ -139,23 +129,25 @@ test.describe('Feedzy Loop', () => {
 			name: 'feedzy-rss-feeds/loop',
 		});
 
-		await page
+		await editor.canvas
 			.getByPlaceholder('Enter URLs or select a Feed')
 			.fill(
 				'http://invalid-url.com/feed, https://www.nasa.gov/feeds/iotd-feed/'
 			);
-		await page.getByRole('button', { name: 'Load Feed' }).click();
+		await editor.canvas.getByRole('button', { name: 'Load Feed' }).click();
 
-		await page.waitForSelector('.feedzy-validation-results', { timeout: 30000 });
+		await editor.canvas
+			.locator('.feedzy-validation-results')
+			.waitFor({ timeout: 30000 });
 
 		await expect(
-			page
+			editor.canvas
 				.locator('.feedzy-validation-results .is-error')
 				.getByText('http://invalid-url.com/feed', { exact: true })
 		).toBeVisible();
 
 		await expect(
-			page
+			editor.canvas
 				.locator('.feedzy-validation-results .is-success')
 				.getByText('https://www.nasa.gov/feeds/iotd-feed/', {
 					exact: true,
@@ -179,14 +171,14 @@ test.describe('Feedzy Loop', () => {
 			},
 		});
 
-		await page
+		await editor.canvas
 			.getByLabel('Display curated RSS content')
 			.click({ force: true });
 
-		await page.waitForSelector('.feedzy-loop-columns-1');
+		await editor.canvas.locator('.feedzy-loop-columns-1').waitFor({timeout: 30000});
 
 		expect(
-			await page
+			await editor.canvas
 				.locator(`.wp-block-feedzy-rss-feeds-loop img[src*="https"]`)
 				.count()
 		).toBeGreaterThan(0);
@@ -209,14 +201,14 @@ test.describe('Feedzy Loop', () => {
 			},
 		});
 
-		await page
+		await editor.canvas
 			.getByLabel('Display curated RSS content')
 			.click({ force: true });
 
-		await page.waitForSelector('.feedzy-loop-columns-1');
+		await editor.canvas.locator('.feedzy-loop-columns-1').waitFor({timeout: 30000});
 
 		expect(
-			await page
+			await editor.canvas
 				.locator(`.wp-block-feedzy-rss-feeds-loop img[src*="https"]`)
 				.count()
 		).toBe(0);
@@ -243,14 +235,14 @@ test.describe('Feedzy Loop', () => {
 			},
 		});
 
-		await page
+		await editor.canvas
 			.getByLabel('Display curated RSS content')
 			.click({ force: true });
 
-		await page.waitForSelector('.feedzy-loop-columns-1');
+		await editor.canvas.locator('.feedzy-loop-columns-1').waitFor({timeout: 30000});
 
 		expect(
-			await page
+			await editor.canvas
 				.locator(`.wp-block-feedzy-rss-feeds-loop img[src*=".svg"]`)
 				.count()
 		).toBeGreaterThan(0);
