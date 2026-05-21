@@ -34,7 +34,7 @@ test.describe('Feed Import', () => {
 
 		// Insert a shortcode block.
 		await editor.insertBlock({ name: 'core/shortcode' });
-		await page.getByPlaceholder('Write shortcode here…').fill(shortcode);
+		await editor.canvas.getByPlaceholder('Write shortcode here…').fill(shortcode);
 
 		const postId = await editor.publishPost();
 		await page.goto(`/?p=${postId}`);
@@ -66,7 +66,7 @@ test.describe('Feed Import', () => {
 
 		// Insert a shortcode block.
 		await editor.insertBlock({ name: 'core/shortcode' });
-		await page
+		await editor.canvas
 			.getByPlaceholder('Write shortcode here…')
 			.fill(lazyShortcode);
 
@@ -101,7 +101,7 @@ test.describe('Feed Import', () => {
 
 		// Insert a shortcode block.
 		await editor.insertBlock({ name: 'core/shortcode' });
-		await page
+		await editor.canvas
 			.getByPlaceholder('Write shortcode here…')
 			.fill(multipleFeedsShortCode);
 
