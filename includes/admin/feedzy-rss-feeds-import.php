@@ -1507,23 +1507,23 @@ class Feedzy_Rss_Feeds_Import {
 
 		// we will add tags corresponding to the most potential problems.
 		$tags = array();
-		if ( $this->feedzy_is_business() && strpos( $feedzy_meta_data['import_post_content'], 'full_content' ) !== false ) {
+		if ( $this->feedzy_is_business() && isset( $feedzy_meta_data['import_post_content'] ) && strpos( $feedzy_meta_data['import_post_content'], 'full_content' ) !== false ) {
 			$tags[] = 'item_full_content';
 		}
-		if ( strpos( $feedzy_meta_data['import_post_content'], 'item_image' ) !== false || strpos( $feedzy_meta_data['import_post_featured_img'], 'item_image' ) !== false ) {
+		if ( ( isset( $feedzy_meta_data['import_post_content'] ) && strpos( $feedzy_meta_data['import_post_content'], 'item_image' ) !== false ) || ( isset( $feedzy_meta_data['import_post_featured_img'] ) && strpos( $feedzy_meta_data['import_post_featured_img'], 'item_image' ) !== false ) ) {
 			$tags[] = 'item_image';
 		}
 
 		$shortcode = sprintf(
 			'[feedzy-rss feeds="%s" max="%d" feed_title=no meta=no summary=no thumb=no error_empty="%s" keywords_inc="%s" %s="%s" %s="%s" _dry_run_tags_="%s" _dryrun_="yes"]',
 			$feedzy_meta_data['source'],
-			$feedzy_meta_data['import_feed_limit'],
+			isset( $feedzy_meta_data['import_feed_limit'] ) ? absint( $feedzy_meta_data['import_feed_limit'] ) : 5,
 			'', // should be empty.
-			$feedzy_meta_data['inc_key'],
+			isset( $feedzy_meta_data['inc_key'] ) ? esc_attr( $feedzy_meta_data['inc_key'] ) : '',
 			feedzy_is_pro() ? 'keywords_exc' : '',
-			feedzy_is_pro() ? $feedzy_meta_data['exc_key'] : '',
+			feedzy_is_pro() ? ( isset( $feedzy_meta_data['exc_key'] ) ? esc_attr( $feedzy_meta_data['exc_key'] ) : '' ) : '',
 			feedzy_is_pro() ? 'keywords_ban' : '',
-			feedzy_is_pro() ? $feedzy_meta_data['exc_key'] : '',
+			feedzy_is_pro() ? ( isset( $feedzy_meta_data['exc_key'] ) ? esc_attr( $feedzy_meta_data['exc_key'] ) : '' ) : '',
 			implode( ',', $tags )
 		);
 
