@@ -1515,17 +1515,21 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		$shortcode = sprintf(
-			'[feedzy-rss feeds="%s" max="%d" feed_title=no meta=no summary=no thumb=no error_empty="%s" keywords_inc="%s" %s="%s" %s="%s" _dry_run_tags_="%s" _dryrun_="yes"]',
+			'feedzy-rss feeds="%s" max="%d" feed_title=no meta=no summary=no thumb=no error_empty="%s" keywords_inc="%s" _dry_run_tags_="%s" _dryrun_="yes"',
 			$feedzy_meta_data['source'],
 			isset( $feedzy_meta_data['import_feed_limit'] ) ? absint( $feedzy_meta_data['import_feed_limit'] ) : 5,
 			'', // should be empty.
 			isset( $feedzy_meta_data['inc_key'] ) ? esc_attr( $feedzy_meta_data['inc_key'] ) : '',
-			feedzy_is_pro() ? 'keywords_exc' : '',
-			feedzy_is_pro() ? ( isset( $feedzy_meta_data['exc_key'] ) ? esc_attr( $feedzy_meta_data['exc_key'] ) : '' ) : '',
-			feedzy_is_pro() ? 'keywords_ban' : '',
-			feedzy_is_pro() ? ( isset( $feedzy_meta_data['exc_key'] ) ? esc_attr( $feedzy_meta_data['exc_key'] ) : '' ) : '',
 			implode( ',', $tags )
 		);
+
+		if ( feedzy_is_pro() ) {
+			$shortcode .= sprintf(
+				' keywords_exc="%s" keywords_ban="%s"',
+				isset( $feedzy_meta_data['exc_key'] ) ? esc_attr( $feedzy_meta_data['exc_key'] ) : '',
+				isset( $feedzy_meta_data['exc_key'] ) ? esc_attr( $feedzy_meta_data['exc_key'] ) : ''
+			);
+		}
 
 		Feedzy_Rss_Feeds_Log::debug(
 			'Dry run shortcode generated',
