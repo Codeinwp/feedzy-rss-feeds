@@ -1445,6 +1445,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				);
 
 				$auto_categories = array_values( $auto_categories );
+				$settings        = is_array( $settings ) ? $settings : array();
 
 				$settings['general']['disable-default-style'] = isset( $_POST['disable-default-style'] ) ? absint( wp_unslash( $_POST['disable-default-style'] ) ) : '';
 				$settings['general']['default-thumbnail-id']  = isset( $_POST['default-thumbnail-id'] ) ? absint( wp_unslash( $_POST['default-thumbnail-id'] ) ) : 0;
