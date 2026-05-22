@@ -1082,12 +1082,19 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	protected function check_valid_source( $url, $cache, $source_type = 'xml' ) {
 		global $post;
 
+		$post_id = 0;
+
 		// phpcs:disable WordPress.Security.NonceVerification
-		if ( null === $post && ! empty( $_POST['id'] ) ) {
+		if ( ! empty( $_POST['id'] ) ) {
 			$post_id = (int) $_POST['id'];
-		} else {
+		} elseif ( null !== $post ) {
 			$post_id = $post->ID;
 		}
+
+		if ( empty( $post_id ) ) {
+			return false;
+		}
+
 		$is_valid = true;
 		if ( 'amazon' === $source_type ) {
 			$amazon_api_errors = array();
