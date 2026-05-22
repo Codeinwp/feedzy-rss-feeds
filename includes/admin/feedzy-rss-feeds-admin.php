@@ -1444,7 +1444,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 				$settings['general']['disable-default-style'] = isset( $_POST['disable-default-style'] ) ? absint( wp_unslash( $_POST['disable-default-style'] ) ) : '';
 				$settings['general']['default-thumbnail-id']  = isset( $_POST['default-thumbnail-id'] ) ? absint( wp_unslash( $_POST['default-thumbnail-id'] ) ) : 0;
-				$settings['general']['fz_cron_schedule']      = isset( $_POST['fz_cron_schedule'] ) ? sanitize_text_field( wp_unslash( $_POST['fz_cron_schedule'] ) ) : 'hourly';
+				$settings['general']['fz_cron_schedule'] = isset( $_POST['fz_cron_schedule'] ) ? sanitize_text_field( wp_unslash( $_POST['fz_cron_schedule'] ) ) : 'hourly';
 				$settings['general']['auto-categories']       = array_values( $auto_categories );
 				$settings['general']['feedzy-telemetry']      = isset( $_POST['feedzy-telemetry'] ) ? absint( wp_unslash( $_POST['feedzy-telemetry'] ) ) : '';
 
