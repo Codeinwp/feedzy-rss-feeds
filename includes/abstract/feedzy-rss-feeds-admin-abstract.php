@@ -830,6 +830,175 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return SimplePie
 	 */
 	private function init_feed( $feed_url, $cache, $sc, $allow_https = FEEDZY_ALLOW_HTTPS ) {
+		$feed_urls      = is_array( $feed_url ) ? $feed_url : array( $feed_url );
+		$is_single_feed = count( $feed_urls ) === 1;
+
+		if ( $is_single_feed ) {
+			return $this->init_single_feed( reset( $feed_urls ), $cache, $sc, $allow_https );
+		}
+
+		return $this->init_multiple_feeds( $feed_urls, $cache, $sc, $allow_https );
+	}
+
+	/**
+	 * Initialize a single feed using SimplePie.
+	 *
+	 * @access  private
+	 *
+	 * @param   string               $feed_url The feed URL.
+	 * @param   string               $cache The cache string.
+	 * @param   array<string, mixed> $sc The shortcode attributes.
+	 * @param   bool                 $allow_https Defaults to constant FEEDZY_ALLOW_HTTPS.
+	 *
+	 * @return SimplePie
+	 */
+	private function init_single_feed( $feed_url, $cache, $sc, $allow_https = FEEDZY_ALLOW_HTTPS ) {
+		$cache_time = $this->calculate_cache_time( $cache );
+		$feed       = $this->create_simplepie_instance( $sc, $allow_https );
+		
+		$this->configure_simplepie( $feed, $sc, $feed_url, $cache_time );
+
+		$default_agent = $this->get_default_user_agent( $feed_url );
+		$cloned_feed   = clone $feed;
+
+		// Set the URL as the last step.
+		$feed->set_feed_url( $feed_url );
+
+		// Allow unsafe html.
+		if ( defined( 'FEEDZY_ALLOW_UNSAFE_HTML' ) && FEEDZY_ALLOW_UNSAFE_HTML ) {
+			$feed->strip_htmltags( false );
+		}
+
+		if ( isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
+			// phpcs:ignore WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___SERVER__HTTP_USER_AGENT__
+			$set_server_agent = sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) . \SimplePie\Misc::get_default_useragent() );
+			$feed->set_useragent( apply_filters( 'http_headers_useragent', $set_server_agent, $feed_url ) );
+		}
+
+		$feed->init();
+
+		if ( ! $feed->get_type() ) {
+			return $feed;
+		}
+
+		$error = $feed->error();
+		if ( is_array( $error ) ) {
+			$error = implode( '|', $error );
+		}
+
+		if ( ! empty( $error ) ) {
+			$feed = $this->handle_feed_error( $feed, $cloned_feed, $feed_url, $cache, $sc, $default_agent, $error );
+		}
+
+		return $feed;
+	}
+
+	/**
+	 * Initialize multiple feeds using SimplePie.
+	 *
+	 * Creates separate SimplePie instances for each feed URL and merges items.
+	 *
+	 * @access  private
+	 *
+	 * @param   array<string>        $feed_urls Array of feed URLs.
+	 * @param   string               $cache The cache string.
+	 * @param   array<string, mixed> $sc The shortcode attributes.
+	 * @param   bool                 $allow_https Defaults to constant FEEDZY_ALLOW_HTTPS.
+	 *
+	 * @return SimplePie
+	 */
+	private function init_multiple_feeds( array $feed_urls, $cache, array $sc, $allow_https = FEEDZY_ALLOW_HTTPS ) {
+		$cache_time       = $this->calculate_cache_time( $cache );
+		$feeds            = array();
+		$simplepie_errors = array();
+
+		$base_feed = $this->create_simplepie_instance( $sc, $allow_https );
+		$this->configure_simplepie( $base_feed, $sc, $feed_urls, $cache_time );
+
+		foreach ( $feed_urls as $url ) {
+			$feed_instance = clone $base_feed;
+			$feed_instance->set_feed_url( $url );
+
+			if ( defined( 'FEEDZY_ALLOW_UNSAFE_HTML' ) && FEEDZY_ALLOW_UNSAFE_HTML ) {
+				$feed_instance->strip_htmltags( false );
+			}
+
+			if ( isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
+				// phpcs:ignore WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___SERVER__HTTP_USER_AGENT__
+				$set_server_agent = sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) . \SimplePie\Misc::get_default_useragent() );
+				$feed_instance->set_useragent( apply_filters( 'http_headers_useragent', $set_server_agent, $url ) );
+			}
+
+			$feed_instance->init();
+
+			$error = $feed_instance->error();
+			if ( is_array( $error ) ) {
+				$error = implode( '|', $error );
+			}
+
+			if ( ! empty( $error ) ) {
+				Feedzy_Rss_Feeds_Log::error(
+					// translators: %1$s is the feed URL, %2$s is the error message.
+					sprintf( __( 'Error while parsing feed URL "%1$s": %2$s', 'feedzy-rss-feeds' ), $url, $error ),
+					array(
+						'feed_url' => $url,
+						'cache'    => $cache,
+						'sc'       => $sc,
+					)
+				);
+
+				// Handle SSL certificate errors.
+				if ( strpos( $error, 'SSL certificate' ) !== false && $allow_https ) {
+					Feedzy_Rss_Feeds_Log::warning(
+						sprintf( 'Got an SSL Error (%s), retrying by ignoring SSL', $error ),
+						array(
+							'feed_url' => $url,
+							'cache'    => $cache,
+							'sc'       => $sc,
+						)
+					);
+					$retry_feed = $this->init_single_feed( $url, $cache, $sc, false );
+					if ( empty( $retry_feed->error() ) ) {
+						$feeds[] = $retry_feed;
+					}
+				}
+
+				$simplepie_errors[] = $error;
+				continue;
+			}
+
+			$feeds[] = $feed_instance;
+		}
+
+		if ( empty( $feeds ) ) {
+			Feedzy_Rss_Feeds_Log::error(
+				'No feeds could be fetched from the provided URLs',
+				array(
+					'feed_urls' => $feed_urls,
+					'cache'     => $cache,
+					'sc'        => $sc,
+					'errors'    => $simplepie_errors,
+				)
+			);
+			return $base_feed;
+		}
+
+		$base_feed->init();
+		$base_feed->data['items'] = SimplePie::merge_items( $feeds );
+
+		return $base_feed;
+	}
+
+	/**
+	 * Calculate cache time based on cache string.
+	 *
+	 * @access  private
+	 *
+	 * @param   string $cache The cache string.
+	 *
+	 * @return int Cache time in seconds.
+	 */
+	private function calculate_cache_time( $cache ) {
 		$unit_defaults = array(
 			'mins'  => MINUTE_IN_SECONDS,
 			'hours' => HOUR_IN_SECONDS,
@@ -837,6 +1006,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		);
 		$cache_time    = 12 * HOUR_IN_SECONDS;
 		$cache         = trim( $cache );
+
 		if ( isset( $cache ) && '' !== $cache ) {
 			list( $value, $unit ) = explode( '_', $cache );
 			if ( isset( $value ) && is_numeric( $value ) && $value >= 1 && $value <= 100 ) {
@@ -846,7 +1016,22 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 		}
 
+		return $cache_time;
+	}
+
+	/**
+	 * Create a SimplePie instance with base configuration.
+	 *
+	 * @access  private
+	 *
+	 * @param   array<string, mixed> $sc The shortcode attributes.
+	 * @param   bool                 $allow_https Whether to allow HTTPS.
+	 *
+	 * @return Feedzy_Rss_Feeds_Util_SimplePie SimplePie instance.
+	 */
+	private function create_simplepie_instance( array $sc, $allow_https ) {
 		$feed = new Feedzy_Rss_Feeds_Util_SimplePie( $sc );
+
 		if ( ! $allow_https && method_exists( $feed, 'set_curl_options' ) ) {
 			$feed->set_curl_options(
 				array(
@@ -855,12 +1040,30 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				)
 			);
 		}
+
+		return $feed;
+	}
+
+	/**
+	 * Configure SimplePie instance with cache and user agent settings.
+	 *
+	 * @access  private
+	 *
+	 * @param   SimplePie            $feed SimplePie instance.
+	 * @param   array<string, mixed> $sc The shortcode attributes.
+	 * @param   string|array<string> $feed_url Feed URL(s).
+	 * @param   int                  $cache_time Cache time in seconds.
+	 *
+	 * @return void
+	 */
+	private function configure_simplepie( $feed, $sc, $feed_url, $cache_time ) {
 		require_once ABSPATH . WPINC . '/class-wp-feed-cache-transient.php';
 		require_once ABSPATH . WPINC . '/class-wp-simplepie-file.php';
 
 		$feed->get_registry()->register( SimplePie\File::class, 'WP_SimplePie_File', true );
 		$default_agent = $this->get_default_user_agent( $feed_url );
 		$feed->set_useragent( apply_filters( 'http_headers_useragent', $default_agent, is_array( $feed_url ) ? reset( $feed_url ) : $feed_url ) );
+
 		if ( false === apply_filters( 'feedzy_disable_db_cache', false, $feed_url ) ) {
 			SimplePie_Cache::register( 'wp_transient', 'WP_Feed_Cache_Transient' );
 			$feed->set_cache_location( 'wp_transient' );
@@ -889,7 +1092,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 						sprintf( 'Unable to create SimplePie cache directory: %s', $dir ),
 						array(
 							'feed_url' => $feed_url,
-							'cache'    => $cache,
+							'cache'    => $cache_time,
 							'sc'       => $sc,
 						)
 					);
@@ -898,91 +1101,70 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$feed->set_cache_location( $dir );
 		}
 
-		// Do not use force_feed for multiple URLs.
+		// Only use force_feed for single URLs.
 		$feed->force_feed( apply_filters( 'feedzy_force_feed', ( is_string( $feed_url ) || ( is_array( $feed_url ) && 1 === count( $feed_url ) ) ) ) );
 
 		do_action( 'feedzy_modify_feed_config', $feed );
+	}
 
-		$cloned_feed = clone $feed;
+	/**
+	 * Handle feed errors and attempt recovery strategies.
+	 *
+	 * @access  private
+	 *
+	 * @param   SimplePie            $feed Current feed instance.
+	 * @param   SimplePie            $cloned_feed Cloned feed instance for fallback.
+	 * @param   string               $feed_url Feed URL.
+	 * @param   string               $cache Cache string.
+	 * @param   array<string, mixed> $sc Shortcode attributes.
+	 * @param   string               $default_agent Default user agent.
+	 * @param   string               $error Error message.
+	 *
+	 * @return SimplePie Feed instance.
+	 */
+	private function handle_feed_error( $feed, $cloned_feed, $feed_url, $cache, $sc, $default_agent, $error ) {
+		Feedzy_Rss_Feeds_Log::error(
+			// translators: %1$s is the feed URL, %2$s is the error message.
+			sprintf( __( 'Error while parsing feed URL "%1$s": %2$s', 'feedzy-rss-feeds' ), $feed_url, $error ),
+			array(
+				'feed_url' => $feed_url,
+				'cache'    => $cache,
+				'sc'       => $sc,
+			)
+		);
 
-		// set the url as the last step, because we need to be able to clone this feed without the url being set
-		// so that we can fall back to raw data in case of an error.
-		$feed->set_feed_url( $feed_url );
-
-		// Allow unsafe html.
-		if ( defined( 'FEEDZY_ALLOW_UNSAFE_HTML' ) && FEEDZY_ALLOW_UNSAFE_HTML ) {
-			$feed->strip_htmltags( false );
-		}
-
-		if ( isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
-			// phpcs:ignore WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___SERVER__HTTP_USER_AGENT__
-			$set_server_agent = sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) . SIMPLEPIE_USERAGENT );
-			$feed->set_useragent( apply_filters( 'http_headers_useragent', $set_server_agent, is_array( $feed_url ) ? reset( $feed_url ) : $feed_url ) );
-		}
-
-		$feed->init();
-
-		if ( ! $feed->get_type() ) {
-			return $feed;
-		}
-
-		$error = $feed->error();
-		// error could be an array, so let's join the different errors.
-		if ( is_array( $error ) ) {
-			$error = implode( '|', $error );
-		}
-
-		if ( ! empty( $error ) ) {
-			Feedzy_Rss_Feeds_Log::error(
-				// translators: %1$s is the feed URL, %2$s is the error message.
-				sprintf( __( 'Error while parsing feed URL "%1$s": %2$s', 'feedzy-rss-feeds' ), $feed_url, $error ),
+		// Handle SSL certificate errors.
+		if ( strpos( $error, 'SSL certificate' ) !== false ) {
+			Feedzy_Rss_Feeds_Log::warning(
+				sprintf( 'Got an SSL Error (%s), retrying by ignoring SSL', $error ),
 				array(
 					'feed_url' => $feed_url,
 					'cache'    => $cache,
 					'sc'       => $sc,
 				)
 			);
-
-			// curl: (60) SSL certificate problem: unable to get local issuer certificate.
-			if ( strpos( $error, 'SSL certificate' ) !== false ) {
-				Feedzy_Rss_Feeds_Log::warning(
-					sprintf( 'Got an SSL Error (%s), retrying by ignoring SSL', $error ),
-					array(
-						'feed_url' => $feed_url,
-						'cache'    => $cache,
-						'sc'       => $sc,
-					)
-				);
-				$feed = $this->init_feed( $feed_url, $cache, $sc, false );
-			} elseif ( is_string( $feed_url ) || ( is_array( $feed_url ) && 1 === count( $feed_url ) ) ) {
-				Feedzy_Rss_Feeds_Log::debug(
-					sprintf( 'Using raw data for feed: %s', $feed_url ),
-					array(
-						'cache' => $cache,
-						'sc'    => $sc,
-					)
-				);
-
-				$data = wp_remote_retrieve_body( wp_safe_remote_get( $feed_url, array( 'user-agent' => $default_agent ) ) );
-				$cloned_feed->set_raw_data( $data );
-				$cloned_feed->init();
-				$error_raw = $cloned_feed->error();
-				if ( empty( $error_raw ) ) {
-					// only if using the raw url produces no errors, will we consider the new feed as good to go.
-					// otherwise we will use the old feed.
-					$feed = $cloned_feed;
-				}
-			} else {
-				Feedzy_Rss_Feeds_Log::debug(
-					'Cannot use raw data as this is a multi-feed URL',
-					array(
-						'feed_url' => $feed_url,
-						'cache'    => $cache,
-						'sc'       => $sc,
-					)
-				);
-			}
+			return $this->init_feed( $feed_url, $cache, $sc, false );
 		}
+
+		// Try using raw data as fallback.
+		Feedzy_Rss_Feeds_Log::debug(
+			sprintf( 'Using raw data for feed: %s', $feed_url ),
+			array(
+				'cache' => $cache,
+				'sc'    => $sc,
+			)
+		);
+
+		$data = wp_remote_retrieve_body( wp_safe_remote_get( $feed_url, array( 'user-agent' => $default_agent ) ) );
+		$cloned_feed->set_raw_data( $data );
+		$cloned_feed->init();
+		$error_raw = $cloned_feed->error();
+		
+		if ( empty( $error_raw ) ) {
+			// Only if using the raw url produces no errors, will we use the cloned feed.
+			return $cloned_feed;
+		}
+
 		return $feed;
 	}
 
