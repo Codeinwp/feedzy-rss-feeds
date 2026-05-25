@@ -1,3 +1,9 @@
+##### [Version 5.1.7](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.1.6...v5.1.7) (2026-05-25)
+
+- Enhanced security
+- Fixed bug to only load modals on Feedzy screens
+- Improved compatibility with WP 7.0
+
 ##### [Version 5.1.6](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.1.5...v5.1.6) (2026-05-19)
 
 - Fixed issue with Import job showing Full Content filter for Personal plan users, causing silent import failures 
