@@ -3129,11 +3129,12 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					$title = $feed->get_title();
 					$error = $feed->error();
 
-					if ( is_array( $error ) && ! empty( $error ) ) {
+					if ( ! empty( $error ) ) {
+						$error     = is_array( $error ) ? implode( ', ', $error ) : $error;
 						$results[] = array(
 							'url'     => $feed_url,
 							'status'  => 'error',
-							'message' => __( 'Error fetching feed: ', 'feedzy-rss-feeds' ) . implode( ', ', $error ),
+							'message' => __( 'Error fetching feed: ', 'feedzy-rss-feeds' ) . $error,
 						);
 						continue;
 					}
