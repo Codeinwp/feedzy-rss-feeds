@@ -445,6 +445,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * Add modals for the plugin.
 	 */
 	public function add_modals() {
+		$screen = get_current_screen();
+		if ( empty( $screen ) || 'feedzy_imports' !== $screen->post_type ) {
+			return;
+		}
 		?>
 			<script type="text/javascript">
 				jQuery(function () {
@@ -1442,6 +1446,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 				$auto_categories = array_values( $auto_categories );
 
+				$settings            = is_array( $settings ) ? $settings : array();
+				$settings['general'] = isset( $settings['general'] ) && is_array( $settings['general'] ) ? $settings['general'] : array();
+				$settings['logs']    = isset( $settings['logs'] ) && is_array( $settings['logs'] ) ? $settings['logs'] : array();
+
 				$settings['general']['disable-default-style'] = isset( $_POST['disable-default-style'] ) ? absint( wp_unslash( $_POST['disable-default-style'] ) ) : '';
 				$settings['general']['default-thumbnail-id']  = isset( $_POST['default-thumbnail-id'] ) ? absint( wp_unslash( $_POST['default-thumbnail-id'] ) ) : 0;
 				$settings['general']['fz_cron_schedule']      = isset( $_POST['fz_cron_schedule'] ) ? sanitize_text_field( wp_unslash( $_POST['fz_cron_schedule'] ) ) : 'hourly';
@@ -1853,6 +1861,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$post_action = isset( $_POST['_action'] ) ? sanitize_text_field( wp_unslash( $_POST['_action'] ) ) : '';
 		$post_id     = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : '';
+
+		if ( ! feedzy_current_user_can() ) {
+			wp_send_json_error( array( 'msg' => __( 'You do not have permission to do this.', 'feedzy-rss-feeds' ) ), 403 );
+		}
 
 		switch ( $post_action ) {
 			case 'validate_clean':
@@ -3117,11 +3129,12 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					$title = $feed->get_title();
 					$error = $feed->error();
 
-					if ( is_array( $error ) && ! empty( $error ) ) {
+					if ( ! empty( $error ) ) {
+						$error     = is_array( $error ) ? implode( ', ', $error ) : $error;
 						$results[] = array(
 							'url'     => $feed_url,
 							'status'  => 'error',
-							'message' => __( 'Error fetching feed: ', 'feedzy-rss-feeds' ) . implode( ', ', $error ),
+							'message' => __( 'Error fetching feed: ', 'feedzy-rss-feeds' ) . $error,
 						);
 						continue;
 					}

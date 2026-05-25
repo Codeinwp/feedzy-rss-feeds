@@ -1259,6 +1259,10 @@ class Feedzy_Rss_Feeds_Import {
 		$_POST['feedzy_category_meta_noncename'] = isset( $_POST['security'] ) ? sanitize_text_field( wp_unslash( $_POST['security'] ) ) : '';
 		$_action                                 = isset( $_POST['_action'] ) ? sanitize_text_field( wp_unslash( $_POST['_action'] ) ) : '';
 
+		if ( ! feedzy_current_user_can() ) {
+			wp_send_json_error( array( 'msg' => __( 'You do not have permission to do this.', 'feedzy-rss-feeds' ) ), 403 );
+		}
+
 		switch ( $_action ) {
 			case 'import_status':
 				$this->import_status();
@@ -1503,25 +1507,29 @@ class Feedzy_Rss_Feeds_Import {
 
 		// we will add tags corresponding to the most potential problems.
 		$tags = array();
-		if ( $this->feedzy_is_business() && strpos( $feedzy_meta_data['import_post_content'], 'full_content' ) !== false ) {
+		if ( $this->feedzy_is_business() && isset( $feedzy_meta_data['import_post_content'] ) && strpos( $feedzy_meta_data['import_post_content'], 'full_content' ) !== false ) {
 			$tags[] = 'item_full_content';
 		}
-		if ( strpos( $feedzy_meta_data['import_post_content'], 'item_image' ) !== false || strpos( $feedzy_meta_data['import_post_featured_img'], 'item_image' ) !== false ) {
+		if ( ( isset( $feedzy_meta_data['import_post_content'] ) && strpos( $feedzy_meta_data['import_post_content'], 'item_image' ) !== false ) || ( isset( $feedzy_meta_data['import_post_featured_img'] ) && strpos( $feedzy_meta_data['import_post_featured_img'], 'item_image' ) !== false ) ) {
 			$tags[] = 'item_image';
 		}
 
 		$shortcode = sprintf(
-			'[feedzy-rss feeds="%s" max="%d" feed_title=no meta=no summary=no thumb=no error_empty="%s" keywords_inc="%s" %s="%s" %s="%s" _dry_run_tags_="%s" _dryrun_="yes"]',
+			'feedzy-rss feeds="%s" max="%d" feed_title=no meta=no summary=no thumb=no error_empty="%s" keywords_inc="%s" _dry_run_tags_="%s" _dryrun_="yes"',
 			$feedzy_meta_data['source'],
-			$feedzy_meta_data['import_feed_limit'],
+			isset( $feedzy_meta_data['import_feed_limit'] ) ? absint( $feedzy_meta_data['import_feed_limit'] ) : 5,
 			'', // should be empty.
-			$feedzy_meta_data['inc_key'],
-			feedzy_is_pro() ? 'keywords_exc' : '',
-			feedzy_is_pro() ? $feedzy_meta_data['exc_key'] : '',
-			feedzy_is_pro() ? 'keywords_ban' : '',
-			feedzy_is_pro() ? $feedzy_meta_data['exc_key'] : '',
+			isset( $feedzy_meta_data['inc_key'] ) ? esc_attr( $feedzy_meta_data['inc_key'] ) : '',
 			implode( ',', $tags )
 		);
+
+		if ( feedzy_is_pro() ) {
+			$shortcode .= sprintf(
+				' keywords_exc="%s" keywords_ban="%s"',
+				isset( $feedzy_meta_data['exc_key'] ) ? esc_attr( $feedzy_meta_data['exc_key'] ) : '',
+				isset( $feedzy_meta_data['exc_key'] ) ? esc_attr( $feedzy_meta_data['exc_key'] ) : ''
+			);
+		}
 
 		Feedzy_Rss_Feeds_Log::debug(
 			'Dry run shortcode generated',
