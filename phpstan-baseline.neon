@@ -46,11 +46,6 @@ parameters:
 			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
 
 		-
-			message: "#^Constant SIMPLEPIE_USERAGENT not found\\.$#"
-			count: 1
-			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
-
-		-
 			message: "#^Constant WPINC not found\\.$#"
 			count: 2
 			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
