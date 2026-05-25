@@ -47,7 +47,7 @@ parameters:
 
 		-
 			message: "#^Constant SIMPLEPIE_USERAGENT not found\\.$#"
-			count: 2
+			count: 1
 			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
 
 		-
