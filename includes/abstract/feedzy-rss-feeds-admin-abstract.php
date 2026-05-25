@@ -830,6 +830,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return SimplePie
 	 */
 	private function init_feed( $feed_url, $cache, $sc, $allow_https = FEEDZY_ALLOW_HTTPS ) {
+		if ( ! is_array( $sc ) ) {
+			$sc = (array) $sc;
+		}
+
 		$feed_urls      = is_array( $feed_url ) ? $feed_url : array( $feed_url );
 		$is_single_feed = count( $feed_urls ) === 1;
 
@@ -887,7 +891,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		if ( ! empty( $error ) ) {
-			$feed = $this->handle_feed_error( $feed, $cloned_feed, $feed_url, $cache, $sc, $default_agent, $error );
+			$feed = $this->handle_feed_error( $feed, $cloned_feed, $feed_url, $cache, $sc, $allow_https, $default_agent, $error );
 		}
 
 		return $feed;
@@ -983,7 +987,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			return $base_feed;
 		}
 
-		$base_feed->init();
 		$base_feed->data['items'] = SimplePie::merge_items( $feeds );
 
 		return $base_feed;
@@ -1117,12 +1120,13 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @param   string               $feed_url Feed URL.
 	 * @param   string               $cache Cache string.
 	 * @param   array<string, mixed> $sc Shortcode attributes.
+	 * @param   bool                 $allow_https Whether HTTPS is allowed.
 	 * @param   string               $default_agent Default user agent.
 	 * @param   string               $error Error message.
 	 *
 	 * @return SimplePie Feed instance.
 	 */
-	private function handle_feed_error( $feed, $cloned_feed, $feed_url, $cache, $sc, $default_agent, $error ) {
+	private function handle_feed_error( $feed, $cloned_feed, $feed_url, $cache, $sc, $allow_https, $default_agent, $error ) {
 		Feedzy_Rss_Feeds_Log::error(
 			// translators: %1$s is the feed URL, %2$s is the error message.
 			sprintf( __( 'Error while parsing feed URL "%1$s": %2$s', 'feedzy-rss-feeds' ), $feed_url, $error ),
@@ -1133,8 +1137,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			)
 		);
 
-		// Handle SSL certificate errors.
-		if ( strpos( $error, 'SSL certificate' ) !== false ) {
+		// Handle SSL certificate errors - only retry if HTTPS verification is currently enabled.
+		if ( strpos( $error, 'SSL certificate' ) !== false && $allow_https ) {
 			Feedzy_Rss_Feeds_Log::warning(
 				sprintf( 'Got an SSL Error (%s), retrying by ignoring SSL', $error ),
 				array(
@@ -1176,18 +1180,16 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return string Optimal User Agent
 	 */
 	private function get_default_user_agent( $urls ) {
+		$set = is_array( $urls ) ? $urls : array( $urls );
 
-		$set = array();
-		if ( ! is_array( $urls ) ) {
-			$set[] = $urls;
-		}
 		foreach ( $set as $url ) {
 			if ( strpos( $url, 'medium.com' ) !== false ) {
 				return FEEDZY_USER_AGENT;
 			}
 		}
 
-		return SIMPLEPIE_USERAGENT;
+		// Use SimplePie's default user agent as fallback.
+		return \SimplePie\Misc::get_default_useragent();
 	}
 
 	/**
