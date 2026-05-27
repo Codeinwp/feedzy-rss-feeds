@@ -3489,7 +3489,7 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		if ( $disabled ) {
-			$default_tags .= '<hr>';
+			$default_tags .= '<hr/>';
 			foreach ( $disabled as $tag => $label ) {
 				$default_tags .= '<span disabled title="' . __( 'Upgrade your license to use this tag', 'feedzy-rss-feeds' ) . '" class="dropdown-item feedzy-pro"><span>' . $label . ' -- <small>[#' . $tag . ']</small></span><span class="pro-label">PRO</span></span>';
 			}
