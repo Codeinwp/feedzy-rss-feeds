@@ -1531,6 +1531,8 @@ class Feedzy_Rss_Feeds_Import {
 			);
 		}
 
+		$shortcode = '[' . $shortcode . ']';
+
 		Feedzy_Rss_Feeds_Log::debug(
 			'Dry run shortcode generated',
 			array(

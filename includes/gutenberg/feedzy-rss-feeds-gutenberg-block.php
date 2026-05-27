@@ -337,7 +337,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 		$feed     = $admin->fetch_feed( $url, '12_hours', array( '' ) );
 		$feedy    = array();
 
-		if ( ! $feed->init() ) {
+		if ( $feed->error() ) {
 			$feedy['error'] = __( 'Invalid Feed URL', 'feedzy-rss-feeds' );
 			header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );
 			return $feedy;
