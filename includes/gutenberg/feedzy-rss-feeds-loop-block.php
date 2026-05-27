@@ -130,8 +130,6 @@ class Feedzy_Rss_Feeds_Loop_Block {
 
 		$query             = isset( $attributes['query'] ) ? wp_parse_args( $attributes['query'], $default_query ) : $default_query;
 		$filters           = isset( $attributes['conditions'] ) ? $attributes['conditions'] : array();
-		$summary_length    = isset( $query['summary_length'] ) ? $query['summary_length'] : '400';
-		$title_length      = isset( $query['title_length'] ) ? $query['title_length'] : '0';
 		$thumb             = 'auto';
 		$default_thumbnail = '';
 	
@@ -152,6 +150,18 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			}
 		}
 
+		$summary_length = '400';
+		$title_length   = '';
+ 		if ( isset( $query['summary_length'] ) ) {
+ 			$summary_length = absint( $query['summary_length'] );
+ 			$summary_length = $summary_length > 0 ? (string) $summary_length : '';
+ 		}
+
+		if ( isset( $query['title_length'] ) ) {
+			$title_length = absint( $query['title_length'] );
+			$title_length = $title_length > 0 ? (string) $title_length : '';
+		}
+
 		$options = array(
 			'feeds'         => implode( ',', $feed_urls ),
 			'max'           => $query['max'],
@@ -162,11 +172,11 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			'columns'       => '1',
 			'thumb'         => $thumb,
 			'default'       => $default_thumbnail,
-			'title'         => $title_length > 0 ? $title_length : '',
+			'title'         => $title_length,
 			'meta'          => 'yes',
 			'multiple_meta' => 'no',
 			'summary'       => 'yes',
-			'summarylength' => $summary_length > 0 ? $summary_length : '',
+			'summarylength' => $summary_length,
 			'filters'       => wp_json_encode( $filters ),
 			'referral_url'  => $referral_url,
 		);
