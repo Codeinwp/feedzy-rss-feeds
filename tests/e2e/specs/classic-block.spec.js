@@ -150,4 +150,71 @@ test.describe('Feedzy Classic Block', () => {
 		const image = rssContainer.locator('img').first();
 		await expect(image).toBeVisible();
 	});
+
+	test('create feedzy group with multiple URLs and load in classic block', async ({
+		editor,
+		page,
+		admin,
+	}) => {
+		const FEED_URL_1 = 'https://themeisle.com/blog/feed/';
+		const FEED_URL_2 = 'https://s3.amazonaws.com/verti-utils/sample-feed-import.xml';
+		const GROUP_NAME = `Multi URL Group ${Math.floor(Math.random() * 10000)}`;
+		const POST_TITLE = `Feedzy Classic Multi URL Test ${Math.floor(Math.random() * 10000)}`;
+
+		await page.goto('/wp-admin/post-new.php?post_type=feedzy_categories');
+		await page.locator('#title').click();
+		await page.keyboard.type(GROUP_NAME);
+
+		await page.locator('textarea[name="feedzy_category_feed"]').click();
+		await page.keyboard.type(`${FEED_URL_1}, ${FEED_URL_2}`);
+		
+		await page
+			.getByRole('button', { name: 'Publish', exact: true })
+			.click();
+		await page.waitForTimeout(1000);
+
+		await page.goto('/wp-admin/post-new.php');
+
+		if (
+			(await page.$(
+				'.edit-post-welcome-guide .components-modal__header button'
+			)) !== null
+		) {
+			await page.click(
+				'.edit-post-welcome-guide .components-modal__header button'
+			);
+		}
+
+		await editor.canvas.getByLabel('Add title').click();
+		await page.keyboard.type(POST_TITLE);
+
+		await editor.insertBlock({ name: 'feedzy-rss-feeds/feedzy-block' });
+
+		await page.getByPlaceholder('Enter URL or group of your').click();
+		await page.keyboard.type(GROUP_NAME);
+		await page.waitForTimeout(500);
+
+		const loadFeedButton = await page.getByRole('button', {
+			name: 'Load Feed',
+			exact: true,
+		});
+		const isDisabled = await loadFeedButton.isDisabled();
+		expect(isDisabled).toBe(false);
+		await loadFeedButton.click();
+		await page.waitForTimeout(2000);
+
+		const postId = await editor.publishPost();
+
+		await page.goto(`/?p=${postId}`);
+		await page.waitForTimeout(2000);
+
+		const feedzyBlock = await page.$('.feedzy-rss');
+		expect(feedzyBlock).not.toBeNull();
+
+		const rssItems = await page.$$('.feedzy-rss .rss_item');
+		expect(rssItems.length).toBeGreaterThan(0);
+
+		const firstItem = page.locator('.feedzy-rss .rss_item').first();
+		await expect(firstItem).toBeVisible();
+	});
 });
