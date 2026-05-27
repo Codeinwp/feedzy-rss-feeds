@@ -43,6 +43,14 @@
 					"type": "string",
 					"enum": [ "1_hours", "3_hours", "12_hours", "1_days", "3_days", "15_days" ],
 					"default": "12_hours"
+				},
+				"title_length": {
+					"type": "number",
+					"default": 0
+				},
+				"summary_length": {
+					"type": "number",
+					"default": 400
 				}
 			}
 		},

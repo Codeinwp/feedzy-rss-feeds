@@ -150,6 +150,18 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			}
 		}
 
+		$summary_length = '400';
+		$title_length   = '';
+ 		if ( isset( $query['summary_length'] ) ) {
+ 			$summary_length = absint( $query['summary_length'] );
+ 			$summary_length = $summary_length > 0 ? (string) $summary_length : '';
+ 		}
+
+		if ( isset( $query['title_length'] ) ) {
+			$title_length = absint( $query['title_length'] );
+			$title_length = $title_length > 0 ? (string) $title_length : '';
+		}
+
 		$options = array(
 			'feeds'         => implode( ',', $feed_urls ),
 			'max'           => $query['max'],
@@ -160,11 +172,11 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			'columns'       => '1',
 			'thumb'         => $thumb,
 			'default'       => $default_thumbnail,
-			'title'         => '',
+			'title'         => $title_length,
 			'meta'          => 'yes',
 			'multiple_meta' => 'no',
 			'summary'       => 'yes',
-			'summarylength' => '',
+			'summarylength' => $summary_length,
 			'filters'       => wp_json_encode( $filters ),
 			'referral_url'  => $referral_url,
 		);
