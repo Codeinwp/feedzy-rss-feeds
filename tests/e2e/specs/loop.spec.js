@@ -247,4 +247,88 @@ test.describe('Feedzy Loop', () => {
 				.count()
 		).toBeGreaterThan(0);
 	});
+
+	test('create feedzy group with multiple URLs and load in loop block', async ({
+		editor,
+		page,
+		admin,
+	}) => {
+		const FEED_URL_1 = 'https://themeisle.com/blog/feed/';
+		const FEED_URL_2 = 'https://s3.amazonaws.com/verti-utils/sample-feed-import.xml';
+		const GROUP_NAME = `Multi URL Group ${Math.floor(Math.random() * 10000)}`;
+		const POST_TITLE = `Feedzy Multi URL Test ${Math.floor(Math.random() * 10000)}`;
+
+		await page.goto('/wp-admin/post-new.php?post_type=feedzy_categories');
+		await page.locator('#title').click();
+		await page.keyboard.type(GROUP_NAME);
+
+		await page.locator('textarea[name="feedzy_category_feed"]').click();
+		await page.keyboard.type(`${FEED_URL_1}, ${FEED_URL_2}`);
+		
+		await page
+			.getByRole('button', { name: 'Publish', exact: true })
+			.click();
+		await page.waitForTimeout(1000);
+
+		await page.goto('/wp-admin/post-new.php');
+
+		if (
+			(await page.$(
+				'.edit-post-welcome-guide .components-modal__header button'
+			)) !== null
+		) {
+			await page.click(
+				'.edit-post-welcome-guide .components-modal__header button'
+			);
+		}
+
+		await editor.canvas.getByLabel('Add title').click();
+		await page.keyboard.type(POST_TITLE);
+
+		await editor.insertBlock({ name: 'feedzy-rss-feeds/loop' });
+
+		await editor.canvas.getByRole('button', { name: 'Select Feed Group' }).click();
+		await page.waitForTimeout(500);
+
+		await editor.canvas.locator('.fz-dropdown-item').first().click();
+
+		const loadFeedButton = await editor.canvas.getByRole('button', {
+			name: 'Load Feed',
+			exact: true,
+		});
+		const isDisabled = await loadFeedButton.isDisabled();
+		expect(isDisabled).toBe(false);
+		await loadFeedButton.click();
+
+		await editor.canvas
+			.getByLabel('Display curated RSS content')
+			.click({ force: true });
+
+		await page
+			.getByRole('button', { name: 'Publish', exact: true })
+			.click();
+		await page.waitForTimeout(1000);
+
+		await page
+			.getByLabel('Editor publish')
+			.getByRole('button', { name: 'Publish', exact: true })
+			.click();
+		await page.waitForTimeout(3000);
+
+		const snackbar = await page.getByTestId('snackbar');
+		const snackbarText = await snackbar.textContent();
+		expect(snackbarText).toContain('Post published.');
+
+		await page.goto('/wp-admin/edit.php');
+		const postTitle = await page.locator('a.row-title').first();
+		await postTitle.hover();
+		await page.getByLabel('View “' + POST_TITLE + '”').click();
+		await page.waitForTimeout(3000);
+
+		const feedzyLoop = await page.$('.wp-block-feedzy-rss-feeds-loop');
+		expect(feedzyLoop).not.toBeNull();
+
+		const feedzyLoopChildren = await feedzyLoop.$$(':scope > *');
+		expect(feedzyLoopChildren.length).toBeGreaterThan(0);
+	});
 });
