@@ -2972,3 +2972,9 @@ button.feedzy-action-button {
 	cursor: auto;
 	line-height: 1.5;
 }
+
+.dropdown-menu .feedzy-pro {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
