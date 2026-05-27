@@ -53,6 +53,7 @@ const attributes = {
 	},
 	summarylength: {
 		type: 'number',
+		default: 400,
 	},
 	keywords_title: {
 		type: 'string',
