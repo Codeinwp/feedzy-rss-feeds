@@ -5,6 +5,10 @@
 	}
 	.feedzy-source {
 		margin-right: 10px;
+
+		input {
+			min-height: 32px;
+		}
 	}
 	.feedzy-source + .dashicons-arrow-down-alt2 {
 		position: absolute;
@@ -13,6 +17,10 @@
 		z-index: 5;
 		color: #757575;
 		cursor: pointer;
+	}
+
+	.components-button.is-primary {
+		height: 32px;
 	}
 }
 
@@ -98,6 +106,12 @@
 .block-editor-block-inspector {
 	.components-base-control {
 		margin: 24px 0;
+	}
+
+	.components-range-control {
+		.components-base-control {
+			margin: 0;
+		}
 	}
 }
 .fz-locked {
