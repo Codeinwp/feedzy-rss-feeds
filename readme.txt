@@ -4,7 +4,7 @@ Tags: rss aggregator, news aggregator, autoblogging, feed to post, rss import
 Requires at least: 6.0
 Requires PHP: 7.2
 Tested up to: 7.0
-Stable tag: 5.1.7
+Stable tag: 5.1.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -479,11 +479,9 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
-##### [Version 5.1.7](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.1.6...v5.1.7) (2026-05-25)
+##### [Version 5.1.8](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.1.7...v5.1.8) (2026-05-28)
 
 - Enhanced security
-- Fixed bug to only load modals on Feedzy screens
-- Improved compatibility with WP 7.0
 
 
 
