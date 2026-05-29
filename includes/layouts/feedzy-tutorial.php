@@ -122,7 +122,7 @@ $logs_link         = add_query_arg(
 				<h3 class="h3"><?php esc_html_e( 'Pagebuilders integration', 'feedzy-rss-feeds' ); ?></h3>
 				<p><?php esc_html_e( 'Feedzy is compatible with most popular page builders, so you can easily configure your feed imports directly in Elementor & Gutenberg.', 'feedzy-rss-feeds' ); ?></p>
 				<div>
-					<a href="https://docs.themeisle.com/feedzy-rss-feeds/feedzy-rss-feeds-documentation#gutenberg" class="btn btn-outline-primary" target="_blank">
+					<a href="https://docs.themeisle.com/feedzy-rss-feeds/feedzy-rss-feeds-documentation#integration-with-the-wordpress-editor" class="btn btn-outline-primary" target="_blank">
 						<?php esc_html_e( 'Learn more', 'feedzy-rss-feeds' ); ?>
 					</a>
 				</div>
