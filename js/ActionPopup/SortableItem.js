@@ -571,6 +571,11 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 	}
 
 	if ('fz_image' === item.id) {
+		const isPro = feedzyData.isPro;
+		const providerLicenseStatus = feedzyData.apiLicenseStatus.openaiStatus;
+		const defaultModel = window.feedzyData?.integrations?.openAIImageModel || 'gpt-image-2';
+		const selectedAIModel = item.data.aiModel || defaultModel;
+
 		return (
 			<li
 				className="fz-action-control fz-chat-cpt-action"
@@ -616,7 +621,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 								}
 								utmCampaign="action-generate-image-chatgpt"
 							/>
-							<BaseControl>
+							<BaseControl className="mb-20">
 								<ToggleControl
 									checked={
 										item.data.generateOnlyMissingImages ??
@@ -643,6 +648,44 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 											.openaiStatus
 									}
 								/>
+							</BaseControl>
+							<BaseControl __nextHasNoMarginBottom className="mb-20">
+								<SelectControl
+									__nextHasNoMarginBottom
+									label={__('Choose Model', 'feedzy-rss-feeds')}
+									value={selectedAIModel}
+									onChange={(currentValue) => {
+										propRef.onChangeHandler({
+											index: loopIndex,
+											aiModel:
+												currentValue !== defaultModel ? currentValue : '',
+										});
+									}}
+									disabled={!isPro || !providerLicenseStatus}
+								>
+									{window.feedzyData.openAIImageModels.length > 0 && (
+										<optgroup label={__('Latest models', 'feedzy-rss-feeds')}>
+											{window.feedzyData.openAIImageModels.map((model) => (
+												<option key={model} value={model}>
+													{model}
+												</option>
+											))}
+										</optgroup>
+									)}
+									{window.feedzyData.deprecatedOpenAIImageModels.length > 0 && (
+										<optgroup
+											label={__('Deprecated models', 'feedzy-rss-feeds')}
+										>
+											{window.feedzyData.deprecatedOpenAIImageModels.map(
+												(model) => (
+													<option key={model} value={model}>
+														{model}
+													</option>
+												)
+											)}
+										</optgroup>
+									)}
+								</SelectControl>
 							</BaseControl>
 							<BaseControl __nextHasNoMarginBottom>
 								<TextareaControl
