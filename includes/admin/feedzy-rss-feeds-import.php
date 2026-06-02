@@ -3065,8 +3065,8 @@ class Feedzy_Rss_Feeds_Import {
 				$upload_dir = wp_upload_dir();
 				if ( ! empty( $upload_dir['error'] ) ) {
 					Feedzy_Rss_Feeds_Log::error(
-						// translators: %s is the WordPress uploads directory error.
-						sprintf( __( 'WordPress uploads directory error: %s', 'feedzy-rss-feeds' ), $upload_dir['error'] ),
+						// translators: %s is the error message.
+						sprintf( __( 'An error occurred: %s', 'feedzy-rss-feeds' ), $upload_dir['error'] ),
 						array(
 							'post_id' => $post_id,
 						)
@@ -3081,7 +3081,8 @@ class Feedzy_Rss_Feeds_Import {
 					$type = strtolower( $mime_matches[1] );
 				}
 
-				$extension  = str_replace( 'image/', '.', $type );
+				$extension  = function_exists( 'wp_get_default_extension_for_mime_type' ) ? wp_get_default_extension_for_mime_type( $type ) : '';
+ 				$extension  = ! empty( $extension ) ? '.' . $extension : '.webp';
 				$filename   = sanitize_file_name( $post_title ) . '-' . uniqid() . $extension;
 				$local_file = trailingslashit( $upload_dir['path'] ) . $filename;
 
@@ -3155,7 +3156,8 @@ class Feedzy_Rss_Feeds_Import {
 
 				// Correct the file extension if the detected type differs from the
 				// one inferred from the data-URI prefix (e.g. image/jpeg → .jpeg).
-				$correct_extension  = str_replace( 'image/', '.', $type );
+				$correct_extension  = function_exists( 'wp_get_default_extension_for_mime_type' ) ? wp_get_default_extension_for_mime_type( $type ) : '';
+ 				$correct_extension  = ! empty( $correct_extension ) ? '.' . $correct_extension : str_replace( 'image/', '.', $type );
 				$correct_local_file = preg_replace( '/\.[a-z0-9]+$/i', $correct_extension, $local_file );
 
 				if ( $correct_local_file !== $local_file ) {
