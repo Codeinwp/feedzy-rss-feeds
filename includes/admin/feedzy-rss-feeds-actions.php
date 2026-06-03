@@ -703,7 +703,7 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 */
 		private function resolve_ai_provider() {
 
-			// Check that the pro connector class is loaded and a provider is wired up.
+ 			// Prefer the WordPress AI connector when it is available.
 			if (
 				class_exists( 'Feedzy_Rss_Feeds_Pro_Ai_Connector' ) &&
 				Feedzy_Rss_Feeds_Pro_Ai_Connector::is_available()
@@ -711,14 +711,6 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 				return 'connector';
 			}
 
-			// Connector mode selected but no provider configured — log and degrade.
-			do_action(
-				'feedzy_log',
-				array(
-					'level'   => 'error',
-					'message' => 'WordPress AI Connector mode is selected but no provider is configured or the WordPress AI Client API is unavailable. Falling back to OpenAI.',
-				)
-			);
 			return $this->current_job->data->aiProvider ?? 'openai';
 		}
 	}
