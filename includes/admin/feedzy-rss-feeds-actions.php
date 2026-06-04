@@ -703,7 +703,7 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 */
 		private function resolve_ai_provider() {
 
- 			// Prefer the WordPress AI connector when it is available.
+			// Prefer the WordPress AI connector when it is available.
 			if (
 				class_exists( 'Feedzy_Rss_Feeds_Pro_Ai_Connector' ) &&
 				Feedzy_Rss_Feeds_Pro_Ai_Connector::is_available()
