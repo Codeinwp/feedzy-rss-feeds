@@ -585,6 +585,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 					{feedzyData.isPro &&
 						(feedzyData.isBusinessPlan ||
 							feedzyData.isAgencyPlan) &&
+						!feedzyData.apiLicenseStatus.wpAiProvider &&
 						!feedzyData.apiLicenseStatus.openaiStatus &&
 						(feedzyData.isHighPrivileges ? (
 							<span className="error-message">
@@ -644,8 +645,10 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 									)}
 									disabled={
 										!feedzyData.isPro ||
-										!feedzyData.apiLicenseStatus
-											.openaiStatus
+										(
+											!feedzyData.apiLicenseStatus.wpAiProvider &&
+											!feedzyData.apiLicenseStatus.openaiStatus
+										)
 									}
 								/>
 							</BaseControl>
@@ -717,8 +720,10 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 									)}
 									disabled={
 										!feedzyData.isPro ||
-										!feedzyData.apiLicenseStatus
-											.openaiStatus
+										(
+											!feedzyData.apiLicenseStatus.wpAiProvider &&
+											!feedzyData.apiLicenseStatus.openaiStatus
+										)
 									}
 								/>
 							</BaseControl>

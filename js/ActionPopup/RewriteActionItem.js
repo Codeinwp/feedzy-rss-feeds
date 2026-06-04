@@ -277,12 +277,9 @@ const RewriteActionItem = ({ counter, item, loopIndex, propRef }) => {
 
 	const selectedProvider = item.data.aiProvider || defaultProvider;
 	const providerLicenseStatus =
-		apiLicenseStatus.wpAiProvider ||
-		(
-			selectedProvider === 'openai'
-				? apiLicenseStatus.openaiStatus
-				: apiLicenseStatus.openRouterStatus
-		);
+		selectedProvider === 'openai'
+			? apiLicenseStatus.openaiStatus || apiLicenseStatus.wpAiProvider
+			: apiLicenseStatus.openRouterStatus
 
 	const defaultModel =
 		selectedProvider === 'openai'
