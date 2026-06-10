@@ -244,7 +244,7 @@ class Inspector extends Component {
 										'feedzy-rss-feeds'
 									)}
 									type="number"
-									value={this.props.attributes.summarylength}
+									value={this.props.attributes.summarylength ?? 400}
 									onChange={this.props.edit.onSummaryLength}
 									className="feedzy-summary-length"
 									min={0}
