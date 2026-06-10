@@ -3082,7 +3082,7 @@ class Feedzy_Rss_Feeds_Import {
 				}
 
 				$extension  = function_exists( 'wp_get_default_extension_for_mime_type' ) ? wp_get_default_extension_for_mime_type( $type ) : '';
- 				$extension  = ! empty( $extension ) ? '.' . $extension : '.webp';
+				$extension  = ! empty( $extension ) ? '.' . $extension : '.webp';
 				$filename   = sanitize_file_name( $post_title ) . '-' . uniqid() . $extension;
 				$local_file = trailingslashit( $upload_dir['path'] ) . $filename;
 
@@ -3157,7 +3157,7 @@ class Feedzy_Rss_Feeds_Import {
 				// Correct the file extension if the detected type differs from the
 				// one inferred from the data-URI prefix (e.g. image/jpeg → .jpeg).
 				$correct_extension  = function_exists( 'wp_get_default_extension_for_mime_type' ) ? wp_get_default_extension_for_mime_type( $type ) : '';
- 				$correct_extension  = ! empty( $correct_extension ) ? '.' . $correct_extension : str_replace( 'image/', '.', $type );
+				$correct_extension  = ! empty( $correct_extension ) ? '.' . $correct_extension : str_replace( 'image/', '.', $type );
 				$correct_local_file = preg_replace( '/\.[a-z0-9]+$/i', $correct_extension, $local_file );
 
 				if ( $correct_local_file !== $local_file ) {
