@@ -124,6 +124,7 @@ input[type="text"].fz-input-field {
     background-color: #fff;
     color: #1e1e1e;
     box-sizing: border-box;
+    min-height: 32px;
 }
 
 input[type="text"].fz-input-field:focus {
