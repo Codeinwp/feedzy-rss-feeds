@@ -498,6 +498,7 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 
 			$additional_data = array(
 				'ai_provider' => 'openai',
+				'job_id'      => isset( $this->job->ID ) ? $this->job->ID : 0,
 			);
 
 			if ( isset( $this->current_job->data ) && isset( $this->current_job->data->aiProvider ) ) {
