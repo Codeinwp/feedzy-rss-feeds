@@ -246,6 +246,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$integration_settings = get_option( 'feedzy-rss-feeds-settings', array() );
 
 			$recommended_ai_models     = apply_filters( 'feedzy_openai_recommended_models', array() );
+			$recommended_ai_models     = array_values( array_filter( (array) $recommended_ai_models, 'is_string' ) );
 			$all_open_ai_models        = apply_filters( 'feedzy_openai_models', array() );
 			$deprecated_open_ai_models = apply_filters( 'feedzy_openai_deprecated_models', array() );
 			$active_open_ai_models     = array_values( array_diff( $all_open_ai_models, $deprecated_open_ai_models ) );
@@ -285,7 +286,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					'deprecatedOpenAIModels'      => $deprecated_open_ai_models,
 					'openAIImageModels'           => $active_open_ai_image_models,
 					'deprecatedOpenAIImageModels' => $deprecated_open_ai_image_models,
-
 				)
 			);
 
