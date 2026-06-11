@@ -152,10 +152,10 @@ class Feedzy_Rss_Feeds_Loop_Block {
 
 		$summary_length = '400';
 		$title_length   = '';
- 		if ( isset( $query['summary_length'] ) ) {
- 			$summary_length = absint( $query['summary_length'] );
- 			$summary_length = $summary_length > 0 ? (string) $summary_length : '';
- 		}
+		if ( isset( $query['summary_length'] ) ) {
+			$summary_length = absint( $query['summary_length'] );
+			$summary_length = $summary_length > 0 ? (string) $summary_length : '';
+		}
 
 		if ( isset( $query['title_length'] ) ) {
 			$title_length = absint( $query['title_length'] );
