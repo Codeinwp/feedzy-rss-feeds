@@ -331,4 +331,61 @@ test.describe('Feedzy Loop', () => {
 		const feedzyLoopChildren = await feedzyLoop.$$(':scope > *');
 		expect(feedzyLoopChildren.length).toBeGreaterThan(0);
 	});
+
+	test('check both title and description limits together', async ({
+		editor,
+		page,
+		admin,
+	}) => {
+		const TITLE_LIMIT = 30;
+		const DESCRIPTION_LIMIT = 100;
+
+		await admin.createNewPost();
+
+		await editor.insertBlock({
+			name: 'feedzy-rss-feeds/loop',
+			attributes: {
+				feed: {
+					type: 'url',
+					source: ['https://www.nasa.gov/feeds/iotd-feed/'],
+				},
+				query: {
+					max: 1,
+					title_length: TITLE_LIMIT,
+					summary_length: DESCRIPTION_LIMIT,
+				},
+			},
+		});
+
+		await editor.canvas
+			.getByLabel('Display curated RSS content')
+			.click({ force: true });
+
+		await editor.canvas.locator('.feedzy-loop-columns-1').waitFor({timeout: 30000});
+
+		const postId = await editor.publishPost();
+		await page.goto(`/?p=${postId}`);
+		await page.waitForTimeout(2000);
+
+		// Verify titles are limited
+		const titleElements = await page.locator('.wp-block-feedzy-rss-feeds-loop .wp-block-paragraph a');
+		const titleCount = await titleElements.count();
+		expect(titleCount).toBeGreaterThan(0);
+
+		for (let i = 0; i < titleCount; i++) {
+			const titleText = await titleElements.nth(i).textContent();
+			expect(titleText.length).toBeLessThanOrEqual(TITLE_LIMIT + 3);
+		}
+
+		// Verify descriptions are limited
+		const descriptionElements = await page.locator('.wp-block-feedzy-rss-feeds-loop .wp-block-paragraph');
+		const descCount = await descriptionElements.count();
+		
+		if (descCount > 0) {
+			for (let i = 0; i < descCount; i++) {
+				const descText = await descriptionElements.nth(i).textContent();
+				expect(descText.trim().length).toBeLessThanOrEqual(DESCRIPTION_LIMIT + 3);
+			}
+		}
+	});
 });

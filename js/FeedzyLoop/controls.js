@@ -179,7 +179,7 @@ function CustomInspectorControls({
 			)}
 
 			<PanelBody
-				title={__('Item Image Options', 'feedzy-rss-feeds')}
+				title={__('Item Options', 'feedzy-rss-feeds')}
 				initialOpen={false}
 				className="feedzy-image-options"
 			>
@@ -236,6 +236,24 @@ function CustomInspectorControls({
 						)}
 					</Fragment>
 				)}
+
+				<RangeControl
+					label={__('Title Character Limit', 'feedzy-rss-feeds')}
+					value={attributes?.query?.title_length || 0}
+					onChange={(value) => onChangeQuery({ type: 'title_length', value })}
+					min={0}
+					max={100}
+					help={__('Maximum number of characters for the title. Set to 0 for no limit.', 'feedzy-rss-feeds')}
+				/>
+
+				<RangeControl
+					label={__('Description Character Limit', 'feedzy-rss-feeds')}
+					value={attributes?.query?.summary_length >= 0 ? attributes?.query?.summary_length : 400}
+					onChange={(value) => onChangeQuery({ type: 'summary_length', value })}
+					min={0}
+					max={1000}
+					help={__('Maximum number of characters for the description. Set to 0 for no limit.', 'feedzy-rss-feeds')}
+				/>
 			</PanelBody>
 
 			<PanelBody
