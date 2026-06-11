@@ -3076,7 +3076,7 @@ class Feedzy_Rss_Feeds_Import {
 				}
 
 				// Detect MIME type from the data-URI prefix when present; default to WebP.
-				$type = 'image/webp';
+				$type = '';
 				if ( preg_match( '/^data:(image\/[a-z0-9.+-]+);base64,/i', trim( $img_source_url ), $mime_matches ) ) {
 					$type = strtolower( $mime_matches[1] );
 				}
@@ -3128,6 +3128,23 @@ class Feedzy_Rss_Feeds_Import {
 						array(
 							'post_id'   => $post_id,
 							'mime_type' => $type,
+						)
+					);
+
+					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
+					unlink( $local_file );
+
+					return false;
+				} elseif ( ! empty( $type ) ) {
+					// The file type is not allowed by WordPress (e.g., SVG).
+					// Skip the upload gracefully to avoid error log spam.
+					Feedzy_Rss_Feeds_Log::debug(
+						// translators: %1$s is the MIME type, %2$s is the image source URL.
+						sprintf( __( 'Skipping image upload — file type "%1$s" is not allowed by WordPress: %2$s', 'feedzy-rss-feeds' ), $type, $img_source_url ),
+						array(
+							'post_id'        => $post_id,
+							'img_source_url' => $img_source_url,
+							'mime_type'      => $type,
 						)
 					);
 
@@ -3221,6 +3238,11 @@ class Feedzy_Rss_Feeds_Import {
 					$type = mime_content_type( $local_file );
 				}
 
+				// Normalize the MIME type: lowercase and strip any parameters (e.g., "; charset=UTF-8").
+				if ( ! empty( $type ) ) {
+					$type = strtolower( trim( explode( ';', $type )[0] ) );
+				}
+
 				// if the file type is not found, try to get it from the URL.
 				if ( empty( $type ) ) {
 					$type = $this->get_file_type_by_url( $img_source_url );
@@ -3250,6 +3272,23 @@ class Feedzy_Rss_Feeds_Import {
 
 						return false;
 					}
+				} elseif ( ! empty( $type ) ) {
+					// The file type is not allowed by WordPress (e.g., SVG).
+					// Skip the upload gracefully to avoid error log spam.
+					Feedzy_Rss_Feeds_Log::debug(
+						// translators: %1$s is the MIME type, %2$s is the image source URL.
+						sprintf( __( 'Skipping image upload — file type "%1$s" is not allowed by WordPress: %2$s', 'feedzy-rss-feeds' ), $type, $img_source_url ),
+						array(
+							'post_id'        => $post_id,
+							'img_source_url' => $img_source_url,
+							'mime_type'      => $type,
+						)
+					);
+
+					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
+					unlink( $local_file );
+
+					return false;
 				}
 
 				$file_array['tmp_name'] = $local_file;
