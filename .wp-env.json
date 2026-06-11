@@ -12,7 +12,8 @@
 			},
 			"mappings": {
 				"wp-content/themes/gutenberg-test-themes/twentytwentyone": "https://downloads.wordpress.org/theme/twentytwentyone.2.1.zip",
-				"wp-content/themes/gutenberg-test-themes/twentytwentyfour": "https://downloads.wordpress.org/theme/twentytwentyfour.1.0.zip"
+				"wp-content/themes/gutenberg-test-themes/twentytwentyfour": "https://downloads.wordpress.org/theme/twentytwentyfour.1.0.zip",
+				"wp-content/mu-plugins/feedzy-youtube-mock.php": "./tests/e2e/fixtures/feedzy-youtube-mock.php"
 			}
 		}
 	}
