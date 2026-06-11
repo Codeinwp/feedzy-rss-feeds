@@ -74,7 +74,7 @@
 					<?php
 					wp_nonce_field( $active_tab, 'nonce' );
 					if ( $show_button ) {
-							$disable_button = ! feedzy_is_pro() && in_array( $active_tab, array( 'spinnerchief', 'wordai', 'amazon-product-advertising', 'openai' ), true ) ? ' disabled' : '';
+						$disable_button = ! feedzy_is_pro() && in_array( $active_tab, array( 'spinnerchief', 'wordai', 'amazon-product-advertising', 'openai', 'wp-ai-connector' ), true ) ? ' disabled' : '';
 						?>
 						<div class="mb-24">
 							<button type="submit" class="btn btn-primary<?php echo esc_attr( $disable_button ); ?>" id="feedzy-settings-submit" name="feedzy-settings-submit" onclick="return ajaxUpdate(this);"><?php esc_html_e( 'Validate & Save', 'feedzy-rss-feeds' ); ?></button>

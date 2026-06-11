@@ -412,8 +412,55 @@
 										<div class="fz-form-group">
 											<div class="help-text pt-8"><?php esc_html_e( 'Send data about plugin settings to measure the usage of the features. The data is private and not shared with third-party entities. Only plugin data is collected without sensitive information.', 'feedzy-rss-feeds' ); ?></div>
 										</div>
+									</div>								
+									<?php
+									$ai_connection_source = isset( $settings['general']['ai_connection_source'] ) ? $settings['general']['ai_connection_source'] : 'feedzy';
+									$wp_ai_available      = false;
+									$available_connectors = array();
+									if ( class_exists( 'Feedzy_Rss_Feeds_Pro_Ai_Connector' ) ) {
+										$wp_ai_available      = Feedzy_Rss_Feeds_Pro_Ai_Connector::is_available();
+										$tmp_connector        = new Feedzy_Rss_Feeds_Pro_Ai_Connector();
+										$available_connectors = $tmp_connector->get_providers();
+									}
+									?>
+								<div class="form-block <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
+									<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'ai-connection-source', 'settings' ) ); ?>
+									<div class="fz-form-group">
+										<label class="form-label" for="fz-ai-connection-source"><?php esc_html_e( 'AI Connection Source', 'feedzy-rss-feeds' ); ?></label>
+										<div class="help-text pb-8"><?php esc_html_e( 'Choose which AI connection Feedzy uses for AI actions.', 'feedzy-rss-feeds' ); ?></div>
+										<select name="ai_connection_source" id="fz-ai-connection-source" class="form-control fz-select-control">
+											<option value="feedzy" <?php selected( 'feedzy', $ai_connection_source ); ?>>
+												<?php esc_html_e( 'Feedzy AI Connection', 'feedzy-rss-feeds' ); ?>
+											</option>
+											<option
+												value="wp-ai-connector"
+												<?php selected( 'wp-ai-connector', $ai_connection_source ); ?>
+												<?php echo ! $wp_ai_available ? 'disabled' : ''; ?>
+											>
+												<?php esc_html_e( 'WordPress AI Connector', 'feedzy-rss-feeds' ); ?>
+												<?php if ( ! class_exists( 'Feedzy_Rss_Feeds_Pro_Ai_Connector' ) ) : ?>
+													<?php echo esc_html__( 'WordPress AI Connector Not Available.', 'feedzy-rss-feeds' ); ?>
+												<?php elseif ( empty( $available_connectors ) ) : ?>
+													<?php echo esc_html__( 'The WordPress AI Connector is available, but no AI provider connectors have been configured yet.', 'feedzy-rss-feeds' ); ?>
+												<?php endif; ?>
+											</option>
+										</select>
+										<?php if ( 'wp-ai-connector' === $ai_connection_source ) : ?>
+											<div class="help-text pt-8">
+												<?php
+												echo wp_kses_post(
+													sprintf(
+														// translators: %1$s opening anchor, %2$s closing anchor.
+														__( 'Configure the active connector in the %1$sWordPress AI Connector tab%2$s.', 'feedzy-rss-feeds' ),
+														'<a href="' . esc_url( admin_url( 'admin.php?page=feedzy-integration&tab=wp-ai-connector' ) ) . '">',
+														'</a>'
+													)
+												);
+												?>
+											</div>
+										<?php endif; ?>
 									</div>
-							</div>
+								</div>
 							<?php
 							break;
 						case 'proxy':

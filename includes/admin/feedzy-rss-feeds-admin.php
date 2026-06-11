@@ -1468,6 +1468,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				$settings['general']['auto-categories']       = array_values( $auto_categories );
 				$settings['general']['feedzy-telemetry']      = isset( $_POST['feedzy-telemetry'] ) ? absint( wp_unslash( $_POST['feedzy-telemetry'] ) ) : '';
 
+				$raw_ai_source                               = isset( $_POST['ai_connection_source'] ) ? sanitize_text_field( wp_unslash( $_POST['ai_connection_source'] ) ) : 'feedzy';
+				$settings['general']['ai_connection_source'] = in_array( $raw_ai_source, array( 'feedzy', 'wp-ai-connector' ), true ) ? $raw_ai_source : 'feedzy';
+
 				$settings['logs']['level']             = isset( $_POST['logs-logging-level'] ) ? sanitize_text_field( wp_unslash( $_POST['logs-logging-level'] ) ) : '';
 				$settings['logs']['email']             = isset( $_POST['feedzy-email-error-address'] ) ? sanitize_email( wp_unslash( $_POST['feedzy-email-error-address'] ) ) : '';
 				$settings['logs']['send_email_report'] = isset( $_POST['feedzy-email-error-enabled'] ) ? absint( wp_unslash( $_POST['feedzy-email-error-enabled'] ) ) : '';

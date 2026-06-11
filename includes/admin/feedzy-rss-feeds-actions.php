@@ -702,9 +702,12 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 * @return string Resolved service slug.
 		 */
 		private function resolve_ai_provider() {
+			$fz_settings = get_option( 'feedzy-settings', array() );
+			$ai_source   = isset( $fz_settings['general']['ai_connection_source'] ) ? $fz_settings['general']['ai_connection_source'] : 'feedzy';
 
 			// Prefer the WordPress AI connector when it is available.
 			if (
+				'wp-ai-connector' === $ai_source &&
 				class_exists( 'Feedzy_Rss_Feeds_Pro_Ai_Connector' ) &&
 				Feedzy_Rss_Feeds_Pro_Ai_Connector::is_available()
 			) {
