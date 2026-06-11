@@ -3238,6 +3238,11 @@ class Feedzy_Rss_Feeds_Import {
 					$type = mime_content_type( $local_file );
 				}
 
+				// Normalize the MIME type: lowercase and strip any parameters (e.g., "; charset=UTF-8").
+				if ( ! empty( $type ) ) {
+					$type = strtolower( trim( explode( ';', $type )[0] ) );
+				}
+
 				// if the file type is not found, try to get it from the URL.
 				if ( empty( $type ) ) {
 					$type = $this->get_file_type_by_url( $img_source_url );
