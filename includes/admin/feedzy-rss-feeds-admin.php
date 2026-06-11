@@ -245,9 +245,12 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$open_router_model    = '';
 			$integration_settings = get_option( 'feedzy-rss-feeds-settings', array() );
 
+			$recommended_ai_models     = apply_filters( 'feedzy_openai_recommended_models', array() );
+			$recommended_ai_models     = array_values( array_filter( (array) $recommended_ai_models, 'is_string' ) );
 			$all_open_ai_models        = apply_filters( 'feedzy_openai_models', array() );
 			$deprecated_open_ai_models = apply_filters( 'feedzy_openai_deprecated_models', array() );
 			$active_open_ai_models     = array_values( array_diff( $all_open_ai_models, $deprecated_open_ai_models ) );
+			$active_open_ai_models     = array_values( array_diff( $active_open_ai_models, $recommended_ai_models ) );
 
 			$all_open_ai_image_models        = apply_filters( 'feedzy_openai_image_models', array() );
 			$deprecated_open_ai_image_models = apply_filters( 'feedzy_openai_deprecated_image_models', array() );
@@ -277,6 +280,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 						'openRouterModel'  => $open_router_model,
 						'openAIImageModel' => ! empty( $active_open_ai_image_models ) ? reset( $active_open_ai_image_models ) : 'gpt-image-2',
 					),
+
+					'recommendedAIModels'         => $recommended_ai_models,
 					'activeOpenAIModels'          => $active_open_ai_models,
 					'deprecatedOpenAIModels'      => $deprecated_open_ai_models,
 					'openAIImageModels'           => $active_open_ai_image_models,

@@ -158,6 +158,22 @@ const ModelSelect = ({
 					)
 				}
 			>
+				{Array.isArray(window.feedzyData.recommendedAIModels) &&
+ 					window.feedzyData.recommendedAIModels.length > 0 && (
+ 						<optgroup
+ 							label={__(
+ 								'Recommended models',
+ 								'feedzy-rss-feeds'
+ 							)}
+ 						>
+ 							{window.feedzyData.recommendedAIModels.map((model) => (
+								<option key={model} value={model}>
+									{model}
+								</option>
+							))}
+						</optgroup>
+					)
+				}
 				{window.feedzyData.activeOpenAIModels.length > 0 && (
 					<optgroup label={__('Latest models', 'feedzy-rss-feeds')}>
 						{window.feedzyData.activeOpenAIModels.map((model) => (
