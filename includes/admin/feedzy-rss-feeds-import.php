@@ -3076,7 +3076,7 @@ class Feedzy_Rss_Feeds_Import {
 				}
 
 				// Detect MIME type from the data-URI prefix when present; default to WebP.
-				$type = 'image/webp';
+				$type = '';
 				if ( preg_match( '/^data:(image\/[a-z0-9.+-]+);base64,/i', trim( $img_source_url ), $mime_matches ) ) {
 					$type = strtolower( $mime_matches[1] );
 				}
