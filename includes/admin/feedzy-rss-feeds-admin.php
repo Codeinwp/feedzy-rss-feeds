@@ -2639,6 +2639,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			'openaiStatus'       => false,
 			'amazonStatus'       => false,
 			'openRouterStatus'   => false,
+			'wpAiProvider'       => false,
 		);
 
 		if ( ! feedzy_is_pro() ) {
@@ -2668,6 +2669,12 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 		if ( ! empty( $pro_options['amazon_access_key'] ) && ! empty( $pro_options['amazon_secret_key'] ) ) {
 			$data['amazonStatus'] = true;
+		}
+
+		if ( class_exists( 'Feedzy_Rss_Feeds_Pro_Ai_Connector' ) && Feedzy_Rss_Feeds_Pro_Ai_Connector::is_available() ) {
+			if ( apply_filters( 'feedzy_is_license_of_type', false, 'business' ) || apply_filters( 'feedzy_is_license_of_type', false, 'agency' ) ) {
+				$data['wpAiProvider'] = true;
+			}
 		}
 		return $data;
 	}

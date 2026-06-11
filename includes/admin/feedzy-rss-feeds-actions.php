@@ -486,11 +486,6 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 * @return string
 		 */
 		private function chat_gpt_rewrite() {
-			// Return prompt content if openAI class doesn't exist.
-			if ( ! class_exists( '\Feedzy_Rss_Feeds_Pro_Openai' ) ) {
-				return $this->current_job->data->ChatGPT;
-			}
-
 			$content        = call_user_func( array( $this, $this->current_job->tag ) );
 			$content        = wp_strip_all_tags( $content );
 			$content        = substr( $content, 0, apply_filters( 'feedzy_chat_gpt_content_limit', 3000 ) );
@@ -500,16 +495,33 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 				'ai_provider' => 'openai',
 				'job_id'      => isset( $this->job->ID ) ? $this->job->ID : 0,
 			);
+			$resolved_service = $this->resolve_ai_provider();
 
-			if ( isset( $this->current_job->data ) && isset( $this->current_job->data->aiProvider ) ) {
-				$additional_data['ai_provider'] = $this->current_job->data->aiProvider;
+			if ( class_exists( 'Feedzy_Rss_Feeds_Pro_Ai_Connector' ) && 'connector' === $resolved_service ) {
+				/*
+				 * Build the full prompt exactly as OpenAI does so the connector
+				 * receives the same ready-to-execute string.
+				 */
+				$full_prompt          = str_replace( '{content}', $content, $prompt_content );
+				$additional_data = array();
+				if ( ! empty( $this->current_job->data->aiModel ) ) {
+					$additional_data['ai_model'] = (string) $this->current_job->data->aiModel;
+				}
+				$connector       = new Feedzy_Rss_Feeds_Pro_Ai_Connector();
+				$rewrite_content = $connector->call_api( $this->settings, $full_prompt, 'rewrite', $additional_data );
+				return str_replace( explode( '{content}', $prompt_content ), '', trim( $rewrite_content, '"' ) );
 			}
 
-			if (
-				'openai' === $additional_data['ai_provider'] &&
-				isset( $this->current_job->data ) && isset( $this->current_job->data->aiModel )
-			) {
-				$additional_data['ai_model'] = $this->current_job->data->aiModel;
+			if ( ! class_exists( '\Feedzy_Rss_Feeds_Pro_Openai' ) ) {
+				return $this->current_job->data->ChatGPT;
+			}
+
+			$additional_data = array(
+				'ai_provider' => $resolved_service,
+			);
+
+			if ( 'openai' === $resolved_service && ! empty( $this->current_job->data->aiModel ) ) {
+				$additional_data['ai_model'] = (string) $this->current_job->data->aiModel;
 			}
 
 			$content         = str_replace( array( '{content}' ), array( $content ), $prompt_content );
@@ -527,6 +539,24 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 */
 		private function summarize_content() {
 			$content = call_user_func( array( $this, $this->current_job->tag ) );
+
+			$resolved_service = $this->resolve_ai_provider();
+
+			if ( class_exists( 'Feedzy_Rss_Feeds_Pro_Ai_Connector' ) && 'connector' === $resolved_service ) {
+				$connector_additional = array();
+				if ( ! empty( $this->current_job->data->aiModel ) ) {
+					$connector_additional['ai_model'] = (string) $this->current_job->data->aiModel;
+				}
+				$connector = new Feedzy_Rss_Feeds_Pro_Ai_Connector();
+				$summary   = $connector->call_api(
+					$this->settings,
+					wp_strip_all_tags( $content ),
+					'summarize',
+					$connector_additional
+				);
+				return '' !== $summary ? $summary : $content;
+			}
+
 			if ( ! class_exists( '\Feedzy_Rss_Feeds_Pro_Openai' ) ) {
 				return $content;
 			}
@@ -542,14 +572,9 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 * Generate item image using OpenAI.
 		 * Return default value if OpenAI is not available or `Generate only for missing images` option is enabled and feed has image.
 		 *
-		 * @return string Image URL to download.
+		 * @return string Image data URI to download, or default value.
 		 */
 		private function generate_image() {
-
-			if ( ! class_exists( '\Feedzy_Rss_Feeds_Pro_Openai' ) ) {
-				return isset( $this->default_value ) ? $this->default_value : '';
-			}
-
 			$feed_has_image = false !== filter_var( $this->default_value, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED );
 			if ( ( ! isset( $this->current_job->data->generateOnlyMissingImages ) || ! empty( $this->current_job->data->generateOnlyMissingImages ) ) && $feed_has_image ) {
 				return isset( $this->default_value ) ? $this->default_value : '';
@@ -562,7 +587,20 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 
 			$additional = array();
 			if ( isset( $this->current_job->data->aiModel ) && ! empty( $this->current_job->data->aiModel ) ) {
-				$additional['ai_model'] = $this->current_job->data->aiModel;
+				$additional['ai_model'] = (string) $this->current_job->data->aiModel;
+			}
+
+
+			$resolved_service = $this->resolve_ai_provider();
+
+			if ( class_exists( 'Feedzy_Rss_Feeds_Pro_Ai_Connector' ) && 'connector' === $resolved_service ) {
+				$connector = new Feedzy_Rss_Feeds_Pro_Ai_Connector();
+				$image     = $connector->call_api( $this->settings, $prompt, 'image', $additional );
+				return '' !== $image ? $image : ( isset( $this->default_value ) ? $this->default_value : '' );
+			}
+
+			if ( ! class_exists( '\Feedzy_Rss_Feeds_Pro_Openai' ) ) {
+				return $this->default_value;
 			}
 
 			$openai = new \Feedzy_Rss_Feeds_Pro_Openai();
@@ -656,6 +694,32 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 */
 		private function custom_html() {
 			return $this->current_job->tag;
+		}
+
+		/**
+		 * Resolve which AI service to use for the current action.
+		 *
+		 * @return string Resolved service slug.
+		 */
+		private function resolve_ai_provider() {
+
+			// Check that the pro connector class is loaded and a provider is wired up.
+			if (
+				class_exists( 'Feedzy_Rss_Feeds_Pro_Ai_Connector' ) &&
+				Feedzy_Rss_Feeds_Pro_Ai_Connector::is_available()
+			) {
+				return 'connector';
+			}
+
+			// Connector mode selected but no provider configured — log and degrade.
+			do_action(
+				'feedzy_log',
+				array(
+					'level'   => 'error',
+					'message' => 'WordPress AI Connector mode is selected but no provider is configured or the WordPress AI Client API is unavailable. Falling back to OpenAI.',
+				)
+			);
+			return $this->current_job->data->aiProvider ?? 'openai';
 		}
 	}
 }
