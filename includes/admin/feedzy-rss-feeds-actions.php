@@ -558,8 +558,34 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			if ( ! empty( $this->current_job->data->generateImagePrompt ) ) {
 				$prompt .= "\r\n" . $this->current_job->data->generateImagePrompt;
 			}
+
+			$additional = array();
+			if ( isset( $this->current_job->data->aiModel ) && ! empty( $this->current_job->data->aiModel ) ) {
+				$additional['ai_model'] = $this->current_job->data->aiModel;
+			}
+
 			$openai = new \Feedzy_Rss_Feeds_Pro_Openai();
-			return $openai->call_api( $this->settings, $prompt, 'image', array() );
+			$result = $openai->call_api( $this->settings, $prompt, 'image', $additional );
+
+			if ( is_wp_error( $result ) ) {
+				do_action(
+					'feedzy_log',
+					array(
+						'level'   => 'error',
+						'message' => sprintf(
+							'Image generation failed: %s',
+							$result->get_error_message()
+						),
+						'context' => array(
+							'error_code' => $result->get_error_code(),
+							'ai_model'   => isset( $additional['ai_model'] ) ? $additional['ai_model'] : 'default',
+						),
+					)
+				);
+				return $this->default_value;
+			}
+
+			return $result;
 		}
 
 		/**

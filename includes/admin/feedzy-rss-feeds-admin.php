@@ -249,6 +249,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$deprecated_open_ai_models = apply_filters( 'feedzy_openai_deprecated_models', array() );
 			$active_open_ai_models     = array_values( array_diff( $all_open_ai_models, $deprecated_open_ai_models ) );
 
+			$all_open_ai_image_models        = apply_filters( 'feedzy_openai_image_models', array() );
+			$deprecated_open_ai_image_models = apply_filters( 'feedzy_openai_deprecated_image_models', array() );
+			$active_open_ai_image_models     = array_values( array_diff( $all_open_ai_image_models, $deprecated_open_ai_image_models ) );
+
 			if ( ! empty( $integration_settings['openai_api_model'] ) ) {
 				$openai_model = $integration_settings['openai_api_model'];
 			}
@@ -261,19 +265,22 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				$this->plugin_name . '_action_popup',
 				'feedzyData',
 				array(
-					'isPro'                  => feedzy_is_pro(),
-					'isBusinessPlan'         => apply_filters( 'feedzy_is_license_of_type', false, 'business' ),
-					'isAgencyPlan'           => apply_filters( 'feedzy_is_license_of_type', false, 'agency' ),
-					'apiLicenseStatus'       => $this->api_license_status(),
-					'isHighPrivileges'       => current_user_can( 'manage_options' ),
-					'languageList'           => $this->get_lang_list(),
-					'integrationSettings'    => get_option( 'feedzy-rss-feeds-settings' ),
-					'integrations'           => array(
-						'openAIModel'     => $openai_model,
-						'openRouterModel' => $open_router_model,
+					'isPro'                       => feedzy_is_pro(),
+					'isBusinessPlan'              => apply_filters( 'feedzy_is_license_of_type', false, 'business' ),
+					'isAgencyPlan'                => apply_filters( 'feedzy_is_license_of_type', false, 'agency' ),
+					'apiLicenseStatus'            => $this->api_license_status(),
+					'isHighPrivileges'            => current_user_can( 'manage_options' ),
+					'languageList'                => $this->get_lang_list(),
+					'integrationSettings'         => get_option( 'feedzy-rss-feeds-settings' ),
+					'integrations'                => array(
+						'openAIModel'      => $openai_model,
+						'openRouterModel'  => $open_router_model,
+						'openAIImageModel' => ! empty( $active_open_ai_image_models ) ? reset( $active_open_ai_image_models ) : 'gpt-image-2',
 					),
-					'activeOpenAIModels'     => $active_open_ai_models,
-					'deprecatedOpenAIModels' => $deprecated_open_ai_models,
+					'activeOpenAIModels'          => $active_open_ai_models,
+					'deprecatedOpenAIModels'      => $deprecated_open_ai_models,
+					'openAIImageModels'           => $active_open_ai_image_models,
+					'deprecatedOpenAIImageModels' => $deprecated_open_ai_image_models,
 				)
 			);
 
