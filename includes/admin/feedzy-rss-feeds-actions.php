@@ -491,7 +491,7 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			$content        = substr( $content, 0, apply_filters( 'feedzy_chat_gpt_content_limit', 3000 ) );
 			$prompt_content = $this->current_job->data->ChatGPT;
 
-			$additional_data = array(
+			$additional_data  = array(
 				'ai_provider' => 'openai',
 				'job_id'      => isset( $this->job->ID ) ? $this->job->ID : 0,
 			);
@@ -502,7 +502,7 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 				 * Build the full prompt exactly as OpenAI does so the connector
 				 * receives the same ready-to-execute string.
 				 */
-				$full_prompt          = str_replace( '{content}', $content, $prompt_content );
+				$full_prompt     = str_replace( '{content}', $content, $prompt_content );
 				$additional_data = array();
 				if ( ! empty( $this->current_job->data->aiModel ) ) {
 					$additional_data['ai_model'] = (string) $this->current_job->data->aiModel;
