@@ -3253,7 +3253,9 @@ class Feedzy_Rss_Feeds_Import {
 				// but if the URL is like https://source.unsplash.com/random, then the upload fails
 				// so let's determine the file's mime type and then rename the .tmp file with that extension.
 				if ( in_array( $type, array_values( get_allowed_mime_types() ), true ) ) {
-					$new_local_file = preg_replace( '/\.tmp$/', str_replace( 'image/', '.', $type ), $local_file );
+					$extension      = function_exists( 'wp_get_default_extension_for_mime_type' ) ? wp_get_default_extension_for_mime_type( $type ) : '';
+					$extension      = ! empty( $extension ) ? '.' . $extension : str_replace( 'image/', '.', $type );
+					$new_local_file = preg_replace( '/\.tmp$/', $extension, $local_file );
 
 					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_rename
 					$renamed = rename( $local_file, $new_local_file );
