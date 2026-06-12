@@ -168,10 +168,10 @@ test.describe('Feedzy Classic Block', () => {
 		await page.locator('textarea[name="feedzy_category_feed"]').click();
 		await page.keyboard.type(`${FEED_URL_1}, ${FEED_URL_2}`);
 		
-		await page
-			.getByRole('button', { name: 'Publish', exact: true })
-			.click();
-		await page.waitForTimeout(1000);
+		await Promise.all([
+			page.waitForURL(/post\.php\?post=\d+&action=edit/),
+			page.getByRole('button', { name: 'Publish', exact: true }).click(),
+		]);
 
 		await page.goto('/wp-admin/post-new.php');
 
