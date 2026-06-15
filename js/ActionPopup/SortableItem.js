@@ -587,6 +587,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 						(feedzyData.isBusinessPlan ||
 							feedzyData.isAgencyPlan) &&
 						!feedzyData.apiLicenseStatus.openaiStatus &&
+						!isThemeisleAIEnabled &&
 						(feedzyData.isHighPrivileges ? (
 							<span className="error-message">
 								{__('Invalid API Key', 'feedzy-rss-feeds')}{' '}
@@ -645,8 +646,9 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 									)}
 									disabled={
 										!feedzyData.isPro ||
-										!feedzyData.apiLicenseStatus
-											.openaiStatus
+										(!feedzyData.apiLicenseStatus
+											.openaiStatus &&
+											!isThemeisleAIEnabled)
 									}
 								/>
 							</BaseControl>
@@ -720,8 +722,9 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 									)}
 									disabled={
 										!feedzyData.isPro ||
-										!feedzyData.apiLicenseStatus
-											.openaiStatus
+										(!feedzyData.apiLicenseStatus
+											.openaiStatus &&
+											!isThemeisleAIEnabled)
 									}
 								/>
 							</BaseControl>

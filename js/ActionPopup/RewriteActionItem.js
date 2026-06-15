@@ -289,7 +289,10 @@ const RewriteActionItem = ({ counter, item, loopIndex, propRef }) => {
 	const selectedAIModel = item.data.aiModel || defaultModel;
 
 	const showError =
-		isPro && (isBusinessPlan || isAgencyPlan) && !providerLicenseStatus;
+		isPro &&
+		(isBusinessPlan || isAgencyPlan) &&
+		!providerLicenseStatus &&
+		!isThemeisleAIEnabled;
 	const showUpgradeNotice = !isBusinessPlan && !isAgencyPlan;
 
 	return (
@@ -338,7 +341,9 @@ const RewriteActionItem = ({ counter, item, loopIndex, propRef }) => {
 							loopIndex={loopIndex}
 							propRef={propRef}
 							isPro={isPro}
-							providerLicenseStatus={providerLicenseStatus}
+							providerLicenseStatus={
+								providerLicenseStatus || isThemeisleAIEnabled
+							}
 							selectedProvider={selectedProvider}
 						/>
 					</PanelRow>

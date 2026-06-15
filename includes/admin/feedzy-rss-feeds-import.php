@@ -3676,6 +3676,10 @@ class Feedzy_Rss_Feeds_Import {
 			return '';
 		}
 
+		if ( ! file_exists( $file ) ) {
+			return '';
+		}
+
 		ob_start();
 		include $file;
 
