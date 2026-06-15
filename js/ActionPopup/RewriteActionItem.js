@@ -264,6 +264,7 @@ const RewriteActionItem = ({ counter, item, loopIndex, propRef }) => {
 		isAgencyPlan,
 		isHighPrivileges,
 		apiLicenseStatus,
+		isThemeisleAIEnabled,
 	} = window.feedzyData;
 
 	let defaultProvider;
@@ -313,21 +314,25 @@ const RewriteActionItem = ({ counter, item, loopIndex, propRef }) => {
 							higherPlanNotice={showUpgradeNotice}
 							utmCampaign="action-paraphrase-chatgpt"
 						/>
-						<ProviderSelect
-							selectedProvider={selectedProvider}
-							loopIndex={loopIndex}
-							propRef={propRef}
-							isPro={isPro}
-						/>
-						<ModelSelect
-							selectedProvider={selectedProvider}
-							selectedAIModel={selectedAIModel}
-							defaultModel={defaultModel}
-							loopIndex={loopIndex}
-							propRef={propRef}
-							isPro={isPro}
-							providerLicenseStatus={providerLicenseStatus}
-						/>
+						{!isThemeisleAIEnabled && (
+							<ProviderSelect
+								selectedProvider={selectedProvider}
+								loopIndex={loopIndex}
+								propRef={propRef}
+								isPro={isPro}
+							/>
+						)}
+						{!isThemeisleAIEnabled && (
+							<ModelSelect
+								selectedProvider={selectedProvider}
+								selectedAIModel={selectedAIModel}
+								defaultModel={defaultModel}
+								loopIndex={loopIndex}
+								propRef={propRef}
+								isPro={isPro}
+								providerLicenseStatus={providerLicenseStatus}
+							/>
+						)}
 						<PromptControls
 							item={item}
 							loopIndex={loopIndex}
