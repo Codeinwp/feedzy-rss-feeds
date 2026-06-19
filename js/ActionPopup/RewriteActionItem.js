@@ -264,6 +264,7 @@ const RewriteActionItem = ({ counter, item, loopIndex, propRef }) => {
 		isAgencyPlan,
 		isHighPrivileges,
 		apiLicenseStatus,
+		isThemeisleAIEnabled,
 	} = window.feedzyData;
 
 	let defaultProvider;
@@ -288,7 +289,10 @@ const RewriteActionItem = ({ counter, item, loopIndex, propRef }) => {
 	const selectedAIModel = item.data.aiModel || defaultModel;
 
 	const showError =
-		isPro && (isBusinessPlan || isAgencyPlan) && !providerLicenseStatus;
+		isPro &&
+		(isBusinessPlan || isAgencyPlan) &&
+		!providerLicenseStatus &&
+		!isThemeisleAIEnabled;
 	const showUpgradeNotice = !isBusinessPlan && !isAgencyPlan;
 
 	return (
@@ -313,27 +317,33 @@ const RewriteActionItem = ({ counter, item, loopIndex, propRef }) => {
 							higherPlanNotice={showUpgradeNotice}
 							utmCampaign="action-paraphrase-chatgpt"
 						/>
-						<ProviderSelect
-							selectedProvider={selectedProvider}
-							loopIndex={loopIndex}
-							propRef={propRef}
-							isPro={isPro}
-						/>
-						<ModelSelect
-							selectedProvider={selectedProvider}
-							selectedAIModel={selectedAIModel}
-							defaultModel={defaultModel}
-							loopIndex={loopIndex}
-							propRef={propRef}
-							isPro={isPro}
-							providerLicenseStatus={providerLicenseStatus}
-						/>
+						{!isThemeisleAIEnabled && (
+							<ProviderSelect
+								selectedProvider={selectedProvider}
+								loopIndex={loopIndex}
+								propRef={propRef}
+								isPro={isPro}
+							/>
+						)}
+						{!isThemeisleAIEnabled && (
+							<ModelSelect
+								selectedProvider={selectedProvider}
+								selectedAIModel={selectedAIModel}
+								defaultModel={defaultModel}
+								loopIndex={loopIndex}
+								propRef={propRef}
+								isPro={isPro}
+								providerLicenseStatus={providerLicenseStatus}
+							/>
+						)}
 						<PromptControls
 							item={item}
 							loopIndex={loopIndex}
 							propRef={propRef}
 							isPro={isPro}
-							providerLicenseStatus={providerLicenseStatus}
+							providerLicenseStatus={
+								providerLicenseStatus || isThemeisleAIEnabled
+							}
 							selectedProvider={selectedProvider}
 						/>
 					</PanelRow>

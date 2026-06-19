@@ -413,6 +413,29 @@
 											<div class="help-text pt-8"><?php esc_html_e( 'Send data about plugin settings to measure the usage of the features. The data is private and not shared with third-party entities. Only plugin data is collected without sensitive information.', 'feedzy-rss-feeds' ); ?></div>
 										</div>
 									</div>
+									<?php
+									$managed_ai_enabled = class_exists( 'Feedzy_Rss_Feeds_Pro_Ai_Quota_Manager' )
+										? ( new Feedzy_Rss_Feeds_Pro_Ai_Quota_Manager() )->is_managed_ai_enabled()
+										: false;
+									?>
+									<div class="form-block <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
+										<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'managed-ai', 'settings' ) ); ?>
+										<div class="fz-form-switch pb-0">
+											<input
+												type="checkbox"
+												id="feedzy-managed-ai"
+												class="fz-switch-toggle"
+												name="feedzy-managed-ai"
+												value="1"
+												<?php checked( true, $managed_ai_enabled ); ?>
+												<?php echo feedzy_is_pro() ? '' : 'disabled'; ?>
+											/>
+											<label for="feedzy-managed-ai" class="form-label"><?php esc_html_e( 'Manage AI by Themeisle', 'feedzy-rss-feeds' ); ?></label>
+										</div>
+										<div class="fz-form-group">
+											<div class="help-text pt-8"><?php esc_html_e( 'Use Themeisle-managed AI credits for AI actions (rewrite, summarize, image generation) instead of your own API keys. New installations have this enabled by default.', 'feedzy-rss-feeds' ); ?></div>
+										</div>
+									</div>
 							</div>
 							<?php
 							break;

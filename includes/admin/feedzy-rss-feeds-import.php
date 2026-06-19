@@ -2661,7 +2661,8 @@ class Feedzy_Rss_Feeds_Import {
 					}
 				}
 
-				if ( 'yes' === $import_item_img_url || ! $this->try_reuse_existing_featured_image( $img_success, $img_title, $new_post_id ) ) {
+				$has_fz_image_action = false !== strpos( $import_featured_img, 'fz_image' );
+				if ( 'yes' === $import_item_img_url || $has_fz_image_action || ! $this->try_reuse_existing_featured_image( $img_success, $img_title, $new_post_id ) ) {
 					// Run chained actions.
 					$import_featured_img = rawurldecode( $import_featured_img );
 					$import_featured_img = trim( $import_featured_img );
@@ -3120,14 +3121,13 @@ class Feedzy_Rss_Feeds_Import {
 					)
 				);
 
-				// Guard against disallowed MIME types.
-				if ( ! in_array( $type, array_values( get_allowed_mime_types() ), true ) ) {
+				// Reject when the MIME type could not be determined.
+				if ( empty( $type ) ) {
 					Feedzy_Rss_Feeds_Log::error(
-						// translators: %s is the detected MIME type.
-						sprintf( __( 'Image MIME type not allowed: %s', 'feedzy-rss-feeds' ), $type ),
+						__( 'Could not determine the image MIME type.', 'feedzy-rss-feeds' ),
 						array(
-							'post_id'   => $post_id,
-							'mime_type' => $type,
+							'post_id'    => $post_id,
+							'post_title' => $post_title,
 						)
 					);
 
@@ -3135,9 +3135,10 @@ class Feedzy_Rss_Feeds_Import {
 					unlink( $local_file );
 
 					return false;
-				} elseif ( ! empty( $type ) ) {
-					// The file type is not allowed by WordPress (e.g., SVG).
-					// Skip the upload gracefully to avoid error log spam.
+				}
+
+				// Skip gracefully when WordPress does not permit the file type (e.g., SVG).
+				if ( ! in_array( $type, array_values( get_allowed_mime_types() ), true ) ) {
 					Feedzy_Rss_Feeds_Log::debug(
 						// translators: %1$s is the MIME type, %2$s is the image source URL.
 						sprintf( __( 'Skipping image upload — file type "%1$s" is not allowed by WordPress: %2$s', 'feedzy-rss-feeds' ), $type, $img_source_url ),
@@ -3599,9 +3600,11 @@ class Feedzy_Rss_Feeds_Import {
 			if ( ! isset( $tabs['openrouter'] ) ) {
 				$tabs['openrouter'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'OpenRouter', 'feedzy-rss-feeds' ) );
 			}
+			$tabs['ai-quota']                   = sprintf( '%s <span class="pro-label">PRO</span>', __( 'AI Quota', 'feedzy-rss-feeds' ) );
 			$tabs['spinnerchief']               = sprintf( '%s <span class="pro-label">PRO</span>', __( 'SpinnerChief', 'feedzy-rss-feeds' ) );
 			$tabs['amazon-product-advertising'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'Amazon Product Advertising', 'feedzy-rss-feeds' ) );
 			$tabs['wordai']                     = sprintf( '%s <span class="pro-label">PRO</span>', __( 'WordAi', 'feedzy-rss-feeds' ) );
+			$tabs['wp-ai-connector']            = sprintf( '%s <span class="pro-label">PRO</span>', __( 'WordPress AI Connector', 'feedzy-rss-feeds' ) );
 		}
 
 		return $tabs;
@@ -3657,6 +3660,8 @@ class Feedzy_Rss_Feeds_Import {
 			case 'amazon-product-advertising':
 			case 'openai':
 			case 'openrouter':
+			case 'wp-ai-connector':
+			case 'ai-quota':
 				if ( ! feedzy_is_pro() || ! apply_filters( 'feedzy_is_license_of_type', false, 'business' ) ) {
 					$file = FEEDZY_ABSPATH . '/includes/views/' . $name . '-view.php';
 				} else {
@@ -3669,6 +3674,10 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		if ( ! $file ) {
+			return '';
+		}
+
+		if ( ! file_exists( $file ) ) {
 			return '';
 		}
 

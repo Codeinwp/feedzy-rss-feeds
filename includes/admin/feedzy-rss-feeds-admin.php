@@ -272,6 +272,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					'isBusinessPlan'              => apply_filters( 'feedzy_is_license_of_type', false, 'business' ),
 					'isAgencyPlan'                => apply_filters( 'feedzy_is_license_of_type', false, 'agency' ),
 					'apiLicenseStatus'            => $this->api_license_status(),
+					'isThemeisleAIEnabled'        => class_exists( 'Feedzy_Rss_Feeds_Pro_Ai_Quota_Manager' ) && ( new Feedzy_Rss_Feeds_Pro_Ai_Quota_Manager() )->is_managed_ai_enabled(),
 					'isHighPrivileges'            => current_user_can( 'manage_options' ),
 					'languageList'                => $this->get_lang_list(),
 					'integrationSettings'         => get_option( 'feedzy-rss-feeds-settings' ),
@@ -1467,6 +1468,12 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				$settings['general']['fz_cron_schedule']      = isset( $_POST['fz_cron_schedule'] ) ? sanitize_text_field( wp_unslash( $_POST['fz_cron_schedule'] ) ) : 'hourly';
 				$settings['general']['auto-categories']       = array_values( $auto_categories );
 				$settings['general']['feedzy-telemetry']      = isset( $_POST['feedzy-telemetry'] ) ? absint( wp_unslash( $_POST['feedzy-telemetry'] ) ) : '';
+
+				// Persist Managed AI toggle when the pro quota manager is available.
+				if ( class_exists( 'Feedzy_Rss_Feeds_Pro_Ai_Quota_Manager' ) ) {
+					$managed_ai_value = isset( $_POST['feedzy-managed-ai'] ) ? 'yes' : 'no';
+					update_option( Feedzy_Rss_Feeds_Pro_Ai_Quota_Manager::MANAGED_AI_OPTION_KEY, $managed_ai_value );
+				}
 
 				$settings['logs']['level']             = isset( $_POST['logs-logging-level'] ) ? sanitize_text_field( wp_unslash( $_POST['logs-logging-level'] ) ) : '';
 				$settings['logs']['email']             = isset( $_POST['feedzy-email-error-address'] ) ? sanitize_email( wp_unslash( $_POST['feedzy-email-error-address'] ) ) : '';

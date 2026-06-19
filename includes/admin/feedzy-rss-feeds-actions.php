@@ -512,6 +512,36 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 				$additional_data['ai_model'] = $this->current_job->data->aiModel;
 			}
 
+			// Use the Feedzy AI workflow service when Managed AI is enabled.
+			if ( class_exists( '\Feedzy_Rss_Feeds_Pro_Ai_Quota_Manager' ) ) {
+				$ai_manager = new \Feedzy_Rss_Feeds_Pro_Ai_Quota_Manager();
+				if ( $ai_manager->is_managed_ai_enabled() ) {
+					$job_id = $additional_data['job_id'];
+					$args   = array(
+						'prompt' => $prompt_content,
+						'text'   => $content,
+					);
+					$result = $ai_manager->run_feedzy_ai_workflow( 'rewrite', $args, $job_id );
+					if ( is_wp_error( $result ) ) {
+						if ( class_exists( 'Feedzy_Rss_Feeds_Log' ) ) {
+							Feedzy_Rss_Feeds_Log::debug(
+								'Feedzy AI rewrite workflow failed; falling back to original content.',
+								array(
+									'job_id'     => $job_id,
+									'action'     => 'rewrite',
+									'error_code' => $result->get_error_code(),
+									'error'      => $result->get_error_message(),
+									'item_title' => isset( $this->item['item_title'] ) ? $this->item['item_title'] : '',
+									'item_url'   => isset( $this->item['item_url'] ) ? $this->item['item_url'] : '',
+								)
+							);
+						}
+						return $content;
+					}
+					return $result;
+				}
+			}
+
 			$content         = str_replace( array( '{content}' ), array( $content ), $prompt_content );
 			$openai          = new \Feedzy_Rss_Feeds_Pro_Openai();
 			$rewrite_content = $openai->call_api( $this->settings, $content, '', $additional_data );
@@ -563,6 +593,36 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			$additional = array();
 			if ( isset( $this->current_job->data->aiModel ) && ! empty( $this->current_job->data->aiModel ) ) {
 				$additional['ai_model'] = $this->current_job->data->aiModel;
+			}
+
+			if ( class_exists( '\Feedzy_Rss_Feeds_Pro_Ai_Quota_Manager' ) ) {
+				$ai_manager            = new Feedzy_Rss_Feeds_Pro_Ai_Quota_Manager();
+				$is_managed_ai_enabled = $ai_manager->is_managed_ai_enabled();
+
+				if ( $is_managed_ai_enabled ) {
+					$args   = array(
+						'prompt' => $prompt,
+					);
+					$job_id = isset( $this->job->ID ) ? $this->job->ID : 0;
+					$result = $ai_manager->run_feedzy_ai_workflow( 'image', $args, $job_id );
+					if ( is_wp_error( $result ) ) {
+						if ( class_exists( 'Feedzy_Rss_Feeds_Log' ) ) {
+							Feedzy_Rss_Feeds_Log::debug(
+								'Feedzy AI image workflow failed; falling back to default value.',
+								array(
+									'job_id'     => $job_id,
+									'action'     => 'image',
+									'error_code' => $result->get_error_code(),
+									'error'      => $result->get_error_message(),
+									'item_title' => isset( $this->item['item_title'] ) ? $this->item['item_title'] : '',
+									'item_url'   => isset( $this->item['item_url'] ) ? $this->item['item_url'] : '',
+								)
+							);
+						}
+						return isset( $this->default_value ) ? $this->default_value : '';
+					}
+					return $result;
+				}
 			}
 
 			$openai = new \Feedzy_Rss_Feeds_Pro_Openai();
