@@ -437,8 +437,10 @@
 												<?php
 												echo wp_kses_post(
 													sprintf(
-														/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag. */
-														__( 'Use Themeisle-managed AI credits for AI actions (rewrite, summarize, image generation) instead of your %1$sown API keys%2$s. New installations have this enabled by default.', 'feedzy-rss-feeds' ),
+														/* translators: %1$s: opening anchor tag for AI quota page, %2$s: closing anchor tag, %3$s: opening anchor tag for OpenAI integration page, %4$s: closing anchor tag. */
+														__( 'Use %1$sThemeisle-managed AI credits%2$s for AI actions (rewrite, summarize, image generation) instead of your %3$sown API keys%4$s. New installations have this enabled by default.', 'feedzy-rss-feeds' ),
+														'<a href="' . esc_url( admin_url( 'admin.php?page=feedzy-integration&tab=ai-quota' ) ) . '">',
+														'</a>',
 														'<a href="' . esc_url( admin_url( 'admin.php?page=feedzy-integration&tab=openai' ) ) . '">',
 														'</a>'
 													)
