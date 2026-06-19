@@ -73,10 +73,7 @@
 								?>
 							</p>
 						</div>
-					<?php endif; ?>
-
-					<?php if ( $is_managed_ai_active && 'openai' === $active_tab ) : ?>
-					<div class="fz-managed-ai-disabled" style="opacity: 0.5; pointer-events: none;">
+					<div class="fz-managed-ai-disabled" style="opacity: 0.5; pointer-events: none;" aria-disabled="true">
 					<?php endif; ?>
 
 					<?php
