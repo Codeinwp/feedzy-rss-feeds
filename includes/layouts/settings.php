@@ -433,7 +433,18 @@
 											<label for="feedzy-managed-ai" class="form-label"><?php esc_html_e( 'Manage AI by Themeisle', 'feedzy-rss-feeds' ); ?></label>
 										</div>
 										<div class="fz-form-group">
-											<div class="help-text pt-8"><?php esc_html_e( 'Use Themeisle-managed AI credits for AI actions (rewrite, summarize, image generation) instead of your own API keys. New installations have this enabled by default.', 'feedzy-rss-feeds' ); ?></div>
+											<div class="help-text pt-8">
+												<?php
+												echo wp_kses_post(
+													sprintf(
+														/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag. */
+														__( 'Use Themeisle-managed AI credits for AI actions (rewrite, summarize, image generation) instead of your %1$sown API keys%2$s. New installations have this enabled by default.', 'feedzy-rss-feeds' ),
+														'<a href="' . esc_url( admin_url( 'admin.php?page=feedzy-integration&tab=openai' ) ) . '">',
+														'</a>'
+													)
+												);
+												?>
+											</div>
 										</div>
 									</div>
 							</div>
