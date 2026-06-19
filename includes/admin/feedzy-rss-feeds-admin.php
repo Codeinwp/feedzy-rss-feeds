@@ -553,6 +553,11 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! empty( $license_key ) ) {
 			$renew_license_url = tsdk_utmify( 'https://store.themeisle.com/?edd_license_key=' . $license_key . '&download_id=6306666', 'feedzy_renew_link' );
 		}
+		if ( defined( 'FEEDZY_PRO_VERSION' ) && has_action( 'feedzy_dashboard_license_content' ) ) {
+			$activate_license_url = admin_url( 'admin.php?page=feedzy-support&tab=license' );
+		} else {
+			$activate_license_url = admin_url( 'options-general.php#feedzy_rss_feeds_pro_license' );
+		}
 
 		?>
 			<div id="feedzy-renew-edit" class="wp-core-ui feedzy-modal" style="display:none;">
@@ -582,9 +587,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 								<?php esc_html_e( 'Renew License', 'feedzy-rss-feeds' ); ?><span aria-hidden="true" class="dashicons dashicons-external"></span>
 							</a>
 							<a
-								href="<?php echo esc_url( admin_url( 'options-general.php#feedzy_rss_feeds_pro_license' ) ); ?>"
-								target="_blank"
-								rel="noopener "
+								href="<?php echo esc_url( $activate_license_url ); ?>"
 								class="button button-secondary button-large"
 							>
 								<?php esc_html_e( 'Activate License', 'feedzy-rss-feeds' ); ?>
