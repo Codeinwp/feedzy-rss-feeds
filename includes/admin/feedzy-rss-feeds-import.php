@@ -1419,22 +1419,26 @@ class Feedzy_Rss_Feeds_Import {
 
 		// If the job has a scheduled event, clear it before running the job to avoid conflicts.
 		$job_id_int          = (int) $job_id;
-		$had_scheduled_event = false;
+		$cron_args           = array( 100, $job_id_int );
+ 		$next_scheduled_time = false;
 		if ( ! empty( $job_id_int ) ) {
-			$had_scheduled_event = (bool) Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'feedzy_cron', array( 100, $job_id_int ) );
-			if ( $had_scheduled_event ) {
-				Feedzy_Rss_Feeds_Util_Scheduler::clear_scheduled_hook( 'feedzy_cron', array( 100, $job_id_int ) );
+			$next_scheduled_time = Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'feedzy_cron', $cron_args );
+ 			if ( $next_scheduled_time ) {
+ 				Feedzy_Rss_Feeds_Util_Scheduler::clear_scheduled_hook( 'feedzy_cron', $cron_args );
 			}
 		}
 
-		// If the job had a scheduled event, reschedule it before running the job to maintain its schedule.
-		if ( ! empty( $job_id_int ) && $had_scheduled_event ) {
+		// If the job had a scheduled event, reschedule it for the next recurrence to keep the original cadence.
+		if ( ! empty( $job_id_int ) && $next_scheduled_time ) {
 			$fz_cron_schedule = get_post_meta( $job_id_int, 'fz_cron_schedule', true );
-			if ( ! empty( $fz_cron_schedule ) && false === Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'feedzy_cron', array( 100, $job_id_int ) ) ) {
-				$schedules = wp_get_schedules();
-				$interval  = isset( $schedules[ $fz_cron_schedule ]['interval'] ) ? (int) $schedules[ $fz_cron_schedule ]['interval'] : 0;
-				$next_time = $interval > 0 ? time() + $interval : time() + 10;
-				Feedzy_Rss_Feeds_Util_Scheduler::schedule_event( $next_time, $fz_cron_schedule, 'feedzy_cron', array( 100, $job_id_int ) );
+			$schedules        = wp_get_schedules();
+ 			$interval         = isset( $schedules[ $fz_cron_schedule ]['interval'] ) ? (int) $schedules[ $fz_cron_schedule ]['interval'] : 0;
+ 			if ( ! empty( $fz_cron_schedule ) && $interval > 0 && false === Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'feedzy_cron', $cron_args ) ) {
+ 				$next_time = time() + $interval;
+ 				if ( is_numeric( $next_scheduled_time ) && (int) $next_scheduled_time > time() ) {
+ 					$next_time = (int) $next_scheduled_time + $interval;
+ 				}
+ 				Feedzy_Rss_Feeds_Util_Scheduler::schedule_event( $next_time, $fz_cron_schedule, 'feedzy_cron', $cron_args );
 			}
 		}
 
