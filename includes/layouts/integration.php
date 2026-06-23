@@ -100,7 +100,7 @@
 					<?php
 					wp_nonce_field( $active_tab, 'nonce' );
 					if ( $show_button ) {
-						$disable_button = ! feedzy_is_pro() && in_array( $active_tab, array( 'spinnerchief', 'wordai', 'amazon-product-advertising', 'openai', 'wp-ai-connector', 'ai-quota' ), true ) ? ' disabled' : '';
+						$disable_button = ! feedzy_is_pro() && in_array( $active_tab, array( 'spinnerchief', 'wordai', 'amazon-product-advertising', 'openai', 'ai-quota' ), true ) ? ' disabled' : '';
 						if ( 'ai-quota' !== $active_tab ) :
 							?>
 						<div class="mb-24">

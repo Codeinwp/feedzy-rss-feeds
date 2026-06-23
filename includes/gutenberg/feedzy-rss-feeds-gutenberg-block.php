@@ -146,8 +146,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 						'default' => true,
 					),
 					'summarylength'   => array(
-						'type'    => 'number',
-						'default' => 400,
+						'type' => 'number',
 					),
 					'keywords_title'  => array(
 						'type' => 'string',

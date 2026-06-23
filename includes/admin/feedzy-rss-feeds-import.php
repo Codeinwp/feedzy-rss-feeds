@@ -3606,7 +3606,6 @@ class Feedzy_Rss_Feeds_Import {
 			$tabs['spinnerchief']               = sprintf( '%s <span class="pro-label">PRO</span>', __( 'SpinnerChief', 'feedzy-rss-feeds' ) );
 			$tabs['amazon-product-advertising'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'Amazon Product Advertising', 'feedzy-rss-feeds' ) );
 			$tabs['wordai']                     = sprintf( '%s <span class="pro-label">PRO</span>', __( 'WordAi', 'feedzy-rss-feeds' ) );
-			$tabs['wp-ai-connector']            = sprintf( '%s <span class="pro-label">PRO</span>', __( 'WordPress AI Connector', 'feedzy-rss-feeds' ) );
 		}
 
 		return $tabs;
@@ -3662,7 +3661,6 @@ class Feedzy_Rss_Feeds_Import {
 			case 'amazon-product-advertising':
 			case 'openai':
 			case 'openrouter':
-			case 'wp-ai-connector':
 			case 'ai-quota':
 				if ( ! feedzy_is_pro() || ! apply_filters( 'feedzy_is_license_of_type', false, 'business' ) ) {
 					$file = FEEDZY_ABSPATH . '/includes/views/' . $name . '-view.php';
