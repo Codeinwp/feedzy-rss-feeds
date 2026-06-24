@@ -91,7 +91,7 @@ $logs_link         = add_query_arg(
 						<li><a href="https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation#widget" target="_blank"><?php esc_html_e( 'Feedzy Widget', 'feedzy-rss-feeds' ); ?></a></li>
 					</ul>
 					<ul>
-						<li><a href="https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation#troubleshooting" target="_blank"><?php esc_html_e( 'Troubleshooting Guide', 'feedzy-rss-feeds' ); ?></a></li>
+						<li><a href="https://docs.themeisle.com/article/1155-feedzy-troubleshooting-guide	" target="_blank"><?php esc_html_e( 'Troubleshooting Guide', 'feedzy-rss-feeds' ); ?></a></li>
 						<li><a href="https://docs.themeisle.com/article/540-what-actions-and-filters-are-available-in-feedzy" target="_blank"><?php esc_html_e( 'Customizing Feedzy', 'feedzy-rss-feeds' ); ?></a></li>
 						<li><a href="https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation#categories" target="_blank"><?php esc_html_e( 'Organize feeds in Categories', 'feedzy-rss-feeds' ); ?></a></li>
 					</ul>
@@ -111,7 +111,7 @@ $logs_link         = add_query_arg(
 					?>
 				</p>
 				<div>
-					<a href="https://bit.ly/3IxzOI1" class="btn btn-outline-primary" target="_blank">
+					<a href="https://docs.themeisle.com/feedzy-rss-feeds/how-to-use-feedzy-with-a-shortcode" class="btn btn-outline-primary" target="_blank">
 						<?php esc_html_e( 'Learn more', 'feedzy-rss-feeds' ); ?>
 					</a>
 				</div>
@@ -122,7 +122,7 @@ $logs_link         = add_query_arg(
 				<h3 class="h3"><?php esc_html_e( 'Pagebuilders integration', 'feedzy-rss-feeds' ); ?></h3>
 				<p><?php esc_html_e( 'Feedzy is compatible with most popular page builders, so you can easily configure your feed imports directly in Elementor & Gutenberg.', 'feedzy-rss-feeds' ); ?></p>
 				<div>
-					<a href="https://bit.ly/3RuN3gA" class="btn btn-outline-primary" target="_blank">
+					<a href="https://docs.themeisle.com/feedzy-rss-feeds/feedzy-rss-feeds-documentation#integration-with-the-wordpress-editor" class="btn btn-outline-primary" target="_blank">
 						<?php esc_html_e( 'Learn more', 'feedzy-rss-feeds' ); ?>
 					</a>
 				</div>

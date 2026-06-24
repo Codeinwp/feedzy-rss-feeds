@@ -386,6 +386,21 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		} else {
 			$src  = trim( $src );
 			$post = get_page_by_path( $src, OBJECT, 'feedzy_categories' );
+			if ( ! $post ) {
+				// Fallback: search by post title for group names containing spaces or mixed case.
+				$posts = get_posts(
+					array(
+						'post_type'      => 'feedzy_categories',
+						'title'          => $src,
+						'post_status'    => 'publish',
+						'posts_per_page' => 1,
+						'no_found_rows'  => true,
+					)
+				);
+				if ( ! empty( $posts ) ) {
+					$post = $posts[0];
+				}
+			}
 			if ( $post ) {
 				return trim( preg_replace( '/\s+/', ' ', get_post_meta( $post->ID, 'feedzy_category_feed', true ) ) );
 			} else {

@@ -1417,6 +1417,31 @@ class Feedzy_Rss_Feeds_Import {
 			)
 		);
 
+		// If the job has a scheduled event, clear it before running the job to avoid conflicts.
+		$job_id_int          = (int) $job_id;
+		$cron_args           = array( 100, $job_id_int );
+		$next_scheduled_time = false;
+		if ( ! empty( $job_id_int ) ) {
+			$next_scheduled_time = Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'feedzy_cron', $cron_args );
+			if ( $next_scheduled_time ) {
+				Feedzy_Rss_Feeds_Util_Scheduler::clear_scheduled_hook( 'feedzy_cron', $cron_args );
+			}
+		}
+
+		// If the job had a scheduled event, reschedule it for the next recurrence to keep the original cadence.
+		if ( ! empty( $job_id_int ) && $next_scheduled_time ) {
+			$fz_cron_schedule = get_post_meta( $job_id_int, 'fz_cron_schedule', true );
+			$schedules        = wp_get_schedules();
+			$interval         = isset( $schedules[ $fz_cron_schedule ]['interval'] ) ? (int) $schedules[ $fz_cron_schedule ]['interval'] : 0;
+			if ( ! empty( $fz_cron_schedule ) && $interval > 0 && false === Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'feedzy_cron', $cron_args ) ) {
+				$next_time = time() + $interval;
+				if ( is_numeric( $next_scheduled_time ) && (int) $next_scheduled_time > time() ) {
+					$next_time = (int) $next_scheduled_time + $interval;
+				}
+				Feedzy_Rss_Feeds_Util_Scheduler::schedule_event( $next_time, $fz_cron_schedule, 'feedzy_cron', $cron_args );
+			}
+		}
+
 		$count = $this->run_job( $job, 100 );
 
 		$msg  = 0 < $count ? __( 'Successfully run!', 'feedzy-rss-feeds' ) : __( 'Nothing imported!', 'feedzy-rss-feeds' );
@@ -1530,6 +1555,8 @@ class Feedzy_Rss_Feeds_Import {
 				isset( $feedzy_meta_data['exc_key'] ) ? esc_attr( $feedzy_meta_data['exc_key'] ) : ''
 			);
 		}
+
+		$shortcode = '[' . $shortcode . ']';
 
 		Feedzy_Rss_Feeds_Log::debug(
 			'Dry run shortcode generated',
@@ -2659,7 +2686,8 @@ class Feedzy_Rss_Feeds_Import {
 					}
 				}
 
-				if ( 'yes' === $import_item_img_url || ! $this->try_reuse_existing_featured_image( $img_success, $img_title, $new_post_id ) ) {
+				$has_fz_image_action = false !== strpos( $import_featured_img, 'fz_image' );
+				if ( 'yes' === $import_item_img_url || $has_fz_image_action || ! $this->try_reuse_existing_featured_image( $img_success, $img_title, $new_post_id ) ) {
 					// Run chained actions.
 					$import_featured_img = rawurldecode( $import_featured_img );
 					$import_featured_img = trim( $import_featured_img );
@@ -2668,7 +2696,7 @@ class Feedzy_Rss_Feeds_Import {
 					$image_source_url = $img_action->run_action_job( $img_action->get_serialized_actions(), $import_translation_lang, $job, $language_code, $item, $image_source_url );
 
 					if ( ! empty( $image_source_url ) ) {
-						if ( 'yes' === $import_item_img_url ) {
+						if ( 'yes' === $import_item_img_url && ! $this->is_base64_image( $image_source_url ) ) {
 							// Set external image URL.
 							update_post_meta( $new_post_id, 'feedzy_item_external_url', $image_source_url );
 
@@ -2977,6 +3005,46 @@ class Feedzy_Rss_Feeds_Import {
 	 * @since 1.2.0
 	 * @access private
 	 */
+	/**
+	 * Determines whether an image source string is base64-encoded data rather
+	 * than a remote URL.
+	 *
+	 * @param string $img_source The raw image source string to inspect.
+	 *
+	 * @return bool True when the source appears to be base64 image data.
+	 */
+	private function is_base64_image( $img_source ) {
+		$img_source = trim( $img_source );
+
+		if ( 0 === strpos( $img_source, 'data:image/' ) ) {
+			return true;
+		}
+
+		if ( false === strpos( $img_source, '://' ) && preg_match( '/^[A-Za-z0-9+\/=]+$/', $img_source ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Attempts to save a featured image for a post,
+	 * either by downloading it from a remote URL or by decoding base64-encoded image data.
+	 *
+	 * If an attachment with the same title already exists, it will be reused instead of creating a new one.
+	 *
+	 * @param string $img_source_url  The image source, which can be a remote URL or a base64-encoded data string.
+	 * @param int    $post_id         ID of the post to attach the image to.
+	 * @param string $post_title      Title of the post.
+	 * @param array  $import_info     Import-job context array.
+	 * @param array  $post_data       Optional extra fields forwarded to
+	 *                                `media_handle_sideload()`. When non-empty the
+	 *                                raw attachment ID is returned instead of the
+	 *                                boolean result of `set_post_thumbnail()`.
+	 *
+	 * @return int|bool  Attachment ID when $post_data is non-empty; boolean result
+	 *                   of `set_post_thumbnail()` otherwise; false on any error.
+	 */
 	private function try_save_featured_image( $img_source_url, $post_id, $post_title, &$import_info, $post_data = array() ) {
 		if ( ! function_exists( 'post_exists' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/post.php';
@@ -2986,99 +3054,280 @@ class Feedzy_Rss_Feeds_Import {
 
 		if ( ! $id ) {
 
-			// We escape the URL to ensure that valid URLs are passed by the filter. We also convert the URL parts to ASCII.
-			// This is necessary because FILTER_VALIDATE_URL only validates against ASCII URLs.
-			$escaped_url = $this->convert_url_to_ascii( $img_source_url );
-			if ( filter_var( $escaped_url, FILTER_VALIDATE_URL ) === false ) {
-				Feedzy_Rss_Feeds_Log::error(
-					// translators: %s is the invalid image URL.
-					sprintf( __( 'Invalid image URL: %s', 'feedzy-rss-feeds' ), $img_source_url ),
-					array(
-						'post_id'    => $post_id,
-						'post_title' => $post_title,
-					)
-				);
-				
-				return false;
-			}
-
-			Feedzy_Rss_Feeds_Log::debug(
-				sprintf( 'Save the image as featured image with upload in Media Library for post ID' ),
-				array(
-					'post_id'        => $post_id,
-					'post_title'     => $post_title,
-					'img_source_url' => $img_source_url,
-					'escaped_url'    => $escaped_url,
-					'post_data'      => $post_data,
-				)
-			);
-
 			require_once ABSPATH . 'wp-admin/includes/image.php';
 			require_once ABSPATH . 'wp-admin/includes/file.php';
 			require_once ABSPATH . 'wp-admin/includes/media.php';
 
-			$file_array     = array();
-			$img_source_url = trim( $img_source_url, chr( 0xC2 ) . chr( 0xA0 ) );
-			$local_file     = download_url( $img_source_url );
-			if ( is_wp_error( $local_file ) ) {
-				Feedzy_Rss_Feeds_Log::error(
-					// translators: %s is the image source URL.
-					sprintf( __( 'Unable to download image: %s', 'feedzy-rss-feeds' ), $img_source_url ),
-					array(
-						'post_id' => $post_id,
-						'errors'  => $local_file->get_error_messages(),
-					)
-				);
+			if ( $this->is_base64_image( $img_source_url ) ) {
+				$base64_payload = preg_replace( '/^data:image\/[a-z0-9.+-]+;base64,/i', '', trim( $img_source_url ) );
 
-				return false;
-			}
-
-			$type = '';
-			// try first to get the file type using the built-in function if available.
-			if ( function_exists( 'mime_content_type' ) ) {
-				$type = mime_content_type( $local_file );
-			}
-
-			// if the file type is not found, try to get it from the URL.
-			if ( empty( $type ) ) {
-				$type = $this->get_file_type_by_url( $img_source_url );
-			}
-
-			// the file is downloaded with a .tmp extension
-			// if the URL mentions the extension of the file, the upload succeeds
-			// but if the URL is like https://source.unsplash.com/random, then the upload fails
-			// so let's determine the file's mime type and then rename the .tmp file with that extension.
-			if ( in_array( $type, array_values( get_allowed_mime_types() ), true ) ) {
-				$new_local_file = str_replace( '.tmp', str_replace( 'image/', '.', $type ), $local_file );
-
-				// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_rename
-				$renamed = rename( $local_file, $new_local_file );
-				if ( $renamed ) {
-					$local_file = $new_local_file;
-				} else {
-
+				if ( empty( $base64_payload ) ) {
 					Feedzy_Rss_Feeds_Log::error(
-						// translators: %s the name of the post.
-						sprintf( __( 'Could not rename temporary file for: %s', 'feedzy-rss-feeds' ), get_the_title( $post_id ) ),
+						__( 'Invalid base64 image data: empty payload.', 'feedzy-rss-feeds' ),
 						array(
-							'post_id'        => $post_id,
-							'local_file'     => $local_file,
-							'new_local_file' => $new_local_file,
+							'post_id'    => $post_id,
+							'post_title' => $post_title,
 						)
 					);
 
 					return false;
 				}
-			}
 
-			$file_array['tmp_name'] = $local_file;
-			$file_array['name']     = basename( $local_file );
+				$image_data = base64_decode( $base64_payload, true );
+
+				if ( false === $image_data || '' === $image_data ) {
+					Feedzy_Rss_Feeds_Log::error(
+						__( 'Invalid base64 image data: decoding failed.', 'feedzy-rss-feeds' ),
+						array(
+							'post_id'    => $post_id,
+							'post_title' => $post_title,
+						)
+					);
+
+					return false;
+				}
+
+				// Write decoded bytes to the uploads directory.
+				$upload_dir = wp_upload_dir();
+				if ( ! empty( $upload_dir['error'] ) ) {
+					Feedzy_Rss_Feeds_Log::error(
+						// translators: %s is the error message.
+						sprintf( __( 'An error occurred: %s', 'feedzy-rss-feeds' ), $upload_dir['error'] ),
+						array(
+							'post_id' => $post_id,
+						)
+					);
+
+					return false;
+				}
+
+				// Detect MIME type from the data-URI prefix when present; default to WebP.
+				$type = '';
+				if ( preg_match( '/^data:(image\/[a-z0-9.+-]+);base64,/i', trim( $img_source_url ), $mime_matches ) ) {
+					$type = strtolower( $mime_matches[1] );
+				}
+
+				$extension  = function_exists( 'wp_get_default_extension_for_mime_type' ) ? wp_get_default_extension_for_mime_type( $type ) : '';
+				$extension  = ! empty( $extension ) ? '.' . $extension : '.webp';
+				$filename   = sanitize_file_name( $post_title ) . '-' . uniqid() . $extension;
+				$local_file = trailingslashit( $upload_dir['path'] ) . $filename;
+
+				// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_file_put_contents
+				$bytes_written = file_put_contents( $local_file, $image_data );
+
+				if ( false === $bytes_written || 0 === $bytes_written ) {
+					Feedzy_Rss_Feeds_Log::error(
+						__( 'Could not write decoded image data to the uploads directory.', 'feedzy-rss-feeds' ),
+						array(
+							'post_id'    => $post_id,
+							'local_file' => $local_file,
+						)
+					);
+
+					return false;
+				}
+
+				// Re-confirm MIME type from the actual file contents when possible.
+				if ( function_exists( 'mime_content_type' ) ) {
+					$detected_type = mime_content_type( $local_file );
+					if ( ! empty( $detected_type ) ) {
+						$type = $detected_type;
+					}
+				}
+
+				Feedzy_Rss_Feeds_Log::debug(
+					'Saving base64 image as featured image (upload to Media Library).',
+					array(
+						'post_id'    => $post_id,
+						'post_title' => $post_title,
+						'mime_type'  => $type,
+						'data_size'  => strlen( $image_data ),
+						'post_data'  => $post_data,
+					)
+				);
+
+				// Reject when the MIME type could not be determined.
+				if ( empty( $type ) ) {
+					Feedzy_Rss_Feeds_Log::error(
+						__( 'Could not determine the image MIME type.', 'feedzy-rss-feeds' ),
+						array(
+							'post_id'    => $post_id,
+							'post_title' => $post_title,
+						)
+					);
+
+					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
+					unlink( $local_file );
+
+					return false;
+				}
+
+				// Skip gracefully when WordPress does not permit the file type (e.g., SVG).
+				if ( ! in_array( $type, array_values( get_allowed_mime_types() ), true ) ) {
+					Feedzy_Rss_Feeds_Log::debug(
+						// translators: %1$s is the MIME type, %2$s is the image source URL.
+						sprintf( __( 'Skipping image upload — file type "%1$s" is not allowed by WordPress: %2$s', 'feedzy-rss-feeds' ), $type, $img_source_url ),
+						array(
+							'post_id'        => $post_id,
+							'img_source_url' => $img_source_url,
+							'mime_type'      => $type,
+						)
+					);
+
+					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
+					unlink( $local_file );
+
+					return false;
+				}
+
+				// Correct the file extension if the detected type differs from the
+				// one inferred from the data-URI prefix (e.g. image/jpeg → .jpeg).
+				$correct_extension  = function_exists( 'wp_get_default_extension_for_mime_type' ) ? wp_get_default_extension_for_mime_type( $type ) : '';
+				$correct_extension  = ! empty( $correct_extension ) ? '.' . $correct_extension : str_replace( 'image/', '.', $type );
+				$correct_local_file = preg_replace( '/\.[a-z0-9]+$/i', $correct_extension, $local_file );
+
+				if ( $correct_local_file !== $local_file ) {
+					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_rename
+					if ( rename( $local_file, $correct_local_file ) ) {
+						$local_file = $correct_local_file;
+					} else {
+						Feedzy_Rss_Feeds_Log::error(
+							// translators: %s the name of the post.
+							sprintf( __( 'Could not rename temporary file for: %s', 'feedzy-rss-feeds' ), get_the_title( $post_id ) ),
+							array(
+								'post_id'        => $post_id,
+								'local_file'     => $local_file,
+								'new_local_file' => $correct_local_file,
+							)
+						);
+
+						// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
+						unlink( $local_file );
+
+						return false;
+					}
+				}
+
+				$file_array = array(
+					'tmp_name' => $local_file,
+					'name'     => basename( $local_file ),
+				);
+
+			} else {
+
+				// We escape the URL to ensure that valid URLs are passed by the filter. We also convert the URL parts to ASCII.
+				// This is necessary because FILTER_VALIDATE_URL only validates against ASCII URLs.
+				$escaped_url = $this->convert_url_to_ascii( $img_source_url );
+				if ( filter_var( $escaped_url, FILTER_VALIDATE_URL ) === false ) {
+					Feedzy_Rss_Feeds_Log::error(
+						// translators: %s is the invalid image URL.
+						sprintf( __( 'Invalid image URL: %s', 'feedzy-rss-feeds' ), $img_source_url ),
+						array(
+							'post_id'    => $post_id,
+							'post_title' => $post_title,
+						)
+					);
+
+					return false;
+				}
+
+				Feedzy_Rss_Feeds_Log::debug(
+					sprintf( 'Save the image as featured image with upload in Media Library for post ID' ),
+					array(
+						'post_id'        => $post_id,
+						'post_title'     => $post_title,
+						'img_source_url' => $img_source_url,
+						'escaped_url'    => $escaped_url,
+						'post_data'      => $post_data,
+					)
+				);
+
+				$file_array     = array();
+				$img_source_url = trim( $img_source_url, chr( 0xC2 ) . chr( 0xA0 ) );
+				$local_file     = download_url( $img_source_url );
+				if ( is_wp_error( $local_file ) ) {
+					Feedzy_Rss_Feeds_Log::error(
+						// translators: %s is the image source URL.
+						sprintf( __( 'Unable to download image: %s', 'feedzy-rss-feeds' ), $img_source_url ),
+						array(
+							'post_id' => $post_id,
+							'errors'  => $local_file->get_error_messages(),
+						)
+					);
+
+					return false;
+				}
+
+				$type = '';
+				// try first to get the file type using the built-in function if available.
+				if ( function_exists( 'mime_content_type' ) ) {
+					$type = mime_content_type( $local_file );
+				}
+
+				// Normalize the MIME type: lowercase and strip any parameters (e.g., "; charset=UTF-8").
+				if ( ! empty( $type ) ) {
+					$type = strtolower( trim( explode( ';', $type )[0] ) );
+				}
+
+				// if the file type is not found, try to get it from the URL.
+				if ( empty( $type ) ) {
+					$type = $this->get_file_type_by_url( $img_source_url );
+				}
+
+				// the file is downloaded with a .tmp extension
+				// if the URL mentions the extension of the file, the upload succeeds
+				// but if the URL is like https://source.unsplash.com/random, then the upload fails
+				// so let's determine the file's mime type and then rename the .tmp file with that extension.
+				if ( in_array( $type, array_values( get_allowed_mime_types() ), true ) ) {
+					$extension      = function_exists( 'wp_get_default_extension_for_mime_type' ) ? wp_get_default_extension_for_mime_type( $type ) : '';
+					$extension      = ! empty( $extension ) ? '.' . $extension : str_replace( 'image/', '.', $type );
+					$new_local_file = preg_replace( '/\.tmp$/', $extension, $local_file );
+
+					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_rename
+					$renamed = rename( $local_file, $new_local_file );
+					if ( $renamed ) {
+						$local_file = $new_local_file;
+					} else {
+						Feedzy_Rss_Feeds_Log::error(
+							// translators: %s the name of the post.
+							sprintf( __( 'Could not rename temporary file for: %s', 'feedzy-rss-feeds' ), get_the_title( $post_id ) ),
+							array(
+								'post_id'        => $post_id,
+								'local_file'     => $local_file,
+								'new_local_file' => $new_local_file,
+							)
+						);
+
+						return false;
+					}
+				} elseif ( ! empty( $type ) ) {
+					// The file type is not allowed by WordPress (e.g., SVG).
+					// Skip the upload gracefully to avoid error log spam.
+					Feedzy_Rss_Feeds_Log::debug(
+						// translators: %1$s is the MIME type, %2$s is the image source URL.
+						sprintf( __( 'Skipping image upload — file type "%1$s" is not allowed by WordPress: %2$s', 'feedzy-rss-feeds' ), $type, $img_source_url ),
+						array(
+							'post_id'        => $post_id,
+							'img_source_url' => $img_source_url,
+							'mime_type'      => $type,
+						)
+					);
+
+					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
+					unlink( $local_file );
+
+					return false;
+				}
+
+				$file_array['tmp_name'] = $local_file;
+				$file_array['name']     = basename( $local_file );
+			}
 
 			$id = media_handle_sideload( $file_array, $post_id, $post_title, $post_data );
 			if ( is_wp_error( $id ) ) {
 				Feedzy_Rss_Feeds_Log::error(
-					// translators: %s is the image source URL.
-					sprintf( __( 'Cannot upload the image to Media Library: %s', 'feedzy-rss-feeds' ), $img_source_url ),
+					// translators: %s is the image source URL or a label for base64 data.
+					sprintf( __( 'Cannot upload the image to Media Library: %s', 'feedzy-rss-feeds' ), $this->is_base64_image( $img_source_url ) ? '[base64 data]' : $img_source_url ),
 					array(
 						'post_id' => $post_id,
 						'errors'  => $id->get_error_messages(),
@@ -3086,7 +3335,10 @@ class Feedzy_Rss_Feeds_Import {
 				);
 
 				// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
-				unlink( $file_array['tmp_name'] );
+				if ( file_exists( $file_array['tmp_name'] ) ) {
+					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
+					unlink( $file_array['tmp_name'] );
+				}
 
 				return false;
 			}
@@ -3095,7 +3347,7 @@ class Feedzy_Rss_Feeds_Import {
 				sprintf( 'Reusing existing attachment image for post ID %d', $post_id ),
 				array(
 					'post_id'        => $post_id,
-					'img_source_url' => $img_source_url,
+					'img_source_url' => $this->is_base64_image( $img_source_url ) ? '[base64 data]' : $img_source_url,
 					'attachment_id'  => $id,
 				)
 			);
@@ -3113,7 +3365,7 @@ class Feedzy_Rss_Feeds_Import {
 				array(
 					'post_id'          => $post_id,
 					'attachment_id'    => $id,
-					'image_source_url' => $img_source_url,
+					'image_source_url' => $this->is_base64_image( $img_source_url ) ? '[base64 data]' : $img_source_url,
 				)
 			);
 		} else {
@@ -3122,7 +3374,7 @@ class Feedzy_Rss_Feeds_Import {
 				array(
 					'post_id'          => $post_id,
 					'attachment_id'    => $id,
-					'image_source_url' => $img_source_url,
+					'image_source_url' => $this->is_base64_image( $img_source_url ) ? '[base64 data]' : $img_source_url,
 				)
 			);
 		}
@@ -3375,6 +3627,7 @@ class Feedzy_Rss_Feeds_Import {
 			if ( ! isset( $tabs['openrouter'] ) ) {
 				$tabs['openrouter'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'OpenRouter', 'feedzy-rss-feeds' ) );
 			}
+			$tabs['ai-quota']                   = sprintf( '%s <span class="pro-label">PRO</span>', __( 'AI Quota', 'feedzy-rss-feeds' ) );
 			$tabs['spinnerchief']               = sprintf( '%s <span class="pro-label">PRO</span>', __( 'SpinnerChief', 'feedzy-rss-feeds' ) );
 			$tabs['amazon-product-advertising'] = sprintf( '%s <span class="pro-label">PRO</span>', __( 'Amazon Product Advertising', 'feedzy-rss-feeds' ) );
 			$tabs['wordai']                     = sprintf( '%s <span class="pro-label">PRO</span>', __( 'WordAi', 'feedzy-rss-feeds' ) );
@@ -3433,6 +3686,7 @@ class Feedzy_Rss_Feeds_Import {
 			case 'amazon-product-advertising':
 			case 'openai':
 			case 'openrouter':
+			case 'ai-quota':
 				if ( ! feedzy_is_pro() || ! apply_filters( 'feedzy_is_license_of_type', false, 'business' ) ) {
 					$file = FEEDZY_ABSPATH . '/includes/views/' . $name . '-view.php';
 				} else {
@@ -3445,6 +3699,10 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		if ( ! $file ) {
+			return '';
+		}
+
+		if ( ! file_exists( $file ) ) {
 			return '';
 		}
 
@@ -3489,8 +3747,9 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		if ( $disabled ) {
+			$default_tags .= '<hr/>';
 			foreach ( $disabled as $tag => $label ) {
-				$default_tags .= '<span disabled title="' . __( 'Upgrade your license to use this tag', 'feedzy-rss-feeds' ) . '" class="dropdown-item">' . $label . ' -- <small>[#' . $tag . ']</small></span>';
+				$default_tags .= '<span disabled title="' . __( 'Upgrade your license to use this tag', 'feedzy-rss-feeds' ) . '" class="dropdown-item feedzy-pro"><span>' . $label . ' -- <small>[#' . $tag . ']</small></span><span class="pro-label">PRO</span></span>';
 			}
 		}
 

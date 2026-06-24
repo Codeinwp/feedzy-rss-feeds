@@ -151,7 +151,29 @@ const ModelSelect = ({
 					});
 				}}
 				disabled={!isPro || !providerLicenseStatus}
+				help={
+					__(
+						'Tip: High-reasoning or heavier models may time out on massive articles. If results are not generated correctly, try selecting a faster, lightweight model from the list.',
+						'feedzy-rss-feeds'
+					)
+				}
 			>
+				{Array.isArray(window.feedzyData.recommendedAIModels) &&
+ 					window.feedzyData.recommendedAIModels.length > 0 && (
+ 						<optgroup
+ 							label={__(
+ 								'Recommended models',
+ 								'feedzy-rss-feeds'
+ 							)}
+ 						>
+ 							{window.feedzyData.recommendedAIModels.map((model) => (
+								<option key={model} value={model}>
+									{model}
+								</option>
+							))}
+						</optgroup>
+					)
+				}
 				{window.feedzyData.activeOpenAIModels.length > 0 && (
 					<optgroup label={__('Latest models', 'feedzy-rss-feeds')}>
 						{window.feedzyData.activeOpenAIModels.map((model) => (
@@ -242,6 +264,7 @@ const RewriteActionItem = ({ counter, item, loopIndex, propRef }) => {
 		isAgencyPlan,
 		isHighPrivileges,
 		apiLicenseStatus,
+		isThemeisleAIEnabled,
 	} = window.feedzyData;
 
 	let defaultProvider;
@@ -266,7 +289,10 @@ const RewriteActionItem = ({ counter, item, loopIndex, propRef }) => {
 	const selectedAIModel = item.data.aiModel || defaultModel;
 
 	const showError =
-		isPro && (isBusinessPlan || isAgencyPlan) && !providerLicenseStatus;
+		isPro &&
+		(isBusinessPlan || isAgencyPlan) &&
+		!providerLicenseStatus &&
+		!isThemeisleAIEnabled;
 	const showUpgradeNotice = !isBusinessPlan && !isAgencyPlan;
 
 	return (
@@ -291,27 +317,33 @@ const RewriteActionItem = ({ counter, item, loopIndex, propRef }) => {
 							higherPlanNotice={showUpgradeNotice}
 							utmCampaign="action-paraphrase-chatgpt"
 						/>
-						<ProviderSelect
-							selectedProvider={selectedProvider}
-							loopIndex={loopIndex}
-							propRef={propRef}
-							isPro={isPro}
-						/>
-						<ModelSelect
-							selectedProvider={selectedProvider}
-							selectedAIModel={selectedAIModel}
-							defaultModel={defaultModel}
-							loopIndex={loopIndex}
-							propRef={propRef}
-							isPro={isPro}
-							providerLicenseStatus={providerLicenseStatus}
-						/>
+						{!isThemeisleAIEnabled && (
+							<ProviderSelect
+								selectedProvider={selectedProvider}
+								loopIndex={loopIndex}
+								propRef={propRef}
+								isPro={isPro}
+							/>
+						)}
+						{!isThemeisleAIEnabled && (
+							<ModelSelect
+								selectedProvider={selectedProvider}
+								selectedAIModel={selectedAIModel}
+								defaultModel={defaultModel}
+								loopIndex={loopIndex}
+								propRef={propRef}
+								isPro={isPro}
+								providerLicenseStatus={providerLicenseStatus}
+							/>
+						)}
 						<PromptControls
 							item={item}
 							loopIndex={loopIndex}
 							propRef={propRef}
 							isPro={isPro}
-							providerLicenseStatus={providerLicenseStatus}
+							providerLicenseStatus={
+								providerLicenseStatus || isThemeisleAIEnabled
+							}
 							selectedProvider={selectedProvider}
 						/>
 					</PanelRow>

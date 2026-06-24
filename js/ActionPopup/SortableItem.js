@@ -571,6 +571,12 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 	}
 
 	if ('fz_image' === item.id) {
+		const isPro = feedzyData.isPro;
+		const isThemeisleAIEnabled = feedzyData.isThemeisleAIEnabled;
+		const providerLicenseStatus = feedzyData.apiLicenseStatus.openaiStatus;
+		const defaultModel = window.feedzyData?.integrations?.openAIImageModel || 'gpt-image-2';
+		const selectedAIModel = item.data.aiModel || defaultModel;
+
 		return (
 			<li
 				className="fz-action-control fz-chat-cpt-action"
@@ -581,6 +587,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 						(feedzyData.isBusinessPlan ||
 							feedzyData.isAgencyPlan) &&
 						!feedzyData.apiLicenseStatus.openaiStatus &&
+						!isThemeisleAIEnabled &&
 						(feedzyData.isHighPrivileges ? (
 							<span className="error-message">
 								{__('Invalid API Key', 'feedzy-rss-feeds')}{' '}
@@ -616,7 +623,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 								}
 								utmCampaign="action-generate-image-chatgpt"
 							/>
-							<BaseControl>
+							<BaseControl className="mb-20">
 								<ToggleControl
 									checked={
 										item.data.generateOnlyMissingImages ??
@@ -639,11 +646,52 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 									)}
 									disabled={
 										!feedzyData.isPro ||
-										!feedzyData.apiLicenseStatus
-											.openaiStatus
+										(!feedzyData.apiLicenseStatus
+											.openaiStatus &&
+											!isThemeisleAIEnabled)
 									}
 								/>
 							</BaseControl>
+							{!isThemeisleAIEnabled && (
+								<BaseControl __nextHasNoMarginBottom className="mb-20">
+									<SelectControl
+										__nextHasNoMarginBottom
+										label={__('Choose Model', 'feedzy-rss-feeds')}
+										value={selectedAIModel}
+										onChange={(currentValue) => {
+											propRef.onChangeHandler({
+												index: loopIndex,
+												aiModel:
+													currentValue !== defaultModel ? currentValue : '',
+											});
+										}}
+										disabled={!isPro || !providerLicenseStatus}
+									>
+										{window.feedzyData.openAIImageModels.length > 0 && (
+											<optgroup label={__('Latest models', 'feedzy-rss-feeds')}>
+												{window.feedzyData.openAIImageModels.map((model) => (
+													<option key={model} value={model}>
+														{model}
+													</option>
+												))}
+											</optgroup>
+										)}
+										{window.feedzyData.deprecatedOpenAIImageModels.length > 0 && (
+											<optgroup
+												label={__('Deprecated models', 'feedzy-rss-feeds')}
+											>
+												{window.feedzyData.deprecatedOpenAIImageModels.map(
+													(model) => (
+														<option key={model} value={model}>
+															{model}
+														</option>
+													)
+												)}
+											</optgroup>
+										)}
+									</SelectControl>
+								</BaseControl>
+							)}
 							<BaseControl __nextHasNoMarginBottom>
 								<TextareaControl
 									__nextHasNoMarginBottom
@@ -674,8 +722,9 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 									)}
 									disabled={
 										!feedzyData.isPro ||
-										!feedzyData.apiLicenseStatus
-											.openaiStatus
+										(!feedzyData.apiLicenseStatus
+											.openaiStatus &&
+											!isThemeisleAIEnabled)
 									}
 								/>
 							</BaseControl>

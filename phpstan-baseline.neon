@@ -417,7 +417,7 @@ parameters:
 
 		-
 			message: "#^Property Feedzy_Rss_Feeds_Actions\\:\\:\\$default_value \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 2
+			count: 3
 			path: includes/admin/feedzy-rss-feeds-actions.php
 
 		-

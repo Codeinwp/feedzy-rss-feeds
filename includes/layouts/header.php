@@ -14,6 +14,18 @@ if ( isset( $_GET['page'] ) && 'feedzy-support' === $_GET['page'] ) {
 } elseif ( isset( $_GET['page'] ) && 'feedzy-integration' === $_GET['page'] ) {
 	$page_title = __( 'Integration', 'feedzy-rss-feeds' );
 }
+
+/**
+ * Filters the page title shown in the Feedzy admin header.
+ *
+ * Allows Pro (or any extension) to supply a custom page title for new pages
+ * that are added under the Feedzy menu without modifying this file.
+ *
+ * @since 5.1.0
+ *
+ * @param string $page_title The resolved page title.
+ */
+$page_title = apply_filters( 'feedzy_admin_page_title', $page_title );
 ?>
 <div class="feedzy-header">
 	<div class="feedzy-container">

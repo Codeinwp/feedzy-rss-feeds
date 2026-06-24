@@ -245,9 +245,16 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$open_router_model    = '';
 			$integration_settings = get_option( 'feedzy-rss-feeds-settings', array() );
 
+			$recommended_ai_models     = apply_filters( 'feedzy_openai_recommended_models', array() );
+			$recommended_ai_models     = array_values( array_filter( (array) $recommended_ai_models, 'is_string' ) );
 			$all_open_ai_models        = apply_filters( 'feedzy_openai_models', array() );
 			$deprecated_open_ai_models = apply_filters( 'feedzy_openai_deprecated_models', array() );
 			$active_open_ai_models     = array_values( array_diff( $all_open_ai_models, $deprecated_open_ai_models ) );
+			$active_open_ai_models     = array_values( array_diff( $active_open_ai_models, $recommended_ai_models ) );
+
+			$all_open_ai_image_models        = apply_filters( 'feedzy_openai_image_models', array() );
+			$deprecated_open_ai_image_models = apply_filters( 'feedzy_openai_deprecated_image_models', array() );
+			$active_open_ai_image_models     = array_values( array_diff( $all_open_ai_image_models, $deprecated_open_ai_image_models ) );
 
 			if ( ! empty( $integration_settings['openai_api_model'] ) ) {
 				$openai_model = $integration_settings['openai_api_model'];
@@ -261,19 +268,25 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				$this->plugin_name . '_action_popup',
 				'feedzyData',
 				array(
-					'isPro'                  => feedzy_is_pro(),
-					'isBusinessPlan'         => apply_filters( 'feedzy_is_license_of_type', false, 'business' ),
-					'isAgencyPlan'           => apply_filters( 'feedzy_is_license_of_type', false, 'agency' ),
-					'apiLicenseStatus'       => $this->api_license_status(),
-					'isHighPrivileges'       => current_user_can( 'manage_options' ),
-					'languageList'           => $this->get_lang_list(),
-					'integrationSettings'    => get_option( 'feedzy-rss-feeds-settings' ),
-					'integrations'           => array(
-						'openAIModel'     => $openai_model,
-						'openRouterModel' => $open_router_model,
+					'isPro'                       => feedzy_is_pro(),
+					'isBusinessPlan'              => apply_filters( 'feedzy_is_license_of_type', false, 'business' ),
+					'isAgencyPlan'                => apply_filters( 'feedzy_is_license_of_type', false, 'agency' ),
+					'apiLicenseStatus'            => $this->api_license_status(),
+					'isThemeisleAIEnabled'        => class_exists( 'Feedzy_Rss_Feeds_Pro_Ai_Quota_Manager' ) && ( new Feedzy_Rss_Feeds_Pro_Ai_Quota_Manager() )->is_managed_ai_enabled(),
+					'isHighPrivileges'            => current_user_can( 'manage_options' ),
+					'languageList'                => $this->get_lang_list(),
+					'integrationSettings'         => get_option( 'feedzy-rss-feeds-settings' ),
+					'integrations'                => array(
+						'openAIModel'      => $openai_model,
+						'openRouterModel'  => $open_router_model,
+						'openAIImageModel' => ! empty( $active_open_ai_image_models ) ? reset( $active_open_ai_image_models ) : 'gpt-image-2',
 					),
-					'activeOpenAIModels'     => $active_open_ai_models,
-					'deprecatedOpenAIModels' => $deprecated_open_ai_models,
+
+					'recommendedAIModels'         => $recommended_ai_models,
+					'activeOpenAIModels'          => $active_open_ai_models,
+					'deprecatedOpenAIModels'      => $deprecated_open_ai_models,
+					'openAIImageModels'           => $active_open_ai_image_models,
+					'deprecatedOpenAIImageModels' => $deprecated_open_ai_image_models,
 				)
 			);
 
@@ -540,6 +553,11 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! empty( $license_key ) ) {
 			$renew_license_url = tsdk_utmify( 'https://store.themeisle.com/?edd_license_key=' . $license_key . '&download_id=6306666', 'feedzy_renew_link' );
 		}
+		if ( defined( 'FEEDZY_PRO_VERSION' ) && has_action( 'feedzy_dashboard_license_content' ) ) {
+			$activate_license_url = admin_url( 'admin.php?page=feedzy-support&tab=license' );
+		} else {
+			$activate_license_url = admin_url( 'options-general.php#feedzy_rss_feeds_pro_license' );
+		}
 
 		?>
 			<div id="feedzy-renew-edit" class="wp-core-ui feedzy-modal" style="display:none;">
@@ -569,9 +587,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 								<?php esc_html_e( 'Renew License', 'feedzy-rss-feeds' ); ?><span aria-hidden="true" class="dashicons dashicons-external"></span>
 							</a>
 							<a
-								href="<?php echo esc_url( admin_url( 'options-general.php#feedzy_rss_feeds_pro_license' ) ); ?>"
-								target="_blank"
-								rel="noopener "
+								href="<?php echo esc_url( $activate_license_url ); ?>"
 								class="button button-secondary button-large"
 							>
 								<?php esc_html_e( 'Activate License', 'feedzy-rss-feeds' ); ?>
@@ -1455,6 +1471,12 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				$settings['general']['fz_cron_schedule']      = isset( $_POST['fz_cron_schedule'] ) ? sanitize_text_field( wp_unslash( $_POST['fz_cron_schedule'] ) ) : 'hourly';
 				$settings['general']['auto-categories']       = array_values( $auto_categories );
 				$settings['general']['feedzy-telemetry']      = isset( $_POST['feedzy-telemetry'] ) ? absint( wp_unslash( $_POST['feedzy-telemetry'] ) ) : '';
+
+				// Persist Managed AI toggle when the pro quota manager is available.
+				if ( class_exists( 'Feedzy_Rss_Feeds_Pro_Ai_Quota_Manager' ) ) {
+					$managed_ai_value = isset( $_POST['feedzy-managed-ai'] ) ? 'yes' : 'no';
+					update_option( Feedzy_Rss_Feeds_Pro_Ai_Quota_Manager::MANAGED_AI_OPTION_KEY, $managed_ai_value );
+				}
 
 				$settings['logs']['level']             = isset( $_POST['logs-logging-level'] ) ? sanitize_text_field( wp_unslash( $_POST['logs-logging-level'] ) ) : '';
 				$settings['logs']['email']             = isset( $_POST['feedzy-email-error-address'] ) ? sanitize_email( wp_unslash( $_POST['feedzy-email-error-address'] ) ) : '';
