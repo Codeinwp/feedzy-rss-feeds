@@ -4,7 +4,7 @@ Tags: rss aggregator, news aggregator, autoblogging, feed to post, rss import
 Requires at least: 6.0
 Requires PHP: 7.2
 Tested up to: 7.0
-Stable tag: 5.1.8
+Stable tag: 5.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -479,9 +479,29 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
-##### [Version 5.1.8](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.1.7...v5.1.8) (2026-05-28)
+#### [Version 5.2.0](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.1.8...v5.2.0) (2026-06-24)
 
-- Enhanced security
+New Features
+
+  - [PRO] Added Themeisle-managed AI - use Feedzy built-in AI credits without configuring your own OpenAI key with quota tracking
+  - [PRO] Added an AI image generation model picker for more control over generated featured images when using your own API key
+  - [PRO] Added support for the latest OpenAI models, with recommended models highlighted in the selector
+  - [PRO] Added title and description length controls for Feedzy Loop
+  - [PRO] Exposed Feedzy abilities for usage with MCP
+
+Improvements
+
+  - [Free] Improved compatibility with WordPress 7.x
+  - [PRO] Redesigned the Import Content PRO options UI for clearer configuration
+  - [Free] Improved error logging for easier troubleshooting
+  - [Free] Added a default excerpt/summary length in the Loop block to 400 chars
+  - [Free] Updated dashboard links and the page builder documentation link
+  - [PRO] Improved how articles are rewritten with AI for better results
+
+Bug Fixes
+
+  - [Free] Fixed featured image rename failure on servers with .tmp in the temp directory path
+  - [Free] Fixed incorrect timestamps shown in error logs
 
 
 
