@@ -1693,11 +1693,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$img_style = '';
 
 			if ( isset( $sizes['height'] ) && is_numeric( $sizes['height'] ) ) {
-				$img_style .= 'height:' . $sizes['height'] . 'px;';
+				$img_style .= 'height:' . esc_attr( $sizes['height'] ) . 'px;';
 			}
 
 			if ( isset( $sc['aspectRatio'] ) && '1' !== $sc['aspectRatio'] ) {
-				$img_style .= 'aspect-ratio:' . $sc['aspectRatio'] . '; object-fit: fill;';
+				$img_style .= 'aspect-ratio:' . esc_attr( $sc['aspectRatio'] ) . '; object-fit: fill;';
 			}
 			
 			if (
@@ -1713,10 +1713,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 					)
 				)
 			) {
-				$img_style .= 'width:' . $sizes['width'] . 'px;';
+				$img_style .= 'width:' . esc_attr( $sizes['width'] ) . 'px;';
 			}
 
-			$content_thumb .= '<img decoding="async" src="' . $thumbnail_to_use . '" title="' . esc_attr( $item->get_title() ) . '" style="' . $img_style . '">';
+			$content_thumb .= '<img decoding="async" src="' . esc_url( $thumbnail_to_use ) . '" title="' . esc_attr( $item->get_title() ) . '" style="' . esc_attr( $img_style ) . '">';
 			$content_thumb  = apply_filters( 'feedzy_thumb_output', $content_thumb, $feed_url, $sizes, $item );
 		}
 
@@ -1874,11 +1874,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$img_style = '';
 		if ( isset( $sizes['height'] ) ) {
-			$img_style = 'height:' . $sizes['height'] . 'px;';
+			$img_style = 'height:' . esc_attr( $sizes['height'] ) . 'px;';
 			if ( isset( $sc['aspectRatio'] ) && '1' !== $sc['aspectRatio'] ) {  
-				$img_style .= 'aspect-ratio:' . $sc['aspectRatio'] . ';';
+				$img_style .= 'aspect-ratio:' . esc_attr( $sc['aspectRatio'] ) . ';';
 			} elseif ( isset( $sizes['width'] ) ) {
-				$img_style .= 'width:' . $sizes['width'] . 'px;';
+				$img_style .= 'width:' . esc_attr( $sizes['width'] ) . 'px;';
 			}
 		}
 
