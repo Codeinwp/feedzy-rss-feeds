@@ -1692,31 +1692,37 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! empty( $thumbnail_to_use ) && is_string( $thumbnail_to_use ) ) {
 			$img_style = '';
 
-			if ( isset( $sizes['height'] ) && is_numeric( $sizes['height'] ) ) {
-				$img_style .= 'height:' . $sizes['height'] . 'px;';
+			$safe_height     = ( isset( $sizes['height'] ) && is_numeric( $sizes['height'] ) && (int) $sizes['height'] > 0 ) ? (int) $sizes['height'] : 0;
+			$safe_width      = ( isset( $sizes['width'] ) && is_numeric( $sizes['width'] ) && (int) $sizes['width'] > 0 ) ? (int) $sizes['width'] : 0;
+			$raw_ratio       = isset( $sc['aspectRatio'] ) ? (string) $sc['aspectRatio'] : '';
+			$safe_ratio      = ( '' !== $raw_ratio && preg_match( '~^(auto|\d+(?:\.\d+)?(?:\s*/\s*\d+(?:\.\d+)?)?)$~', $raw_ratio ) ) ? $raw_ratio : '';
+			$has_valid_ratio = ( '' !== $safe_ratio && '1' !== $safe_ratio );
+
+			if ( $safe_height > 0 ) {
+				$img_style .= 'height:' . $safe_height . 'px;';
 			}
 
-			if ( isset( $sc['aspectRatio'] ) && '1' !== $sc['aspectRatio'] ) {
-				$img_style .= 'aspect-ratio:' . $sc['aspectRatio'] . '; object-fit: fill;';
+			if ( $has_valid_ratio ) {
+				$img_style .= 'aspect-ratio:' . $safe_ratio . '; object-fit: fill;';
 			}
-			
+
 			if (
-				isset( $sizes['width'] ) && is_numeric( $sizes['width'] ) && 
+				$safe_width > 0 &&
 				(
-					$sizes['width'] !== $sizes['height'] || // Note: Custom modification via filters.
+					$safe_width !== $safe_height ||
 					(
-						isset( $sc['aspectRatio'] ) &&
+						'' !== $safe_ratio &&
 						(
-							( 'auto' === $sc['aspectRatio'] && $amp_running ) || // Note: AMP compatibility. Auto without `height` breaks the layout.
-							'1' === $sc['aspectRatio'] // Note: Backward compatiblity.
+							( 'auto' === $safe_ratio && $amp_running ) ||
+							'1' === $safe_ratio // Note: Backward compatiblity.
 						)
 					)
 				)
 			) {
-				$img_style .= 'width:' . $sizes['width'] . 'px;';
+				$img_style .= 'width:' . $safe_width . 'px;';
 			}
 
-			$content_thumb .= '<img decoding="async" src="' . $thumbnail_to_use . '" title="' . esc_attr( $item->get_title() ) . '" style="' . $img_style . '">';
+			$content_thumb .= '<img decoding="async" src="' . esc_url( $thumbnail_to_use ) . '" title="' . esc_attr( $item->get_title() ) . '" style="' . esc_attr( $img_style ) . '">';
 			$content_thumb  = apply_filters( 'feedzy_thumb_output', $content_thumb, $feed_url, $sizes, $item );
 		}
 
@@ -1872,13 +1878,17 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$item_content = esc_html__( 'Post Content', 'feedzy-rss-feeds' );
 		}
 
-		$img_style = '';
-		if ( isset( $sizes['height'] ) ) {
-			$img_style = 'height:' . $sizes['height'] . 'px;';
-			if ( isset( $sc['aspectRatio'] ) && '1' !== $sc['aspectRatio'] ) {  
-				$img_style .= 'aspect-ratio:' . $sc['aspectRatio'] . ';';
-			} elseif ( isset( $sizes['width'] ) ) {
-				$img_style .= 'width:' . $sizes['width'] . 'px;';
+		$img_style       = '';
+		$safe_height_val = ( isset( $sizes['height'] ) && is_numeric( $sizes['height'] ) && (int) $sizes['height'] > 0 ) ? (int) $sizes['height'] : 0;
+		$safe_width_val  = ( isset( $sizes['width'] ) && is_numeric( $sizes['width'] ) && (int) $sizes['width'] > 0 ) ? (int) $sizes['width'] : 0;
+		$raw_ratio_val   = isset( $sc['aspectRatio'] ) ? (string) $sc['aspectRatio'] : '';
+		$safe_ratio_val  = ( '' !== $raw_ratio_val && preg_match( '~^(auto|\d+(?:\.\d+)?(?:\s*/\s*\d+(?:\.\d+)?)?)$~', $raw_ratio_val ) ) ? $raw_ratio_val : '';
+		if ( $safe_height_val > 0 ) {
+			$img_style = 'height:' . $safe_height_val . 'px;';
+			if ( '' !== $safe_ratio_val && '1' !== $safe_ratio_val ) {
+				$img_style .= 'aspect-ratio:' . $safe_ratio_val . ';';
+			} elseif ( $safe_width_val > 0 ) {
+				$img_style .= 'width:' . $safe_width_val . 'px;';
 			}
 		}
 
