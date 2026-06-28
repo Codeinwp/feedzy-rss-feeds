@@ -150,7 +150,7 @@
 								<?php do_action( 'feedzy_general_setting_before' ); ?>	
 								<div class="form-block">
 									<div class="fz-form-group">
-										<label for="feed-post-default-thumbnail" class="form-label"><?php echo esc_html_e( 'Fallback Featured Image Settings', 'feedzy-rss-feeds' ); ?></label>
+										<label for="feed-post-default-thumbnail" class="form-label"><?php esc_html_e( 'Fallback Featured Image Settings', 'feedzy-rss-feeds' ); ?></label>
 										<div class="help-text pb-8"><?php esc_html_e( 'Choose a default image to display when RSS feeds don\'t include images.', 'feedzy-rss-feeds' ); ?></div>
 										<?php
 										$btn_label = esc_html__( 'Choose image', 'feedzy-rss-feeds' );
