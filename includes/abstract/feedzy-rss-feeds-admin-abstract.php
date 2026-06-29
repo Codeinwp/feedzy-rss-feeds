@@ -1450,7 +1450,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$content .= sprintf(
 					$line_item,
 					wp_kses_post( $item['itemAttr'] ),
-					! empty( $item['item_img'] ) && 'no' !== $sc['thumb'] ? sprintf( '<div class="%s" style="%s">%s</div>', $item['item_img_class'], $item['item_img_style'], sprintf( $anchor1, esc_url( $item['item_url'] ), esc_attr( $item['item_url_target'] ), esc_attr( $item['item_url_follow'] ), $item['item_url_title'], $item['item_img_style'], $item['item_img'] ) ) : '',
+					! empty( $item['item_img'] ) && 'no' !== $sc['thumb'] ? sprintf( '<div class="%s" style="%s">%s</div>', esc_attr( $item['item_img_class'] ), esc_attr( $item['item_img_style'] ), sprintf( $anchor1, esc_url( $item['item_url'] ), esc_attr( $item['item_url_target'] ), esc_attr( $item['item_url_follow'] ), esc_attr( $item['item_url_title'] ), esc_attr( $item['item_img_style'] ), wp_kses_post( $item['item_img'] ) ) ) : '',
 					sprintf( $anchor2, esc_url( $item['item_url'] ), esc_attr( $item['item_url_target'] ), esc_attr( $item['item_url_follow'] ), wp_kses_post( $item['item_title'] ) ),
 					esc_attr( $item['item_content_class'] ),
 					esc_attr( $item['item_content_style'] ),
