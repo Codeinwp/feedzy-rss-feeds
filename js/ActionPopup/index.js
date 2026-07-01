@@ -489,7 +489,49 @@ const ActionModal = () => {
 									{isVisible && (
 										<div className="popover-action-list">
 											<ul>
-												{'item_image' === shortCode
+												{'item_seo' === shortCode
+													? [
+															window.feedzyData
+																.isPro &&
+															( window.feedzyData
+																.isBusinessPlan ||
+																window.feedzyData
+																	.isAgencyPlan ) &&
+															window.feedzyData
+																.isSeoPluginActive ? (
+																<li key="action-seo-1">
+																	<button
+																		className="feedzy-action-button"
+																		onClick={() =>
+																			addAction(
+																				'fz_seo_metadata'
+																			)
+																		}
+																	>
+																		{__(
+																			'Generate SEO Metadata',
+																			'feedzy-rss-feeds'
+																		)}
+																	</button>
+																</li>
+															) : (
+																<li
+																	key="action-seo-1-disabled"
+																	className="fz-action-disabled"
+																>
+																	{__(
+																		'Generate SEO Metadata',
+																		'feedzy-rss-feeds'
+																	)}
+																	<span className="pro-label">
+																		{ window.feedzyData.isSeoPluginActive
+																			? 'PRO'
+																			: __( 'SEO plugin required', 'feedzy-rss-feeds' ) }
+																	</span>
+																</li>
+															),
+														]
+													: 'item_image' === shortCode
 													? [
 															window.feedzyData
 																.isPro &&

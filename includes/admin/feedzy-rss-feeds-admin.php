@@ -273,6 +273,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					'isAgencyPlan'                => apply_filters( 'feedzy_is_license_of_type', false, 'agency' ),
 					'apiLicenseStatus'            => $this->api_license_status(),
 					'isThemeisleAIEnabled'        => class_exists( 'Feedzy_Rss_Feeds_Pro_Ai_Quota_Manager' ) && ( new Feedzy_Rss_Feeds_Pro_Ai_Quota_Manager() )->is_managed_ai_enabled(),
+					'isSeoPluginActive'           => apply_filters( 'feedzy_is_seo_plugin_active', false ),
 					'isHighPrivileges'            => current_user_can( 'manage_options' ),
 					'languageList'                => $this->get_lang_list(),
 					'integrationSettings'         => get_option( 'feedzy-rss-feeds-settings' ),

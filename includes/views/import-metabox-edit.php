@@ -406,6 +406,44 @@ global $post;
 									</div>
 								</div>
 							</div>
+
+							<div class="form-block form-block-two-column">
+								<div class="fz-left">
+									<h4 class="h4">
+										<?php esc_html_e( 'SEO data', 'feedzy-rss-feeds' ); ?>
+									</h4>
+								</div>
+								<div class="fz-right">
+									<div class="fz-form-group">
+										<div class="fz-input-group">
+											<div class="fz-input-group-left">
+												<div class="fz-group position-relative">
+													<input type="text" name="feedzy_meta_data[import_seo_data]"
+														placeholder="<?php esc_attr_e( 'SEO data', 'feedzy-rss-feeds' ); ?>"
+														class="form-control fz-input-tagify"
+														value="<?php echo esc_attr( feedzy_custom_tag_escape( isset( $import_seo_data ) ? $import_seo_data : '' ) ); ?>" />
+													<div class="fz-input-group-right fz-seo-action-tags position-absolute fz-insert-tags">
+														<div class="dropdown">
+															<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" aria-haspopup="true"
+																aria-expanded="false">
+																<span class="dashicons dashicons-plus-alt2"></span>
+															</button>
+															<div class="dropdown-menu dropdown-menu-right">
+																<?php echo wp_kses_post( apply_filters( 'feedzy_render_magic_tags', '', apply_filters( 'feedzy_magic_tags_seo', array() ), 'import_seo_data' ) ); ?>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="help-text">
+													<?php
+														esc_html_e( 'You can use the magic tags or leave it empty.', 'feedzy-rss-feeds' );
+													?>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="fz-tab-content" id="fz-advanced-options">

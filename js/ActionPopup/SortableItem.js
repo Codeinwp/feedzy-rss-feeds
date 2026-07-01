@@ -1,4 +1,5 @@
 import React from 'react';
+import { useRef, useEffect } from '@wordpress/element';
 import { SortableElement, sortableHandle } from 'react-sortable-hoc';
 import { __, sprintf } from '@wordpress/i18n';
 import { unescape } from 'lodash';
@@ -30,10 +31,76 @@ import {
 } from '@wordpress/components';
 
 import RewriteActionItem from './RewriteActionItem';
+import ModelSelect from './ModelSelect';
+import ProviderSelect from './ProviderSelect';
 
 const DragHandle = sortableHandle(() => (
 	<Icon icon={dragHandle} size={18} className="components-panel__icon" />
 ));
+
+const SEO_FIELDS = [
+	{ value: 'seo_title',        label: () => __( 'SEO Title', 'feedzy-rss-feeds' ) },
+	{ value: 'meta_description', label: () => __( 'Meta Description', 'feedzy-rss-feeds' ) },
+	{ value: 'focus_keyword',    label: () => __( 'Focus Keyword', 'feedzy-rss-feeds' ) },
+];
+const ALL_SEO_FIELD_VALUES = SEO_FIELDS.map( ( f ) => f.value );
+
+const SeoFieldsSelect = ( { currentFields, onChange, disabled } ) => {
+	const selectRef  = useRef( null );
+	const chosenInit = useRef( false );
+
+	useEffect( () => {
+		if ( ! selectRef.current || typeof jQuery === 'undefined' ) {
+			return;
+		}
+		const $select = jQuery( selectRef.current );
+		$select.chosen( { width: '100%' } );
+		chosenInit.current = true;
+
+		$select.on( 'change.feedzy-seo-fields', function () {
+			const selected = Array.from( this.selectedOptions ).map( ( o ) => o.value );
+			onChange( selected );
+		} );
+
+		return () => {
+			$select.off( 'change.feedzy-seo-fields' );
+			if ( chosenInit.current ) {
+				try {
+					$select.chosen( 'destroy' );
+				} catch ( e ) {} // eslint-disable-line no-empty
+				chosenInit.current = false;
+			}
+		};
+	}, [] ); // eslint-disable-line react-hooks/exhaustive-deps
+
+	useEffect( () => {
+		if ( ! selectRef.current || ! chosenInit.current || typeof jQuery === 'undefined' ) {
+			return;
+		}
+		const options = selectRef.current.options;
+		for ( let i = 0; i < options.length; i++ ) {
+			options[ i ].selected = currentFields.includes( options[ i ].value );
+		}
+		jQuery( selectRef.current ).trigger( 'chosen:updated' );
+	}, [ currentFields ] );
+
+	return (
+		<select
+			ref={ selectRef }
+			multiple
+			className="feedzy-chosen form-control"
+			disabled={ disabled }
+			defaultValue={ currentFields }
+			onChange={ () => {} }
+		>
+			{ SEO_FIELDS.map( ( field ) => (
+				<option key={ field.value } value={ field.value }>
+					{ field.label() }
+				</option>
+			) ) }
+		</select>
+	);
+};
 
 const UpgradeNotice = ({ higherPlanNotice, utmCampaign }) => {
 	const upsellLink = `https://themeisle.com/plugins/feedzy-rss-feeds/upgrade/?utm_source=wpadmin&utm_medium=import&utm_campaign=${utmCampaign}&utm_content=feedzy-rss-feeds`;
@@ -880,6 +947,181 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 						onClick={() => {
 							propRef.removeCallback(loopIndex);
 						}}
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="24"
+							height="24"
+							viewBox="0 0 24 24"
+							fill="none"
+						>
+							<path
+								d="M20 5.0002H14.3C14.3 3.7002 13.3 2.7002 12 2.7002C10.7 2.7002 9.7 3.7002 9.7 5.0002H4V7.0002H5.5V7.3002L7.2 18.4002C7.3 19.4002 8.2 20.1002 9.2 20.1002H14.9C15.9 20.1002 16.7 19.4002 16.9 18.4002L18.6 7.3002V7.0002H20V5.0002ZM16.8 7.0002L15.1 18.1002C15.1 18.2002 15 18.3002 14.8 18.3002H9.1C9 18.3002 8.8 18.2002 8.8 18.1002L7.2 7.0002H16.8Z"
+								fill="black"
+							/>
+						</svg>
+					</button>
+				</div>
+			</li>
+		);
+	}
+
+	if ('fz_seo_metadata' === item.id) {
+		const {
+			isPro,
+			isBusinessPlan,
+			isAgencyPlan,
+			isHighPrivileges,
+			apiLicenseStatus,
+			isThemeisleAIEnabled,
+			isSeoPluginActive,
+		} = window.feedzyData;
+
+		let defaultProvider;
+		if (apiLicenseStatus.openaiStatus) {
+			defaultProvider = 'openai';
+		} else if (apiLicenseStatus.openRouterStatus) {
+			defaultProvider = 'openrouter';
+		} else {
+			defaultProvider = 'openai';
+		}
+
+		const selectedProvider = item.data.aiProvider || defaultProvider;
+		const providerLicenseStatus =
+			selectedProvider === 'openai'
+				? apiLicenseStatus.openaiStatus
+				: apiLicenseStatus.openRouterStatus;
+
+		const defaultModel =
+			selectedProvider === 'openai'
+				? window.feedzyData?.integrations?.openAIModel
+				: '';
+		const selectedAIModel = item.data.aiModel || defaultModel;
+
+		const showError =
+			isPro &&
+			( isBusinessPlan || isAgencyPlan ) &&
+			! providerLicenseStatus &&
+			! isThemeisleAIEnabled;
+		const showUpgradeNotice = ! isBusinessPlan && ! isAgencyPlan;
+		const isDisabled = ! isPro || ( ! providerLicenseStatus && ! isThemeisleAIEnabled ) || ! isSeoPluginActive;
+
+		const examplePrompt =
+			__( 'Example: Generate SEO-optimized metadata for this article.', 'feedzy-rss-feeds' );
+
+		return (
+			<li
+				className="fz-action-control fz-chat-cpt-action"
+				data-counter={counter}
+			>
+				<div className="fz-action-event">
+					{ showError && (
+						<span className="error-message">
+							{ isHighPrivileges ? (
+								<>
+									{ __( 'Invalid API Key', 'feedzy-rss-feeds' ) }{ ' ' }
+									<ExternalLink
+										href={ `admin.php?page=feedzy-integration&tab=${ selectedProvider }` }
+									>
+										<Icon icon={ external } size={ 16 } fill="#F00" />
+									</ExternalLink>
+								</>
+							) : __(
+								'Invalid API Key, Please contact the administrator',
+								'feedzy-rss-feeds'
+							) }
+						</span>
+					) }
+					<PanelBody
+						title={ __( 'Generate SEO Metadata', 'feedzy-rss-feeds' ) }
+						icon={ DragHandle }
+						initialOpen={ isInitialOpen }
+					>
+						<PanelRow>
+							{ ! isSeoPluginActive && (
+								<div className="fz-notice-wrap">
+									<Notice
+										status="warning"
+										isDismissible={ false }
+										className="fz-upgrade-notice"
+									>
+										<p>
+											{ __(
+												'No supported SEO plugin is active.',
+												'feedzy-rss-feeds'
+											) }
+										</p>
+									</Notice>
+								</div>
+							) }
+							<UpgradeNotice
+								higherPlanNotice={ showUpgradeNotice }
+								utmCampaign="action-seo-metadata"
+							/>
+							{ ! isThemeisleAIEnabled && (
+								<ProviderSelect
+									selectedProvider={selectedProvider}
+									loopIndex={loopIndex}
+									propRef={propRef}
+									isPro={isPro}
+								/>
+							) }
+							{ ! isThemeisleAIEnabled && selectedProvider === 'openai' && (
+								<ModelSelect
+									selectedProvider={selectedProvider}
+									selectedAIModel={selectedAIModel}
+									defaultModel={defaultModel}
+									loopIndex={loopIndex}
+									propRef={propRef}
+									isPro={isPro}
+									providerLicenseStatus={providerLicenseStatus}
+								/>
+							) }
+							<BaseControl __nextHasNoMarginBottom className="mb-20">
+								<BaseControl.VisualLabel>
+									{ __( 'SEO Fields to Generate', 'feedzy-rss-feeds' ) }
+								</BaseControl.VisualLabel>
+								<SeoFieldsSelect
+									currentFields={
+										Array.isArray( item.data.seoFields )
+											? item.data.seoFields
+											: ALL_SEO_FIELD_VALUES
+									}
+									onChange={ ( selected ) =>
+										propRef.onChangeHandler( {
+											index: loopIndex,
+											seoFields: selected,
+										} )
+									}
+									disabled={ isDisabled }
+								/>
+							</BaseControl>
+							<BaseControl __nextHasNoMarginBottom>
+								<TextareaControl
+									__nextHasNoMarginBottom
+									label={ __( 'SEO Prompt', 'feedzy-rss-feeds' ) }
+									value={
+										item.data.seoPrompt
+											? unescape( item.data.seoPrompt.replaceAll( '&#039;', "'" ) )
+											: ''
+									}
+									help={ examplePrompt }
+									onChange={ ( currentValue ) =>
+										propRef.onChangeHandler( {
+											index: loopIndex,
+											seoPrompt: currentValue ?? '',
+										} )
+									}
+									disabled={ isDisabled }
+								/>
+							</BaseControl>
+						</PanelRow>
+					</PanelBody>
+				</div>
+				<div className="fz-trash-action">
+					<button
+						type="button"
+						onClick={ () => propRef.removeCallback( loopIndex ) }
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
