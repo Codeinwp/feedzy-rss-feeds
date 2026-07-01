@@ -1,3 +1,7 @@
+##### [Version 5.2.3](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.2...v5.2.3) (2026-07-01)
+
+- Enhanced security
+
 ##### [Version 5.2.2](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.1...v5.2.2) (2026-06-26)
 
 - Enhanced security
