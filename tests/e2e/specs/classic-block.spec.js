@@ -83,7 +83,7 @@ test.describe('Feedzy Classic Block', () => {
 		const image = page.locator('.feedzy-rss .rss_image img');
 		await expect(image).toHaveAttribute(
 			'style',
-			'height:150px;width:150px;'
+			'height:150px;width:150px'
 		);
 	});
 
