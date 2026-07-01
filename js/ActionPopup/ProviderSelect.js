@@ -3,7 +3,7 @@ import {
 	SelectControl,
 } from '@wordpress/components';
 
-import { __ } from "@wordpress/i18n";
+import { __ } from '@wordpress/i18n';
 
 const ProviderSelect = ({ selectedProvider, loopIndex, propRef, isPro }) => (
     <BaseControl __nextHasNoMarginBottom className="mb-20">

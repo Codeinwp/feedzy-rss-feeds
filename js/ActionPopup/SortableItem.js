@@ -1099,7 +1099,7 @@ const SortableItem = ({ propRef, loopIndex, item }) => {
 							<BaseControl __nextHasNoMarginBottom>
 								<TextareaControl
 									__nextHasNoMarginBottom
-									label={ __( 'SEO Prompt', 'feedzy-rss-feeds' ) }
+									label={ __( 'Additional Prompt', 'feedzy-rss-feeds' ) }
 									value={
 										item.data.seoPrompt
 											? unescape( item.data.seoPrompt.replaceAll( '&#039;', "'" ) )

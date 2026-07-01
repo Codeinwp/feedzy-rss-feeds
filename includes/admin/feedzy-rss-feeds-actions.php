@@ -664,6 +664,8 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		 * @return string Original field content, unmodified.
 		 */
 		private function generate_seo_metadata() {
+			$this->pending_seo_metadata = null;
+
 			$title   = isset( $this->item['item_title'] ) ? $this->item['item_title'] : '';
 			$content = isset( $this->item['item_content'] ) ? $this->item['item_content']
 				: ( isset( $this->item['item_description'] ) ? $this->item['item_description'] : '' );
