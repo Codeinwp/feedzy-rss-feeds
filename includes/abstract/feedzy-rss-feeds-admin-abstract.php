@@ -1061,7 +1061,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return string
 	 */
 	private function get_lazyload_cache_key( $sc, $feed_url ) {
-		return md5( sprintf( 'feedzy-lazy-%s-%d-%d', ( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ), ( ! empty( $sc['max'] ) ? $sc['max'] : 1 ), ( ! empty( $sc['offset'] ) ? $sc['offset'] : 0 ) ) );
+		return md5( sprintf( 'feedzy-lazy-%s-%d-%d-%s', ( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ), ( ! empty( $sc['max'] ) ? $sc['max'] : 1 ), ( ! empty( $sc['offset'] ) ? $sc['offset'] : 0 ), ( ! empty( $sc['refresh'] ) ? $sc['refresh'] : '12_hours' ) ) );
 	}
 
 	/**
