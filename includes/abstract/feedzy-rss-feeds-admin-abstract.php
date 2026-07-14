@@ -460,7 +460,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				}
 				$attributes .= 'data-' . esc_attr( $key ) . '="' . esc_attr( $val ) . '"';
 			}
-			$lazyload_cache_key = md5( sprintf( 'feedzy-lazy-%s-%d-%d', ( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ), ( ! empty( $sc['max'] ) ? $sc['max'] : 1 ), ( ! empty( $sc['offset'] ) ? $sc['offset'] : 0 ) ) );
+			$lazyload_cache_key = $this->get_lazyload_cache_key( $sc, $feed_url );
 			$content            = get_transient( $lazyload_cache_key );
 
 			// the first time the shortcode is being called it will not have any content.
@@ -577,6 +577,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			wp_send_json_error( array( 'message' => __( 'Security check failed.', 'feedzy-rss-feeds' ) ) );
 		}
 
+		$lazyload_cache_key = $this->get_lazyload_cache_key( $sc, $feed_url );
+
 		if ( isset( $sc['filters'] ) && ! empty( $sc['filters'] ) && feedzy_is_pro() ) {
 			$sc['filters'] = apply_filters( 'feedzy_filter_conditions_attribute', $sc['filters'] );
 		} else {
@@ -604,9 +606,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$sc      = $this->sanitize_attr( $sc, $feed_url );
 		$content = $this->render_content( $sc, $feed, $feed_url, '' );
 
-		// save the content as a transient so that whenever the feed is refreshed next, this stale content is displayed first.
-		$lazyload_cache_key = md5( sprintf( 'feedzy-lazy-%s-%d-%d', ( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ), ( ! empty( $sc['max'] ) ? $sc['max'] : 1 ), ( ! empty( $sc['offset'] ) ? $sc['offset'] : 0 ) ) );
-		set_transient( $lazyload_cache_key, $content, apply_filters( 'feedzy_lazyload_cache_time', DAY_IN_SECONDS, $feed_url ) );
+		$cache_time = $this->calculate_cache_time( $sc['refresh'] );
+		set_transient( $lazyload_cache_key, $content, apply_filters( 'feedzy_lazyload_cache_time', $cache_time, $feed_url ) );
 
 		wp_send_json_success( array( 'content' => $content ) );
 	}
@@ -1022,19 +1023,45 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			'hours' => HOUR_IN_SECONDS,
 			'days'  => DAY_IN_SECONDS,
 		);
+		$unit_aliases  = array(
+			'min'     => 'mins',
+			'mins'    => 'mins',
+			'minute'  => 'mins',
+			'minutes' => 'mins',
+			'hour'    => 'hours',
+			'hours'   => 'hours',
+			'day'     => 'days',
+			'days'    => 'days',
+		);
 		$cache_time    = 12 * HOUR_IN_SECONDS;
 		$cache         = trim( $cache );
 
-		if ( isset( $cache ) && '' !== $cache ) {
-			list( $value, $unit ) = explode( '_', $cache );
-			if ( isset( $value ) && is_numeric( $value ) && $value >= 1 && $value <= 100 ) {
-				if ( isset( $unit ) && in_array( strtolower( $unit ), array( 'mins', 'hours', 'days' ), true ) ) {
-					$cache_time = $value * $unit_defaults[ $unit ];
+		if ( '' !== $cache ) {
+			$parts = explode( '_', $cache, 2 );
+			if ( 2 === count( $parts ) ) {
+				list( $value, $unit ) = $parts;
+				$unit                 = strtolower( trim( $unit ) );
+				if ( is_numeric( $value ) && $value >= 1 && $value <= 100 && isset( $unit_aliases[ $unit ] ) ) {
+					$cache_time = $value * $unit_defaults[ $unit_aliases[ $unit ] ];
 				}
 			}
 		}
 
 		return $cache_time;
+	}
+
+	/**
+	 * Build the transient key used to cache the rendered lazy-load HTML output.
+	 *
+	 * @access  private
+	 *
+	 * @param   array<string, mixed> $sc The shortcode attributes.
+	 * @param   string|array<string> $feed_url The feed URL(s).
+	 *
+	 * @return string
+	 */
+	private function get_lazyload_cache_key( $sc, $feed_url ) {
+		return md5( sprintf( 'feedzy-lazy-%s-%d-%d', ( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ), ( ! empty( $sc['max'] ) ? $sc['max'] : 1 ), ( ! empty( $sc['offset'] ) ? $sc['offset'] : 0 ) ) );
 	}
 
 	/**
