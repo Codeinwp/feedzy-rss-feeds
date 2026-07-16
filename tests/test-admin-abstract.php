@@ -624,4 +624,100 @@ class Test_Abstract_Admin extends WP_UnitTestCase {
             $this->assertEquals($expected, $result, "Failed for input: $input");
         }
     }
+
+	/**
+	 * Calls the private is_valid_feed_url() method via reflection.
+	 *
+	 * @param string $url The URL to validate.
+	 *
+	 * @return bool
+	 */
+	private function invoke_is_valid_feed_url( $url ) {
+		$reflector = new ReflectionClass( $this->feedzy_abstract );
+		$method    = $reflector->getMethod( 'is_valid_feed_url' );
+		$method->setAccessible( true );
+
+		return $method->invoke( $this->feedzy_abstract, $url );
+	}
+
+	/**
+	 * Test is_valid_feed_url method with feed URLs containing HTTP Basic Auth credentials.
+	 */
+	public function test_is_valid_feed_url_with_basic_auth_credentials() {
+		$this->assertTrue( $this->invoke_is_valid_feed_url( 'https://username:password@example.com/feed.xml' ) );
+		$this->assertTrue( $this->invoke_is_valid_feed_url( 'https://username:password@example.com:8080/feed.xml' ) );
+		$this->assertTrue( $this->invoke_is_valid_feed_url( 'http://user:pass@example.com/feed.xml?a=1#frag' ) );
+	}
+
+	/**
+	 * Test is_valid_feed_url method still accepts plain feed URLs without credentials.
+	 */
+	public function test_is_valid_feed_url_without_credentials() {
+		$this->assertTrue( $this->invoke_is_valid_feed_url( 'https://example.com/feed.xml' ) );
+	}
+
+	/**
+	 * Test is_valid_feed_url method still rejects local/private hosts even when credentials are present,
+	 * so SSRF protections keep working for authenticated URLs too.
+	 */
+	public function test_is_valid_feed_url_rejects_local_host_with_credentials() {
+		$this->assertFalse( $this->invoke_is_valid_feed_url( 'https://username:password@127.0.0.1/feed.xml' ) );
+		$this->assertFalse( $this->invoke_is_valid_feed_url( 'https://username:password@10.0.0.5/feed.xml' ) );
+	}
+
+	/**
+	 * Test is_valid_feed_url method still rejects local/private hosts without credentials (baseline SSRF check).
+	 */
+	public function test_is_valid_feed_url_rejects_local_host_without_credentials() {
+		$this->assertFalse( $this->invoke_is_valid_feed_url( 'https://127.0.0.1/feed.xml' ) );
+	}
+
+	/**
+	 * Test is_valid_feed_url method with edge case inputs.
+	 */
+	public function test_is_valid_feed_url_edge_cases() {
+		$this->assertFalse( $this->invoke_is_valid_feed_url( '' ) );
+		$this->assertFalse( $this->invoke_is_valid_feed_url( 'not-a-url' ) );
+	}
+
+	/**
+	 * Test that an "@" in the URL path (not userinfo) is left alone and doesn't affect validation.
+	 */
+	public function test_is_valid_feed_url_with_at_symbol_in_path() {
+		$this->assertTrue( $this->invoke_is_valid_feed_url( 'https://example.com/feed@2x.xml' ) );
+	}
+
+	/**
+	 * Test normalize_urls() preserves a single feed source URL with HTTP Basic Auth credentials intact.
+	 * Regression test: normalize_urls() previously discarded authenticated feed URLs because
+	 * wp_http_validate_url() unconditionally rejects any URL containing a user:pass@ userinfo component.
+	 */
+	public function test_normalize_urls_preserves_basic_auth_credentials() {
+		$url    = 'https://username:password@example.com/feed.xml';
+		$result = $this->feedzy_abstract->normalize_urls( $url );
+
+		$this->assertEquals( $url, $result );
+	}
+
+	/**
+	 * Test normalize_urls() preserves credentials for an array of feed source URLs.
+	 */
+	public function test_normalize_urls_preserves_basic_auth_credentials_in_array() {
+		$authenticated_url = 'https://username:password@example.com/feed.xml';
+		$plain_url         = 'https://example.org/other-feed.xml';
+		$result            = $this->feedzy_abstract->normalize_urls( $authenticated_url . ',' . $plain_url );
+
+		$this->assertIsArray( $result );
+		$this->assertContains( $authenticated_url, $result );
+		$this->assertContains( $plain_url, $result );
+	}
+
+	/**
+	 * Test normalize_urls() still rejects an authenticated URL pointing at a local/private host.
+	 */
+	public function test_normalize_urls_rejects_local_host_with_basic_auth_credentials() {
+		$result = $this->feedzy_abstract->normalize_urls( 'https://username:password@127.0.0.1/feed.xml' );
+
+		$this->assertEquals( '', $result );
+	}
 }

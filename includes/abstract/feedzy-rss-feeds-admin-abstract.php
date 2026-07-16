@@ -721,17 +721,34 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$feed_url = apply_filters( 'feedzy_get_feed_url', $feeds );
 		if ( is_array( $feed_url ) ) {
 			foreach ( $feed_url as $index => $url ) {
-				if ( wp_http_validate_url( $url ) ) {
+				if ( $this->is_valid_feed_url( $url ) ) {
 					$feed_url[ $index ] = trim( $this->smart_convert( esc_url_raw( $url ) ) );
 				}
 			}
-		} elseif ( wp_http_validate_url( $feed_url ) ) {
+		} elseif ( $this->is_valid_feed_url( $feed_url ) ) {
 			$feed_url = trim( $this->smart_convert( esc_url_raw( $feed_url ) ) );
 		} else {
 			$feed_url = '';
 		}
 
 		return $feed_url;
+	}
+
+	/**
+	 * Validates a feed source URL.
+	 *
+	 * @param   string $url The feed url to validate.
+	 *
+	 * @return bool Whether the URL passes SSRF validation.
+	 */
+	private function is_valid_feed_url( $url ) {
+		if ( ! is_string( $url ) || '' === $url ) {
+			return false;
+		}
+
+		$url = preg_replace( '#^(https?://)[^/@]*@#i', '$1', $url );
+
+		return (bool) wp_http_validate_url( $url );
 	}
 
 	/**
