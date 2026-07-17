@@ -122,20 +122,19 @@ $logs_entries = isset( $logs ) && is_array( $logs ) ? $logs : array();
 					<?php if ( '' !== $import_id || '' !== $import_title || '' !== $feed_url ) : ?>
 						<div class="fz-log-container__badges">
 							<?php if ( '' !== $import_id || '' !== $import_title ) : ?>
-								<span class="fz-log-context-import" title="<?php esc_attr_e( 'Import job that produced this entry', 'feedzy-rss-feeds' ); ?>">
+								<span class="fz-log-context-import">
 									<?php
 									if ( '' !== $import_title ) {
 										echo esc_html( $import_title ) . ' ';
 									}
 									if ( '' !== $import_id ) {
-										// translators: %s is the import job ID.
-										echo esc_html( sprintf( __( '(Import #%s)', 'feedzy-rss-feeds' ), $import_id ) );
+										echo esc_html( '(#' . $import_id . ')' );
 									}
 									?>
 								</span>
 							<?php endif; ?>
 							<?php if ( '' !== $feed_url ) : ?>
-								<span class="fz-log-context-feed-url" title="<?php esc_attr_e( 'Feed source', 'feedzy-rss-feeds' ); ?>"><?php echo esc_html( $feed_url ); ?></span>
+								<span class="fz-log-context-feed-url"><?php echo esc_html( $feed_url ); ?></span>
 							<?php endif; ?>
 						</div>
 					<?php endif; ?>
