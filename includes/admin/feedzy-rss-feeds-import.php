@@ -565,6 +565,8 @@ class Feedzy_Rss_Feeds_Import {
 		$import_custom_fields  = get_post_meta( $post->ID, 'imports_custom_fields', true );
 		$custom_fields_actions = get_post_meta( $post->ID, 'imports_custom_field_actions', true );
 		$import_feed_limit     = get_post_meta( $post->ID, 'import_feed_limit', true );
+		$import_batch_size     = get_post_meta( $post->ID, 'import_batch_size', true );
+		$import_item_delay_ms  = get_post_meta( $post->ID, 'import_item_delay_ms', true );
 		if ( empty( $import_feed_limit ) ) {
 			$import_feed_limit = 10;
 		}
@@ -767,6 +769,7 @@ class Feedzy_Rss_Feeds_Import {
 				add_action( 'save_post_feedzy_imports', array( $this, 'save_feedzy_import_feed_meta' ), 1, 2 );
 			}
 			// Clear the import job cron schedule if it exists.
+			delete_post_meta( $post_id, 'import_batch_cursor' );
 			Feedzy_Rss_Feeds_Util_Scheduler::clear_scheduled_hook( 'feedzy_cron', array( 100, $post_id ) );
 			do_action( 'feedzy_save_fields', $post_id, $post );
 		}
@@ -1607,7 +1610,14 @@ class Feedzy_Rss_Feeds_Import {
 		$feedzy_imports = get_posts( $args );
 		foreach ( $feedzy_imports as $job ) {
 			try {
-				$result = $this->run_job( $job, $max );
+				$result     = $this->run_job( $job, $max );
+				$batch_size = max(
+					0,
+					min(
+						9999,
+						(int) apply_filters( 'feedzy_import_batch_size', get_post_meta( $job->ID, 'import_batch_size', true ), $job )
+					)
+				);
 
 				Feedzy_Rss_Feeds_Log::debug(
 					'Cron job run for: ' . $job->post_title,
@@ -1617,7 +1627,7 @@ class Feedzy_Rss_Feeds_Import {
 					)
 				);
 
-				if ( empty( $result ) ) {
+				if ( empty( $result ) && 0 === $batch_size ) {
 					$this->run_job( $job, $max );
 
 					Feedzy_Rss_Feeds_Log::debug(
@@ -1692,6 +1702,20 @@ class Feedzy_Rss_Feeds_Import {
 		$import_max               = $import_feed_limit;
 		$import_remove_html       = get_post_meta( $job->ID, 'import_remove_html', true );
 		$import_order             = get_post_meta( $job->ID, 'import_order', true );
+		$import_batch_size        = max(
+			0,
+			min(
+				9999,
+				(int) apply_filters( 'feedzy_import_batch_size', get_post_meta( $job->ID, 'import_batch_size', true ), $job )
+			)
+		);
+		$import_item_delay_ms     = max(
+			0,
+			min(
+				60000,
+				(int) apply_filters( 'feedzy_import_item_delay_ms', get_post_meta( $job->ID, 'import_item_delay_ms', true ), $job )
+			)
+		);
 
 		if ( ! defined( 'TI_UNIT_TESTING' ) ) {
 			$max = $import_max;
@@ -1724,6 +1748,8 @@ class Feedzy_Rss_Feeds_Import {
 				'filter_conditions'        => $filter_conditions,
 				'import_auto_translation'  => $import_auto_translation,
 				'import_translation_lang'  => $import_translation_lang,
+				'import_batch_size'        => $import_batch_size,
+				'import_item_delay_ms'     => $import_item_delay_ms,
 			)
 		);
 
@@ -1907,6 +1933,10 @@ class Feedzy_Rss_Feeds_Import {
 		$items_found      = array();
 		$found_duplicates = array();
 		$result_count     = count( $result );
+		$attempted_items  = 0;
+		$batch_cursor     = 0 < $import_batch_size ? (string) get_post_meta( $job->ID, 'import_batch_cursor', true ) : '';
+		$cursor_reached   = empty( $batch_cursor );
+		$batch_stopped    = false;
 
 		foreach ( $result as $key => $item ) {
 			Feedzy_Rss_Feeds_Log::debug(
@@ -1925,13 +1955,52 @@ class Feedzy_Rss_Feeds_Import {
 					$item_obj = $xml_results['items'][ $real_index_key ];
 				}
 			}
-			$item_hash                        = $use_new_hash ? $item['item_id'] : hash( 'sha256', $item['item_url'] . '_' . $item['item_date'] );
-			$is_duplicate                     = $use_new_hash ? in_array( $item_hash, $imported_items_new, true ) : in_array( $item_hash, $imported_items_old, true );
+			$item_hash    = $use_new_hash ? $item['item_id'] : hash( 'sha256', $item['item_url'] . '_' . $item['item_date'] );
+			$is_duplicate = $use_new_hash ? in_array( $item_hash, $imported_items_new, true ) : in_array( $item_hash, $imported_items_old, true );
+
+			if ( ! $cursor_reached ) {
+				if ( $batch_cursor === (string) $item_hash ) {
+					$cursor_reached = true;
+				}
+				continue;
+			}
+
+			if ( $is_duplicate ) {
+				$items_found[ $item['item_url'] ] = $item['item_title'];
+				do_action(
+					'feedzy_log_event',
+					array(
+						'type'   => 'info',
+						'output' => sprintf( 'Ignoring URl %1$s with hash %2$s as it is a duplicate (%3$s hash).', $item['item_url'], $item_hash, $use_new_hash ? 'new' : 'old' ),
+						'file'   => __FILE__,
+						'line'   => __LINE__,
+					)
+				);
+				Feedzy_Rss_Feeds_Log::debug(
+					sprintf( 'Ignoring item %1$s as it is a duplicate (%2$s hash).', $item['item_url'], $use_new_hash ? 'new' : 'old' )
+				);
+				++$index;
+				$duplicates[ $item['item_url'] ] = $item['item_title'];
+				continue;
+			}
+
+			if ( 0 < $import_batch_size && $attempted_items >= $import_batch_size ) {
+				$batch_stopped = true;
+				break;
+			}
+
 			$items_found[ $item['item_url'] ] = $item['item_title'];
+			if ( 0 < $attempted_items && 0 < $import_item_delay_ms ) {
+				usleep( $import_item_delay_ms * 1000 );
+			}
+			if ( 0 < $import_batch_size ) {
+				update_post_meta( $job->ID, 'import_batch_cursor', $item_hash );
+			}
+			++$attempted_items;
 
 			$duplicate_tag_value = array();
 			$mark_duplicate_key  = 'item_url';
-			if ( 'yes' === $import_remove_duplicates && ! $is_duplicate ) {
+			if ( 'yes' === $import_remove_duplicates ) {
 				if ( ! empty( $mark_duplicate_tag ) ) {
 					$mark_duplicate_tag  = is_string( $mark_duplicate_tag ) ? explode( ',', $mark_duplicate_tag ) : $mark_duplicate_tag;
 					$mark_duplicate_tag  = array_map( 'trim', $mark_duplicate_tag );
@@ -1971,24 +2040,6 @@ class Feedzy_Rss_Feeds_Import {
 					}
 				}
 			}
-			if ( $is_duplicate ) {
-				do_action(
-					'feedzy_log_event',
-					array(
-						'type'   => 'info',
-						'output' => sprintf( 'Ignoring URl %1$s with hash %2$s as it is a duplicate (%3$s hash).', $item['item_url'], $item_hash, $use_new_hash ? 'new' : 'old' ),
-						'file'   => __FILE__,
-						'line'   => __LINE__,
-					) 
-				);
-				Feedzy_Rss_Feeds_Log::debug(
-					sprintf( 'Ignoring item %1$s as it is a duplicate (%2$s hash).', $item['item_url'], $use_new_hash ? 'new' : 'old' )
-				);
-				++$index;
-				$duplicates[ $item['item_url'] ] = $item['item_title'];
-				continue;
-			}
-
 			$author = '';
 			if ( $item['item_author'] ) {
 				if ( is_string( $item['item_author'] ) ) {
@@ -2778,6 +2829,17 @@ class Feedzy_Rss_Feeds_Import {
 			update_post_meta( $new_post_id, 'feedzy_job_time', $last_run );
 
 			do_action( 'feedzy_after_post_import', $new_post_id, $item, $this->settings );
+
+			if ( $use_new_hash ) {
+				update_post_meta( $job->ID, 'imported_items_hash', $imported_items );
+			} else {
+				update_post_meta( $job->ID, 'imported_items', $imported_items );
+			}
+			update_post_meta( $job->ID, 'imported_items_count', $count );
+		}
+
+		if ( ! $batch_stopped ) {
+			delete_post_meta( $job->ID, 'import_batch_cursor' );
 		}
 
 		if ( $use_new_hash ) {
@@ -4018,6 +4080,7 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		delete_post_meta( $id, 'imported_items_hash' );
+		delete_post_meta( $id, 'import_batch_cursor' );
 		delete_post_meta( $id, 'last_run' );
 		wp_die();
 	}
@@ -4285,6 +4348,7 @@ class Feedzy_Rss_Feeds_Import {
 				'last_run',
 				'imported_items_hash',
 				'imported_items_count',
+				'import_batch_cursor',
 			);
 
 			if ( $post_meta ) {

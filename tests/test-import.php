@@ -90,6 +90,8 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 		$_POST['feedzy_meta_data']['import_post_content']              = "{$magic_tags}";
 		$_POST['feedzy_meta_data']['import_post_featured_img']         = '[#item_image]';
 		$_POST['feedzy_meta_data']['import_feed_limit']         = $num_items;
+		$_POST['feedzy_meta_data']['import_batch_size']                = 1;
+		$_POST['feedzy_meta_data']['import_item_delay_ms']             = 0;
 		$_POST['custom_vars_key']                                    = array();
 		$_POST['custom_vars_value']                                  = array();
 
@@ -98,6 +100,7 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 			$_POST['feedzy_meta_data']['mark_duplicate_tag']       = '[#item_author]';
 		}
 
+		update_post_meta( $p->ID, 'import_batch_cursor', 'stale-cursor' );
 		do_action( 'save_post_feedzy_imports', $p->ID, $p );
 		$this->assertEquals( $p->post_title, $random_name2 );
 		$this->assertEquals( $p->post_type, 'feedzy_imports' );
@@ -114,6 +117,8 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 		$import_featured_img  = get_post_meta( $p->ID, 'import_post_featured_img', true );
 		$import_custom_fields = get_post_meta( $p->ID, 'imports_custom_fields', true );
 		$import_feed_limit    = get_post_meta( $p->ID, 'import_feed_limit', true );
+		$import_batch_size    = get_post_meta( $p->ID, 'import_batch_size', true );
+		$import_item_delay_ms = get_post_meta( $p->ID, 'import_item_delay_ms', true );
 
 		// The import_post_content goes through escape_html_to_tag() which converts HTML tags to JSON format
 		$expected_content = escape_html_to_tag( $magic_tags );
@@ -135,6 +140,9 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 		$this->assertEquals( '[#item_image]', $import_featured_img );
 		$this->assertEquals( '', $import_custom_fields );
 		$this->assertEquals( $num_items, $import_feed_limit );
+		$this->assertEquals( 1, $import_batch_size );
+		$this->assertEquals( 0, $import_item_delay_ms );
+		$this->assertSame( '', get_post_meta( $p->ID, 'import_batch_cursor', true ) );
 
 		if ( $check_duplicate ) {
 			$this->assertEquals( 'yes', $remove_duplicates );

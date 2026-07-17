@@ -620,10 +620,10 @@ global $post;
 								</div>
 								<div class="fz-right">
 									<div class="fz-form-group">
-										<label class="form-label"><?php esc_html_e( 'Number of items to import', 'feedzy-rss-feeds' ); ?></label>
+										<label class="form-label"><?php esc_html_e( 'Feed items to scan', 'feedzy-rss-feeds' ); ?></label>
 										<input type="number" min="0" max="9999" id="feedzy_item_limit" name="feedzy_meta_data[import_feed_limit<?php echo ! feedzy_is_pro() && ! feedzy_is_legacyv5() ? 'locked' : ''; ?>]" class="form-control" value="<?php echo esc_attr( (int) $import_feed_limit ); ?>" />
 										<div class="help-text pt-8">
-											<?php echo wp_kses_post( sprintf( __( 'Set the number of feed items to import per run.', 'feedzy-rss-feeds' ), '<b>', '</b>' ) ); ?>
+											<?php esc_html_e( 'Maximum number of candidate items loaded from the feed per run.', 'feedzy-rss-feeds' ); ?>
 										</div>
 									</div>
 								</div>
@@ -827,6 +827,31 @@ global $post;
 					</div>
 					<div class="fz-tab-content" id="fz-advanced-settings">
 						<div class="fz-form-wrap">
+
+							<div class="form-block form-block-two-column <?php echo ! feedzy_is_pro() && ! feedzy_is_legacyv5() ? esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ) : ''; ?>">
+								<?php echo ! feedzy_is_pro() && ! feedzy_is_legacyv5() ? wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'import-batching', 'import' ) ) : ''; ?>
+								<div class="fz-left">
+									<h4 class="h4"><?php esc_html_e( 'Import Batching', 'feedzy-rss-feeds' ); ?><?php echo ! feedzy_is_pro() && ! feedzy_is_legacyv5() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
+								</div>
+								<div class="fz-right">
+									<div class="fz-form-row">
+										<div class="fz-form-col-6">
+											<div class="fz-form-group">
+												<label class="form-label" for="feedzy-import-batch-size"><?php esc_html_e( 'Items processed per cron run', 'feedzy-rss-feeds' ); ?></label>
+												<input type="number" min="0" max="9999" id="feedzy-import-batch-size" name="feedzy_meta_data[import_batch_size<?php echo ! feedzy_is_pro() && ! feedzy_is_legacyv5() ? 'locked' : ''; ?>]" class="form-control" value="<?php echo esc_attr( (int) $import_batch_size ); ?>" />
+												<div class="help-text pt-8"><?php esc_html_e( 'Use a smaller batch on memory-limited hosts. Set to 0 for no processing limit.', 'feedzy-rss-feeds' ); ?></div>
+											</div>
+										</div>
+										<div class="fz-form-col-6">
+											<div class="fz-form-group">
+												<label class="form-label" for="feedzy-import-item-delay"><?php esc_html_e( 'Delay between items (milliseconds)', 'feedzy-rss-feeds' ); ?></label>
+												<input type="number" min="0" max="60000" id="feedzy-import-item-delay" name="feedzy_meta_data[import_item_delay_ms<?php echo ! feedzy_is_pro() && ! feedzy_is_legacyv5() ? 'locked' : ''; ?>]" class="form-control" value="<?php echo esc_attr( (int) $import_item_delay_ms ); ?>" />
+												<div class="help-text pt-8"><?php esc_html_e( 'Optional pause between new items. Set to 0 for no delay.', 'feedzy-rss-feeds' ); ?></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 
 							<div class="form-block form-block-two-column no-border">
 								<div class="fz-left">
