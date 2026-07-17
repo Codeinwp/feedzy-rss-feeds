@@ -1,4 +1,9 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 $custom_schedules = array();
 $has_pro          = feedzy_is_pro();
 $settings         = apply_filters( 'feedzy_get_settings', array() );

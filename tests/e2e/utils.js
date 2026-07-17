@@ -303,7 +303,9 @@ export async function runImportByName(
 			response
 				.request()
 				.postData()
-				.includes('action=feedzy&_action=run_now')
+				.includes('action=feedzy&_action=run_now'),
+		// Importing a feed can take a while (remote fetch + image sideloads).
+		{ timeout: 60000 }
 	);
 
 	const responseBody = await runNowResponse.json();

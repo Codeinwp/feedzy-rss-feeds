@@ -9,6 +9,11 @@
  * @subpackage feedzy-rss-feeds/includes/admin
  */
 
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 	/**
 	 * Singleton class for content action process.

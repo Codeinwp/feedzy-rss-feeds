@@ -3196,8 +3196,7 @@ class Feedzy_Rss_Feeds_Import {
 						)
 					);
 
-					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
-					unlink( $local_file );
+					wp_delete_file( $local_file );
 
 					return false;
 				}
@@ -3214,8 +3213,7 @@ class Feedzy_Rss_Feeds_Import {
 						)
 					);
 
-					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
-					unlink( $local_file );
+					wp_delete_file( $local_file );
 
 					return false;
 				}
@@ -3227,7 +3225,7 @@ class Feedzy_Rss_Feeds_Import {
 				$correct_local_file = preg_replace( '/\.[a-z0-9]+$/i', $correct_extension, $local_file );
 
 				if ( $correct_local_file !== $local_file ) {
-					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_rename
+					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_rename, WordPress.WP.AlternativeFunctions.rename_rename -- renaming a temp file created by download_url().
 					if ( rename( $local_file, $correct_local_file ) ) {
 						$local_file = $correct_local_file;
 					} else {
@@ -3241,8 +3239,7 @@ class Feedzy_Rss_Feeds_Import {
 							)
 						);
 
-						// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
-						unlink( $local_file );
+						wp_delete_file( $local_file );
 
 						return false;
 					}
@@ -3323,7 +3320,7 @@ class Feedzy_Rss_Feeds_Import {
 					$extension      = ! empty( $extension ) ? '.' . $extension : str_replace( 'image/', '.', $type );
 					$new_local_file = preg_replace( '/\.tmp$/', $extension, $local_file );
 
-					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_rename
+					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_rename, WordPress.WP.AlternativeFunctions.rename_rename -- renaming a temp file created by download_url().
 					$renamed = rename( $local_file, $new_local_file );
 					if ( $renamed ) {
 						$local_file = $new_local_file;
@@ -3353,8 +3350,7 @@ class Feedzy_Rss_Feeds_Import {
 						)
 					);
 
-					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
-					unlink( $local_file );
+					wp_delete_file( $local_file );
 
 					return false;
 				}
@@ -3374,10 +3370,8 @@ class Feedzy_Rss_Feeds_Import {
 					)
 				);
 
-				// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
 				if ( file_exists( $file_array['tmp_name'] ) ) {
-					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
-					unlink( $file_array['tmp_name'] );
+					wp_delete_file( $file_array['tmp_name'] );
 				}
 
 				return false;

@@ -6,6 +6,11 @@
  * @since   5.1.0
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+
 ?>
 <div class="feedzy-container">
 	<div class="feedzy-helper-notice" style="padding: 30px; position: relative">

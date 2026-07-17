@@ -8,6 +8,11 @@
  * @subpackage feedzy-rss-feeds/includes/util
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+
 if ( ! class_exists( 'SimplePie' ) ) {
 	require_once ABSPATH . WPINC . '/class-simplepie.php';
 	require_once ABSPATH . WPINC . '/class-wp-feed-cache-transient.php';
