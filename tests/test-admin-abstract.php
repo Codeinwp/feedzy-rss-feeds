@@ -624,4 +624,86 @@ class Test_Abstract_Admin extends WP_UnitTestCase {
             $this->assertEquals($expected, $result, "Failed for input: $input");
         }
     }
+
+	/**
+	 * Build a SimplePie item that has no image anywhere (enclosure, media, content, description).
+	 */
+	private function get_imageless_item() {
+		$feed = new SimplePie();
+		$feed->set_raw_data('<?xml version="1.0" encoding="UTF-8"?>
+			<rss version="2.0">
+				<channel>
+					<title>Test Feed</title>
+					<item>
+						<title>Item without image</title>
+						<link>https://example.com/article</link>
+						<description>Plain text, no image tag.</description>
+					</item>
+				</channel>
+			</rss>');
+		$feed->init();
+		$items = $feed->get_items();
+		return $items[0];
+	}
+
+	/**
+	 * During an import job the bundled default image (feedzy.svg) must NOT be used as
+	 * the item image: WordPress rejects SVG uploads, causing Media Library errors.
+	 * See https://github.com/Codeinwp/feedzy-rss-feeds/issues/1277.
+	 */
+	public function test_feedzy_retrieve_image_import_job_skips_default_image() {
+		$sc = array(
+			'feeds'    => 'https://example.com/feed',
+			'default'  => '',
+			'__jobID'  => 42,
+		);
+
+		$result = $this->feedzy_abstract->feedzy_retrieve_image( $this->get_imageless_item(), $sc );
+
+		$this->assertSame( '', $result, 'Import jobs must not fall back to the bundled default image' );
+	}
+
+	/**
+	 * Display contexts (shortcode/block rendering, no __jobID) keep the default image
+	 * fallback, where the bundled SVG is fine inside an <img> tag.
+	 */
+	public function test_feedzy_retrieve_image_display_keeps_default_image() {
+		$sc = array(
+			'feeds'   => 'https://example.com/feed',
+			'default' => '',
+		);
+
+		$result = $this->feedzy_abstract->feedzy_retrieve_image( $this->get_imageless_item(), $sc );
+
+		$this->assertSame( FEEDZY_ABSURL . 'img/feedzy.svg', $result, 'Display contexts must keep the default image fallback' );
+	}
+
+	/**
+	 * The import-job guard must only suppress the fallback, never a real item image.
+	 */
+	public function test_feedzy_retrieve_image_import_job_keeps_real_item_image() {
+		$feed = new SimplePie();
+		$feed->set_raw_data('<?xml version="1.0" encoding="UTF-8"?>
+			<rss version="2.0">
+				<channel>
+					<title>Test Feed</title>
+					<item>
+						<title>Item with image</title>
+						<enclosure url="https://example.com/real-image.jpg" type="image/jpeg" />
+					</item>
+				</channel>
+			</rss>');
+		$feed->init();
+		$items = $feed->get_items();
+
+		$sc = array(
+			'feeds'    => 'https://example.com/feed',
+			'default'  => '',
+			'__jobID'  => 42,
+		);
+
+		$result = $this->feedzy_abstract->feedzy_retrieve_image( $items[0], $sc );
+
+		$this->assertSame( 'https://example.com/real-image.jpg', $result, 'Import jobs must still use the real item image' );
+	}
 }

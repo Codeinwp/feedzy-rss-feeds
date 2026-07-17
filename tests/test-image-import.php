@@ -11,6 +11,92 @@
 class Test_Image_Import extends WP_UnitTestCase {
 
 	/**
+	 * End-to-end import of a feed whose items have no images: the bundled SVG default
+	 * must not be sideloaded, and the configured global fallback thumbnail must be used.
+	 * See https://github.com/Codeinwp/feedzy-rss-feeds/issues/1277.
+	 */
+	public function test_import_without_item_images_uses_fallback_thumbnail() {
+		// Serve a two-item, image-less feed for any HTTP request, recording requested URLs.
+		$requested_urls = array();
+		add_filter(
+			'pre_http_request',
+			function ( $preempt, $args, $url ) use ( &$requested_urls ) {
+				$requested_urls[] = $url;
+				return array(
+					'headers'  => array( 'content-type' => 'application/rss+xml' ),
+					'body'     => '<?xml version="1.0" encoding="UTF-8"?>
+						<rss version="2.0"><channel><title>No Image Feed</title><link>http://feedzy.test</link><description>t</description>
+							<item><title>Imageless one</title><link>http://feedzy.test/1</link><description>Plain text.</description><guid>fz-1</guid></item>
+							<item><title>Imageless two</title><link>http://feedzy.test/2</link><description>Also plain.</description><guid>fz-2</guid></item>
+						</channel></rss>',
+					'response' => array( 'code' => 200, 'message' => 'OK' ),
+					'cookies'  => array(),
+					'filename' => null,
+				);
+			},
+			10,
+			3
+		);
+
+		// Configure a global fallback thumbnail.
+		$fallback_id = self::factory()->attachment->create_upload_object( DIR_TESTDATA . '/images/2004-07-22-DSC_0007.jpg' );
+		$settings    = get_option( 'feedzy-settings', array() );
+		$settings['general']['default-thumbnail-id'] = $fallback_id;
+		update_option( 'feedzy-settings', $settings );
+
+		// Create the import job.
+		$job_id = wp_insert_post(
+			array(
+				'post_title'  => 'No image import',
+				'post_type'   => 'feedzy_imports',
+				'post_status' => 'publish',
+			)
+		);
+		foreach ( array(
+			'source'                    => 'http://feedzy.test/feed.xml',
+			'import_post_title'         => '[#item_title]',
+			'import_post_date'          => '[#item_date]',
+			'import_post_content'       => '[#item_content]',
+			'import_post_featured_img'  => '[#item_image]',
+			'import_post_type'          => 'post',
+			'import_post_status'        => 'publish',
+			'import_use_external_image' => 'no',
+		) as $key => $value ) {
+			update_post_meta( $job_id, $key, $value );
+		}
+
+		$attachments_before = count( get_posts( array( 'post_type' => 'attachment', 'numberposts' => -1 ) ) );
+
+		// Fresh instance so free_settings picks up the option; run outside wp-cron/AJAX,
+		// like WP-CLI based cron runners (the path that leaked the SVG).
+		$import = new Feedzy_Rss_Feeds_Import( 'feedzy-rss-feeds', '1.2.0' );
+		$import->run_cron( 100, $job_id );
+
+		$created = get_posts( array( 'post_type' => 'post', 'post_status' => 'publish', 'numberposts' => -1 ) );
+		$this->assertCount( 2, $created, 'Both feed items should be imported' );
+
+		foreach ( $created as $post ) {
+			$this->assertEquals( $fallback_id, get_post_thumbnail_id( $post->ID ), 'Imported post must use the fallback thumbnail' );
+		}
+
+		// No sideload happened: the bundled SVG (or anything else) was not uploaded.
+		$attachments_after = count( get_posts( array( 'post_type' => 'attachment', 'numberposts' => -1 ) ) );
+		$this->assertEquals( $attachments_before, $attachments_after, 'Import must not upload any image to the Media Library' );
+
+		$this->assertEmpty( get_post_meta( $job_id, 'import_errors', true ), 'Import must finish without errors' );
+
+		// No fallback image (bundled SVG or configured attachment) may be fetched over
+		// HTTP during the import: the only allowed request is the feed itself.
+		$non_feed_requests = array_filter(
+			$requested_urls,
+			function ( $url ) {
+				return 0 !== strpos( $url, 'http://feedzy.test/' );
+			}
+		);
+		$this->assertEmpty( $non_feed_requests, 'Import must not download any image for imageless items: ' . implode( ', ', $non_feed_requests ) );
+	}
+
+	/**
 	 * Test that the image import allows valid image URLs and logs errors for invalid ones.
 	 * Test introduced to cover this issue https://github.com/Codeinwp/feedzy-rss-feeds/issues/917.
 	 * @since 4.4.6
