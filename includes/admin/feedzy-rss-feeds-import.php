@@ -1413,7 +1413,9 @@ class Feedzy_Rss_Feeds_Import {
 				isset( $job->post_title ) ? $job->post_title : 'Unknown Job'
 			),
 			array(
-				'job_id' => $job_id,
+				'job_id'       => $job_id,
+				'import_id'    => (int) $job_id,
+				'import_title' => isset( $job->post_title ) ? $job->post_title : '',
 			)
 		);
 
@@ -1612,8 +1614,10 @@ class Feedzy_Rss_Feeds_Import {
 				Feedzy_Rss_Feeds_Log::debug(
 					'Cron job run for: ' . $job->post_title,
 					array(
-						'job_id' => $job->ID,
-						'result' => $result,
+						'job_id'       => $job->ID,
+						'import_id'    => $job->ID,
+						'import_title' => $job->post_title,
+						'result'       => $result,
 					)
 				);
 
@@ -1623,8 +1627,10 @@ class Feedzy_Rss_Feeds_Import {
 					Feedzy_Rss_Feeds_Log::debug(
 						'Previous run did not return any results, running again for job: ' . $job->post_title,
 						array(
-							'job_id' => $job->ID,
-							'result' => $result,
+							'job_id'       => $job->ID,
+							'import_id'    => $job->ID,
+							'import_title' => $job->post_title,
+							'result'       => $result,
 						)
 					);
 				}
@@ -1638,8 +1644,10 @@ class Feedzy_Rss_Feeds_Import {
 					// translators: %1$s is the import job title, %2$s is the error message.
 					sprintf( __( 'Error when running "%1$s": %2$s', 'feedzy-rss-feeds' ), $job->post_title, $e->getMessage() ),
 					array(
-						'job_id' => $job->ID,
-						'error'  => $e->getMessage(),
+						'job_id'       => $job->ID,
+						'import_id'    => $job->ID,
+						'import_title' => $job->post_title,
+						'error'        => $e->getMessage(),
 					)
 				);
 			}
@@ -1647,17 +1655,49 @@ class Feedzy_Rss_Feeds_Import {
 	}
 
 	/**
-	 * Runs a specific job.
-	 * 
+	 * Runs a specific job, scoping the logger context to it.
+	 *
+	 * Every log entry written while the job runs (including feed fetch/parse
+	 * errors logged deeper in the stack) is tagged with the import ID, title
+	 * and source, so it can be traced back to this job.
+	 *
 	 * @param \WP_Post $job The custom post type with the job options.
 	 * @param int      $max The import feed limit.
 	 *
 	 * @return  int The number of imported items.
-	 * 
+	 *
 	 * @since   1.6.1
 	 * @access  private
 	 */
 	private function run_job( $job, $max ) {
+		$logger = Feedzy_Rss_Feeds_Log::get_instance();
+		$logger->set_context(
+			array(
+				'import_id'    => $job->ID,
+				'import_title' => $job->post_title,
+				'source'       => (string) get_post_meta( $job->ID, 'source', true ),
+			)
+		);
+
+		try {
+			return $this->run_job_logic( $job, $max );
+		} finally {
+			$logger->set_context( array() );
+		}
+	}
+
+	/**
+	 * The logic of running a specific job.
+	 *
+	 * @param \WP_Post $job The custom post type with the job options.
+	 * @param int      $max The import feed limit.
+	 *
+	 * @return  int The number of imported items.
+	 *
+	 * @since   1.6.1
+	 * @access  private
+	 */
+	private function run_job_logic( $job, $max ) {
 		Feedzy_Rss_Feeds_Usage::get_instance()->track_rss_import();
 		Feedzy_Rss_Feeds_Log::get_instance()->enable_error_messages_retention();
 

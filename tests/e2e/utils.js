@@ -8,6 +8,8 @@ const { RequestUtils } = require('@wordpress/e2e-test-utils-playwright');
 export const CUSTOM_FEED_URL =
 	'https://s3.amazonaws.com/verti-utils/sample-feed.xml';
 
+export const INVALID_FEED_URL = 'https://example.com/nonexistent-feed.xml';
+
 /**
  * Close the tour modal if it is visible.
  *
@@ -215,7 +217,7 @@ export async function getPostsByFeedzy(requestUtils) {
  * @param {import('playwright').Page} page
  * @param {string}                    feedUrl
  *
- * @return {Promise<void>} The promise that resolves when the import is created and run.
+ * @return {Promise<string>} The promise that resolves with the import name when the import is created and run.
  */
 export async function createAndRunSampleImport(
 	page,
@@ -233,4 +235,118 @@ export async function createAndRunSampleImport(
 		.click({ force: true });
 
 	await runFeedImport(page);
+
+	return importName;
+}
+
+/**
+ * Create a sample import with the given feed URL without running it.
+ *
+ * @param {import('playwright').Page} page       The page object.
+ * @param {string}                    feedUrl    The feed URL to import from.
+ * @param {string}                    importName The name of the import.
+ * @return {Promise<string>} The promise that resolves with the import name once the import is saved and activated.
+ */
+export async function createSampleImport(page, feedUrl, importName) {
+	await page.goto('/wp-admin/post-new.php?post_type=feedzy_imports');
+	await tryCloseTourModal(page);
+
+	await page.getByPlaceholder('Add a name for your import').fill(importName);
+	await addFeeds(page, [feedUrl]);
+
+	// Prevent the "unsaved changes" beforeunload dialog from cancelling the
+	// form submission (auto-dismissed dialogs abort the navigation).
+	await page.evaluate(() => {
+		window.onbeforeunload = null;
+		if (window.jQuery) {
+			window.jQuery(window).off('beforeunload');
+		}
+	});
+
+	await Promise.all([
+		// `commit` avoids stalling on slow-loading subresources of the target page.
+		page.waitForURL(/wp-admin\/(post|edit)\.php/, { waitUntil: 'commit' }),
+		page
+			.getByRole('button', { name: 'Save & Activate importing' })
+			.click({ force: true }),
+	]);
+
+	return importName;
+}
+
+/**
+ * Run a specific import from the imports list by its name.
+ *
+ * @param {import('playwright').Page} page                    The page object.
+ * @param {string}                    importName              The name of the import to run.
+ * @param {Object}                    [options]               Options.
+ * @param {boolean}                   [options.expectSuccess] Whether the run is expected to import items.
+ * @return {Promise<void>} The promise that resolves when the run request completes.
+ */
+export async function runImportByName(
+	page,
+	importName,
+	{ expectSuccess = true } = {}
+) {
+	await page.goto('/wp-admin/edit.php?post_type=feedzy_imports');
+	await page.locator('.feedzy-import-status-row').first().waitFor();
+
+	await page
+		.locator('tr', { hasText: importName })
+		.getByRole('button', { name: 'Run Now' })
+		.click();
+
+	const runNowResponse = await page.waitForResponse(
+		(response) =>
+			response.url().includes('/wp-admin/admin-ajax.php') &&
+			response.request().method() === 'POST' &&
+			response
+				.request()
+				.postData()
+				.includes('action=feedzy&_action=run_now')
+	);
+
+	const responseBody = await runNowResponse.json();
+	expect(responseBody.success).toBe(true);
+	expect(responseBody.data.import_success).toBe(expectSuccess);
+}
+
+/**
+ * Set the logging level in Feedzy settings.
+ *
+ * @param {import('playwright').Page}                                             page  The page object.
+ * @param {import('@wordpress/e2e-test-utils-playwright/build-types/admin').Admin} admin The admin utils object.
+ * @param {string}                                                                level The logging level to set.
+ * @return {Promise<void>} The promise that resolves when the settings are saved.
+ */
+export async function setLoggingLevel(page, admin, level) {
+	await admin.visitAdminPage('admin.php?page=feedzy-settings');
+
+	await page.locator('select[name="logs-logging-level"]').selectOption(level);
+
+	await page
+		.getByRole('button', { name: 'Save Settings' })
+		.click({ force: true });
+
+	await page.waitForSelector('.fz-snackbar-notice.updated');
+}
+
+/**
+ * Delete the Feedzy log file.
+ *
+ * @param {RequestUtils} requestUtils The request utils object.
+ * @return {Promise<void>} The promise that resolves when the logs are deleted.
+ */
+export async function clearLogs(requestUtils) {
+	try {
+		await requestUtils.rest({
+			method: 'DELETE',
+			path: '/feedzy/v1/logs',
+		});
+	} catch (error) {
+		// The endpoint returns 404 when there is no log file yet.
+		if (error?.code !== 'no_logs') {
+			throw error;
+		}
+	}
 }

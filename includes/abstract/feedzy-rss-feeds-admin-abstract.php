@@ -896,13 +896,24 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$feed->init();
 
-		if ( ! $feed->get_type() ) {
-			return $feed;
-		}
-
 		$error = $feed->error();
 		if ( is_array( $error ) ) {
 			$error = implode( '|', $error );
+		}
+
+		if ( ! $feed->get_type() ) {
+			if ( ! empty( $error ) ) {
+				Feedzy_Rss_Feeds_Log::error(
+					// translators: %1$s is the feed URL, %2$s is the error message.
+					sprintf( __( 'Error while parsing feed URL "%1$s": %2$s', 'feedzy-rss-feeds' ), $feed_url, $error ),
+					array(
+						'feed_url' => $feed_url,
+						'cache'    => $cache,
+						'sc'       => $sc,
+					)
+				);
+			}
+			return $feed;
 		}
 
 		if ( ! empty( $error ) ) {
@@ -1169,8 +1180,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		Feedzy_Rss_Feeds_Log::debug(
 			sprintf( 'Using raw data for feed: %s', $feed_url ),
 			array(
-				'cache' => $cache,
-				'sc'    => $sc,
+				'feed_url' => $feed_url,
+				'cache'    => $cache,
+				'sc'       => $sc,
 			)
 		);
 

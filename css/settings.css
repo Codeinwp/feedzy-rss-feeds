@@ -2821,6 +2821,34 @@ button.feedzy-action-button {
   margin-top: 10px;
 }
 
+/* Import/feed attribution badges */
+.fz-log-container__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.fz-log-context-import,
+.fz-log-context-feed-url {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 0.85em;
+  word-break: break-all;
+  overflow-wrap: break-word;
+}
+
+.fz-log-context-import {
+  background-color: #eef2ff;
+  color: #3730a3;
+}
+
+.fz-log-context-feed-url {
+  background-color: #ecfdf5;
+  color: #065f46;
+}
+
 /* Right section - Context */
 .fz-log-container__right {
   flex: 1;
