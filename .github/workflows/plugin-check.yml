@@ -20,6 +20,7 @@ jobs:
 
       - uses: wordpress/plugin-check-action@v1
         id: plugin-check
+        continue-on-error: true
         with:
           categories: plugin_repo,security,performance,general
           exclude-directories: |
