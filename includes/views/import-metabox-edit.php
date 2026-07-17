@@ -6,6 +6,10 @@
  * @package feedzy-rss-feeds-pro
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
 global $post;
 $import_batch_size    = $import_batch_size ?? '';
 $import_item_delay_ms = $import_item_delay_ms ?? '';
