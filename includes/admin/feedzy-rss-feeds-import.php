@@ -3237,7 +3237,7 @@ class Feedzy_Rss_Feeds_Import {
 				$correct_local_file = preg_replace( '/\.[a-z0-9]+$/i', $correct_extension, $local_file );
 
 				if ( $correct_local_file !== $local_file ) {
-					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_rename, WordPress.WP.AlternativeFunctions.rename_rename
+					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_rename
 					if ( rename( $local_file, $correct_local_file ) ) {
 						$local_file = $correct_local_file;
 					} else {
@@ -3332,7 +3332,7 @@ class Feedzy_Rss_Feeds_Import {
 					$extension      = ! empty( $extension ) ? '.' . $extension : str_replace( 'image/', '.', $type );
 					$new_local_file = preg_replace( '/\.tmp$/', $extension, $local_file );
 
-					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_rename, WordPress.WP.AlternativeFunctions.rename_rename
+					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_rename
 					$renamed = rename( $local_file, $new_local_file );
 					if ( $renamed ) {
 						$local_file = $new_local_file;
