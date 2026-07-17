@@ -44,7 +44,7 @@ jobs:
       - name: Compare POT files
         uses: Codeinwp/action-i18n-string-reviewer@main
         with:
-          fail-on-changes: 'false'
+          fail-on-changes: 'true'
           openrouter-key: ${{ secrets.OPEN_ROUTER_API_KEY }}
           openrouter-model: 'google/gemini-2.5-flash'
           base-pot-file: 'feedzy-base/languages/feedzy-rss-feeds.pot'

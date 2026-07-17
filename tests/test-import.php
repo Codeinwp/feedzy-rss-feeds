@@ -89,7 +89,7 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 		$_POST['feedzy_meta_data']['import_post_date']                 = '[#item_date]';
 		$_POST['feedzy_meta_data']['import_post_content']              = "{$magic_tags}";
 		$_POST['feedzy_meta_data']['import_post_featured_img']         = '[#item_image]';
-		$_POST['feedzy_meta_data']['import_feed_limit']         = $num_items;
+		$_POST['feedzy_meta_data']['import_feed_limit']                 = $num_items;
 		$_POST['feedzy_meta_data']['import_batch_size']                = 1;
 		$_POST['feedzy_meta_data']['import_item_delay_ms']             = 100;
 		$_POST['custom_vars_key']                                    = array();

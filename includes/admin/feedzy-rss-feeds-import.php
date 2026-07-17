@@ -758,7 +758,7 @@ class Feedzy_Rss_Feeds_Import {
 			// Added this to activate post if publish is clicked and sometimes it does not change status.
 			if (
 				$source_is_valid && isset( $_POST['custom_post_status'] ) &&
-				'Publish' === sanitize_text_field( $_POST['custom_post_status'] )
+				'Publish' === sanitize_text_field( wp_unslash( $_POST['custom_post_status'] ) )
 			) {
 				$activate = array(
 					'ID'          => $post_id,
@@ -1372,7 +1372,7 @@ class Feedzy_Rss_Feeds_Import {
 	private function get_taxonomies() {
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
 
-		$post_type  = isset( $_POST['post_type'] ) ? sanitize_text_field( $_POST['post_type'] ) : '';
+		$post_type  = isset( $_POST['post_type'] ) ? sanitize_text_field( wp_unslash( $_POST['post_type'] ) ) : '';
 		$taxonomies = get_object_taxonomies(
 			array(
 				'post_type' => $post_type,
@@ -1468,7 +1468,7 @@ class Feedzy_Rss_Feeds_Import {
 	private function dry_run() {
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
 
-		$fields = urldecode( isset( $_POST['fields'] ) ? sanitize_url( $_POST['fields'] ) : '' );
+		$fields = urldecode( isset( $_POST['fields'] ) ? sanitize_url( wp_unslash( $_POST['fields'] ) ) : '' );
 		parse_str( $fields, $data );
 
 		$feedzy_meta_data = $data['feedzy_meta_data'];
@@ -1610,14 +1610,7 @@ class Feedzy_Rss_Feeds_Import {
 		$feedzy_imports = get_posts( $args );
 		foreach ( $feedzy_imports as $job ) {
 			try {
-				$result     = $this->run_job( $job, $max );
-				$batch_size = max(
-					0,
-					min(
-						9999,
-						(int) apply_filters( 'feedzy_import_batch_size', get_post_meta( $job->ID, 'import_batch_size', true ), $job )
-					)
-				);
+				$result = $this->run_job( $job, $max );
 
 				Feedzy_Rss_Feeds_Log::debug(
 					'Cron job run for: ' . $job->post_title,
@@ -1627,7 +1620,7 @@ class Feedzy_Rss_Feeds_Import {
 					)
 				);
 
-				if ( empty( $result ) && 0 === $batch_size ) {
+				if ( empty( $result ) && ! get_post_meta( $job->ID, 'import_batch_cursor', true ) ) {
 					$this->run_job( $job, $max );
 
 					Feedzy_Rss_Feeds_Log::debug(
@@ -1640,10 +1633,6 @@ class Feedzy_Rss_Feeds_Import {
 				}
 				do_action( 'feedzy_run_cron_extra', $job );
 			} catch ( Exception $e ) {
-				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-					error_log( '[Feedzy Run Cron][Post title: ' . ( ! empty( $job->post_title ) ? $job->post_title : '' ) . '] Error: ' . $e->getMessage() );
-				}
-
 				Feedzy_Rss_Feeds_Log::error(
 					// translators: %1$s is the import job title, %2$s is the error message.
 					sprintf( __( 'Error when running "%1$s": %2$s', 'feedzy-rss-feeds' ), $job->post_title, $e->getMessage() ),
@@ -1852,6 +1841,7 @@ class Feedzy_Rss_Feeds_Import {
 		delete_post_meta( $job->ID, 'import_info' );
 
 		// let's increase this time in case spinnerchief/wordai is being used.
+		// phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged
 		set_time_limit( apply_filters( 'feedzy_max_execution_time', 500 ) );
 
 		$count               = 0;
@@ -3218,8 +3208,7 @@ class Feedzy_Rss_Feeds_Import {
 						)
 					);
 
-					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
-					unlink( $local_file );
+					wp_delete_file( $local_file );
 
 					return false;
 				}
@@ -3236,8 +3225,7 @@ class Feedzy_Rss_Feeds_Import {
 						)
 					);
 
-					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
-					unlink( $local_file );
+					wp_delete_file( $local_file );
 
 					return false;
 				}
@@ -3263,8 +3251,7 @@ class Feedzy_Rss_Feeds_Import {
 							)
 						);
 
-						// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
-						unlink( $local_file );
+						wp_delete_file( $local_file );
 
 						return false;
 					}
@@ -3375,8 +3362,7 @@ class Feedzy_Rss_Feeds_Import {
 						)
 					);
 
-					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
-					unlink( $local_file );
+					wp_delete_file( $local_file );
 
 					return false;
 				}
@@ -3396,10 +3382,8 @@ class Feedzy_Rss_Feeds_Import {
 					)
 				);
 
-				// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
 				if ( file_exists( $file_array['tmp_name'] ) ) {
-					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
-					unlink( $file_array['tmp_name'] );
+					wp_delete_file( $file_array['tmp_name'] );
 				}
 
 				return false;
@@ -3457,7 +3441,7 @@ class Feedzy_Rss_Feeds_Import {
 
 		if (
 			( isset( $_POST['nonce'] ) && isset( $_POST['tab'] ) ) &&
-			wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), sanitize_text_field( $_POST['tab'] ) )
+			wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), sanitize_text_field( wp_unslash( $_POST['tab'] ) ) )
 		) {
 			if ( ! empty( $_POST['fz_cron_schedule'] ) ) {
 				$schedule = sanitize_text_field( wp_unslash( $_POST['fz_cron_schedule'] ) );
@@ -3711,7 +3695,7 @@ class Feedzy_Rss_Feeds_Import {
 	public function save_tab_settings( $settings, $tab ) {
 		if (
 			! isset( $_POST['nonce'] ) ||
-			! wp_verify_nonce( sanitize_text_field( $_POST['nonce'] ), $tab )
+			! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), $tab )
 		) {
 			return array();
 		}
