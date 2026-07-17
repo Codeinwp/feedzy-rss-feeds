@@ -12,7 +12,6 @@
  * @subpackage feedzy-rss-feeds/form
  */
 
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }

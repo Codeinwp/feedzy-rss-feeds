@@ -9,7 +9,6 @@
  * @subpackage feedzy-rss-feeds/includes/admin
  */
 
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }

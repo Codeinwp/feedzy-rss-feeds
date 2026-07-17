@@ -1678,22 +1678,22 @@ parameters:
 		-
 			message: "#^Call to an undefined method SimplePie\\:\\:get_date\\(\\)\\.$#"
 			count: 2
-			path: includes/util/feedzy-rss-feeds-util-simplepie.php
+			path: includes/util/feedzy-rss-feeds-util-feed.php
 
 		-
 			message: "#^Constant WPINC not found\\.$#"
 			count: 3
-			path: includes/util/feedzy-rss-feeds-util-simplepie.php
+			path: includes/util/feedzy-rss-feeds-util-feed.php
 
 		-
 			message: "#^Method Feedzy_Rss_Feeds_Util_SimplePie\\:\\:__construct\\(\\) has parameter \\$sc with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: includes/util/feedzy-rss-feeds-util-simplepie.php
+			path: includes/util/feedzy-rss-feeds-util-feed.php
 
 		-
 			message: "#^Property Feedzy_Rss_Feeds_Util_SimplePie\\:\\:\\$sc type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: includes/util/feedzy-rss-feeds-util-simplepie.php
+			path: includes/util/feedzy-rss-feeds-util-feed.php
 
 		-
 			message: "#^Parameter \\#1 \\$attachment_id of function wp_get_attachment_image expects int, string given\\.$#"
