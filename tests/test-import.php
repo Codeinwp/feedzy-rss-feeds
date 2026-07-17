@@ -91,7 +91,7 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 		$_POST['feedzy_meta_data']['import_post_featured_img']         = '[#item_image]';
 		$_POST['feedzy_meta_data']['import_feed_limit']         = $num_items;
 		$_POST['feedzy_meta_data']['import_batch_size']                = 1;
-		$_POST['feedzy_meta_data']['import_item_delay_ms']             = 0;
+		$_POST['feedzy_meta_data']['import_item_delay_ms']             = 100;
 		$_POST['custom_vars_key']                                    = array();
 		$_POST['custom_vars_value']                                  = array();
 
@@ -141,7 +141,7 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 		$this->assertEquals( '', $import_custom_fields );
 		$this->assertEquals( $num_items, $import_feed_limit );
 		$this->assertEquals( 1, $import_batch_size );
-		$this->assertEquals( 0, $import_item_delay_ms );
+		$this->assertEquals( 100, $import_item_delay_ms );
 		$this->assertSame( '', get_post_meta( $p->ID, 'import_batch_cursor', true ) );
 
 		if ( $check_duplicate ) {

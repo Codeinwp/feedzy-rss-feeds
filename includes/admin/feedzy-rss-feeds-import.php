@@ -4080,7 +4080,7 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		delete_post_meta( $id, 'imported_items_hash' );
-		delete_post_meta( $id, 'import_batch_cursor' );
+		delete_post_meta( (int) $id, 'import_batch_cursor' );
 		delete_post_meta( $id, 'last_run' );
 		wp_die();
 	}

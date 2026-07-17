@@ -7,6 +7,8 @@
  */
 
 global $post;
+$import_batch_size    = $import_batch_size ?? '';
+$import_item_delay_ms = $import_item_delay_ms ?? '';
 ?>
 <?php if ( feedzy_show_import_tour() && ! defined( 'TI_CYPRESS_TESTING' ) ) : ?>
 	<div id="fz-on-boarding"></div>
@@ -838,14 +840,14 @@ global $post;
 										<div class="fz-form-col-6">
 											<div class="fz-form-group">
 												<label class="form-label" for="feedzy-import-batch-size"><?php esc_html_e( 'Items processed per cron run', 'feedzy-rss-feeds' ); ?></label>
-												<input type="number" min="0" max="9999" id="feedzy-import-batch-size" name="feedzy_meta_data[import_batch_size<?php echo ! feedzy_is_pro() && ! feedzy_is_legacyv5() ? 'locked' : ''; ?>]" class="form-control" value="<?php echo esc_attr( (int) $import_batch_size ); ?>" />
+												<input type="number" min="0" max="9999" id="feedzy-import-batch-size" name="feedzy_meta_data[import_batch_size<?php echo ! feedzy_is_pro() && ! feedzy_is_legacyv5() ? 'locked' : ''; ?>]" class="form-control" value="<?php echo esc_attr( (string) (int) $import_batch_size ); ?>" />
 												<div class="help-text pt-8"><?php esc_html_e( 'Use a smaller batch on memory-limited hosts. Set to 0 for no processing limit.', 'feedzy-rss-feeds' ); ?></div>
 											</div>
 										</div>
 										<div class="fz-form-col-6">
 											<div class="fz-form-group">
 												<label class="form-label" for="feedzy-import-item-delay"><?php esc_html_e( 'Delay between items (milliseconds)', 'feedzy-rss-feeds' ); ?></label>
-												<input type="number" min="0" max="60000" id="feedzy-import-item-delay" name="feedzy_meta_data[import_item_delay_ms<?php echo ! feedzy_is_pro() && ! feedzy_is_legacyv5() ? 'locked' : ''; ?>]" class="form-control" value="<?php echo esc_attr( (int) $import_item_delay_ms ); ?>" />
+												<input type="number" min="0" max="60000" id="feedzy-import-item-delay" name="feedzy_meta_data[import_item_delay_ms<?php echo ! feedzy_is_pro() && ! feedzy_is_legacyv5() ? 'locked' : ''; ?>]" class="form-control" value="<?php echo esc_attr( (string) (int) $import_item_delay_ms ); ?>" />
 												<div class="help-text pt-8"><?php esc_html_e( 'Optional pause between new items. Set to 0 for no delay.', 'feedzy-rss-feeds' ); ?></div>
 											</div>
 										</div>
