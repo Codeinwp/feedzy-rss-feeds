@@ -85,15 +85,15 @@ class Test_Image_Import extends WP_UnitTestCase {
 
 		$this->assertEmpty( get_post_meta( $job_id, 'import_errors', true ), 'Import must finish without errors' );
 
-		// No fallback image (bundled SVG or configured attachment) may be fetched over
-		// HTTP during the import: the only allowed request is the feed itself.
-		$non_feed_requests = array_filter(
+		// No fallback image may be fetched over HTTP during the import: neither the
+		// bundled SVG nor the configured fallback attachment (hosted on this site).
+		$fallback_requests = array_filter(
 			$requested_urls,
 			function ( $url ) {
-				return 0 !== strpos( $url, 'http://feedzy.test/' );
+				return false !== strpos( $url, 'feedzy.svg' ) || 0 === strpos( $url, home_url() );
 			}
 		);
-		$this->assertEmpty( $non_feed_requests, 'Import must not download any image for imageless items: ' . implode( ', ', $non_feed_requests ) );
+		$this->assertEmpty( $fallback_requests, 'Import must not download any fallback image for imageless items: ' . implode( ', ', $fallback_requests ) );
 	}
 
 	/**
