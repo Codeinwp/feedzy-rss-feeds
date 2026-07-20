@@ -1056,10 +1056,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @param   array<string, mixed> $sc The shortcode attributes.
 	 * @param   bool                 $allow_https Whether to allow HTTPS.
 	 *
-	 * @return Feedzy_Rss_Feeds_Util_SimplePie SimplePie instance.
+	 * @return Feedzy_Rss_Feeds_Util_Feed SimplePie instance.
 	 */
 	private function create_simplepie_instance( array $sc, $allow_https ) {
-		$feed = new Feedzy_Rss_Feeds_Util_SimplePie( $sc );
+		$feed = new Feedzy_Rss_Feeds_Util_Feed( $sc );
 
 		if ( ! $allow_https && method_exists( $feed, 'set_curl_options' ) ) {
 			$feed->set_curl_options(

@@ -28,7 +28,7 @@ if ( ! class_exists( 'SimplePie' ) ) {
  * @subpackage feedzy-rss-feeds/includes/util
  * @author     Themeisle <friends@themeisle.com>
  */
-class Feedzy_Rss_Feeds_Util_SimplePie extends SimplePie {
+class Feedzy_Rss_Feeds_Util_Feed extends SimplePie {
 
 	/**
 	 * The shortcode attributes.

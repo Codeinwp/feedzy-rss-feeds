@@ -59,17 +59,6 @@ register_deactivation_hook( __FILE__, 'deactivate_feedzy_rss_feeds' );
  * @since    3.0.0
  */
 function feedzy_rss_feeds_autoload( $class_to_load ) {
-	// Class files named differently from the autoloader convention
-	// (e.g. to avoid matching core-library filename patterns).
-	$class_map = array(
-		'Feedzy_Rss_Feeds_Util_SimplePie' => 'includes/util/feedzy-rss-feeds-util-feed.php',
-	);
-	if ( isset( $class_map[ $class_to_load ] ) ) {
-		require_once plugin_dir_path( __FILE__ ) . $class_map[ $class_to_load ];
-
-		return true;
-	}
-
 	$namespaces = array( 'Feedzy_Rss_Feeds' );
 	foreach ( $namespaces as $namespace ) {
 		if ( substr( $class_to_load, 0, strlen( $namespace ) ) === $namespace ) {
