@@ -3080,19 +3080,41 @@ class Feedzy_Rss_Feeds_Import {
 	}
 
 	/**
-	 * Attempts to save a featured image for a post,
-	 * either by downloading it from a remote URL or by decoding base64-encoded image data.
+	 * Move a temporary file to a new path using WP_Filesystem.
 	 *
-	 * If an attachment with the same title already exists, it will be reused instead of creating a new one.
+	 * Replaces direct rename() calls to satisfy WordPress.org guidelines. Moving a
+	 * file onto itself is treated as a no-op success, because WP_Filesystem::move()
+	 * would otherwise delete the (identical) destination and lose the file.
+	 *
+	 * @param string $source      Source file path.
+	 * @param string $destination Destination file path.
+	 *
+	 * @return bool True on success, false on failure.
+	 */
+	private function move_temp_file( $source, $destination ) {
+		// Same path is a no-op success; moving onto itself would delete the file.
+		if ( $source === $destination ) {
+			return true;
+		}
+
+		if ( ! function_exists( 'WP_Filesystem' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+		WP_Filesystem();
+		global $wp_filesystem;
+
+		return $wp_filesystem ? (bool) $wp_filesystem->move( $source, $destination, true ) : false;
+	}
+
+	/**
+	 * Download or decode an image and set it as the post's featured image.
 	 *
 	 * @param string $img_source_url  The image source, which can be a remote URL or a base64-encoded data string.
 	 * @param int    $post_id         ID of the post to attach the image to.
 	 * @param string $post_title      Title of the post.
 	 * @param array  $import_info     Import-job context array.
 	 * @param array  $post_data       Optional extra fields forwarded to
-	 *                                `media_handle_sideload()`. When non-empty the
-	 *                                raw attachment ID is returned instead of the
-	 *                                boolean result of `set_post_thumbnail()`.
+	 *                                `media_handle_sideload()`.
 	 *
 	 * @return int|bool  Attachment ID when $post_data is non-empty; boolean result
 	 *                   of `set_post_thumbnail()` otherwise; false on any error.
@@ -3237,8 +3259,7 @@ class Feedzy_Rss_Feeds_Import {
 				$correct_local_file = preg_replace( '/\.[a-z0-9]+$/i', $correct_extension, $local_file );
 
 				if ( $correct_local_file !== $local_file ) {
-					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_rename
-					if ( rename( $local_file, $correct_local_file ) ) {
+					if ( $this->move_temp_file( $local_file, $correct_local_file ) ) {
 						$local_file = $correct_local_file;
 					} else {
 						Feedzy_Rss_Feeds_Log::error(
@@ -3332,8 +3353,7 @@ class Feedzy_Rss_Feeds_Import {
 					$extension      = ! empty( $extension ) ? '.' . $extension : str_replace( 'image/', '.', $type );
 					$new_local_file = preg_replace( '/\.tmp$/', $extension, $local_file );
 
-					// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_rename
-					$renamed = rename( $local_file, $new_local_file );
+					$renamed = $this->move_temp_file( $local_file, $new_local_file );
 					if ( $renamed ) {
 						$local_file = $new_local_file;
 					} else {
