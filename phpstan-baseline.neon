@@ -296,21 +296,6 @@ parameters:
 			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
 
 		-
-			message: "#^Variable \\$cache in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
-
-		-
-			message: "#^Variable \\$unit in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
-
-		-
-			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
-
-		-
 			message: "#^is_wp_error\\(SimplePie\\) will always evaluate to false\\.$#"
 			count: 1
 			path: includes/abstract/feedzy-rss-feeds-admin-abstract.php
