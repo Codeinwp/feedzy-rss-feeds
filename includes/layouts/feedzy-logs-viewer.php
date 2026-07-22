@@ -94,7 +94,7 @@ $logs_entries = isset( $logs ) && is_array( $logs ) ? $logs : array();
 						]
 						<?php
 						if ( $log['timestamp'] ) {
-							echo esc_html( date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $log['timestamp'] ) ) );
+							echo esc_html( wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $log['timestamp'] ) ) );
 						} else {
 							echo esc_html( '-' );
 						}
