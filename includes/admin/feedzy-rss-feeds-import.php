@@ -2711,7 +2711,7 @@ class Feedzy_Rss_Feeds_Import {
 							$img_success = $this->try_save_featured_image( $image_source_url, $new_post_id, $img_title, $import_info );
 
 							Feedzy_Rss_Feeds_Log::debug(
-								sprintf( 'Saved featured image for post ID %1$s: %2$s', $new_post_id, $image_source_url ),
+								sprintf( 'Tried to save featured image for post ID %1$s: %2$s. Success: %3$s', $new_post_id, $image_source_url, $img_success ? 'yes' : 'no' ),
 								array(
 									'job_id'           => $job->ID,
 									'image_source_url' => $image_source_url,

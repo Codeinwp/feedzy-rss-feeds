@@ -2062,7 +2062,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				return $the_thumbnail;
 			}
 	
-			if ( ( ! defined( 'REST_REQUEST' ) || ! REST_REQUEST ) && ! empty( $sc['feeds'] ) ) {
+			// Import jobs (__jobID set) skip the display fallback image: it cannot be sideloaded (SVG); imports use the default_thumbnail_id setting instead.
+			if ( ( ! defined( 'REST_REQUEST' ) || ! REST_REQUEST ) && ! empty( $sc['feeds'] ) && empty( $sc['__jobID'] ) ) {
 				$feed_url      = $this->normalize_urls( $sc['feeds'] );
 				$the_thumbnail = ! empty( $the_thumbnail ) ? $the_thumbnail : apply_filters( 'feedzy_default_image', $sc['default'], $feed_url );
 			}
