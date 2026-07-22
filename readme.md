@@ -4,7 +4,7 @@
 **Requires at least:** 6.0  
 **Requires PHP:** 7.2  
 **Tested up to:** 7.0  
-**Stable tag:** 5.2.3  
+**Stable tag:** 5.2.4  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -479,9 +479,10 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
-##### [Version 5.2.3](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.2...v5.2.3) (2026-07-01)
+##### [Version 5.2.4](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.3...v5.2.4) (2026-07-22)
 
-- Enhanced security
+- Fixed the import logs showing event times in UTC instead of the sites local timezone.
+- Fixed an issue where feeds displayed with lazy loading ignored the refresh interval set in the shortcode and could keep showing cached content for up to a day.
 
 
 

@@ -1,3 +1,8 @@
+##### [Version 5.2.4](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.3...v5.2.4) (2026-07-22)
+
+- Fixed the import logs showing event times in UTC instead of the sites local timezone.
+- Fixed an issue where feeds displayed with lazy loading ignored the refresh interval set in the shortcode and could keep showing cached content for up to a day.
+
 ##### [Version 5.2.3](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.2...v5.2.3) (2026-07-01)
 
 - Enhanced security
