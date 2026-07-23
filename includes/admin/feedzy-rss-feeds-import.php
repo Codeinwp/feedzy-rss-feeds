@@ -2295,19 +2295,7 @@ class Feedzy_Rss_Feeds_Import {
 			$post_date = str_replace( '[#post_date]', $now, $post_date );
 
 			if ( ! defined( 'FEEDZY_ALLOW_UNSAFE_HTML' ) || ! FEEDZY_ALLOW_UNSAFE_HTML ) {
-				$link_rel_callback = null;
-				if ( $link_rel ) {
-					$link_rel_callback = function () use ( $link_rel ) {
-						return $link_rel;
-					};
-					add_filter( 'wp_targeted_link_rel', $link_rel_callback );
-				}
-
 				$post_content = wp_kses_post( $post_content );
-
-				if ( $link_rel_callback ) {
-					remove_filter( 'wp_targeted_link_rel', $link_rel_callback );
-				}
 
 				if ( ! function_exists( 'use_block_editor_for_post_type' ) ) {
 					require_once ABSPATH . 'wp-admin/includes/post.php';
@@ -2457,7 +2445,21 @@ class Feedzy_Rss_Feeds_Import {
 					++$import_image_errors;
 				}
 			} else {
+				$link_rel_callback = null;
+				if ( $link_rel ) {
+					$link_rel_callback = function () use ( $link_rel ) {
+						return $link_rel;
+					};
+					add_filter( 'wp_targeted_link_rel', $link_rel_callback );
+				}
+
 				$new_post_id = wp_insert_post( $new_post, true );
+
+				if ( $link_rel_callback ) {
+					remove_filter( 'wp_targeted_link_rel', $link_rel_callback );
+				}
+
+				Feedzy_Rss_Feeds_Actions::remove_link_rel_filter();
 			}
 
 			// Set post language.
