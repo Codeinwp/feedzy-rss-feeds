@@ -53,6 +53,11 @@ function feedzy_display_external_post_image( $html, $post_id, $post_thumbnail_id
 		return $html;
 	}
 
+	// Only apply to Feedzy-imported posts.
+	if ( ! get_post_meta( $post_id, 'feedzy', true ) ) {
+		return $html;
+	}
+
 	// Post thumbnail size.
 	$size = ! empty( $size ) ? $size : 'thumbnail';
 
@@ -184,6 +189,12 @@ function feedzy_enable_external_url_support( $has_thumbnail, $post, $thumbnail_i
 	} elseif ( $post && is_numeric( $post ) ) {
 		$post_id = $post;
 	}
+
+	// Only apply to Feedzy-imported posts.
+	if ( ! get_post_meta( $post_id, 'feedzy', true ) ) {
+		return $has_thumbnail;
+	}
+
 	$feedzy_item_external_url = get_post_meta( $post_id, 'feedzy_item_external_url', true );
 	// Check external URL exists OR not.
 	if ( ! empty( $feedzy_item_external_url ) ) {
@@ -203,8 +214,15 @@ add_filter( 'has_post_thumbnail', 'feedzy_enable_external_url_support', 10, 3 );
  * @return array|false
  */
 function feedzy_get_attachment_image_src( $image, $attachment_id, $size, $icon ) {
+	$post_id = get_the_ID();
+
+	// Only apply to Feedzy-imported posts.
+	if ( ! get_post_meta( $post_id, 'feedzy', true ) ) {
+		return $image;
+	}
+
 	if ( 0 === $attachment_id ) {
-		$external_url = get_post_meta( get_the_ID(), 'feedzy_item_external_url', true );
+		$external_url = get_post_meta( $post_id, 'feedzy_item_external_url', true );
 		if ( $external_url ) {
 			$image = array( $external_url, 0, 0, false );
 		}

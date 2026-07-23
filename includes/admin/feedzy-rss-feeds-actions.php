@@ -689,12 +689,13 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 				}
 			}
 			if ( ! empty( $this->current_job->data->follow ) && 'yes' === $this->current_job->data->follow ) {
-				add_filter(
-					'wp_targeted_link_rel',
-					function () {
-						return 'nofollow';
-					}
-				);
+				$link_rel_callback = function () {
+					return 'nofollow';
+				};
+				add_filter( 'wp_targeted_link_rel', $link_rel_callback );
+				$html = $dom->saveHTML();
+				remove_filter( 'wp_targeted_link_rel', $link_rel_callback );
+				return $html;
 			}
 			return $dom->saveHTML();
 		}

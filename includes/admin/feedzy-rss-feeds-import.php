@@ -2081,14 +2081,6 @@ class Feedzy_Rss_Feeds_Import {
 
 			// Remove WordPress default link rel.
 			$link_rel = isset( $item_link_data['attr']['rel'] ) ? $item_link_data['attr']['rel'] : '';
-			if ( $link_rel ) {
-				add_filter(
-					'wp_targeted_link_rel',
-					function () use ( $link_rel ) {
-						return $link_rel;
-					}
-				);
-			}
 
 			$item_link_attr = isset( $item_link_data['attr'] ) ? $item_link_data['attr'] : array();
 			$item_link_attr = array_map(
@@ -2303,7 +2295,19 @@ class Feedzy_Rss_Feeds_Import {
 			$post_date = str_replace( '[#post_date]', $now, $post_date );
 
 			if ( ! defined( 'FEEDZY_ALLOW_UNSAFE_HTML' ) || ! FEEDZY_ALLOW_UNSAFE_HTML ) {
+				$link_rel_callback = null;
+				if ( $link_rel ) {
+					$link_rel_callback = function () use ( $link_rel ) {
+						return $link_rel;
+					};
+					add_filter( 'wp_targeted_link_rel', $link_rel_callback );
+				}
+
 				$post_content = wp_kses_post( $post_content );
+
+				if ( $link_rel_callback ) {
+					remove_filter( 'wp_targeted_link_rel', $link_rel_callback );
+				}
 
 				if ( ! function_exists( 'use_block_editor_for_post_type' ) ) {
 					require_once ABSPATH . 'wp-admin/includes/post.php';
