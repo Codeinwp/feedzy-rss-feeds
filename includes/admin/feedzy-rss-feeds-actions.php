@@ -23,6 +23,13 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		private static $instance;
 
 		/**
+		 * Pending SEO metadata. It is an associative array with metadata keys.
+		 *
+		 * @var array<string, string>|null
+		 */
+		public $pending_seo_metadata = null;
+
+		/**
 		 * Serialized content actions. It can contain a mix of magic tags and simple text.
 		 *
 		 * @var string $raw_serialized_actions Content actions.
@@ -313,6 +320,8 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 					return $this->summarize_content();
 				case 'fz_image':
 					return $this->generate_image();
+				case 'fz_seo_metadata':
+					return $this->generate_seo_metadata();
 				case 'modify_links':
 					return $this->modify_links();
 				case 'custom_html':
@@ -647,6 +656,127 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			}
 
 			return $result;
+		}
+
+		/**
+		 * Generate SEO metadata for the current item via the active AI provider.
+		 *
+		 * @return string Original field content, unmodified.
+		 */
+		private function generate_seo_metadata() {
+			$this->pending_seo_metadata = null;
+
+			$title   = isset( $this->item['item_title'] ) ? $this->item['item_title'] : '';
+			$content = isset( $this->item['item_content'] ) ? $this->item['item_content']
+				: ( isset( $this->item['item_description'] ) ? $this->item['item_description'] : '' );
+
+			if ( ! class_exists( 'Feedzy_Rss_Feeds_Pro_Admin' ) ) {
+				Feedzy_Rss_Feeds_Log::debug(
+					'SEO metadata generation skipped: Feedzy_Rss_Feeds_Pro_Admin class not found.',
+					array(
+						'job_id' => isset( $this->job->ID ) ? $this->job->ID : 0,
+					)
+				);
+				return $content;
+			}
+
+			if ( '' === Feedzy_Rss_Feeds_Pro_Admin::get_seo_active_plugin() ) {
+				Feedzy_Rss_Feeds_Log::debug(
+					'SEO metadata generation skipped: no supported SEO plugin is active.',
+					array(
+						'job_id' => isset( $this->job->ID ) ? $this->job->ID : 0,
+					)
+				);
+				return $content;
+			}
+
+			$prompt = '';
+			if ( isset( $this->current_job->data->seoPrompt ) && ! empty( $this->current_job->data->seoPrompt ) ) {
+				$prompt = $this->current_job->data->seoPrompt;
+			}
+
+			$additional = array(
+				'ai_provider' => 'openai',
+				'job_id'      => isset( $this->job->ID ) ? $this->job->ID : 0,
+			);
+
+			if ( isset( $this->current_job->data->aiProvider ) ) {
+				$additional['ai_provider'] = $this->current_job->data->aiProvider;
+			}
+
+			if ( isset( $this->current_job->data->aiModel ) && ! empty( $this->current_job->data->aiModel ) ) {
+				$additional['ai_model'] = $this->current_job->data->aiModel;
+			}
+
+			$article = trim( $title . "\n\n" . wp_strip_all_tags( $content ) );
+			$article = substr( $article, 0, apply_filters( 'feedzy_seo_metadata_content_limit', 3000 ) );
+			$job_id  = (int) $additional['job_id'];
+
+			$valid_seo_fields = array( 'seo_title', 'meta_description', 'focus_keyword' );
+			$seo_fields       = $valid_seo_fields;
+			if ( isset( $this->current_job->data->seoFields ) && is_array( $this->current_job->data->seoFields ) && ! empty( $this->current_job->data->seoFields ) ) {
+				$seo_fields = array_values( array_intersect( (array) $this->current_job->data->seoFields, $valid_seo_fields ) );
+				if ( empty( $seo_fields ) ) {
+					$seo_fields = $valid_seo_fields;
+				}
+			}
+
+			// Use Feedzy Managed AI when enabled.
+			if ( class_exists( 'Feedzy_Rss_Feeds_Pro_Ai_Quota_Manager' ) ) {
+				$ai_manager = new Feedzy_Rss_Feeds_Pro_Ai_Quota_Manager();
+				if ( $ai_manager->is_managed_ai_enabled() ) {
+					$args   = array(
+						'prompt' => $prompt,
+						'text'   => $article,
+						'fields' => $seo_fields,
+					);
+					$result = $ai_manager->run_feedzy_ai_workflow( 'seo-metadata', $args, $job_id );
+					if ( is_wp_error( $result ) ) {
+						Feedzy_Rss_Feeds_Log::debug(
+							'SEO metadata generation failed.',
+							array(
+								'job_id'     => $additional['job_id'],
+								'error_code' => $result->get_error_code(),
+								'error'      => $result->get_error_message(),
+							)
+						);
+						return $content;
+					}
+					$this->pending_seo_metadata = $result;
+					return $content;
+				}
+			}
+
+			// Fall back to the configured OpenAI / OpenRouter provider.
+			if ( ! class_exists( 'Feedzy_Rss_Feeds_Pro_Openai' ) ) {
+				Feedzy_Rss_Feeds_Log::debug(
+					'SEO metadata generation failed.',
+					array(
+						'job_id' => $additional['job_id'],
+					)
+				);
+				return $content;
+			}
+
+			$additional['fields'] = $seo_fields;
+			$prompt               = $prompt . "\n\n" . $article;
+			$openai               = new Feedzy_Rss_Feeds_Pro_Openai();
+			$result               = $openai->call_api( $this->settings, $prompt, 'seo-metadata', $additional );
+
+			if ( is_wp_error( $result ) ) {
+				Feedzy_Rss_Feeds_Log::debug(
+					'SEO metadata generation failed.',
+					array(
+						'job_id'     => $additional['job_id'],
+						'error_code' => $result->get_error_code(),
+						'error'      => $result->get_error_message(),
+					)
+				);
+				return $content;
+			}
+
+			$this->pending_seo_metadata = $result;
+			return $content;
 		}
 
 		/**

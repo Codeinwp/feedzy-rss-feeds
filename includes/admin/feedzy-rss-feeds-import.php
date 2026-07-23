@@ -488,6 +488,7 @@ class Feedzy_Rss_Feeds_Import {
 		$import_remove_html       = get_post_meta( $post->ID, 'import_remove_html', true );
 		$import_remove_html       = 'yes' === $import_remove_html ? 'checked' : '';
 		$import_order             = get_post_meta( $post->ID, 'import_order', true );
+		$import_seo_data          = get_post_meta( $post->ID, 'import_seo_data', true );
 
 		if ( empty( $filter_conditions ) ) {
 			$filter_conditions = apply_filters(
@@ -1692,6 +1693,7 @@ class Feedzy_Rss_Feeds_Import {
 		$import_max               = $import_feed_limit;
 		$import_remove_html       = get_post_meta( $job->ID, 'import_remove_html', true );
 		$import_order             = get_post_meta( $job->ID, 'import_order', true );
+		$import_seo_data          = get_post_meta( $job->ID, 'import_seo_data', true );
 
 		if ( ! defined( 'TI_UNIT_TESTING' ) ) {
 			$max = $import_max;
@@ -2244,6 +2246,13 @@ class Feedzy_Rss_Feeds_Import {
 			}
 
 			$post_content = apply_filters( 'feedzy_invoke_services', $post_content, 'content', $item['item_description'], $job );
+
+			// Item SEO action.
+			$import_seo_data = rawurldecode( $import_seo_data );
+			if ( ! empty( $import_seo_data ) ) {
+				$seo_action = $this->get_actions_runner( $import_seo_data, 'item_seo' );
+				$seo_action->run_action_job( $seo_action->get_serialized_actions(), $import_translation_lang, $job, $language_code, $item );
+			}
 
 			// Translate full-content.
 			if ( $import_auto_translation && false !== strpos( $post_content, '[#translated_full_content]' ) ) {
@@ -3735,8 +3744,8 @@ class Feedzy_Rss_Feeds_Import {
 				$disabled[ str_replace( ':disabled', '', $tag ) ] = $label;
 				continue;
 			}
-			if ( in_array( $type, array( 'import_post_content', 'import_post_featured_img', 'import_post_title' ), true ) ) {
-				if ( in_array( $tag, array( 'item_content', 'item_description', 'item_full_content', 'item_categories', 'item_image', 'item_title' ), true ) ) {
+			if ( in_array( $type, array( 'import_post_content', 'import_post_featured_img', 'import_post_title', 'import_seo_data' ), true ) ) {
+				if ( in_array( $tag, array( 'item_content', 'item_description', 'item_full_content', 'item_categories', 'item_image', 'item_title', 'item_seo' ), true ) ) {
 					$default_tags .= '<a class="dropdown-item" href="#" data-field-name="' . $type . '" data-field-tag="' . $tag . '" data-action_popup="' . $tag . '">' . $label . ' <small>[#' . $tag . ']</small></a>';
 					continue;
 				}
@@ -4224,6 +4233,18 @@ class Feedzy_Rss_Feeds_Import {
 			$default_value['translated_content:disabled']     = __( '🚫 Translated Content', 'feedzy-rss-feeds' );
 			$default_value['translated_description:disabled'] = __( '🚫 Translated Description', 'feedzy-rss-feeds' );
 		}
+
+		return $default_value;
+	}
+
+	/**
+	 * Renders the tags for SEO.
+	 *
+	 * @param array<string, string> $default_value The default tags, empty.
+	 * @return array<string, string> The default value for the tags.
+	 */
+	public function magic_tags_seo( $default_value ) {
+		$default_value['item_seo:disabled'] = '🚫 ' . __( 'Item SEO', 'feedzy-rss-feeds' );
 
 		return $default_value;
 	}

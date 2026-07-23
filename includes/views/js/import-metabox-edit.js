@@ -805,7 +805,7 @@
 
 		// Tagify for normal textbox.
 		$(
-			'.fz-input-tagify:not(.fz-tagify-image):not([name="feedzy_meta_data[import_post_title]"]):not([name="feedzy_meta_data[import_post_content]"])'
+			'.fz-input-tagify:not(.fz-tagify-image):not([name="feedzy_meta_data[import_post_title]"]):not([name="feedzy_meta_data[import_post_content]"]):not([name="feedzy_meta_data[import_seo_data]"])'
 		).tagify({
 			editTags: false,
 			originalInputValueFormat(valuesArr) {
@@ -938,6 +938,44 @@
 					} catch (err) {
 						console.error(err);
 					}
+				},
+			},
+		});
+
+		// Tagify for SEO data field.
+		$(
+			'.fz-input-tagify[name="feedzy_meta_data[import_seo_data]"]'
+		).tagify({
+			mode: 'mix',
+			editTags: false,
+			templates: {
+				tag(tagData) {
+					try {
+						let decodeTagData = decodeURIComponent(tagData.value);
+						const isEncoded =
+							typeof tagData.value === 'string' &&
+							decodeTagData !== tagData.value;
+						let tagLabel = tagData.value;
+						if (isEncoded) {
+							decodeTagData = JSON.parse(decodeTagData);
+							decodeTagData = decodeTagData[0] || {};
+							tagLabel = decodeTagData.tag.replaceAll('_', ' ');
+							tagData['data-actions'] = tagData.value;
+							tagData['data-field_id'] = 'fz-seo-action-tags';
+						}
+						return `
+						<tag title='${tagLabel}' contenteditable='false' spellcheck="false" class='tagify__tag ${isEncoded ? 'fz-content-action' : ''}'>
+							<x title='remove tag' class='tagify__tag__removeBtn'></x>
+							<div>
+								<span class='tagify__tag-text'>${tagLabel}</span>
+								${
+									tagData['data-actions']
+										? `<a href="javascript:;" class="tagify__filter-icon" ${this.getAttributes(tagData)}></a>`
+										: ''
+								}
+							</div>
+						</tag>`;
+					} catch (err) {}
 				},
 			},
 		});
