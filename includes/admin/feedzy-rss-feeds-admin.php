@@ -1550,6 +1550,184 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 		// phpcs:ignore WordPressVIPMinimum.Hooks.RestrictedHooks.http_request_args
 		add_filter( 'http_request_args', array( $this, 'http_request_args' ) );
+
+		// Validate the request URL and any redirects to ensure they are publicly routable.
+		add_filter( 'pre_http_request', array( $this, 'validate_unsafe_request' ), 10, 3 );
+		add_action( 'requests-requests.before_redirect', array( $this, 'validate_redirect' ) );
+	}
+
+	/**
+	 * Validates that a request URL is safe to request.
+	 *
+	 * @param false|array<string, mixed>|WP_Error $preempt Preemptive return value.
+	 * @param array<string, mixed>                $parsed_args HTTP request arguments.
+	 * @param string                              $url The request URL.
+	 * @return false|array<string, mixed>|WP_Error
+	 */
+	public function validate_unsafe_request( $preempt, $parsed_args, $url ) {
+		if ( false !== $preempt ) {
+			return $preempt;
+		}
+
+		if ( $this->is_safe_url( $url ) ) {
+			return false;
+		}
+
+		return new WP_Error(
+			'feedzy_unsafe_url',
+			__( 'Invalid feed URL.', 'feedzy-rss-feeds' )
+		);
+	}
+
+	/**
+	 * Aborts the request if a redirect points to a non-public URL.
+	 *
+	 * @param string $location The redirect destination.
+	 *
+	 * @return void
+	 *
+	 * @throws \WpOrg\Requests\Exception When the redirect target is not safe.
+	 */
+	public function validate_redirect( $location ) {
+		if ( $this->is_safe_url( $location ) ) {
+			return;
+		}
+
+		// The Requests library does not provide a way to abort a request with a WP_Error,
+		// so we throw an exception instead.
+		throw new \WpOrg\Requests\Exception(
+			esc_html__( 'Invalid feed URL.', 'feedzy-rss-feeds' ),
+			'feedzy.unsafe_redirect'
+		);
+	}
+
+	/**
+	 * Whether a URL uses an allowed scheme and every address its host
+	 * resolves to is publicly routable.
+	 *
+	 * @param string $url The URL to validate.
+	 *
+	 * @return bool
+	 */
+	private function is_safe_url( $url ) {
+		if ( ! is_string( $url ) || '' === trim( $url ) ) {
+			return false;
+		}
+
+		$parts = wp_parse_url( $url );
+
+		if ( empty( $parts['scheme'] ) || empty( $parts['host'] ) ) {
+			return false;
+		}
+
+		if ( ! in_array( strtolower( $parts['scheme'] ), array( 'http', 'https' ), true ) ) {
+			return false;
+		}
+
+		$host = strtolower( trim( $parts['host'], '.' ) );
+
+		if ( '' === $host || 'localhost' === $host ) {
+			return false;
+		}
+
+		$ips = $this->resolve_ips( $host );
+
+		if ( empty( $ips ) ) {
+			return false;
+		}
+
+		foreach ( $ips as $ip ) {
+			if ( ! $this->is_public_ip( $ip ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Resolves a hostname (or IP literal) to every IPv4/IPv6 address it maps to.
+	 *
+	 * @param string $host The hostname or IP literal.
+	 *
+	 * @return string[]
+	 */
+	private function resolve_ips( $host ) {
+		if ( false !== filter_var( $host, FILTER_VALIDATE_IP ) ) {
+			return array( $host );
+		}
+
+		$ips = array();
+
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		$a_records = @dns_get_record( $host, DNS_A );
+		if ( is_array( $a_records ) ) {
+			foreach ( $a_records as $record ) {
+				if ( ! empty( $record['ip'] ) ) {
+					$ips[] = $record['ip'];
+				}
+			}
+		}
+
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		$aaaa_records = @dns_get_record( $host, DNS_AAAA );
+		if ( is_array( $aaaa_records ) ) {
+			foreach ( $aaaa_records as $record ) {
+				if ( ! empty( $record['ipv6'] ) ) {
+					$ips[] = $record['ipv6'];
+				}
+			}
+		}
+
+		if ( empty( $ips ) ) {
+			$fallback = gethostbyname( $host );
+			if ( $fallback !== $host ) {
+				$ips[] = $fallback;
+			}
+		}
+
+		return $ips;
+	}
+
+	/**
+	 * Whether an IP address is publicly routable, i.e. not private,
+	 * loopback, link-local, multicast or otherwise reserved.
+	 *
+	 * @param string $ip The IP address.
+	 *
+	 * @return bool
+	 */
+	private function is_public_ip( $ip ) {
+		if ( false === filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) ) {
+			return false;
+		}
+
+		return ! $this->is_multicast_ip( $ip );
+	}
+
+	/**
+	 * Whether an IP address is in a multicast range.
+	 *
+	 * @param string $ip The IP address.
+	 *
+	 * @return bool
+	 */
+	private function is_multicast_ip( $ip ) {
+		$packed = inet_pton( $ip );
+
+		if ( false === $packed ) {
+			return true;
+		}
+
+		$first_byte = ord( $packed[0] );
+
+		if ( 4 === strlen( $packed ) ) {
+			// IPv4 multicast: 224.0.0.0/4.
+			return $first_byte >= 224 && $first_byte <= 239;
+		}
+
+		// IPv6 multicast: ff00::/8.
+		return 0xff === $first_byte;
 	}
 
 	/**
@@ -1681,6 +1859,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	public function post_http_teardown( $url ) {
 		remove_filter( 'http_headers_useragent', array( $this, 'add_user_agent' ) );
+		remove_filter( 'pre_http_request', array( $this, 'validate_unsafe_request' ), 10 );
+		remove_action( 'requests-requests.before_redirect', array( $this, 'validate_redirect' ) );
 	}
 
 	/**
