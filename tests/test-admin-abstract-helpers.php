@@ -197,6 +197,25 @@ class Test_Admin_Abstract_Helpers extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Seed the feedzy_category_feed meta bypassing the write-time validation.
+	 *
+	 * The plugin hooks validate_category_feeds() on add/update_post_metadata,
+	 * which fetches every URL over HTTP and drops the ones that are not real
+	 * feeds. These tests cover slug RESOLUTION, not validation, so the meta is
+	 * seeded with the validation filters removed (the WP test framework
+	 * restores all hooks after each test).
+	 *
+	 * @param int    $post_id The feed group post id.
+	 * @param string $value   The raw meta value to store.
+	 */
+	private function seed_category_feed_meta( $post_id, $value ) {
+		$admin = Feedzy_Rss_Feeds::instance()->get_admin();
+		remove_filter( 'update_post_metadata', array( $admin, 'validate_category_feeds' ) );
+		remove_filter( 'add_post_metadata', array( $admin, 'validate_category_feeds' ) );
+		update_post_meta( $post_id, 'feedzy_category_feed', $value );
+	}
+
+	/**
 	 * Test get_feed_url resolves a feedzy_categories slug into its stored feed urls.
 	 *
 	 * @access public
@@ -210,7 +229,7 @@ class Test_Admin_Abstract_Helpers extends WP_UnitTestCase {
 				'post_status' => 'publish',
 			)
 		);
-		update_post_meta( $category->ID, 'feedzy_category_feed', 'https://example.com/feed-a, https://example.com/feed-b' );
+		$this->seed_category_feed_meta( $category->ID, 'https://example.com/feed-a, https://example.com/feed-b' );
 
 		$result = $this->feedzy_abstract->get_feed_url( 'my-feed-group' );
 
@@ -234,7 +253,7 @@ class Test_Admin_Abstract_Helpers extends WP_UnitTestCase {
 				'post_status' => 'publish',
 			)
 		);
-		update_post_meta( $category->ID, 'feedzy_category_feed', "https://example.com/one.xml,\nhttps://example.com/two.xml" );
+		$this->seed_category_feed_meta( $category->ID, "https://example.com/one.xml,\nhttps://example.com/two.xml" );
 
 		$result = $this->feedzy_abstract->process_feed_source( 'another-group' );
 
