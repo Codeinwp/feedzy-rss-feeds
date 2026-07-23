@@ -1600,7 +1600,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return void
 	 *
 	 * @throws \WpOrg\Requests\Exception When the redirect target is not safe (WP 6.2+).
-	 * @throws \Requests_Exception When the redirect target is not safe (WP < 6.2).
+	 * @throws \Exception When the redirect target is not safe (WP < 6.2).
 	 */
 	public function validate_redirect( $location ) {
 		if ( $this->is_safe_url( $location ) ) {
@@ -1617,7 +1617,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			);
 		}
 
-		throw new \Requests_Exception(
+		throw new \Exception(
 			esc_html__( 'Invalid feed URL.', 'feedzy-rss-feeds' ),
 			'feedzy.unsafe_redirect'
 		);
