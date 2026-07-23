@@ -49,6 +49,14 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	protected $version;
 
 	/**
+	 * Pinned resolve entries for cURL requests. Each entry is a string in the format "host:port:ip".
+	 *
+	 * @access   private
+	 * @var      array<string, string> $pinned_resolve
+	 */
+	private $pinned_resolve = array();
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since   3.0.0
@@ -1551,9 +1559,14 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		// phpcs:ignore WordPressVIPMinimum.Hooks.RestrictedHooks.http_request_args
 		add_filter( 'http_request_args', array( $this, 'http_request_args' ) );
 
+		$this->pinned_resolve = array();
+
 		// Validate the request URL and any redirects to ensure they are publicly routable.
 		add_filter( 'pre_http_request', array( $this, 'validate_unsafe_request' ), 10, 3 );
 		add_action( 'requests-requests.before_redirect', array( $this, 'validate_redirect' ) );
+
+		// Pin the connection to a validated address if the request URL resolves to one or more publicly routable addresses.
+		add_action( 'http_api_curl', array( $this, 'pin_curl_resolve' ), 10, 3 );
 	}
 
 	/**
@@ -1586,7 +1599,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @return void
 	 *
-	 * @throws \WpOrg\Requests\Exception When the redirect target is not safe.
+	 * @throws \WpOrg\Requests\Exception When the redirect target is not safe (WP 6.2+).
+	 * @throws \Requests_Exception When the redirect target is not safe (WP < 6.2).
 	 */
 	public function validate_redirect( $location ) {
 		if ( $this->is_safe_url( $location ) ) {
@@ -1594,8 +1608,16 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		// The Requests library does not provide a way to abort a request with a WP_Error,
-		// so we throw an exception instead.
-		throw new \WpOrg\Requests\Exception(
+		// so we throw an exception instead. WP < 6.2 bundles the pre-namespace Requests
+		// library, where this class is `Requests_Exception` instead.
+		if ( class_exists( '\WpOrg\Requests\Exception' ) ) {
+			throw new \WpOrg\Requests\Exception(
+				esc_html__( 'Invalid feed URL.', 'feedzy-rss-feeds' ),
+				'feedzy.unsafe_redirect'
+			);
+		}
+
+		throw new \Requests_Exception(
 			esc_html__( 'Invalid feed URL.', 'feedzy-rss-feeds' ),
 			'feedzy.unsafe_redirect'
 		);
@@ -1642,7 +1664,60 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 		}
 
+		// Pin the connection to the first resolved address, which is guaranteed to be publicly routable.
+		$this->pin_resolved_address( $host, $this->get_url_port( $parts, strtolower( $parts['scheme'] ) ), $ips[0] );
+
 		return true;
+	}
+
+	/**
+	 * Returns the port for a URL, defaulting to 80 for HTTP and 443 for HTTPS if not specified.
+	 *
+	 * @param array<string, mixed> $parts  The URL, as parsed by wp_parse_url().
+	 * @param string               $scheme The lowercased URL scheme.
+	 *
+	 * @return int
+	 */
+	private function get_url_port( array $parts, $scheme ) {
+		if ( ! empty( $parts['port'] ) ) {
+			return (int) $parts['port'];
+		}
+
+		return 'https' === $scheme ? 443 : 80;
+	}
+
+	/**
+	 * Pins a cURL connection to a validated address for a given host and port.
+	 *
+	 * @param string $host The hostname (not an IP literal).
+	 * @param int    $port The port the request will connect on.
+	 * @param string $ip   The validated address to pin the connection to.
+	 *
+	 * @return void
+	 */
+	private function pin_resolved_address( $host, $port, $ip ) {
+		$formatted_ip = ( false !== strpos( $ip, ':' ) ) ? '[' . $ip . ']' : $ip;
+
+		$this->pinned_resolve[ "{$host}:{$port}" ] = "{$host}:{$port}:{$formatted_ip}";
+	}
+
+	/**
+	 * Pins a cURL connection to a validated address if one has been recorded
+	 * for the request URL's host and port.
+	 *
+	 * @param resource             $handle      The cURL handle returned by curl_init() (passed by reference).
+	 * @param array<string, mixed> $parsed_args The HTTP request arguments.
+	 * @param string               $url         The request URL.
+	 *
+	 * @return void
+	 */
+	public function pin_curl_resolve( $handle, $parsed_args, $url ) {
+		if ( empty( $this->pinned_resolve ) || ! defined( 'CURLOPT_RESOLVE' ) ) {
+			return;
+		}
+
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt
+		curl_setopt( $handle, CURLOPT_RESOLVE, array_values( $this->pinned_resolve ) );
 	}
 
 	/**
@@ -1659,27 +1734,29 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$ips = array();
 
-		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-		$a_records = @dns_get_record( $host, DNS_A );
-		if ( is_array( $a_records ) ) {
-			foreach ( $a_records as $record ) {
-				if ( ! empty( $record['ip'] ) ) {
-					$ips[] = $record['ip'];
+		if ( function_exists( 'dns_get_record' ) ) {
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			$a_records = @dns_get_record( $host, DNS_A );
+			if ( is_array( $a_records ) ) {
+				foreach ( $a_records as $record ) {
+					if ( ! empty( $record['ip'] ) ) {
+						$ips[] = $record['ip'];
+					}
+				}
+			}
+
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			$aaaa_records = @dns_get_record( $host, DNS_AAAA );
+			if ( is_array( $aaaa_records ) ) {
+				foreach ( $aaaa_records as $record ) {
+					if ( ! empty( $record['ipv6'] ) ) {
+						$ips[] = $record['ipv6'];
+					}
 				}
 			}
 		}
 
-		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-		$aaaa_records = @dns_get_record( $host, DNS_AAAA );
-		if ( is_array( $aaaa_records ) ) {
-			foreach ( $aaaa_records as $record ) {
-				if ( ! empty( $record['ipv6'] ) ) {
-					$ips[] = $record['ipv6'];
-				}
-			}
-		}
-
-		if ( empty( $ips ) ) {
+		if ( empty( $ips ) && function_exists( 'gethostbyname' ) ) {
 			$fallback = gethostbyname( $host );
 			if ( $fallback !== $host ) {
 				$ips[] = $fallback;
@@ -1861,6 +1938,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		remove_filter( 'http_headers_useragent', array( $this, 'add_user_agent' ) );
 		remove_filter( 'pre_http_request', array( $this, 'validate_unsafe_request' ), 10 );
 		remove_action( 'requests-requests.before_redirect', array( $this, 'validate_redirect' ) );
+		remove_action( 'http_api_curl', array( $this, 'pin_curl_resolve' ), 10 );
+		$this->pinned_resolve = array();
 	}
 
 	/**
