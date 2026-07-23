@@ -8,7 +8,10 @@
 	"env": {
 		"tests": {
 			"config": {
-				"E2E_TESTING": true
+				"E2E_TESTING": true,
+				"WP_DEBUG": true,
+				"WP_DEBUG_LOG": true,
+				"WP_DEBUG_DISPLAY": false
 			},
 			"mappings": {
 				"wp-content/themes/gutenberg-test-themes/twentytwentyone": "https://downloads.wordpress.org/theme/twentytwentyone.2.1.zip",
