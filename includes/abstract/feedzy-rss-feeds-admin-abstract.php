@@ -724,7 +724,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				if ( $this->is_valid_feed_url( $url ) ) {
 					$feed_url[ $index ] = trim( $this->smart_convert( esc_url_raw( $url ) ) );
 				} else {
- 					unset( $feed_url[ $index ] );
+					unset( $feed_url[ $index ] );
 				}
 			}
 		} elseif ( $this->is_valid_feed_url( $feed_url ) ) {
