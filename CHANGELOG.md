@@ -1,3 +1,7 @@
+##### [Version 5.2.5](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.4...v5.2.5) (2026-07-24)
+
+- Enhanced Security
+
 ##### [Version 5.2.4](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.3...v5.2.4) (2026-07-22)
 
 - Fixed the import logs showing event times in UTC instead of the sites local timezone.
