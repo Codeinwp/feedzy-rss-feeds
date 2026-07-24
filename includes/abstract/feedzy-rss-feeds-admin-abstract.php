@@ -1235,7 +1235,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		} catch ( \Throwable $e ) {
 			Feedzy_Rss_Feeds_Log::error(
 				// translators: %1$s is the feed URL, %2$s is the error message.
-				sprintf( __( 'Error while initializing cloned feed for URL "%1$s": %2$s', 'feedzy-rss-feeds' ), $feed_url, $e->getMessage() ),
+				sprintf( __( 'Error while parsing feed URL "%1$s": %2$s', 'feedzy-rss-feeds' ), $feed_url, $e->getMessage() ),
 				array(
 					'feed_url' => $feed_url,
 					'cache'    => $cache,
