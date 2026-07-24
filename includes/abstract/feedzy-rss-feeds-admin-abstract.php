@@ -777,55 +777,57 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	public function fetch_feed( $feed_url, $cache = '12_hours', $sc = '' ) {
 		// Load SimplePie if not already.
 		do_action( 'feedzy_pre_http_setup', $feed_url );
-		if ( function_exists( 'feedzy_amazon_get_locale_hosts' ) ) {
-			$amazon_hosts     = feedzy_amazon_get_locale_hosts();
-			$is_amazon_source = false;
-			if ( is_array( $feed_url ) ) {
-				$url_host         = array_map(
-					function ( $url ) {
-						return 'webservices.' . wp_parse_url( $url, PHP_URL_HOST );
-					},
-					$feed_url
-				);
-				$url_host         = array_diff( $url_host, $amazon_hosts );
-				$is_amazon_source = ! empty( $amazon_hosts ) && empty( $url_host );
-			} else {
-				$url_host         = 'webservices.' . wp_parse_url( $feed_url, PHP_URL_HOST );
-				$is_amazon_source = ! empty( $amazon_hosts ) && in_array( $url_host, $amazon_hosts, true );
-			}
-			if ( $is_amazon_source ) {
-				$feed = $this->init_amazon_api(
-					$feed_url,
-					isset( $sc['refresh'] ) ? $sc['refresh'] : '12_hours',
-					array(
-						'number_of_item' => isset( $sc['max'] ) ? $sc['max'] : 5,
-						'no-cache'       => false,
-					)
-				);
-				return $feed;
-			}
-		}
-		// Load SimplePie Instance.
-		$feed = $this->init_feed( $feed_url, $cache, $sc ); // Not used as log as #41304 is Opened.
 
-		// Report error when is an error loading the feed.
-		if ( is_wp_error( $feed ) ) {
-			// Fallback for different edge cases.
-			if ( is_array( $feed_url ) ) {
-				$feed_url = array_map( 'html_entity_decode', $feed_url );
-			} else {
-				$feed_url = html_entity_decode( $feed_url );
+		try {
+			if ( function_exists( 'feedzy_amazon_get_locale_hosts' ) ) {
+				$amazon_hosts     = feedzy_amazon_get_locale_hosts();
+				$is_amazon_source = false;
+				if ( is_array( $feed_url ) ) {
+					$url_host         = array_map(
+						function ( $url ) {
+							return 'webservices.' . wp_parse_url( $url, PHP_URL_HOST );
+						},
+						$feed_url
+					);
+					$url_host         = array_diff( $url_host, $amazon_hosts );
+					$is_amazon_source = ! empty( $amazon_hosts ) && empty( $url_host );
+				} else {
+					$url_host         = 'webservices.' . wp_parse_url( $feed_url, PHP_URL_HOST );
+					$is_amazon_source = ! empty( $amazon_hosts ) && in_array( $url_host, $amazon_hosts, true );
+				}
+				if ( $is_amazon_source ) {
+					return $this->init_amazon_api(
+						$feed_url,
+						isset( $sc['refresh'] ) ? $sc['refresh'] : '12_hours',
+						array(
+							'number_of_item' => isset( $sc['max'] ) ? $sc['max'] : 5,
+							'no-cache'       => false,
+						)
+					);
+				}
 			}
-
-			$feed_url = $this->get_valid_source_urls( $feed_url, $cache );
-
+			// Load SimplePie Instance.
 			$feed = $this->init_feed( $feed_url, $cache, $sc ); // Not used as log as #41304 is Opened.
 
+			// Report error when is an error loading the feed.
+			if ( is_wp_error( $feed ) ) {
+				// Fallback for different edge cases.
+				if ( is_array( $feed_url ) ) {
+					$feed_url = array_map( 'html_entity_decode', $feed_url );
+				} else {
+					$feed_url = html_entity_decode( $feed_url );
+				}
+
+				$feed_url = $this->get_valid_source_urls( $feed_url, $cache );
+
+				$feed = $this->init_feed( $feed_url, $cache, $sc ); // Not used as log as #41304 is Opened.
+
+			}
+
+			return $feed;
+		} finally {
+			do_action( 'feedzy_post_http_teardown', $feed_url );
 		}
-
-		do_action( 'feedzy_post_http_teardown', $feed_url );
-
-		return $feed;
 	}
 
 	/**
