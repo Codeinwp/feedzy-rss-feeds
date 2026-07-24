@@ -895,7 +895,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$feed->set_useragent( apply_filters( 'http_headers_useragent', $set_server_agent, $feed_url ) );
 		}
 
-		$feed->init();
+		try {
+			$feed->init();
+		} catch ( \Throwable $e ) {
+			return $this->handle_feed_error( $feed, $cloned_feed, $feed_url, $cache, $sc, $allow_https, $default_agent, $e->getMessage(), array( 'trace' => $e->getTraceAsString() ) );
+		}
 
 		if ( ! $feed->get_type() ) {
 			return $feed;
@@ -949,7 +953,24 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$feed_instance->set_useragent( apply_filters( 'http_headers_useragent', $set_server_agent, $url ) );
 			}
 
-			$feed_instance->init();
+			try {
+				$feed_instance->init();
+			} catch ( \Throwable $e ) {
+				Feedzy_Rss_Feeds_Log::error(
+					// translators: %1$s is the feed URL, %2$s is the error message.
+					sprintf( __( 'Error while parsing feed URL "%1$s": %2$s', 'feedzy-rss-feeds' ), $url, $e->getMessage() ),
+					array(
+						'feed_url' => $url,
+						'cache'    => $cache,
+						'sc'       => $sc,
+						'error'    => $e->getMessage(),
+						'trace'    => $e->getTraceAsString(),
+					)
+				);
+
+				$simplepie_errors[] = $e->getMessage();
+				continue;
+			}
 
 			$error = $feed_instance->error();
 			if ( is_array( $error ) ) {
@@ -1165,17 +1186,22 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @param   bool                 $allow_https Whether HTTPS is allowed.
 	 * @param   string               $default_agent Default user agent.
 	 * @param   string               $error Error message.
+	 * @param   array<string, mixed> $extra_context Additional log context (e.g. throwable trace).
 	 *
 	 * @return SimplePie Feed instance.
 	 */
-	private function handle_feed_error( $feed, $cloned_feed, $feed_url, $cache, $sc, $allow_https, $default_agent, $error ) {
+	private function handle_feed_error( $feed, $cloned_feed, $feed_url, $cache, $sc, $allow_https, $default_agent, $error, $extra_context = array() ) {
 		Feedzy_Rss_Feeds_Log::error(
 			// translators: %1$s is the feed URL, %2$s is the error message.
 			sprintf( __( 'Error while parsing feed URL "%1$s": %2$s', 'feedzy-rss-feeds' ), $feed_url, $error ),
-			array(
-				'feed_url' => $feed_url,
-				'cache'    => $cache,
-				'sc'       => $sc,
+			array_merge(
+				array(
+					'feed_url' => $feed_url,
+					'cache'    => $cache,
+					'sc'       => $sc,
+					'error'    => $error,
+				),
+				$extra_context
 			)
 		);
 
@@ -1203,9 +1229,27 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$data = wp_remote_retrieve_body( wp_safe_remote_get( $feed_url, array( 'user-agent' => $default_agent ) ) );
 		$cloned_feed->set_raw_data( $data );
-		$cloned_feed->init();
+
+		try {
+			$cloned_feed->init();
+		} catch ( \Throwable $e ) {
+			Feedzy_Rss_Feeds_Log::error(
+				// translators: %1$s is the feed URL, %2$s is the error message.
+				sprintf( __( 'Error while parsing feed URL "%1$s": %2$s', 'feedzy-rss-feeds' ), $feed_url, $e->getMessage() ),
+				array(
+					'feed_url' => $feed_url,
+					'cache'    => $cache,
+					'sc'       => $sc,
+					'error'    => $e->getMessage(),
+					'trace'    => $e->getTraceAsString(),
+				)
+			);
+
+			return $feed;
+		}
+
 		$error_raw = $cloned_feed->error();
-		
+
 		if ( empty( $error_raw ) ) {
 			// Only if using the raw url produces no errors, will we use the cloned feed.
 			return $cloned_feed;
