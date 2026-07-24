@@ -9,6 +9,10 @@
  * @subpackage feedzy-rss-feeds/includes
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Adds the featured image to the website's RSS feed.
  *

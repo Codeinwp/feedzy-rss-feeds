@@ -76,7 +76,25 @@ $logs_entries = isset( $logs ) && is_array( $logs ) ? $logs : array();
 		foreach ( $logs_entries as $log ) :
 			?>
 			<?php
-				$level = isset( $log['level'] ) ? $log['level'] : '';
+			$level     = isset( $log['level'] ) ? $log['level'] : '';
+			$timestamp = isset( $log['timestamp'] ) ? $log['timestamp'] : '';
+			$message   = isset( $log['message'] ) ? $log['message'] : '';
+			$context   = isset( $log['context'] ) && is_array( $log['context'] ) ? $log['context'] : array();
+
+			// Surface the import/feed that produced this entry. Older entries used `job_id`/`source` keys.
+			$import_id = '';
+			if ( isset( $context['import_id'] ) && is_scalar( $context['import_id'] ) ) {
+				$import_id = (string) $context['import_id'];
+			} elseif ( isset( $context['job_id'] ) && is_scalar( $context['job_id'] ) ) {
+				$import_id = (string) $context['job_id'];
+			}
+			$import_title = isset( $context['import_title'] ) && is_scalar( $context['import_title'] ) ? (string) $context['import_title'] : '';
+			$feed_url     = '';
+			if ( isset( $context['feed_url'] ) && is_scalar( $context['feed_url'] ) ) {
+				$feed_url = (string) $context['feed_url'];
+			} elseif ( isset( $context['source'] ) && is_scalar( $context['source'] ) ) {
+				$feed_url = (string) $context['source'];
+			}
 			?>
 			<div
 				class="fz-log-container fz-log-container--<?php echo esc_attr( strtolower( $level ) ); ?>"
@@ -85,26 +103,45 @@ $logs_entries = isset( $logs ) && is_array( $logs ) ? $logs : array();
 					<div class="fx-log-container__header">
 						[
 						<?php
-						if ( $log['level'] ) {
-							echo esc_html( strtoupper( $log['level'] ) );
+						if ( $level ) {
+							echo esc_html( strtoupper( $level ) );
 						} else {
 							echo esc_html( '-' );
 						}
 						?>
 						]
 						<?php
-						if ( $log['timestamp'] ) {
-							echo esc_html( wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $log['timestamp'] ) ) );
+						if ( $timestamp ) {
+							echo esc_html( wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $timestamp ) ) );
 						} else {
 							echo esc_html( '-' );
 						}
 						?>
-						
+
 					</div>
+					<?php if ( '' !== $import_id || '' !== $import_title || '' !== $feed_url ) : ?>
+						<div class="fz-log-container__badges">
+							<?php if ( '' !== $import_id || '' !== $import_title ) : ?>
+								<span class="fz-log-context-import">
+									<?php
+									if ( '' !== $import_title ) {
+										echo esc_html( $import_title ) . ' ';
+									}
+									if ( '' !== $import_id ) {
+										echo esc_html( '(#' . $import_id . ')' );
+									}
+									?>
+								</span>
+							<?php endif; ?>
+							<?php if ( '' !== $feed_url ) : ?>
+								<span class="fz-log-context-feed-url"><?php echo esc_html( $feed_url ); ?></span>
+							<?php endif; ?>
+						</div>
+					<?php endif; ?>
 					<div class="fz-log-container__message">
 						<?php
-						if ( $log['message'] ) {
-							echo esc_html( $log['message'] );
+						if ( $message ) {
+							echo esc_html( $message );
 						} else {
 							echo esc_html( '-' );
 						}
@@ -112,8 +149,8 @@ $logs_entries = isset( $logs ) && is_array( $logs ) ? $logs : array();
 					</div>
 				</div>
 				<div class="fz-log-container__right">
-					<?php if ( $log['context'] ) : ?>
-						<div class="fz-log-container__context"><?php echo esc_html( wp_json_encode( $log['context'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES ) ); ?></div>
+					<?php if ( $context ) : ?>
+						<div class="fz-log-container__context"><?php echo esc_html( wp_json_encode( $context, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES ) ); ?></div>
 					<?php endif; ?>
 				</div>
 			</div>

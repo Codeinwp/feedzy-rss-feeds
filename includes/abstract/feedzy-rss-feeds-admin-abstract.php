@@ -897,13 +897,24 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$feed->init();
 
-		if ( ! $feed->get_type() ) {
-			return $feed;
-		}
-
 		$error = $feed->error();
 		if ( is_array( $error ) ) {
 			$error = implode( '|', $error );
+		}
+
+		if ( ! $feed->get_type() ) {
+			if ( ! empty( $error ) ) {
+				Feedzy_Rss_Feeds_Log::error(
+					// translators: %1$s is the feed URL, %2$s is the error message.
+					sprintf( __( 'Error while parsing feed URL "%1$s": %2$s', 'feedzy-rss-feeds' ), $feed_url, $error ),
+					array(
+						'feed_url' => $feed_url,
+						'cache'    => $cache,
+						'sc'       => $sc,
+					)
+				);
+			}
+			return $feed;
 		}
 
 		if ( ! empty( $error ) ) {
@@ -1072,10 +1083,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @param   array<string, mixed> $sc The shortcode attributes.
 	 * @param   bool                 $allow_https Whether to allow HTTPS.
 	 *
-	 * @return Feedzy_Rss_Feeds_Util_SimplePie SimplePie instance.
+	 * @return Feedzy_Rss_Feeds_Util_Feed SimplePie instance.
 	 */
 	private function create_simplepie_instance( array $sc, $allow_https ) {
-		$feed = new Feedzy_Rss_Feeds_Util_SimplePie( $sc );
+		$feed = new Feedzy_Rss_Feeds_Util_Feed( $sc );
 
 		if ( ! $allow_https && method_exists( $feed, 'set_curl_options' ) ) {
 			$feed->set_curl_options(
@@ -1196,8 +1207,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		Feedzy_Rss_Feeds_Log::debug(
 			sprintf( 'Using raw data for feed: %s', $feed_url ),
 			array(
-				'cache' => $cache,
-				'sc'    => $sc,
+				'feed_url' => $feed_url,
+				'cache'    => $cache,
+				'sc'       => $sc,
 			)
 		);
 

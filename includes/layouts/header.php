@@ -7,6 +7,11 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+
 // phpcs:disable WordPress.Security.NonceVerification
 $page_title = __( 'Settings', 'feedzy-rss-feeds' );
 if ( isset( $_GET['page'] ) && 'feedzy-support' === $_GET['page'] ) {
