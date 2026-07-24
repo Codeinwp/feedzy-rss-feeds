@@ -135,6 +135,8 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 
 		/**
 		 * Remove the wp_targeted_link_rel filter added by modify_links() if it was added.
+		 *
+		 * @return void
 		 */
 		public static function remove_link_rel_filter() {
 			if ( null !== self::$link_rel_callback ) {
