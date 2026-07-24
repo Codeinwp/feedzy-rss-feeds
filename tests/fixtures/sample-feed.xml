@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+	<channel>
+		<title>Feedzy Fixture Feed</title>
+		<link>https://tests.example.com/</link>
+		<description>Deterministic fixture feed for unit tests</description>
+		<item>
+			<title>Alpha Article About Space Exploration</title>
+			<link>https://tests.example.com/alpha</link>
+			<guid>https://tests.example.com/alpha</guid>
+			<pubDate>Fri, 05 Jan 2024 10:00:00 +0000</pubDate>
+			<description>Alpha unique description content.</description>
+		</item>
+		<item>
+			<title>Beta Bananas Are Great</title>
+			<link>https://tests.example.com/beta</link>
+			<guid>https://tests.example.com/beta</guid>
+			<pubDate>Thu, 04 Jan 2024 10:00:00 +0000</pubDate>
+			<description>Beta unique description content.</description>
+		</item>
+		<item>
+			<title>Gamma Space Telescope News</title>
+			<link>https://tests.example.com/gamma</link>
+			<guid>https://tests.example.com/gamma</guid>
+			<pubDate>Wed, 03 Jan 2024 10:00:00 +0000</pubDate>
+			<description>Gamma unique description content.</description>
+		</item>
+		<item>
+			<title>Delta Cooking Recipes</title>
+			<link>https://tests.example.com/delta</link>
+			<guid>https://tests.example.com/delta</guid>
+			<pubDate>Tue, 02 Jan 2024 10:00:00 +0000</pubDate>
+			<description>Delta unique description content.</description>
+		</item>
+		<item>
+			<title>Epsilon Space Rocks Discovered</title>
+			<link>https://tests.example.com/epsilon</link>
+			<guid>https://tests.example.com/epsilon</guid>
+			<pubDate>Mon, 01 Jan 2024 10:00:00 +0000</pubDate>
+			<description>Epsilon unique description content.</description>
+		</item>
+	</channel>
+</rss>
