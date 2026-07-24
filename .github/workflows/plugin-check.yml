@@ -52,6 +52,10 @@ jobs:
           if [ ! -s "$RESULTS_FILE" ]; then
             echo "No results file found or file is empty." >> $GITHUB_STEP_SUMMARY
             echo "Check the action logs for details." >> $GITHUB_STEP_SUMMARY
+            if [ "${{ steps.plugin-check.outcome }}" != "success" ]; then
+              echo "::error::Plugin Check did not produce results and its step failed — treating as an infrastructure failure."
+              exit 1
+            fi
             exit 0
           fi
 
@@ -179,6 +183,7 @@ jobs:
           MEDIUM_SECTION=$(echo "$PARSED" | sed -n '/^---MEDIUM---$/,/^---OTHER---$/p' | sed '1d;$d')
           OTHER_SECTION=$(echo "$PARSED" | sed -n '/^---OTHER---$/,/^---COUNTS---$/p' | sed '1d;$d')
           COUNTS=$(echo "$PARSED" | tail -1)
+          HIGH_COUNT=$(echo "$COUNTS" | cut -d'|' -f1)
           OTHER_COUNT=$(echo "$COUNTS" | cut -d'|' -f3)
 
           echo "### 🚨 HIGH RISK — Can cause plugin closure or suspension" >> $GITHUB_STEP_SUMMARY
@@ -209,3 +214,8 @@ jobs:
           fi
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "</details>" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${HIGH_COUNT:-0}" -gt 0 ]; then
+            echo "::error::Plugin Check found ${HIGH_COUNT} high-risk issue(s) — see the job summary."
+            exit 1
+          fi

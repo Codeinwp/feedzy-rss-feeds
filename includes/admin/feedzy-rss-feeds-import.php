@@ -1620,7 +1620,8 @@ class Feedzy_Rss_Feeds_Import {
 					)
 				);
 
-				if ( empty( $result ) && ! get_post_meta( $job->ID, 'import_batch_cursor', true ) ) {
+				$batching_enabled = 0 < (int) apply_filters( 'feedzy_import_batch_size', get_post_meta( $job->ID, 'import_batch_size', true ), $job );
+				if ( empty( $result ) && ! $batching_enabled && ! get_post_meta( $job->ID, 'import_batch_cursor', true ) ) {
 					$this->run_job( $job, $max );
 
 					Feedzy_Rss_Feeds_Log::debug(
@@ -1927,6 +1928,24 @@ class Feedzy_Rss_Feeds_Import {
 		$batch_cursor     = 0 < $import_batch_size ? (string) get_post_meta( $job->ID, 'import_batch_cursor', true ) : '';
 		$cursor_reached   = empty( $batch_cursor );
 		$batch_stopped    = false;
+		$delay_budget_ms  = max( 0, (int) apply_filters( 'feedzy_import_delay_budget_ms', 30000, $job ) );
+		$slept_ms         = 0;
+
+		if ( ! $cursor_reached ) {
+			// If the cursor item has aged out of the current feed window,
+			// process the run from the beginning instead of skipping everything.
+			$cursor_in_result = false;
+			foreach ( $result as $cursor_check_item ) {
+				$cursor_check_hash = $use_new_hash ? $cursor_check_item['item_id'] : hash( 'sha256', $cursor_check_item['item_url'] . '_' . $cursor_check_item['item_date'] );
+				if ( $batch_cursor === (string) $cursor_check_hash ) {
+					$cursor_in_result = true;
+					break;
+				}
+			}
+			if ( ! $cursor_in_result ) {
+				$cursor_reached = true;
+			}
+		}
 
 		foreach ( $result as $key => $item ) {
 			Feedzy_Rss_Feeds_Log::debug(
@@ -1979,9 +1998,17 @@ class Feedzy_Rss_Feeds_Import {
 				break;
 			}
 
+			if ( 0 < $attempted_items && 0 < $import_item_delay_ms && $slept_ms + $import_item_delay_ms > $delay_budget_ms ) {
+				// The configured throttling no longer fits this run's sleep
+				// budget; stop here and let the next cron run resume.
+				$batch_stopped = true;
+				break;
+			}
+
 			$items_found[ $item['item_url'] ] = $item['item_title'];
 			if ( 0 < $attempted_items && 0 < $import_item_delay_ms ) {
 				usleep( $import_item_delay_ms * 1000 );
+				$slept_ms += $import_item_delay_ms;
 			}
 			if ( 0 < $import_batch_size ) {
 				update_post_meta( $job->ID, 'import_batch_cursor', $item_hash );
@@ -2818,14 +2845,16 @@ class Feedzy_Rss_Feeds_Import {
 			// we can use this to associate the items that were imported in a particular run.
 			update_post_meta( $new_post_id, 'feedzy_job_time', $last_run );
 
-			do_action( 'feedzy_after_post_import', $new_post_id, $item, $this->settings );
-
+			// Persist the successful item before handing control to third-party
+			// callbacks, so a throwing callback cannot cause a re-import.
 			if ( $use_new_hash ) {
 				update_post_meta( $job->ID, 'imported_items_hash', $imported_items );
 			} else {
 				update_post_meta( $job->ID, 'imported_items', $imported_items );
 			}
 			update_post_meta( $job->ID, 'imported_items_count', $count );
+
+			do_action( 'feedzy_after_post_import', $new_post_id, $item, $this->settings );
 		}
 
 		if ( ! $batch_stopped ) {
