@@ -1618,8 +1618,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		throw new \Exception(
-			esc_html__( 'Invalid feed URL.', 'feedzy-rss-feeds' ),
-			'feedzy.unsafe_redirect'
+			esc_html__( 'Invalid feed URL.', 'feedzy-rss-feeds' )
 		);
 	}
 
