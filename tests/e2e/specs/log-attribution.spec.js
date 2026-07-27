@@ -175,4 +175,34 @@ test.describe('Log attribution (#1278)', () => {
 			await keylessEntry.locator('.fz-log-container__badges').count()
 		).toBe(0);
 	});
+
+	test('legacy entries with only job_id and source render both badges', async ({
+		page,
+		admin,
+		requestUtils,
+	}) => {
+		// Seed an entry in the shape written before #1278: the context
+		// carries only `job_id` and `source` (no `import_id`/`feed_url`).
+		await requestUtils.rest({
+			method: 'POST',
+			path: '/feedzy-e2e/v1/legacy-log',
+		});
+
+		await admin.visitAdminPage('admin.php?page=feedzy-settings&tab=logs');
+
+		const legacyEntry = page.locator('.fz-log-container', {
+			hasText: 'Legacy log entry seeded for e2e',
+		});
+		await expect(legacyEntry).toHaveCount(1);
+
+		// `job_id` falls back to the import badge...
+		await expect(
+			legacyEntry.locator('.fz-log-context-import')
+		).toContainText('(#123)');
+
+		// ...and `source` falls back to the feed URL badge.
+		await expect(
+			legacyEntry.locator('.fz-log-context-feed-url')
+		).toHaveText('https://example.com/legacy-feed.xml');
+	});
 });

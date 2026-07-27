@@ -1748,7 +1748,8 @@ class Feedzy_Rss_Feeds_Import {
 				'inc_key'                  => $inc_key,
 				'inc_on'                   => $inc_on,
 				'exc_on'                   => $exc_on,
-				'import_title'             => $import_title,
+				// `import_title` is reserved for the job attribution set in run_job(); this is the post-title mapping template.
+				'import_post_title'        => $import_title,
 				'import_date'              => $import_date,
 				'post_excerpt'             => $post_excerpt,
 				'import_content'           => $import_content,

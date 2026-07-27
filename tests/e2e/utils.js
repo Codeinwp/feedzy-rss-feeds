@@ -131,17 +131,21 @@ export async function runFeedImport(page) {
 	await page.goto('/wp-admin/edit.php?post_type=feedzy_imports');
 	await page.waitForSelector('.feedzy-import-status-row');
 
-	await page.getByRole('button', { name: 'Run Now' }).click();
-
-	const runNowResponse = await page.waitForResponse(
+	// Register the listener before clicking so a fast response is not missed.
+	const runNowResponsePromise = page.waitForResponse(
 		(response) =>
 			response.url().includes('/wp-admin/admin-ajax.php') &&
 			response.request().method() === 'POST' &&
 			response
 				.request()
 				.postData()
-				.includes('action=feedzy&_action=run_now')
+				.includes('action=feedzy&_action=run_now'),
+		{ timeout: 60000 }
 	);
+
+	await page.getByRole('button', { name: 'Run Now' }).click();
+
+	const runNowResponse = await runNowResponsePromise;
 
 	expect(runNowResponse).not.toBeNull();
 	const responseBody = await runNowResponse.json();
@@ -291,12 +295,8 @@ export async function runImportByName(
 	await page.goto('/wp-admin/edit.php?post_type=feedzy_imports');
 	await page.locator('.feedzy-import-status-row').first().waitFor();
 
-	await page
-		.locator('tr', { hasText: importName })
-		.getByRole('button', { name: 'Run Now' })
-		.click();
-
-	const runNowResponse = await page.waitForResponse(
+	// Register the listener before clicking so a fast response is not missed.
+	const runNowResponsePromise = page.waitForResponse(
 		(response) =>
 			response.url().includes('/wp-admin/admin-ajax.php') &&
 			response.request().method() === 'POST' &&
@@ -307,6 +307,13 @@ export async function runImportByName(
 		// Importing a feed can take a while (remote fetch + image sideloads).
 		{ timeout: 60000 }
 	);
+
+	await page
+		.locator('tr', { hasText: importName })
+		.getByRole('button', { name: 'Run Now' })
+		.click();
+
+	const runNowResponse = await runNowResponsePromise;
 
 	const responseBody = await runNowResponse.json();
 	expect(responseBody.success).toBe(true);
