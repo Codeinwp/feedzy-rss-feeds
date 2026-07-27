@@ -967,7 +967,7 @@ class Feedzy_Rss_Feeds_Import {
 				$msg .= $this->get_last_run_details( $post_id );
 				echo ( $msg ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
-				if ( 'publish' === $post->post_status ) {
+				if ( 'publish' === $post->post_status && current_user_can( 'edit_post', $post_id ) ) {
 					printf( '<p><input type="button" class="button button-primary feedzy-run-now" data-id="%d" value="%s"></p>', esc_attr( $post_id ), esc_attr__( 'Run Now', 'feedzy-rss-feeds' ) );
 				}
 
@@ -1070,7 +1070,7 @@ class Feedzy_Rss_Feeds_Import {
 		$errors = $this->get_import_errors( $post_id );
 		// popup for errors found.
 		if ( ! empty( $errors ) ) {
-			$msg .= '<div class="feedzy-errors-found-' . $post_id . ' feedzy-errors-dialog" title="' . __( 'Errors', 'feedzy-rss-feeds' ) . '" data-id="' . $post_id . '">' . $errors . '</div>';
+			$msg .= '<div class="feedzy-errors-found-' . $post_id . ' feedzy-errors-dialog" title="' . __( 'Errors', 'feedzy-rss-feeds' ) . '" data-id="' . $post_id . '" data-can-manage="' . ( current_user_can( 'edit_post', $post_id ) ? '1' : '0' ) . '">' . $errors . '</div>';
 		}
 
 		// remember, cypress will work off the data-value attributes.
@@ -1295,6 +1295,34 @@ class Feedzy_Rss_Feeds_Import {
 	}
 
 	/**
+	 * Gets the import post if the ID is valid and the current user is authorized to manage it.
+	 *
+	 * @param int $import_id The import post ID.
+	 *
+	 * @return \WP_Post|false The import post on success, false if the ID is invalid or the
+	 *                        current user is not authorized to manage it.
+	 *
+	 * @access  private
+	 */
+	private function get_authorized_import( $import_id ) {
+		$import_id = (int) $import_id;
+		if ( empty( $import_id ) ) {
+			return false;
+		}
+
+		$import = get_post( $import_id );
+		if ( ! $import || 'feedzy_imports' !== $import->post_type ) {
+			return false;
+		}
+
+		if ( ! current_user_can( 'edit_post', $import_id ) ) {
+			return false;
+		}
+
+		return $import;
+	}
+
+	/**
 	 * AJAX called method to remove import upsell notice.
 	 *
 	 * @since   3.4.1
@@ -1328,7 +1356,11 @@ class Feedzy_Rss_Feeds_Import {
 
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
 
-		$id      = isset( $_POST['id'] ) ? (int) $_POST['id'] : 0;
+		$id = isset( $_POST['id'] ) ? (int) $_POST['id'] : 0;
+		if ( ! $this->get_authorized_import( $id ) ) {
+			wp_send_json_error( array( 'msg' => __( 'You do not have permission to do this.', 'feedzy-rss-feeds' ) ), 403 );
+		}
+
 		$status  = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '';
 		$publish = 'draft';
 		// no activation till source is not valid.
@@ -1403,14 +1435,17 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	private function run_now() {
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
-	
+
 		$job_id = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
-		$job    = get_post( $job_id );
+		$job    = $this->get_authorized_import( (int) $job_id );
+		if ( ! $job ) {
+			wp_send_json_error( array( 'msg' => __( 'You do not have permission to do this.', 'feedzy-rss-feeds' ) ), 403 );
+		}
 
 		Feedzy_Rss_Feeds_Log::info(
 			sprintf(
 				'Manual run for import: %s',
-				isset( $job->post_title ) ? $job->post_title : 'Unknown Job'
+				$job->post_title
 			),
 			array(
 				'job_id' => $job_id,
@@ -3904,11 +3939,13 @@ class Feedzy_Rss_Feeds_Import {
 			// don't need quick edit.
 			unset( $actions['inline hide-if-no-js'] );
 
-			$actions['feedzy_purge'] = sprintf(
-				'<a href="#" class="feedzy-purge" data-id="%d">%2$s</a>',
-				$post->ID,
-				esc_html( __( 'Purge &amp; Reset', 'feedzy-rss-feeds' ) )
-			);
+			if ( current_user_can( 'edit_post', $post->ID ) ) {
+				$actions['feedzy_purge'] = sprintf(
+					'<a href="#" class="feedzy-purge" data-id="%d">%2$s</a>',
+					$post->ID,
+					esc_html( __( 'Purge &amp; Reset', 'feedzy-rss-feeds' ) )
+				);
+			}
 
 			if ( feedzy_is_pro() ) {
 				$actions['feedzy_clone'] =
@@ -3987,9 +4024,8 @@ class Feedzy_Rss_Feeds_Import {
 
 		$id                 = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
 		$del_imported_posts = filter_input( INPUT_POST, 'del_imported_posts', FILTER_VALIDATE_BOOLEAN );
-		$post               = get_post( $id );
-		if ( 'feedzy_imports' !== $post->post_type ) {
-			wp_die();
+		if ( ! $this->get_authorized_import( (int) $id ) ) {
+			wp_send_json_error( array( 'msg' => __( 'You do not have permission to do this.', 'feedzy-rss-feeds' ) ), 403 );
 		}
 
 		// Delete imported posts.
@@ -4451,9 +4487,10 @@ class Feedzy_Rss_Feeds_Import {
 	private function clear_error_logs() {
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
 		$id = ! empty( $_POST['id'] ) ? (int) $_POST['id'] : 0;
-		if ( $id ) {
-			delete_post_meta( $id, 'import_errors' );
+		if ( ! $this->get_authorized_import( $id ) ) {
+			wp_send_json_error( array( 'msg' => __( 'You do not have permission to do this.', 'feedzy-rss-feeds' ) ), 403 );
 		}
+		delete_post_meta( $id, 'import_errors' );
 		wp_send_json(
 			array(
 				'status' => 1,
