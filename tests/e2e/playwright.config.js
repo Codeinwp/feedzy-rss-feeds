@@ -16,6 +16,12 @@ const config = defineConfig( {
 		? [ [ 'github' ], [ './config/flaky-tests-reporter.js' ] ]
 		: 'list',
 	workers: 1,
+	use: {
+		...baseConfig.use,
+		// Feedzy blocks fetch remote feeds during save/render, which can
+		// exceed the default 10s action timeout on CI.
+		actionTimeout: 30_000,
+	},
 	globalSetup: fileURLToPath(
 		new URL( './config/global-setup.js', 'file:' + __filename ).href
 	),
