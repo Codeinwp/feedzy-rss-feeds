@@ -136,10 +136,10 @@ export async function runFeedImport(page) {
 		(response) =>
 			response.url().includes('/wp-admin/admin-ajax.php') &&
 			response.request().method() === 'POST' &&
-			response
+			!!response
 				.request()
 				.postData()
-				.includes('action=feedzy&_action=run_now'),
+				?.includes('action=feedzy&_action=run_now'),
 		{ timeout: 60000 }
 	);
 
