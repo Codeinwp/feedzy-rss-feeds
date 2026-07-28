@@ -1708,7 +1708,7 @@ class Feedzy_Rss_Feeds_Import {
 			)
 		);
 		// A delay-only job can also stop early (delay budget), so either control enables cursor resume.
-		$batching_active          = 0 < $import_batch_size || 0 < $import_item_delay_ms;
+		$batching_active = 0 < $import_batch_size || 0 < $import_item_delay_ms;
 
 		if ( ! defined( 'TI_UNIT_TESTING' ) ) {
 			$max = $import_max;
