@@ -290,9 +290,14 @@
 		};
 
 		function showStatusError(message) {
+			const sourceCell = toggle.parents('tr').find('td.feedzy-source');
+			sourceCell.find('.feedzy-error-critical').remove();
 			if (message) {
-				// eslint-disable-next-line no-alert
-				window.alert(message);
+				if (sourceCell.find('.feedzy-error-critical').length) {
+					sourceCell.find('.feedzy-error-critical').remove();
+				}
+				const errorHtml = `<span class="feedzy-error-critical" style="color: red; display: block; margin-top: 5px;">${message}</span>`;
+				sourceCell.append(errorHtml);
 			}
 			// revert the toggle back to its state prior to this click.
 			toggle.prop('checked', !status);

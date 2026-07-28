@@ -531,6 +531,64 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Rejects a non-owner Author from running another user's import job, and leaves the
+	 * job and its cron schedule untouched. This endpoint triggers the import itself, so a
+	 * denied request must not run it or disturb its recurring schedule.
+	 */
+	public function test_run_now_ajax_denies_non_owner_author() {
+		$owner_id  = $this->factory->user->create( array( 'role' => 'editor' ) );
+		$author_id = $this->factory->user->create( array( 'role' => 'author' ) );
+		$import_id = $this->create_import( $owner_id );
+
+		$cron_args = array( 100, $import_id );
+		Feedzy_Rss_Feeds_Util_Scheduler::schedule_event( time() + HOUR_IN_SECONDS, 'hourly', 'feedzy_cron', $cron_args );
+		$this->assertNotFalse( Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'feedzy_cron', $cron_args ) );
+
+		wp_set_current_user( $author_id );
+		$response = $this->do_feedzy_ajax(
+			array(
+				'_action' => 'run_now',
+				'id'      => $import_id,
+			)
+		);
+
+		$this->assertFalse( $response['success'] );
+		$this->assertEmpty( get_post_meta( $import_id, 'last_run', true ) );
+		$this->assertNotFalse( Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'feedzy_cron', $cron_args ) );
+	}
+
+	/**
+	 * Rejects a non-owner Author from purging another user's import, leaving its metadata
+	 * and any already-imported posts untouched. This is a destructive path, so the ownership
+	 * check must hold independently of the status and clear-log checks.
+	 */
+	public function test_purge_ajax_denies_non_owner_author() {
+		$owner_id  = $this->factory->user->create( array( 'role' => 'editor' ) );
+		$author_id = $this->factory->user->create( array( 'role' => 'author' ) );
+		$import_id = $this->create_import( $owner_id );
+		update_post_meta( $import_id, 'import_post_type', 'post' );
+		update_post_meta( $import_id, 'last_run', time() );
+		update_post_meta( $import_id, 'imported_items_hash', array( 'some-hash' ) );
+
+		$imported_post_id = $this->factory->post->create( array( 'post_author' => $owner_id ) );
+		update_post_meta( $imported_post_id, 'feedzy_job', $import_id );
+
+		wp_set_current_user( $author_id );
+		$response = $this->do_feedzy_ajax(
+			array(
+				'_action'            => 'purge',
+				'id'                 => $import_id,
+				'del_imported_posts' => 'true',
+			)
+		);
+
+		$this->assertFalse( $response['success'] );
+		$this->assertNotEmpty( get_post_meta( $import_id, 'last_run', true ) );
+		$this->assertNotEmpty( get_post_meta( $import_id, 'imported_items_hash', true ) );
+		$this->assertInstanceOf( 'WP_Post', get_post( $imported_post_id ) );
+	}
+
+	/**
 	 * Rejects a non-owner Author from clearing another user's import error logs.
 	 */
 	public function test_clear_error_logs_ajax_denies_non_owner_author() {
