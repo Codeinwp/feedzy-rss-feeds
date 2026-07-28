@@ -626,10 +626,10 @@ $import_item_delay_ms = $import_item_delay_ms ?? '';
 								</div>
 								<div class="fz-right">
 									<div class="fz-form-group">
-										<label class="form-label"><?php esc_html_e( 'Feed items to scan', 'feedzy-rss-feeds' ); ?></label>
+										<label class="form-label"><?php esc_html_e( 'Number of items to import', 'feedzy-rss-feeds' ); ?></label>
 										<input type="number" min="0" max="9999" id="feedzy_item_limit" name="feedzy_meta_data[import_feed_limit<?php echo ! feedzy_is_pro() && ! feedzy_is_legacyv5() ? 'locked' : ''; ?>]" class="form-control" value="<?php echo esc_attr( (int) $import_feed_limit ); ?>" />
 										<div class="help-text pt-8">
-											<?php esc_html_e( 'Maximum number of candidate items loaded from the feed per run.', 'feedzy-rss-feeds' ); ?>
+											<?php echo wp_kses_post( sprintf( __( 'Set the number of feed items to import per run.', 'feedzy-rss-feeds' ), '<b>', '</b>' ) ); ?>
 										</div>
 									</div>
 								</div>
