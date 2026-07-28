@@ -1696,15 +1696,15 @@ class Feedzy_Rss_Feeds_Import {
 		$import_order             = get_post_meta( $job->ID, 'import_order', true );
 		// Batching is a Pro feature: without an entitlement the stored meta
 		// resolves to 0 (the filters can still override the default).
-		$batching_allowed         = feedzy_is_pro() || feedzy_is_legacyv5();
-		$import_batch_size        = max(
+		$batching_allowed     = feedzy_is_pro() || feedzy_is_legacyv5();
+		$import_batch_size    = max(
 			0,
 			min(
 				9999,
 				(int) apply_filters( 'feedzy_import_batch_size', $batching_allowed ? get_post_meta( $job->ID, 'import_batch_size', true ) : 0, $job )
 			)
 		);
-		$import_item_delay_ms     = max(
+		$import_item_delay_ms = max(
 			0,
 			min(
 				60000,
