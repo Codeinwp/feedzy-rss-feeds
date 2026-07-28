@@ -1620,7 +1620,8 @@ class Feedzy_Rss_Feeds_Import {
 					)
 				);
 
-				$batching_enabled = 0 < (int) apply_filters( 'feedzy_import_batch_size', get_post_meta( $job->ID, 'import_batch_size', true ), $job );
+				$batching_enabled = 0 < (int) apply_filters( 'feedzy_import_batch_size', get_post_meta( $job->ID, 'import_batch_size', true ), $job )
+					|| 0 < (int) apply_filters( 'feedzy_import_item_delay_ms', get_post_meta( $job->ID, 'import_item_delay_ms', true ), $job );
 				if ( empty( $result ) && ! $batching_enabled && ! get_post_meta( $job->ID, 'import_batch_cursor', true ) ) {
 					$this->run_job( $job, $max );
 
@@ -1706,6 +1707,8 @@ class Feedzy_Rss_Feeds_Import {
 				(int) apply_filters( 'feedzy_import_item_delay_ms', get_post_meta( $job->ID, 'import_item_delay_ms', true ), $job )
 			)
 		);
+		// A delay-only job can also stop early (delay budget), so either control enables cursor resume.
+		$batching_active          = 0 < $import_batch_size || 0 < $import_item_delay_ms;
 
 		if ( ! defined( 'TI_UNIT_TESTING' ) ) {
 			$max = $import_max;
@@ -1925,7 +1928,7 @@ class Feedzy_Rss_Feeds_Import {
 		$found_duplicates = array();
 		$result_count     = count( $result );
 		$attempted_items  = 0;
-		$batch_cursor     = 0 < $import_batch_size ? (string) get_post_meta( $job->ID, 'import_batch_cursor', true ) : '';
+		$batch_cursor     = $batching_active ? (string) get_post_meta( $job->ID, 'import_batch_cursor', true ) : '';
 		$cursor_reached   = empty( $batch_cursor );
 		$batch_stopped    = false;
 		$delay_budget_ms  = max( 0, (int) apply_filters( 'feedzy_import_delay_budget_ms', 30000, $job ) );
@@ -2010,7 +2013,7 @@ class Feedzy_Rss_Feeds_Import {
 				usleep( $import_item_delay_ms * 1000 );
 				$slept_ms += $import_item_delay_ms;
 			}
-			if ( 0 < $import_batch_size ) {
+			if ( $batching_active ) {
 				update_post_meta( $job->ID, 'import_batch_cursor', $item_hash );
 			}
 			++$attempted_items;
