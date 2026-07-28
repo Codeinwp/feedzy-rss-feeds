@@ -1620,8 +1620,9 @@ class Feedzy_Rss_Feeds_Import {
 					)
 				);
 
-				$batching_enabled = 0 < (int) apply_filters( 'feedzy_import_batch_size', get_post_meta( $job->ID, 'import_batch_size', true ), $job )
-					|| 0 < (int) apply_filters( 'feedzy_import_item_delay_ms', get_post_meta( $job->ID, 'import_item_delay_ms', true ), $job );
+				$batching_allowed = feedzy_is_pro() || feedzy_is_legacyv5();
+				$batching_enabled = 0 < (int) apply_filters( 'feedzy_import_batch_size', $batching_allowed ? get_post_meta( $job->ID, 'import_batch_size', true ) : 0, $job )
+					|| 0 < (int) apply_filters( 'feedzy_import_item_delay_ms', $batching_allowed ? get_post_meta( $job->ID, 'import_item_delay_ms', true ) : 0, $job );
 				if ( empty( $result ) && ! $batching_enabled && ! get_post_meta( $job->ID, 'import_batch_cursor', true ) ) {
 					$this->run_job( $job, $max );
 
@@ -1693,18 +1694,21 @@ class Feedzy_Rss_Feeds_Import {
 		$import_max               = $import_feed_limit;
 		$import_remove_html       = get_post_meta( $job->ID, 'import_remove_html', true );
 		$import_order             = get_post_meta( $job->ID, 'import_order', true );
+		// Batching is a Pro feature: without an entitlement the stored meta
+		// resolves to 0 (the filters can still override the default).
+		$batching_allowed         = feedzy_is_pro() || feedzy_is_legacyv5();
 		$import_batch_size        = max(
 			0,
 			min(
 				9999,
-				(int) apply_filters( 'feedzy_import_batch_size', get_post_meta( $job->ID, 'import_batch_size', true ), $job )
+				(int) apply_filters( 'feedzy_import_batch_size', $batching_allowed ? get_post_meta( $job->ID, 'import_batch_size', true ) : 0, $job )
 			)
 		);
 		$import_item_delay_ms     = max(
 			0,
 			min(
 				60000,
-				(int) apply_filters( 'feedzy_import_item_delay_ms', get_post_meta( $job->ID, 'import_item_delay_ms', true ), $job )
+				(int) apply_filters( 'feedzy_import_item_delay_ms', $batching_allowed ? get_post_meta( $job->ID, 'import_item_delay_ms', true ) : 0, $job )
 			)
 		);
 		// A delay-only job can also stop early (delay budget), so either control enables cursor resume.
@@ -2568,6 +2572,15 @@ class Feedzy_Rss_Feeds_Import {
 				++$count;
 			}
 
+			// Persist the successful item before any post-processing hooks run,
+			// so a throwing callback cannot cause a re-import.
+			if ( $use_new_hash ) {
+				update_post_meta( $job->ID, 'imported_items_hash', $imported_items );
+			} else {
+				update_post_meta( $job->ID, 'imported_items', $imported_items );
+			}
+			update_post_meta( $job->ID, 'imported_items_count', $count );
+
 			if (
 				'none' !== $import_post_term &&
 				0 < strpos( $import_post_term, '_' )
@@ -2847,15 +2860,6 @@ class Feedzy_Rss_Feeds_Import {
 
 			// we can use this to associate the items that were imported in a particular run.
 			update_post_meta( $new_post_id, 'feedzy_job_time', $last_run );
-
-			// Persist the successful item before handing control to third-party
-			// callbacks, so a throwing callback cannot cause a re-import.
-			if ( $use_new_hash ) {
-				update_post_meta( $job->ID, 'imported_items_hash', $imported_items );
-			} else {
-				update_post_meta( $job->ID, 'imported_items', $imported_items );
-			}
-			update_post_meta( $job->ID, 'imported_items_count', $count );
 
 			do_action( 'feedzy_after_post_import', $new_post_id, $item, $this->settings );
 		}

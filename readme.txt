@@ -63,7 +63,7 @@ Take your “Feed to Post” automation to the next level with powerful Pro-only
 * **Auto-Delete Old Posts:** Remove outdated or time-sensitive imports automatically after a set number of days.  
 * **Fallback Image:** Assign a default image for feed items without images to maintain a consistent site layout.  
 * **Import Item Count Control:** Decide how many feed items to fetch from each source every run.  
-* **Import Batching:** Limit how many new items are processed in one cron request and optionally add a delay between items. On memory-restricted hosts, start with a batch size of 1–3 under General feed settings → Advanced. Developers can override these values with the `feedzy_import_batch_size` and `feedzy_import_item_delay_ms` filters.
+* **Import Batching:** Limit how many new items are processed in one cron request and optionally add a delay between items. On memory-restricted hosts, start with a batch size of 1–3 under General feed settings → Advanced. Developers can override these values with the `feedzy_import_batch_size` and `feedzy_import_item_delay_ms` filters, and the per-run delay cap (30 seconds by default) with the `feedzy_import_delay_budget_ms` filter.
 * **Scheduled Imports:** Run imports automatically on your preferred schedule with default options like hourly, daily, or weekly, or create custom cron schedules for complete flexibility.  
 * **Custom Post Author:** Assign imported posts to a specific author profile.  
 * **Post Excerpts and Custom Fields:** Map feed data to post excerpts or custom fields for richer content display.  
