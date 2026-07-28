@@ -114,6 +114,13 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		private $current_job;
 
 		/**
+		 * Callback for the wp_targeted_link_rel filter.
+		 *
+		 * @var callable|null
+		 */
+		private static $link_rel_callback = null;
+
+		/**
 		 * Init the main singleton instance class.
 		 *
 		 * @return Feedzy_Rss_Feeds_Actions Return the instance class
@@ -124,6 +131,18 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			}
 
 			return self::$instance;
+		}
+
+		/**
+		 * Remove the wp_targeted_link_rel filter added by modify_links() if it was added.
+		 *
+		 * @return void
+		 */
+		public static function remove_link_rel_filter() {
+			if ( null !== self::$link_rel_callback ) {
+				remove_filter( 'wp_targeted_link_rel', self::$link_rel_callback );
+				self::$link_rel_callback = null;
+			}
 		}
 
 		/**
@@ -689,12 +708,12 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 				}
 			}
 			if ( ! empty( $this->current_job->data->follow ) && 'yes' === $this->current_job->data->follow ) {
-				add_filter(
-					'wp_targeted_link_rel',
-					function () {
-						return 'nofollow';
-					}
-				);
+				// Kept attached until the post is saved; removed via self::remove_link_rel_filter()
+				// in Feedzy_Rss_Feeds_Import::run_job() right after wp_insert_post().
+				self::$link_rel_callback = function () {
+					return 'nofollow';
+				};
+				add_filter( 'wp_targeted_link_rel', self::$link_rel_callback );
 			}
 			return $dom->saveHTML();
 		}
