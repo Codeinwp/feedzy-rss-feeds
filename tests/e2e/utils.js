@@ -300,10 +300,10 @@ export async function runImportByName(
 		(response) =>
 			response.url().includes('/wp-admin/admin-ajax.php') &&
 			response.request().method() === 'POST' &&
-			response
+			!!response
 				.request()
 				.postData()
-				.includes('action=feedzy&_action=run_now'),
+				?.includes('action=feedzy&_action=run_now'),
 		// Importing a feed can take a while (remote fetch + image sideloads).
 		{ timeout: 60000 }
 	);
