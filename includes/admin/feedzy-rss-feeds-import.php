@@ -1670,7 +1670,8 @@ class Feedzy_Rss_Feeds_Import {
 	 * @access  private
 	 */
 	private function run_job( $job, $max ) {
-		$logger = Feedzy_Rss_Feeds_Log::get_instance();
+		$logger           = Feedzy_Rss_Feeds_Log::get_instance();
+		$previous_context = $logger->get_context();
 		$logger->set_context(
 			array(
 				'import_id'    => $job->ID,
@@ -1682,7 +1683,7 @@ class Feedzy_Rss_Feeds_Import {
 		try {
 			return $this->run_job_logic( $job, $max );
 		} finally {
-			$logger->set_context( array() );
+			$logger->set_context( $previous_context );
 		}
 	}
 
