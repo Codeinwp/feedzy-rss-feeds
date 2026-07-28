@@ -2572,14 +2572,17 @@ class Feedzy_Rss_Feeds_Import {
 				++$count;
 			}
 
-			// Persist the successful item before any post-processing hooks run,
-			// so a throwing callback cannot cause a re-import.
-			if ( $use_new_hash ) {
-				update_post_meta( $job->ID, 'imported_items_hash', $imported_items );
-			} else {
-				update_post_meta( $job->ID, 'imported_items', $imported_items );
+			// For batched runs (bounded per-run item count), persist the successful
+			// item before any post-processing hooks run, so a throwing callback
+			// cannot cause a re-import. Unbatched runs persist once at completion.
+			if ( $batching_active ) {
+				if ( $use_new_hash ) {
+					update_post_meta( $job->ID, 'imported_items_hash', $imported_items );
+				} else {
+					update_post_meta( $job->ID, 'imported_items', $imported_items );
+				}
+				update_post_meta( $job->ID, 'imported_items_count', $count );
 			}
-			update_post_meta( $job->ID, 'imported_items_count', $count );
 
 			if (
 				'none' !== $import_post_term &&
