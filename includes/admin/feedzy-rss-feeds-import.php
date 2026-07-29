@@ -2081,14 +2081,6 @@ class Feedzy_Rss_Feeds_Import {
 
 			// Remove WordPress default link rel.
 			$link_rel = isset( $item_link_data['attr']['rel'] ) ? $item_link_data['attr']['rel'] : '';
-			if ( $link_rel ) {
-				add_filter(
-					'wp_targeted_link_rel',
-					function () use ( $link_rel ) {
-						return $link_rel;
-					}
-				);
-			}
 
 			$item_link_attr = isset( $item_link_data['attr'] ) ? $item_link_data['attr'] : array();
 			$item_link_attr = array_map(
@@ -2453,7 +2445,21 @@ class Feedzy_Rss_Feeds_Import {
 					++$import_image_errors;
 				}
 			} else {
+				$link_rel_callback = null;
+				if ( $link_rel ) {
+					$link_rel_callback = function () use ( $link_rel ) {
+						return $link_rel;
+					};
+					add_filter( 'wp_targeted_link_rel', $link_rel_callback );
+				}
+
 				$new_post_id = wp_insert_post( $new_post, true );
+
+				if ( $link_rel_callback ) {
+					remove_filter( 'wp_targeted_link_rel', $link_rel_callback );
+				}
+
+				Feedzy_Rss_Feeds_Actions::remove_link_rel_filter();
 			}
 
 			// Set post language.
@@ -2711,7 +2717,7 @@ class Feedzy_Rss_Feeds_Import {
 							$img_success = $this->try_save_featured_image( $image_source_url, $new_post_id, $img_title, $import_info );
 
 							Feedzy_Rss_Feeds_Log::debug(
-								sprintf( 'Saved featured image for post ID %1$s: %2$s', $new_post_id, $image_source_url ),
+								sprintf( 'Tried to save featured image for post ID %1$s: %2$s. Success: %3$s', $new_post_id, $image_source_url, $img_success ? 'yes' : 'no' ),
 								array(
 									'job_id'           => $job->ID,
 									'image_source_url' => $image_source_url,
