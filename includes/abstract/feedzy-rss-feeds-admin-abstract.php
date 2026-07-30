@@ -486,6 +486,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 					'url'        => get_rest_url( null, 'feedzy/v' . FEEDZY_REST_VERSION . '/lazy/' ),
 					'rest_nonce' => wp_create_nonce( 'wp_rest' ),
 					'nonce'      => wp_create_nonce( 'feedzy' ),
+					'error'      => apply_filters( 'feedzy_lazyload_error_msg', __( 'The feed could not be loaded.', 'feedzy-rss-feeds' ), $feed_url ),
 				)
 			);
 			return $html;

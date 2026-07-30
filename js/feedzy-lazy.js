@@ -38,11 +38,18 @@
                     xhr.setRequestHeader('X-WP-Nonce', feedzy.rest_nonce);
                 },
                 success: function(data){
-                    if(data.success){
+                    if(data && data.success && data.data && data.data.content){
                         $feedzy_block.empty().append(data.data.content);
-                    } else {
+                    } else if(data && data.data && data.data.message){
                         $feedzy_block.empty().append(data.data.message);
+                    } else if('string' === typeof data && data.length){
+                        $feedzy_block.empty().append(data);
+                    } else {
+                        $feedzy_block.empty().append(feedzy.error);
                     }
+                },
+                error: function(){
+                    $feedzy_block.empty().append(feedzy.error);
                 },
                 complete: function(){
                     $feedzy_block.removeClass('loading');
