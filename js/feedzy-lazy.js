@@ -45,11 +45,11 @@
                     } else if('string' === typeof data && data.length){
                         $feedzy_block.empty().append(data);
                     } else {
-                        $feedzy_block.empty().append(feedzy.error);
+                        $feedzy_block.empty().append($attributes.error_msg);
                     }
                 },
                 error: function(){
-                    $feedzy_block.empty().append(feedzy.error);
+                    $feedzy_block.empty().append($attributes.error_msg);
                 },
                 complete: function(){
                     $feedzy_block.removeClass('loading');

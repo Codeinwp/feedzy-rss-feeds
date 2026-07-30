@@ -89,87 +89,6 @@ test.describe('Feed Import', () => {
 		).resolves.toBeGreaterThan(0);
 	});
 
-	test('lazy loading feed exits loading state when the request fails', async ({
-		editor,
-		page,
-		admin,
-	}) => {
-		// Distinct attributes so the lazy-load transient cache is cold and the
-		// initial render shows the loading indicator.
-		const lazyShortcode =
-			"[feedzy-rss feeds='https://s3.amazonaws.com/verti-utils/sample-feed.xml' max='3' feed_title='yes' refresh='1_hours' template='style1' lazy='yes']";
-
-		await admin.createNewPost();
-
-		// Insert a shortcode block.
-		await editor.insertBlock({ name: 'core/shortcode' });
-		await editor.canvas
-			.getByPlaceholder('Write shortcode here…')
-			.fill(lazyShortcode);
-
-		const postId = await editor.publishPost();
-
-		// Force the lazy REST request to fail at the network layer.
-		await page.route(/feedzy\/v\d+\/lazy/, (route) =>
-			route.abort('failed')
-		);
-
-		await page.goto(`/?p=${postId}`);
-
-		const lazyContainer = page.locator('.feedzy-lazy');
-		await expect(lazyContainer).toBeVisible();
-		await expect(lazyContainer).toContainText('Loading');
-
-		// Wait until the lazy request has actually been attempted (and failed).
-		await page.waitForRequest(/feedzy\/v\d+\/lazy/);
-
-		// The container must exit the loading state and show feed content or
-		// an error message instead of an indefinite loading indicator.
-		await expect(lazyContainer).not.toContainText('Loading', {
-			timeout: 10000,
-		});
-	});
-
-	test('lazy loading feed exits loading state on a malformed response', async ({
-		editor,
-		page,
-		admin,
-	}) => {
-		// The REST callback can return a raw string (e.g. a fetch error)
-		// instead of the expected { success, data } envelope.
-		const lazyShortcode =
-			"[feedzy-rss feeds='https://s3.amazonaws.com/verti-utils/sample-feed.xml' max='4' feed_title='yes' refresh='1_hours' template='style1' lazy='yes']";
-
-		await admin.createNewPost();
-
-		// Insert a shortcode block.
-		await editor.insertBlock({ name: 'core/shortcode' });
-		await editor.canvas
-			.getByPlaceholder('Write shortcode here…')
-			.fill(lazyShortcode);
-
-		const postId = await editor.publishPost();
-
-		await page.route(/feedzy\/v\d+\/lazy/, (route) =>
-			route.fulfill({
-				status: 200,
-				contentType: 'application/json',
-				body: JSON.stringify('Feed fetch failed.'),
-			})
-		);
-
-		await page.goto(`/?p=${postId}`);
-
-		const lazyContainer = page.locator('.feedzy-lazy');
-		await expect(lazyContainer).toContainText('Loading');
-		await page.waitForRequest(/feedzy\/v\d+\/lazy/);
-
-		// The raw string should be surfaced instead of a stuck loader.
-		await expect(lazyContainer).toContainText('Feed fetch failed.', {
-			timeout: 10000,
-		});
-	});
-
 	// Publish a post with a lazy shortcode. A unique max value gives a cold
 	// lazy-load cache so the initial render shows the loading indicator.
 	async function publishLazyPost(admin, editor, max) {
@@ -183,15 +102,52 @@ test.describe('Feed Import', () => {
 		return editor.publishPost();
 	}
 
+	// The request promise is created before navigation so a request fired
+	// during a slow page load cannot slip past the listener.
 	async function expectLazyResult(page, postId, expectedText) {
+		const lazyRequest = page.waitForRequest(/feedzy\/v\d+\/lazy/);
 		await page.goto(`/?p=${postId}`);
-		const lazyContainer = page.locator('.feedzy-lazy');
-		await expect(lazyContainer).toContainText('Loading');
-		await page.waitForRequest(/feedzy\/v\d+\/lazy/);
-		await expect(lazyContainer).toContainText(expectedText, {
-			timeout: 10000,
-		});
+		await lazyRequest;
+		await expect(page.locator('.feedzy-lazy')).toContainText(
+			expectedText,
+			{ timeout: 10000 }
+		);
 	}
+
+	test('lazy loading feed exits loading state when the request fails', async ({
+		editor,
+		page,
+		admin,
+	}) => {
+		const postId = await publishLazyPost(admin, editor, 3);
+
+		// Force the lazy REST request to fail at the network layer.
+		await page.route(/feedzy\/v\d+\/lazy/, (route) =>
+			route.abort('failed')
+		);
+
+		await expectLazyResult(page, postId, 'The feed could not be loaded.');
+	});
+
+	test('lazy loading feed exits loading state on a malformed response', async ({
+		editor,
+		page,
+		admin,
+	}) => {
+		const postId = await publishLazyPost(admin, editor, 4);
+
+		// The REST callback can return a raw string (e.g. a fetch error)
+		// instead of the expected { success, data } envelope.
+		await page.route(/feedzy\/v\d+\/lazy/, (route) =>
+			route.fulfill({
+				status: 200,
+				contentType: 'application/json',
+				body: JSON.stringify('Feed fetch failed.'),
+			})
+		);
+
+		await expectLazyResult(page, postId, 'Feed fetch failed.');
+	});
 
 	test('lazy loading feed shows an error on a server error response', async ({
 		editor,

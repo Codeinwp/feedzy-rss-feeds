@@ -472,6 +472,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 			// Add nonce based on feed url.
 			$attributes .= 'data-nonce="' . esc_attr( wp_create_nonce( $feed_url ) ) . '"';
+			$attributes .= 'data-error_msg="' . esc_attr( apply_filters( 'feedzy_lazyload_error_msg', __( 'The feed could not be loaded.', 'feedzy-rss-feeds' ), $feed_url ) ) . '"';
 
 			$class = array_filter( apply_filters( 'feedzy_add_classes_block', array( $sc['classname'], 'feedzy-' . md5( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ) ), $sc, null, $feed_url ) );
 			$html  = "<div class='feedzy-lazy' $attributes>";
@@ -486,7 +487,6 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 					'url'        => get_rest_url( null, 'feedzy/v' . FEEDZY_REST_VERSION . '/lazy/' ),
 					'rest_nonce' => wp_create_nonce( 'wp_rest' ),
 					'nonce'      => wp_create_nonce( 'feedzy' ),
-					'error'      => apply_filters( 'feedzy_lazyload_error_msg', __( 'The feed could not be loaded.', 'feedzy-rss-feeds' ), $feed_url ),
 				)
 			);
 			return $html;
