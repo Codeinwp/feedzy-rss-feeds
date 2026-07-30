@@ -289,24 +289,36 @@
 			status,
 		};
 
+		function showStatusError(message) {
+			const sourceCell = toggle.parents('tr').find('td.feedzy-source');
+			sourceCell.find('.feedzy-error-critical').remove();
+			if (message) {
+				if (sourceCell.find('.feedzy-error-critical').length) {
+					sourceCell.find('.feedzy-error-critical').remove();
+				}
+				const errorHtml = `<span class="feedzy-error-critical" style="color: red; display: block; margin-top: 5px;">${message}</span>`;
+				sourceCell.append(errorHtml);
+			}
+			// revert the toggle back to its state prior to this click.
+			toggle.prop('checked', !status);
+		}
+
 		showSpinner(toggle);
 		$.ajax({
 			url: ajaxurl,
 			data,
 			method: 'POST',
-			success(data) {
-				if (!data.success && status) {
-					toggle
-						.parents('tr')
-						.find('td.feedzy-source')
-						.find('.feedzy-error-critical')
-						.remove();
-					toggle
-						.parents('tr')
-						.find('td.feedzy-source')
-						.append($(data.data.msg));
-					toggle.prop('checked', false);
+			success(response) {
+				if (!response.success) {
+					showStatusError(response.data && response.data.msg);
 				}
+			},
+			error(jqXHR) {
+				showStatusError(
+					jqXHR.responseJSON &&
+						jqXHR.responseJSON.data &&
+						jqXHR.responseJSON.data.msg
+				);
 			},
 			complete() {
 				hideSpinner(toggle);
@@ -1113,13 +1125,14 @@
 		});
 
 		// Error logs popup.
-		$('.feedzy-errors-dialog').dialog({
-			modal: true,
-			autoOpen: false,
-			height: 400,
-			width: 500,
-			buttons: [
-				{
+		$('.feedzy-errors-dialog').each(function () {
+			const $dialog = $(this);
+			// the clear-log button mutates the job, so only offer it to users allowed to manage it.
+			const canManageJob = '1' === $dialog.attr('data-can-manage');
+			const buttons = [];
+
+			if (canManageJob) {
+				buttons.push({
 					text: feedzy.i10n.clearLogButton,
 					class: 'button button-primary feedzy-clear-logs',
 					click(event) {
@@ -1129,16 +1142,20 @@
 							'<span class="feedzy-spinner spinner is-active"></span>'
 						).insertAfter(clearButton);
 						clearButton.attr('disabled', true);
-						$.post(
-							ajaxurl,
-							{
-								security: feedzy.ajax.security,
-								id: $(this).attr('data-id'),
-								action: 'feedzy',
-								_action: 'clear_error_logs',
-							},
-							function () {
-								clearButton.next('.feedzy-spinner').remove();
+
+						function resetClearButton() {
+							clearButton.next('.feedzy-spinner').remove();
+							clearButton.attr('disabled', false);
+						}
+
+						$.post(ajaxurl, {
+							security: feedzy.ajax.security,
+							id: $(this).attr('data-id'),
+							action: 'feedzy',
+							_action: 'clear_error_logs',
+						})
+							.done(function () {
+								resetClearButton();
 
 								dialogBox
 									.find('.feedzy-error.feedzy-api-error')
@@ -1147,10 +1164,25 @@
 											feedzy.i10n.removeErrorLogsMsg +
 											'</p></div>'
 									);
-							}
-						);
+							})
+							.fail(function (jqXHR) {
+								resetClearButton();
+
+								const message =
+									jqXHR.responseJSON &&
+									jqXHR.responseJSON.data
+										? jqXHR.responseJSON.data.msg
+										: '';
+								if (message) {
+									// eslint-disable-next-line no-alert
+									window.alert(message);
+								}
+							});
 					},
-				},
+				});
+			}
+
+			buttons.push(
 				{
 					text: window.feedzy.i10n.goToLogsTab,
 					class: 'button button-secondary',
@@ -1164,8 +1196,16 @@
 					click() {
 						$(this).dialog('close');
 					},
-				},
-			],
+				}
+			);
+
+			$dialog.dialog({
+				modal: true,
+				autoOpen: false,
+				height: 400,
+				width: 500,
+				buttons,
+			});
 		});
 
 		$('.feedzy-dialog-open').on('click', function (e) {
@@ -1178,12 +1218,14 @@
 		$('.feedzy-run-now').on('click', function (e) {
 			e.preventDefault();
 			const button = $(this);
+			const originalButtonValue = button.val();
 			button.val(feedzy.i10n.importing);
 
 			const numberRow = button
 				.parents('tr')
 				.find('~ tr.feedzy-import-status-row:first')
 				.find('td tr:first');
+			const originalNumberRowHtml = numberRow.html();
 			numberRow.find('td').hide();
 			numberRow
 				.find('td:first')
@@ -1191,6 +1233,15 @@
 				.attr('colspan', 5)
 				.html(feedzy.i10n.importing)
 				.show();
+
+			function restoreRow(errorMessage) {
+				// put the row back the way it was before this run was attempted.
+				numberRow.html(originalNumberRowHtml);
+				if (errorMessage) {
+					// eslint-disable-next-line no-alert
+					window.alert(errorMessage);
+				}
+			}
 
 			$.ajax({
 				url: ajaxurl,
@@ -1202,13 +1253,24 @@
 					_action: 'run_now',
 				},
 				success(data) {
+					if (!data.success) {
+						restoreRow(data.data && data.data.msg);
+						return;
+					}
 					if (data.data.import_success) {
 						numberRow.find('td:first').addClass('import_success');
 					}
 					numberRow.find('td:first').html(data.data.msg);
 				},
+				error(jqXHR) {
+					restoreRow(
+						jqXHR.responseJSON &&
+							jqXHR.responseJSON.data &&
+							jqXHR.responseJSON.data.msg
+					);
+				},
 				complete() {
-					button.val(feedzy.i10n.run_now);
+					button.val(originalButtonValue);
 				},
 			});
 		});
@@ -1248,6 +1310,16 @@
 				},
 				success() {
 					location.reload();
+				},
+				error(jqXHR) {
+					const message =
+						jqXHR.responseJSON && jqXHR.responseJSON.data
+							? jqXHR.responseJSON.data.msg
+							: '';
+					if (message) {
+						// eslint-disable-next-line no-alert
+						window.alert(message);
+					}
 				},
 				complete() {
 					hideSpinner(element);
