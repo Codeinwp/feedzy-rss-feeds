@@ -666,11 +666,7 @@ class Feedzy_Rss_Feeds_Import {
 			}
 		}
 
-		$global_cron_schedule = ! empty( $this->free_settings['general']['fz_cron_schedule'] ) ? $this->free_settings['general']['fz_cron_schedule'] : '';
-		if (
-			empty( $data_meta['fz_cron_schedule'] ) || $global_cron_schedule === $data_meta['fz_cron_schedule']
-		) {
-			// Remove scheduled cron settings if they are equal to the global settings.
+		if ( empty( $data_meta['fz_cron_schedule'] ) ) {
 			unset( $data_meta['fz_cron_schedule'] );
 		}
 
