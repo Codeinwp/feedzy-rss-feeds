@@ -565,7 +565,11 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			$limit          = apply_filters( 'feedzy_chat_gpt_content_limit', 3000 );
 			$original_bytes = strlen( $content );
 			if ( $original_bytes > $limit ) {
-				$content = function_exists( 'mb_strcut' ) ? mb_strcut( $content, 0, $limit, 'UTF-8' ) : substr( $content, 0, $limit );
+				$content = substr( $content, 0, $limit );
+				// The byte cut can land inside a multibyte character; drop any incomplete
+				// trailing UTF-8 sequence (lead byte with too few continuation bytes).
+				// Pure byte matching, so it works without the mbstring extension.
+				$content = preg_replace( '/(?:[\xC2-\xDF]|[\xE0-\xEF][\x80-\xBF]?|[\xF0-\xF4][\x80-\xBF]{0,2})$/', '', $content );
 				if ( class_exists( 'Feedzy_Rss_Feeds_Log' ) ) {
 					Feedzy_Rss_Feeds_Log::debug(
 						'AI rewrite source content truncated for the OpenAI API key integration.',

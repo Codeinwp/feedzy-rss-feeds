@@ -147,7 +147,24 @@ class Test_Ai_Actions extends WP_UnitTestCase {
 		// A blind substr() would leave 3,000 bytes ending in half a code point.
 		$this->assertSame( 2999, strlen( $sent_content ) );
 		$this->assertTrue( (bool) preg_match( '//u', $sent_content ), 'Truncated content must be valid UTF-8.' );
-		$this->assertSame( 'ă', mb_substr( $sent_content, -1 ) );
+		// Byte-level check on purpose — no mbstring dependency in the tests either.
+		$this->assertSame( 'ă', substr( $sent_content, -2 ) );
+	}
+
+	/**
+	 * The cut is also safe when it lands inside a 4-byte (supplementary plane) character.
+	 */
+	public function test_byok_truncation_is_safe_for_four_byte_characters() {
+		// 2 ASCII bytes then 4-byte emoji: byte 3,000 lands two bytes into an emoji.
+		$content = 'ab' . str_repeat( '💩', 1000 );
+
+		$this->run_ai_action( $content );
+		$sent_content = str_replace( 'Rewrite this: ', '', Feedzy_Rss_Feeds_Pro_Openai::$last_content );
+
+		// 2 + 749 * 4 = 2998: the two dangling emoji bytes are dropped.
+		$this->assertSame( 2998, strlen( $sent_content ) );
+		$this->assertTrue( (bool) preg_match( '//u', $sent_content ), 'Truncated content must be valid UTF-8.' );
+		$this->assertSame( '💩', substr( $sent_content, -4 ) );
 	}
 
 	/**
