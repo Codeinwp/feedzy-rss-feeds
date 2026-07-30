@@ -4,7 +4,7 @@
 **Requires at least:** 6.0  
 **Requires PHP:** 7.2  
 **Tested up to:** 7.0  
-**Stable tag:** 5.2.5  
+**Stable tag:** 5.2.6  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -479,9 +479,9 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
-##### [Version 5.2.5](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.4...v5.2.5) (2026-07-24)
+##### [Version 5.2.6](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.5...v5.2.6) (2026-07-30)
 
-- Enhanced Security
+- Fixed a missing-authorization issue in import job actions.
 
 
 

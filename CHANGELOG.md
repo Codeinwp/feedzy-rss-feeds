@@ -1,3 +1,7 @@
+##### [Version 5.2.6](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.5...v5.2.6) (2026-07-30)
+
+- Fixed a missing-authorization issue in import job actions.
+
 ##### [Version 5.2.5](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.4...v5.2.5) (2026-07-24)
 
 - Enhanced Security
