@@ -510,10 +510,9 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 				return $this->current_job->data->ChatGPT;
 			}
 
-			$content        = call_user_func( array( $this, $this->current_job->tag ) );
-			$content        = wp_strip_all_tags( $content );
-			$content        = substr( $content, 0, apply_filters( 'feedzy_chat_gpt_content_limit', 3000 ) );
-			$prompt_content = $this->current_job->data->ChatGPT;
+			$original_content = call_user_func( array( $this, $this->current_job->tag ) );
+			$content          = wp_strip_all_tags( $original_content );
+			$prompt_content   = $this->current_job->data->ChatGPT;
 
 			$additional_data = array(
 				'ai_provider' => 'openai',
@@ -546,18 +545,39 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 							Feedzy_Rss_Feeds_Log::debug(
 								'Feedzy AI rewrite workflow failed; falling back to original content.',
 								array(
-									'job_id'     => $job_id,
-									'action'     => 'rewrite',
-									'error_code' => $result->get_error_code(),
-									'error'      => $result->get_error_message(),
-									'item_title' => isset( $this->item['item_title'] ) ? $this->item['item_title'] : '',
-									'item_url'   => isset( $this->item['item_url'] ) ? $this->item['item_url'] : '',
+									'job_id'        => $job_id,
+									'action'        => 'rewrite',
+									'error_code'    => $result->get_error_code(),
+									'error'         => $result->get_error_message(),
+									'content_bytes' => strlen( $content ),
+									'item_title'    => isset( $this->item['item_title'] ) ? $this->item['item_title'] : '',
+									'item_url'      => isset( $this->item['item_url'] ) ? $this->item['item_url'] : '',
 								)
 							);
 						}
-						return $content;
+						return $original_content;
 					}
 					return $result;
+				}
+			}
+
+			// Legacy BYOK integration keeps the historical byte limit, but never splits a UTF-8 code point.
+			$limit          = apply_filters( 'feedzy_chat_gpt_content_limit', 3000 );
+			$original_bytes = strlen( $content );
+			if ( $original_bytes > $limit ) {
+				$content = function_exists( 'mb_strcut' ) ? mb_strcut( $content, 0, $limit, 'UTF-8' ) : substr( $content, 0, $limit );
+				if ( class_exists( 'Feedzy_Rss_Feeds_Log' ) ) {
+					Feedzy_Rss_Feeds_Log::debug(
+						'AI rewrite source content truncated for the OpenAI API key integration.',
+						array(
+							'job_id'          => $additional_data['job_id'],
+							'action'          => 'rewrite',
+							'ai_provider'     => $additional_data['ai_provider'],
+							'limit_bytes'     => $limit,
+							'original_bytes'  => $original_bytes,
+							'truncated_bytes' => strlen( $content ),
+						)
+					);
 				}
 			}
 
