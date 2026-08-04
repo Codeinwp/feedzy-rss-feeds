@@ -1446,7 +1446,7 @@ class Feedzy_Rss_Feeds_Import {
 			array(
 				'job_id'       => $job_id,
 				'import_id'    => (int) $job_id,
-				'import_title' => isset( $job->post_title ) ? $job->post_title : '',
+				'import_title' => $job->post_title,
 			)
 		);
 
