@@ -242,6 +242,19 @@ class Test_Logger extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test the context can be read back, so callers can save and restore it.
+	 */
+	public function test_get_context() {
+		$context = array( 'request_id' => 'abc-123' );
+
+		$this->logger->set_context( $context );
+		$this->assertEquals( $context, $this->logger->get_context() );
+
+		$this->logger->set_context( array() );
+		$this->assertEquals( array(), $this->logger->get_context() );
+	}
+
+	/**
 	 * Test log entry structure.
 	 */
 	public function test_log_entry_structure() {

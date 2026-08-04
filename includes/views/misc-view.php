@@ -5,6 +5,11 @@
  * @package feedzy-rss-feeds
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+
 ?>
 <h2><?php // esc_html_e( 'Import Posts', 'feedzy-rss-feeds' ); ?></h2>
 <div class="fz-form-wrap">

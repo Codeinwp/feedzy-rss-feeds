@@ -39,7 +39,7 @@ class Test_Plugin_Health extends WP_UnitTestCase {
 			'Feedzy_Rss_Feeds_Options',
 			'Feedzy_Rss_Feeds_Conditions',
 			'Feedzy_Rss_Feeds_Util_Scheduler',
-			'Feedzy_Rss_Feeds_Util_SimplePie',
+			'Feedzy_Rss_Feeds_Util_Feed',
 			'Feedzy_Rss_Feeds_Loader',
 		);
 

@@ -1,3 +1,8 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+?>
 <div id="fz-feedback-modal"></div>
 <div class="fz-help-improve-wrap">
 	<div class="fz-help-improve-box">
