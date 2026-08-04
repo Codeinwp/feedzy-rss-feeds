@@ -4,7 +4,7 @@
 **Requires at least:** 6.0  
 **Requires PHP:** 7.2  
 **Tested up to:** 7.0  
-**Stable tag:** 5.2.6  
+**Stable tag:** 5.2.7  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -479,9 +479,19 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
-##### [Version 5.2.6](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.5...v5.2.6) (2026-07-30)
+##### [Version 5.2.7](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.6...v5.2.7) (2026-08-04)
 
-- Fixed a missing-authorization issue in import job actions.
+- Link attributes and external images are now adjusted only on posts imported by Feedzy, so the rest of the content on your site is no longer affected.
+- Fixed an issue where feed imports tried to upload the built-in fallback image to the Media Library, filling the logs with errors when an item had no image of its own. Imports now use the Fallback Featured Image setting instead.
+- Fixed feed URLs that carry a username and password being dropped during import, so feeds behind basic authentication work again.
+- Fixed a failing feed being able to stop an import run with a fatal error. The failure is now logged and the remaining feeds are imported.
+- Fixed an issue where a per-import cron schedule reverted to the global default when both were set to the same value.
+- Log entries recorded during an import now show which import and feed they came from, so an error can be traced back to the right feed when several imports are running.
+- Fixed a single feed that cannot be read importing nothing without recording any error, making the failure invisible in the logs.
+- Rewrite with AI now sends the whole article instead of only its first 3,000 bytes, so rewritten, translated and summarized items are based on the complete source.
+- When an AI rewrite fails, the imported item now keeps its original content with the formatting intact, instead of a shortened plain-text version.
+- Fixed the size limit that still applies when using your own OpenAI key cutting text in the middle of a character on feeds in non-Latin scripts.
+- Updated dependencies
 
 
 
