@@ -126,7 +126,7 @@ test.describe('Feed Import', () => {
 			route.abort('failed')
 		);
 
-		await expectLazyResult(page, postId, 'The feed could not be loaded.');
+		await expectLazyResult(page, postId, 'An error occurred while fetching the feed.');
 	});
 
 	test('lazy loading feed exits loading state on a malformed response', async ({
@@ -168,7 +168,7 @@ test.describe('Feed Import', () => {
 			})
 		);
 
-		await expectLazyResult(page, postId, 'The feed could not be loaded.');
+		await expectLazyResult(page, postId, 'An error occurred while fetching the feed.');
 	});
 
 	test('lazy loading feed shows an error when the JSON response is corrupted', async ({
@@ -187,7 +187,7 @@ test.describe('Feed Import', () => {
 			})
 		);
 
-		await expectLazyResult(page, postId, 'The feed could not be loaded.');
+		await expectLazyResult(page, postId, 'An error occurred while fetching the feed.');
 	});
 
 	test('lazy loading feed shows the server message on a json_error response', async ({
@@ -227,7 +227,7 @@ test.describe('Feed Import', () => {
 			})
 		);
 
-		await expectLazyResult(page, postId, 'The feed could not be loaded.');
+		await expectLazyResult(page, postId, 'An error occurred while fetching the feed.');
 	});
 
 	test('import multiple feeds with shortcode', async ({
