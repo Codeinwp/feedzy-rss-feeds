@@ -46,3 +46,4 @@ phpstan.neon
 phpstan-baseline.neon
 languages
 AGENTS.md
+.wp-env.override.json

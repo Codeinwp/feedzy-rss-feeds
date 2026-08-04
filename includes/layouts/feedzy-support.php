@@ -1,4 +1,9 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 // phpcs:ignore WordPress.Security.NonceVerification
 $active_tab                  = isset( $_REQUEST['tab'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['tab'] ) ) : 'help';
 $onboarding_user_subscribed  = get_option( 'feedzy_onboarding_user_subscribed' );

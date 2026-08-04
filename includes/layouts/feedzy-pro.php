@@ -1,4 +1,10 @@
-<?php // phpcs:disable ?>
+<?php
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+// phpcs:disable ?>
 <div class="fz-pro-features-wrap">
     <div class="fz-pro-features-table mb-30">
         <div class="fz-pro-features-table-header">

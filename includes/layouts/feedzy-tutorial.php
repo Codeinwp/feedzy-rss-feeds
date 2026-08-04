@@ -1,3 +1,8 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+?>
 <!--
 Layout For Tutorial Page of Feedzy RSS Feeds
 

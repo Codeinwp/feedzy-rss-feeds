@@ -9,6 +9,10 @@
  * @subpackage feedzy-rss-feeds/includes/admin
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 	/**
 	 * Singleton class for content action process.
@@ -114,6 +118,13 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 		private $current_job;
 
 		/**
+		 * Callback for the wp_targeted_link_rel filter.
+		 *
+		 * @var callable|null
+		 */
+		private static $link_rel_callback = null;
+
+		/**
 		 * Init the main singleton instance class.
 		 *
 		 * @return Feedzy_Rss_Feeds_Actions Return the instance class
@@ -124,6 +135,18 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 			}
 
 			return self::$instance;
+		}
+
+		/**
+		 * Remove the wp_targeted_link_rel filter added by modify_links() if it was added.
+		 *
+		 * @return void
+		 */
+		public static function remove_link_rel_filter() {
+			if ( null !== self::$link_rel_callback ) {
+				remove_filter( 'wp_targeted_link_rel', self::$link_rel_callback );
+				self::$link_rel_callback = null;
+			}
 		}
 
 		/**
@@ -491,10 +514,9 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 				return $this->current_job->data->ChatGPT;
 			}
 
-			$content        = call_user_func( array( $this, $this->current_job->tag ) );
-			$content        = wp_strip_all_tags( $content );
-			$content        = substr( $content, 0, apply_filters( 'feedzy_chat_gpt_content_limit', 3000 ) );
-			$prompt_content = $this->current_job->data->ChatGPT;
+			$original_content = call_user_func( array( $this, $this->current_job->tag ) );
+			$content          = wp_strip_all_tags( $original_content );
+			$prompt_content   = $this->current_job->data->ChatGPT;
 
 			$additional_data = array(
 				'ai_provider' => 'openai',
@@ -527,18 +549,43 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 							Feedzy_Rss_Feeds_Log::debug(
 								'Feedzy AI rewrite workflow failed; falling back to original content.',
 								array(
-									'job_id'     => $job_id,
-									'action'     => 'rewrite',
-									'error_code' => $result->get_error_code(),
-									'error'      => $result->get_error_message(),
-									'item_title' => isset( $this->item['item_title'] ) ? $this->item['item_title'] : '',
-									'item_url'   => isset( $this->item['item_url'] ) ? $this->item['item_url'] : '',
+									'job_id'        => $job_id,
+									'action'        => 'rewrite',
+									'error_code'    => $result->get_error_code(),
+									'error'         => $result->get_error_message(),
+									'content_bytes' => strlen( $content ),
+									'item_title'    => isset( $this->item['item_title'] ) ? $this->item['item_title'] : '',
+									'item_url'      => isset( $this->item['item_url'] ) ? $this->item['item_url'] : '',
 								)
 							);
 						}
-						return $content;
+						return $original_content;
 					}
 					return $result;
+				}
+			}
+
+			// Legacy BYOK integration keeps the historical byte limit, but never splits a UTF-8 code point.
+			$limit          = apply_filters( 'feedzy_chat_gpt_content_limit', 3000 );
+			$original_bytes = strlen( $content );
+			if ( $original_bytes > $limit ) {
+				$content = substr( $content, 0, $limit );
+				// The byte cut can land inside a multibyte character; drop any incomplete
+				// trailing UTF-8 sequence (lead byte with too few continuation bytes).
+				// Pure byte matching, so it works without the mbstring extension.
+				$content = preg_replace( '/(?:[\xC2-\xDF]|[\xE0-\xEF][\x80-\xBF]?|[\xF0-\xF4][\x80-\xBF]{0,2})$/', '', $content );
+				if ( class_exists( 'Feedzy_Rss_Feeds_Log' ) ) {
+					Feedzy_Rss_Feeds_Log::debug(
+						'AI rewrite source content truncated for the OpenAI API key integration.',
+						array(
+							'job_id'          => $additional_data['job_id'],
+							'action'          => 'rewrite',
+							'ai_provider'     => $additional_data['ai_provider'],
+							'limit_bytes'     => $limit,
+							'original_bytes'  => $original_bytes,
+							'truncated_bytes' => strlen( $content ),
+						)
+					);
 				}
 			}
 
@@ -689,12 +736,12 @@ if ( ! class_exists( 'Feedzy_Rss_Feeds_Actions' ) ) {
 				}
 			}
 			if ( ! empty( $this->current_job->data->follow ) && 'yes' === $this->current_job->data->follow ) {
-				add_filter(
-					'wp_targeted_link_rel',
-					function () {
-						return 'nofollow';
-					}
-				);
+				// Kept attached until the post is saved; removed via self::remove_link_rel_filter()
+				// in Feedzy_Rss_Feeds_Import::run_job() right after wp_insert_post().
+				self::$link_rel_callback = function () {
+					return 'nofollow';
+				};
+				add_filter( 'wp_targeted_link_rel', self::$link_rel_callback );
 			}
 			return $dom->saveHTML();
 		}

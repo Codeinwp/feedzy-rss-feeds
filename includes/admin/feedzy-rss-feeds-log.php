@@ -294,6 +294,19 @@ class Feedzy_Rss_Feeds_Log {
 	}
 
 	/**
+	 * Get the current context of the logger.
+	 *
+	 * Useful for saving the context before temporarily overriding it, so it
+	 * can be restored afterwards.
+	 *
+	 * @since 5.2.6
+	 * @return array<string, mixed> The current context.
+	 */
+	public function get_context() {
+		return $this->context;
+	}
+
+	/**
 	 * Log a message.
 	 *
 	 * @since 5.1.0
@@ -611,6 +624,7 @@ class Feedzy_Rss_Feeds_Log {
 					break;
 				}
 			}
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- direct-access fast path, guarded by can_use_direct_file_access().
 			fclose( $handle );
 		
 			return $text;
@@ -740,6 +754,7 @@ class Feedzy_Rss_Feeds_Log {
 		header( 'Pragma: public' );
 		header( 'Content-Length: ' . filesize( $this->filepath ) );
 
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile -- streams the log download without loading it into memory.
 		readfile( $this->filepath );
 
 		exit;

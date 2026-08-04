@@ -6,6 +6,11 @@
  * @package feedzy-rss-feeds-pro
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+
 global $post;
 ?>
 <?php if ( feedzy_show_import_tour() && ! defined( 'TI_CYPRESS_TESTING' ) ) : ?>

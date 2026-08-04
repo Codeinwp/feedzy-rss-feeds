@@ -9,6 +9,10 @@
  * @subpackage feedzy-rss-feeds/includes/admin
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! class_exists( 'Feedzy_Rss_Feeds_Upgrader' ) ) {
 	/**
 	 * Class Feedzy_Rss_Feeds_Upgrader for upgrading processes
