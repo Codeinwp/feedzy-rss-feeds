@@ -326,7 +326,6 @@ test.describe('Feed Import', () => {
 		await page.evaluate((selector) => {
 			const tagify = window.jQuery(selector).data('tagify');
 			delete tagify.clearPersistedData;
-			delete tagify.setPersistedData;
 		}, featuredImgInput);
 
 		// Open the action popup for the featured image tag.
