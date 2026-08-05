@@ -244,14 +244,15 @@ class Test_Image_Import extends WP_UnitTestCase {
 		$try_save_featured_image = $reflector->getMethod( 'try_save_featured_image' );
 		$try_save_featured_image->setAccessible( true );
 
-		$logged = array();
+		$requested_urls = array();
 		add_filter(
-			'themeisle_log_event',
-			function ( $product, $message, $type ) use ( &$logged ) {
-				$logged[] = array( $type, $message );
+			'pre_http_request',
+			function ( $preempt, $request_args, $url ) use ( &$requested_urls ) {
+ 				$requested_urls[] = $url;
+ 				return new WP_Error( 'test_download_failure', 'Expected test download failure.' );
 			},
 			10,
-			5
+			3
 		);
 
 		$import_info = array();
@@ -261,8 +262,6 @@ class Test_Image_Import extends WP_UnitTestCase {
 		// The image does not exist, so the download fails, but the URL itself must pass validation.
 		$this->assertFalse( $response );
 
-		foreach ( $logged as $entry ) {
-			$this->assertStringNotContainsString( 'Invalid image URL', $entry[1], 'Internationalized URL should not be rejected as invalid' );
-		}
+		$this->assertNotEmpty( $requested_urls, 'Internationalized URL should pass validation and reach the HTTP layer.' );
 	}
 }
