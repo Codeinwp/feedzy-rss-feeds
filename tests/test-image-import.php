@@ -169,4 +169,100 @@ class Test_Image_Import extends WP_UnitTestCase {
 		$this->assertTrue( empty( $import_errors ) );
 
 	}
+
+	/**
+	 * Internationalized image URLs must be converted to their ASCII representation so that
+	 * FILTER_VALIDATE_URL accepts them.
+	 */
+	public function test_convert_url_to_ascii_converts_internationalized_urls() {
+		$feedzy    = new Feedzy_Rss_Feeds_Import( 'feedzy-rss-feeds', '1.2.0' );
+		$reflector = new ReflectionClass( $feedzy );
+		$convert   = $reflector->getMethod( 'convert_url_to_ascii' );
+		$convert->setAccessible( true );
+
+		$cases = array(
+			// ASCII URLs are left untouched.
+			'https://example.com/wp-content/uploads/image.jpg' => 'https://example.com/wp-content/uploads/image.jpg',
+			// The host is punycoded and the path is percent encoded.
+			'https://bücher.example.com/path/ïmage.jpg'        => 'https://xn--bcher-kva.example.com/path/%C3%AFmage.jpg',
+			// Already punycoded hosts stay as they are.
+			'https://xn--bcher-kva.example.com/image.jpg'      => 'https://xn--bcher-kva.example.com/image.jpg',
+			// Ports and query strings are preserved.
+			'https://münchen.de:8080/image.jpg?itok=ZYU_ihPB'  => 'https://xn--mnchen-3ya.de:8080/image.jpg?itok=ZYU_ihPB',
+		);
+
+		foreach ( $cases as $url => $expected ) {
+			$actual = $convert->invoke( $feedzy, $url );
+			$this->assertSame( $expected, $actual, 'Unexpected ASCII conversion for ' . $url );
+			$this->assertNotFalse( filter_var( $actual, FILTER_VALIDATE_URL ), 'Converted URL should validate: ' . $actual );
+		}
+
+		// Protocol relative URLs keep their host.
+		$this->assertStringContainsString( 'xn--bcher-kva.example.com', $convert->invoke( $feedzy, '//bücher.example.com/image.jpg' ) );
+	}
+
+	/**
+	 * `idn_to_ascii()` belongs to the optional `intl` extension, so the conversion must not
+	 * depend on it. The punycode fallback bundled with WordPress has to return the same host,
+	 * and an unconvertible host must degrade gracefully instead of raising a fatal error.
+	 * See https://github.com/Codeinwp/feedzy-rss-feeds/issues/1289.
+	 */
+	public function test_convert_host_to_ascii_without_intl_extension() {
+		$feedzy    = new Feedzy_Rss_Feeds_Import( 'feedzy-rss-feeds', '1.2.0' );
+		$reflector = new ReflectionClass( $feedzy );
+
+		// The fallback used when `idn_to_ascii()` is undefined.
+		$fallback = $reflector->getMethod( 'punycode_encode_host' );
+		$fallback->setAccessible( true );
+
+		$this->assertSame( 'xn--bcher-kva.example.com', $fallback->invoke( $feedzy, 'bücher.example.com' ) );
+		$this->assertSame( 'xn--r8jz45g.xn--zckzah', $fallback->invoke( $feedzy, '例え.テスト' ) );
+
+		// A host that cannot be encoded yields an empty string rather than an uncaught exception.
+		$unconvertible = str_repeat( 'ä', 200 ) . '.com';
+		$this->assertSame( '', $fallback->invoke( $feedzy, $unconvertible ) );
+
+		$convert_host = $reflector->getMethod( 'convert_host_to_ascii' );
+		$convert_host->setAccessible( true );
+
+		// ASCII hosts need no conversion at all, so no extension is involved.
+		$this->assertSame( 'example.com', $convert_host->invoke( $feedzy, 'example.com' ) );
+		$this->assertSame( '', $convert_host->invoke( $feedzy, '' ) );
+
+		// When neither path can convert the host it is returned unchanged.
+		$this->assertSame( $unconvertible, $convert_host->invoke( $feedzy, $unconvertible ) );
+	}
+
+	/**
+	 * The featured image cron must keep running when an internationalized URL is imported,
+	 * no matter whether the `intl` extension is installed.
+	 */
+	public function test_try_save_featured_image_with_internationalized_url() {
+		$feedzy    = new Feedzy_Rss_Feeds_Import( 'feedzy-rss-feeds', '1.2.0' );
+		$reflector = new ReflectionClass( $feedzy );
+
+		$try_save_featured_image = $reflector->getMethod( 'try_save_featured_image' );
+		$try_save_featured_image->setAccessible( true );
+
+		$logged = array();
+		add_filter(
+			'themeisle_log_event',
+			function ( $product, $message, $type ) use ( &$logged ) {
+				$logged[] = array( $type, $message );
+			},
+			10,
+			5
+		);
+
+		$import_info = array();
+		$arguments   = array( 'https://bücher.example.com/path_to_image/ïmage.jpg', 0, 'Post Title', &$import_info, array() );
+		$response    = $try_save_featured_image->invokeArgs( $feedzy, $arguments );
+
+		// The image does not exist, so the download fails, but the URL itself must pass validation.
+		$this->assertFalse( $response );
+
+		foreach ( $logged as $entry ) {
+			$this->assertStringNotContainsString( 'Invalid image URL', $entry[1], 'Internationalized URL should not be rejected as invalid' );
+		}
+	}
 }
