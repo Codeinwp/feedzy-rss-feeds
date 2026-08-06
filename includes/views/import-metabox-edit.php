@@ -833,7 +833,7 @@ global $post;
 								<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
 									<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'auto-delete', 'import' ) ); ?>
 									<div class="fz-left">
-										<h4 class="h4"><?php esc_html_e( 'Auto-Delete', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
+										<h4 class="h4"><?php esc_html_e( 'Delete', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
 									</div>
 									<div class="fz-right">
 										<div class="fz-form-group">
@@ -850,7 +850,7 @@ global $post;
 							<?php if ( isset( $has_import_feed_delete_media ) && $has_import_feed_delete_media ) : ?>
 								<div class="form-block form-block-two-column no-border <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
 									<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'delete-featured-image', 'import' ) ); ?>
-									<div class="fz-left"><h4 class="h4"><?php esc_html_e( 'Delete image', 'feedzy-rss-feeds' ); ?><?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
+									<div class="fz-left"><h4 class="h4"><?php esc_html_e( 'Remove image', 'feedzy-rss-feeds' ); ?><?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
 									</div>
 									<div class="fz-right">
 										<div class="fz-form-group">
