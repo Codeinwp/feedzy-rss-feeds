@@ -837,7 +837,7 @@ global $post;
 									</div>
 									<div class="fz-right">
 										<div class="fz-form-group">
-											<label class="form-label"><?php esc_html_e( 'Delete the posts created for this import after a number of days', 'feedzy-rss-feeds' ); ?></label>
+											<label class="form-label" for="feedzy_delete_days"><?php esc_html_e( 'Delete the posts created for this import after a number of days', 'feedzy-rss-feeds' ); ?></label>
 											<input type="number" min="0" max="9999" id="feedzy_delete_days" name="feedzy_meta_data[import_feed_delete_days]" class="form-control" value="<?php echo (int) esc_attr( isset( $import_feed_delete_days ) ? $import_feed_delete_days : 0 ); ?>" />
 											<div class="help-text pt-8">
 												<?php esc_html_e( 'Helpful if you want to remove stale or old items automatically. Choose 0, and the imported items will not be automatically deleted.', 'feedzy-rss-feeds' ); ?>
