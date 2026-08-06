@@ -3083,12 +3083,8 @@ class Feedzy_Rss_Feeds_Import {
 			return $host;
 		}
 
-		if ( function_exists( 'idn_to_ascii' ) ) {
-			if ( defined( 'IDNA_DEFAULT' ) && defined( 'INTL_IDNA_VARIANT_UTS46' ) ) {
-				$ascii_host = idn_to_ascii( $host, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46 );
-			} else {
-				$ascii_host = idn_to_ascii( $host ); // phpcs:ignore PHPCompatibility.ParameterValues.NewIDNVariantDefault.NotSet
-			}
+		if ( function_exists( 'idn_to_ascii' ) && defined( 'IDNA_DEFAULT' ) && defined( 'INTL_IDNA_VARIANT_UTS46' ) ) {
+			$ascii_host = idn_to_ascii( $host, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46 );
 
 			if ( is_string( $ascii_host ) && '' !== $ascii_host ) {
 				return $ascii_host;

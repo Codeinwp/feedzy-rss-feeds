@@ -248,8 +248,8 @@ class Test_Image_Import extends WP_UnitTestCase {
 		add_filter(
 			'pre_http_request',
 			function ( $preempt, $request_args, $url ) use ( &$requested_urls ) {
- 				$requested_urls[] = $url;
- 				return new WP_Error( 'test_download_failure', 'Expected test download failure.' );
+				$requested_urls[] = $url;
+				return new WP_Error( 'test_download_failure', 'Expected test download failure.' );
 			},
 			10,
 			3
