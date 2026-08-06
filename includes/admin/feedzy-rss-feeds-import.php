@@ -731,6 +731,12 @@ class Feedzy_Rss_Feeds_Import {
 				$data_meta['import_feed_delete_media'] = 'no';
 			}
 
+			// The Auto-Delete field is optional, so clearing it submits an empty string. Normalize it to the
+			// documented 0 ("never delete") state so the value is kept instead of falling back to the global one.
+			if ( isset( $data_meta['import_feed_delete_days'] ) ) {
+				$data_meta['import_feed_delete_days'] = (string) absint( $data_meta['import_feed_delete_days'] );
+			}
+
 			// $data_meta['feedzy_post_author'] should be the author username. We convert it to the author ID.
 			if ( ! empty( $data_meta['import_post_author'] ) ) {
 				$author = get_user_by( 'login', $data_meta['import_post_author'] );
