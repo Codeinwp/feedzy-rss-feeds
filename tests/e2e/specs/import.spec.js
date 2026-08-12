@@ -305,6 +305,58 @@ test.describe('Feed Import', () => {
 		).resolves.toBeGreaterThan(0); // We should have some imported images.
 	});
 
+	test('save featured image action when Tagify has no persistence API', async ({
+		page,
+	}) => {
+		const featuredImgInput =
+			'input[name="feedzy_meta_data[import_post_featured_img]"]';
+		const pageErrors = [];
+		page.on('pageerror', (error) => pageErrors.push(error.message));
+
+		await page.goto('/wp-admin/post-new.php?post_type=feedzy_imports');
+		await tryCloseTourModal(page);
+
+		await page.getByRole('button', { name: 'Step 3 Map content ' }).click();
+
+		// Simulate a Tagify build that does not expose the optional persistence API.
+		await page.waitForFunction(
+			(selector) => Boolean(window.jQuery(selector).data('tagify')),
+			featuredImgInput
+		);
+		await page.evaluate((selector) => {
+			const tagify = window.jQuery(selector).data('tagify');
+			delete tagify.clearPersistedData;
+		}, featuredImgInput);
+
+		// Open the action popup for the featured image tag.
+		await page.locator('.fz-image-action-tags .btn-add-fields').click();
+		await page
+			.locator('.fz-image-action-tags [data-action_popup="item_image"]')
+			.click();
+
+		await expect(
+			page.getByRole('heading', { name: 'Add actions to this tag' })
+		).toBeVisible();
+
+		await page.getByRole('button', { name: 'Skip Actions' }).click();
+
+		// The modal closes and the tag is persisted on the field.
+		await expect(
+			page.getByRole('heading', { name: 'Add actions to this tag' })
+		).not.toBeVisible();
+		await expect
+			.poll(() =>
+				page.evaluate(
+					(selector) => document.querySelector(selector).value,
+					featuredImgInput
+				)
+			)
+			.toContain('item_image');
+		expect(
+			pageErrors.filter((message) => message.includes('PersistedData'))
+		).toEqual([]);
+	});
+
 	test('close Feedzy Action modal when clicking outside', async ({
 		page,
 	}) => {
