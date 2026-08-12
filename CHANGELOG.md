@@ -1,3 +1,8 @@
+##### [Version 5.2.8](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.7...v5.2.8) (2026-08-12)
+
+- Fixed an error when importing feed featured images on servers without the PHP intl extension.
+- Fixed the Save Actions button not working for OpenAI featured-image actions.
+
 ##### [Version 5.2.7](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.6...v5.2.7) (2026-08-04)
 
 - Link attributes and external images are now adjusted only on posts imported by Feedzy, so the rest of the content on your site is no longer affected.
