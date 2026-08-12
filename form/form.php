@@ -12,6 +12,10 @@
  * @subpackage feedzy-rss-feeds/form
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 $html_parts = Feedzy_Rss_Feeds_Ui_Lang::get_form_elements();
 ?>
 <!DOCTYPE html>

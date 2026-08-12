@@ -16,3 +16,4 @@ js/build
 artifacts
 .DS_Store
 languages
+.wp-env.override.json

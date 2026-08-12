@@ -624,4 +624,182 @@ class Test_Abstract_Admin extends WP_UnitTestCase {
             $this->assertEquals($expected, $result, "Failed for input: $input");
         }
     }
+
+	/**
+	 * Build a SimplePie item that has no image anywhere (enclosure, media, content, description).
+	 */
+	private function get_imageless_item() {
+		$feed = new SimplePie();
+		$feed->set_raw_data('<?xml version="1.0" encoding="UTF-8"?>
+			<rss version="2.0">
+				<channel>
+					<title>Test Feed</title>
+					<item>
+						<title>Item without image</title>
+						<link>https://example.com/article</link>
+						<description>Plain text, no image tag.</description>
+					</item>
+				</channel>
+			</rss>');
+		$feed->init();
+		$items = $feed->get_items();
+		return $items[0];
+	}
+
+	/**
+	 * During an import job the bundled default image (feedzy.svg) must NOT be used as
+	 * the item image: WordPress rejects SVG uploads, causing Media Library errors.
+	 * See https://github.com/Codeinwp/feedzy-rss-feeds/issues/1277.
+	 */
+	public function test_feedzy_retrieve_image_import_job_skips_default_image() {
+		$sc = array(
+			'feeds'    => 'https://example.com/feed',
+			'default'  => '',
+			'__jobID'  => 42,
+		);
+
+		$result = $this->feedzy_abstract->feedzy_retrieve_image( $this->get_imageless_item(), $sc );
+
+		$this->assertSame( '', $result, 'Import jobs must not fall back to the bundled default image' );
+	}
+
+	/**
+	 * Display contexts (shortcode/block rendering, no __jobID) keep the default image
+	 * fallback, where the bundled SVG is fine inside an <img> tag.
+	 */
+	public function test_feedzy_retrieve_image_display_keeps_default_image() {
+		$sc = array(
+			'feeds'   => 'https://example.com/feed',
+			'default' => '',
+		);
+
+		$result = $this->feedzy_abstract->feedzy_retrieve_image( $this->get_imageless_item(), $sc );
+
+		$this->assertSame( FEEDZY_ABSURL . 'img/feedzy.svg', $result, 'Display contexts must keep the default image fallback' );
+	}
+
+	/**
+	 * The import-job guard must only suppress the fallback, never a real item image.
+	 */
+	public function test_feedzy_retrieve_image_import_job_keeps_real_item_image() {
+		$feed = new SimplePie();
+		$feed->set_raw_data('<?xml version="1.0" encoding="UTF-8"?>
+			<rss version="2.0">
+				<channel>
+					<title>Test Feed</title>
+					<item>
+						<title>Item with image</title>
+						<enclosure url="https://example.com/real-image.jpg" type="image/jpeg" />
+					</item>
+				</channel>
+			</rss>');
+		$feed->init();
+		$items = $feed->get_items();
+
+		$sc = array(
+			'feeds'    => 'https://example.com/feed',
+			'default'  => '',
+			'__jobID'  => 42,
+		);
+
+		$result = $this->feedzy_abstract->feedzy_retrieve_image( $items[0], $sc );
+
+		$this->assertSame( 'https://example.com/real-image.jpg', $result, 'Import jobs must still use the real item image' );
+	}
+	/**
+	 * Calls the private is_valid_feed_url() method via reflection.
+	 *
+	 * @param string $url The URL to validate.
+	 *
+	 * @return bool
+	 */
+	private function invoke_is_valid_feed_url( $url ) {
+		$reflector = new ReflectionClass( $this->feedzy_abstract );
+		$method    = $reflector->getMethod( 'is_valid_feed_url' );
+		$method->setAccessible( true );
+
+		return $method->invoke( $this->feedzy_abstract, $url );
+	}
+
+	/**
+	 * Test is_valid_feed_url method with feed URLs containing HTTP Basic Auth credentials.
+	 */
+	public function test_is_valid_feed_url_with_basic_auth_credentials() {
+		$this->assertTrue( $this->invoke_is_valid_feed_url( 'https://username:password@example.com/feed.xml' ) );
+		$this->assertTrue( $this->invoke_is_valid_feed_url( 'https://username:password@example.com:8080/feed.xml' ) );
+		$this->assertTrue( $this->invoke_is_valid_feed_url( 'http://user:pass@example.com/feed.xml?a=1#frag' ) );
+	}
+
+	/**
+	 * Test is_valid_feed_url method still accepts plain feed URLs without credentials.
+	 */
+	public function test_is_valid_feed_url_without_credentials() {
+		$this->assertTrue( $this->invoke_is_valid_feed_url( 'https://example.com/feed.xml' ) );
+	}
+
+	/**
+	 * Test is_valid_feed_url method still rejects local/private hosts even when credentials are present,
+	 * so SSRF protections keep working for authenticated URLs too.
+	 */
+	public function test_is_valid_feed_url_rejects_local_host_with_credentials() {
+		$this->assertFalse( $this->invoke_is_valid_feed_url( 'https://username:password@127.0.0.1/feed.xml' ) );
+		$this->assertFalse( $this->invoke_is_valid_feed_url( 'https://username:password@10.0.0.5/feed.xml' ) );
+	}
+
+	/**
+	 * Test is_valid_feed_url method still rejects local/private hosts without credentials (baseline SSRF check).
+	 */
+	public function test_is_valid_feed_url_rejects_local_host_without_credentials() {
+		$this->assertFalse( $this->invoke_is_valid_feed_url( 'https://127.0.0.1/feed.xml' ) );
+	}
+
+	/**
+	 * Test is_valid_feed_url method with edge case inputs.
+	 */
+	public function test_is_valid_feed_url_edge_cases() {
+		$this->assertFalse( $this->invoke_is_valid_feed_url( '' ) );
+		$this->assertFalse( $this->invoke_is_valid_feed_url( 'not-a-url' ) );
+	}
+
+	/**
+	 * Test that an "@" in the URL path (not userinfo) is left alone and doesn't affect validation.
+	 */
+	public function test_is_valid_feed_url_with_at_symbol_in_path() {
+		$this->assertTrue( $this->invoke_is_valid_feed_url( 'https://example.com/feed@2x.xml' ) );
+	}
+
+	/**
+	 * Test normalize_urls() preserves a single feed source URL with HTTP Basic Auth credentials intact.
+	 * Regression test: normalize_urls() previously discarded authenticated feed URLs because
+	 * wp_http_validate_url() unconditionally rejects any URL containing a user:pass@ userinfo component.
+	 */
+	public function test_normalize_urls_preserves_basic_auth_credentials() {
+		$url    = 'https://username:password@example.com/feed.xml';
+		$result = $this->feedzy_abstract->normalize_urls( $url );
+
+		$this->assertEquals( $url, $result );
+	}
+
+	/**
+	 * Test normalize_urls() preserves credentials for an array of feed source URLs.
+	 */
+	public function test_normalize_urls_preserves_basic_auth_credentials_in_array() {
+		$authenticated_url = 'https://username:password@example.com/feed.xml';
+		$plain_url         = 'https://example.org/other-feed.xml';
+		$result            = $this->feedzy_abstract->normalize_urls( $authenticated_url . ',' . $plain_url );
+
+		$this->assertIsArray( $result );
+		$this->assertContains( $authenticated_url, $result );
+		$this->assertContains( $plain_url, $result );
+	}
+
+	/**
+	 * Test normalize_urls() still rejects an authenticated URL pointing at a local/private host.
+	 */
+	public function test_normalize_urls_rejects_local_host_with_basic_auth_credentials() {
+		$result = $this->feedzy_abstract->normalize_urls( 'https://username:password@127.0.0.1/feed.xml' );
+
+		$this->assertEquals( '', $result );
+	}
+
 }

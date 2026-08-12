@@ -1,3 +1,8 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+?>
 <div id="fz-features" class="feedzy-wrap">
 
 	<?php load_template( FEEDZY_ABSPATH . '/includes/layouts/header.php' ); ?>

@@ -9,6 +9,10 @@
  * @subpackage feedzy-rss-feeds/includes/admin
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! class_exists( 'Feedy_Rss_Feeds_Options' ) ) {
 	/**
 	 * Singleton class for options wrapper

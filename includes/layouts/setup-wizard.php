@@ -5,6 +5,11 @@
  * @package Feedzy_Rss_Feeds
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+
 // Note: It will be redirect to dashboard by `feedzy_dismiss_wizard` action.
 $skip_onboarding_url_callback = add_query_arg(
 	array(

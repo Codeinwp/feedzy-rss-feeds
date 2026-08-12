@@ -722,17 +722,36 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$feed_url = apply_filters( 'feedzy_get_feed_url', $feeds );
 		if ( is_array( $feed_url ) ) {
 			foreach ( $feed_url as $index => $url ) {
-				if ( wp_http_validate_url( $url ) ) {
+				if ( $this->is_valid_feed_url( $url ) ) {
 					$feed_url[ $index ] = trim( $this->smart_convert( esc_url_raw( $url ) ) );
+				} else {
+					unset( $feed_url[ $index ] );
 				}
 			}
-		} elseif ( wp_http_validate_url( $feed_url ) ) {
+		} elseif ( $this->is_valid_feed_url( $feed_url ) ) {
 			$feed_url = trim( $this->smart_convert( esc_url_raw( $feed_url ) ) );
 		} else {
 			$feed_url = '';
 		}
 
 		return $feed_url;
+	}
+
+	/**
+	 * Validates a feed source URL.
+	 *
+	 * @param   string $url The feed url to validate.
+	 *
+	 * @return bool Whether the URL passes SSRF validation.
+	 */
+	private function is_valid_feed_url( $url ) {
+		if ( ! is_string( $url ) || '' === $url ) {
+			return false;
+		}
+
+		$url = preg_replace( '#^(https?://)[^/@]*@#i', '$1', $url );
+
+		return (bool) wp_http_validate_url( $url );
 	}
 
 	/**
@@ -897,15 +916,30 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$feed->set_useragent( apply_filters( 'http_headers_useragent', $set_server_agent, $feed_url ) );
 		}
 
-		$feed->init();
-
-		if ( ! $feed->get_type() ) {
-			return $feed;
+		try {
+			$feed->init();
+		} catch ( \Throwable $e ) {
+			return $this->handle_feed_error( $feed, $cloned_feed, $feed_url, $cache, $sc, $allow_https, $default_agent, $e->getMessage(), array( 'trace' => $e->getTraceAsString() ) );
 		}
 
 		$error = $feed->error();
 		if ( is_array( $error ) ) {
 			$error = implode( '|', $error );
+		}
+
+		if ( ! $feed->get_type() ) {
+			if ( ! empty( $error ) ) {
+				Feedzy_Rss_Feeds_Log::error(
+					// translators: %1$s is the feed URL, %2$s is the error message.
+					sprintf( __( 'Error while parsing feed URL "%1$s": %2$s', 'feedzy-rss-feeds' ), $feed_url, $error ),
+					array(
+						'feed_url' => $feed_url,
+						'cache'    => $cache,
+						'sc'       => $sc,
+					)
+				);
+			}
+			return $feed;
 		}
 
 		if ( ! empty( $error ) ) {
@@ -951,7 +985,24 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$feed_instance->set_useragent( apply_filters( 'http_headers_useragent', $set_server_agent, $url ) );
 			}
 
-			$feed_instance->init();
+			try {
+				$feed_instance->init();
+			} catch ( \Throwable $e ) {
+				Feedzy_Rss_Feeds_Log::error(
+					// translators: %1$s is the feed URL, %2$s is the error message.
+					sprintf( __( 'Error while parsing feed URL "%1$s": %2$s', 'feedzy-rss-feeds' ), $url, $e->getMessage() ),
+					array(
+						'feed_url' => $url,
+						'cache'    => $cache,
+						'sc'       => $sc,
+						'error'    => $e->getMessage(),
+						'trace'    => $e->getTraceAsString(),
+					)
+				);
+
+				$simplepie_errors[] = $e->getMessage();
+				continue;
+			}
 
 			$error = $feed_instance->error();
 			if ( is_array( $error ) ) {
@@ -1074,10 +1125,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @param   array<string, mixed> $sc The shortcode attributes.
 	 * @param   bool                 $allow_https Whether to allow HTTPS.
 	 *
-	 * @return Feedzy_Rss_Feeds_Util_SimplePie SimplePie instance.
+	 * @return Feedzy_Rss_Feeds_Util_Feed SimplePie instance.
 	 */
 	private function create_simplepie_instance( array $sc, $allow_https ) {
-		$feed = new Feedzy_Rss_Feeds_Util_SimplePie( $sc );
+		$feed = new Feedzy_Rss_Feeds_Util_Feed( $sc );
 
 		if ( ! $allow_https && method_exists( $feed, 'set_curl_options' ) ) {
 			$feed->set_curl_options(
@@ -1167,17 +1218,22 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @param   bool                 $allow_https Whether HTTPS is allowed.
 	 * @param   string               $default_agent Default user agent.
 	 * @param   string               $error Error message.
+	 * @param   array<string, mixed> $extra_context Additional log context (e.g. throwable trace).
 	 *
 	 * @return SimplePie Feed instance.
 	 */
-	private function handle_feed_error( $feed, $cloned_feed, $feed_url, $cache, $sc, $allow_https, $default_agent, $error ) {
+	private function handle_feed_error( $feed, $cloned_feed, $feed_url, $cache, $sc, $allow_https, $default_agent, $error, $extra_context = array() ) {
 		Feedzy_Rss_Feeds_Log::error(
 			// translators: %1$s is the feed URL, %2$s is the error message.
 			sprintf( __( 'Error while parsing feed URL "%1$s": %2$s', 'feedzy-rss-feeds' ), $feed_url, $error ),
-			array(
-				'feed_url' => $feed_url,
-				'cache'    => $cache,
-				'sc'       => $sc,
+			array_merge(
+				array(
+					'feed_url' => $feed_url,
+					'cache'    => $cache,
+					'sc'       => $sc,
+					'error'    => $error,
+				),
+				$extra_context
 			)
 		);
 
@@ -1198,16 +1254,35 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		Feedzy_Rss_Feeds_Log::debug(
 			sprintf( 'Using raw data for feed: %s', $feed_url ),
 			array(
-				'cache' => $cache,
-				'sc'    => $sc,
+				'feed_url' => $feed_url,
+				'cache'    => $cache,
+				'sc'       => $sc,
 			)
 		);
 
 		$data = wp_remote_retrieve_body( wp_safe_remote_get( $feed_url, array( 'user-agent' => $default_agent ) ) );
 		$cloned_feed->set_raw_data( $data );
-		$cloned_feed->init();
+
+		try {
+			$cloned_feed->init();
+		} catch ( \Throwable $e ) {
+			Feedzy_Rss_Feeds_Log::error(
+				// translators: %1$s is the feed URL, %2$s is the error message.
+				sprintf( __( 'Error while parsing feed URL "%1$s": %2$s', 'feedzy-rss-feeds' ), $feed_url, $e->getMessage() ),
+				array(
+					'feed_url' => $feed_url,
+					'cache'    => $cache,
+					'sc'       => $sc,
+					'error'    => $e->getMessage(),
+					'trace'    => $e->getTraceAsString(),
+				)
+			);
+
+			return $feed;
+		}
+
 		$error_raw = $cloned_feed->error();
-		
+
 		if ( empty( $error_raw ) ) {
 			// Only if using the raw url produces no errors, will we use the cloned feed.
 			return $cloned_feed;
@@ -2064,7 +2139,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				return $the_thumbnail;
 			}
 	
-			if ( ( ! defined( 'REST_REQUEST' ) || ! REST_REQUEST ) && ! empty( $sc['feeds'] ) ) {
+			// Import jobs (__jobID set) skip the display fallback image: it cannot be sideloaded (SVG); imports use the default_thumbnail_id setting instead.
+			if ( ( ! defined( 'REST_REQUEST' ) || ! REST_REQUEST ) && ! empty( $sc['feeds'] ) && empty( $sc['__jobID'] ) ) {
 				$feed_url      = $this->normalize_urls( $sc['feeds'] );
 				$the_thumbnail = ! empty( $the_thumbnail ) ? $the_thumbnail : apply_filters( 'feedzy_default_image', $sc['default'], $feed_url );
 			}

@@ -8,6 +8,11 @@
  * @subpackage feedzy-rss-feeds/includes/util
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+
 if ( ! class_exists( 'SimplePie' ) ) {
 	require_once ABSPATH . WPINC . '/class-simplepie.php';
 	require_once ABSPATH . WPINC . '/class-wp-feed-cache-transient.php';
@@ -23,7 +28,7 @@ if ( ! class_exists( 'SimplePie' ) ) {
  * @subpackage feedzy-rss-feeds/includes/util
  * @author     Themeisle <friends@themeisle.com>
  */
-class Feedzy_Rss_Feeds_Util_SimplePie extends SimplePie {
+class Feedzy_Rss_Feeds_Util_Feed extends SimplePie {
 
 	/**
 	 * The shortcode attributes.

@@ -7,8 +7,9 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+	exit;
 }
+
 
 global $post;
 $import_batch_size    = $import_batch_size ?? '';
