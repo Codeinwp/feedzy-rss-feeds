@@ -17,6 +17,21 @@ import {
 
 import { Icon, dragHandle, close, plus, trash } from '@wordpress/icons';
 
+/**
+ * Drop the data Tagify keeps in the browser storage for the given instance.
+ *
+ * @param {Object} tagify The Tagify instance.
+ */
+const clearTagifyPersistedData = (tagify) => {
+	if ('function' === typeof tagify?.clearPersistedData) {
+		tagify.clearPersistedData();
+		return;
+	}
+	if ('function' === typeof tagify?.setPersistedData) {
+		tagify.setPersistedData([], 'value');
+	}
+};
+
 const ActionModal = () => {
 	// useRef
 	const userRef = useRef(null);
@@ -236,7 +251,7 @@ const ActionModal = () => {
 		if ('import_post_featured_img' === fieldName) {
 			inputField.removeAllTags();
 			inputField.addEmptyTag();
-			inputField.clearPersistedData();
+			clearTagifyPersistedData(inputField);
 		}
 		if (null === editModeTag || 'import_post_featured_img' === fieldName) {
 			const tagElm = inputField.createTagElem({ value: _action });
