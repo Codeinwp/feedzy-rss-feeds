@@ -1698,6 +1698,14 @@ class Feedzy_Rss_Feeds_Import {
 	 * errors logged deeper in the stack) is tagged with the import ID, title
 	 * and source, so it can be traced back to this job.
 	 *
+	 * The run is guarded by an atomic per-job lock so that overlapping runs of
+	 * the same job (for example, a manual "Run Now" firing while a scheduled
+	 * cron run is still in progress) cannot advance the resume cursor or
+	 * overwrite the imported-items checkpoint against a stale snapshot, which
+	 * would skip or re-import items. A stale lock older than the (filterable)
+	 * timeout is broken automatically, so a crashed run cannot block the job
+	 * forever, and the lock is always released once the run finishes.
+	 *
 	 * @param \WP_Post $job The custom post type with the job options.
 	 * @param int      $max The import feed limit.
 	 *
@@ -1707,6 +1715,24 @@ class Feedzy_Rss_Feeds_Import {
 	 * @access  private
 	 */
 	private function run_job( $job, $max ) {
+		$lock_name       = 'feedzy_import_' . (int) $job->ID;
+		$release_timeout = (int) apply_filters( 'feedzy_import_lock_timeout', 15 * MINUTE_IN_SECONDS, $job );
+
+		if ( ! class_exists( 'WP_Upgrader' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+		}
+
+		if ( ! WP_Upgrader::create_lock( $lock_name, $release_timeout ) ) {
+			Feedzy_Rss_Feeds_Log::info(
+				'Skipping import run: another run is already in progress for this job.',
+				array(
+					'import_id'    => $job->ID,
+					'import_title' => $job->post_title,
+				)
+			);
+			return 0;
+		}
+
 		$logger           = Feedzy_Rss_Feeds_Log::get_instance();
 		$previous_context = $logger->get_context();
 		$logger->set_context(
@@ -1721,6 +1747,7 @@ class Feedzy_Rss_Feeds_Import {
 			return $this->run_job_logic( $job, $max );
 		} finally {
 			$logger->set_context( $previous_context );
+			WP_Upgrader::release_lock( $lock_name );
 		}
 	}
 
