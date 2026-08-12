@@ -3040,8 +3040,8 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		$host = '';
-		if ( isset( $parts['scheme'] ) ) {
-			$host = idn_to_ascii( $parts['host'], IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46 );
+		if ( isset( $parts['host'] ) ) {
+			$host = $this->convert_host_to_ascii( $parts['host'] );
 		}
 
 		$url = $scheme . $host;
@@ -3068,6 +3068,65 @@ class Feedzy_Rss_Feeds_Import {
 			$url .= '#' . $parts['fragment'];
 		}
 		return esc_url( $url );
+	}
+
+	/**
+	 * Converts a host to its IDNA ASCII (punycode) representation.
+	 *
+	 * @param string $host The host to convert.
+	 *
+	 * @return string The ASCII host, or the original host when it cannot be converted.
+	 */
+	private function convert_host_to_ascii( $host ) {
+		// Hosts that are already ASCII need no conversion, so no extension is required for them.
+		if ( '' === $host || ! preg_match( '/[^\x20-\x7F]/', $host ) ) {
+			return $host;
+		}
+
+		if ( function_exists( 'idn_to_ascii' ) && defined( 'IDNA_DEFAULT' ) && defined( 'INTL_IDNA_VARIANT_UTS46' ) ) {
+			$ascii_host = idn_to_ascii( $host, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46 );
+
+			if ( is_string( $ascii_host ) && '' !== $ascii_host ) {
+				return $ascii_host;
+			}
+		}
+
+		$ascii_host = $this->punycode_encode_host( $host );
+
+		return '' !== $ascii_host ? $ascii_host : $host;
+	}
+
+	/**
+	 * Encodes a host with the punycode encoder shipped with WordPress core.
+	 *
+	 * Used as the fallback for `idn_to_ascii()` when the `intl` extension is not installed.
+	 *
+	 * @param string $host The host to encode.
+	 *
+	 * @return string The encoded host, or an empty string when it could not be encoded.
+	 */
+	private function punycode_encode_host( $host ) {
+		// `WpOrg\Requests\IdnaEncoder` ships with WordPress 6.2+, `Requests_IDNAEncoder` with older versions.
+		$encoders = array( 'WpOrg\Requests\IdnaEncoder', 'Requests_IDNAEncoder' );
+
+		foreach ( $encoders as $encoder ) {
+			if ( ! class_exists( $encoder ) ) {
+				continue;
+			}
+
+			try {
+				$ascii_host = call_user_func( array( $encoder, 'encode' ), $host );
+			} catch ( Exception $e ) {
+				// Invalid or non-encodable host, e.g. a label that is too long once encoded.
+				return '';
+			}
+
+			if ( is_string( $ascii_host ) ) {
+				return $ascii_host;
+			}
+		}
+
+		return '';
 	}
 
 	/**
