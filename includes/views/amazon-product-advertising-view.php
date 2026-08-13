@@ -39,24 +39,24 @@ $content = ! apply_filters( 'feedzy_is_license_of_type', false, 'business' ) ? _
 			<div class="fz-form-row">
 				<div class="fz-form-col-6">
 					<div class="fz-form-group">
-						<label class="form-label"><?php esc_html_e( 'Access Key:', 'feedzy-rss-feeds' ); ?></label>
-						<input type="password" class="form-control" placeholder="<?php echo esc_attr( __( 'Access Key', 'feedzy-rss-feeds' ) ); ?>"/>
+						<label class="form-label"><?php esc_html_e( 'Client ID', 'feedzy-rss-feeds' ); ?>:</label>
+						<input type="password" class="form-control" placeholder="<?php echo esc_attr( __( 'Client ID', 'feedzy-rss-feeds' ) ); ?>"/>
 					</div>
 				</div>
 				<div class="fz-form-col-6">
 					<div class="fz-form-group">
-						<label class="form-label"><?php esc_html_e( 'Secret key:', 'feedzy-rss-feeds' ); ?></label>
-						<input type="password" class="form-control" placeholder="<?php echo esc_attr( __( 'Secret key', 'feedzy-rss-feeds' ) ); ?>"/>
+						<label class="form-label"><?php esc_html_e( 'Client Secret', 'feedzy-rss-feeds' ); ?>:</label>
+						<input type="password" class="form-control" placeholder="<?php echo esc_attr( __( 'Client Secret', 'feedzy-rss-feeds' ) ); ?>"/>
 					</div>
 				</div>
 			</div>
 			<div class="fz-form-row">
 				<div class="fz-form-col-6">
 					<div class="fz-form-group">
-						<label class="form-label"><?php esc_html_e( 'Marketplace', 'feedzy-rss-feeds' ); ?>:</label>
+						<label class="form-label" for="amazon_marketplace"><?php esc_html_e( 'Marketplace', 'feedzy-rss-feeds' ); ?>:</label>
 						<div class="fz-input-group">
 							<div class="fz-input-group-left">
-								<select class="form-control fz-select-control">
+								<select id="amazon_marketplace" class="form-control fz-select-control">
 									<option>www.amazon.com</option>
 								</select>
 								<div class="help-text"><?php esc_html_e( 'API Status: Invalid | Last check: Never', 'feedzy-rss-feeds' ); ?></div>
