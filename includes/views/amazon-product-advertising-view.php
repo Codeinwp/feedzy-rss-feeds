@@ -51,29 +51,27 @@ $content = ! apply_filters( 'feedzy_is_license_of_type', false, 'business' ) ? _
 				</div>
 			</div>
 			<div class="fz-form-row">
-			<div class="fz-form-col-6">
-				<div class="fz-form-group">
-					<label class="form-label"><?php esc_html_e( 'Host:', 'feedzy-rss-feeds' ); ?></label>
-					<select class="form-control fz-select-control">
-						<option>webservices.amazon.com</option>
-					</select>
+				<div class="fz-form-col-6">
+					<div class="fz-form-group">
+						<label class="form-label"><?php esc_html_e( 'Marketplace', 'feedzy-rss-feeds' ); ?>:</label>
+						<div class="fz-input-group">
+							<div class="fz-input-group-left">
+								<select class="form-control fz-select-control">
+									<option>www.amazon.com</option>
+								</select>
+								<div class="help-text"><?php esc_html_e( 'API Status: Invalid | Last check: Never', 'feedzy-rss-feeds' ); ?></div>
+							</div>
+						</div>
+					</div>
 				</div>
-			</div>
-			<div class="fz-form-col-6">
-				<div class="fz-form-group">
-					<label class="form-label"><?php esc_html_e( 'Region:', 'feedzy-rss-feeds' ); ?></label>
-					<select class="form-control fz-select-control">
-						<option>us-east-1</option>
-					</select>
-				</div>
-			</div>
-		</div>
-			<div class="fz-form-group">
-				<label class="form-label"><?php esc_html_e( 'Partner Tag (store/tracking id):', 'feedzy-rss-feeds' ); ?></label>
-				<div class="fz-input-group">
-					<div class="fz-input-group-left">
-						<input type="text" class="form-control" name="amazon_partner_tag" placeholder="<?php echo esc_attr( __( 'Partner Tag (store/tracking id)', 'feedzy-rss-feeds' ) ); ?>"/>
-						<div class="help-text"><?php esc_html_e( 'API Status: Invalid | Last check: Never', 'feedzy-rss-feeds' ); ?></div>
+				<div class="fz-form-col-6">
+					<div class="fz-form-group">
+						<label class="form-label"><?php esc_html_e( 'Partner Tag (store/tracking id):', 'feedzy-rss-feeds' ); ?></label>
+						<div class="fz-input-group">
+							<div class="fz-input-group-left">
+								<input type="text" class="form-control" name="amazon_partner_tag" placeholder="<?php echo esc_attr( __( 'Partner Tag (store/tracking id)', 'feedzy-rss-feeds' ) ); ?>"/>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
