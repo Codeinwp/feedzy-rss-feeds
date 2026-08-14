@@ -2458,12 +2458,14 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$upgrader = new Plugin_Upgrader( $skin );
 			$result   = $upgrader->install( $api->download_link );
 			if ( is_wp_error( $result ) ) {
-				wp_send_json(
-					array(
-						'status'  => 0,
-						'message' => $api->get_error_message(),
-					)
-				);
+				if ( 'folder_exists' !== $result->get_error_code() ) {
+					wp_send_json(
+						array(
+							'status'  => 0,
+							'message' => $result->get_error_message(),
+						)
+					);
+				}
 			} elseif ( is_wp_error( $skin->result ) ) {
 				if ( 'folder_exists' !== $skin->result->get_error_code() ) {
 					wp_send_json(
@@ -2474,17 +2476,18 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					);
 				}
 			} elseif ( $skin->get_errors()->has_errors() ) {
-				if ( 'folder_exists' !== $skin->get_error_code() ) {
+				$skin_errors = $skin->get_errors();
+				if ( 'folder_exists' !== $skin_errors->get_error_code() ) {
 					wp_send_json(
 						array(
 							'status'  => 0,
-							'message' => $skin->get_error_message(),
+							'message' => $skin_errors->get_error_message(),
 						)
 					);
 				}
 			} elseif ( is_null( $result ) ) {
 				global $wp_filesystem;
-				$status            = array();
+				$status            = array( 'status' => 0 );
 				$status['message'] = __( 'Unable to connect to the filesystem. Please confirm your credentials.', 'feedzy-rss-feeds' );
 
 				// Pass through the error from WP_Filesystem if one was raised.
