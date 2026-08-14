@@ -2457,34 +2457,14 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$skin     = new WP_Ajax_Upgrader_Skin();
 			$upgrader = new Plugin_Upgrader( $skin );
 			$result   = $upgrader->install( $api->download_link );
+
+			$installer_error = '';
 			if ( is_wp_error( $result ) ) {
-				if ( 'folder_exists' !== $result->get_error_code() ) {
-					wp_send_json(
-						array(
-							'status'  => 0,
-							'message' => $result->get_error_message(),
-						)
-					);
-				}
+				$installer_error = $this->setup_wizard_installer_error( $result );
 			} elseif ( is_wp_error( $skin->result ) ) {
-				if ( 'folder_exists' !== $skin->result->get_error_code() ) {
-					wp_send_json(
-						array(
-							'status'  => 0,
-							'message' => $skin->result->get_error_message(),
-						)
-					);
-				}
+				$installer_error = $this->setup_wizard_installer_error( $skin->result );
 			} elseif ( $skin->get_errors()->has_errors() ) {
-				$skin_errors = $skin->get_errors();
-				if ( 'folder_exists' !== $skin_errors->get_error_code() ) {
-					wp_send_json(
-						array(
-							'status'  => 0,
-							'message' => $skin_errors->get_error_message(),
-						)
-					);
-				}
+				$installer_error = $this->setup_wizard_installer_error( $skin->get_errors() );
 			} elseif ( is_null( $result ) ) {
 				global $wp_filesystem;
 				$status            = array( 'status' => 0 );
@@ -2498,7 +2478,25 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				wp_send_json( $status );
 			}
 
-			activate_plugin( 'optimole-wp/optimole-wp.php' );
+			if ( '' !== $installer_error ) {
+				wp_send_json(
+					array(
+						'status'  => 0,
+						'message' => $installer_error,
+					)
+				);
+			}
+
+			$activated = activate_plugin( 'optimole-wp/optimole-wp.php' );
+			if ( is_wp_error( $activated ) ) {
+				wp_send_json(
+					array(
+						'status'  => 0,
+						'message' => $activated->get_error_message(),
+					)
+				);
+			}
+
 			delete_transient( 'optml_fresh_install' );
 			$wizard_data = get_option( 'feedzy_wizard_data', array() );
 
@@ -2511,6 +2509,23 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				)
 			);
 		}
+	}
+
+	/**
+	 * Get the first installer error that has to be reported to the user.
+	 *
+	 * @param WP_Error $errors Errors collected while installing.
+	 * @return string Error message, empty when there is nothing to report.
+	 */
+	private function setup_wizard_installer_error( $errors ) {
+		foreach ( $errors->get_error_codes() as $error_code ) {
+			if ( 'folder_exists' === $error_code ) {
+				continue;
+			}
+			return $errors->get_error_message( $error_code );
+		}
+
+		return '';
 	}
 
 	/**

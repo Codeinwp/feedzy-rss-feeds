@@ -2,7 +2,7 @@
 /**
  * Tests for the setup wizard plugin installer (step 3).
  *
- * Covers the successful installation path and every failure branch,
+ * Covers the successful installation path and key failure branches,
  * making sure a failed install is reported back as JSON instead of
  * blowing up with a fatal error.
  *
@@ -15,7 +15,7 @@ class Test_Setup_Wizard_Installer extends WP_UnitTestCase {
 	 *
 	 * @var string
 	 */
-	const SLUG = 'feedzy-test-plugin';
+	const SLUG = 'optimole-wp';
 
 	/**
 	 * Path of the generated package.
@@ -50,6 +50,8 @@ class Test_Setup_Wizard_Installer extends WP_UnitTestCase {
 	 * @access public
 	 */
 	public function tear_down() {
+		deactivate_plugins( self::SLUG . '/' . self::SLUG . '.php', true );
+
 		remove_filter( 'wp_doing_ajax', '__return_true' );
 		remove_filter( 'pre_http_request', array( $this, 'block_http_request' ) );
 		remove_filter( 'wp_die_ajax_handler', array( $this, 'get_die_handler' ), 1 );
@@ -97,6 +99,7 @@ class Test_Setup_Wizard_Installer extends WP_UnitTestCase {
 		$this->assertEquals( 1, $response['status'] );
 		$this->assertArrayNotHasKey( 'message', $response );
 		$this->assertFileExists( WP_PLUGIN_DIR . '/' . self::SLUG . '/' . self::SLUG . '.php' );
+		$this->assertTrue( is_plugin_active( self::SLUG . '/' . self::SLUG . '.php' ) );
 
 		$wizard_data = get_option( 'feedzy_wizard_data', array() );
 		$this->assertTrue( $wizard_data['enable_perfomance'] );
@@ -129,6 +132,36 @@ class Test_Setup_Wizard_Installer extends WP_UnitTestCase {
 		$response = $this->run_install_step();
 
 		$this->assertEquals( 1, $response['status'] );
+	}
+
+	/**
+	 * An existing but incomplete plugin folder is not reported as a successful install.
+	 *
+	 * @access public
+	 */
+	public function test_incomplete_plugin_folder_is_not_a_success() {
+		mkdir( WP_PLUGIN_DIR . '/' . self::SLUG );
+		file_put_contents( WP_PLUGIN_DIR . '/' . self::SLUG . '/leftover.txt', 'leftover' );
+
+		$response = $this->run_install_step();
+
+		$this->assertEquals( 0, $response['status'] );
+		$this->assertNotEmpty( $response['message'] );
+		$this->assertFalse( is_plugin_active( self::SLUG . '/' . self::SLUG . '.php' ) );
+	}
+
+	/**
+	 * An error next to a folder_exists error is still reported.
+	 *
+	 * @access public
+	 */
+	public function test_error_after_folder_exists_is_reported() {
+		add_action( 'upgrader_process_complete', array( $this, 'add_skin_folder_exists_and_other_error' ) );
+		$response = $this->run_install_step();
+		remove_action( 'upgrader_process_complete', array( $this, 'add_skin_folder_exists_and_other_error' ) );
+
+		$this->assertEquals( 0, $response['status'] );
+		$this->assertEquals( 'Plugin could not be verified.', $response['message'] );
 	}
 
 	/**
@@ -268,6 +301,17 @@ class Test_Setup_Wizard_Installer extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Record a folder_exists error followed by another error.
+	 *
+	 * @access public
+	 * @param WP_Upgrader $upgrader The upgrader that just ran.
+	 */
+	public function add_skin_folder_exists_and_other_error( $upgrader ) {
+		$upgrader->skin->error( new WP_Error( 'folder_exists', 'Destination folder already exists.' ) );
+		$upgrader->skin->error( new WP_Error( 'verification_failed', 'Plugin could not be verified.' ) );
+	}
+
+	/**
 	 * Ask for a filesystem method that has no credentials available.
 	 *
 	 * @access public
@@ -285,7 +329,7 @@ class Test_Setup_Wizard_Installer extends WP_UnitTestCase {
 	 */
 	public function fake_plugins_api() {
 		return (object) array(
-			'name'          => 'Feedzy Test Plugin',
+			'name'          => 'Optimole',
 			'slug'          => self::SLUG,
 			'version'       => '1.0.0',
 			'download_link' => $this->package,
@@ -346,7 +390,7 @@ class Test_Setup_Wizard_Installer extends WP_UnitTestCase {
 		$zip->addEmptyDir( self::SLUG );
 		$zip->addFromString(
 			self::SLUG . '/' . self::SLUG . '.php',
-			"<?php\n/**\n * Plugin Name: Feedzy Test Plugin\n * Version: 1.0.0\n */\n"
+			"<?php\n/**\n * Plugin Name: Optimole\n * Version: 1.0.0\n */\n"
 		);
 		$zip->close();
 
