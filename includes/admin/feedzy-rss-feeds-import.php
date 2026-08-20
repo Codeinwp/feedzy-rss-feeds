@@ -565,6 +565,8 @@ class Feedzy_Rss_Feeds_Import {
 		$import_custom_fields  = get_post_meta( $post->ID, 'imports_custom_fields', true );
 		$custom_fields_actions = get_post_meta( $post->ID, 'imports_custom_field_actions', true );
 		$import_feed_limit     = get_post_meta( $post->ID, 'import_feed_limit', true );
+		$import_batch_size     = get_post_meta( $post->ID, 'import_batch_size', true );
+		$import_item_delay_ms  = get_post_meta( $post->ID, 'import_item_delay_ms', true );
 		if ( empty( $import_feed_limit ) ) {
 			$import_feed_limit = 10;
 		}
@@ -752,7 +754,7 @@ class Feedzy_Rss_Feeds_Import {
 			// Added this to activate post if publish is clicked and sometimes it does not change status.
 			if (
 				$source_is_valid && isset( $_POST['custom_post_status'] ) &&
-				'Publish' === sanitize_text_field( $_POST['custom_post_status'] )
+				'Publish' === sanitize_text_field( wp_unslash( $_POST['custom_post_status'] ) )
 			) {
 				$activate = array(
 					'ID'          => $post_id,
@@ -763,6 +765,7 @@ class Feedzy_Rss_Feeds_Import {
 				add_action( 'save_post_feedzy_imports', array( $this, 'save_feedzy_import_feed_meta' ), 1, 2 );
 			}
 			// Clear the import job cron schedule if it exists.
+			delete_post_meta( $post_id, 'import_batch_cursor' );
 			Feedzy_Rss_Feeds_Util_Scheduler::clear_scheduled_hook( 'feedzy_cron', array( 100, $post_id ) );
 			do_action( 'feedzy_save_fields', $post_id, $post );
 		}
@@ -1397,7 +1400,7 @@ class Feedzy_Rss_Feeds_Import {
 	private function get_taxonomies() {
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
 
-		$post_type  = isset( $_POST['post_type'] ) ? sanitize_text_field( $_POST['post_type'] ) : '';
+		$post_type  = isset( $_POST['post_type'] ) ? sanitize_text_field( wp_unslash( $_POST['post_type'] ) ) : '';
 		$taxonomies = get_object_taxonomies(
 			array(
 				'post_type' => $post_type,
@@ -1498,7 +1501,7 @@ class Feedzy_Rss_Feeds_Import {
 	private function dry_run() {
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
 
-		$fields = urldecode( isset( $_POST['fields'] ) ? sanitize_url( $_POST['fields'] ) : '' );
+		$fields = urldecode( isset( $_POST['fields'] ) ? sanitize_url( wp_unslash( $_POST['fields'] ) ) : '' );
 		parse_str( $fields, $data );
 
 		$feedzy_meta_data = $data['feedzy_meta_data'];
@@ -1652,7 +1655,10 @@ class Feedzy_Rss_Feeds_Import {
 					)
 				);
 
-				if ( empty( $result ) ) {
+				$batching_allowed = feedzy_is_pro() || feedzy_is_legacyv5();
+				$batching_enabled = 0 < (int) apply_filters( 'feedzy_import_batch_size', $batching_allowed ? get_post_meta( $job->ID, 'import_batch_size', true ) : 0, $job )
+					|| 0 < (int) apply_filters( 'feedzy_import_item_delay_ms', $batching_allowed ? get_post_meta( $job->ID, 'import_item_delay_ms', true ) : 0, $job );
+				if ( empty( $result ) && ! $batching_enabled && ! get_post_meta( $job->ID, 'import_batch_cursor', true ) ) {
 					$this->run_job( $job, $max );
 
 					Feedzy_Rss_Feeds_Log::debug(
@@ -1692,6 +1698,14 @@ class Feedzy_Rss_Feeds_Import {
 	 * errors logged deeper in the stack) is tagged with the import ID, title
 	 * and source, so it can be traced back to this job.
 	 *
+	 * The run is guarded by an atomic per-job lock so that overlapping runs of
+	 * the same job (for example, a manual "Run Now" firing while a scheduled
+	 * cron run is still in progress) cannot advance the resume cursor or
+	 * overwrite the imported-items checkpoint against a stale snapshot, which
+	 * would skip or re-import items. A stale lock older than the (filterable)
+	 * timeout is broken automatically, so a crashed run cannot block the job
+	 * forever, and the lock is always released once the run finishes.
+	 *
 	 * @param \WP_Post $job The custom post type with the job options.
 	 * @param int      $max The import feed limit.
 	 *
@@ -1701,6 +1715,24 @@ class Feedzy_Rss_Feeds_Import {
 	 * @access  private
 	 */
 	private function run_job( $job, $max ) {
+		$lock_name       = 'feedzy_import_' . (int) $job->ID;
+		$release_timeout = (int) apply_filters( 'feedzy_import_lock_timeout', 15 * MINUTE_IN_SECONDS, $job );
+
+		if ( ! class_exists( 'WP_Upgrader' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+		}
+
+		if ( ! WP_Upgrader::create_lock( $lock_name, $release_timeout ) ) {
+			Feedzy_Rss_Feeds_Log::info(
+				'Skipping import run: another run is already in progress for this job.',
+				array(
+					'import_id'    => $job->ID,
+					'import_title' => $job->post_title,
+				)
+			);
+			return 0;
+		}
+
 		$logger           = Feedzy_Rss_Feeds_Log::get_instance();
 		$previous_context = $logger->get_context();
 		$logger->set_context(
@@ -1715,6 +1747,7 @@ class Feedzy_Rss_Feeds_Import {
 			return $this->run_job_logic( $job, $max );
 		} finally {
 			$logger->set_context( $previous_context );
+			WP_Upgrader::release_lock( $lock_name );
 		}
 	}
 
@@ -1764,6 +1797,25 @@ class Feedzy_Rss_Feeds_Import {
 		$import_max               = $import_feed_limit;
 		$import_remove_html       = get_post_meta( $job->ID, 'import_remove_html', true );
 		$import_order             = get_post_meta( $job->ID, 'import_order', true );
+		// Batching is a Pro feature: without an entitlement the stored meta
+		// resolves to 0 (the filters can still override the default).
+		$batching_allowed     = feedzy_is_pro() || feedzy_is_legacyv5();
+		$import_batch_size    = max(
+			0,
+			min(
+				9999,
+				(int) apply_filters( 'feedzy_import_batch_size', $batching_allowed ? get_post_meta( $job->ID, 'import_batch_size', true ) : 0, $job )
+			)
+		);
+		$import_item_delay_ms = max(
+			0,
+			min(
+				60000,
+				(int) apply_filters( 'feedzy_import_item_delay_ms', $batching_allowed ? get_post_meta( $job->ID, 'import_item_delay_ms', true ) : 0, $job )
+			)
+		);
+		// A delay-only job can also stop early (delay budget), so either control enables cursor resume.
+		$batching_active = 0 < $import_batch_size || 0 < $import_item_delay_ms;
 
 		if ( ! defined( 'TI_UNIT_TESTING' ) ) {
 			$max = $import_max;
@@ -1797,6 +1849,8 @@ class Feedzy_Rss_Feeds_Import {
 				'filter_conditions'        => $filter_conditions,
 				'import_auto_translation'  => $import_auto_translation,
 				'import_translation_lang'  => $import_translation_lang,
+				'import_batch_size'        => $import_batch_size,
+				'import_item_delay_ms'     => $import_item_delay_ms,
 			)
 		);
 
@@ -1899,6 +1953,7 @@ class Feedzy_Rss_Feeds_Import {
 		delete_post_meta( $job->ID, 'import_info' );
 
 		// let's increase this time in case spinnerchief/wordai is being used.
+		// phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged
 		set_time_limit( apply_filters( 'feedzy_max_execution_time', 500 ) );
 
 		$count               = 0;
@@ -1980,6 +2035,28 @@ class Feedzy_Rss_Feeds_Import {
 		$items_found      = array();
 		$found_duplicates = array();
 		$result_count     = count( $result );
+		$attempted_items  = 0;
+		$batch_cursor     = $batching_active ? (string) get_post_meta( $job->ID, 'import_batch_cursor', true ) : '';
+		$cursor_reached   = empty( $batch_cursor );
+		$batch_stopped    = false;
+		$delay_budget_ms  = max( 0, (int) apply_filters( 'feedzy_import_delay_budget_ms', 30000, $job ) );
+		$slept_ms         = 0;
+
+		if ( ! $cursor_reached ) {
+			// If the cursor item has aged out of the current feed window,
+			// process the run from the beginning instead of skipping everything.
+			$cursor_in_result = false;
+			foreach ( $result as $cursor_check_item ) {
+				$cursor_check_hash = $use_new_hash ? $cursor_check_item['item_id'] : hash( 'sha256', $cursor_check_item['item_url'] . '_' . $cursor_check_item['item_date'] );
+				if ( $batch_cursor === (string) $cursor_check_hash ) {
+					$cursor_in_result = true;
+					break;
+				}
+			}
+			if ( ! $cursor_in_result ) {
+				$cursor_reached = true;
+			}
+		}
 
 		foreach ( $result as $key => $item ) {
 			Feedzy_Rss_Feeds_Log::debug(
@@ -1998,13 +2075,60 @@ class Feedzy_Rss_Feeds_Import {
 					$item_obj = $xml_results['items'][ $real_index_key ];
 				}
 			}
-			$item_hash                        = $use_new_hash ? $item['item_id'] : hash( 'sha256', $item['item_url'] . '_' . $item['item_date'] );
-			$is_duplicate                     = $use_new_hash ? in_array( $item_hash, $imported_items_new, true ) : in_array( $item_hash, $imported_items_old, true );
+			$item_hash    = $use_new_hash ? $item['item_id'] : hash( 'sha256', $item['item_url'] . '_' . $item['item_date'] );
+			$is_duplicate = $use_new_hash ? in_array( $item_hash, $imported_items_new, true ) : in_array( $item_hash, $imported_items_old, true );
+
+			if ( ! $cursor_reached ) {
+				if ( $batch_cursor === (string) $item_hash ) {
+					$cursor_reached = true;
+				}
+				continue;
+			}
+
+			if ( $is_duplicate ) {
+				$items_found[ $item['item_url'] ] = $item['item_title'];
+				do_action(
+					'feedzy_log_event',
+					array(
+						'type'   => 'info',
+						'output' => sprintf( 'Ignoring URl %1$s with hash %2$s as it is a duplicate (%3$s hash).', $item['item_url'], $item_hash, $use_new_hash ? 'new' : 'old' ),
+						'file'   => __FILE__,
+						'line'   => __LINE__,
+					)
+				);
+				Feedzy_Rss_Feeds_Log::debug(
+					sprintf( 'Ignoring item %1$s as it is a duplicate (%2$s hash).', $item['item_url'], $use_new_hash ? 'new' : 'old' )
+				);
+				++$index;
+				$duplicates[ $item['item_url'] ] = $item['item_title'];
+				continue;
+			}
+
+			if ( 0 < $import_batch_size && $attempted_items >= $import_batch_size ) {
+				$batch_stopped = true;
+				break;
+			}
+
+			if ( 0 < $attempted_items && 0 < $import_item_delay_ms && $slept_ms + $import_item_delay_ms > $delay_budget_ms ) {
+				// The configured throttling no longer fits this run's sleep
+				// budget; stop here and let the next cron run resume.
+				$batch_stopped = true;
+				break;
+			}
+
 			$items_found[ $item['item_url'] ] = $item['item_title'];
+			if ( 0 < $attempted_items && 0 < $import_item_delay_ms ) {
+				usleep( $import_item_delay_ms * 1000 );
+				$slept_ms += $import_item_delay_ms;
+			}
+			if ( $batching_active ) {
+				update_post_meta( $job->ID, 'import_batch_cursor', $item_hash );
+			}
+			++$attempted_items;
 
 			$duplicate_tag_value = array();
 			$mark_duplicate_key  = 'item_url';
-			if ( 'yes' === $import_remove_duplicates && ! $is_duplicate ) {
+			if ( 'yes' === $import_remove_duplicates ) {
 				if ( ! empty( $mark_duplicate_tag ) ) {
 					$mark_duplicate_tag  = is_string( $mark_duplicate_tag ) ? explode( ',', $mark_duplicate_tag ) : $mark_duplicate_tag;
 					$mark_duplicate_tag  = array_map( 'trim', $mark_duplicate_tag );
@@ -2044,24 +2168,6 @@ class Feedzy_Rss_Feeds_Import {
 					}
 				}
 			}
-			if ( $is_duplicate ) {
-				do_action(
-					'feedzy_log_event',
-					array(
-						'type'   => 'info',
-						'output' => sprintf( 'Ignoring URl %1$s with hash %2$s as it is a duplicate (%3$s hash).', $item['item_url'], $item_hash, $use_new_hash ? 'new' : 'old' ),
-						'file'   => __FILE__,
-						'line'   => __LINE__,
-					) 
-				);
-				Feedzy_Rss_Feeds_Log::debug(
-					sprintf( 'Ignoring item %1$s as it is a duplicate (%2$s hash).', $item['item_url'], $use_new_hash ? 'new' : 'old' )
-				);
-				++$index;
-				$duplicates[ $item['item_url'] ] = $item['item_title'];
-				continue;
-			}
-
 			$author = '';
 			if ( $item['item_author'] ) {
 				if ( is_string( $item['item_author'] ) ) {
@@ -2576,6 +2682,18 @@ class Feedzy_Rss_Feeds_Import {
 				++$count;
 			}
 
+			// For batched runs (bounded per-run item count), persist the successful
+			// item before any post-processing hooks run, so a throwing callback
+			// cannot cause a re-import. Unbatched runs persist once at completion.
+			if ( $batching_active ) {
+				if ( $use_new_hash ) {
+					update_post_meta( $job->ID, 'imported_items_hash', $imported_items );
+				} else {
+					update_post_meta( $job->ID, 'imported_items', $imported_items );
+				}
+				update_post_meta( $job->ID, 'imported_items_count', $count );
+			}
+
 			if (
 				'none' !== $import_post_term &&
 				0 < strpos( $import_post_term, '_' )
@@ -2857,6 +2975,10 @@ class Feedzy_Rss_Feeds_Import {
 			update_post_meta( $new_post_id, 'feedzy_job_time', $last_run );
 
 			do_action( 'feedzy_after_post_import', $new_post_id, $item, $this->settings );
+		}
+
+		if ( ! $batch_stopped ) {
+			delete_post_meta( $job->ID, 'import_batch_cursor' );
 		}
 
 		if ( $use_new_hash ) {
@@ -3527,7 +3649,7 @@ class Feedzy_Rss_Feeds_Import {
 
 		if (
 			( isset( $_POST['nonce'] ) && isset( $_POST['tab'] ) ) &&
-			wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), sanitize_text_field( $_POST['tab'] ) )
+			wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), sanitize_text_field( wp_unslash( $_POST['tab'] ) ) )
 		) {
 			if ( ! empty( $_POST['fz_cron_schedule'] ) ) {
 				$schedule = sanitize_text_field( wp_unslash( $_POST['fz_cron_schedule'] ) );
@@ -3781,7 +3903,7 @@ class Feedzy_Rss_Feeds_Import {
 	public function save_tab_settings( $settings, $tab ) {
 		if (
 			! isset( $_POST['nonce'] ) ||
-			! wp_verify_nonce( sanitize_text_field( $_POST['nonce'] ), $tab )
+			! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), $tab )
 		) {
 			return array();
 		}
@@ -4151,6 +4273,7 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		delete_post_meta( $id, 'imported_items_hash' );
+		delete_post_meta( (int) $id, 'import_batch_cursor' );
 		delete_post_meta( $id, 'last_run' );
 		wp_die();
 	}
@@ -4418,6 +4541,7 @@ class Feedzy_Rss_Feeds_Import {
 				'last_run',
 				'imported_items_hash',
 				'imported_items_count',
+				'import_batch_cursor',
 			);
 
 			if ( $post_meta ) {
