@@ -272,25 +272,25 @@ test.describe('Feed Import', () => {
 
 		// Insert a Feedzy block.
 		await editor.insertBlock({ name: 'feedzy-rss-feeds/feedzy-block' });
-		await page
+		await editor.canvas
 			.getByPlaceholder('Enter URL or group of your')
 			.fill(FEED_URL);
-		await page.getByRole('button', { name: 'Load Feed' }).click();
+		await editor.canvas.getByRole('button', { name: 'Load Feed' }).click();
 
-		await page.waitForSelector('.rss_header');
+		await editor.canvas.locator('.rss_header').waitFor();
 
 		// We should have some preview content.
 		await expect(
-			page.locator('.feedzy-rss').count()
+			editor.canvas.locator('.feedzy-rss').count()
 		).resolves.toBeGreaterThan(0);
 		await expect(
-			page.locator('.feedzy-rss .rss_item').count()
+			editor.canvas.locator('.feedzy-rss .rss_item').count()
 		).resolves.toBeGreaterThan(0);
 		await expect(
-			page.locator('.feedzy-rss .rss_image').count()
+			editor.canvas.locator('.feedzy-rss .rss_image').count()
 		).resolves.toBeGreaterThan(0);
 		await expect(
-			page.locator('.feedzy-rss .rss_content').count()
+			editor.canvas.locator('.feedzy-rss .rss_content').count()
 		).resolves.toBeGreaterThan(0);
 
 		const postId = await editor.publishPost();
