@@ -392,9 +392,9 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 
 	/**
 	 * Sanitize Rest API Return
-	 * 
-	 * @param array $input The feeds.
-	 * 
+	 *
+	 * @param array|string $input The feeds, either as an array of urls or a single url string.
+	 *
 	 * @return string|array The sanitized feeds.
 	 */
 	public function feedzy_sanitize_feeds( $input ) {

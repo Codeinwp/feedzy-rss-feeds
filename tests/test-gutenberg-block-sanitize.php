@@ -33,9 +33,9 @@ class Test_Gutenberg_Block_Sanitize extends WP_UnitTestCase {
 	 * @access public
 	 */
 	public function test_sanitize_feeds_with_string_input() {
-		$result = $this->block->feedzy_sanitize_feeds( 'https://example.com/feed' );
+		$result = $this->block->feedzy_sanitize_feeds( 'https://example.org/feed' );
 
-		$this->assertEquals( 'https://example.com/feed', $result );
+		$this->assertEquals( 'https://example.org/feed', $result );
 	}
 
 	/**
@@ -55,9 +55,9 @@ class Test_Gutenberg_Block_Sanitize extends WP_UnitTestCase {
 	 * @access public
 	 */
 	public function test_sanitize_feeds_with_single_item_array() {
-		$result = $this->block->feedzy_sanitize_feeds( array( 'https://example.com/feed' ) );
+		$result = $this->block->feedzy_sanitize_feeds( array( 'https://example.org/feed' ) );
 
-		$this->assertEquals( 'https://example.com/feed', $result );
+		$this->assertEquals( 'https://example.org/feed', $result );
 	}
 
 	/**
@@ -67,9 +67,9 @@ class Test_Gutenberg_Block_Sanitize extends WP_UnitTestCase {
 	 */
 	public function test_sanitize_feeds_with_multiple_item_array() {
 		$result = $this->block->feedzy_sanitize_feeds(
-			array( 'https://example.com/feed', 'https://example.org/feed', 'not-a-url' )
+			array( 'https://example.org/feed1', 'https://example.org/feed2', 'not-a-url' )
 		);
 
-		$this->assertEquals( array( 'https://example.com/feed', 'https://example.org/feed' ), $result );
+		$this->assertEquals( array( 'https://example.org/feed1', 'https://example.org/feed2' ), $result );
 	}
 }
