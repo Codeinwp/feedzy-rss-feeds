@@ -24,6 +24,34 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Stops a failed feed URL filter before the import tries to read feed data.
+	 */
+	public function test_import_stops_when_feed_url_filter_returns_error() {
+		$owner_id  = $this->factory->user->create( array( 'role' => 'administrator' ) );
+		$import_id = $this->create_import( $owner_id );
+
+		update_post_meta( $import_id, 'source', 'https://example.com/feed' );
+		update_post_meta( $import_id, 'import_post_title', '[#item_title]' );
+		update_post_meta( $import_id, 'import_post_content', '[#item_content]' );
+
+		$feed_error = function () {
+			return new WP_Error( 'feedzy_test_error', 'The feed is unavailable.' );
+		};
+		add_filter( 'feedzy_import_feed_url', $feed_error );
+
+		$import = new Feedzy_Rss_Feeds_Import( 'feedzy-rss-feeds', '1.2.0' );
+		$method = new ReflectionMethod( $import, 'run_job_logic' );
+		$method->setAccessible( true );
+		$result = $method->invoke( $import, get_post( $import_id ), 1 );
+
+		remove_filter( 'feedzy_import_feed_url', $feed_error );
+
+		$this->assertSame( 0, $result );
+		$this->assertSame( '0', get_post_meta( $import_id, 'imported_items_count', true ) );
+		$this->assertNotEmpty( get_post_meta( $import_id, 'import_errors', true ) );
+	}
+
+	/**
 	 * Test method to check Feedzy Imports
 	 *
 	 * @requires PHP 5.4
