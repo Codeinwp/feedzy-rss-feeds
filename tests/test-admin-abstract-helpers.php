@@ -402,4 +402,20 @@ class Test_Admin_Abstract_Helpers extends WP_UnitTestCase {
 		$this->assertArrayHasKey( 'classname', $sc );
 		$this->assertEquals( 'my-class', $sc['classname'] );
 	}
+
+	/**
+	 * Invalid filter return values should not crash shortcode attribute preparation.
+	 *
+	 * @access public
+	 */
+	public function test_get_short_code_attributes_ignores_null_filter_result() {
+		add_filter( 'feedzy_get_short_code_attributes_filter', '__return_null' );
+
+		$sc = $this->feedzy_abstract->get_short_code_attributes( array() );
+
+		remove_filter( 'feedzy_get_short_code_attributes_filter', '__return_null' );
+
+		$this->assertIsArray( $sc );
+		$this->assertEquals( '5', $sc['max'] );
+	}
 }
