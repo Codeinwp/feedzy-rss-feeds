@@ -250,14 +250,27 @@ class Feedzy_Rss_Feeds_Log {
 	private function setup_log_directory() {
 		$upload_dir = wp_upload_dir();
 		$log_dir    = $upload_dir['basedir'] . '/feedzy-logs';
+		$dir_mode   = $this->get_filesystem_permission( 'FS_CHMOD_DIR', 0755 );
+		$file_mode  = $this->get_filesystem_permission( 'FS_CHMOD_FILE', 0644 );
 
 		if ( ! $this->filesystem->exists( $log_dir ) ) {
-			$this->filesystem->mkdir( $log_dir, FS_CHMOD_DIR );
-			$this->filesystem->put_contents( $log_dir . '/.htaccess', "Deny from all\n", FS_CHMOD_FILE );
-			$this->filesystem->put_contents( $log_dir . '/index.php', "<?php // Silence is golden\n", FS_CHMOD_FILE );
+			$this->filesystem->mkdir( $log_dir, $dir_mode );
+			$this->filesystem->put_contents( $log_dir . '/.htaccess', "Deny from all\n", $file_mode );
+			$this->filesystem->put_contents( $log_dir . '/index.php', "<?php // Silence is golden\n", $file_mode );
 		}
 
 		$this->filepath = $this->get_log_file_path();
+	}
+
+	/**
+	 * Resolve a WordPress filesystem permission constant with a safe default.
+	 *
+	 * @param string $constant_name Permission constant name.
+	 * @param int    $fallback      Permission used when the constant is unavailable.
+	 * @return int
+	 */
+	private function get_filesystem_permission( $constant_name, $fallback ) {
+		return defined( $constant_name ) ? (int) constant( $constant_name ) : $fallback;
 	}
 
 	/**
