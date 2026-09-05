@@ -447,7 +447,7 @@ parameters:
 
 		-
 			message: "#^Call to function is_null\\(\\) with bool will always evaluate to false\\.$#"
-			count: 2
+			count: 1
 			path: includes/admin/feedzy-rss-feeds-admin.php
 
 		-
@@ -692,11 +692,6 @@ parameters:
 
 		-
 			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:setup_wizard_subscribe_process\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: includes/admin/feedzy-rss-feeds-admin.php
-
-		-
-			message: "#^Parameter \\#4 \\$return_valid of method Feedzy_Rss_Feeds_Admin\\:\\:check_source_validity\\(\\) expects bool, null given\\.$#"
 			count: 1
 			path: includes/admin/feedzy-rss-feeds-admin.php
 

@@ -2016,15 +2016,16 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Validates the source (category or URL(s)) and returns only the ones that were found to be valid.
 	 *
-	 * @param string $src                   Source string.
-	 * @param int    $post_id               Post ID.
-	 * @param bool   $add_pseudo_transient  Add pseudo transient.
-	 * @param bool   $return_valid          Return valid.
+	 * @param string    $src                   Source string.
+	 * @param int       $post_id               Post ID.
+	 * @param bool      $add_pseudo_transient  Add pseudo transient.
+	 * @param bool|null $return_valid       Return valid, or both result sets when null.
 	 * @return array
 	 */
 	public function check_source_validity( $src, $post_id, $add_pseudo_transient, $return_valid ) {
-		$urls_in   = $src;
-		$post_type = get_post_type( $post_id );
+		$urls_in     = $src;
+		$post_type   = get_post_type( $post_id );
+		$return_both = is_null( $return_valid );
 		if ( 'feedzy_imports' === $post_type && false === strpos( $src, 'http' ) && false === strpos( $src, 'https' ) ) {
 			// category.
 			$category = get_page_by_path( $src, OBJECT, 'feedzy_categories' );
@@ -2037,7 +2038,12 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		// even without clicking the publish button,
 		// thereby sending empty urls.
 		if ( empty( $urls_in ) ) {
-			return array();
+			return $return_both
+				? array(
+					'valid'   => array(),
+					'invalid' => array(),
+				)
+				: array();
 		}
 
 		$urls = $this->normalize_urls( $urls_in );
@@ -2062,7 +2068,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 		}
 
-		if ( is_null( $return_valid ) ) {
+		if ( $return_both ) {
 			return array(
 				'valid'   => $valid,
 				'invalid' => $invalid,

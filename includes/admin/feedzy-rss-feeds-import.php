@@ -1933,15 +1933,8 @@ class Feedzy_Rss_Feeds_Import {
 		$import_errors = array();
 
 		// the array that captures additional information about the import.
-		$import_info   = array();
-		$results       = $this->get_job_feed( $options, $import_content, true );
-		$language_code = $results['feed']->get_language();
-		
-		$xml_results = '';
-		if ( str_contains( $import_content, '_full_content' ) ) {
-			$xml_results = $this->get_job_feed( $options, '[#item_content]', true );
-		}
-		
+		$import_info = array();
+		$results     = $this->get_job_feed( $options, $import_content, true );
 		if ( is_wp_error( $results ) ) {
 			// BUG: If $results is error, the import run details will not show the results even if the errors are set.
 			Feedzy_Rss_Feeds_Log::error(
@@ -1965,6 +1958,13 @@ class Feedzy_Rss_Feeds_Import {
 			update_post_meta( $job->ID, 'imported_items_count', 0 );
 
 			return 0;
+		}
+
+		$language_code = $results['feed']->get_language();
+
+		$xml_results = '';
+		if ( str_contains( $import_content, '_full_content' ) ) {
+			$xml_results = $this->get_job_feed( $options, '[#item_content]', true );
 		}
 
 		$result = $results['items'];
