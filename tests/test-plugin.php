@@ -11,6 +11,21 @@
  */
 class Test_Feedzy extends WP_UnitTestCase {
 	/**
+	 * Keeps the keyed validation response shape when a category has no feeds.
+	 */
+	public function test_empty_category_source_returns_keyed_validation_result() {
+		$admin = Feedzy_Rss_Feeds::instance()->get_admin();
+
+		$this->assertSame(
+			array(
+				'valid'   => array(),
+				'invalid' => array(),
+			),
+			$admin->check_source_validity( '', 0, false, null )
+		);
+	}
+
+	/**
 	 * Test method to check Create | Update and Feed from Slug
 	 *
 	 * @since   3.0.12
