@@ -404,6 +404,22 @@ class Test_Admin_Abstract_Helpers extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Invalid filter return values should not crash shortcode attribute preparation.
+	 *
+	 * @access public
+	 */
+	public function test_get_short_code_attributes_ignores_null_filter_result() {
+		add_filter( 'feedzy_get_short_code_attributes_filter', '__return_null' );
+
+		$sc = $this->feedzy_abstract->get_short_code_attributes( array() );
+
+		remove_filter( 'feedzy_get_short_code_attributes_filter', '__return_null' );
+
+		$this->assertIsArray( $sc );
+		$this->assertEquals( '5', $sc['max'] );
+	}
+
+	/**
 	 * Invoke the private feed_nonce_action() method through reflection.
 	 *
 	 * @param string|array $feed_url The normalized feed url(s).
@@ -468,8 +484,8 @@ class Test_Admin_Abstract_Helpers extends WP_UnitTestCase {
 		$feed->method( 'get_title' )->willReturn( null );
 
 		$result = $method->invoke( $this->feedzy_abstract, $feed, array( 'classname' => '' ), 'https://example.com/feed' );
-
 		$this->assertSame( '', $result['rss_url'] );
+		$this->assertSame( '', $result['rss_description'] );
 		$this->assertSame( '', $result['rss_description'] );
 	}
 }

@@ -703,7 +703,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$sc['classname'] = $sc['className'];
 			unset( $sc['className'] );
 		}
-		$sc = array_merge( $sc, apply_filters( 'feedzy_get_short_code_attributes_filter', $atts ) );
+		$filtered_atts = apply_filters( 'feedzy_get_short_code_attributes_filter', $atts );
+		if ( ! is_array( $filtered_atts ) ) {
+			$filtered_atts = array();
+		}
+		$sc = array_merge( $sc, $filtered_atts );
 
 		return $sc;
 	}
