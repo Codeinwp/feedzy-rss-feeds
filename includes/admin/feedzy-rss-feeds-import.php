@@ -569,6 +569,18 @@ class Feedzy_Rss_Feeds_Import {
 			$import_feed_limit = 10;
 		}
 
+		$has_import_feed_delete_days = metadata_exists( 'post', $post->ID, 'import_feed_delete_days' );
+		$import_feed_delete_days     = intval( get_post_meta( $post->ID, 'import_feed_delete_days', true ) );
+		if ( ! $has_import_feed_delete_days ) {
+			$import_feed_delete_days = ! empty( $this->free_settings['general']['feedzy-delete-days'] ) ? (int) $this->free_settings['general']['feedzy-delete-days'] : 0;
+		}
+
+		$has_import_feed_delete_media = metadata_exists( 'post', $post->ID, 'import_feed_delete_media' );
+		$import_feed_delete_media     = get_post_meta( $post->ID, 'import_feed_delete_media', true );
+		if ( empty( $import_feed_delete_media ) ) {
+			$import_feed_delete_media = ! empty( $this->free_settings['general']['feedzy-delete-media'] ) ? 'yes' : 'no';
+		}
+
 		$default_thumbnail_id   = 0;
 		$inherited_thumbnail_id = ! empty( $this->free_settings['general']['default-thumbnail-id'] ) ? (int) $this->free_settings['general']['default-thumbnail-id'] : 0;
 		$custom_thumbnail_id    = get_post_meta( $post->ID, 'default_thumbnail_id', true );
@@ -714,6 +726,17 @@ class Feedzy_Rss_Feeds_Import {
 				$data_meta['filter_conditions'] = wp_slash( $data_meta['filter_conditions'] );
 			}
 
+			// This legacy setting is only rendered for imports that already store it, so don't create it for the rest.
+			if ( ! isset( $data_meta['import_feed_delete_media'] ) && metadata_exists( 'post', $post_id, 'import_feed_delete_media' ) ) {
+				$data_meta['import_feed_delete_media'] = 'no';
+			}
+
+			// The Auto-Delete field is optional, so clearing it submits an empty string. Normalize it to the
+			// documented 0 ("never delete") state so the value is kept instead of falling back to the global one.
+			if ( isset( $data_meta['import_feed_delete_days'] ) ) {
+				$data_meta['import_feed_delete_days'] = (string) absint( $data_meta['import_feed_delete_days'] );
+			}
+
 			// $data_meta['feedzy_post_author'] should be the author username. We convert it to the author ID.
 			if ( ! empty( $data_meta['import_post_author'] ) ) {
 				$author = get_user_by( 'login', $data_meta['import_post_author'] );
@@ -743,7 +766,7 @@ class Feedzy_Rss_Feeds_Import {
 					add_post_meta( $post_id, $key, $value );
 				}
 				if ( ! $value ) {
-					if ( 'default_thumbnail_id' === $key && '0' === $value ) { // Mark the feed as having no default fallback image (including the global fallback).
+					if ( ( 'default_thumbnail_id' === $key || 'import_feed_delete_days' === $key ) && '0' === $value ) { // Mark the feed as having no default fallback image or auto-delete days (including the global fallback).
 						continue;
 					}
 					delete_post_meta( $post_id, $key );
@@ -1910,15 +1933,8 @@ class Feedzy_Rss_Feeds_Import {
 		$import_errors = array();
 
 		// the array that captures additional information about the import.
-		$import_info   = array();
-		$results       = $this->get_job_feed( $options, $import_content, true );
-		$language_code = $results['feed']->get_language();
-		
-		$xml_results = '';
-		if ( str_contains( $import_content, '_full_content' ) ) {
-			$xml_results = $this->get_job_feed( $options, '[#item_content]', true );
-		}
-		
+		$import_info = array();
+		$results     = $this->get_job_feed( $options, $import_content, true );
 		if ( is_wp_error( $results ) ) {
 			// BUG: If $results is error, the import run details will not show the results even if the errors are set.
 			Feedzy_Rss_Feeds_Log::error(
@@ -1942,6 +1958,13 @@ class Feedzy_Rss_Feeds_Import {
 			update_post_meta( $job->ID, 'imported_items_count', 0 );
 
 			return 0;
+		}
+
+		$language_code = $results['feed']->get_language();
+
+		$xml_results = '';
+		if ( str_contains( $import_content, '_full_content' ) ) {
+			$xml_results = $this->get_job_feed( $options, '[#item_content]', true );
 		}
 
 		$result = $results['items'];

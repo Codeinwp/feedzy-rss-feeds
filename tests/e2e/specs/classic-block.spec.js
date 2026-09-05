@@ -15,16 +15,18 @@ test.describe('Feedzy Classic Block', () => {
 			name: 'feedzy-rss-feeds/feedzy-block',
 		});
 
-		await page
+		await editor.canvas
 			.getByPlaceholder('Enter URL or group of your')
 			.fill('http://invalid-url.com/feed');
 
-		await page.getByRole('button', { name: 'Load Feed' }).click();
+		await editor.canvas.getByRole('button', { name: 'Load Feed' }).click();
 
-		await page.waitForSelector('.feedzy-validation-results', { timeout: 30000 });
+		await editor.canvas
+			.locator('.feedzy-validation-results')
+			.waitFor({ timeout: 30000 });
 
 		await expect(
-			page
+			editor.canvas
 				.locator('.feedzy-validation-results .is-error')
 				.getByText('http://invalid-url.com/feed', { exact: true })
 		).toBeVisible();
@@ -41,24 +43,26 @@ test.describe('Feedzy Classic Block', () => {
 			name: 'feedzy-rss-feeds/feedzy-block',
 		});
 
-		await page
+		await editor.canvas
 			.getByPlaceholder('Enter URL or group of your')
 			.fill(
 				'http://invalid-url.com/feed, https://www.nasa.gov/feeds/iotd-feed/'
 			);
 
-		await page.getByRole('button', { name: 'Load Feed' }).click();
+		await editor.canvas.getByRole('button', { name: 'Load Feed' }).click();
 
-		await page.waitForSelector('.feedzy-validation-results', { timeout: 30000 });
+		await editor.canvas
+			.locator('.feedzy-validation-results')
+			.waitFor({ timeout: 30000 });
 
 		await expect(
-			page
+			editor.canvas
 				.locator('.feedzy-validation-results .is-error')
 				.getByText('http://invalid-url.com/feed', { exact: true })
 		).toBeVisible();
 
 		await expect(
-			page
+			editor.canvas
 				.locator('.feedzy-validation-results .is-success')
 				.getByText('https://www.nasa.gov/feeds/iotd-feed/', {
 					exact: true,
@@ -190,11 +194,13 @@ test.describe('Feedzy Classic Block', () => {
 
 		await editor.insertBlock({ name: 'feedzy-rss-feeds/feedzy-block' });
 
-		await page.getByPlaceholder('Enter URL or group of your').click();
+		await editor.canvas
+			.getByPlaceholder('Enter URL or group of your')
+			.click();
 		await page.keyboard.type(GROUP_NAME);
 		await page.waitForTimeout(500);
 
-		const loadFeedButton = await page.getByRole('button', {
+		const loadFeedButton = editor.canvas.getByRole('button', {
 			name: 'Load Feed',
 			exact: true,
 		});

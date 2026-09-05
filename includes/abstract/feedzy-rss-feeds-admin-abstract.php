@@ -471,7 +471,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 
 			// Add nonce based on feed url.
-			$attributes .= 'data-nonce="' . esc_attr( wp_create_nonce( $feed_url ) ) . '"';
+			$attributes .= 'data-nonce="' . esc_attr( wp_create_nonce( $this->feed_nonce_action( $feed_url ) ) ) . '"';
+			$attributes .= 'data-error_msg="' . esc_attr( apply_filters( 'feedzy_lazyload_error_msg', __( 'An error occurred while fetching the feed.', 'feedzy-rss-feeds' ), $feed_url ) ) . '"';
 
 			$class = array_filter( apply_filters( 'feedzy_add_classes_block', array( $sc['classname'], 'feedzy-' . md5( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ) ), $sc, null, $feed_url ) );
 			$html  = "<div class='feedzy-lazy' $attributes>";
@@ -573,7 +574,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$feed_url = $this->normalize_urls( $sc['feeds'] );
 		$nonce    = isset( $atts['nonce'] ) ? $atts['nonce'] : '';
 
-		if ( ! wp_verify_nonce( $nonce, $feed_url ) ) {
+		if ( ! wp_verify_nonce( $nonce, $this->feed_nonce_action( $feed_url ) ) ) {
 			wp_send_json_error( array( 'message' => __( 'Security check failed.', 'feedzy-rss-feeds' ) ) );
 		}
 
@@ -735,6 +736,20 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		return $feed_url;
+	}
+
+	/**
+	 * Derives a deterministic nonce action string from a normalized feed URL.
+	 * normalize_urls() returns an array for multi-feed shortcodes, and PHP's
+	 * array-to-string coercion collapses any array to "Array" if passed
+	 * straight into wp_create_nonce()/wp_verify_nonce(), making every
+	 * multi-feed shortcode share the same nonce action.
+	 *
+	 * @param   string|array<string> $feed_url The normalized feed url(s).
+	 * @return  string
+	 */
+	private function feed_nonce_action( $feed_url ) {
+		return is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url;
 	}
 
 	/**
@@ -1650,11 +1665,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 */
 	private function get_feed_title_filter( $feed, $sc, $feed_url ) {
 		return array(
-			'rss_url'               => $feed->get_permalink(),
+			'rss_url'               => ! empty( $feed->get_permalink() ) ? $feed->get_permalink() : '',
 			'rss_title_class'       => 'rss_title',
 			'rss_title'             => html_entity_decode( ! empty( $feed->get_title() ) ? $feed->get_title() : '' ),
 			'rss_description_class' => 'rss_description',
-			'rss_description'       => $feed->get_description(),
+			'rss_description'       => ! empty( $feed->get_description() ) ? $feed->get_description() : '',
 			'rss_classes'           => array( $sc['classname'], 'feedzy-' . md5( is_array( $feed_url ) ? implode( ', ', $feed_url ) : $feed_url ) ),
 		);
 	}
