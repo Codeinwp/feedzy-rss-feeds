@@ -89,6 +89,147 @@ test.describe('Feed Import', () => {
 		).resolves.toBeGreaterThan(0);
 	});
 
+	// Publish a post with a lazy shortcode. A unique max value gives a cold
+	// lazy-load cache so the initial render shows the loading indicator.
+	async function publishLazyPost(admin, editor, max) {
+		await admin.createNewPost();
+		await editor.insertBlock({ name: 'core/shortcode' });
+		await editor.canvas
+			.getByPlaceholder('Write shortcode here…')
+			.fill(
+				`[feedzy-rss feeds='https://s3.amazonaws.com/verti-utils/sample-feed.xml' max='${max}' feed_title='yes' refresh='1_hours' template='style1' lazy='yes']`
+			);
+		return editor.publishPost();
+	}
+
+	// The request promise is created before navigation so a request fired
+	// during a slow page load cannot slip past the listener.
+	async function expectLazyResult(page, postId, expectedText) {
+		const lazyRequest = page.waitForRequest(/feedzy\/v\d+\/lazy/);
+		await page.goto(`/?p=${postId}`);
+		await lazyRequest;
+		await expect(page.locator('.feedzy-lazy')).toContainText(
+			expectedText,
+			{ timeout: 10000 }
+		);
+	}
+
+	test('lazy loading feed exits loading state when the request fails', async ({
+		editor,
+		page,
+		admin,
+	}) => {
+		const postId = await publishLazyPost(admin, editor, 3);
+
+		// Force the lazy REST request to fail at the network layer.
+		await page.route(/feedzy\/v\d+\/lazy/, (route) =>
+			route.abort('failed')
+		);
+
+		await expectLazyResult(page, postId, 'An error occurred while fetching the feed.');
+	});
+
+	test('lazy loading feed exits loading state on a malformed response', async ({
+		editor,
+		page,
+		admin,
+	}) => {
+		const postId = await publishLazyPost(admin, editor, 4);
+
+		// The REST callback can return a raw string (e.g. a fetch error)
+		// instead of the expected { success, data } envelope.
+		await page.route(/feedzy\/v\d+\/lazy/, (route) =>
+			route.fulfill({
+				status: 200,
+				contentType: 'application/json',
+				body: JSON.stringify('Feed fetch failed.'),
+			})
+		);
+
+		await expectLazyResult(page, postId, 'Feed fetch failed.');
+	});
+
+	test('lazy loading feed shows an error on a server error response', async ({
+		editor,
+		page,
+		admin,
+	}) => {
+		const postId = await publishLazyPost(admin, editor, 5);
+
+		await page.route(/feedzy\/v\d+\/lazy/, (route) =>
+			route.fulfill({
+				status: 500,
+				contentType: 'application/json',
+				body: JSON.stringify({
+					code: 'internal_server_error',
+					message: 'Internal server error',
+					data: { status: 500 },
+				}),
+			})
+		);
+
+		await expectLazyResult(page, postId, 'An error occurred while fetching the feed.');
+	});
+
+	test('lazy loading feed shows an error when the JSON response is corrupted', async ({
+		editor,
+		page,
+		admin,
+	}) => {
+		const postId = await publishLazyPost(admin, editor, 6);
+
+		// A PHP notice printed before the JSON payload breaks parsing.
+		await page.route(/feedzy\/v\d+\/lazy/, (route) =>
+			route.fulfill({
+				status: 200,
+				contentType: 'application/json',
+				body: '<b>Notice</b>: Undefined variable {"success":true,"data":{"content":"x"}}',
+			})
+		);
+
+		await expectLazyResult(page, postId, 'An error occurred while fetching the feed.');
+	});
+
+	test('lazy loading feed shows the server message on a json_error response', async ({
+		editor,
+		page,
+		admin,
+	}) => {
+		const postId = await publishLazyPost(admin, editor, 7);
+
+		// The shape produced by wp_send_json_error(), e.g. a failed nonce.
+		await page.route(/feedzy\/v\d+\/lazy/, (route) =>
+			route.fulfill({
+				status: 200,
+				contentType: 'application/json',
+				body: JSON.stringify({
+					success: false,
+					data: { message: 'Security check failed.' },
+				}),
+			})
+		);
+
+		await expectLazyResult(page, postId, 'Security check failed.');
+	});
+
+	test('lazy loading feed shows an error when a successful response has no content', async ({
+		editor,
+		page,
+		admin,
+	}) => {
+		const postId = await publishLazyPost(admin, editor, 8);
+
+		await page.route(/feedzy\/v\d+\/lazy/, (route) =>
+			route.fulfill({
+				status: 200,
+				contentType: 'application/json',
+				body: JSON.stringify({ success: true, data: {} }),
+			})
+		);
+
+		await expectLazyResult(page, postId, 'An error occurred while fetching the feed.');
+	});
+
 	test('import multiple feeds with shortcode', async ({
 		editor,
 		page,
@@ -131,25 +272,25 @@ test.describe('Feed Import', () => {
 
 		// Insert a Feedzy block.
 		await editor.insertBlock({ name: 'feedzy-rss-feeds/feedzy-block' });
-		await page
+		await editor.canvas
 			.getByPlaceholder('Enter URL or group of your')
 			.fill(FEED_URL);
-		await page.getByRole('button', { name: 'Load Feed' }).click();
+		await editor.canvas.getByRole('button', { name: 'Load Feed' }).click();
 
-		await page.waitForSelector('.rss_header');
+		await editor.canvas.locator('.rss_header').waitFor();
 
 		// We should have some preview content.
 		await expect(
-			page.locator('.feedzy-rss').count()
+			editor.canvas.locator('.feedzy-rss').count()
 		).resolves.toBeGreaterThan(0);
 		await expect(
-			page.locator('.feedzy-rss .rss_item').count()
+			editor.canvas.locator('.feedzy-rss .rss_item').count()
 		).resolves.toBeGreaterThan(0);
 		await expect(
-			page.locator('.feedzy-rss .rss_image').count()
+			editor.canvas.locator('.feedzy-rss .rss_image').count()
 		).resolves.toBeGreaterThan(0);
 		await expect(
-			page.locator('.feedzy-rss .rss_content').count()
+			editor.canvas.locator('.feedzy-rss .rss_content').count()
 		).resolves.toBeGreaterThan(0);
 
 		const postId = await editor.publishPost();

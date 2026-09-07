@@ -124,6 +124,16 @@ class Test_Logger extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Logger setup must have a permission value before WordPress defines its constants.
+	 */
+	public function test_filesystem_permission_falls_back_for_undefined_constant() {
+		$method = new ReflectionMethod( Feedzy_Rss_Feeds_Log::class, 'get_filesystem_permission' );
+		$method->setAccessible( true );
+
+		$this->assertSame( 0755, $method->invoke( $this->logger, 'FEEDZY_TEST_UNDEFINED_CHMOD', 0755 ) );
+	}
+
+	/**
 	 * Test log level constants.
 	 */
 	public function test_log_level_constants() {

@@ -828,6 +828,45 @@ global $post;
 									</div>
 								</div>
 							</div>
+
+							<?php if ( isset( $has_import_feed_delete_days ) && $has_import_feed_delete_days ) : ?>
+								<div class="form-block form-block-two-column <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
+									<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'auto-delete', 'import' ) ); ?>
+									<div class="fz-left">
+										<h4 class="h4"><?php esc_html_e( 'Delete', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
+									</div>
+									<div class="fz-right">
+										<div class="fz-form-group">
+											<label class="form-label" for="feedzy_delete_days"><?php esc_html_e( 'Delete the posts created for this import after a number of days', 'feedzy-rss-feeds' ); ?></label>
+											<input type="number" min="0" max="9999" id="feedzy_delete_days" name="feedzy_meta_data[import_feed_delete_days]" class="form-control" value="<?php echo (int) esc_attr( isset( $import_feed_delete_days ) ? $import_feed_delete_days : 0 ); ?>" />
+											<div class="help-text pt-8">
+												<?php esc_html_e( 'Helpful if you want to remove stale or old items automatically. Choose 0, and the imported items will not be automatically deleted.', 'feedzy-rss-feeds' ); ?>
+											</div>
+										</div>
+									</div>
+								</div>
+							<?php endif; ?>
+
+							<?php if ( isset( $has_import_feed_delete_media ) && $has_import_feed_delete_media ) : ?>
+								<div class="form-block form-block-two-column no-border <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
+									<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'delete-featured-image', 'import' ) ); ?>
+									<div class="fz-left"><h4 class="h4"><?php esc_html_e( 'Remove image', 'feedzy-rss-feeds' ); ?><?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?></h4>
+									</div>
+									<div class="fz-right">
+										<div class="fz-form-group">
+											<div class="fz-form-switch">
+												<input id="delete-attached-media" name="feedzy_meta_data[import_feed_delete_media]"
+												class="fz-switch-toggle" type="checkbox" value="yes"
+												<?php echo esc_attr( ( isset( $import_feed_delete_media ) && 'yes' === $import_feed_delete_media ) ? 'checked' : '' ); ?>>
+												<label class="feedzy-inline form-label" for="delete-attached-media"><?php esc_html_e( 'Delete attached featured image', 'feedzy-rss-feeds' ); ?></label>
+											</div>
+											<div class="help-text">
+												<?php echo wp_sprintf( esc_html__( 'Helpful if you want to delete attached featured image when posts are automatically deleted.', 'feedzy-rss-feeds' ) ); ?>
+											</div>
+										</div>
+									</div>
+								</div>
+							<?php endif; ?>
 						</div>
 					</div>
 					<div class="fz-tab-content" id="fz-advanced-settings">

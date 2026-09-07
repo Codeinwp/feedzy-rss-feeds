@@ -27,6 +27,11 @@ require_once $_tests_dir . '/includes/functions.php';
  */
 function _manually_load_plugin() {
 	require dirname( dirname( __FILE__ ) ) . '/feedzy-rss-feed.php';
+
+	// Composer autoloads the SDK loader before ABSPATH exists, so it bails out before declaring its helpers.
+	if ( ! function_exists( 'tsdk_translate_link' ) ) {
+		require dirname( dirname( __FILE__ ) ) . '/vendor/codeinwp/themeisle-sdk/load.php';
+	}
 }
 
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
