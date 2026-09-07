@@ -4,7 +4,7 @@ Tags: rss aggregator, news aggregator, autoblogging, feed to post, rss import
 Requires at least: 6.0
 Requires PHP: 7.2
 Tested up to: 7.1
-Stable tag: 5.2.8
+Stable tag: 5.2.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -479,10 +479,18 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
-##### [Version 5.2.8](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.7...v5.2.8) (2026-08-12)
+##### [Version 5.2.9](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.8...v5.2.9) (2026-09-07)
 
-- Fixed an error when importing feed featured images on servers without the PHP intl extension.
-- Fixed the Save Actions button not working for OpenAI featured-image actions.
+- Fixed setup wizard crashes during optional plugin installation.
+- Fixed lazy feed sections that stayed on Loading after a request failed.
+- Improved Amazon import settings for Creator API credentials.
+- Fixed deletion settings for existing imports with legacy expiration values.
+- Fixed lazy-loaded multi-feed shortcodes using separate security tokens for each feed set.
+- Fixed warnings when lazy shortcodes use multiple feed URLs.
+- Fixed category validation when a category has no feed URLs.
+- Fixed task scheduling errors when logger permission settings are unavailable.
+- Fixed import jobs crashing when a feed reports an error.
+- Fixed lazy-loaded feeds failing when custom shortcode settings are invalid.
 
 
 
