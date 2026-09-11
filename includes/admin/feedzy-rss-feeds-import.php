@@ -272,10 +272,12 @@ class Feedzy_Rss_Feeds_Import {
 			return $item_array;
 		}
 
-		$tags = $item->get_item_tags( \SimplePie\SimplePie::NAMESPACE_MEDIARSS, 'group' );
+		$mediarss_ns = class_exists( '\SimplePie\SimplePie' ) ? \SimplePie\SimplePie::NAMESPACE_MEDIARSS : (string) constant( 'SIMPLEPIE_NAMESPACE_MEDIARSS' );
+
+		$tags = $item->get_item_tags( $mediarss_ns, 'group' );
 		$desc = '';
 		if ( $tags ) {
-			$desc_tag = $tags[0]['child'][ \SimplePie\SimplePie::NAMESPACE_MEDIARSS ]['description'];
+			$desc_tag = $tags[0]['child'][ $mediarss_ns ]['description'];
 			if ( $desc_tag ) {
 				$desc = $desc_tag[0]['data'];
 			}
