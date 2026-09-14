@@ -14,6 +14,7 @@ class Test_Auto_Category_Options extends WP_UnitTestCase {
 	 */
 	public function tearDown(): void {
 		remove_all_filters( 'feedzy_post_taxonomy_limit' );
+		remove_all_filters( 'feedzy_auto_categories_search_limit' );
 		parent::tearDown();
 	}
 
@@ -154,5 +155,79 @@ class Test_Auto_Category_Options extends WP_UnitTestCase {
 		);
 
 		$this->assertSame( $baseline, $options );
+	}
+
+	/**
+	 * Search reaches categories that fall outside the bounded initial list.
+	 *
+	 * @access public
+	 */
+	public function test_search_finds_category_outside_the_bound() {
+		$this->factory()->category->create( array( 'name' => 'Needle Category' ) );
+		$this->make_categories( 8 );
+
+		add_filter(
+			'feedzy_post_taxonomy_limit',
+			function () {
+				return 1;
+			}
+		);
+
+		$options = Feedzy_Rss_Feeds_Admin::get_auto_category_options( array() );
+		$this->assertNotContains( 'Needle Category', $options );
+
+		$results = Feedzy_Rss_Feeds_Admin::get_auto_category_search_results( 'Needle' );
+		$names   = wp_list_pluck( $results['categories'], 'name' );
+
+		$this->assertContains( 'Needle Category', $names );
+	}
+
+	/**
+	 * Search results are paginated and report whether another page exists.
+	 *
+	 * @access public
+	 */
+	public function test_search_results_are_paginated() {
+		$this->make_categories( 7 );
+
+		add_filter(
+			'feedzy_auto_categories_search_limit',
+			function () {
+				return 3;
+			}
+		);
+
+		$first = Feedzy_Rss_Feeds_Admin::get_auto_category_search_results( 'Auto Cat', 1 );
+		$this->assertCount( 3, $first['categories'] );
+		$this->assertTrue( $first['has_more'] );
+
+		$second = Feedzy_Rss_Feeds_Admin::get_auto_category_search_results( 'Auto Cat', 2 );
+		$this->assertCount( 3, $second['categories'] );
+
+		$this->assertSame(
+			array(),
+			array_intersect(
+				wp_list_pluck( $first['categories'], 'id' ),
+				wp_list_pluck( $second['categories'], 'id' )
+			)
+		);
+
+		$third = Feedzy_Rss_Feeds_Admin::get_auto_category_search_results( 'Auto Cat', 3 );
+		$this->assertCount( 1, $third['categories'] );
+		$this->assertFalse( $third['has_more'] );
+	}
+
+	/**
+	 * A search with no match returns an empty result set rather than everything.
+	 *
+	 * @access public
+	 */
+	public function test_search_without_match_returns_nothing() {
+		$this->make_categories( 3 );
+
+		$results = Feedzy_Rss_Feeds_Admin::get_auto_category_search_results( 'zzz-no-such-category' );
+
+		$this->assertSame( array(), $results['categories'] );
+		$this->assertFalse( $results['has_more'] );
 	}
 }

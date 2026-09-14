@@ -116,6 +116,22 @@ jQuery(function ($) {
 		let rowIndex = rows.length - 1;
 		let comboCount = 0;
 
+		// Use one document listener and query only live comboboxes.
+		const closers = new WeakMap();
+
+		document.addEventListener('click', (e) => {
+			elements.tbody
+				.querySelectorAll('.fz-auto-cat-picker')
+				.forEach((picker) => {
+					if (!picker.contains(e.target)) {
+						const close = closers.get(picker);
+						if (close) {
+							close();
+						}
+					}
+				});
+		});
+
 		/**
 		 * Turn a row's native select into a searchable combobox.
 		 *
@@ -153,10 +169,23 @@ jQuery(function ($) {
 			list.id = listId;
 			list.className = 'fz-combo-list';
 			list.setAttribute('role', 'listbox');
-			list.hidden = true;
+
+			// Load more is a real button so it is tab reachable; it sits outside
+			// the listbox because a listbox may only own options.
+			const moreBtn = document.createElement('button');
+			moreBtn.type = 'button';
+			moreBtn.className = 'fz-combo-more';
+			moreBtn.textContent = l10n.load_more;
+			moreBtn.hidden = true;
+
+			const popup = document.createElement('div');
+			popup.className = 'fz-combo-popup';
+			popup.hidden = true;
+			popup.appendChild(list);
+			popup.appendChild(moreBtn);
 
 			picker.insertBefore(input, select);
-			picker.appendChild(list);
+			picker.appendChild(popup);
 
 			const state = {
 				search: '',
@@ -241,26 +270,21 @@ jQuery(function ($) {
 					list.appendChild(item);
 				});
 
-				if (state.hasMore) {
-					const more = document.createElement('li');
-					more.className = 'fz-combo-more';
-					more.textContent = l10n.load_more;
-					list.appendChild(more);
-				}
+				moreBtn.hidden = !state.hasMore;
 
 				setActive(-1);
 			};
 
 			const open = () => {
 				state.open = true;
-				list.hidden = false;
+				popup.hidden = false;
 				input.setAttribute('aria-expanded', 'true');
 				renderList();
 			};
 
 			const close = () => {
 				state.open = false;
-				list.hidden = true;
+				popup.hidden = true;
 				input.setAttribute('aria-expanded', 'false');
 				input.removeAttribute('aria-activedescendant');
 				state.active = -1;
@@ -270,6 +294,8 @@ jQuery(function ($) {
 
 			const choose = (value) => {
 				select.value = value;
+				// The native select fired this; the unsaved-form guard listens for it.
+				select.dispatchEvent(new Event('change', { bubbles: true }));
 				close();
 			};
 
@@ -327,7 +353,19 @@ jQuery(function ($) {
 					});
 			};
 
-			input.addEventListener('focus', open);
+			// Start a new search when typing or pasting over the committed name.
+			const startsNewSearch = () => state.search === '';
+
+			input.addEventListener('focus', () => {
+				open();
+				input.select();
+			});
+
+			input.addEventListener('paste', () => {
+				if (startsNewSearch()) {
+					input.value = '';
+				}
+			});
 
 			input.addEventListener('input', () => {
 				state.search = input.value.trim();
@@ -345,6 +383,13 @@ jQuery(function ($) {
 			});
 
 			input.addEventListener('keydown', (e) => {
+				const isTyping =
+					e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey;
+
+				if (isTyping && startsNewSearch()) {
+					input.value = '';
+				}
+
 				if (e.key === 'ArrowDown' && !state.open) {
 					e.preventDefault();
 					open();
@@ -399,12 +444,6 @@ jQuery(function ($) {
 			});
 
 			list.addEventListener('click', (e) => {
-				if (e.target.matches('.fz-combo-more')) {
-					state.page += 1;
-					fetchCategories();
-					return;
-				}
-
 				const item = e.target.closest('.fz-combo-option');
 
 				if (item) {
@@ -412,11 +451,15 @@ jQuery(function ($) {
 				}
 			});
 
-			document.addEventListener('click', (e) => {
-				if (state.open && !picker.contains(e.target)) {
-					close();
-				}
+			moreBtn.addEventListener('click', () => {
+				state.page += 1;
+				fetchCategories();
+				// Hand the keyboard back to the field, so the newly loaded
+				// options are immediately reachable with the arrow keys.
+				input.focus();
 			});
+
+			closers.set(picker, close);
 
 			syncInput();
 		};
@@ -429,7 +472,7 @@ jQuery(function ($) {
 
 			// The cloned row carries a copy of the first row's combobox; drop it
 			// and let enhanceRow() build a fresh one bound to this row's select.
-			row.querySelectorAll('.fz-combo-input, .fz-combo-list').forEach(
+			row.querySelectorAll('.fz-combo-input, .fz-combo-popup').forEach(
 				(node) => node.remove()
 			);
 
