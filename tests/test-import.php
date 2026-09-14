@@ -206,7 +206,15 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 
 		$expected_created_posts = $num_items;
 
-		if ( $use_filter ) {
+		if ( 'title' === $use_filter ) {
+			$expected_created_posts = 0;
+			add_filter(
+				'feedzy_insert_post_args', function( $args ) {
+					$args['post_title'] = '';
+					return $args;
+				}, 10, 1
+			);
+		} elseif ( $use_filter ) {
 			$expected_created_posts = 0;
 			add_filter(
 				'feedzy_insert_post_args', function( $args ) {
@@ -341,6 +349,25 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 	/**
 	 * Test the attachment import works and the mime type is correct.
 	 */
+	/**
+	 * Test that an item whose processed title ends up empty is skipped (#1330).
+	 *
+	 * The content stays populated, so WordPress itself would happily create an
+	 * untitled post; the importer has to reject the item on its own.
+	 */
+	public function test_import_skips_item_with_empty_title_1330() {
+		$this->test_feedzy_imports( $this->get_rand_name(), $this->get_rand_name(), $this->get_two_rand_feeds(), '[#item_content]', 'title' );
+
+		$created = get_posts(
+			array(
+				'numberposts' => -1,
+				'post_type'   => 'post',
+				'post_status' => 'any',
+			)
+		);
+		$this->assertCount( 0, $created );
+	}
+
 	public function test_attachement_import() {
 		$this->test_feedzy_imports( $this->get_rand_name(), $this->get_rand_name(), $this->get_two_rand_feeds(), '[#item_content]', false, 'attachment' );
 		$args = array(
