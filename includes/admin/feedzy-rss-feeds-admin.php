@@ -1407,6 +1407,62 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	}
 
 	/**
+	 * Build the bounded category option list for the Auto Categories Mapping rows.
+	 *
+	 * @param array<int, array<string, mixed>> $mapped_categories Saved mapping rows.
+	 *
+	 * @return array<int, string> Term ID => term name.
+	 * @access  public
+	 */
+	public static function get_auto_category_options( $mapped_categories = array() ) {
+		$options = get_terms(
+			array(
+				'taxonomy'   => 'category',
+				'hide_empty' => false,
+				'fields'     => 'id=>name',
+				'number'     => apply_filters( 'feedzy_post_taxonomy_limit', 999, 'category' ),
+			)
+		);
+
+		$options = is_array( $options ) ? $options : array();
+
+		if ( ! is_array( $mapped_categories ) ) {
+			return $options;
+		}
+
+		// Saved mappings may point outside the bound; keep them selectable.
+		$missing_ids = array();
+		foreach ( $mapped_categories as $category_mapping ) {
+			if ( ! isset( $category_mapping['category'] ) || ! is_numeric( $category_mapping['category'] ) ) {
+				continue;
+			}
+			$term_id = absint( $category_mapping['category'] );
+			if ( $term_id && ! isset( $options[ $term_id ] ) ) {
+				$missing_ids[] = $term_id;
+			}
+		}
+
+		if ( empty( $missing_ids ) ) {
+			return $options;
+		}
+
+		$missing = get_terms(
+			array(
+				'taxonomy'   => 'category',
+				'hide_empty' => false,
+				'fields'     => 'id=>name',
+				'include'    => array_unique( $missing_ids ),
+			)
+		);
+
+		if ( is_array( $missing ) ) {
+			$options += $missing;
+		}
+
+		return $options;
+	}
+
+	/**
 	 * Method to register the integration page.
 	 *
 	 * @access  public
