@@ -3007,3 +3007,58 @@ button.feedzy-action-button {
 	justify-content: space-between;
  	gap: 8px;
 }
+.fz-auto-cat .fz-auto-cat-picker {
+	flex: 1;
+	min-width: 0;
+	position: relative;
+}
+.fz-auto-cat .fz-select-control.fz-combo-native {
+	display: none;
+}
+.fz-auto-cat .fz-combo-list {
+	position: absolute;
+	z-index: 10;
+	top: 100%;
+	left: 0;
+	right: 0;
+	max-height: 240px;
+	overflow-y: auto;
+	margin: 2px 0 0;
+	padding: 0;
+	list-style: none;
+	background: #fff;
+	border: 1px solid #d5dadf;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+.fz-auto-cat .fz-combo-list[hidden] {
+	display: none;
+}
+.fz-auto-cat .fz-combo-list.is-loading {
+	opacity: 0.6;
+}
+.fz-auto-cat .fz-combo-option,
+.fz-auto-cat .fz-combo-empty,
+.fz-auto-cat .fz-combo-more {
+	margin: 0;
+	padding: 8px 12px;
+	font-size: 14px;
+	line-height: 18px;
+}
+.fz-auto-cat .fz-combo-option {
+	cursor: pointer;
+}
+.fz-auto-cat .fz-combo-option:hover,
+.fz-auto-cat .fz-combo-option.is-active {
+	background: #f0f0f1;
+}
+.fz-auto-cat .fz-combo-empty {
+	color: #646970;
+}
+.fz-auto-cat .fz-combo-more {
+	cursor: pointer;
+	color: #2271b1;
+	border-top: 1px solid #d5dadf;
+}
+.fz-auto-cat .fz-combo-more:hover {
+	background: #f0f0f1;
+}

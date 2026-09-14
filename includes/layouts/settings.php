@@ -191,18 +191,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 														<input type="text" name="auto-categories[<?php echo esc_attr( $index ); ?>][keywords]" class="form-control" placeholder="<?php esc_attr_e( 'Values separated by commas', 'feedzy-rss-feeds' ); ?>" value="<?php echo esc_attr( $category_mapping['keywords'] ); ?>"/>
 													</td>
 													<td class="fz-auto-cat-col-4">
-														<select name="auto-categories[<?php echo esc_attr( $index ); ?>][category]" class="form-control fz-select-control">
-															<option value=""><?php esc_html_e( 'Select a category', 'feedzy-rss-feeds' ); ?></option>
-															<?php
-															foreach ( $category_options as $term_id => $term_name ) {
-																$selected = (int) $term_id === (int) $category_mapping['category'] ? 'selected' : '';
-																echo '<option value="' . esc_attr( (int) $term_id ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $term_name ) . '</option>';
-															}
-															?>
-														</select>
+														<div class="fz-auto-cat-picker">
+															<select name="auto-categories[<?php echo esc_attr( $index ); ?>][category]" class="form-control fz-select-control">
+																<option value=""><?php esc_html_e( 'Select a category', 'feedzy-rss-feeds' ); ?></option>
+																<?php
+																foreach ( $category_options as $term_id => $term_name ) {
+																	$selected = (int) $term_id === (int) $category_mapping['category'] ? 'selected' : '';
+																	echo '<option value="' . esc_attr( (int) $term_id ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $term_name ) . '</option>';
+																}
+																?>
+															</select>
+														</div>
 														<button
 															type="button"
-															class="btn btn-outline-primary<?php echo 0 === $index ? ' disabled' : ''; ?>" <?php echo 0 === $index ? 'disabled' : ''; ?>
+															class="btn btn-outline-primary fz-auto-cat-delete<?php echo 0 === $index ? ' disabled' : ''; ?>" <?php echo 0 === $index ? 'disabled' : ''; ?>
 														> 
 															<?php esc_html_e( 'Delete', 'feedzy-rss-feeds' ); ?>
 														</button>
