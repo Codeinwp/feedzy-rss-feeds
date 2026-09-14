@@ -214,12 +214,15 @@ jQuery(function ($) {
 			const matchingOptions = () => {
 				const term = state.search.toLowerCase();
 
-				return Array.from(select.options).filter(
-					(option) =>
-						option.value &&
-						(!term ||
-							option.textContent.toLowerCase().includes(term))
-				);
+				return Array.from(select.options).filter((option) => {
+					if (!option.value) {
+						return !term;
+					}
+
+					return (
+						!term || option.textContent.toLowerCase().includes(term)
+					);
+				});
 			};
 
 			const items = () =>
@@ -262,7 +265,9 @@ jQuery(function ($) {
 				options.forEach((option, i) => {
 					const item = document.createElement('li');
 					item.id = `${listId}-option-${i}`;
-					item.className = 'fz-combo-option';
+					item.className = option.value
+						? 'fz-combo-option'
+						: 'fz-combo-option is-placeholder';
 					item.setAttribute('role', 'option');
 					item.setAttribute('aria-selected', 'false');
 					item.dataset.value = option.value;
@@ -359,6 +364,12 @@ jQuery(function ($) {
 			input.addEventListener('focus', () => {
 				open();
 				input.select();
+			});
+
+			input.addEventListener('click', () => {
+				if (!state.open) {
+					open();
+				}
 			});
 
 			input.addEventListener('paste', () => {

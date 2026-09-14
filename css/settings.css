@@ -3054,7 +3054,8 @@ button.feedzy-action-button {
 .fz-auto-cat .fz-combo-option.is-active {
 	background: #f0f0f1;
 }
-.fz-auto-cat .fz-combo-empty {
+.fz-auto-cat .fz-combo-empty,
+.fz-auto-cat .fz-combo-option.is-placeholder {
 	color: #646970;
 }
 .fz-auto-cat .fz-combo-more {
