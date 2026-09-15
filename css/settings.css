@@ -3075,3 +3075,7 @@ button.feedzy-action-button {
 .fz-auto-cat .fz-combo-more:focus {
 	background: #f0f0f1;
 }
+.fz-auto-cat .fz-combo-more.is-busy {
+	opacity: 0.6;
+	cursor: default;
+}

@@ -169,6 +169,7 @@ jQuery(function ($) {
 			list.id = listId;
 			list.className = 'fz-combo-list';
 			list.setAttribute('role', 'listbox');
+			list.setAttribute('aria-label', l10n.select_category);
 
 			// Load more is a real button so it is tab reachable; it sits outside
 			// the listbox because a listbox may only own options.
@@ -303,6 +304,8 @@ jQuery(function ($) {
 				input.removeAttribute('aria-activedescendant');
 				state.active = -1;
 				state.search = '';
+				state.page = 1;
+				state.hasMore = false;
 				state.results.clear();
 				state.token += 1;
 				clearTimeout(state.timer);
@@ -329,7 +332,11 @@ jQuery(function ($) {
 
 					state.results.add(value);
 
-					if (select.querySelector(`option[value="${value}"]`)) {
+					const known = Array.from(select.options).some(
+						(option) => option.value === value
+					);
+
+					if (known) {
 						return;
 					}
 
@@ -340,28 +347,44 @@ jQuery(function ($) {
 				});
 			};
 
+			const setLoading = (loading) => {
+				list.classList.toggle('is-loading', loading);
+				moreBtn.classList.toggle('is-busy', loading);
+				moreBtn.setAttribute('aria-disabled', loading ? 'true' : 'false');
+			};
+
 			const abortRequest = () => {
 				if (state.request) {
 					const pending = state.request;
 					state.request = null;
 					pending.abort();
+					setLoading(false);
 				}
 			};
 
-			const fetchCategories = () => {
+			/**
+			 * Load one page of search results.
+			 *
+			 * The page number is only committed to the state once the server has
+			 * answered for it, so a failed, aborted or superseded page is asked
+			 * for again on the next attempt rather than skipped.
+			 *
+			 * @param {number} page 1 based page to request.
+			 */
+			const fetchCategories = (page) => {
 				if (typeof window.ajaxurl === 'undefined') {
 					return;
 				}
 
 				abortRequest();
-				list.classList.add('is-loading');
+				setLoading(true);
 
 				const token = state.token;
 				const request = $.post(window.ajaxurl, {
 					action: 'feedzy_search_auto_categories',
 					security: feedzy_setting.ajax.security,
 					search: state.search,
-					page: state.page,
+					page,
 				});
 
 				state.request = request;
@@ -376,6 +399,7 @@ jQuery(function ($) {
 							return;
 						}
 
+						state.page = page;
 						mergeResults(response.data.categories);
 						state.hasMore = response.data.has_more;
 
@@ -386,7 +410,7 @@ jQuery(function ($) {
 					.always(() => {
 						if (state.request === request) {
 							state.request = null;
-							list.classList.remove('is-loading');
+							setLoading(false);
 						}
 					});
 			};
@@ -427,7 +451,7 @@ jQuery(function ($) {
 				}
 
 				clearTimeout(state.timer);
-				state.timer = setTimeout(fetchCategories, 300);
+				state.timer = setTimeout(() => fetchCategories(1), 300);
 			});
 
 			input.addEventListener('keydown', (e) => {
@@ -486,8 +510,8 @@ jQuery(function ($) {
 				}
 			});
 
-			list.addEventListener('mousedown', (e) => {
-				// Keep focus on the input so the blur handler does not close first.
+			popup.addEventListener('mousedown', (e) => {
+				// Keep popup interactions from moving focus off the field.
 				e.preventDefault();
 			});
 
@@ -500,11 +524,19 @@ jQuery(function ($) {
 			});
 
 			moreBtn.addEventListener('click', () => {
-				state.page += 1;
-				fetchCategories();
-				// Hand the keyboard back to the field, so the newly loaded
-				// options are immediately reachable with the arrow keys.
+				if (state.request) {
+					return;
+				}
+
+				// Restore focus before loading options to keep the picker open.
 				input.focus();
+				fetchCategories(state.page + 1);
+			});
+
+			picker.addEventListener('focusout', (e) => {
+				if (state.open && !picker.contains(e.relatedTarget)) {
+					close();
+				}
 			});
 
 			closers.set(picker, close);
