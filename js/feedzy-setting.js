@@ -195,6 +195,7 @@ jQuery(function ($) {
 				timer: null,
 				active: -1,
 				open: false,
+				results: new Set(),
 			};
 
 			const selectedOption = () =>
@@ -217,6 +218,11 @@ jQuery(function ($) {
 				return Array.from(select.options).filter((option) => {
 					if (!option.value) {
 						return !term;
+					}
+
+					// Keep server matches, including slug matches.
+					if (state.results.has(option.value)) {
+						return true;
 					}
 
 					return (
@@ -294,6 +300,7 @@ jQuery(function ($) {
 				input.removeAttribute('aria-activedescendant');
 				state.active = -1;
 				state.search = '';
+				state.results.clear();
 				syncInput();
 			};
 
@@ -313,6 +320,8 @@ jQuery(function ($) {
 			const mergeResults = (categories) => {
 				categories.forEach((category) => {
 					const value = String(category.id);
+
+					state.results.add(value);
 
 					if (select.querySelector(`option[value="${value}"]`)) {
 						return;
@@ -382,6 +391,8 @@ jQuery(function ($) {
 				state.search = input.value.trim();
 				state.page = 1;
 				state.hasMore = false;
+				// Results belong to the previous search term.
+				state.results.clear();
 
 				if (!state.open) {
 					open();
