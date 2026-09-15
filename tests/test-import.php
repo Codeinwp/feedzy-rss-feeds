@@ -347,9 +347,6 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test the attachment import works and the mime type is correct.
-	 */
-	/**
 	 * Test that an item whose processed title ends up empty is skipped (#1330).
 	 *
 	 * The content stays populated, so WordPress itself would happily create an
@@ -368,6 +365,9 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 		$this->assertCount( 0, $created );
 	}
 
+	/**
+	 * Test the attachment import works and the mime type is correct.
+	 */
 	public function test_attachement_import() {
 		$this->test_feedzy_imports( $this->get_rand_name(), $this->get_rand_name(), $this->get_two_rand_feeds(), '[#item_content]', false, 'attachment' );
 		$args = array(

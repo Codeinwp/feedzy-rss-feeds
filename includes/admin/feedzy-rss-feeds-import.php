@@ -2459,7 +2459,7 @@ class Feedzy_Rss_Feeds_Import {
 			$final_title   = isset( $new_post['post_title'] ) && is_string( $new_post['post_title'] ) ? trim( $new_post['post_title'] ) : '';
 			$final_content = isset( $new_post['post_content'] ) && is_string( $new_post['post_content'] ) ? trim( $new_post['post_content'] ) : '';
 
-			if ( empty( $final_title ) || empty( $final_content ) ) {
+			if ( '' === $final_title || ( 'attachment' !== $import_post_type && '' === $final_content ) ) {
 				++$index;
 
 				Feedzy_Rss_Feeds_Log::error(
