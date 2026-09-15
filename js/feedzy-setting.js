@@ -196,6 +196,9 @@ jQuery(function ($) {
 				active: -1,
 				open: false,
 				results: new Set(),
+				// Bumped whenever the search term changes, so a response for an
+				// abandoned term can be recognised and dropped.
+				token: 0,
 			};
 
 			const selectedOption = () =>
@@ -301,6 +304,9 @@ jQuery(function ($) {
 				state.active = -1;
 				state.search = '';
 				state.results.clear();
+				state.token += 1;
+				clearTimeout(state.timer);
+				abortRequest();
 				syncInput();
 			};
 
@@ -334,36 +340,54 @@ jQuery(function ($) {
 				});
 			};
 
+			const abortRequest = () => {
+				if (state.request) {
+					const pending = state.request;
+					state.request = null;
+					pending.abort();
+				}
+			};
+
 			const fetchCategories = () => {
 				if (typeof window.ajaxurl === 'undefined') {
 					return;
 				}
 
-				if (state.request) {
-					state.request.abort();
-				}
-
+				abortRequest();
 				list.classList.add('is-loading');
 
-				state.request = $.post(window.ajaxurl, {
+				const token = state.token;
+				const request = $.post(window.ajaxurl, {
 					action: 'feedzy_search_auto_categories',
 					security: feedzy_setting.ajax.security,
 					search: state.search,
 					page: state.page,
-				})
+				});
+
+				state.request = request;
+
+				request
 					.done((response) => {
+						if (token !== state.token) {
+							return;
+						}
+
 						if (!response || !response.success) {
 							return;
 						}
+
 						mergeResults(response.data.categories);
 						state.hasMore = response.data.has_more;
+
 						if (state.open) {
 							renderList();
 						}
 					})
 					.always(() => {
-						state.request = null;
-						list.classList.remove('is-loading');
+						if (state.request === request) {
+							state.request = null;
+							list.classList.remove('is-loading');
+						}
 					});
 			};
 
@@ -391,8 +415,10 @@ jQuery(function ($) {
 				state.search = input.value.trim();
 				state.page = 1;
 				state.hasMore = false;
-				// Results belong to the previous search term.
+				// Clear stale results and cancel the previous request.
 				state.results.clear();
+				state.token += 1;
+				abortRequest();
 
 				if (!state.open) {
 					open();
