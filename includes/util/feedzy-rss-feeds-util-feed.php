@@ -79,9 +79,9 @@ class Feedzy_Rss_Feeds_Util_Feed extends SimplePie {
 			// callback. The ordering is the one PHP derived from the booleans before.
 			switch ( self::$sc['sort'] ) {
 				case 'title_desc':
-					return strcmp( (string) $b->get_title(), (string) $a->get_title() );
+					return $b->get_title() <=> $a->get_title();
 				case 'title_asc':
-					return strcmp( (string) $a->get_title(), (string) $b->get_title() );
+					return $a->get_title() <=> $b->get_title();
 				case 'date_asc':
 					return (int) $a->get_date( 'U' ) <=> (int) $b->get_date( 'U' );
 			}
