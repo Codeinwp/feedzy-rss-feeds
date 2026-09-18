@@ -849,7 +849,8 @@ class Feedzy_Rss_Feeds_Ability_Helpers {
 			return true;
 		}
 
-		$is_pro = function_exists( 'feedzy_is_pro' ) && feedzy_is_pro();
+		$is_pro      = function_exists( 'feedzy_is_pro' ) && feedzy_is_pro();
+		$upgrade_url = self::upgrade_url( (string) array_key_first( $missing ) );
 
 		return new WP_Error(
 			$is_pro ? 'feedzy_plan_required' : 'feedzy_pro_required',
@@ -857,12 +858,31 @@ class Feedzy_Rss_Feeds_Ability_Helpers {
 				/* translators: %s: comma separated list of input fields */
 				__( 'These fields are not available with the current Feedzy plan: %s.', 'feedzy-rss-feeds' ),
 				implode( ', ', array_keys( $missing ) )
+			) . ' ' . sprintf(
+				/* translators: %s: URL of the Feedzy upgrade page */
+				__( 'Upgrade: %s', 'feedzy-rss-feeds' ),
+				$upgrade_url
 			),
 			array(
-				'status' => 403,
-				'fields' => $missing,
+				'status'      => 403,
+				'fields'      => $missing,
+				'upgrade_url' => $upgrade_url,
 			)
 		);
+	}
+
+	/**
+	 * Upgrade link relayed by AI agents when a request needs a higher plan.
+	 *
+	 * @param  string $feature The gated input field, e.g. `custom_fields` or `import_content_action:fz_summarize`.
+	 *
+	 * @return string
+	 */
+	private static function upgrade_url( string $feature ): string {
+		$parts = explode( ':', $feature );
+		$area  = str_replace( '_', '-', sanitize_key( (string) end( $parts ) ) );
+
+		return feedzy_upgrade_link( '' !== $area ? $area : 'import-fields', 'mcp' );
 	}
 
 	/**
