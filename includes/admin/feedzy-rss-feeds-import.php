@@ -1597,13 +1597,20 @@ class Feedzy_Rss_Feeds_Import {
 			$tags[] = 'item_image';
 		}
 
+		// preview in the order the import would use, not SimplePie's newest-first default.
+		$sort = isset( $feedzy_meta_data['import_order'] ) ? $feedzy_meta_data['import_order'] : '';
+		if ( ! in_array( $sort, array( 'date_asc', 'date_desc' ), true ) ) {
+			$sort = '';
+		}
+
 		$shortcode = sprintf(
-			'feedzy-rss feeds="%s" max="%d" feed_title=no meta=no summary=no thumb=no error_empty="%s" keywords_inc="%s" _dry_run_tags_="%s" _dryrun_="yes"',
+			'feedzy-rss feeds="%s" max="%d" feed_title=no meta=no summary=no thumb=no error_empty="%s" keywords_inc="%s" _dry_run_tags_="%s" _dryrun_="yes" sort="%s"',
 			$feedzy_meta_data['source'],
 			isset( $feedzy_meta_data['import_feed_limit'] ) ? absint( $feedzy_meta_data['import_feed_limit'] ) : 5,
 			'', // should be empty.
 			isset( $feedzy_meta_data['inc_key'] ) ? esc_attr( $feedzy_meta_data['inc_key'] ) : '',
-			implode( ',', $tags )
+			implode( ',', $tags ),
+			esc_attr( $sort )
 		);
 
 		if ( feedzy_is_pro() ) {
@@ -1623,7 +1630,25 @@ class Feedzy_Rss_Feeds_Import {
 			)
 		);
 
-		wp_send_json_success( array( 'output' => do_shortcode( $shortcode ) ) );
+		// an empty order means the feed's own order; the shortcode pipeline sorts by date unless told otherwise.
+		$keep_feed_order = null;
+		if ( '' === $sort ) {
+			$keep_feed_order = function ( $feed_items, $sc, $feed ) {
+				if ( is_object( $feed ) && method_exists( $feed, 'enable_order_by_date' ) ) {
+					$feed->enable_order_by_date( false );
+				}
+				return $feed_items;
+			};
+			add_filter( 'feedzy_get_feed_array', $keep_feed_order, 9, 3 );
+		}
+
+		$output = do_shortcode( $shortcode );
+
+		if ( $keep_feed_order ) {
+			remove_filter( 'feedzy_get_feed_array', $keep_feed_order, 9 );
+		}
+
+		wp_send_json_success( array( 'output' => $output ) );
 	}
 
 	/**
