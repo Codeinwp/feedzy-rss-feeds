@@ -42,13 +42,23 @@ class Feedzy_Rss_Feeds_Ability_Get_Import_Status extends Feedzy_Rss_Feeds_Abilit
 	 * @return array<string, mixed> Output data, validated and sanitized according to `output_schema()`.
 	 */
 	public function execute_callback( ?array $input = null ) {
+		$run = null;
+		if ( ! empty( $input['job_id'] ) ) {
+			$run = Feedzy_Rss_Feeds_Ability_Helpers::decode_run_reference( (string) $input['job_id'] );
+			if ( is_wp_error( $run ) ) {
+				return Feedzy_Rss_Feeds_Ability_Helpers::from_wp_error( $run );
+			}
+			$input['id'] = $run['post_id'];
+		}
+
 		if ( empty( $input['id'] ) ) {
 			return Feedzy_Rss_Feeds_Ability_Helpers::error(
 				'feedzy_invalid_input',
 				sprintf(
-					/* translators: %s is the name of the required input field */
-					__( '"%s" is required.', 'feedzy-rss-feeds' ),
-					'id'
+					/* translators: %1$s and %2$s are the names of the input fields */
+					__( 'Provide either "%1$s" or "%2$s".', 'feedzy-rss-feeds' ),
+					'id',
+					'job_id'
 				)
 			);
 		}
@@ -64,9 +74,39 @@ class Feedzy_Rss_Feeds_Ability_Get_Import_Status extends Feedzy_Rss_Feeds_Abilit
 			);
 		}
 
-		return Feedzy_Rss_Feeds_Ability_Helpers::success(
+		$response = Feedzy_Rss_Feeds_Ability_Helpers::success(
 			Feedzy_Rss_Feeds_Ability_Helpers::build_import_status( $post )
 		);
+
+		if ( null !== $run ) {
+			$run_state                  = Feedzy_Rss_Feeds_Ability_Helpers::build_run_state( $post_id, $run['queued_at'], $run['max'] );
+			$response['state']          = $run_state['state'];
+			$response['progress']       = $run_state['progress'];
+			$response['data']['run_id'] = $run_state['run_id'];
+		}
+
+		return $response;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 *
+	 * Applies the object-level check to the import job referenced by a run `job_id`.
+	 *
+	 * @param mixed $input Ability input.
+	 *
+	 * @return true|WP_Error
+	 */
+	public function check_permission( $input = null ) {
+		if ( is_array( $input ) && ! empty( $input['job_id'] ) && is_string( $input['job_id'] ) ) {
+			$run = Feedzy_Rss_Feeds_Ability_Helpers::decode_run_reference( $input['job_id'] );
+			if ( ! is_wp_error( $run ) ) {
+				$input['id'] = $run['post_id'];
+			}
+			unset( $input['job_id'] );
+		}
+
+		return parent::check_permission( $input );
 	}
 
 	/**
@@ -75,11 +115,15 @@ class Feedzy_Rss_Feeds_Ability_Get_Import_Status extends Feedzy_Rss_Feeds_Abilit
 	protected function input_schema() {
 		return array(
 			'type'                 => 'object',
-			'required'             => array( 'id' ),
 			'properties'           => array(
-				'id' => array(
-					'type'    => 'integer',
-					'minimum' => 1,
+				'id'     => array(
+					'type'        => 'integer',
+					'description' => __( 'Numeric post ID of the import job. Required unless job_id is given.', 'feedzy-rss-feeds' ),
+					'minimum'     => 1,
+				),
+				'job_id' => array(
+					'type'        => 'string',
+					'description' => __( 'Run reference returned by feedzy/run-import. When given, the response also reports the state and progress of that run.', 'feedzy-rss-feeds' ),
 				),
 			),
 			'additionalProperties' => false,
@@ -93,10 +137,28 @@ class Feedzy_Rss_Feeds_Ability_Get_Import_Status extends Feedzy_Rss_Feeds_Abilit
 		return array(
 			'type'       => 'object',
 			'properties' => array(
-				'success' => array( 'type' => 'boolean' ),
-				'data'    => array(
+				'success'  => array( 'type' => 'boolean' ),
+				'state'    => array(
+					'type'        => 'string',
+					'description' => __( 'State of the run referenced by job_id. Only when job_id is given.', 'feedzy-rss-feeds' ),
+					'enum'        => array( 'working', 'completed', 'failed', 'cancelled' ),
+				),
+				'progress' => array(
+					'type'        => 'object',
+					'description' => __( 'Progress of the run referenced by job_id. total is 0 while the number of items is unknown.', 'feedzy-rss-feeds' ),
+					'properties'  => array(
+						'current' => array( 'type' => 'integer' ),
+						'total'   => array( 'type' => 'integer' ),
+						'message' => array( 'type' => 'string' ),
+					),
+				),
+				'data'     => array(
 					'type'       => 'object',
 					'properties' => array(
+						'run_id'           => array(
+							'type'        => 'integer',
+							'description' => __( 'Run identifier accepted by feedzy/list-imported-items. Only when job_id is given; 0 until the run starts.', 'feedzy-rss-feeds' ),
+						),
 						'job_id'           => array( 'type' => 'integer' ),
 						'job_title'        => array( 'type' => 'string' ),
 						'job_status'       => array( 'type' => 'string' ),

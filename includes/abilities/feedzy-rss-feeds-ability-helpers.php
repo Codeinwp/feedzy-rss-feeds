@@ -947,6 +947,138 @@ class Feedzy_Rss_Feeds_Ability_Helpers {
 	}
 
 	/**
+	 * Build the reference of an import run requested through the abilities.
+	 *
+	 * The reference is stateless: the import job ID, the time the run was requested and
+	 * the limit passed to the cron hook.
+	 *
+	 * @param  int $post_id   Import job ID.
+	 * @param  int $queued_at Unix timestamp of the request.
+	 * @param  int $max       The import feed limit passed to the cron hook.
+	 *
+	 * @return string
+	 */
+	public static function encode_run_reference( int $post_id, int $queued_at, int $max ) {
+		return $post_id . ':' . $queued_at . ':' . $max;
+	}
+
+	/**
+	 * Decode a run reference built by `encode_run_reference()`.
+	 *
+	 * @param  string $reference The run reference.
+	 *
+	 * @return array{ post_id: int, queued_at: int, max: int }|WP_Error
+	 */
+	public static function decode_run_reference( string $reference ) {
+		if ( ! preg_match( '/^([1-9]\d{0,18}):([1-9]\d{0,10}):([1-9]\d{0,5})$/', $reference, $parts ) ) {
+			return new WP_Error(
+				'feedzy_invalid_job_id',
+				__( 'The job_id is not a valid import run reference.', 'feedzy-rss-feeds' )
+			);
+		}
+
+		return array(
+			'post_id'   => (int) $parts[1],
+			'queued_at' => (int) $parts[2],
+			'max'       => (int) $parts[3],
+		);
+	}
+
+	/**
+	 * Derive the state of a requested import run from the data the import runner stores on the job.
+	 *
+	 * The runner sets `last_run_id` and clears `import_errors` / `import_info` when a run starts,
+	 * and writes `import_errors` again on every exit path (`import_info` only when items were processed).
+	 *
+	 * @param  int $post_id   Import job ID.
+	 * @param  int $queued_at Unix timestamp of the request.
+	 * @param  int $max       The import feed limit passed to the cron hook.
+	 *
+	 * @return array{ state: string, run_id: int, progress: array{ current: int, total: int, message: string } }
+	 */
+	public static function build_run_state( int $post_id, int $queued_at, int $max ) {
+		$run_id = (int) get_post_meta( $post_id, 'last_run_id', true );
+
+		if ( $run_id < $queued_at ) {
+			$pending = false !== Feedzy_Rss_Feeds_Util_Scheduler::is_scheduled( 'feedzy_cron', array( $max, $post_id ) );
+			$waiting = $pending || ( time() - $queued_at ) < 5 * MINUTE_IN_SECONDS;
+
+			return array(
+				'state'    => $waiting ? 'working' : 'failed',
+				'run_id'   => 0,
+				'progress' => array(
+					'current' => 0,
+					'total'   => 0,
+					'message' => $waiting
+						? __( 'Queued, waiting for the cron to start the import.', 'feedzy-rss-feeds' )
+						: __( 'The import did not start: the queued event is gone. Check that WP-Cron is working.', 'feedzy-rss-feeds' ),
+				),
+			);
+		}
+
+		if ( metadata_exists( 'post', $post_id, 'import_errors' ) ) {
+			$imported = (int) get_post_meta( $post_id, 'imported_items_count', true );
+			$ran      = metadata_exists( 'post', $post_id, 'import_info' );
+
+			return array(
+				'state'    => $ran ? 'completed' : 'failed',
+				'run_id'   => $run_id,
+				'progress' => array(
+					'current' => $imported,
+					'total'   => $imported,
+					'message' => $ran
+						/* translators: %d: number of imported items */
+						? sprintf( __( 'Import run completed. %d items imported.', 'feedzy-rss-feeds' ), $imported )
+						: __( 'The import stopped before processing any item. See errors.', 'feedzy-rss-feeds' ),
+				),
+			);
+		}
+
+		$post_type = (string) get_post_meta( $post_id, 'import_post_type', true );
+		if ( '' === $post_type || ! post_type_exists( $post_type ) ) {
+			$post_type = 'any';
+		}
+
+		$query = new WP_Query(
+			array(
+				'post_type'              => $post_type,
+				'post_status'            => 'any',
+				'posts_per_page'         => 1,
+				'fields'                 => 'ids',
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+				// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				'meta_query'             => array(
+					array(
+						'key'   => 'feedzy_job',
+						'value' => $post_id,
+					),
+					array(
+						'key'   => 'feedzy_job_time',
+						'value' => $run_id,
+					),
+				),
+			)
+		);
+
+		$imported = (int) $query->found_posts;
+		$stalled  = ( time() - $run_id ) > (int) apply_filters( 'feedzy_max_execution_time', 500 ) + MINUTE_IN_SECONDS;
+
+		return array(
+			'state'    => $stalled ? 'failed' : 'working',
+			'run_id'   => $run_id,
+			'progress' => array(
+				'current' => $imported,
+				'total'   => 0,
+				'message' => $stalled
+					? __( 'The import run did not finish within the maximum execution time.', 'feedzy-rss-feeds' )
+					/* translators: %d: number of imported items */
+					: sprintf( __( 'Import running. %d items imported so far.', 'feedzy-rss-feeds' ), $imported ),
+			),
+		);
+	}
+
+	/**
 	 * Build per-feed status breakdown for multi-feed import jobs.
 	 *
 	 * @param  int $post_id Job post ID.
