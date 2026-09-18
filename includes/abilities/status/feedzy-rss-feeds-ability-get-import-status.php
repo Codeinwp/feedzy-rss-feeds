@@ -31,7 +31,7 @@ class Feedzy_Rss_Feeds_Ability_Get_Import_Status extends Feedzy_Rss_Feeds_Abilit
 	 * {@inheritdoc}
 	 */
 	public static function get_ability_description() {
-		return __( 'Return the last-run status for a Feedzy import job.', 'feedzy-rss-feeds' );
+		return __( 'Return the last-run status for a Feedzy import job. Pass the job_id returned by feedzy/run-import to get the state and progress of that run; call again until state is no longer working.', 'feedzy-rss-feeds' );
 	}
 
 	/**
