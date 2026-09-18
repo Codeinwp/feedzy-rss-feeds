@@ -5,6 +5,7 @@ parameters:
 	bootstrapFiles:
 		- %currentWorkingDirectory%/tests/php/static-analysis-stubs/feedzy.php
 		- %currentWorkingDirectory%/tests/php/static-analysis-stubs/elementor.php
+		- %currentWorkingDirectory%/tests/php/static-analysis-stubs/abilities-api.php
 includes:
 	- %currentWorkingDirectory%/vendor/szepeviktor/phpstan-wordpress/extension.neon
 	- %currentWorkingDirectory%/phpstan-baseline.neon
