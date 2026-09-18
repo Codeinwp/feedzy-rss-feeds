@@ -11,6 +11,31 @@ export const CUSTOM_FEED_URL =
 export const INVALID_FEED_URL = 'https://example.com/nonexistent-feed.xml';
 
 /**
+ * Path served by the Feedzy E2E Order Feed Mock mu-plugin.
+ *
+ * The url is built on the site host so it passes wp_http_validate_url() without
+ * a DNS lookup; the request itself never leaves WordPress.
+ */
+export const ORDER_FEED_PATH = '/feedzy-e2e-order-feed.xml';
+
+/**
+ * Build the mocked order feed url, optionally with a variant so separate tests
+ * do not share a feed cache entry.
+ *
+ * @param {import('playwright').Page} page    The page object.
+ * @param {string}                    variant A value appended as a query arg.
+ * @return {string} The absolute feed url.
+ */
+export function getOrderFeedUrl(page, variant = '') {
+	const url = new URL(ORDER_FEED_PATH, page.url());
+	if (variant) {
+		url.searchParams.set('variant', variant);
+	}
+
+	return url.href;
+}
+
+/**
  * Close the tour modal if it is visible.
  *
  * @param {import('playwright').Page} page The page object.
@@ -90,6 +115,42 @@ export async function setItemLimit(page, limit) {
 	} catch (error) {
 		// Element not found or not attached - ignore silently
 	}
+}
+
+/**
+ * Pick a Feed Order choice on the Feed Edit page by its visible label.
+ *
+ * Selecting by label rather than by value is the point: it asserts the label a
+ * user reads is attached to the sort token that behaves that way (issue #1336).
+ *
+ * @param {import('playwright').Page} page  The page object.
+ * @param {string}                    label The Feed Order label to select.
+ * @return {Promise<string>} The promise that resolves with the selected value.
+ */
+export async function setFeedOrder(page, label) {
+	await page
+		.getByRole('button', { name: 'Step 4 General feed settings ' })
+		.click();
+	await page.getByRole('link', { name: 'Advanced' }).click();
+
+	const select = page.locator('#import-order');
+	await select.waitFor();
+
+	const value = await select.evaluate((element, optionLabel) => {
+		const option = Array.from(element.options).find(
+			(item) => item.textContent.trim() === optionLabel
+		);
+		if (!option) {
+			return null;
+		}
+		return option.value;
+	}, label);
+
+	expect(value, `Feed Order should offer a "${label}" choice`).not.toBeNull();
+
+	await select.selectOption(value);
+
+	return value;
 }
 
 /**
@@ -199,10 +260,11 @@ export async function deleteAllFeedImports(requestUtils) {
 
 /**
  * Get post created with Feedzy.
- * @param {RequestUtils} requestUtils The request utils object.
+ * @param {RequestUtils} requestUtils  The request utils object.
+ * @param {Object}       [extraParams] Extra query params, e.g. orderby/order.
  * @return {Promise<*>}
  */
-export async function getPostsByFeedzy(requestUtils) {
+export async function getPostsByFeedzy(requestUtils, extraParams = {}) {
 	return await requestUtils.rest({
 		path: '/wp/v2/posts',
 		params: {
@@ -211,6 +273,7 @@ export async function getPostsByFeedzy(requestUtils) {
 			meta_key: 'feedzy',
 			meta_value: 1,
 			meta_compare: '=',
+			...extraParams,
 		},
 	});
 }
