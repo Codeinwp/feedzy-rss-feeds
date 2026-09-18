@@ -272,10 +272,12 @@ class Feedzy_Rss_Feeds_Import {
 			return $item_array;
 		}
 
-		$tags = $item->get_item_tags( \SimplePie\SimplePie::NAMESPACE_MEDIARSS, 'group' );
+		$mediarss_ns = class_exists( '\SimplePie\SimplePie' ) ? \SimplePie\SimplePie::NAMESPACE_MEDIARSS : (string) constant( 'SIMPLEPIE_NAMESPACE_MEDIARSS' );
+
+		$tags = $item->get_item_tags( $mediarss_ns, 'group' );
 		$desc = '';
 		if ( $tags ) {
-			$desc_tag = $tags[0]['child'][ \SimplePie\SimplePie::NAMESPACE_MEDIARSS ]['description'];
+			$desc_tag = $tags[0]['child'][ $mediarss_ns ]['description'];
 			if ( $desc_tag ) {
 				$desc = $desc_tag[0]['data'];
 			}
@@ -2453,15 +2455,19 @@ class Feedzy_Rss_Feeds_Import {
 				$job
 			);
 
-			// no point creating a post if either the title or the content is null.
-			if ( is_null( $post_title ) || is_null( $post_content ) ) {
+			// Validate the final arguments, since title processing and the filter above can empty them.
+			$final_title   = isset( $new_post['post_title'] ) && is_string( $new_post['post_title'] ) ? trim( $new_post['post_title'] ) : '';
+			$final_content = isset( $new_post['post_content'] ) && is_string( $new_post['post_content'] ) ? trim( $new_post['post_content'] ) : '';
+
+			if ( '' === $final_title || ( 'attachment' !== $import_post_type && '' === $final_content ) ) {
 				++$index;
 
 				Feedzy_Rss_Feeds_Log::error(
 					__( 'Title or Content is empty.', 'feedzy-rss-feeds' ),
 					array(
-						'job_id'   => $job->ID,
-						'new_post' => $new_post,
+						'job_id'     => $job->ID,
+						'item_title' => $item['item_title'],
+						'new_post'   => $new_post,
 					)
 				);
 				continue;
