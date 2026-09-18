@@ -141,11 +141,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 							'category' => '',
 						),
 					);
-					$categories           = get_categories(
-						array(
-							'hide_empty' => false,
-						)
-					);
 					$telemetry_enabled    = get_option( 'feedzy_rss_feeds_logger_flag', 0 );
 
 					switch ( $active_tab ) {
@@ -186,6 +181,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 								<div class="form-block <?php echo esc_attr( apply_filters( 'feedzy_upsell_class', '' ) ); ?>">
 									<?php echo wp_kses_post( apply_filters( 'feedzy_upsell_content', '', 'auto-categories', 'settings' ) ); ?>
 									<div class="fz-form-group">
+										<?php $category_options = Feedzy_Rss_Feeds_Admin::get_auto_category_options( $mapped_categories ); ?>
 										<label class="form-label"><?php esc_html_e( 'Auto Categories Mapping', 'feedzy-rss-feeds' ); ?></label>
 										<table class="fz-auto-cat">
 											<tbody>
@@ -195,18 +191,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 														<input type="text" name="auto-categories[<?php echo esc_attr( $index ); ?>][keywords]" class="form-control" placeholder="<?php esc_attr_e( 'Values separated by commas', 'feedzy-rss-feeds' ); ?>" value="<?php echo esc_attr( $category_mapping['keywords'] ); ?>"/>
 													</td>
 													<td class="fz-auto-cat-col-4">
-														<select name="auto-categories[<?php echo esc_attr( $index ); ?>][category]" class="form-control fz-select-control">
-															<option value=""><?php esc_html_e( 'Select a category', 'feedzy-rss-feeds' ); ?></option>
-															<?php
-															foreach ( $categories as $category ) {
-																$selected = $category->term_id == $category_mapping['category'] ? 'selected' : '';
-																echo '<option value="' . esc_attr( $category->term_id ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $category->name ) . '</option>';
-															}
-															?>
-														</select>
+														<div class="fz-auto-cat-picker">
+															<select name="auto-categories[<?php echo esc_attr( $index ); ?>][category]" class="form-control fz-select-control">
+																<option value=""><?php esc_html_e( 'Select a category', 'feedzy-rss-feeds' ); ?></option>
+																<?php
+																foreach ( $category_options as $term_id => $term_name ) {
+																	$selected = (int) $term_id === (int) $category_mapping['category'] ? 'selected' : '';
+																	echo '<option value="' . esc_attr( (int) $term_id ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $term_name ) . '</option>';
+																}
+																?>
+															</select>
+														</div>
 														<button
 															type="button"
-															class="btn btn-outline-primary<?php echo 0 === $index ? ' disabled' : ''; ?>" <?php echo 0 === $index ? 'disabled' : ''; ?>
+															class="btn btn-outline-primary fz-auto-cat-delete<?php echo 0 === $index ? ' disabled' : ''; ?>" <?php echo 0 === $index ? 'disabled' : ''; ?>
 														> 
 															<?php esc_html_e( 'Delete', 'feedzy-rss-feeds' ); ?>
 														</button>
