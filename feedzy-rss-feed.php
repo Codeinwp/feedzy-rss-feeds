@@ -298,6 +298,43 @@ add_filter(
 );
 
 add_filter(
+	'feedzy_rss_feeds_ai_connect_metadata',
+	function () {
+		return array(
+			'name'         => 'Feedzy',
+			'notice_cases' => array(
+				__( 'set up a feed import', 'feedzy-rss-feeds' ),
+				__( 'check which feeds are failing', 'feedzy-rss-feeds' ),
+				__( 'run an import now', 'feedzy-rss-feeds' ),
+			),
+			'prompts'      => array(
+				__( 'Set up a Feedzy import that brings new articles from https://example.com/feed into my News category as drafts, and show me what it would import first.', 'feedzy-rss-feeds' ),
+				__( 'Some of my imports stopped bringing in posts. Tell me which feeds are failing and why.', 'feedzy-rss-feeds' ),
+				__( 'Run my News import now and list what it published.', 'feedzy-rss-feeds' ),
+			),
+			'abilities'    => array(
+				'feedzy/list-feed-sources',
+				'feedzy/get-feed-source',
+				'feedzy/create-feed-source',
+				'feedzy/update-feed-source',
+				'feedzy/delete-feed-source',
+				'feedzy/list-imports',
+				'feedzy/get-import',
+				'feedzy/create-import',
+				'feedzy/update-import',
+				'feedzy/update-import-template',
+				'feedzy/delete-import',
+				'feedzy/dry-run-import',
+				'feedzy/run-import',
+				'feedzy/list-imported-items',
+				'feedzy/get-import-status',
+				'feedzy/get-feed-health',
+			),
+		);
+	}
+);
+
+add_filter(
 	'themeisle_sdk_labels',
 	function ( $labels ) {
 		if ( isset( $labels['float_widget'] ) ) {
