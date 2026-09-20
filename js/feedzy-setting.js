@@ -112,26 +112,460 @@ jQuery(function ($) {
 		}
 
 		const rows = elements.tbody.querySelectorAll('tr');
+		const l10n = feedzy_setting.l10n;
 		let rowIndex = rows.length - 1;
+		let comboCount = 0;
+
+		// Use one document listener and query only live comboboxes.
+		const closers = new WeakMap();
+
+		document.addEventListener('click', (e) => {
+			elements.tbody
+				.querySelectorAll('.fz-auto-cat-picker')
+				.forEach((picker) => {
+					if (!picker.contains(e.target)) {
+						const close = closers.get(picker);
+						if (close) {
+							close();
+						}
+					}
+				});
+		});
+
+		/**
+		 * Turn a row's native select into a searchable combobox.
+		 *
+		 * The select stays in the DOM and remains the submitted value, so the
+		 * form still works when this never runs. Categories beyond the bounded
+		 * server rendered list are pulled in on demand and appended to it.
+		 *
+		 * @param {HTMLElement} row The mapping row.
+		 */
+		const enhanceRow = (row) => {
+			const select = row.querySelector('select');
+			const picker = row.querySelector('.fz-auto-cat-picker');
+
+			if (!select || !picker || select.dataset.fzCombo === '1') {
+				return;
+			}
+
+			select.dataset.fzCombo = '1';
+			select.classList.add('fz-combo-native');
+
+			const listId = `fz-combo-list-${comboCount++}`;
+
+			const input = document.createElement('input');
+			input.type = 'text';
+			input.className = 'form-control fz-combo-input';
+			input.placeholder = l10n.select_category;
+			input.autocomplete = 'off';
+			input.setAttribute('role', 'combobox');
+			input.setAttribute('aria-autocomplete', 'list');
+			input.setAttribute('aria-expanded', 'false');
+			input.setAttribute('aria-controls', listId);
+			input.setAttribute('aria-label', l10n.search_categories);
+
+			const list = document.createElement('ul');
+			list.id = listId;
+			list.className = 'fz-combo-list';
+			list.setAttribute('role', 'listbox');
+			list.setAttribute('aria-label', l10n.select_category);
+
+			// Load more is a real button so it is tab reachable; it sits outside
+			// the listbox because a listbox may only own options.
+			const moreBtn = document.createElement('button');
+			moreBtn.type = 'button';
+			moreBtn.className = 'fz-combo-more';
+			moreBtn.textContent = l10n.load_more;
+			moreBtn.hidden = true;
+
+			const popup = document.createElement('div');
+			popup.className = 'fz-combo-popup';
+			popup.hidden = true;
+			popup.appendChild(list);
+			popup.appendChild(moreBtn);
+
+			picker.insertBefore(input, select);
+			picker.appendChild(popup);
+
+			const state = {
+				search: '',
+				page: 1,
+				hasMore: false,
+				request: null,
+				timer: null,
+				active: -1,
+				open: false,
+				results: new Set(),
+				// Bumped whenever the search term changes, so a response for an
+				// abandoned term can be recognised and dropped.
+				token: 0,
+			};
+
+			const selectedOption = () =>
+				select.options[select.selectedIndex] || null;
+
+			const syncInput = () => {
+				const option = selectedOption();
+				input.value = option && option.value ? option.textContent : '';
+			};
+
+			/**
+			 * The loaded options matching the current search, taken from the
+			 * select itself so server rendered and searched entries are one list.
+			 *
+			 * @return {HTMLOptionElement[]} Matching options.
+			 */
+			const matchingOptions = () => {
+				const term = state.search.toLowerCase();
+
+				return Array.from(select.options).filter((option) => {
+					if (!option.value) {
+						return !term;
+					}
+
+					// Keep server matches, including slug matches.
+					if (state.results.has(option.value)) {
+						return true;
+					}
+
+					return (
+						!term || option.textContent.toLowerCase().includes(term)
+					);
+				});
+			};
+
+			const items = () =>
+				Array.from(list.querySelectorAll('[role="option"]'));
+
+			const setActive = (index) => {
+				const options = items();
+
+				options.forEach((item, i) => {
+					const isActive = i === index;
+					item.classList.toggle('is-active', isActive);
+					item.setAttribute(
+						'aria-selected',
+						isActive ? 'true' : 'false'
+					);
+				});
+
+				state.active = index;
+
+				if (index < 0 || !options[index]) {
+					input.removeAttribute('aria-activedescendant');
+					return;
+				}
+
+				input.setAttribute('aria-activedescendant', options[index].id);
+				options[index].scrollIntoView({ block: 'nearest' });
+			};
+
+			const renderList = () => {
+				list.innerHTML = '';
+				const options = matchingOptions();
+
+				if (!options.length) {
+					const empty = document.createElement('li');
+					empty.className = 'fz-combo-empty';
+					empty.textContent = l10n.no_categories_found;
+					list.appendChild(empty);
+				}
+
+				options.forEach((option, i) => {
+					const item = document.createElement('li');
+					item.id = `${listId}-option-${i}`;
+					item.className = option.value
+						? 'fz-combo-option'
+						: 'fz-combo-option is-placeholder';
+					item.setAttribute('role', 'option');
+					item.setAttribute('aria-selected', 'false');
+					item.dataset.value = option.value;
+					item.textContent = option.textContent;
+					list.appendChild(item);
+				});
+
+				moreBtn.hidden = !state.hasMore;
+
+				setActive(-1);
+			};
+
+			const open = () => {
+				state.open = true;
+				popup.hidden = false;
+				input.setAttribute('aria-expanded', 'true');
+				renderList();
+			};
+
+			const close = () => {
+				state.open = false;
+				popup.hidden = true;
+				input.setAttribute('aria-expanded', 'false');
+				input.removeAttribute('aria-activedescendant');
+				state.active = -1;
+				state.search = '';
+				state.page = 1;
+				state.hasMore = false;
+				state.results.clear();
+				state.token += 1;
+				clearTimeout(state.timer);
+				abortRequest();
+				syncInput();
+			};
+
+			const choose = (value) => {
+				select.value = value;
+				// The native select fired this; the unsaved-form guard listens for it.
+				select.dispatchEvent(new Event('change', { bubbles: true }));
+				close();
+			};
+
+			/**
+			 * Merge searched categories into the select, which is the single
+			 * store of loaded options.
+			 *
+			 * @param {Array} categories Categories from the search response.
+			 */
+			const mergeResults = (categories) => {
+				categories.forEach((category) => {
+					const value = String(category.id);
+
+					state.results.add(value);
+
+					const known = Array.from(select.options).some(
+						(option) => option.value === value
+					);
+
+					if (known) {
+						return;
+					}
+
+					const option = document.createElement('option');
+					option.value = value;
+					option.textContent = category.name;
+					select.appendChild(option);
+				});
+			};
+
+			const setLoading = (loading) => {
+				list.classList.toggle('is-loading', loading);
+				moreBtn.classList.toggle('is-busy', loading);
+				moreBtn.setAttribute('aria-disabled', loading ? 'true' : 'false');
+			};
+
+			const abortRequest = () => {
+				if (state.request) {
+					const pending = state.request;
+					state.request = null;
+					pending.abort();
+					setLoading(false);
+				}
+			};
+
+			/**
+			 * Load one page of search results.
+			 *
+			 * The page number is only committed to the state once the server has
+			 * answered for it, so a failed, aborted or superseded page is asked
+			 * for again on the next attempt rather than skipped.
+			 *
+			 * @param {number} page 1 based page to request.
+			 */
+			const fetchCategories = (page) => {
+				if (typeof window.ajaxurl === 'undefined') {
+					return;
+				}
+
+				abortRequest();
+				setLoading(true);
+
+				const token = state.token;
+				const request = $.post(window.ajaxurl, {
+					action: 'feedzy_search_auto_categories',
+					security: feedzy_setting.ajax.security,
+					search: state.search,
+					page,
+				});
+
+				state.request = request;
+
+				request
+					.done((response) => {
+						if (token !== state.token) {
+							return;
+						}
+
+						if (!response || !response.success) {
+							return;
+						}
+
+						state.page = page;
+						mergeResults(response.data.categories);
+						state.hasMore = response.data.has_more;
+
+						if (state.open) {
+							renderList();
+						}
+					})
+					.always(() => {
+						if (state.request === request) {
+							state.request = null;
+							setLoading(false);
+						}
+					});
+			};
+
+			// Start a new search when typing or pasting over the committed name.
+			const startsNewSearch = () => state.search === '';
+
+			input.addEventListener('focus', () => {
+				open();
+				input.select();
+			});
+
+			input.addEventListener('click', () => {
+				if (!state.open) {
+					open();
+				}
+			});
+
+			input.addEventListener('paste', () => {
+				if (startsNewSearch()) {
+					input.value = '';
+				}
+			});
+
+			input.addEventListener('input', () => {
+				state.search = input.value.trim();
+				state.page = 1;
+				state.hasMore = false;
+				// Clear stale results and cancel the previous request.
+				state.results.clear();
+				state.token += 1;
+				abortRequest();
+
+				if (!state.open) {
+					open();
+				} else {
+					renderList();
+				}
+
+				clearTimeout(state.timer);
+				state.timer = setTimeout(() => fetchCategories(1), 300);
+			});
+
+			input.addEventListener('keydown', (e) => {
+				const isTyping =
+					e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey;
+
+				if (isTyping && startsNewSearch()) {
+					input.value = '';
+				}
+
+				if (e.key === 'ArrowDown' && !state.open) {
+					e.preventDefault();
+					open();
+					return;
+				}
+
+				const options = items();
+
+				switch (e.key) {
+					case 'ArrowDown':
+						e.preventDefault();
+						setActive(
+							Math.min(state.active + 1, options.length - 1)
+						);
+						break;
+					case 'ArrowUp':
+						e.preventDefault();
+						setActive(Math.max(state.active - 1, 0));
+						break;
+					case 'Home':
+						if (state.open) {
+							e.preventDefault();
+							setActive(0);
+						}
+						break;
+					case 'End':
+						if (state.open) {
+							e.preventDefault();
+							setActive(options.length - 1);
+						}
+						break;
+					case 'Enter':
+						e.preventDefault();
+						if (state.open && options[state.active]) {
+							choose(options[state.active].dataset.value);
+						}
+						break;
+					case 'Escape':
+						if (state.open) {
+							e.preventDefault();
+							close();
+						}
+						break;
+					default:
+						break;
+				}
+			});
+
+			popup.addEventListener('mousedown', (e) => {
+				// Keep popup interactions from moving focus off the field.
+				e.preventDefault();
+			});
+
+			list.addEventListener('click', (e) => {
+				const item = e.target.closest('.fz-combo-option');
+
+				if (item) {
+					choose(item.dataset.value);
+				}
+			});
+
+			moreBtn.addEventListener('click', () => {
+				if (state.request) {
+					return;
+				}
+
+				// Restore focus before loading options to keep the picker open.
+				input.focus();
+				fetchCategories(state.page + 1);
+			});
+
+			picker.addEventListener('focusout', (e) => {
+				if (state.open && !picker.contains(e.relatedTarget)) {
+					close();
+				}
+			});
+
+			closers.set(picker, close);
+
+			syncInput();
+		};
 
 		const getNewRow = (index) => {
 			const row = rows[0].cloneNode(true);
-			const input = row.querySelector('input');
+			const input = row.querySelector('input[type="text"]');
 			const select = row.querySelector('select');
-			const deleteBtn = row.querySelector('button');
+			const deleteBtn = row.querySelector('.fz-auto-cat-delete');
+
+			// The cloned row carries a copy of the first row's combobox; drop it
+			// and let enhanceRow() build a fresh one bound to this row's select.
+			row.querySelectorAll('.fz-combo-input, .fz-combo-popup').forEach(
+				(node) => node.remove()
+			);
 
 			if (input) {
 				input.value = '';
 				input.name = `auto-categories[${index}][keywords]`;
-				input.addEventListener('keydown', (e) => {
-					if (e.key === 'Enter') {
-						e.preventDefault();
-					}
-				});
 			}
 
 			if (select) {
 				select.name = `auto-categories[${index}][category]`;
+				select.selectedIndex = 0;
+				select.classList.remove('fz-combo-native');
+				delete select.dataset.fzCombo;
 			}
 
 			if (deleteBtn) {
@@ -142,8 +576,14 @@ jQuery(function ($) {
 			return row;
 		};
 
+		elements.tbody.addEventListener('keydown', (e) => {
+			if (e.key === 'Enter' && e.target.matches('input[type="text"]')) {
+				e.preventDefault();
+			}
+		});
+
 		elements.tbody.addEventListener('click', (e) => {
-			if (e.target.matches('button:not(.disabled)')) {
+			if (e.target.matches('.fz-auto-cat-delete:not(.disabled)')) {
 				e.target.closest('tr')?.remove();
 			}
 		});
@@ -153,20 +593,11 @@ jQuery(function ($) {
 			if (rows.length > 0) {
 				const newRow = getNewRow(++rowIndex);
 				elements.tbody.appendChild(newRow);
+				enhanceRow(newRow);
 			}
 		});
 
-		// Add event listener to existing inputs
-		rows.forEach((row) => {
-			const input = row.querySelector('input');
-			if (input) {
-				input.addEventListener('keydown', (e) => {
-					if (e.key === 'Enter') {
-						e.preventDefault();
-					}
-				});
-			}
-		});
+		rows.forEach(enhanceRow);
 	};
 
 	initializeAutoCatActions();

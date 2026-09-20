@@ -182,6 +182,7 @@ class Feedzy_Rss_Feeds {
 		self::$instance->loader->add_action( 'wp_enqueue_scripts', self::$instance->admin, 'enqueue_styles' );
 		self::$instance->loader->add_action( 'admin_enqueue_scripts', self::$instance->admin, 'enqueue_styles_admin', 99 );
 		self::$instance->loader->add_action( 'wp_ajax_feedzy_categories', self::$instance->admin, 'ajax' );
+		self::$instance->loader->add_action( 'wp_ajax_feedzy_search_auto_categories', self::$instance->admin, 'search_auto_categories' );
 		self::$instance->loader->add_action( 'admin_action_feedzy_dismiss_wizard', self::$instance->admin, 'feedzy_dismiss_wizard' );
 
 		self::$instance->loader->add_filter( 'manage_feedzy_categories_posts_columns', self::$instance->admin, 'feedzy_category_columns' );
