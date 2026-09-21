@@ -64,7 +64,7 @@ class Feedzy_Rss_Feeds_Ability_Update_Import extends Feedzy_Rss_Feeds_Ability {
 			);
 		}
 
-		foreach ( array( 'validate_edition', 'validate_author' ) as $check ) {
+		foreach ( array( 'validate_edition', 'validate_author', 'validate_terms' ) as $check ) {
 			$valid = Feedzy_Rss_Feeds_Ability_Helpers::$check( (array) $input );
 			if ( is_wp_error( $valid ) ) {
 				return Feedzy_Rss_Feeds_Ability_Helpers::from_wp_error( $valid );

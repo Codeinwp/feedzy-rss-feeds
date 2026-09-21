@@ -67,10 +67,19 @@ class Feedzy_Rss_Feeds_Ability_List_Imports extends Feedzy_Rss_Feeds_Ability {
 		$query   = new WP_Query( $args );
 		$total   = (int) $query->found_posts;
 		$pages   = (int) ceil( $total / $per_page );
-		$imports = array_map(
-			array( 'Feedzy_Rss_Feeds_Ability_Helpers', 'shape_import' ),
-			$query->posts
-		);
+		$imports = array();
+
+		foreach ( $query->posts as $post ) {
+			$import = Feedzy_Rss_Feeds_Ability_Helpers::shape_import( $post );
+
+			// The imports screen lists every job (title, status, source, last run) but its settings and
+			// templates are only shown on the edit screen, which requires `edit_post` on the job.
+			if ( ! current_user_can( 'edit_post', $post->ID ) ) {
+				$import['meta'] = array( 'source' => $import['meta']['source'] );
+			}
+
+			$imports[] = $import;
+		}
 
 		return Feedzy_Rss_Feeds_Ability_Helpers::success(
 			array(

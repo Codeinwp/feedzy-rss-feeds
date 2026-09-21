@@ -590,7 +590,7 @@ class Feedzy_Rss_Feeds_Ability_Helpers {
 	}
 
 	/**
-	 * Resolve user-friendly taxonomy term descriptors into the {taxonomy}_{termId} format Feedzy expects, creating missing terms and passing magic tags through unchanged.
+	 * Resolve user-friendly taxonomy term descriptors into the {taxonomy}_{termId} format Feedzy expects, creating missing terms when the user may (see `can_create_term()`) and passing magic tags through unchanged.
 	 *
 	 * @param  string|array<string> $value Raw input from the ability caller.
 	 *
@@ -613,26 +613,13 @@ class Feedzy_Rss_Feeds_Ability_Helpers {
 				continue;
 			}
 
-			if ( substr( $token, 0, 2 ) === '[#' ) {
+			$named = self::parse_term_name( $token );
+			if ( null === $named ) {
 				$resolved[] = $token;
 				continue;
 			}
 
-			$parts = explode( '_', $token );
-			if ( count( $parts ) >= 2 && is_numeric( end( $parts ) ) && (int) end( $parts ) > 0 ) {
-				$resolved[] = $token;
-				continue;
-			}
-
-			if ( strpos( $token, ':' ) !== false ) {
-				[ $taxonomy, $term_name ] = array_map( 'trim', explode( ':', $token, 2 ) );
-				$taxonomy                 = sanitize_key( $taxonomy );
-			} else {
-				$taxonomy  = 'category';
-				$term_name = $token;
-			}
-
-			$term_name = sanitize_text_field( $term_name );
+			list( $taxonomy, $term_name ) = $named;
 
 			if ( empty( $term_name ) || empty( $taxonomy ) ) {
 				continue;
@@ -641,6 +628,9 @@ class Feedzy_Rss_Feeds_Ability_Helpers {
 			$term = get_term_by( 'name', $term_name, $taxonomy );
 
 			if ( ! $term ) {
+				if ( ! self::can_create_term( $taxonomy ) ) {
+					continue;
+				}
 				$inserted = wp_insert_term( $term_name, $taxonomy );
 				if ( is_wp_error( $inserted ) ) {
 					if ( 'term_exists' === $inserted->get_error_code() ) {
@@ -659,6 +649,142 @@ class Feedzy_Rss_Feeds_Ability_Helpers {
 		}
 
 		return implode( ',', $resolved );
+	}
+
+	/**
+	 * Split a term descriptor into its taxonomy and term name.
+	 *
+	 * @param  string $token One comma-separated part of `import_post_term`.
+	 *
+	 * @return array{0: string, 1: string}|null `[ taxonomy, term name ]`, or null when the token is a magic tag or an existing `{taxonomy}_{termId}` reference and must be kept as is.
+	 */
+	private static function parse_term_name( string $token ) {
+		if ( substr( $token, 0, 2 ) === '[#' ) {
+			return null;
+		}
+
+		$parts = explode( '_', $token );
+		if ( count( $parts ) >= 2 && is_numeric( end( $parts ) ) && (int) end( $parts ) > 0 ) {
+			return null;
+		}
+
+		if ( strpos( $token, ':' ) !== false ) {
+			list( $taxonomy, $term_name ) = array_map( 'trim', explode( ':', $token, 2 ) );
+			$taxonomy                     = sanitize_key( $taxonomy );
+		} else {
+			$taxonomy  = 'category';
+			$term_name = $token;
+		}
+
+		return array( $taxonomy, sanitize_text_field( $term_name ) );
+	}
+
+	/**
+	 * Whether the current user may create a term in a taxonomy.
+	 *
+	 * The import edit screen only lists existing terms, so creating one is gated by the
+	 * capability WordPress itself requires on the taxonomy screen (`manage_categories` for categories).
+	 *
+	 * @param  string $taxonomy Taxonomy slug.
+	 *
+	 * @return bool
+	 */
+	public static function can_create_term( string $taxonomy ): bool {
+		$taxonomy_object = get_taxonomy( $taxonomy );
+		if ( ! $taxonomy_object ) {
+			return false;
+		}
+		return current_user_can( $taxonomy_object->cap->edit_terms );
+	}
+
+	/**
+	 * Validate that the current user may create every term named in `import_post_term` that does not exist yet.
+	 *
+	 * @param  array<string, mixed> $input Caller-supplied fields.
+	 *
+	 * @return true|WP_Error
+	 */
+	public static function validate_terms( array $input ) {
+		if ( empty( $input['import_post_term'] ) ) {
+			return true;
+		}
+
+		$value  = $input['import_post_term'];
+		$value  = is_array( $value ) ? implode( ',', $value ) : (string) $value;
+		$denied = array();
+
+		foreach ( array_map( 'trim', explode( ',', $value ) ) as $token ) {
+			if ( '' === $token ) {
+				continue;
+			}
+			$named = self::parse_term_name( $token );
+			if ( null === $named || '' === $named[0] || '' === $named[1] ) {
+				continue;
+			}
+			list( $taxonomy, $term_name ) = $named;
+			if ( ! taxonomy_exists( $taxonomy ) || get_term_by( 'name', $term_name, $taxonomy ) ) {
+				continue;
+			}
+			if ( ! self::can_create_term( $taxonomy ) ) {
+				$denied[] = $taxonomy . ':' . $term_name;
+			}
+		}
+
+		if ( empty( $denied ) ) {
+			return true;
+		}
+
+		return new WP_Error(
+			'feedzy_forbidden',
+			sprintf(
+				/* translators: %s: comma separated list of taxonomy:term pairs */
+				__( 'You do not have permission to create these terms: %s.', 'feedzy-rss-feeds' ),
+				implode( ', ', $denied )
+			),
+			array(
+				'status' => 403,
+				'fields' => array( 'import_post_term' => $denied ),
+			)
+		);
+	}
+
+	/**
+	 * Validate that another import job may be created with the active edition.
+	 *
+	 * Mirrors the "New Import" gate of the imports screen (`Feedzy_Rss_Feeds_Admin::handle_legacy()`):
+	 * Free installs that are not grandfathered are limited to a single import job, in any status.
+	 *
+	 * @return true|WP_Error
+	 */
+	public static function validate_import_limit() {
+		if ( function_exists( 'feedzy_is_pro' ) && feedzy_is_pro() ) {
+			return true;
+		}
+
+		$legacy = (int) get_option( 'feedzy_legacyv5', 0 );
+		if ( 0 === $legacy ) {
+			$legacy = Feedzy_Rss_Feeds_Admin::get_no_of_imports() > 0 ? 1 : -1;
+			update_option( 'feedzy_legacyv5', $legacy );
+		}
+
+		if ( -1 !== $legacy || Feedzy_Rss_Feeds_Admin::get_no_of_imports() < 1 ) {
+			return true;
+		}
+
+		$upgrade_url = feedzy_upgrade_link( 'add-new-import', 'mcp' );
+
+		return new WP_Error(
+			'feedzy_pro_required',
+			__( 'Import limit reached', 'feedzy-rss-feeds' ) . '. ' . __( 'Your current plan supports only one import setup. Upgrade to unlock unlimited import configurations and make the most of Feedzy\'s powerful features!', 'feedzy-rss-feeds' ) . ' ' . sprintf(
+				/* translators: %s: URL of the Feedzy upgrade page */
+				__( 'Upgrade: %s', 'feedzy-rss-feeds' ),
+				$upgrade_url
+			),
+			array(
+				'status'      => 403,
+				'upgrade_url' => $upgrade_url,
+			)
+		);
 	}
 
 	/**

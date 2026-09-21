@@ -52,7 +52,13 @@ class Feedzy_Rss_Feeds_Ability_Create_Import extends Feedzy_Rss_Feeds_Ability {
 			);
 		}
 
-		foreach ( array( 'validate_edition', 'validate_author' ) as $check ) {
+		// The imports screen blocks "New Import" once a Free, non-legacy install has a job.
+		$limit = Feedzy_Rss_Feeds_Ability_Helpers::validate_import_limit();
+		if ( is_wp_error( $limit ) ) {
+			return Feedzy_Rss_Feeds_Ability_Helpers::from_wp_error( $limit );
+		}
+
+		foreach ( array( 'validate_edition', 'validate_author', 'validate_terms' ) as $check ) {
 			$valid = Feedzy_Rss_Feeds_Ability_Helpers::$check( (array) $input );
 			if ( is_wp_error( $valid ) ) {
 				return Feedzy_Rss_Feeds_Ability_Helpers::from_wp_error( $valid );
