@@ -107,7 +107,7 @@ class Feedzy_Rss_Feeds_Ability_List_Imports extends Feedzy_Rss_Feeds_Ability {
 				),
 				'status'   => array(
 					'type'        => 'string',
-					'description' => __( 'Filter by post status.', 'feedzy-rss-feeds' ),
+					'description' => __( 'Post status', 'feedzy-rss-feeds' ),
 					'enum'        => array( 'publish', 'draft', 'any' ),
 					'default'     => 'any',
 				),

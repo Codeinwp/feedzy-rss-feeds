@@ -121,7 +121,7 @@ class Feedzy_Rss_Feeds_Ability_Create_Import extends Feedzy_Rss_Feeds_Ability {
 				array(
 					'title'  => array(
 						'type'        => 'string',
-						'description' => __( 'Human-readable name for the import job.', 'feedzy-rss-feeds' ),
+						'description' => __( 'Import Title', 'feedzy-rss-feeds' ),
 						'minLength'   => 1,
 					),
 					'status' => array(
@@ -255,7 +255,7 @@ class Feedzy_Rss_Feeds_Ability_Create_Import extends Feedzy_Rss_Feeds_Ability {
 			),
 			'import_post_type'             => array(
 				'type'        => 'string',
-				'description' => __( 'WordPress post type for imported posts.', 'feedzy-rss-feeds' ),
+				'description' => __( 'Post Type', 'feedzy-rss-feeds' ),
 				'default'     => 'post',
 			),
 			'import_post_status'           => array(
@@ -293,7 +293,7 @@ class Feedzy_Rss_Feeds_Ability_Create_Import extends Feedzy_Rss_Feeds_Ability {
 			),
 			'import_feed_limit'            => array(
 				'type'        => 'integer',
-				'description' => __( 'Maximum number of items to import per run.', 'feedzy-rss-feeds' ),
+				'description' => __( 'Set the number of feed items to import per run.', 'feedzy-rss-feeds' ),
 				'minimum'     => 1,
 				'maximum'     => 9999,
 			),
@@ -314,7 +314,7 @@ class Feedzy_Rss_Feeds_Ability_Create_Import extends Feedzy_Rss_Feeds_Ability {
 			),
 			'import_order'                 => array(
 				'type'        => 'string',
-				'description' => __( 'Order of imported items.', 'feedzy-rss-feeds' ),
+				'description' => __( 'Feed Order', 'feedzy-rss-feeds' ),
 			),
 			'inc_key'                      => array(
 				'type'        => 'string',
@@ -346,29 +346,29 @@ class Feedzy_Rss_Feeds_Ability_Create_Import extends Feedzy_Rss_Feeds_Ability {
 			),
 			'import_auto_translation'      => array(
 				'type'        => 'string',
-				'description' => __( 'Enable auto-translation for imported content.', 'feedzy-rss-feeds' ),
+				'description' => __( 'Translate content automatically on import.', 'feedzy-rss-feeds' ),
 				'enum'        => array( 'yes', 'no' ),
 			),
 			'import_auto_translation_lang' => array(
 				'type'        => 'string',
-				'description' => __( 'Target language for auto-translation.', 'feedzy-rss-feeds' ),
+				'description' => __( 'Target Language', 'feedzy-rss-feeds' ),
 			),
 			'language'                     => array(
 				'type'        => 'string',
-				'description' => __( 'Title of the language for the feed source.', 'feedzy-rss-feeds' ),
+				'description' => __( 'Content Language after import', 'feedzy-rss-feeds' ),
 			),
 			'mark_duplicate_tag'           => array(
 				'type'        => 'string',
-				'description' => __( 'Magic-tag used to detect duplicates across runs (Pro).', 'feedzy-rss-feeds' ),
+				'description' => __( 'Define a custom duplication key for identifying unique feed items when importing content. By default, items are considered unique based on their title and URL. Enter one or multiple magic tags.', 'feedzy-rss-feeds' ) . ' (Pro)',
 			),
 			'import_link_author_admin'     => array(
 				'type'        => 'string',
-				'description' => __( 'Link the imported post author to the feed item author in the dashboard (Pro).', 'feedzy-rss-feeds' ),
+				'description' => __( 'The source author will appear in the Dashboard', 'feedzy-rss-feeds' ) . ' (Pro)',
 				'enum'        => array( 'yes', 'no' ),
 			),
 			'import_link_author_public'    => array(
 				'type'        => 'string',
-				'description' => __( 'Link the imported post author to the feed item author on the front end (Pro).', 'feedzy-rss-feeds' ),
+				'description' => __( 'The source author will appear in Archive Pages', 'feedzy-rss-feeds' ) . ' (Pro)',
 				'enum'        => array( 'yes', 'no' ),
 			),
 			'default_thumbnail_id'         => array(
@@ -377,7 +377,7 @@ class Feedzy_Rss_Feeds_Ability_Create_Import extends Feedzy_Rss_Feeds_Ability {
 			),
 			'import_feed_delete_days'      => array(
 				'type'        => 'integer',
-				'description' => __( 'Delete imported posts after this many days; 0 never deletes (Pro).', 'feedzy-rss-feeds' ),
+				'description' => __( 'Delete the posts created for this import after a number of days', 'feedzy-rss-feeds' ) . '. ' . __( 'Helpful if you want to remove stale or old items automatically. Choose 0, and the imported items will not be automatically deleted.', 'feedzy-rss-feeds' ) . ' (Pro)',
 				'minimum'     => 0,
 				'maximum'     => 9999,
 			),
@@ -387,7 +387,7 @@ class Feedzy_Rss_Feeds_Ability_Create_Import extends Feedzy_Rss_Feeds_Ability {
 				'additionalProperties' => array( 'type' => 'string' ),
 			),
 			'title_action'                 => array(
-				'description' => __( 'Action(s) to apply to the post title.', 'feedzy-rss-feeds' ) . __( 'Pass a single action object or an array of actions.', 'feedzy-rss-feeds' ),
+				'description' => __( 'Action(s) to apply to the post title.', 'feedzy-rss-feeds' ) . ' ' . __( 'Pass a single action object or an array of actions.', 'feedzy-rss-feeds' ),
 				'oneOf'       => array(
 					array(
 						'type'                 => 'object',
@@ -408,7 +408,7 @@ class Feedzy_Rss_Feeds_Ability_Create_Import extends Feedzy_Rss_Feeds_Ability {
 				),
 			),
 			'content_action'               => array(
-				'description' => __( 'Action(s) to apply to the post content.', 'feedzy-rss-feeds' ) . __( 'Pass a single action object or an array of actions.', 'feedzy-rss-feeds' ),
+				'description' => __( 'Action(s) to apply to the post content.', 'feedzy-rss-feeds' ) . ' ' . __( 'Pass a single action object or an array of actions.', 'feedzy-rss-feeds' ),
 				'oneOf'       => array(
 					array(
 						'type'                 => 'object',
@@ -429,7 +429,7 @@ class Feedzy_Rss_Feeds_Ability_Create_Import extends Feedzy_Rss_Feeds_Ability {
 				),
 			),
 			'excerpt_action'               => array(
-				'description' => __( 'Action(s) to apply to the post excerpt.', 'feedzy-rss-feeds' ) . __( 'Pass a single action object or an array of actions.', 'feedzy-rss-feeds' ),
+				'description' => __( 'Action(s) to apply to the post excerpt.', 'feedzy-rss-feeds' ) . ' ' . __( 'Pass a single action object or an array of actions.', 'feedzy-rss-feeds' ),
 				'oneOf'       => array(
 					array(
 						'type'                 => 'object',
@@ -450,7 +450,7 @@ class Feedzy_Rss_Feeds_Ability_Create_Import extends Feedzy_Rss_Feeds_Ability {
 				),
 			),
 			'featured_img_action'          => array(
-				'description' => __( 'Action(s) to apply to the featured image field.', 'feedzy-rss-feeds' ) . __( 'Pass a single action object or an array of actions.', 'feedzy-rss-feeds' ),
+				'description' => __( 'Action(s) to apply to the featured image field.', 'feedzy-rss-feeds' ) . ' ' . __( 'Pass a single action object or an array of actions.', 'feedzy-rss-feeds' ),
 				'oneOf'       => array(
 					array(
 						'type'                 => 'object',
@@ -514,7 +514,7 @@ class Feedzy_Rss_Feeds_Ability_Create_Import extends Feedzy_Rss_Feeds_Ability {
 			),
 			'only_missing' => array(
 				'type'        => 'boolean',
-				'description' => 'fz_image: ' . __( 'Only generate an image when the feed item has none. Default true.', 'feedzy-rss-feeds' ),
+				'description' => 'fz_image: ' . __( 'Only generate the featured image if it\'s missing in the source XML RSS Feed.', 'feedzy-rss-feeds' ),
 				'default'     => true,
 			),
 			'length'       => array(
@@ -528,7 +528,7 @@ class Feedzy_Rss_Feeds_Ability_Create_Import extends Feedzy_Rss_Feeds_Ability {
 			),
 			'replace'      => array(
 				'type'        => 'string',
-				'description' => 'search_replace: ' . __( 'Replacement text.', 'feedzy-rss-feeds' ),
+				'description' => 'search_replace: ' . __( 'Replace with', 'feedzy-rss-feeds' ),
 			),
 			'mode'         => array(
 				'type'        => 'string',
@@ -538,11 +538,11 @@ class Feedzy_Rss_Feeds_Ability_Create_Import extends Feedzy_Rss_Feeds_Ability {
 			),
 			'lang'         => array(
 				'type'        => 'string',
-				'description' => __( 'Targeted language title.', 'feedzy-rss-feeds' ),
+				'description' => __( 'Target Language', 'feedzy-rss-feeds' ),
 			),
 			'remove_links' => array(
 				'type'        => 'boolean',
-				'description' => 'modify_links: ' . __( 'Remove all hyperlinks from the content.', 'feedzy-rss-feeds' ),
+				'description' => 'modify_links: ' . __( 'Remove links from the content?', 'feedzy-rss-feeds' ),
 			),
 			'target'       => array(
 				'type'        => 'string',

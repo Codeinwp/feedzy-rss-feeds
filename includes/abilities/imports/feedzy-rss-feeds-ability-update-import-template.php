@@ -136,7 +136,7 @@ class Feedzy_Rss_Feeds_Ability_Update_Import_Template extends Feedzy_Rss_Feeds_A
 				),
 				'import_post_type'          => array(
 					'type'        => 'string',
-					'description' => __( 'WordPress post type for imported posts.', 'feedzy-rss-feeds' ),
+					'description' => __( 'Post Type', 'feedzy-rss-feeds' ),
 				),
 				'import_post_status'        => array(
 					'type' => 'string',
@@ -177,12 +177,12 @@ class Feedzy_Rss_Feeds_Ability_Update_Import_Template extends Feedzy_Rss_Feeds_A
 				),
 				'import_link_author_admin'  => array(
 					'type'        => 'string',
-					'description' => __( 'Link the imported post author to the feed item author in the dashboard (Pro).', 'feedzy-rss-feeds' ),
+					'description' => __( 'The source author will appear in the Dashboard', 'feedzy-rss-feeds' ) . ' (Pro)',
 					'enum'        => array( 'yes', 'no' ),
 				),
 				'import_link_author_public' => array(
 					'type'        => 'string',
-					'description' => __( 'Link the imported post author to the feed item author on the front end (Pro).', 'feedzy-rss-feeds' ),
+					'description' => __( 'The source author will appear in Archive Pages', 'feedzy-rss-feeds' ) . ' (Pro)',
 					'enum'        => array( 'yes', 'no' ),
 				),
 				'custom_fields'             => array(
@@ -191,7 +191,7 @@ class Feedzy_Rss_Feeds_Ability_Update_Import_Template extends Feedzy_Rss_Feeds_A
 					'additionalProperties' => array( 'type' => 'string' ),
 				),
 				'title_action'              => array(
-					'description' => __( 'Action(s) to apply to the post title. Pass a single action object or an array of actions.', 'feedzy-rss-feeds' ),
+					'description' => __( 'Action(s) to apply to the post title.', 'feedzy-rss-feeds' ) . ' ' . __( 'Pass a single action object or an array of actions.', 'feedzy-rss-feeds' ),
 					'oneOf'       => array(
 						array(
 							'type'                 => 'object',
@@ -212,7 +212,7 @@ class Feedzy_Rss_Feeds_Ability_Update_Import_Template extends Feedzy_Rss_Feeds_A
 					),
 				),
 				'content_action'            => array(
-					'description' => __( 'Action(s) to apply to the post content. Pass a single action object or an array of actions.', 'feedzy-rss-feeds' ),
+					'description' => __( 'Action(s) to apply to the post content.', 'feedzy-rss-feeds' ) . ' ' . __( 'Pass a single action object or an array of actions.', 'feedzy-rss-feeds' ),
 					'oneOf'       => array(
 						array(
 							'type'                 => 'object',
@@ -233,7 +233,7 @@ class Feedzy_Rss_Feeds_Ability_Update_Import_Template extends Feedzy_Rss_Feeds_A
 					),
 				),
 				'excerpt_action'            => array(
-					'description' => __( 'Action(s) to apply to the post excerpt. Pass a single action object or an array of actions.', 'feedzy-rss-feeds' ),
+					'description' => __( 'Action(s) to apply to the post excerpt.', 'feedzy-rss-feeds' ) . ' ' . __( 'Pass a single action object or an array of actions.', 'feedzy-rss-feeds' ),
 					'oneOf'       => array(
 						array(
 							'type'                 => 'object',
@@ -254,7 +254,7 @@ class Feedzy_Rss_Feeds_Ability_Update_Import_Template extends Feedzy_Rss_Feeds_A
 					),
 				),
 				'featured_img_action'       => array(
-					'description' => __( 'Action(s) to apply to the featured image field. Pass a single action object or an array of actions.', 'feedzy-rss-feeds' ),
+					'description' => __( 'Action(s) to apply to the featured image field.', 'feedzy-rss-feeds' ) . ' ' . __( 'Pass a single action object or an array of actions.', 'feedzy-rss-feeds' ),
 					'oneOf'       => array(
 						array(
 							'type'                 => 'object',

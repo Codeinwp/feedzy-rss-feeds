@@ -220,7 +220,7 @@ class Feedzy_Rss_Feeds_Ability_Run_Import extends Feedzy_Rss_Feeds_Ability {
 			'properties'           => array(
 				'id'   => array(
 					'type'        => 'integer',
-					'description' => __( 'Numeric post ID of the import job to run.', 'feedzy-rss-feeds' ),
+					'description' => __( 'ID of the import job.', 'feedzy-rss-feeds' ),
 					'minimum'     => 1,
 				),
 				'max'  => array(

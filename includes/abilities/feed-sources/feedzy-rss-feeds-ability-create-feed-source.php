@@ -45,7 +45,7 @@ class Feedzy_Rss_Feeds_Ability_Create_Feed_Source extends Feedzy_Rss_Feeds_Abili
 		if ( ! current_user_can( $cap ) ) {
 			return Feedzy_Rss_Feeds_Ability_Helpers::error(
 				'feedzy_forbidden',
-				__( 'You do not have permission to create a feed source.', 'feedzy-rss-feeds' ),
+				__( 'You do not have permission to do this.', 'feedzy-rss-feeds' ),
 				array( 'status' => 403 )
 			);
 		}
@@ -84,7 +84,7 @@ class Feedzy_Rss_Feeds_Ability_Create_Feed_Source extends Feedzy_Rss_Feeds_Abili
 		if ( empty( $feeds ) ) {
 			return Feedzy_Rss_Feeds_Ability_Helpers::error(
 				'feedzy_invalid_input',
-				__( 'No valid feed URLs were provided.', 'feedzy-rss-feeds' )
+				__( 'No valid URLs provided.', 'feedzy-rss-feeds' )
 			);
 		}
 
@@ -130,7 +130,7 @@ class Feedzy_Rss_Feeds_Ability_Create_Feed_Source extends Feedzy_Rss_Feeds_Abili
 			'properties'           => array(
 				'title'  => array(
 					'type'        => 'string',
-					'description' => __( 'Human-readable title for the feed source group.', 'feedzy-rss-feeds' ),
+					'description' => __( 'Group Title', 'feedzy-rss-feeds' ),
 					'minLength'   => 1,
 				),
 				'feeds'  => array(
@@ -144,7 +144,7 @@ class Feedzy_Rss_Feeds_Ability_Create_Feed_Source extends Feedzy_Rss_Feeds_Abili
 				),
 				'status' => array(
 					'type'        => 'string',
-					'description' => __( 'Post status for the group.', 'feedzy-rss-feeds' ),
+					'description' => __( 'Post status', 'feedzy-rss-feeds' ),
 					'enum'        => array( 'publish', 'draft' ),
 					'default'     => 'publish',
 				),

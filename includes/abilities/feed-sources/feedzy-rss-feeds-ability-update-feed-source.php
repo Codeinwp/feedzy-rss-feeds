@@ -46,7 +46,11 @@ class Feedzy_Rss_Feeds_Ability_Update_Feed_Source extends Feedzy_Rss_Feeds_Abili
 		if ( empty( $input['id'] ) ) {
 			return Feedzy_Rss_Feeds_Ability_Helpers::error(
 				'feedzy_invalid_input',
-				__( '"id" is required to update a feed source.', 'feedzy-rss-feeds' )
+				sprintf(
+					/* translators: %s is the name of the required input field */
+					__( '"%s" is required.', 'feedzy-rss-feeds' ),
+					'id'
+				)
 			);
 		}
 
@@ -57,8 +61,7 @@ class Feedzy_Rss_Feeds_Ability_Update_Feed_Source extends Feedzy_Rss_Feeds_Abili
 		if ( ! current_user_can( $cap ) ) {
 			return Feedzy_Rss_Feeds_Ability_Helpers::error(
 				'feedzy_forbidden',
-				/* translators: %d: post ID */
-				sprintf( __( 'You do not have permission to update feed source with ID %d.', 'feedzy-rss-feeds' ), $post_id ),
+				__( 'You do not have permission to do this.', 'feedzy-rss-feeds' ),
 				array( 'status' => 403 )
 			);
 		}
@@ -123,12 +126,12 @@ class Feedzy_Rss_Feeds_Ability_Update_Feed_Source extends Feedzy_Rss_Feeds_Abili
 			'properties'           => array(
 				'id'     => array(
 					'type'        => 'integer',
-					'description' => __( 'Numeric post ID of the feed source group to update.', 'feedzy-rss-feeds' ),
+					'description' => __( 'Numeric post ID of the feed source group.', 'feedzy-rss-feeds' ),
 					'minimum'     => 1,
 				),
 				'title'  => array(
 					'type'        => 'string',
-					'description' => __( 'New human-readable title.', 'feedzy-rss-feeds' ),
+					'description' => __( 'Group Title', 'feedzy-rss-feeds' ),
 					'minLength'   => 1,
 				),
 				'feeds'  => array(
@@ -142,7 +145,7 @@ class Feedzy_Rss_Feeds_Ability_Update_Feed_Source extends Feedzy_Rss_Feeds_Abili
 				),
 				'status' => array(
 					'type'        => 'string',
-					'description' => __( 'New post status.', 'feedzy-rss-feeds' ),
+					'description' => __( 'Post status', 'feedzy-rss-feeds' ),
 					'enum'        => array( 'publish', 'draft' ),
 				),
 			),

@@ -145,7 +145,7 @@ class Feedzy_Rss_Feeds_Ability_Get_Import extends Feedzy_Rss_Feeds_Ability {
 			'feedzy_invalid_input',
 			sprintf(
 				/* translators: %s is the name of the required input field(s) */
-				__( 'Provide either "%1$s" or "%2$s" to identify the import job.', 'feedzy-rss-feeds' ),
+				__( 'Provide either "%1$s" or "%2$s".', 'feedzy-rss-feeds' ),
 				'id',
 				'name'
 			)

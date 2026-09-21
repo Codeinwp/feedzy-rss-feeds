@@ -362,7 +362,7 @@ class Feedzy_Rss_Feeds_Ability_Dry_Run_Import extends Feedzy_Rss_Feeds_Ability {
 				),
 				'job_id'       => array(
 					'type'        => 'integer',
-					'description' => __( 'ID of an existing import job.', 'feedzy-rss-feeds' ),
+					'description' => __( 'ID of the import job.', 'feedzy-rss-feeds' ),
 					'minimum'     => 1,
 				),
 				'limit'        => array(
@@ -467,8 +467,7 @@ class Feedzy_Rss_Feeds_Ability_Dry_Run_Import extends Feedzy_Rss_Feeds_Ability {
 			if ( empty( $source ) ) {
 				return new WP_Error(
 					'feedzy_no_source',
-					/* translators: %d: import job ID */
-					sprintf( __( 'Import job %d has no source configured.', 'feedzy-rss-feeds' ), $post_id )
+					__( 'No Source Configured', 'feedzy-rss-feeds' )
 				);
 			}
 			return $source;
@@ -478,7 +477,7 @@ class Feedzy_Rss_Feeds_Ability_Dry_Run_Import extends Feedzy_Rss_Feeds_Ability {
 			'feedzy_invalid_input',
 			sprintf(
 				/* translators: %s is the name of the required input field(s) */
-				__( 'Provide either "%1$s" or "%2$s" to perform a dry run.', 'feedzy-rss-feeds' ),
+				__( 'Provide either "%1$s" or "%2$s".', 'feedzy-rss-feeds' ),
 				'source',
 				'job_id'
 			)

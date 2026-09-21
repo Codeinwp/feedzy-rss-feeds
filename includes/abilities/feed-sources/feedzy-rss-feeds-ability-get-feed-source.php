@@ -147,7 +147,7 @@ class Feedzy_Rss_Feeds_Ability_Get_Feed_Source extends Feedzy_Rss_Feeds_Ability 
 			'feedzy_invalid_input',
 			sprintf(
 				/* translators: %s is the name of the required input field */
-				__( 'Provide either "%1$s" or "%2$s" to identify the feed source.', 'feedzy-rss-feeds' ),
+				__( 'Provide either "%1$s" or "%2$s".', 'feedzy-rss-feeds' ),
 				'id',
 				'name'
 			)

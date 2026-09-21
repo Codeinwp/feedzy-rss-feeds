@@ -61,8 +61,7 @@ class Feedzy_Rss_Feeds_Ability_Delete_Feed_Source extends Feedzy_Rss_Feeds_Abili
 		if ( ! current_user_can( $cap ) ) {
 			return Feedzy_Rss_Feeds_Ability_Helpers::error(
 				'feedzy_forbidden',
-				/* translators: %d: post ID */
-				sprintf( __( 'You do not have permission to delete feed source with ID %d.', 'feedzy-rss-feeds' ), $post_id ),
+				__( 'You do not have permission to do this.', 'feedzy-rss-feeds' ),
 				array( 'status' => 403 )
 			);
 		}
@@ -131,7 +130,7 @@ class Feedzy_Rss_Feeds_Ability_Delete_Feed_Source extends Feedzy_Rss_Feeds_Abili
 			'properties'           => array(
 				'id'    => array(
 					'type'        => 'integer',
-					'description' => __( 'Numeric post ID of the feed source group to delete.', 'feedzy-rss-feeds' ),
+					'description' => __( 'Numeric post ID of the feed source group.', 'feedzy-rss-feeds' ),
 					'minimum'     => 1,
 				),
 				'force' => array(

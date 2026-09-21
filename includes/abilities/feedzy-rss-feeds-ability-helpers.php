@@ -35,7 +35,7 @@ class Feedzy_Rss_Feeds_Ability_Helpers {
 
 		return new WP_Error(
 			'feedzy_forbidden',
-			__( 'You do not have permission to perform this Feedzy operation.', 'feedzy-rss-feeds' ),
+			__( 'You do not have permission to do this.', 'feedzy-rss-feeds' ),
 			array( 'status' => 403 )
 		);
 	}
