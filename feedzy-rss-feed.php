@@ -308,9 +308,9 @@ add_filter(
 				__( 'run an import now', 'feedzy-rss-feeds' ),
 			),
 			'prompts'        => array(
-				__( 'Set up a Feedzy import that brings new articles from https://example.com/feed into my News category as drafts, and show me what it would import first.', 'feedzy-rss-feeds' ),
-				__( 'Some of my imports stopped bringing in posts. Tell me which feeds are failing and why.', 'feedzy-rss-feeds' ),
-				__( 'Run my News import now and list what it published.', 'feedzy-rss-feeds' ),
+				__( 'Set up a Feedzy import that publishes new articles from https://example.com/feed to my News category as drafts.', 'feedzy-rss-feeds' ),
+				__( 'Find the imports that have stopped bringing in posts and pause them.', 'feedzy-rss-feeds' ),
+				__( 'Run my News import now.', 'feedzy-rss-feeds' ),
 			),
 			'ability_prefix' => 'feedzy',
 		);
