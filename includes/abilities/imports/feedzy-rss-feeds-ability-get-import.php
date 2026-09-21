@@ -2,7 +2,7 @@
 /**
  * Ability: feedzy/get-import
  *
- * Returns the last-run status for a Feedzy import job identified by "id".
+ * Returns one Feedzy import job, with its settings and last-run details, identified by "id" or "name".
  *
  * @package    feedzy-rss-feeds
  * @subpackage feedzy-rss-feeds/includes/abilities/imports
@@ -31,7 +31,7 @@ class Feedzy_Rss_Feeds_Ability_Get_Import extends Feedzy_Rss_Feeds_Ability {
 	 * {@inheritdoc}
 	 */
 	public static function get_ability_description() {
-		return __( 'Returns the last-run status for a Feedzy import job.', 'feedzy-rss-feeds' );
+		return __( 'Returns one Feedzy import job with its source, settings, schedule and last-run details. Identify it by id or name.', 'feedzy-rss-feeds' );
 	}
 
 	/**
