@@ -71,20 +71,23 @@ class Feedzy_Rss_Feeds_Util_Feed extends SimplePie {
 	 * @access public
 	 * @param SimplePie $a The SimplePieItem.
 	 * @param SimplePie $b The SimplePieItem.
-	 * @return boolean
+	 * @return int
 	 */
 	public static function sort_items( $a, $b ) {
 		if ( self::$custom_sorting ) {
+			// integers, not booleans: PHP 8 deprecates a bool return from a comparison
+			// callback. The ordering is the one PHP derived from the booleans before.
 			switch ( self::$sc['sort'] ) {
 				case 'title_desc':
-					return $a->get_title() <= $b->get_title();
+					return $b->get_title() <=> $a->get_title();
 				case 'title_asc':
-					return $a->get_title() > $b->get_title();
+					return $a->get_title() <=> $b->get_title();
 				case 'date_asc':
-					return $a->get_date( 'U' ) > $b->get_date( 'U' );
+					return (int) $a->get_date( 'U' ) <=> (int) $b->get_date( 'U' );
 			}
 		}
-		return parent::sort_items( $a, $b );
+		// SimplePie's own comparator already returns -1/0/1; the stub types it as bool.
+		return (int) parent::sort_items( $a, $b );
 	}
 
 	/**
