@@ -14,6 +14,8 @@ import {
 	wrapSerializedChainedActions,
 	setItemLimit,
 	getPostsByFeedzy,
+	setFeedOrder,
+	getOrderFeedUrl,
 } from '../utils';
 
 test.describe('Feed Import', () => {
@@ -308,6 +310,88 @@ test.describe('Feed Import', () => {
 		await expect(
 			page.locator('.feedzy-rss .rss_content').count()
 		).resolves.toBeGreaterThan(0);
+	});
+
+	/**
+	 * Create an import from the mocked order feed and return the titles it
+	 * created, in the order they were imported.
+	 *
+	 * @param {import('playwright').Page} page         The page object.
+	 * @param {Object}                    requestUtils The request utils.
+	 * @param {string}                    orderLabel   The Feed Order label to select.
+	 * @param {string}                    variant      A unique feed url variant.
+	 * @return {Promise<string[]>} The imported post titles, oldest post first.
+	 */
+	const importWithFeedOrder = async (
+		page,
+		requestUtils,
+		orderLabel,
+		variant
+	) => {
+		await page.goto('/wp-admin/post-new.php?post_type=feedzy_imports');
+		await tryCloseTourModal(page);
+
+		await page
+			.getByPlaceholder('Add a name for your import')
+			.fill(`Test Title: feed order ${orderLabel}`);
+		await addFeeds(page, [getOrderFeedUrl(page, variant)]);
+		await setFeedOrder(page, orderLabel);
+
+		await page
+			.getByRole('button', { name: 'Save & Activate importing' })
+			.click({ force: true });
+
+		await runFeedImport(page);
+
+		// Ordering by id gives the sequence the items were imported in.
+		const posts = await getPostsByFeedzy(requestUtils, {
+			orderby: 'id',
+			order: 'asc',
+		});
+
+		return posts.map((post) => post.title.rendered);
+	};
+
+	// The mocked feed lists its items out of chronological order on purpose, so
+	// neither expectation below can be satisfied by the original feed order.
+	test('Feed Order "Latest items first" imports newest to oldest', async ({
+		page,
+		requestUtils,
+	}) => {
+		const titles = await importWithFeedOrder(
+			page,
+			requestUtils,
+			'Latest items first',
+			'desc'
+		);
+
+		expect(titles).toEqual([
+			'Feedzy order newest',
+			'Feedzy order second',
+			'Feedzy order middle',
+			'Feedzy order fourth',
+			'Feedzy order oldest',
+		]);
+	});
+
+	test('Feed Order "Oldest items first" imports oldest to newest', async ({
+		page,
+		requestUtils,
+	}) => {
+		const titles = await importWithFeedOrder(
+			page,
+			requestUtils,
+			'Oldest items first',
+			'asc'
+		);
+
+		expect(titles).toEqual([
+			'Feedzy order oldest',
+			'Feedzy order fourth',
+			'Feedzy order middle',
+			'Feedzy order second',
+			'Feedzy order newest',
+		]);
 	});
 
 	test('importing feed from URL', async ({ editor, page }) => {

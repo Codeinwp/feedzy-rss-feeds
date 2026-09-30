@@ -952,8 +952,8 @@ global $post;
 													<?php
 													$orders = array(
 														'' => __( 'Original feed order', 'feedzy-rss-feeds' ),
-														'date_asc' => __( 'Latest items first', 'feedzy-rss-feeds' ),
-														'date_desc' => __( 'Oldest items first', 'feedzy-rss-feeds' ),
+														'date_desc' => __( 'Latest items first', 'feedzy-rss-feeds' ),
+														'date_asc' => __( 'Oldest items first', 'feedzy-rss-feeds' ),
 													);
 													foreach ( $orders as $key => $value ) :
 														?>
