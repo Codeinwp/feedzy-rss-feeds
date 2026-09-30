@@ -1,3 +1,12 @@
+##### [Version 5.2.10](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.9...v5.2.10) (2026-09-30)
+
+- Fixed feed previews crashing when a single feed URL is sent.
+- Fixed feed pages crashing on older WordPress versions.
+- Fixed imports creating posts with empty titles.
+- Fixed slow Auto Categories Mapping settings on sites with many categories.
+- Fixed import previews to use the selected feed order.
+- Updated dependencies
+
 ##### [Version 5.2.9](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.8...v5.2.9) (2026-09-07)
 
 - Fixed setup wizard crashes during optional plugin installation.
