@@ -122,7 +122,7 @@
 	visibility: hidden;
 }
 
-.feedzy-banner:has(.themeisle-sale) {
+.feedzy-banner:has(.themeisle-sale, .ti-ai-notice) {
 	margin: 0 auto;
 	display: flex;
 	justify-content: center;
@@ -131,7 +131,7 @@
 	padding: 0 12px;
 }
 
-.feedzy-banner .themeisle-sale {
+.feedzy-banner :is(.themeisle-sale, .ti-ai-notice) {
 	width: 100%;
 	margin: 0;
 }
