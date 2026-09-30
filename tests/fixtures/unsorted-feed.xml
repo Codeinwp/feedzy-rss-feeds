@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+	<channel>
+		<title>Feedzy Unsorted Fixture Feed</title>
+		<link>https://tests.example.com/</link>
+		<description>Fixture feed whose items are deliberately not in date order</description>
+		<item>
+			<title>Third Newest Item</title>
+			<link>https://tests.example.com/third</link>
+			<guid>https://tests.example.com/third</guid>
+			<pubDate>Wed, 03 Jan 2024 10:00:00 +0000</pubDate>
+			<description>Third unique description content.</description>
+		</item>
+		<item>
+			<title>Oldest Item Of All</title>
+			<link>https://tests.example.com/oldest</link>
+			<guid>https://tests.example.com/oldest</guid>
+			<pubDate>Mon, 01 Jan 2024 10:00:00 +0000</pubDate>
+			<description>Oldest unique description content.</description>
+		</item>
+		<item>
+			<title>Newest Item Of All</title>
+			<link>https://tests.example.com/newest</link>
+			<guid>https://tests.example.com/newest</guid>
+			<pubDate>Fri, 05 Jan 2024 10:00:00 +0000</pubDate>
+			<description>Newest unique description content.</description>
+		</item>
+		<item>
+			<title>Second Newest Item</title>
+			<link>https://tests.example.com/second</link>
+			<guid>https://tests.example.com/second</guid>
+			<pubDate>Thu, 04 Jan 2024 10:00:00 +0000</pubDate>
+			<description>Second unique description content.</description>
+		</item>
+		<item>
+			<title>Second Oldest Item</title>
+			<link>https://tests.example.com/fourth</link>
+			<guid>https://tests.example.com/fourth</guid>
+			<pubDate>Tue, 02 Jan 2024 10:00:00 +0000</pubDate>
+			<description>Fourth unique description content.</description>
+		</item>
+	</channel>
+</rss>

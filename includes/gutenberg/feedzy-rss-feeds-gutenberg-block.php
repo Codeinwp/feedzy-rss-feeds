@@ -392,12 +392,15 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 
 	/**
 	 * Sanitize Rest API Return
-	 * 
-	 * @param array $input The feeds.
-	 * 
+	 *
+	 * @param array|string $input The feeds, either as an array of urls or a single url string.
+	 *
 	 * @return string|array The sanitized feeds.
 	 */
 	public function feedzy_sanitize_feeds( $input ) {
+		if ( ! is_array( $input ) ) {
+			return wp_http_validate_url( $input ) ? esc_url_raw( $input ) : '';
+		}
 		if ( count( $input ) === 1 ) {
 			$feed = wp_http_validate_url( $input[0] );
 			return $feed;

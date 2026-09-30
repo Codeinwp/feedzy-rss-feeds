@@ -931,7 +931,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 		if ( isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
 			// phpcs:ignore WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___SERVER__HTTP_USER_AGENT__
-			$set_server_agent = sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) . \SimplePie\Misc::get_default_useragent() );
+			$set_server_agent = sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) . $this->get_simplepie_useragent() );
 			$feed->set_useragent( apply_filters( 'http_headers_useragent', $set_server_agent, $feed_url ) );
 		}
 
@@ -1000,7 +1000,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 			if ( isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
 				// phpcs:ignore WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___SERVER__HTTP_USER_AGENT__
-				$set_server_agent = sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) . \SimplePie\Misc::get_default_useragent() );
+				$set_server_agent = sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) . $this->get_simplepie_useragent() );
 				$feed_instance->set_useragent( apply_filters( 'http_headers_useragent', $set_server_agent, $url ) );
 			}
 
@@ -1177,7 +1177,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		require_once ABSPATH . WPINC . '/class-wp-feed-cache-transient.php';
 		require_once ABSPATH . WPINC . '/class-wp-simplepie-file.php';
 
-		$feed->get_registry()->register( SimplePie\File::class, 'WP_SimplePie_File', true );
+		$file_handler = class_exists( '\SimplePie\File' ) ? 'SimplePie\File' : 'File';
+		$feed->get_registry()->register( $file_handler, 'WP_SimplePie_File', true );
 		$default_agent = $this->get_default_user_agent( $feed_url );
 		$feed->set_useragent( apply_filters( 'http_headers_useragent', $default_agent, is_array( $feed_url ) ? reset( $feed_url ) : $feed_url ) );
 
@@ -1327,7 +1328,29 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		// Use SimplePie's default user agent as fallback.
-		return \SimplePie\Misc::get_default_useragent();
+		return $this->get_simplepie_useragent();
+	}
+
+	/**
+	 * Get SimplePie's own default user agent, whichever SimplePie WordPress bundles.
+	 *
+	 * WordPress ships namespaced SimplePie 1.8 from 6.7 onwards. Earlier versions
+	 * bundle SimplePie 1.5, where the agent is only available as a constant.
+	 *
+	 * @access  private
+	 *
+	 * @return string SimplePie default user agent.
+	 */
+	private function get_simplepie_useragent() {
+		if ( class_exists( '\SimplePie\Misc' ) ) {
+			return \SimplePie\Misc::get_default_useragent();
+		}
+
+		if ( defined( 'SIMPLEPIE_USERAGENT' ) ) {
+			return (string) constant( 'SIMPLEPIE_USERAGENT' );
+		}
+
+		return FEEDZY_USER_AGENT;
 	}
 
 	/**

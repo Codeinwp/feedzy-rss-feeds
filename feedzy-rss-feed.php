@@ -298,6 +298,29 @@ add_filter(
 );
 
 add_filter(
+	'feedzy_rss_feeds_ai_connect_metadata',
+	function () {
+		return array(
+			'name'           => 'Feedzy',
+			'notice_cases'   => array(
+				/* translators: One of three tasks the SDK joins into "Ask Claude, ChatGPT or Cursor to %s." (as "a, b or c"). Lowercase, starts with a verb, no final period. */
+				__( 'set up a feed import', 'feedzy-rss-feeds' ),
+				/* translators: One of three tasks the SDK joins into "Ask Claude, ChatGPT or Cursor to %s." (as "a, b or c"). Lowercase, starts with a verb, no final period. */
+				__( 'check which feeds are failing', 'feedzy-rss-feeds' ),
+				/* translators: One of three tasks the SDK joins into "Ask Claude, ChatGPT or Cursor to %s." (as "a, b or c"). Lowercase, starts with a verb, no final period. */
+				__( 'run an import now', 'feedzy-rss-feeds' ),
+			),
+			'prompts'        => array(
+				__( 'Set up a Feedzy import that publishes new articles from https://example.com/feed to my News category as drafts.', 'feedzy-rss-feeds' ),
+				__( 'Find the imports that have stopped bringing in posts and pause them.', 'feedzy-rss-feeds' ),
+				__( 'Run my News import now.', 'feedzy-rss-feeds' ),
+			),
+			'ability_prefix' => 'feedzy',
+		);
+	}
+);
+
+add_filter(
 	'themeisle_sdk_labels',
 	function ( $labels ) {
 		if ( isset( $labels['float_widget'] ) ) {

@@ -488,4 +488,76 @@ class Test_Admin_Abstract_Helpers extends WP_UnitTestCase {
 		$this->assertSame( '', $result['rss_description'] );
 		$this->assertSame( '', $result['rss_description'] );
 	}
+
+	/**
+	 * Invoke a private method of the abstract class through reflection.
+	 *
+	 * @param string $name Method name.
+	 * @param array  $args Arguments.
+	 *
+	 * @return mixed
+	 */
+	private function invoke_private( $name, array $args = array() ) {
+		$method = new ReflectionMethod( 'Feedzy_Rss_Feeds_Admin_Abstract', $name );
+		$method->setAccessible( true );
+
+		return $method->invokeArgs( $this->feedzy_abstract, $args );
+	}
+
+	/**
+	 * Load WordPress' SimplePie, the way create_simplepie_instance() does before
+	 * the user agent is resolved.
+	 *
+	 * @return void
+	 */
+	private function load_simplepie() {
+		if ( ! class_exists( 'SimplePie' ) ) {
+			require_once ABSPATH . WPINC . '/class-simplepie.php';
+		}
+	}
+
+	/**
+	 * Test get_default_user_agent keeps the browser agent for Medium sources,
+	 * for a single url and for an array of urls.
+	 *
+	 * @access public
+	 */
+	public function test_get_default_user_agent_medium_source_uses_browser_agent() {
+		$this->assertSame(
+			FEEDZY_USER_AGENT,
+			$this->invoke_private( 'get_default_user_agent', array( 'https://medium.com/feed/@someone' ) )
+		);
+
+		$this->assertSame(
+			FEEDZY_USER_AGENT,
+			$this->invoke_private(
+				'get_default_user_agent',
+				array( array( 'https://example.com/feed', 'https://medium.com/feed/@someone' ) )
+			)
+		);
+	}
+
+	/**
+	 * Test get_default_user_agent falls back to SimplePie's own agent for
+	 * non-Medium sources, for a single url and for an array of urls.
+	 *
+	 * @access public
+	 */
+	public function test_get_default_user_agent_non_medium_uses_simplepie_agent() {
+		$this->load_simplepie();
+
+		$agent = $this->invoke_private( 'get_default_user_agent', array( 'https://example.com/feed' ) );
+
+		$this->assertIsString( $agent );
+		$this->assertNotEmpty( $agent );
+		$this->assertNotSame( FEEDZY_USER_AGENT, $agent );
+
+		$this->assertSame(
+			$agent,
+			$this->invoke_private(
+				'get_default_user_agent',
+				array( array( 'https://example.com/feed', 'https://example.org/feed' ) )
+			)
+		);
+	}
 }

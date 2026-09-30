@@ -272,10 +272,12 @@ class Feedzy_Rss_Feeds_Import {
 			return $item_array;
 		}
 
-		$tags = $item->get_item_tags( \SimplePie\SimplePie::NAMESPACE_MEDIARSS, 'group' );
+		$mediarss_ns = class_exists( '\SimplePie\SimplePie' ) ? \SimplePie\SimplePie::NAMESPACE_MEDIARSS : (string) constant( 'SIMPLEPIE_NAMESPACE_MEDIARSS' );
+
+		$tags = $item->get_item_tags( $mediarss_ns, 'group' );
 		$desc = '';
 		if ( $tags ) {
-			$desc_tag = $tags[0]['child'][ \SimplePie\SimplePie::NAMESPACE_MEDIARSS ]['description'];
+			$desc_tag = $tags[0]['child'][ $mediarss_ns ]['description'];
 			if ( $desc_tag ) {
 				$desc = $desc_tag[0]['data'];
 			}
@@ -1595,13 +1597,20 @@ class Feedzy_Rss_Feeds_Import {
 			$tags[] = 'item_image';
 		}
 
+		// preview in the order the import would use, not SimplePie's newest-first default.
+		$sort = isset( $feedzy_meta_data['import_order'] ) ? $feedzy_meta_data['import_order'] : '';
+		if ( ! in_array( $sort, array( 'date_asc', 'date_desc' ), true ) ) {
+			$sort = '';
+		}
+
 		$shortcode = sprintf(
-			'feedzy-rss feeds="%s" max="%d" feed_title=no meta=no summary=no thumb=no error_empty="%s" keywords_inc="%s" _dry_run_tags_="%s" _dryrun_="yes"',
+			'feedzy-rss feeds="%s" max="%d" feed_title=no meta=no summary=no thumb=no error_empty="%s" keywords_inc="%s" _dry_run_tags_="%s" _dryrun_="yes" sort="%s"',
 			$feedzy_meta_data['source'],
 			isset( $feedzy_meta_data['import_feed_limit'] ) ? absint( $feedzy_meta_data['import_feed_limit'] ) : 5,
 			'', // should be empty.
 			isset( $feedzy_meta_data['inc_key'] ) ? esc_attr( $feedzy_meta_data['inc_key'] ) : '',
-			implode( ',', $tags )
+			implode( ',', $tags ),
+			esc_attr( $sort )
 		);
 
 		if ( feedzy_is_pro() ) {
@@ -1621,7 +1630,25 @@ class Feedzy_Rss_Feeds_Import {
 			)
 		);
 
-		wp_send_json_success( array( 'output' => do_shortcode( $shortcode ) ) );
+		// an empty order means the feed's own order; the shortcode pipeline sorts by date unless told otherwise.
+		$keep_feed_order = null;
+		if ( '' === $sort ) {
+			$keep_feed_order = function ( $feed_items, $sc, $feed ) {
+				if ( is_object( $feed ) && method_exists( $feed, 'enable_order_by_date' ) ) {
+					$feed->enable_order_by_date( false );
+				}
+				return $feed_items;
+			};
+			add_filter( 'feedzy_get_feed_array', $keep_feed_order, 9, 3 );
+		}
+
+		$output = do_shortcode( $shortcode );
+
+		if ( $keep_feed_order ) {
+			remove_filter( 'feedzy_get_feed_array', $keep_feed_order, 9 );
+		}
+
+		wp_send_json_success( array( 'output' => $output ) );
 	}
 
 	/**
@@ -2453,15 +2480,19 @@ class Feedzy_Rss_Feeds_Import {
 				$job
 			);
 
-			// no point creating a post if either the title or the content is null.
-			if ( is_null( $post_title ) || is_null( $post_content ) ) {
+			// Validate the final arguments, since title processing and the filter above can empty them.
+			$final_title   = isset( $new_post['post_title'] ) && is_string( $new_post['post_title'] ) ? trim( $new_post['post_title'] ) : '';
+			$final_content = isset( $new_post['post_content'] ) && is_string( $new_post['post_content'] ) ? trim( $new_post['post_content'] ) : '';
+
+			if ( '' === $final_title || ( 'attachment' !== $import_post_type && '' === $final_content ) ) {
 				++$index;
 
 				Feedzy_Rss_Feeds_Log::error(
 					__( 'Title or Content is empty.', 'feedzy-rss-feeds' ),
 					array(
-						'job_id'   => $job->ID,
-						'new_post' => $new_post,
+						'job_id'     => $job->ID,
+						'item_title' => $item['item_title'],
+						'new_post'   => $new_post,
 					)
 				);
 				continue;

@@ -182,6 +182,7 @@ class Feedzy_Rss_Feeds {
 		self::$instance->loader->add_action( 'wp_enqueue_scripts', self::$instance->admin, 'enqueue_styles' );
 		self::$instance->loader->add_action( 'admin_enqueue_scripts', self::$instance->admin, 'enqueue_styles_admin', 99 );
 		self::$instance->loader->add_action( 'wp_ajax_feedzy_categories', self::$instance->admin, 'ajax' );
+		self::$instance->loader->add_action( 'wp_ajax_feedzy_search_auto_categories', self::$instance->admin, 'search_auto_categories' );
 		self::$instance->loader->add_action( 'admin_action_feedzy_dismiss_wizard', self::$instance->admin, 'feedzy_dismiss_wizard' );
 
 		self::$instance->loader->add_filter( 'manage_feedzy_categories_posts_columns', self::$instance->admin, 'feedzy_category_columns' );
@@ -226,6 +227,10 @@ class Feedzy_Rss_Feeds {
 		// Wizard screen setup.
 		self::$instance->loader->add_action( 'admin_body_class', self::$instance->admin, 'add_wizard_classes', 20 );
 		self::$instance->loader->add_action( 'wp_ajax_feedzy_wizard_step_process', self::$instance->admin, 'feedzy_wizard_step_process' );
+
+		// Abilities API (WordPress 6.9+); a no-op when the API is not available.
+		require_once FEEDZY_ABSPATH . '/includes/abilities/feedzy-rss-feeds-ability-registrar.php';
+		new Feedzy_Rss_Feeds_Ability_Registrar();
 
 		// do not include import feature if this is a pro version that does not know of this new support.
 		if ( ! feedzy_is_pro( false ) || has_filter( 'feedzy_free_has_import' ) ) {

@@ -230,12 +230,19 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				$this->plugin_name . '_setting',
 				'feedzy_setting',
 				array(
+					'ajax' => array(
+						'security' => wp_create_nonce( FEEDZY_NAME ),
+					),
 					'l10n' => array(
 						'media_iframe_title'  => __( 'Select image', 'feedzy-rss-feeds' ),
 						'media_iframe_button' => __( 'Set default image', 'feedzy-rss-feeds' ),
 						'action_btn_text_1'   => __( 'Choose image', 'feedzy-rss-feeds' ),
 						'action_btn_text_2'   => __( 'Replace image', 'feedzy-rss-feeds' ),
 						'delete_btn_label'    => __( 'Delete', 'feedzy-rss-feeds' ),
+						'select_category'     => __( 'Select a category', 'feedzy-rss-feeds' ),
+						'search_categories'   => __( 'Search categories', 'feedzy-rss-feeds' ),
+						'load_more'           => __( 'Load more', 'feedzy-rss-feeds' ),
+						'no_categories_found' => __( 'No categories found', 'feedzy-rss-feeds' ),
 					),
 				)
 			);
@@ -1404,6 +1411,135 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$settings = apply_filters( 'feedzy_get_settings', array() );
 		include FEEDZY_ABSPATH . '/includes/layouts/settings.php';
+	}
+
+	/**
+	 * Build the bounded category option list for the Auto Categories Mapping rows.
+	 *
+	 * Categories that are already saved in a mapping are always included, even
+	 * when they fall outside the bound, so that re-saving the settings cannot
+	 * drop a rule; everything else is reached through the search.
+	 *
+	 * @param array<int, array<string, mixed>> $mapped_categories Saved mapping rows.
+	 *
+	 * @return array<int, string> Term ID => term name.
+	 * @access  public
+	 */
+	public static function get_auto_category_options( $mapped_categories = array() ) {
+		$options = get_terms(
+			array(
+				'taxonomy'   => 'category',
+				'hide_empty' => false,
+				'fields'     => 'id=>name',
+				'orderby'    => 'name',
+				'order'      => 'ASC',
+				'number'     => apply_filters( 'feedzy_post_taxonomy_limit', 999, 'category' ),
+			)
+		);
+
+		$options = is_array( $options ) ? $options : array();
+
+		if ( ! is_array( $mapped_categories ) ) {
+			return $options;
+		}
+
+		// Saved mappings may point outside the bound; keep them selectable.
+		$missing_ids = array();
+		foreach ( $mapped_categories as $category_mapping ) {
+			if ( ! isset( $category_mapping['category'] ) || ! is_numeric( $category_mapping['category'] ) ) {
+				continue;
+			}
+			$term_id = absint( $category_mapping['category'] );
+			if ( $term_id && ! isset( $options[ $term_id ] ) ) {
+				$missing_ids[] = $term_id;
+			}
+		}
+
+		if ( empty( $missing_ids ) ) {
+			return $options;
+		}
+
+		$missing = get_terms(
+			array(
+				'taxonomy'   => 'category',
+				'hide_empty' => false,
+				'fields'     => 'id=>name',
+				'include'    => array_unique( $missing_ids ),
+			)
+		);
+
+		if ( is_array( $missing ) ) {
+			$options += $missing;
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Search the category collection for the Auto Categories Mapping selector.
+	 *
+	 * @param string $search Term name to search for; an empty string returns the first page.
+	 * @param int    $page   1 based page number.
+	 *
+	 * @return array{categories: array<int, array{id: int, name: string}>, has_more: bool, page: int} Search results.
+	 * @access  public
+	 */
+	public static function get_auto_category_search_results( $search = '', $page = 1 ) {
+		$page     = max( 1, absint( $page ) );
+		$per_page = max( 1, absint( apply_filters( 'feedzy_auto_categories_search_limit', 50 ) ) );
+
+		$terms = get_terms(
+			array(
+				'taxonomy'   => 'category',
+				'hide_empty' => false,
+				'fields'     => 'id=>name',
+				'search'     => $search,
+				'orderby'    => 'name',
+				'order'      => 'ASC',
+				'number'     => $per_page + 1, // One extra row tells us whether another page exists.
+				'offset'     => ( $page - 1 ) * $per_page,
+			)
+		);
+
+		$terms    = is_array( $terms ) ? $terms : array();
+		$has_more = count( $terms ) > $per_page;
+
+		if ( $has_more ) {
+			array_pop( $terms );
+		}
+
+		$categories = array();
+		foreach ( $terms as $term_id => $term_name ) {
+			$categories[] = array(
+				'id'   => (int) $term_id,
+				'name' => (string) $term_name,
+			);
+		}
+
+		return array(
+			'categories' => $categories,
+			'has_more'   => $has_more,
+			'page'       => $page,
+		);
+	}
+
+	/**
+	 * AJAX handler backing the Auto Categories Mapping category search.
+	 *
+	 * @return void
+	 * @access  public
+	 */
+	public function search_auto_categories() {
+		check_ajax_referer( FEEDZY_NAME, 'security' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'msg' => __( 'You do not have permission to do this.', 'feedzy-rss-feeds' ) ), 403 );
+		}
+
+		$search = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
+		$page   = isset( $_POST['page'] ) ? absint( wp_unslash( $_POST['page'] ) ) : 1;
+
+		wp_send_json_success( self::get_auto_category_search_results( $search, $page ) );
 	}
 
 	/**
