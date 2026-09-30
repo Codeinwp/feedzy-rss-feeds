@@ -486,6 +486,7 @@ You have to check first if your feed is valid. Please test it here: https://vali
 - Fixed imports creating posts with empty titles.
 - Fixed slow Auto Categories Mapping settings on sites with many categories.
 - Fixed import previews to use the selected feed order.
+- Added AI agent support: let AI assistants set up and run your Feedzy imports and check your feeds
 - Updated dependencies
 
 
