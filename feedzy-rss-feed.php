@@ -303,8 +303,11 @@ add_filter(
 		return array(
 			'name'           => 'Feedzy',
 			'notice_cases'   => array(
+				/* translators: One of three tasks the SDK joins into "Ask Claude, ChatGPT or Cursor to %s." (as "a, b or c"). Lowercase, starts with a verb, no final period. */
 				__( 'set up a feed import', 'feedzy-rss-feeds' ),
+				/* translators: One of three tasks the SDK joins into "Ask Claude, ChatGPT or Cursor to %s." (as "a, b or c"). Lowercase, starts with a verb, no final period. */
 				__( 'check which feeds are failing', 'feedzy-rss-feeds' ),
+				/* translators: One of three tasks the SDK joins into "Ask Claude, ChatGPT or Cursor to %s." (as "a, b or c"). Lowercase, starts with a verb, no final period. */
 				__( 'run an import now', 'feedzy-rss-feeds' ),
 			),
 			'prompts'        => array(

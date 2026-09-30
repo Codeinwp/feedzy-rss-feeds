@@ -1174,7 +1174,7 @@ class Feedzy_Rss_Feeds_Ability_Helpers {
 					'total'   => $imported,
 					'message' => $ran
 						/* translators: %d: number of imported items */
-						? sprintf( __( 'Import run completed. %d items imported.', 'feedzy-rss-feeds' ), $imported )
+						? sprintf( _n( 'Import run completed. %d item imported.', 'Import run completed. %d items imported.', $imported, 'feedzy-rss-feeds' ), $imported )
 						: __( 'The import stopped before processing any item. See errors.', 'feedzy-rss-feeds' ),
 				),
 			);
@@ -1219,7 +1219,7 @@ class Feedzy_Rss_Feeds_Ability_Helpers {
 				'message' => $stalled
 					? __( 'The import run did not finish within the maximum execution time.', 'feedzy-rss-feeds' )
 					/* translators: %d: number of imported items */
-					: sprintf( __( 'Import running. %d items imported so far.', 'feedzy-rss-feeds' ), $imported ),
+					: sprintf( _n( 'Import running. %d item imported so far.', 'Import running. %d items imported so far.', $imported, 'feedzy-rss-feeds' ), $imported ),
 			),
 		);
 	}

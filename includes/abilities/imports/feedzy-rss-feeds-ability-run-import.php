@@ -122,7 +122,7 @@ class Feedzy_Rss_Feeds_Ability_Run_Import extends Feedzy_Rss_Feeds_Ability {
 		$import_success = empty( $errors );
 		$message        = $import_success
 			/* translators: %d: number of imported items */
-			? sprintf( __( 'Import run completed. %d items imported.', 'feedzy-rss-feeds' ), $items_count )
+			? sprintf( _n( 'Import run completed. %d item imported.', 'Import run completed. %d items imported.', $items_count, 'feedzy-rss-feeds' ), $items_count )
 			: __( 'Import run completed with errors.', 'feedzy-rss-feeds' );
 
 		if ( class_exists( 'Feedzy_Rss_Feeds_Log' ) ) {
