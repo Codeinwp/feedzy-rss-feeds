@@ -159,7 +159,9 @@ class Test_Loop_Block_Render extends WP_UnitTestCase {
 			'<p>{{feedzy_title}}</p><figure><img src="https://example.org/i.png" alt="{{feedzy_title}}"/></figure>'
 		);
 
-		$this->assertStringNotContainsString( 'onerror=', $output );
+		// Neither a raw tag in element content nor an attribute breakout.
+		$this->assertStringNotContainsString( '<img src=x onerror', $output );
+		$this->assertStringNotContainsString( '" onerror="', $output );
 	}
 
 	/**
@@ -210,6 +212,74 @@ class Test_Loop_Block_Render extends WP_UnitTestCase {
 		$this->assertStringContainsString( '<form', $output );
 		$this->assertStringContainsString( 'type="search"', $output );
 		$this->assertStringNotContainsString( 'onerror=', $output );
+	}
+
+	/**
+	 * An HTML-valued tag (description) placed in an attribute must be escaped
+	 * for the attribute context so it cannot break out and add a handler.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function test_html_value_cannot_break_out_of_attribute() {
+		$feed = '<?xml version="1.0" encoding="UTF-8"?>'
+			. '<rss version="2.0"><channel><title>Fixture</title><link>https://example.org/</link><description>d</description>'
+			. '<item>'
+			. '<title>T</title>'
+			. '<link>https://example.org/a</link>'
+			. '<description>x&quot; onerror=&quot;alert(1)</description>'
+			. '</item></channel></rss>';
+
+		$output = $this->render(
+			$feed,
+			'<img src="https://example.org/i.png" alt="{{feedzy_description}}"/>'
+		);
+
+		$this->assertStringNotContainsString( '" onerror="', $output );
+	}
+
+	/**
+	 * An HTML-valued tag in element content must keep its allowed rich markup.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function test_html_value_keeps_rich_content() {
+		$feed = '<?xml version="1.0" encoding="UTF-8"?>'
+			. '<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/">'
+			. '<channel><title>Fixture</title><link>https://example.org/</link><description>d</description>'
+			. '<item>'
+			. '<title>T</title>'
+			. '<link>https://example.org/a</link>'
+			. '<description>Body</description>'
+			. '<content:encoded>Rich &lt;strong&gt;bold&lt;/strong&gt;</content:encoded>'
+			. '</item></channel></rss>';
+
+		$output = $this->render( $feed, '<p>{{feedzy_content}}</p>' );
+
+		$this->assertStringContainsString( '<strong>bold</strong>', $output );
+	}
+
+	/**
+	 * A feed whose author has only an email (get_name() is null) must not
+	 * abort Loop rendering when the template uses {{feedzy_author}}.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function test_email_only_author_does_not_abort_render() {
+		$feed = '<?xml version="1.0" encoding="UTF-8"?>'
+			. '<rss version="2.0"><channel><title>Fixture</title><link>https://example.org/</link><description>d</description>'
+			. '<item>'
+			. '<title>T</title>'
+			. '<link>https://example.org/a</link>'
+			. '<author>bob@example.com</author>'
+			. '</item></channel></rss>';
+
+		$output = $this->render( $feed, '<p>{{feedzy_author}}</p>' );
+
+		$this->assertStringContainsString( 'feedzy-loop-columns', $output );
+		$this->assertStringNotContainsString( '{{feedzy_author}}', $output );
 	}
 
 	/**

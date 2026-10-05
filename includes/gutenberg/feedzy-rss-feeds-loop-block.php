@@ -238,16 +238,43 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			$content
 		);
 
-		return preg_replace_callback(
-			$pattern,
-			function ( $matches ) use ( $item, $attributes ) {
-				if ( ! isset( $matches[1] ) ) {
-					return '';
-				}
-				return $this->escape_value( $matches[1], $this->get_value( $matches[1], $item, $attributes ) );
-			},
-			$content
-		);
+		if ( ! preg_match_all( $pattern, $content, $matches, PREG_OFFSET_CAPTURE ) ) {
+			return $content;
+		}
+
+		// Replace from the last match to the first so earlier byte offsets stay valid.
+		for ( $i = count( $matches[0] ) - 1; $i >= 0; $i-- ) {
+			$placeholder = $matches[0][ $i ][0];
+			$offset      = $matches[0][ $i ][1];
+			$key         = $matches[1][ $i ][0];
+			$value       = (string) $this->get_value( $key, $item, $attributes );
+			$value       = $this->escape_value( $key, $value, $this->is_attribute_context( $content, $offset ) );
+			$content     = substr_replace( $content, $value, $offset, strlen( $placeholder ) );
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Whether a placeholder at the given byte offset sits inside an HTML tag,
+	 * i.e. in attribute position rather than element content.
+	 *
+	 * @param string $content The template content.
+	 * @param int    $offset The byte offset of the placeholder.
+	 *
+	 * @return bool True when the placeholder is inside a tag.
+	 */
+	private function is_attribute_context( string $content, int $offset ): bool {
+		$before = substr( $content, 0, $offset );
+		$open   = strrpos( $before, '<' );
+
+		if ( false === $open ) {
+			return false;
+		}
+
+		$close = strrpos( $before, '>' );
+
+		return false === $close || $open > $close;
 	}
 
 	/**
@@ -255,18 +282,20 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	 *
 	 * @param string $key The magic tag key.
 	 * @param string $value The raw value returned by get_value().
+	 * @param bool   $in_attribute Whether the placeholder sits in attribute position.
 	 *
 	 * @return string The escaped value.
 	 */
-	private function escape_value( string $key, string $value ): string {
-		$url_keys  = array( 'url', 'image', 'media' );
-		$html_keys = array( 'description', 'content', 'meta', 'categories', 'price' );
-
-		if ( in_array( $key, $url_keys, true ) ) {
+	private function escape_value( string $key, string $value, bool $in_attribute ): string {
+		if ( in_array( $key, array( 'url', 'image', 'media' ), true ) ) {
 			return esc_url( $value );
 		}
 
-		if ( in_array( $key, $html_keys, true ) ) {
+		if ( $in_attribute ) {
+			return esc_attr( $value );
+		}
+
+		if ( in_array( $key, array( 'description', 'content', 'meta', 'categories', 'price' ), true ) ) {
 			return wp_kses_post( $value );
 		}
 
