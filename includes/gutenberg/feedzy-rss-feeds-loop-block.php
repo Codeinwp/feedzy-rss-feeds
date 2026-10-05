@@ -259,22 +259,43 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	 * Whether a placeholder at the given byte offset sits inside an HTML tag,
 	 * i.e. in attribute position rather than element content.
 	 *
+	 * The scan tracks quote state so a literal ">" inside a quoted attribute
+	 * value is not mistaken for a tag terminator.
+	 *
 	 * @param string $content The template content.
 	 * @param int    $offset The byte offset of the placeholder.
 	 *
 	 * @return bool True when the placeholder is inside a tag.
 	 */
 	private function is_attribute_context( string $content, int $offset ): bool {
-		$before = substr( $content, 0, $offset );
-		$open   = strrpos( $before, '<' );
+		$in_tag = false;
+		$quote  = '';
 
-		if ( false === $open ) {
-			return false;
+		for ( $i = 0; $i < $offset; $i++ ) {
+			$char = $content[ $i ];
+
+			if ( '' !== $quote ) {
+				if ( $char === $quote ) {
+					$quote = '';
+				}
+				continue;
+			}
+
+			if ( ! $in_tag ) {
+				if ( '<' === $char ) {
+					$in_tag = true;
+				}
+				continue;
+			}
+
+			if ( '"' === $char || "'" === $char ) {
+				$quote = $char;
+			} elseif ( '>' === $char ) {
+				$in_tag = false;
+			}
 		}
 
-		$close = strrpos( $before, '>' );
-
-		return false === $close || $open > $close;
+		return $in_tag;
 	}
 
 	/**
@@ -282,7 +303,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	 *
 	 * @param string $key The magic tag key.
 	 * @param string $value The raw value returned by get_value().
-	 * @param bool   $in_attribute Whether the placeholder sits in attribute position.
+	 * @param bool   $in_attribute Whether the placeholder sits inside a tag.
 	 *
 	 * @return string The escaped value.
 	 */
@@ -292,7 +313,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		}
 
 		if ( $in_attribute ) {
-			return esc_attr( $value );
+			return $this->escape_attribute_value( $value );
 		}
 
 		if ( in_array( $key, array( 'description', 'content', 'meta', 'categories', 'price' ), true ) ) {
@@ -300,6 +321,34 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		}
 
 		return esc_html( wp_strip_all_tags( $value ) );
+	}
+
+	/**
+	 * Escape a value for use inside an HTML tag, safe for quoted and unquoted
+	 * attribute values alike.
+	 *
+	 * The esc_attr() helper encodes the quote and angle-bracket characters but
+	 * leaves whitespace and "=" untouched, so an unquoted attribute could still
+	 * gain a second attribute. Encoding those separators as character references
+	 * keeps the value a single token; they decode back to their literal form for display.
+	 *
+	 * @param string $value The raw value.
+	 *
+	 * @return string The escaped value.
+	 */
+	private function escape_attribute_value( string $value ): string {
+		return strtr(
+			esc_attr( $value ),
+			array(
+				' '  => '&#32;',
+				"\t" => '&#9;',
+				"\n" => '&#10;',
+				"\r" => '&#13;',
+				"\f" => '&#12;',
+				'='  => '&#61;',
+				'`'  => '&#96;',
+			)
+		);
 	}
 
 	/**

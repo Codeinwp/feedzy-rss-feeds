@@ -239,6 +239,54 @@ class Test_Loop_Block_Render extends WP_UnitTestCase {
 	}
 
 	/**
+	 * A literal ">" in an earlier quoted attribute must not make a later
+	 * placeholder be treated as element content.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function test_gt_in_quoted_attribute_keeps_attribute_context() {
+		$feed = '<?xml version="1.0" encoding="UTF-8"?>'
+			. '<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/">'
+			. '<channel><title>Fixture</title><link>https://example.org/</link><description>d</description>'
+			. '<item>'
+			. '<title>T</title>'
+			. '<link>https://example.org/a</link>'
+			. '<content:encoded>x&quot; onerror=&quot;alert(1)</content:encoded>'
+			. '</item></channel></rss>';
+
+		$output = $this->render(
+			$feed,
+			'<img src="x" alt="1 > 0" title="{{feedzy_content}}"/>'
+		);
+
+		$this->assertStringNotContainsString( '" onerror="', $output );
+	}
+
+	/**
+	 * A plain-text value in an unquoted attribute must not gain a second,
+	 * executable attribute.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function test_unquoted_attribute_cannot_add_handler() {
+		$feed = '<?xml version="1.0" encoding="UTF-8"?>'
+			. '<rss version="2.0"><channel><title>Fixture</title><link>https://example.org/</link><description>d</description>'
+			. '<item>'
+			. '<title>x onerror=alert(1)</title>'
+			. '<link>https://example.org/a</link>'
+			. '</item></channel></rss>';
+
+		$output = $this->render(
+			$feed,
+			'<img src="x" alt={{feedzy_title}}>'
+		);
+
+		$this->assertStringNotContainsString( ' onerror=', $output );
+	}
+
+	/**
 	 * An HTML-valued tag in element content must keep its allowed rich markup.
 	 *
 	 * @access public
