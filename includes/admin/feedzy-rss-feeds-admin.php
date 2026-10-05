@@ -2457,10 +2457,11 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return bool|void
 	 */
 	public function feedzy_dismiss_wizard( $redirect_to_dashboard = true ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You do not have permission to do this.', 'feedzy-rss-feeds' ) );
+		}
+
 		if ( false !== $redirect_to_dashboard ) {
-			if ( ! current_user_can( 'manage_options' ) ) {
-				wp_die( esc_html__( 'You do not have permission to do this.', 'feedzy-rss-feeds' ) );
-			}
 			check_admin_referer( 'feedzy_dismiss_wizard' );
 		}
 

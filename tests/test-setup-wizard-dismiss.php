@@ -16,7 +16,7 @@ class Test_Setup_Wizard_Dismiss extends WP_UnitTestCase {
 	/**
 	 * Request superglobals saved before each test.
 	 *
-	 * @var array{get: array<string, mixed>, request: array<string, mixed>, request_uri: string|null}
+	 * @var array{get: array<string, mixed>, post: array<string, mixed>, request: array<string, mixed>, request_uri: string|null}
 	 */
 	private $original_globals;
 
@@ -30,6 +30,7 @@ class Test_Setup_Wizard_Dismiss extends WP_UnitTestCase {
 
 		$this->original_globals = array(
 			'get'         => $_GET,
+			'post'        => $_POST,
 			'request'     => $_REQUEST,
 			'request_uri' => isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : null,
 		);
@@ -49,8 +50,11 @@ class Test_Setup_Wizard_Dismiss extends WP_UnitTestCase {
 	 */
 	public function tear_down(): void {
 		remove_filter( 'wp_redirect', array( $this, 'throw_redirect' ) );
+		remove_filter( 'wp_doing_ajax', '__return_true' );
+		remove_filter( 'wp_die_ajax_handler', array( $this, 'get_die_handler' ) );
 
 		$_GET     = $this->original_globals['get'];
+		$_POST    = $this->original_globals['post'];
 		$_REQUEST = $this->original_globals['request'];
 		if ( null === $this->original_globals['request_uri'] ) {
 			unset( $_SERVER['REQUEST_URI'] );
@@ -72,6 +76,25 @@ class Test_Setup_Wizard_Dismiss extends WP_UnitTestCase {
 	 */
 	public function throw_redirect( string $location ): void {
 		throw new Exception( $location );
+	}
+
+	/**
+	 * Die handler that throws instead of exiting.
+	 *
+	 * @return callable(string): void
+	 */
+	public function get_die_handler(): callable {
+		return array( $this, 'throw_die_exception' );
+	}
+
+	/**
+	 * Throw the die message as an exception.
+	 *
+	 * @param string $message Die message.
+	 * @throws WPDieException Always.
+	 */
+	public function throw_die_exception( string $message ): void {
+		throw new WPDieException( $message );
 	}
 
 	/**
@@ -186,5 +209,33 @@ class Test_Setup_Wizard_Dismiss extends WP_UnitTestCase {
 		wp_parse_str( wp_parse_url( html_entity_decode( $matches[1] ), PHP_URL_QUERY ), $query );
 		$this->assertArrayHasKey( '_wpnonce', $query );
 		$this->assertSame( 1, wp_verify_nonce( $query['_wpnonce'], 'feedzy_dismiss_wizard' ) );
+	}
+
+	/**
+	 * An author with the block editor nonce cannot dismiss the wizard through the AJAX completion step.
+	 */
+	public function test_author_cannot_dismiss_wizard_via_ajax_completion(): void {
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'author' ) ) );
+		add_filter( 'wp_doing_ajax', '__return_true' );
+		add_filter( 'wp_die_ajax_handler', array( $this, 'get_die_handler' ) );
+
+		$_POST    = array(
+			'action'   => 'feedzy_wizard_step_process',
+			'step'     => 'step_4',
+			'security' => wp_create_nonce( FEEDZY_BASEFILE ),
+		);
+		$_REQUEST = $_POST;
+
+		$died = '';
+		ob_start();
+		try {
+			$this->admin->feedzy_wizard_step_process();
+		} catch ( WPDieException $e ) {
+			$died = $e->getMessage();
+		}
+		ob_end_clean();
+
+		$this->assertSame( 'You do not have permission to do this.', $died );
+		$this->assert_wizard_untouched();
 	}
 }
