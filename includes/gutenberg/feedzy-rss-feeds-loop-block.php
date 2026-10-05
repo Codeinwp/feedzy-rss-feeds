@@ -209,7 +209,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			$wrapper_attributes = get_block_wrapper_attributes(
 				array(
 					'class' => 'feedzy-loop-columns-' . $column_count,
-				) 
+				)
 			),
 			$loop
 		);
@@ -241,10 +241,36 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		return preg_replace_callback(
 			$pattern,
 			function ( $matches ) use ( $item, $attributes ) {
-				return isset( $matches[1] ) ? $this->get_value( $matches[1], $item, $attributes ) : '';
+				if ( ! isset( $matches[1] ) ) {
+					return '';
+				}
+				return $this->escape_value( $matches[1], $this->get_value( $matches[1], $item, $attributes ) );
 			},
-			$content 
+			$content
 		);
+	}
+
+	/**
+	 * Escape a feed value for the context its magic tag is used in.
+	 *
+	 * @param string $key The magic tag key.
+	 * @param string $value The raw value returned by get_value().
+	 *
+	 * @return string The escaped value.
+	 */
+	private function escape_value( string $key, string $value ): string {
+		$url_keys  = array( 'url', 'image', 'media' );
+		$html_keys = array( 'description', 'content', 'meta', 'categories', 'price' );
+
+		if ( in_array( $key, $url_keys, true ) ) {
+			return esc_url( $value );
+		}
+
+		if ( in_array( $key, $html_keys, true ) ) {
+			return wp_kses_post( $value );
+		}
+
+		return esc_html( wp_strip_all_tags( $value ) );
 	}
 
 	/**
