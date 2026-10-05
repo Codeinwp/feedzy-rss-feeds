@@ -204,6 +204,10 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			$loop .= apply_filters( 'feedzy_loop_item', $content, $item, $attributes );
 		}
 
+		// Feed values are attacker-controlled and substituted raw into the
+		// template, so sanitize the assembled markup.
+		$loop = wp_kses_post( $loop );
+
 		return sprintf(
 			'<div %1$s>%2$s</div>',
 			$wrapper_attributes = get_block_wrapper_attributes(
@@ -238,116 +242,12 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			$content
 		);
 
-		if ( ! preg_match_all( $pattern, $content, $matches, PREG_OFFSET_CAPTURE ) ) {
-			return $content;
-		}
-
-		// Replace from the last match to the first so earlier byte offsets stay valid.
-		for ( $i = count( $matches[0] ) - 1; $i >= 0; $i-- ) {
-			$placeholder = $matches[0][ $i ][0];
-			$offset      = $matches[0][ $i ][1];
-			$key         = $matches[1][ $i ][0];
-			$value       = (string) $this->get_value( $key, $item, $attributes );
-			$value       = $this->escape_value( $key, $value, $this->is_attribute_context( $content, $offset ) );
-			$content     = substr_replace( $content, $value, $offset, strlen( $placeholder ) );
-		}
-
-		return $content;
-	}
-
-	/**
-	 * Whether a placeholder at the given byte offset sits inside an HTML tag,
-	 * i.e. in attribute position rather than element content.
-	 *
-	 * The scan tracks quote state so a literal ">" inside a quoted attribute
-	 * value is not mistaken for a tag terminator.
-	 *
-	 * @param string $content The template content.
-	 * @param int    $offset The byte offset of the placeholder.
-	 *
-	 * @return bool True when the placeholder is inside a tag.
-	 */
-	private function is_attribute_context( string $content, int $offset ): bool {
-		$in_tag = false;
-		$quote  = '';
-
-		for ( $i = 0; $i < $offset; $i++ ) {
-			$char = $content[ $i ];
-
-			if ( '' !== $quote ) {
-				if ( $char === $quote ) {
-					$quote = '';
-				}
-				continue;
-			}
-
-			if ( ! $in_tag ) {
-				if ( '<' === $char ) {
-					$in_tag = true;
-				}
-				continue;
-			}
-
-			if ( '"' === $char || "'" === $char ) {
-				$quote = $char;
-			} elseif ( '>' === $char ) {
-				$in_tag = false;
-			}
-		}
-
-		return $in_tag;
-	}
-
-	/**
-	 * Escape a feed value for the context its magic tag is used in.
-	 *
-	 * @param string $key The magic tag key.
-	 * @param string $value The raw value returned by get_value().
-	 * @param bool   $in_attribute Whether the placeholder sits inside a tag.
-	 *
-	 * @return string The escaped value.
-	 */
-	private function escape_value( string $key, string $value, bool $in_attribute ): string {
-		if ( in_array( $key, array( 'url', 'image', 'media' ), true ) ) {
-			return esc_url( $value );
-		}
-
-		if ( $in_attribute ) {
-			return $this->escape_attribute_value( $value );
-		}
-
-		if ( in_array( $key, array( 'description', 'content', 'meta', 'categories', 'price' ), true ) ) {
-			return wp_kses_post( $value );
-		}
-
-		return esc_html( wp_strip_all_tags( $value ) );
-	}
-
-	/**
-	 * Escape a value for use inside an HTML tag, safe for quoted and unquoted
-	 * attribute values alike.
-	 *
-	 * The esc_attr() helper encodes the quote and angle-bracket characters but
-	 * leaves whitespace and "=" untouched, so an unquoted attribute could still
-	 * gain a second attribute. Encoding those separators as character references
-	 * keeps the value a single token; they decode back to their literal form for display.
-	 *
-	 * @param string $value The raw value.
-	 *
-	 * @return string The escaped value.
-	 */
-	private function escape_attribute_value( string $value ): string {
-		return strtr(
-			esc_attr( $value ),
-			array(
-				' '  => '&#32;',
-				"\t" => '&#9;',
-				"\n" => '&#10;',
-				"\r" => '&#13;',
-				"\f" => '&#12;',
-				'='  => '&#61;',
-				'`'  => '&#96;',
-			)
+		return preg_replace_callback(
+			$pattern,
+			function ( $matches ) use ( $item, $attributes ) {
+				return (string) $this->get_value( $matches[1], $item, $attributes );
+			},
+			$content
 		);
 	}
 

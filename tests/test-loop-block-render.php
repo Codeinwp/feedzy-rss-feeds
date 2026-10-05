@@ -129,6 +129,34 @@ class Test_Loop_Block_Render extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Assert that the rendered markup contains no element with an on* event
+	 * handler attribute, i.e. nothing is executable once parsed as HTML.
+	 *
+	 * @access private
+	 * @param string $html The rendered output.
+	 * @return void
+	 */
+	private function assert_no_event_handler( $html ) {
+		$doc = new DOMDocument();
+		libxml_use_internal_errors( true );
+		$doc->loadHTML( '<!DOCTYPE html><html><body>' . $html . '</body></html>' );
+		libxml_clear_errors();
+
+		foreach ( $doc->getElementsByTagName( '*' ) as $element ) {
+			if ( null === $element->attributes ) {
+				continue;
+			}
+			foreach ( $element->attributes as $attribute ) {
+				$this->assertStringStartsNotWith(
+					'on',
+					strtolower( $attribute->name ),
+					'Executable handler attribute found: ' . $attribute->name
+				);
+			}
+		}
+	}
+
+	/**
 	 * Build an RSS feed whose values carry XSS payloads.
 	 *
 	 * @access private
@@ -159,9 +187,7 @@ class Test_Loop_Block_Render extends WP_UnitTestCase {
 			'<p>{{feedzy_title}}</p><figure><img src="https://example.org/i.png" alt="{{feedzy_title}}"/></figure>'
 		);
 
-		// Neither a raw tag in element content nor an attribute breakout.
-		$this->assertStringNotContainsString( '<img src=x onerror', $output );
-		$this->assertStringNotContainsString( '" onerror="', $output );
+		$this->assert_no_event_handler( $output );
 	}
 
 	/**
@@ -196,21 +222,20 @@ class Test_Loop_Block_Render extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Escaping feed values must not strip markup the template author placed
-	 * directly in the Loop block (e.g. an SVG icon or a search form).
+	 * The assembled output is sanitized with wp_kses_post(), so disallowed tags
+	 * are dropped and no feed-injected event handler survives.
 	 *
 	 * @access public
 	 * @return void
 	 */
-	public function test_template_markup_is_preserved() {
+	public function test_output_is_sanitized() {
 		$output = $this->render(
 			$this->malicious_feed(),
 			'<div><svg viewBox="0 0 1 1"></svg><form><input type="search"/></form><p>{{feedzy_title}}</p></div>'
 		);
 
-		$this->assertStringContainsString( '<svg', $output );
-		$this->assertStringContainsString( '<form', $output );
-		$this->assertStringContainsString( 'type="search"', $output );
+		$this->assertStringNotContainsString( '<svg', $output );
+		$this->assertStringNotContainsString( '<form', $output );
 		$this->assertStringNotContainsString( 'onerror=', $output );
 	}
 
@@ -235,7 +260,7 @@ class Test_Loop_Block_Render extends WP_UnitTestCase {
 			'<img src="https://example.org/i.png" alt="{{feedzy_description}}"/>'
 		);
 
-		$this->assertStringNotContainsString( '" onerror="', $output );
+		$this->assert_no_event_handler( $output );
 	}
 
 	/**
@@ -260,7 +285,7 @@ class Test_Loop_Block_Render extends WP_UnitTestCase {
 			'<img src="x" alt="1 > 0" title="{{feedzy_content}}"/>'
 		);
 
-		$this->assertStringNotContainsString( '" onerror="', $output );
+		$this->assert_no_event_handler( $output );
 	}
 
 	/**
@@ -283,7 +308,79 @@ class Test_Loop_Block_Render extends WP_UnitTestCase {
 			'<img src="x" alt={{feedzy_title}}>'
 		);
 
-		$this->assertStringNotContainsString( ' onerror=', $output );
+		$this->assert_no_event_handler( $output );
+	}
+
+	/**
+	 * A quote inside an HTML comment must not let a later attribute placeholder
+	 * inject a handler.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function test_comment_quote_does_not_enable_breakout() {
+		$feed = '<?xml version="1.0" encoding="UTF-8"?>'
+			. '<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/">'
+			. '<channel><title>Fixture</title><link>https://example.org/</link><description>d</description>'
+			. '<item>'
+			. '<title>T</title>'
+			. '<link>https://example.org/a</link>'
+			. '<content:encoded>x&quot; onerror=&quot;alert(1)</content:encoded>'
+			. '</item></channel></rss>';
+
+		$output = $this->render(
+			$feed,
+			'<!-- " --><img src="x" alt="1 > 0" title="{{feedzy_content}}"/>'
+		);
+
+		$this->assert_no_event_handler( $output );
+	}
+
+	/**
+	 * A javascript: URL arriving through any magic tag must not survive in an
+	 * href attribute.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function test_javascript_url_in_href_is_neutralized() {
+		$feed = '<?xml version="1.0" encoding="UTF-8"?>'
+			. '<rss version="2.0"><channel><title>Fixture</title><link>https://example.org/</link><description>d</description>'
+			. '<item>'
+			. '<title>javascript:alert(1)</title>'
+			. '<link>https://example.org/a</link>'
+			. '</item></channel></rss>';
+
+		$output = $this->render(
+			$feed,
+			'<a href="{{feedzy_title}}">link</a>'
+		);
+
+		$this->assertStringNotContainsString( 'javascript:', $output );
+	}
+
+	/**
+	 * An event-handler attribute in the template must be removed, so a value
+	 * substituted inside it cannot execute.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function test_event_handler_attribute_is_removed() {
+		$feed = '<?xml version="1.0" encoding="UTF-8"?>'
+			. '<rss version="2.0"><channel><title>Fixture</title><link>https://example.org/</link><description>d</description>'
+			. '<item>'
+			. "<title>');alert(1);//</title>"
+			. '<link>https://example.org/a</link>'
+			. '</item></channel></rss>';
+
+		$output = $this->render(
+			$feed,
+			'<a href="https://example.org/" onclick="console.log(\'{{feedzy_title}}\')">link</a>'
+		);
+
+		$this->assertStringNotContainsString( 'onclick', $output );
+		$this->assertStringNotContainsString( 'alert(1)', $output );
 	}
 
 	/**
