@@ -125,7 +125,13 @@ class Test_Loop_Block_Render extends WP_UnitTestCase {
 			),
 		);
 
-		return Feedzy_Rss_Feeds_Loop_Block::get_instance()->render_callback( $attributes, $template );
+		$output = Feedzy_Rss_Feeds_Loop_Block::get_instance()->render_callback( $attributes, $template );
+
+		// The Loop wrapper is only emitted once items are fetched and substituted,
+		// so this guards against a feed that silently failed to render.
+		$this->assertStringContainsString( 'feedzy-loop-columns-', $output );
+
+		return $output;
 	}
 
 	/**
@@ -222,21 +228,22 @@ class Test_Loop_Block_Render extends WP_UnitTestCase {
 	}
 
 	/**
-	 * The assembled output is sanitized with wp_kses_post(), so disallowed tags
-	 * are dropped and no feed-injected event handler survives.
+	 * Only feed values are escaped, so child-block markup placed in the template
+	 * (SVG icon, search form) survives while the feed payload stays inert.
 	 *
 	 * @access public
 	 * @return void
 	 */
-	public function test_output_is_sanitized() {
+	public function test_child_block_markup_is_preserved() {
 		$output = $this->render(
 			$this->malicious_feed(),
-			'<div><svg viewBox="0 0 1 1"></svg><form><input type="search"/></form><p>{{feedzy_title}}</p></div>'
+			'<div><svg viewBox="0 0 1 1"><path d="M0 0h1v1z"/></svg><form><input type="search"/></form><p>{{feedzy_title}}</p></div>'
 		);
 
-		$this->assertStringNotContainsString( '<svg', $output );
-		$this->assertStringNotContainsString( '<form', $output );
-		$this->assertStringNotContainsString( 'onerror=', $output );
+		$this->assertStringContainsString( '<svg viewBox="0 0 1 1">', $output );
+		$this->assertStringContainsString( '<path d="M0 0h1v1z"', $output );
+		$this->assertStringContainsString( '<input type="search"', $output );
+		$this->assert_no_event_handler( $output );
 	}
 
 	/**
@@ -360,13 +367,13 @@ class Test_Loop_Block_Render extends WP_UnitTestCase {
 	}
 
 	/**
-	 * An event-handler attribute in the template must be removed, so a value
-	 * substituted inside it cannot execute.
+	 * A feed value substituted into an event-handler attribute is dropped, so
+	 * the attacker payload cannot reach the JavaScript context.
 	 *
 	 * @access public
 	 * @return void
 	 */
-	public function test_event_handler_attribute_is_removed() {
+	public function test_event_handler_substitution_is_rejected() {
 		$feed = '<?xml version="1.0" encoding="UTF-8"?>'
 			. '<rss version="2.0"><channel><title>Fixture</title><link>https://example.org/</link><description>d</description>'
 			. '<item>'
@@ -379,8 +386,180 @@ class Test_Loop_Block_Render extends WP_UnitTestCase {
 			'<a href="https://example.org/" onclick="console.log(\'{{feedzy_title}}\')">link</a>'
 		);
 
-		$this->assertStringNotContainsString( 'onclick', $output );
 		$this->assertStringNotContainsString( 'alert(1)', $output );
+		$this->assertStringContainsString( "console.log('')", $output );
+	}
+
+	/**
+	 * A feed value substituted into a style attribute is dropped.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function test_style_attribute_substitution_is_rejected() {
+		$feed = '<?xml version="1.0" encoding="UTF-8"?>'
+			. '<rss version="2.0"><channel><title>Fixture</title><link>https://example.org/</link><description>d</description>'
+			. '<item>'
+			. '<title>red;background:url(https://evil.example/x)</title>'
+			. '<link>https://example.org/a</link>'
+			. '</item></channel></rss>';
+
+		$output = $this->render(
+			$feed,
+			'<span style="color:{{feedzy_title}}">x</span>'
+		);
+
+		$this->assertStringContainsString( 'style="color:"', $output );
+		$this->assertStringNotContainsString( 'background:', $output );
+	}
+
+	/**
+	 * A feed value substituted in attribute-name position cannot introduce a
+	 * second attribute (only name-legal characters survive).
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function test_attribute_name_position_cannot_inject() {
+		$feed = '<?xml version="1.0" encoding="UTF-8"?>'
+			. '<rss version="2.0"><channel><title>Fixture</title><link>https://example.org/</link><description>d</description>'
+			. '<item>'
+			. '<title>x onclick=alert(1)</title>'
+			. '<link>https://example.org/a</link>'
+			. '</item></channel></rss>';
+
+		$output = $this->render(
+			$feed,
+			'<span {{feedzy_title}}>x</span>'
+		);
+
+		$this->assert_no_event_handler( $output );
+	}
+
+	/**
+	 * A benign title in a quoted attribute keeps its full text and adds no
+	 * extra attribute.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function test_quoted_attribute_keeps_full_value() {
+		$feed = '<?xml version="1.0" encoding="UTF-8"?>'
+			. '<rss version="2.0"><channel><title>Fixture</title><link>https://example.org/</link><description>d</description>'
+			. '<item>'
+			. '<title>She said "hi" &amp; left</title>'
+			. '<link>https://example.org/a</link>'
+			. '</item></channel></rss>';
+
+		$output = $this->render( $feed, '<img src="https://example.org/i.png" alt="{{feedzy_title}}"/>' );
+
+		$doc = new DOMDocument();
+		libxml_use_internal_errors( true );
+		$doc->loadHTML( '<!DOCTYPE html><html><body>' . $output . '</body></html>' );
+		libxml_clear_errors();
+		$img = $doc->getElementsByTagName( 'img' )->item( 0 );
+
+		$this->assertInstanceOf( 'DOMElement', $img );
+		$this->assertSame( 'She said "hi" & left', $img->getAttribute( 'alt' ) );
+		$this->assertSame( 2, $img->attributes->length );
+	}
+
+	/**
+	 * A value in a single-quoted attribute cannot break out of the quotes.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function test_single_quoted_attribute_cannot_break_out() {
+		$feed = '<?xml version="1.0" encoding="UTF-8"?>'
+			. '<rss version="2.0"><channel><title>Fixture</title><link>https://example.org/</link><description>d</description>'
+			. '<item>'
+			. "<title>x' onerror='alert(1)</title>"
+			. '<link>https://example.org/a</link>'
+			. '</item></channel></rss>';
+
+		$output = $this->render( $feed, "<img src='x' alt='{{feedzy_title}}'>" );
+
+		$this->assert_no_event_handler( $output );
+	}
+
+	/**
+	 * An uppercase event-handler attribute is matched case-insensitively and its
+	 * substituted value is rejected.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function test_uppercase_event_handler_is_rejected() {
+		$feed = '<?xml version="1.0" encoding="UTF-8"?>'
+			. '<rss version="2.0"><channel><title>Fixture</title><link>https://example.org/</link><description>d</description>'
+			. '<item>'
+			. '<title>x);alert(1)</title>'
+			. '<link>https://example.org/a</link>'
+			. '</item></channel></rss>';
+
+		$output = $this->render( $feed, '<a ONCLICK="f({{feedzy_title}})">x</a>' );
+
+		$this->assertStringNotContainsString( 'alert(1)', $output );
+	}
+
+	/**
+	 * A data: URL in an href attribute is rejected by esc_url().
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function test_data_url_in_href_is_rejected() {
+		$feed = '<?xml version="1.0" encoding="UTF-8"?>'
+			. '<rss version="2.0"><channel><title>Fixture</title><link>https://example.org/</link><description>d</description>'
+			. '<item>'
+			. '<title>data:text/html,hello</title>'
+			. '<link>https://example.org/a</link>'
+			. '</item></channel></rss>';
+
+		$output = $this->render( $feed, '<a href="{{feedzy_title}}">x</a>' );
+
+		$this->assertStringNotContainsString( 'data:text/html', $output );
+	}
+
+	/**
+	 * A src attribute is treated as a URL regardless of the magic tag key.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function test_src_attribute_rejects_unsafe_scheme() {
+		$feed = '<?xml version="1.0" encoding="UTF-8"?>'
+			. '<rss version="2.0"><channel><title>Fixture</title><link>https://example.org/</link><description>d</description>'
+			. '<item>'
+			. '<title>javascript:alert(1)</title>'
+			. '<link>https://example.org/a</link>'
+			. '</item></channel></rss>';
+
+		$output = $this->render( $feed, '<img src="{{feedzy_title}}">' );
+
+		$this->assertStringNotContainsString( 'javascript:', $output );
+	}
+
+	/**
+	 * A value inside a <script> body cannot close the element or execute: it is
+	 * reduced to inert text, with no extra </script> and no handler.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function test_script_body_is_not_exploitable() {
+		$feed = '<?xml version="1.0" encoding="UTF-8"?>'
+			. '<rss version="2.0"><channel><title>Fixture</title><link>https://example.org/</link><description>d</description>'
+			. '<item>'
+			. '<title>&lt;/script&gt;&lt;img src=x onerror=alert(1)&gt;</title>'
+			. '<link>https://example.org/a</link>'
+			. '</item></channel></rss>';
+
+		$output = $this->render( $feed, '<script>var a = "{{feedzy_title}}";</script>' );
+
+		$this->assertSame( 1, substr_count( strtolower( $output ), '</script>' ) );
+		$this->assertStringNotContainsString( 'onerror=', $output );
 	}
 
 	/**

@@ -12,6 +12,28 @@
 class Feedzy_Rss_Feeds_Loop_Block {
 
 	/**
+	 * Attributes whose value is a URL and must be escaped.
+	 *
+	 * @var string[]
+	 */
+	const URL_ATTRIBUTES = array(
+		'href',
+		'src',
+		'srcset',
+		'action',
+		'formaction',
+		'poster',
+		'cite',
+		'data',
+		'background',
+		'longdesc',
+		'usemap',
+		'ping',
+		'manifest',
+		'xlink:href',
+	);
+
+	/**
 	 * A reference to an instance of this class.
 	 *
 	 * @var Feedzy_Rss_Feeds_Loop_Block The one Feedzy_Rss_Feeds_Loop_Block instance.
@@ -204,10 +226,6 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			$loop .= apply_filters( 'feedzy_loop_item', $content, $item, $attributes );
 		}
 
-		// Feed values are attacker-controlled and substituted raw into the
-		// template, so sanitize the assembled markup.
-		$loop = wp_kses_post( $loop );
-
 		return sprintf(
 			'<div %1$s>%2$s</div>',
 			$wrapper_attributes = get_block_wrapper_attributes(
@@ -242,12 +260,257 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			$content
 		);
 
-		return preg_replace_callback(
-			$pattern,
-			function ( $matches ) use ( $item, $attributes ) {
-				return (string) $this->get_value( $matches[1], $item, $attributes );
-			},
-			$content
+		if ( ! preg_match_all( $pattern, $content, $matches, PREG_OFFSET_CAPTURE ) ) {
+			return $content;
+		}
+
+		// Substitute from the last match to the first so earlier byte offsets stay valid.
+		for ( $i = count( $matches[0] ) - 1; $i >= 0; $i-- ) {
+			$placeholder = $matches[0][ $i ][0];
+			$offset      = (int) $matches[0][ $i ][1];
+			$key         = $matches[1][ $i ][0];
+			$value       = (string) $this->get_value( $key, $item, $attributes );
+			$context     = $this->resolve_context( $content, $offset );
+			$value       = $this->escape_value( $key, $value, $context['type'], $context['attribute'] );
+			$content     = substr_replace( $content, $value, $offset, strlen( $placeholder ) );
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Classify where a placeholder at the given byte offset sits in the template.
+	 *
+	 * Walks the markup before the placeholder with a small HTML scanner that is
+	 * aware of comments and quoted attribute values, so a ">" inside a quoted
+	 * value or a quote inside a comment does not confuse the result.
+	 *
+	 * @param string $content The template content.
+	 * @param int    $offset The byte offset of the placeholder.
+	 *
+	 * @return array{type: string, attribute: string} Context type
+	 *         (text|comment|attribute|tag) and the lowercased attribute name.
+	 */
+	private function resolve_context( string $content, int $offset ): array {
+		$state = 'text';
+		$attr  = '';
+		$word  = '';
+
+		for ( $i = 0; $i < $offset; $i++ ) {
+			$char = $content[ $i ];
+
+			switch ( $state ) {
+				case 'dq':
+				case 'sq':
+					$state = $this->advance_quote( $state, $char );
+					break;
+				case 'comment':
+					$state = $this->advance_comment( $char, $content, $i );
+					break;
+				case 'text':
+					list( $state, $attr, $word ) = $this->advance_text( $char, $content, $i );
+					break;
+				case 'tag':
+					list( $state, $attr, $word ) = $this->advance_name( $char, $attr, $word );
+					break;
+				default:
+					list( $state, $attr, $word ) = $this->advance_value( $state, $char, $attr );
+			}
+		}
+
+		return $this->classify_state( $state, $attr );
+	}
+
+	/**
+	 * Advance one character while inside a quoted attribute value.
+	 *
+	 * @param string $state Current quote state (dq|sq).
+	 * @param string $char Current character.
+	 *
+	 * @return string Next state.
+	 */
+	private function advance_quote( string $state, string $char ): string {
+		if ( ( 'dq' === $state ? '"' : "'" ) === $char ) {
+			return 'tag';
+		}
+		return $state;
+	}
+
+	/**
+	 * Advance one character while inside an HTML comment.
+	 *
+	 * @param string $char Current character.
+	 * @param string $content The template content.
+	 * @param int    $index Current index.
+	 *
+	 * @return string Next state.
+	 */
+	private function advance_comment( string $char, string $content, int $index ): string {
+		if ( '>' === $char && '--' === substr( $content, $index - 2, 2 ) ) {
+			return 'text';
+		}
+		return 'comment';
+	}
+
+	/**
+	 * Advance one character while in element content.
+	 *
+	 * @param string $char Current character.
+	 * @param string $content The template content.
+	 * @param int    $index Current index.
+	 *
+	 * @return array{0: string, 1: string, 2: string} Next state, attribute, token.
+	 */
+	private function advance_text( string $char, string $content, int $index ): array {
+		if ( '<' !== $char ) {
+			return array( 'text', '', '' );
+		}
+		return array( '!--' === substr( $content, $index + 1, 3 ) ? 'comment' : 'tag', '', '' );
+	}
+
+	/**
+	 * Advance one character while reading a tag name or attribute name.
+	 *
+	 * @param string $char Current character.
+	 * @param string $attr Attribute name in scope.
+	 * @param string $word Current name token being read.
+	 *
+	 * @return array{0: string, 1: string, 2: string} Next state, attribute, token.
+	 */
+	private function advance_name( string $char, string $attr, string $word ): array {
+		if ( '>' === $char ) {
+			return array( 'text', '', '' );
+		}
+		if ( '"' === $char ) {
+			return array( 'dq', $attr, '' );
+		}
+		if ( "'" === $char ) {
+			return array( 'sq', $attr, '' );
+		}
+		if ( '=' === $char ) {
+			return array( 'eq', '' === $word ? $attr : strtolower( $word ), '' );
+		}
+		if ( ctype_space( $char ) ) {
+			return array( 'tag', $attr, '' );
+		}
+		return array( 'tag', $attr, $word . $char );
+	}
+
+	/**
+	 * Advance one character while expecting or reading an attribute value
+	 * (after "=", quoted or unquoted).
+	 *
+	 * @param string $state Current value state (eq|uq).
+	 * @param string $char Current character.
+	 * @param string $attr Attribute name the value belongs to.
+	 *
+	 * @return array{0: string, 1: string, 2: string} Next state, attribute, token.
+	 */
+	private function advance_value( string $state, string $char, string $attr ): array {
+		if ( '>' === $char ) {
+			return array( 'text', '', '' );
+		}
+		if ( '"' === $char ) {
+			return array( 'dq', $attr, '' );
+		}
+		if ( "'" === $char ) {
+			return array( 'sq', $attr, '' );
+		}
+		if ( ctype_space( $char ) ) {
+			return array( 'eq' === $state ? 'eq' : 'tag', 'eq' === $state ? $attr : '', '' );
+		}
+		return array( 'uq', $attr, '' );
+	}
+
+	/**
+	 * Turn a final scanner state into a context descriptor.
+	 *
+	 * @param string $state Scanner state at the placeholder.
+	 * @param string $attr Attribute name in scope.
+	 *
+	 * @return array{type: string, attribute: string}
+	 */
+	private function classify_state( string $state, string $attr ): array {
+		if ( 'comment' === $state ) {
+			return array(
+				'type'      => 'comment',
+				'attribute' => '',
+			);
+		}
+		if ( in_array( $state, array( 'dq', 'sq', 'uq', 'eq' ), true ) ) {
+			return array(
+				'type'      => 'attribute',
+				'attribute' => $attr,
+			);
+		}
+		if ( 'tag' === $state ) {
+			return array(
+				'type'      => 'tag',
+				'attribute' => '',
+			);
+		}
+		return array(
+			'type'      => 'text',
+			'attribute' => '',
+		);
+	}
+
+	/**
+	 * Escape a feed value for the context it is substituted into.
+	 *
+	 * @param string $key The magic tag key.
+	 * @param string $value The raw value from get_value().
+	 * @param string $context Context type: text|comment|attribute|tag.
+	 * @param string $attribute Destination attribute name, when in an attribute.
+	 *
+	 * @return string The escaped value.
+	 */
+	private function escape_value( string $key, string $value, string $context, string $attribute ): string {
+		if ( 'attribute' === $context ) {
+			return $this->escape_attribute( $key, $value, $attribute );
+		}
+		if ( 'comment' === $context ) {
+			return str_replace( array( '<', '>', '--' ), '', wp_strip_all_tags( $value ) );
+		}
+		if ( 'tag' === $context ) {
+			return preg_replace( '/[^A-Za-z0-9_:-]/', '', $value );
+		}
+		if ( in_array( $key, array( 'url', 'image', 'media' ), true ) ) {
+			return esc_url( $value );
+		}
+		if ( in_array( $key, array( 'description', 'content', 'meta', 'categories', 'price' ), true ) ) {
+			return wp_kses_post( $value );
+		}
+		return esc_html( wp_strip_all_tags( $value ) );
+	}
+
+	/**
+	 * Escape a feed value destined for an HTML attribute by the attribute's role.
+	 *
+	 * @param string $key The magic tag key.
+	 * @param string $value The raw value.
+	 * @param string $attribute Lowercased attribute name.
+	 *
+	 * @return string The escaped value.
+	 */
+	private function escape_attribute( string $key, string $value, string $attribute ): string {
+		if ( 0 === strpos( $attribute, 'on' ) || 'style' === $attribute ) {
+			return '';
+		}
+		if ( in_array( $attribute, self::URL_ATTRIBUTES, true ) || in_array( $key, array( 'url', 'image', 'media' ), true ) ) {
+			return esc_url( $value );
+		}
+		return strtr(
+			esc_attr( $value ),
+			array(
+				' '  => '&#32;',
+				"\t" => '&#9;',
+				"\n" => '&#10;',
+				"\r" => '&#13;',
+				"\f" => '&#12;',
+				'='  => '&#61;',
+				'`'  => '&#96;',
+			)
 		);
 	}
 
