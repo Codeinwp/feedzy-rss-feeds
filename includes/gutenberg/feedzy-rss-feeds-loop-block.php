@@ -242,45 +242,129 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	}
 
 	/**
-	 * Prepare a template for KSES in one left-to-right pass:
+	 * Prepare a template for KSES in one left-to-right pass that reads `<` the
+	 * way the HTML tokenizer does, so nothing below can run past its real end:
 	 * - script and style elements are removed with their body, since KSES would
 	 *   drop the tags but print the body as text; their code no longer runs;
-	 * - literal < and > in comment bodies are encoded, so KSES keeps the comment
-	 *   instead of escaping it into visible text;
-	 * - literal < and > in quoted attribute values are encoded, so KSES does not
-	 *   read them as tag boundaries; browsers decode them, so values are unchanged.
-	 * Apart from the removed elements, this only ever turns markup into text.
+	 * - textarea, title, xmp and plaintext bodies are text: < and > in them are
+	 *   encoded, which textarea and title display unchanged;
+	 * - iframe, noembed, noframes and noscript bodies are fallback markup that
+	 *   browsers read as raw text: each is prepared on its own up to its end tag;
+	 * - comments, including those closed by --!> or left open, and bogus
+	 *   comments (<!x>, <?x>, </3>) keep their place with < and > encoded and are
+	 *   always closed; empty <!--> and <!---> are dropped;
+	 * - < and > in quoted attribute values of start and end tags are encoded.
+	 * Elements left unclosed are closed so they cannot swallow the page, and
+	 * magic tags inside text and fallback bodies are marked to insert plain text.
 	 *
 	 * @param string $template The inner blocks template.
 	 *
 	 * @return string The prepared template.
 	 */
 	private function prepare_template( string $template ): string {
-		// Earliest match wins, as in browsers: raw-text bodies hide comments and vice versa.
-		$pattern = '#<(?<raw>script|style)(?=[\s/>])[^>]*>.*?(?:</\k<raw>[^>]*>|$)'
-			. '|<!--(?<body>.*?)(?<end>-->|$)'
-			. '|<[a-zA-Z](?:(?>\s*=\s*(?:"[^"]*"|\'[^\']*\'))|[^>])*+>#is';
+		// Rest of a start tag: quotes open a value only after "=".
+		$open    = '(?:(?>\s*=\s*(?:"[^"]*"|\'[^\']*\'))|[^>])*+>';
+		$pattern = '#(?<removed><(?<rname>script|style)(?=[\s/>])' . $open . '.*?(?:</\k<rname>(?=[\s/>])[^>]*>|$))'
+			. '|(?<sopen><(?<sname>textarea|title|xmp|iframe|noembed|noframes|noscript)(?=[\s/>])' . $open . ')(?<sbody>.*?)(?<sclose></\k<sname>(?=[\s/>])[^>]*>|$)'
+			. '|(?<popen><plaintext(?=[\s/>])' . $open . ')(?<pbody>.*)'
+			. '|(?<empty><!---?>)'
+			. '|<!--(?<cbody>.*?)(?:--!?>|$)'
+			. '|(?<bogus><(?:[!?]|/(?![a-zA-Z]))[^>]*)(?:>|$)'
+			. '|</?[a-zA-Z]' . $open . '#is';
 
 		return (string) preg_replace_callback(
 			$pattern,
 			function ( array $matches ): string {
-				if ( '' !== ( $matches['raw'] ?? '' ) ) {
-					return '';
-				}
-
-				if ( 0 === strpos( $matches[0], '<!--' ) ) {
-					return '<!--' . $this->encode_delimiters( $matches['body'] ) . $matches['end'];
-				}
-
-				return (string) preg_replace_callback(
-					'/=\s*("[^"]*"|\'[^\']*\')/',
-					function ( array $value ): string {
-						return $this->encode_delimiters( $value[0] );
-					},
-					$matches[0]
-				);
+				return $this->prepare_match( $matches );
 			},
 			$template
+		);
+	}
+
+	/**
+	 * Prepare one construct matched by prepare_template().
+	 *
+	 * @param array<int|string, string> $matches The pattern matches.
+	 *
+	 * @return string The prepared markup.
+	 */
+	private function prepare_match( array $matches ): string {
+		$matches = array_merge(
+			array(
+				'removed' => '',
+				'empty'   => '',
+				'sname'   => '',
+				'popen'   => '',
+				'bogus'   => '',
+			),
+			$matches
+		);
+
+		if ( '' !== $matches['removed'] || '' !== $matches['empty'] ) {
+			return '';
+		}
+
+		if ( '' !== $matches['sname'] ) {
+			return $this->prepare_special_element( strtolower( $matches['sname'] ), $matches['sopen'], $matches['sbody'], $matches['sclose'] );
+		}
+
+		if ( '' !== $matches['popen'] ) {
+			return $this->encode_attribute_values( $matches['popen'] ) . $this->encode_delimiters( $this->mark_plain_tags( $matches['pbody'] ) );
+		}
+
+		if ( 0 === strpos( $matches[0], '<!--' ) ) {
+			return '<!--' . $this->encode_delimiters( $matches['cbody'] ) . '-->';
+		}
+
+		if ( '' !== $matches['bogus'] ) {
+			return '<' . $this->encode_delimiters( substr( $matches['bogus'], 1 ) ) . '>';
+		}
+
+		return $this->encode_attribute_values( $matches[0] );
+	}
+
+	/**
+	 * Prepare an element whose body the HTML tokenizer does not read as markup.
+	 *
+	 * @param string $name The lowercase element name.
+	 * @param string $open The start tag.
+	 * @param string $body The body up to the end tag.
+	 * @param string $close The end tag, or empty when the element is unclosed.
+	 *
+	 * @return string The prepared element.
+	 */
+	private function prepare_special_element( string $name, string $open, string $body, string $close ): string {
+		$body = $this->mark_plain_tags( $body );
+		$body = in_array( $name, array( 'iframe', 'noembed', 'noframes', 'noscript' ), true ) ? $this->prepare_template( $body ) : $this->encode_delimiters( $body );
+
+		return $this->encode_attribute_values( $open ) . $body . ( '' === $close ? '</' . $name . '>' : $close );
+	}
+
+	/**
+	 * Mark magic tags so their values are inserted as plain text.
+	 *
+	 * @param string $markup The markup.
+	 *
+	 * @return string The markup with marked magic tags.
+	 */
+	private function mark_plain_tags( string $markup ): string {
+		return (string) preg_replace( '/\{\{feedzy_([^}|]+)\}\}/', '{{feedzy_$1|plain}}', $markup );
+	}
+
+	/**
+	 * Encode < and > in the quoted attribute values of a tag.
+	 *
+	 * @param string $tag The tag.
+	 *
+	 * @return string The tag with attribute delimiters encoded.
+	 */
+	private function encode_attribute_values( string $tag ): string {
+		return (string) preg_replace_callback(
+			'/=\s*("[^"]*"|\'[^\']*\')/',
+			function ( array $value ): string {
+				return $this->encode_delimiters( $value[0] );
+			},
+			$tag
 		);
 	}
 
@@ -294,6 +378,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	private function encode_delimiters( string $text ): string {
 		return str_replace( array( '<', '>' ), array( '&lt;', '&gt;' ), $text );
 	}
+
 	/**
 	 * Build the KSES allowlist for a Loop template: post-safe HTML plus every
 	 * tag and attribute the template itself uses, minus executable ones.
@@ -394,10 +479,13 @@ class Feedzy_Rss_Feeds_Loop_Block {
 
 		$template = $this->kses( (string) $template, $this->get_allowed_html( $content ) );
 		$values   = array();
-		foreach ( $keys as $token => $key ) {
+		foreach ( $keys as $token => $tag ) {
+			// prepare_template() marks tags in text and fallback bodies with "|plain".
+			$parts            = explode( '|', $tag, 2 );
 			$values[ $token ] = array(
-				'key'   => $key,
-				'value' => (string) $this->get_raw_value( $key, $item, $attributes ),
+				'key'   => $parts[0],
+				'value' => (string) $this->get_raw_value( $parts[0], $item, $attributes ),
+				'plain' => isset( $parts[1] ) && 'plain' === $parts[1],
 			);
 		}
 
@@ -414,8 +502,8 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	 * Replace the tokens in one piece of KSES-normalized markup, escaping each
 	 * value for where it sits: attribute value, comment or element content.
 	 *
-	 * @param string                                           $part A tag, comment or text run.
-	 * @param array<string, array{key: string, value: string}> $values Raw values keyed by token.
+	 * @param string                                                        $part A tag, comment or text run.
+	 * @param array<string, array{key: string, value: string, plain: bool}> $values Raw values keyed by token.
 	 *
 	 * @return string The filled markup.
 	 */
@@ -441,18 +529,23 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	/**
 	 * Replace tokens with their values escaped for a context.
 	 *
-	 * @param string                                           $markup The markup holding tokens.
-	 * @param array<string, array{key: string, value: string}> $values Raw values keyed by token.
-	 * @param string                                           $context One of text, attribute, comment or drop.
+	 * @param string                                                        $markup The markup holding tokens.
+	 * @param array<string, array{key: string, value: string, plain: bool}> $values Raw values keyed by token.
+	 * @param string                                                        $context One of text, attribute, comment or drop.
 	 *
 	 * @return string The markup with tokens replaced.
 	 */
 	private function replace_tokens( string $markup, array $values, string $context ): string {
 		$replacements = array();
 		foreach ( $values as $token => $value ) {
-			if ( false !== strpos( $markup, $token ) ) {
-				$replacements[ $token ] = 'drop' === $context ? '' : $this->escape_value( $value['key'], $value['value'], $context );
+			if ( false === strpos( $markup, $token ) ) {
+				continue;
 			}
+			if ( 'drop' === $context ) {
+				$replacements[ $token ] = '';
+				continue;
+			}
+			$replacements[ $token ] = $this->escape_value( $value['key'], $value['value'], $value['plain'] ? 'plain' : $context );
 		}
 
 		return empty( $replacements ) ? $markup : strtr( $markup, $replacements );
@@ -463,23 +556,27 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	 *
 	 * @param string $key The magic tag key.
 	 * @param string $value The raw value.
-	 * @param string $context One of text, attribute or comment.
+	 * @param string $context One of text, attribute, comment or plain.
 	 *
 	 * @return string The escaped value.
 	 */
 	private function escape_value( string $key, string $value, string $context ): string {
-		if ( in_array( $key, self::URL_KEYS, true ) && 'comment' !== $context ) {
+		$is_html = in_array( $key, self::HTML_KEYS, true );
+
+		// Comments and text-only bodies get plain text that cannot close them.
+		if ( in_array( $context, array( 'comment', 'plain' ), true ) ) {
+			return esc_html( $is_html ? wp_strip_all_tags( $value ) : $value );
+		}
+
+		if ( in_array( $key, self::URL_KEYS, true ) ) {
 			return esc_url( $value );
 		}
 
-		$is_html = in_array( $key, self::HTML_KEYS, true );
 		if ( 'text' === $context ) {
 			return $is_html ? wp_kses_post( $value ) : esc_html( $value );
 		}
 
-		$value = $is_html ? wp_strip_all_tags( $value ) : $value;
-
-		return 'attribute' === $context ? esc_attr( $value ) : esc_html( wp_strip_all_tags( $value ) );
+		return esc_attr( $is_html ? wp_strip_all_tags( $value ) : $value );
 	}
 
 	/**

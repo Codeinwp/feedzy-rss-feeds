@@ -394,6 +394,79 @@ class Test_Loop_Block_Render extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Templates where the HTML tokenizer does not read "<" as markup, with
+	 * markup that must still render after them.
+	 *
+	 * @return array<string, array{string, string}> Template and expected markup.
+	 */
+	public function special_markup_provider(): array {
+		return array(
+			'textarea with unclosed comment' => array( '<textarea>a <!-- b</textarea><p>{{feedzy_title}}</p>', '</textarea><p>Headline</p>' ),
+			'title with unclosed comment'    => array( '<title>a <!-- b</title><p>{{feedzy_title}}</p>', '</title><p>Headline</p>' ),
+			'xmp with unclosed comment'      => array( '<xmp>a <!-- b</xmp><p>{{feedzy_title}}</p>', '</xmp><p>Headline</p>' ),
+			'iframe body with comment'       => array( '<iframe src="https://example.org/"><!-- </iframe><p>{{feedzy_title}}</p>', '</iframe><p>Headline</p>' ),
+			'noscript body with comment'     => array( '<noscript><!-- </noscript><p>{{feedzy_title}}</p>', '</noscript><p>Headline</p>' ),
+			'unclosed textarea'              => array( '<p>{{feedzy_title}}</p><textarea>a <!-- b', '<p>Headline</p><textarea>a &lt;!-- b</textarea>' ),
+			'comment closed by --!>'         => array( '<!-- a --!><p>{{feedzy_title}}</p>', '<!-- a --><p>Headline</p>' ),
+			'empty comment <!-->'            => array( '<!--><p>{{feedzy_title}}</p>', '<p>Headline</p>' ),
+			'empty comment <!--->'           => array( '<!---><p>{{feedzy_title}}</p>', '<p>Headline</p>' ),
+			'unclosed comment at end'        => array( '<p>{{feedzy_title}}</p><!-- tail', '<p>Headline</p><!-- tail-->' ),
+			'CDATA bogus comment'            => array( '<![CDATA[<!--]]><p>{{feedzy_title}}</p>', '<p>Headline</p>' ),
+			'processing instruction'         => array( '<?x <!--?><p>{{feedzy_title}}</p>', '<p>Headline</p>' ),
+			'end tag attribute value'        => array( '<span>x</span title="<!--"><p>{{feedzy_title}}</p>', '</span><p>Headline</p>' ),
+		);
+	}
+
+	/**
+	 * Raw-text, text-only and comment-like constructs end where browsers end
+	 * them, so the markup after them renders.
+	 *
+	 * @dataProvider special_markup_provider
+	 *
+	 * @param string $template The inner block template.
+	 * @param string $expected Markup that must appear in the output.
+	 * @return void
+	 */
+	public function test_special_markup_keeps_following_markup( string $template, string $expected ): void {
+		$output = $this->render( $this->feed_with_title( 'Headline' ), $template );
+
+		$this->assertSame( 1, substr_count( $output, '<p>Headline</p>' ) );
+		$this->assertStringContainsString( $expected, $output );
+		$this->assertStringNotContainsString( '&lt;p&gt;', $output );
+	}
+
+	/**
+	 * Fallback markup in a noscript body keeps working.
+	 *
+	 * @return void
+	 */
+	public function test_noscript_fallback_markup_is_kept(): void {
+		$output = $this->render(
+			$this->feed_with_title( 'Headline' ),
+			'<noscript><img src="https://example.org/i.png" alt="{{feedzy_title}}"></noscript>'
+		);
+
+		$this->assertStringContainsString( '<noscript><img src="https://example.org/i.png" alt="Headline"></noscript>', $output );
+	}
+
+	/**
+	 * A rich feed value inside a textarea is plain text, so it cannot close the
+	 * textarea and add markup after it.
+	 *
+	 * @return void
+	 */
+	public function test_rich_value_cannot_close_textarea(): void {
+		$output = $this->render(
+			$this->feed_with_content( 'Hi &lt;textarea&gt;x&lt;/textarea&gt;&lt;img src=&quot;https://attacker.example/p.png&quot;&gt;' ),
+			'<textarea>{{feedzy_content}}</textarea>'
+		);
+
+		$this->assertSame( 1, substr_count( $output, '</textarea>' ) );
+		$this->assertStringNotContainsString( 'attacker.example', $output );
+		$this->assertStringContainsString( '<textarea>Hi x</textarea>', $output );
+	}
+
+	/**
 	 * Add a `true` element entry to the post allowlist, as some plugins do.
 	 *
 	 * @param array<string, mixed> $tags The allowed HTML.
