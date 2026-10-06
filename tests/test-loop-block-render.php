@@ -395,7 +395,7 @@ class Test_Loop_Block_Render extends WP_UnitTestCase {
 
 	/**
 	 * Templates where the HTML tokenizer does not read "<" as markup, with
-	 * markup that must still render after them.
+	 * markup around each construct that must still render.
 	 *
 	 * @return array<string, array{string, string}> Template and expected markup.
 	 */
@@ -422,7 +422,7 @@ class Test_Loop_Block_Render extends WP_UnitTestCase {
 
 	/**
 	 * Raw-text, text-only and comment-like constructs end where browsers end
-	 * them, so the markup after them renders.
+	 * them, and the markup around each construct must still render.
 	 *
 	 * @dataProvider special_markup_provider
 	 *
