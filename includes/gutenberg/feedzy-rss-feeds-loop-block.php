@@ -254,8 +254,10 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	 *   comments (<!x>, <?x>, </3>) keep their place with < and > encoded and are
 	 *   always closed; empty <!--> and <!---> are dropped;
 	 * - < and > in quoted attribute values of start and end tags are encoded.
-	 * Elements left unclosed are closed so they cannot swallow the page, and
-	 * magic tags inside text and fallback bodies are marked to insert plain text.
+	 * Unclosed textarea, title, xmp, iframe, noembed, noframes and noscript
+	 * elements are closed at the end of the template. Plaintext has no end tag,
+	 * so it still runs to the end of the template and beyond, as in browsers.
+	 * Magic tags inside text and fallback bodies are marked to insert plain text.
 	 *
 	 * @param string $template The inner blocks template.
 	 *

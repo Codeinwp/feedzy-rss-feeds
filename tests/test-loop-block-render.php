@@ -414,6 +414,9 @@ class Test_Loop_Block_Render extends WP_UnitTestCase {
 			'CDATA bogus comment'            => array( '<![CDATA[<!--]]><p>{{feedzy_title}}</p>', '<p>Headline</p>' ),
 			'processing instruction'         => array( '<?x <!--?><p>{{feedzy_title}}</p>', '<p>Headline</p>' ),
 			'end tag attribute value'        => array( '<span>x</span title="<!--"><p>{{feedzy_title}}</p>', '</span><p>Headline</p>' ),
+			'plaintext to end of template'   => array( '<p>{{feedzy_title}}</p><plaintext>a <!-- b', '<p>Headline</p><plaintext>a &lt;!-- b' ),
+			'plaintext body is text'         => array( '<p>{{feedzy_title}}</p><plaintext>a <b>c</b> <!-- d -->', '<p>Headline</p><plaintext>a &lt;b&gt;c&lt;/b&gt; &lt;!-- d --&gt;' ),
+			'end tag bogus comment'          => array( '</3 <!--><p>{{feedzy_title}}</p>', '<p>Headline</p>' ),
 		);
 	}
 
@@ -436,17 +439,17 @@ class Test_Loop_Block_Render extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Fallback markup in a noscript body keeps working.
+	 * A rich feed value inside a noscript body is inserted as plain text.
 	 *
 	 * @return void
 	 */
-	public function test_noscript_fallback_markup_is_kept(): void {
+	public function test_noscript_value_is_plain_text(): void {
 		$output = $this->render(
-			$this->feed_with_title( 'Headline' ),
-			'<noscript><img src="https://example.org/i.png" alt="{{feedzy_title}}"></noscript>'
+			$this->feed_with_content( 'Hi &lt;b&gt;x&lt;/b&gt;' ),
+			'<noscript><p>{{feedzy_content}}</p></noscript>'
 		);
 
-		$this->assertStringContainsString( '<noscript><img src="https://example.org/i.png" alt="Headline"></noscript>', $output );
+		$this->assertStringContainsString( '<noscript><p>Hi x</p></noscript>', $output );
 	}
 
 	/**
