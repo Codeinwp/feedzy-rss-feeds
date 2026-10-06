@@ -1,3 +1,7 @@
+##### [Version 5.2.11](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.10...v5.2.11) (2026-10-06)
+
+- Enhanced Security. Credit to Ali Hidayat for the responsible disclosure.
+
 ##### [Version 5.2.10](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.9...v5.2.10) (2026-09-30)
 
 - Fixed feed previews crashing when a single feed URL is sent.
