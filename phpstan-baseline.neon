@@ -1586,11 +1586,6 @@ parameters:
 			path: includes/gutenberg/feedzy-rss-feeds-loop-block.php
 
 		-
-			message: "#^Offset 1 on array\\{string, non\\-empty\\-string\\} in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: includes/gutenberg/feedzy-rss-feeds-loop-block.php
-
-		-
 			message: "#^Variable \\$this might not be defined\\.$#"
 			count: 4
 			path: includes/layouts/integration.php
