@@ -13,8 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Note: It will be redirect to dashboard by `feedzy_dismiss_wizard` action.
 $skip_onboarding_url_callback = add_query_arg(
 	array(
-		'action' => 'feedzy_dismiss_wizard',
-		'status' => 0,
+		'action'   => 'feedzy_dismiss_wizard',
+		'status'   => 0,
+		'_wpnonce' => wp_create_nonce( 'feedzy_dismiss_wizard' ),
 	),
 	admin_url( 'admin.php' )
 );

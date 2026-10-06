@@ -2457,13 +2457,20 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return bool|void
 	 */
 	public function feedzy_dismiss_wizard( $redirect_to_dashboard = true ) {
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You do not have permission to do this.', 'feedzy-rss-feeds' ) );
+		}
+
+		if ( false !== $redirect_to_dashboard ) {
+			check_admin_referer( 'feedzy_dismiss_wizard' );
+		}
+
 		$status = isset( $_REQUEST['status'] ) ? (int) $_REQUEST['status'] : 0;
 		update_option( 'feedzy_fresh_install', $status );
 		delete_option( 'feedzy_wizard_data' );
 		if ( false !== $redirect_to_dashboard ) {
 
-			$cleaned_url = remove_query_arg( array( 'page', 'action', 'status' ) );
+			$cleaned_url = remove_query_arg( array( 'page', 'action', 'status', '_wpnonce' ) );
 			$parsed_url  = wp_parse_url( $cleaned_url );
 
 			// Default to dashboard if no page is set.
