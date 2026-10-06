@@ -416,7 +416,7 @@ class Test_Loop_Block_Render extends WP_UnitTestCase {
 			'end tag attribute value'        => array( '<span>x</span title="<!--"><p>{{feedzy_title}}</p>', '</span><p>Headline</p>' ),
 			'plaintext to end of template'   => array( '<p>{{feedzy_title}}</p><plaintext>a <!-- b', '<p>Headline</p><plaintext>a &lt;!-- b' ),
 			'plaintext body is text'         => array( '<p>{{feedzy_title}}</p><plaintext>a <b>c</b> <!-- d -->', '<p>Headline</p><plaintext>a &lt;b&gt;c&lt;/b&gt; &lt;!-- d --&gt;' ),
-			'end tag bogus comment'          => array( '</3 <!--><p>{{feedzy_title}}</p>', '<p>Headline</p>' ),
+			'end tag bogus comment'          => array( '</3 <textarea><p>{{feedzy_title}}</p>', '<p>Headline</p>' ),
 		);
 	}
 
