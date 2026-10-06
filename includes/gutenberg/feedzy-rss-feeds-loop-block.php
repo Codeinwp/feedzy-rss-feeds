@@ -220,7 +220,8 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			return '<div>' . esc_html__( 'No items to display.', 'feedzy-rss-feeds' ) . '</div>';
 		}
 
-		$loop = '';
+		$content = $this->encode_attribute_delimiters( $content );
+		$loop    = '';
 
 		foreach ( $feed_items as $key => $item ) {
 			$loop .= apply_filters( 'feedzy_loop_item', $content, $item, $attributes );
@@ -237,6 +238,38 @@ class Feedzy_Rss_Feeds_Loop_Block {
 				) 
 			),
 			$loop
+		);
+	}
+
+	/**
+	 * Encode literal < and > inside quoted attribute values, which KSES would
+	 * otherwise read as tag boundaries. Browsers decode them, so values are
+	 * unchanged; the result only ever turns markup into text, never the reverse.
+	 *
+	 * @param string $template The inner blocks template.
+	 *
+	 * @return string The template with attribute delimiters encoded.
+	 */
+	private function encode_attribute_delimiters( string $template ): string {
+		// Comments are matched first and left alone; a quote opens a value only after "=".
+		$pattern = '/<!--.*?-->|<[a-zA-Z](?:(?>\s*=\s*(?:"[^"]*"|\'[^\']*\'))|[^>])*+>/s';
+
+		return (string) preg_replace_callback(
+			$pattern,
+			function ( array $matches ): string {
+				if ( 0 === strpos( $matches[0], '<!--' ) ) {
+					return $matches[0];
+				}
+
+				return (string) preg_replace_callback(
+					'/=\s*("[^"]*"|\'[^\']*\')/',
+					function ( array $value ): string {
+						return str_replace( array( '<', '>' ), array( '&lt;', '&gt;' ), $value[0] );
+					},
+					$matches[0]
+				);
+			},
+			$template
 		);
 	}
 

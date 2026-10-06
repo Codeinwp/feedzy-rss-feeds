@@ -281,7 +281,34 @@ class Test_Loop_Block_Render extends WP_UnitTestCase {
 			'<img src="x" alt="1 > 0" title="{{feedzy_content}}"/>'
 		);
 
+		$img = $this->parse( $output )->getElementsByTagName( 'img' )->item( 0 );
+
+		$this->assertInstanceOf( 'DOMElement', $img );
+		$this->assertSame( 'x', $img->getAttribute( 'src' ) );
+		$this->assertSame( '1 > 0', $img->getAttribute( 'alt' ) );
+		$this->assertSame( 'x" onerror="alert(1)', $img->getAttribute( 'title' ) );
+		$this->assertSame( 3, $img->attributes->length );
+		$this->assertSame( '', trim( wp_strip_all_tags( $output ) ) );
 		$this->assert_not_executable( $output );
+	}
+
+	/**
+	 * A ">" in a quoted attribute keeps the tag intact even without magic tags.
+	 *
+	 * @return void
+	 */
+	public function test_gt_in_quoted_attribute_without_magic_tag_is_preserved(): void {
+		$output = $this->render(
+			$this->feed_with_title( 'T' ),
+			'<figure><img src="https://example.org/i.png" alt=\'Price > 5 < 9\'/></figure>'
+		);
+
+		$img = $this->parse( $output )->getElementsByTagName( 'img' )->item( 0 );
+
+		$this->assertInstanceOf( 'DOMElement', $img );
+		$this->assertSame( 'https://example.org/i.png', $img->getAttribute( 'src' ) );
+		$this->assertSame( 'Price > 5 < 9', $img->getAttribute( 'alt' ) );
+		$this->assertSame( '', trim( wp_strip_all_tags( $output ) ) );
 	}
 
 	/**
