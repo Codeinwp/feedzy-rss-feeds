@@ -220,9 +220,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			return '<div>' . esc_html__( 'No items to display.', 'feedzy-rss-feeds' ) . '</div>';
 		}
 
-		$content = $this->encode_literal_delimiters( $content );
-		// KSES drops denied raw-text tags but keeps their body, so remove both; comments are kept.
-		$content = (string) preg_replace( '#(<!--.*?(?:-->|$))|<(script|style)(?=[\s/>])[^>]*>.*?(?:</\2[^>]*>|$)#is', '$1', $content );
+		$content = $this->prepare_template( $content );
 		$loop    = '';
 
 		foreach ( $feed_items as $key => $item ) {
@@ -244,24 +242,34 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	}
 
 	/**
-	 * Encode literal < and > inside quoted attribute values and comment bodies,
-	 * which KSES would otherwise read as tag boundaries or escape into visible
-	 * text. Browsers decode attribute values and never show comments, so the
-	 * output looks the same; the result only ever turns markup into text.
+	 * Prepare a template for KSES in one left-to-right pass:
+	 * - script and style elements are removed with their body, since KSES would
+	 *   drop the tags but print the body as text; their code no longer runs;
+	 * - literal < and > in comment bodies are encoded, so KSES keeps the comment
+	 *   instead of escaping it into visible text;
+	 * - literal < and > in quoted attribute values are encoded, so KSES does not
+	 *   read them as tag boundaries; browsers decode them, so values are unchanged.
+	 * Apart from the removed elements, this only ever turns markup into text.
 	 *
 	 * @param string $template The inner blocks template.
 	 *
-	 * @return string The template with literal delimiters encoded.
+	 * @return string The prepared template.
 	 */
-	private function encode_literal_delimiters( string $template ): string {
-		// Comments are matched first, like KSES does; a quote opens a value only after "=".
-		$pattern = '/<!--(.*?)(-->|$)|<[a-zA-Z](?:(?>\s*=\s*(?:"[^"]*"|\'[^\']*\'))|[^>])*+>/s';
+	private function prepare_template( string $template ): string {
+		// Earliest match wins, as in browsers: raw-text bodies hide comments and vice versa.
+		$pattern = '#<(?<raw>script|style)(?=[\s/>])[^>]*>.*?(?:</\k<raw>[^>]*>|$)'
+			. '|<!--(?<body>.*?)(?<end>-->|$)'
+			. '|<[a-zA-Z](?:(?>\s*=\s*(?:"[^"]*"|\'[^\']*\'))|[^>])*+>#is';
 
 		return (string) preg_replace_callback(
 			$pattern,
 			function ( array $matches ): string {
+				if ( '' !== ( $matches['raw'] ?? '' ) ) {
+					return '';
+				}
+
 				if ( 0 === strpos( $matches[0], '<!--' ) ) {
-					return '<!--' . $this->encode_delimiters( $matches[1] ) . $matches[2];
+					return '<!--' . $this->encode_delimiters( $matches['body'] ) . $matches['end'];
 				}
 
 				return (string) preg_replace_callback(

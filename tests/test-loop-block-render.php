@@ -377,6 +377,23 @@ class Test_Loop_Block_Render extends WP_UnitTestCase {
 	}
 
 	/**
+	 * A comment opener inside a style or script body does not swallow the rest
+	 * of the template.
+	 *
+	 * @return void
+	 */
+	public function test_comment_opener_in_raw_text_body_keeps_following_markup(): void {
+		$output = $this->render(
+			$this->feed_with_title( 'Headline' ),
+			'<style>.x::before{content:"<!--"}</style><p>{{feedzy_title}}</p><script>var a = "<!--";</script><p>{{feedzy_title}}</p>'
+		);
+
+		$this->assertSame( 2, substr_count( $output, '<p>Headline</p>' ) );
+		$this->assertStringNotContainsString( '<!--', $output );
+		$this->assertStringNotContainsString( 'content:', $output );
+	}
+
+	/**
 	 * Add a `true` element entry to the post allowlist, as some plugins do.
 	 *
 	 * @param array<string, mixed> $tags The allowed HTML.
