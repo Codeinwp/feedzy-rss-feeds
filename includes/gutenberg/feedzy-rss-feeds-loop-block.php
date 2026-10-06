@@ -221,6 +221,8 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		}
 
 		$content = $this->encode_attribute_delimiters( $content );
+		// KSES drops denied raw-text tags but keeps their body, so remove both.
+		$content = (string) preg_replace( '#<(script|style)(?=[\s/>])[^>]*>.*?(?:</\1[^>]*>|$)#is', '', $content );
 		$loop    = '';
 
 		foreach ( $feed_items as $key => $item ) {
@@ -285,14 +287,16 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		$allowed = wp_kses_allowed_html( 'post' );
 
 		foreach ( $this->get_template_attributes( $template ) as $tag => $attributes ) {
-			$allowed[ $tag ] = array_merge( $allowed[ $tag ] ?? array(), $attributes );
+			// KSES also accepts `true` for an element with no attributes.
+			$existing        = isset( $allowed[ $tag ] ) && is_array( $allowed[ $tag ] ) ? $allowed[ $tag ] : array();
+			$allowed[ $tag ] = array_merge( $existing, $attributes );
 		}
 
 		$allowed = array_diff_key( $allowed, array_flip( self::DENIED_ELEMENTS ) );
 
 		foreach ( $allowed as $tag => $attributes ) {
 			$allowed[ $tag ] = array_filter(
-				$attributes,
+				is_array( $attributes ) ? $attributes : array(),
 				function ( $attribute ): bool {
 					return 0 !== strpos( (string) $attribute, 'on' ) && 'srcdoc' !== $attribute;
 				},

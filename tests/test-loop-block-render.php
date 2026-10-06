@@ -326,6 +326,68 @@ class Test_Loop_Block_Render extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Magic tags inside a comment cannot end the comment early or add an element,
+	 * and URL values there are plain text.
+	 *
+	 * @return void
+	 */
+	public function test_comment_value_cannot_close_comment(): void {
+		$output = $this->render(
+			$this->feed( '<title>--&gt;&lt;img src=x onerror=alert(1)&gt;</title><link>https://example.org/a</link>' ),
+			'<!-- {{feedzy_title}} {{feedzy_url}} --><p>x</p>'
+		);
+
+		$this->assertSame( 1, substr_count( $output, '<!--' ) );
+		$this->assertSame( 1, substr_count( $output, '-->' ) );
+		$this->assertSame( 1, preg_match( '/<!--([^<]*)--><p>x<\/p>/', $output, $comment ) );
+		$this->assertStringContainsString( 'https://example.org/a', $comment[1] );
+
+		$doc = $this->parse( $output );
+		$this->assertSame( 0, $doc->getElementsByTagName( 'img' )->length );
+		$this->assertSame( 1, $doc->getElementsByTagName( 'p' )->length );
+	}
+
+	/**
+	 * Denied style and script elements are removed with their body, so the
+	 * source never shows as text.
+	 *
+	 * @return void
+	 */
+	public function test_style_and_script_bodies_are_removed(): void {
+		$output = $this->render(
+			$this->feed_with_title( 'Headline' ),
+			'<style>.feedzy-x{color:red}</style><script>var feedzyX = 1;</script><p class="feedzy-x">{{feedzy_title}}</p>'
+		);
+
+		$this->assertStringNotContainsString( '.feedzy-x{color:red}', $output );
+		$this->assertStringNotContainsString( 'feedzyX', $output );
+		$this->assertStringContainsString( '<p class="feedzy-x">Headline</p>', $output );
+	}
+
+	/**
+	 * A `true` element entry added to the post allowlist does not abort rendering.
+	 *
+	 * @return void
+	 */
+	public function test_true_allowlist_entry_does_not_abort_render(): void {
+		$add_mark = function ( array $tags, $context ): array {
+			if ( 'post' === $context ) {
+				$tags['mark'] = true;
+			}
+			return $tags;
+		};
+		add_filter( 'wp_kses_allowed_html', $add_mark, 10, 2 );
+
+		try {
+			$output = $this->render( $this->feed_with_title( 'Headline' ), '<p><mark>{{feedzy_title}}</mark></p>' );
+		} finally {
+			remove_filter( 'wp_kses_allowed_html', $add_mark, 10 );
+		}
+
+		$this->assertStringContainsString( '<mark>Headline</mark>', $output );
+	}
+
+	/**
 	 * A plain-text value in an unquoted attribute cannot add a handler.
 	 *
 	 * @return void
