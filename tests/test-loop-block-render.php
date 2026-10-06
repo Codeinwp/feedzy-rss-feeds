@@ -365,26 +365,55 @@ class Test_Loop_Block_Render extends WP_UnitTestCase {
 	}
 
 	/**
-	 * A `true` element entry added to the post allowlist does not abort rendering.
+	 * Add a `true` element entry to the post allowlist, as some plugins do.
+	 *
+	 * @param array<string, mixed> $tags The allowed HTML.
+	 * @param string               $context The KSES context.
+	 * @return array<string, mixed>
+	 */
+	public function allow_mark_as_true( array $tags, string $context ): array {
+		if ( 'post' === $context ) {
+			$tags['mark'] = true;
+		}
+		return $tags;
+	}
+
+	/**
+	 * Render with a `true` mark entry in the post allowlist.
+	 *
+	 * @param string $template The inner block template.
+	 * @return string The rendered block HTML.
+	 */
+	private function render_with_true_mark_entry( string $template ): string {
+		add_filter( 'wp_kses_allowed_html', array( $this, 'allow_mark_as_true' ), 10, 2 );
+
+		try {
+			return $this->render( $this->feed_with_title( 'Headline' ), $template );
+		} finally {
+			remove_filter( 'wp_kses_allowed_html', array( $this, 'allow_mark_as_true' ), 10 );
+		}
+	}
+
+	/**
+	 * A `true` element entry used by the template does not abort rendering.
 	 *
 	 * @return void
 	 */
 	public function test_true_allowlist_entry_does_not_abort_render(): void {
-		$add_mark = function ( array $tags, $context ): array {
-			if ( 'post' === $context ) {
-				$tags['mark'] = true;
-			}
-			return $tags;
-		};
-		add_filter( 'wp_kses_allowed_html', $add_mark, 10, 2 );
-
-		try {
-			$output = $this->render( $this->feed_with_title( 'Headline' ), '<p><mark>{{feedzy_title}}</mark></p>' );
-		} finally {
-			remove_filter( 'wp_kses_allowed_html', $add_mark, 10 );
-		}
+		$output = $this->render_with_true_mark_entry( '<p><mark>{{feedzy_title}}</mark></p>' );
 
 		$this->assertStringContainsString( '<mark>Headline</mark>', $output );
+	}
+
+	/**
+	 * A `true` element entry the template does not use does not abort rendering.
+	 *
+	 * @return void
+	 */
+	public function test_unused_true_allowlist_entry_does_not_abort_render(): void {
+		$output = $this->render_with_true_mark_entry( '<p>{{feedzy_title}}</p>' );
+
+		$this->assertStringContainsString( '<p>Headline</p>', $output );
 	}
 
 	/**
