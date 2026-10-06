@@ -4,7 +4,7 @@
 **Requires at least:** 6.0  
 **Requires PHP:** 7.2  
 **Tested up to:** 7.1  
-**Stable tag:** 5.2.10  
+**Stable tag:** 5.2.11  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -479,14 +479,9 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
-##### [Version 5.2.10](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.9...v5.2.10) (2026-09-30)
+##### [Version 5.2.11](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.10...v5.2.11) (2026-10-06)
 
-- Fixed feed previews crashing when a single feed URL is sent.
-- Fixed feed pages crashing on older WordPress versions.
-- Fixed imports creating posts with empty titles.
-- Fixed slow Auto Categories Mapping settings on sites with many categories.
-- Fixed import previews to use the selected feed order.
-- Updated dependencies
+- Enhanced Security. Credit to Ali Hidayat for the responsible disclosure.
 
 
 
