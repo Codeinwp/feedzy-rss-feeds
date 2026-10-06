@@ -453,6 +453,73 @@ class Test_Loop_Block_Render extends WP_UnitTestCase {
 	}
 
 	/**
+	 * A javascript: value must not survive in an SVG xlink:href.
+	 *
+	 * @return void
+	 */
+	public function test_svg_xlink_href_rejects_javascript_scheme(): void {
+		$output = $this->render(
+			$this->feed_with_title( 'javascript:alert(1)' ),
+			'<svg><a xlink:href="{{feedzy_title}}">link</a></svg>'
+		);
+
+		$this->assertStringNotContainsString( 'javascript:', $output );
+	}
+
+	/**
+	 * SVG animation elements are removed, so they cannot rewrite an href.
+	 *
+	 * @return void
+	 */
+	public function test_svg_animation_elements_are_removed(): void {
+		$output = $this->render(
+			$this->feed_with_title( 'javascript:alert(1)' ),
+			'<svg><a><set attributeName="href" to="{{feedzy_title}}"/><animate attributeName="href" values="{{feedzy_title}}"/><text y="20">link</text></a></svg>'
+		);
+
+		$doc = $this->parse( $output );
+
+		$this->assertSame( 0, $doc->getElementsByTagName( 'set' )->length );
+		$this->assertSame( 0, $doc->getElementsByTagName( 'animate' )->length );
+		$this->assertSame( 1, $doc->getElementsByTagName( 'text' )->length );
+		$this->assertStringNotContainsString( 'javascript:', $output );
+	}
+
+	/**
+	 * An HTML-valued tag in a quoted attribute keeps its full text and cannot
+	 * add another allowed attribute.
+	 *
+	 * @return void
+	 */
+	public function test_html_value_in_attribute_keeps_full_value(): void {
+		$output = $this->render(
+			$this->feed_with_content( 'x&quot; src=&quot;https://attacker.example/pixel' ),
+			'<img alt="{{feedzy_content}}">'
+		);
+
+		$img = $this->parse( $output )->getElementsByTagName( 'img' )->item( 0 );
+
+		$this->assertInstanceOf( 'DOMElement', $img );
+		$this->assertSame( 'x" src="https://attacker.example/pixel', $img->getAttribute( 'alt' ) );
+		$this->assertSame( 1, $img->attributes->length );
+	}
+
+	/**
+	 * Feed URLs in an SVG link and a CSS background keep working.
+	 *
+	 * @return void
+	 */
+	public function test_url_in_svg_link_and_style_is_preserved(): void {
+		$output = $this->render(
+			$this->feed( '<title>T</title><link>https://example.org/a.png</link>' ),
+			'<svg><use xlink:href="{{feedzy_url}}"/></svg><div style="background-image:url({{feedzy_url}})">x</div>'
+		);
+
+		$this->assertStringContainsString( 'xlink:href="https://example.org/a.png"', $output );
+		$this->assertStringContainsString( 'background-image:url(https://example.org/a.png)', $output );
+	}
+
+	/**
 	 * A benign title in a quoted attribute keeps its full text and adds no attribute.
 	 *
 	 * @return void

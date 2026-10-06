@@ -12,6 +12,28 @@
 class Feedzy_Rss_Feeds_Loop_Block {
 
 	/**
+	 * Magic tags whose value is a URL.
+	 *
+	 * @var list<string>
+	 */
+	const URL_KEYS = array( 'url', 'image', 'media' );
+
+	/**
+	 * Magic tags whose value is rich HTML.
+	 *
+	 * @var list<string>
+	 */
+	const HTML_KEYS = array( 'description', 'content', 'meta' );
+
+	/**
+	 * Elements a template may never contribute: scripts, document-level tags
+	 * and SVG animations, which can rewrite other attributes such as href.
+	 *
+	 * @var list<string>
+	 */
+	const DENIED_ELEMENTS = array( 'script', 'style', 'meta', 'base', 'set', 'animate', 'animatemotion', 'animatetransform' );
+
+	/**
 	 * A reference to an instance of this class.
 	 *
 	 * @var Feedzy_Rss_Feeds_Loop_Block The one Feedzy_Rss_Feeds_Loop_Block instance.
@@ -205,7 +227,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		}
 
 		// Feed values may not add tags, attributes or URL schemes the template lacks.
-		$loop = wp_kses( $loop, $this->get_allowed_html( $content ) );
+		$loop = $this->kses( $loop, $this->get_allowed_html( $content ) );
 
 		return sprintf(
 			'<div %1$s>%2$s</div>',
@@ -233,7 +255,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			$allowed[ $tag ] = array_merge( $allowed[ $tag ] ?? array(), $attributes );
 		}
 
-		unset( $allowed['script'], $allowed['style'] );
+		$allowed = array_diff_key( $allowed, array_flip( self::DENIED_ELEMENTS ) );
 
 		foreach ( $allowed as $tag => $attributes ) {
 			$allowed[ $tag ] = array_filter(
@@ -297,17 +319,144 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			$content
 		);
 
-		return preg_replace_callback(
+		// Swap tags for inert tokens so KSES normalizes the template around them.
+		$prefix   = 'feedzytoken' . substr( md5( uniqid( '', true ) ), 0, 12 );
+		$keys     = array();
+		$template = preg_replace_callback(
 			$pattern,
-			function ( $matches ) use ( $item, $attributes ) {
-				return $this->get_value( $matches[1], $item, $attributes );
+			function ( array $matches ) use ( &$keys, $prefix ): string {
+				$token          = $prefix . count( $keys ) . 'x';
+				$keys[ $token ] = $matches[1];
+				return $token;
 			},
-			$content 
+			$content
+		);
+
+		if ( empty( $keys ) ) {
+			return $content;
+		}
+
+		$template = $this->kses( (string) $template, $this->get_allowed_html( $content ) );
+		$values   = array();
+		foreach ( $keys as $token => $key ) {
+			$values[ $token ] = array(
+				'key'   => $key,
+				'value' => (string) $this->get_raw_value( $key, $item, $attributes ),
+			);
+		}
+
+		return (string) preg_replace_callback(
+			'/<!--.*?-->|<[^>]*>|[^<]+/s',
+			function ( array $matches ) use ( $values ): string {
+				return $this->fill_tokens( $matches[0], $values );
+			},
+			$template
 		);
 	}
 
 	/**
-	 * Get Dynamic Value, escaped for output.
+	 * Replace the tokens in one piece of KSES-normalized markup, escaping each
+	 * value for where it sits: attribute value, comment or element content.
+	 *
+	 * @param string                                           $part A tag, comment or text run.
+	 * @param array<string, array{key: string, value: string}> $values Raw values keyed by token.
+	 *
+	 * @return string The filled markup.
+	 */
+	private function fill_tokens( string $part, array $values ): string {
+		$context = 'text';
+		if ( 0 === strpos( $part, '<!--' ) ) {
+			$context = 'comment';
+		} elseif ( 0 === strpos( $part, '<' ) ) {
+			$context = 'attribute';
+			$part    = (string) preg_replace_callback(
+				'/=("[^"]*"|\'[^\']*\')/',
+				function ( array $matches ) use ( $values ): string {
+					return '=' . $this->replace_tokens( $matches[1], $values, 'attribute' );
+				},
+				$part
+			);
+		}
+
+		// Tokens left in a tag are outside any attribute value, so they are dropped.
+		return $this->replace_tokens( $part, $values, 'attribute' === $context ? 'drop' : $context );
+	}
+
+	/**
+	 * Replace tokens with their values escaped for a context.
+	 *
+	 * @param string                                           $markup The markup holding tokens.
+	 * @param array<string, array{key: string, value: string}> $values Raw values keyed by token.
+	 * @param string                                           $context One of text, attribute, comment or drop.
+	 *
+	 * @return string The markup with tokens replaced.
+	 */
+	private function replace_tokens( string $markup, array $values, string $context ): string {
+		$replacements = array();
+		foreach ( $values as $token => $value ) {
+			if ( false !== strpos( $markup, $token ) ) {
+				$replacements[ $token ] = 'drop' === $context ? '' : $this->escape_value( $value['key'], $value['value'], $context );
+			}
+		}
+
+		return empty( $replacements ) ? $markup : strtr( $markup, $replacements );
+	}
+
+	/**
+	 * Escape a raw feed value for a context.
+	 *
+	 * @param string $key The magic tag key.
+	 * @param string $value The raw value.
+	 * @param string $context One of text, attribute or comment.
+	 *
+	 * @return string The escaped value.
+	 */
+	private function escape_value( string $key, string $value, string $context ): string {
+		if ( in_array( $key, self::URL_KEYS, true ) && 'comment' !== $context ) {
+			return esc_url( $value );
+		}
+
+		$is_html = in_array( $key, self::HTML_KEYS, true );
+		if ( 'text' === $context ) {
+			return $is_html ? wp_kses_post( $value ) : esc_html( $value );
+		}
+
+		$value = $is_html ? wp_strip_all_tags( $value ) : $value;
+
+		return 'attribute' === $context ? esc_attr( $value ) : esc_html( wp_strip_all_tags( $value ) );
+	}
+
+	/**
+	 * Run KSES with SVG link attributes protocol-checked as URLs.
+	 *
+	 * @param string                              $html The markup.
+	 * @param array<string, array<string, mixed>> $allowed The allowed HTML.
+	 *
+	 * @return string The sanitized markup.
+	 */
+	private function kses( string $html, array $allowed ): string {
+		add_filter( 'wp_kses_uri_attributes', array( $this, 'add_uri_attributes' ) );
+		$html = wp_kses( $html, $allowed );
+		remove_filter( 'wp_kses_uri_attributes', array( $this, 'add_uri_attributes' ) );
+
+		return $html;
+	}
+
+	/**
+	 * Add SVG link attributes to the KSES URI attribute list.
+	 *
+	 * @param string[] $attributes The URI attributes.
+	 *
+	 * @return string[] The URI attributes.
+	 */
+	public function add_uri_attributes( array $attributes ): array {
+		$attributes[] = 'xlink:href';
+
+		return $attributes;
+	}
+
+	/**
+	 * Get Dynamic Value, escaped for element content.
 	 *
 	 * @param string               $key The key.
 	 * @param array<string, mixed> $item Feed item.
@@ -316,17 +465,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	 * @return string The value.
 	 */
 	public function get_value( $key, $item, $attributes ) {
-		$value = (string) $this->get_raw_value( $key, $item, $attributes );
-
-		if ( in_array( $key, array( 'url', 'image', 'media' ), true ) ) {
-			return esc_url( $value );
-		}
-
-		if ( in_array( $key, array( 'description', 'content', 'meta' ), true ) ) {
-			return wp_kses_post( $value );
-		}
-
-		return esc_html( $value );
+		return $this->escape_value( $key, (string) $this->get_raw_value( $key, $item, $attributes ), 'text' );
 	}
 
 	/**
