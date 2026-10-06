@@ -300,7 +300,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		return preg_replace_callback(
 			$pattern,
 			function ( $matches ) use ( $item, $attributes ) {
-				return isset( $matches[1] ) ? $this->get_value( $matches[1], $item, $attributes ) : '';
+				return $this->get_value( $matches[1], $item, $attributes );
 			},
 			$content 
 		);
