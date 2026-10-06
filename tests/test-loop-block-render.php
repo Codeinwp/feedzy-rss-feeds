@@ -365,6 +365,18 @@ class Test_Loop_Block_Render extends WP_UnitTestCase {
 	}
 
 	/**
+	 * A style tag inside a comment is not treated as a raw-text element.
+	 *
+	 * @return void
+	 */
+	public function test_style_inside_comment_keeps_following_markup(): void {
+		$output = $this->render( $this->feed_with_title( 'Headline' ), '<!-- <style> --><p>{{feedzy_title}}</p>' );
+
+		$this->assertStringContainsString( '<p>Headline</p>', $output );
+		$this->assertStringNotContainsString( '&lt;!--', $output );
+	}
+
+	/**
 	 * Add a `true` element entry to the post allowlist, as some plugins do.
 	 *
 	 * @param array<string, mixed> $tags The allowed HTML.

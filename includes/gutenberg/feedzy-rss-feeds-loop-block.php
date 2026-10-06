@@ -220,9 +220,9 @@ class Feedzy_Rss_Feeds_Loop_Block {
 			return '<div>' . esc_html__( 'No items to display.', 'feedzy-rss-feeds' ) . '</div>';
 		}
 
-		$content = $this->encode_attribute_delimiters( $content );
-		// KSES drops denied raw-text tags but keeps their body, so remove both.
-		$content = (string) preg_replace( '#<(script|style)(?=[\s/>])[^>]*>.*?(?:</\1[^>]*>|$)#is', '', $content );
+		$content = $this->encode_literal_delimiters( $content );
+		// KSES drops denied raw-text tags but keeps their body, so remove both; comments are kept.
+		$content = (string) preg_replace( '#(<!--.*?(?:-->|$))|<(script|style)(?=[\s/>])[^>]*>.*?(?:</\2[^>]*>|$)#is', '$1', $content );
 		$loop    = '';
 
 		foreach ( $feed_items as $key => $item ) {
@@ -244,29 +244,30 @@ class Feedzy_Rss_Feeds_Loop_Block {
 	}
 
 	/**
-	 * Encode literal < and > inside quoted attribute values, which KSES would
-	 * otherwise read as tag boundaries. Browsers decode them, so values are
-	 * unchanged; the result only ever turns markup into text, never the reverse.
+	 * Encode literal < and > inside quoted attribute values and comment bodies,
+	 * which KSES would otherwise read as tag boundaries or escape into visible
+	 * text. Browsers decode attribute values and never show comments, so the
+	 * output looks the same; the result only ever turns markup into text.
 	 *
 	 * @param string $template The inner blocks template.
 	 *
-	 * @return string The template with attribute delimiters encoded.
+	 * @return string The template with literal delimiters encoded.
 	 */
-	private function encode_attribute_delimiters( string $template ): string {
-		// Comments are matched first and left alone; a quote opens a value only after "=".
-		$pattern = '/<!--.*?-->|<[a-zA-Z](?:(?>\s*=\s*(?:"[^"]*"|\'[^\']*\'))|[^>])*+>/s';
+	private function encode_literal_delimiters( string $template ): string {
+		// Comments are matched first, like KSES does; a quote opens a value only after "=".
+		$pattern = '/<!--(.*?)(-->|$)|<[a-zA-Z](?:(?>\s*=\s*(?:"[^"]*"|\'[^\']*\'))|[^>])*+>/s';
 
 		return (string) preg_replace_callback(
 			$pattern,
 			function ( array $matches ): string {
 				if ( 0 === strpos( $matches[0], '<!--' ) ) {
-					return $matches[0];
+					return '<!--' . $this->encode_delimiters( $matches[1] ) . $matches[2];
 				}
 
 				return (string) preg_replace_callback(
 					'/=\s*("[^"]*"|\'[^\']*\')/',
 					function ( array $value ): string {
-						return str_replace( array( '<', '>' ), array( '&lt;', '&gt;' ), $value[0] );
+						return $this->encode_delimiters( $value[0] );
 					},
 					$matches[0]
 				);
@@ -275,6 +276,16 @@ class Feedzy_Rss_Feeds_Loop_Block {
 		);
 	}
 
+	/**
+	 * Encode < and > as character references.
+	 *
+	 * @param string $text The text.
+	 *
+	 * @return string The encoded text.
+	 */
+	private function encode_delimiters( string $text ): string {
+		return str_replace( array( '<', '>' ), array( '&lt;', '&gt;' ), $text );
+	}
 	/**
 	 * Build the KSES allowlist for a Loop template: post-safe HTML plus every
 	 * tag and attribute the template itself uses, minus executable ones.
