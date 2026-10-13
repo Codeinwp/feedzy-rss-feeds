@@ -1238,10 +1238,10 @@ class Feedzy_Rss_Feeds_Import {
 			$errors = '';
 			if ( is_array( $import_errors ) ) {
 				foreach ( $import_errors as $err ) {
-					$errors .= '<div><i class="dashicons dashicons-warning"></i>' . $err . '</div>';
+					$errors .= '<div><i class="dashicons dashicons-warning"></i>' . esc_html( $err ) . '</div>';
 				}
 			} else {
-				$errors = '<div><i class="dashicons dashicons-warning"></i>' . $import_errors . '</div>';
+				$errors = '<div><i class="dashicons dashicons-warning"></i>' . esc_html( $import_errors ) . '</div>';
 			}
 			$msg = '<div class="feedzy-error feedzy-api-error">' . $errors . '</div>';
 		}
@@ -1263,7 +1263,7 @@ class Feedzy_Rss_Feeds_Import {
 
 		}
 
-		return $msg . $pro_msg;
+		return $msg . wp_kses_post( $pro_msg );
 	}
 
 	/**
