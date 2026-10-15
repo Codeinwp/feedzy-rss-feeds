@@ -2454,6 +2454,8 @@ class Feedzy_Rss_Feeds_Import {
 				$item_post_excerpt = apply_filters( 'feedzy_parse_custom_tags', $item_post_excerpt, $item_obj );
 			}
 
+			$item_post_excerpt = $this->sanitize_post_excerpt( (string) $item_post_excerpt );
+
 			$post_author = ! empty( $import_post_author ) ? $import_post_author : $job->post_author;
 
 			// strip all HTML tag when remove html option is enabled.
@@ -4536,6 +4538,21 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		return $content;
+	}
+
+	/**
+	 * Sanitize an imported post excerpt unless unsafe HTML is allowed.
+	 *
+	 * @param string $excerpt The excerpt built from the feed item.
+	 *
+	 * @return string
+	 */
+	private function sanitize_post_excerpt( string $excerpt ): string {
+		if ( defined( 'FEEDZY_ALLOW_UNSAFE_HTML' ) && FEEDZY_ALLOW_UNSAFE_HTML ) {
+			return $excerpt;
+		}
+
+		return wp_kses_post( $excerpt );
 	}
 
 	/**
