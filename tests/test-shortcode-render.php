@@ -197,6 +197,44 @@ class Test_Shortcode_Render extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Rendered item titles, in the order they appear in the output.
+	 *
+	 * @param string $output The shortcode output.
+	 *
+	 * @return array
+	 */
+	private function get_rendered_titles( $output ) {
+		preg_match_all( '#<span class="title">(.*?)</span>#s', $output, $matches );
+
+		return array_map(
+			function ( $title ) {
+				return trim( wp_strip_all_tags( $title ) );
+			},
+			$matches[1]
+		);
+	}
+
+	/**
+	 * Test the date sort tokens order items.
+	 * @access public
+	 */
+	public function test_shortcode_sorts_items_chronologically() {
+		$newest_first = array(
+			'Alpha Article About Space Exploration',
+			'Beta Bananas Are Great',
+			'Gamma Space Telescope News',
+			'Delta Cooking Recipes',
+			'Epsilon Space Rocks Discovered',
+		);
+
+		$output = do_shortcode( $this->build_shortcode( 'max="10" sort="date_desc"' ) );
+		$this->assertEquals( $newest_first, $this->get_rendered_titles( $output ), 'date_desc should render the newest item first' );
+
+		$output = do_shortcode( $this->build_shortcode( 'max="10" sort="date_asc"' ) );
+		$this->assertEquals( array_reverse( $newest_first ), $this->get_rendered_titles( $output ), 'date_asc should render the oldest item first' );
+	}
+
+	/**
 	 * Test the shortcode filters items by keywords_title.
 	 *
 	 * @access public

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
+	<channel>
+		<title>Feedzy Excerpt Fixture Feed</title>
+		<link>https://tests.example.com/</link>
+		<description>Feed items carrying markup in excerpt magic tags</description>
+		<item>
+			<title>Video Item</title>
+			<link>https://www.youtube.com/watch?v=feedzy1031</link>
+			<guid>https://www.youtube.com/watch?v=feedzy1031</guid>
+			<pubDate>Fri, 05 Jan 2024 10:00:00 +0000</pubDate>
+			<media:group>
+				<media:description>&lt;svg onload=alert(document.domain)&gt;&lt;/svg&gt;&lt;strong&gt;Video&lt;/strong&gt; description</media:description>
+			</media:group>
+		</item>
+		<item>
+			<title>&lt;img src=x onerror=alert(document.domain)&gt;Title Item</title>
+			<link>https://tests.example.com/title-item</link>
+			<guid>https://tests.example.com/title-item</guid>
+			<pubDate>Thu, 04 Jan 2024 10:00:00 +0000</pubDate>
+			<description>Title item description.</description>
+		</item>
+	</channel>
+</rss>
