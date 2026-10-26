@@ -3460,7 +3460,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$license_status   = apply_filters( 'product_feedzy_license_status', false );
 		$is_valid         = 'valid' === $license_status;
-		$is_expired       = 'expired' === $license_status || 'active-expired' === $license_status;
+		$is_expired       = in_array( $license_status, array( 'expired', 'active_expired', 'active-expired' ), true );
 		$pro_product_slug = defined( 'FEEDZY_PRO_BASEFILE' ) ? basename( dirname( FEEDZY_PRO_BASEFILE ) ) : '';
 
 		if ( $is_valid ) {
@@ -3485,9 +3485,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$config['upgrade_menu_text'] = sprintf( __( 'BF Sale - %s off', 'feedzy-rss-feeds' ), '60%' );
 		}
 
-		$url_params = array(
+		$license_key = apply_filters( 'product_feedzy_license_key', false );
+		$url_params  = array(
 			'utm_term' => $is_valid ? 'plan-' . apply_filters( 'product_feedzy_license_plan', 0 ) : 'free',
-			'lkey'     => $is_valid || $is_expired ? apply_filters( 'product_feedzy_license_key', false ) : false,
+			'lkey'     => ! empty( $license_key ) ? $license_key : false,
 			'expired'  => $is_expired ? '1' : false,
 		);
 
