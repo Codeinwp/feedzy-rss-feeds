@@ -3486,7 +3486,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		$license_key = apply_filters( 'product_feedzy_license_key', false );
-		$url_params = array(
+		$url_params  = array(
 			'utm_term' => $is_valid ? 'plan-' . apply_filters( 'product_feedzy_license_plan', 0 ) : 'free',
 			'lkey'     => ! empty( $license_key ) ? $license_key : false,
 			'expired'  => $is_expired ? '1' : false,
