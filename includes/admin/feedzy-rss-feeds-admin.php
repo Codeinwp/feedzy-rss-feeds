@@ -1173,6 +1173,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		$new_columns = $this->array_insert_before( 'slug', $columns, 'source', __( 'Source', 'feedzy-rss-feeds' ) );
+		if ( $new_columns ) {
+			$columns = $new_columns;
+		}
 
 		return $columns;
 	}
