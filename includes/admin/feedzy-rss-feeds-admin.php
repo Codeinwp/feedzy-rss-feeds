@@ -1222,35 +1222,38 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				echo wp_kses_post( sprintf( '<button class="button button-primary validate-category" title="%s" data-category-id="%d">%s</button>', __( 'Click to remove invalid URLs from this category', 'feedzy-rss-feeds' ), $post_id, __( 'Validate & Clean', 'feedzy-rss-feeds' ) ) );
 				break;
 			case 'source':
-				$src = get_post_meta( $post_id, 'feedzy_category_feed', true );
-				if ( empty( $src ) ) {
-					$src = __( 'No Source Configured', 'feedzy-rss-feeds' );
-				} else {
-					$urls = $this->normalize_urls( $src );
-					$src  = '';
-					if ( is_array( $urls ) ) {
-
-						foreach ( $urls as $key => $url ) {
-							$too_long = 130;
-							if ( strlen( $src ) > $too_long ) {
-								$src .= '...';
-								break;
-							} else {
-								$src .= '<a href="' . $url . '" target="_blank" title="' . __( 'Click to view', 'feedzy-rss-feeds' ) . '">' . $url . '</a>';
-								if ( count( $urls ) > $key + 1 ) {
-									$src .= ', ';
-								}
-							}
-						}
-					} else {
-						$src .= '<a href="' . esc_url( $urls ) . '" target="_blank" title="' . __( 'Click to view', 'feedzy-rss-feeds' ) . '">' . esc_html( $urls ) . '</a>';
-					}
-				}
-				echo wp_kses_post( $src );
+				echo wp_kses_post( $this->get_category_source_links( get_post_meta( $post_id, 'feedzy_category_feed', true ) ) );
 				break;
 			default:
 				break;
 		}
+	}
+
+	/**
+	 * Build the Source column links from a feed group's saved URLs.
+	 *
+	 * @param string|string[] $feeds Saved feed URLs, comma or whitespace separated.
+	 *
+	 * @return string
+	 */
+	private function get_category_source_links( $feeds ): string {
+		$too_long = 130;
+		$length   = 0;
+		$links    = array();
+		foreach ( wp_parse_list( $feeds ) as $url ) {
+			if ( $length > $too_long ) {
+				$links[] = '...';
+				break;
+			}
+			$length += strlen( $url );
+			$links[] = sprintf( '<a href="%s" target="_blank" title="%s">%s</a>', esc_url( $url ), esc_attr__( 'Click to view', 'feedzy-rss-feeds' ), esc_html( $url ) );
+		}
+
+		if ( empty( $links ) ) {
+			return esc_html__( 'No Source Configured', 'feedzy-rss-feeds' );
+		}
+
+		return implode( ', ', $links );
 	}
 
 	/**

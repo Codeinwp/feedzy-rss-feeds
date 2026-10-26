@@ -42,13 +42,43 @@ class Test_Feed_Group_Columns extends WP_UnitTestCase {
 	 * A group's saved feed URLs are listed in its row.
 	 */
 	public function test_row_lists_saved_source_urls(): void {
-		// example.org is the test site's own host, so URL validation needs no DNS lookup.
-		$post_id = $this->create_group( 'https://example.org/feed-a, https://example.org/feed-b' );
+		$first   = 'https://www.wpbeginner.com/category/news/feed/';
+		$second  = 'https://planet.wordpress.org/feed/category/news/';
+		$post_id = $this->create_group( $first . ', ' . $second );
 
 		$row = $this->render_row( $post_id );
 
-		$this->assertStringContainsString( '<a href="https://example.org/feed-a" target="_blank"', $row );
-		$this->assertStringContainsString( '<a href="https://example.org/feed-b" target="_blank"', $row );
+		$this->assertStringContainsString( '<a href="' . $first . '" target="_blank" title="Click to view">' . $first . '</a>, <a href="' . $second . '"', $row );
+		$this->assertStringNotContainsString( '...', $row );
+	}
+
+	/**
+	 * A saved URL whose host no longer resolves is still listed.
+	 */
+	public function test_row_lists_unresolvable_source_url(): void {
+		$post_id = $this->create_group( 'https://feeds.example.invalid/rss, https://wordpress.org/news/feed/' );
+
+		$row = $this->render_row( $post_id );
+
+		$this->assertStringContainsString( '<a href="https://feeds.example.invalid/rss" target="_blank" title="Click to view">https://feeds.example.invalid/rss</a>, <a href="https://wordpress.org/news/feed/"', $row );
+	}
+
+	/**
+	 * Long source lists are cut off once the visible URLs pass the length limit.
+	 */
+	public function test_row_truncates_long_source_list(): void {
+		$urls    = array(
+			'https://www.wpbeginner.com/category/news/feed/',
+			'https://planet.wordpress.org/feed/category/news/',
+			'https://themeisle.com/blog/category/wordpress/feed/',
+			'https://wpshout.com/feed/',
+		);
+		$post_id = $this->create_group( implode( ', ', $urls ) );
+
+		$row = $this->render_row( $post_id );
+
+		$this->assertStringContainsString( $urls[2] . '</a>, ...', $row );
+		$this->assertStringNotContainsString( $urls[3], $row );
 	}
 
 	/**
