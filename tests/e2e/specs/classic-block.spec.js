@@ -3,6 +3,11 @@
  */
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
+/**
+ * Internal dependencies
+ */
+import { getOrderFeedUrl } from '../utils';
+
 test.describe('Feedzy Classic Block', () => {
 	test('check validation for invalid URL', async ({
 		editor,
@@ -263,6 +268,54 @@ test.describe('Feedzy Classic Block', () => {
 		} finally {
 			await requestUtils.rest({
 				path: `/wp/v2/feedzy_categories/${group.id}`,
+				method: 'DELETE',
+				params: { force: true },
+			});
+		}
+	});
+
+	test('saved feed group loads its feed when the post is reopened', async ({
+		editor,
+		page,
+		admin,
+		requestUtils,
+	}) => {
+		const GROUP_NAME = `Reopen Group ${Math.floor(Math.random() * 10000)}`;
+
+		await page.goto('/wp-admin/post-new.php?post_type=feedzy_categories');
+		await page.locator('#title').fill(GROUP_NAME);
+		await page
+			.locator('textarea[name="feedzy_category_feed"]')
+			.fill(getOrderFeedUrl(page, 'reopen-group'));
+		await page
+			.getByRole('button', { name: 'Publish', exact: true })
+			.click();
+		await page.waitForURL(/post\.php\?post=\d+/);
+		const groupId = new URL(page.url()).searchParams.get('post');
+
+		try {
+			await admin.createNewPost();
+			await editor.insertBlock({
+				name: 'feedzy-rss-feeds/feedzy-block',
+			});
+			await editor.canvas
+				.getByPlaceholder('Enter URL or group of your')
+				.fill(GROUP_NAME);
+			await editor.canvas
+				.getByRole('button', { name: 'Load Feed' })
+				.click();
+			await expect(editor.canvas.locator('.feedzy-rss')).toBeVisible();
+
+			const postId = await editor.publishPost();
+			await admin.editPost(postId);
+
+			await expect(editor.canvas.locator('.feedzy-rss')).toBeVisible();
+			await expect(
+				editor.canvas.locator('.feedzy-validation-results')
+			).toHaveCount(0);
+		} finally {
+			await requestUtils.rest({
+				path: `/wp/v2/feedzy_categories/${groupId}`,
 				method: 'DELETE',
 				params: { force: true },
 			});
