@@ -87,10 +87,27 @@ class Test_Proxy_Settings extends WP_UnitTestCase {
 	}
 
 	/**
-	 * An empty port is stored empty and the field renders empty.
+	 * Submitted ports that mean "no port".
+	 *
+	 * @return array<string, array{string}> Submitted port.
 	 */
-	public function test_empty_port_is_saved_and_rendered_empty(): void {
-		$value = $this->save_proxy_port( '' );
+	public function blank_port_provider(): array {
+		return array(
+			'empty' => array( '' ),
+			'zero'  => array( '0' ),
+		);
+	}
+
+	/**
+	 * A blank port is stored empty and the field renders empty.
+	 *
+	 * @dataProvider blank_port_provider
+	 *
+	 * @param string $port Submitted port.
+	 * @return void
+	 */
+	public function test_blank_port_is_saved_and_rendered_empty( string $port ): void {
+		$value = $this->save_proxy_port( $port );
 
 		$settings = get_option( 'feedzy-settings' );
 		$this->assertSame( '', $settings['proxy']['port'] );
