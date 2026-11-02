@@ -358,13 +358,11 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
 
-		if ( 'feedzy_page_feedzy-support' === $screen->base &&
-			(
-				( 'improve' === $tab )
-				|| ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type )
-				|| ( 'license' === $tab )
-			)
-		) {
+		if ( 'feedzy_page_feedzy-support' === $screen->base && 'license' === $tab ) {
+			$this->enqueue_license_script();
+		}
+
+		if ( 'feedzy_page_feedzy-support' === $screen->base && 'improve' === $tab ) {
 			$asset_file = include FEEDZY_ABSPATH . '/build/feedback/index.asset.php';
 			wp_enqueue_script( $this->plugin_name . '_feedback', FEEDZY_ABSURL . 'build/feedback/index.js', array_merge( $asset_file['dependencies'], array( 'wp-editor', 'wp-api', 'lodash' ) ), $asset_file['version'], true );
 			wp_enqueue_style( 'wp-block-editor' );
@@ -377,8 +375,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					'pluginVersion' => $this->version,
 				)
 			);
-
-			$this->enqueue_license_script();
 
 			wp_set_script_translations( $this->plugin_name . '_feedback', 'feedzy-rss-feeds' );
 		}
