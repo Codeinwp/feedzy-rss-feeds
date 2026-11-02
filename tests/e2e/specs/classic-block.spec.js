@@ -3,6 +3,95 @@
  */
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
+const THUMBNAIL =
+	'http://img.feedzy.test/thumb.png?src=http://cdn.feedzy.test/a.png';
+const UPGRADED_THUMBNAIL =
+	'https://img.feedzy.test/thumb.png?src=http://cdn.feedzy.test/a.png';
+
+/**
+ * @typedef {{editor: import('@wordpress/e2e-test-utils-playwright').Editor, page: import('@playwright/test').Page, admin: import('@wordpress/e2e-test-utils-playwright').Admin}} ThumbnailFixtures
+ */
+
+/**
+ * Insert a classic block whose mocked feed has one http thumbnail.
+ *
+ * @param {ThumbnailFixtures} fixtures  Test fixtures.
+ * @param {boolean}           httpLoads Whether the http image request succeeds; https requests always fail.
+ * @return {Promise<{image: import('@playwright/test').Locator, requested: string[]}>} The editor thumbnail and the image URLs requested so far.
+ */
+async function loadThumbnailFeed({ editor, page, admin }, httpLoads) {
+	const requested = [];
+
+	await page.route(/admin-ajax\.php/, (route) => {
+		if (!route.request().postData()?.includes('feedzy_validate_feed')) {
+			return route.fallback();
+		}
+		return route.fulfill({
+			status: 200,
+			contentType: 'application/json',
+			body: JSON.stringify({
+				success: true,
+				data: { results: [{ status: 'success', message: 'OK' }] },
+			}),
+		});
+	});
+	await page.route(/feedzy(\/|%2F)v1(\/|%2F)feed/, (route) =>
+		route.fulfill({
+			status: 200,
+			contentType: 'application/json',
+			body: JSON.stringify({
+				channel: null,
+				items: [
+					{
+						title: 'Image item',
+						link: 'https://example.com/item',
+						creator: null,
+						source: '',
+						pubDate: 1700000000,
+						date: 'November 14, 2023',
+						time: '10:13 pm',
+						description: 'Description',
+						thumbnail: THUMBNAIL,
+						default_img: '',
+						price: null,
+						media: null,
+						categories: null,
+					},
+				],
+			}),
+		})
+	);
+	await page.route(/img\.feedzy\.test/, (route) => {
+		const url = route.request().url();
+		requested.push(url);
+		if (url.startsWith('https:') || !httpLoads) {
+			return route.abort('failed');
+		}
+		return route.fulfill({
+			status: 200,
+			contentType: 'image/png',
+			body: Buffer.from(
+				'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+				'base64'
+			),
+		});
+	});
+
+	await admin.createNewPost();
+	await editor.insertBlock({
+		name: 'feedzy-rss-feeds/feedzy-block',
+		attributes: {
+			feeds: 'https://example.com/feed/',
+			max: 1,
+		},
+	});
+
+	return {
+		image: editor.canvas.locator('.feedzy-rss .rss_image img'),
+		requested,
+	};
+}
+
 test.describe('Feedzy Classic Block', () => {
 	test('check validation for invalid URL', async ({
 		editor,
@@ -229,81 +318,31 @@ test.describe('Feedzy Classic Block', () => {
 		page,
 		admin,
 	}) => {
-		const thumbnail =
-			'http://img.feedzy.test/thumb.png?src=http://cdn.feedzy.test/a.png';
-		const upgraded =
-			'https://img.feedzy.test/thumb.png?src=http://cdn.feedzy.test/a.png';
-		const requested = [];
-
-		await page.route(/admin-ajax\.php/, (route) => {
-			if (!route.request().postData()?.includes('feedzy_validate_feed')) {
-				return route.fallback();
-			}
-			return route.fulfill({
-				status: 200,
-				contentType: 'application/json',
-				body: JSON.stringify({
-					success: true,
-					data: { results: [{ status: 'success', message: 'OK' }] },
-				}),
-			});
-		});
-		await page.route(/feedzy(\/|%2F)v1(\/|%2F)feed/, (route) =>
-			route.fulfill({
-				status: 200,
-				contentType: 'application/json',
-				body: JSON.stringify({
-					channel: null,
-					items: [
-						{
-							title: 'Image item',
-							link: 'https://example.com/item',
-							creator: null,
-							source: '',
-							pubDate: 1700000000,
-							date: 'November 14, 2023',
-							time: '10:13 pm',
-							description: 'Description',
-							thumbnail,
-							default_img: '',
-							price: null,
-							media: null,
-							categories: null,
-						},
-					],
-				}),
-			})
+		const { image, requested } = await loadThumbnailFeed(
+			{ editor, page, admin },
+			true
 		);
-		await page.route(/img\.feedzy\.test/, (route) => {
-			const url = route.request().url();
-			requested.push(url);
-			if (url.startsWith('https:')) {
-				return route.abort('failed');
-			}
-			return route.fulfill({
-				status: 200,
-				contentType: 'image/png',
-				body: Buffer.from(
-					'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
-					'base64'
-				),
-			});
-		});
 
-		await admin.createNewPost();
-		await editor.insertBlock({
-			name: 'feedzy-rss-feeds/feedzy-block',
-			attributes: {
-				feeds: 'https://example.com/feed/',
-				max: 1,
-			},
-		});
-
-		const image = editor.canvas.locator('.feedzy-rss .rss_image img');
-		await expect(image).toHaveAttribute('src', thumbnail);
+		await expect(image).toHaveAttribute('src', THUMBNAIL);
 		await expect
 			.poll(() => image.evaluate((img) => img.naturalWidth))
 			.toBe(1);
-		expect(requested).toEqual([upgraded, thumbnail]);
+		expect(requested).toEqual([UPGRADED_THUMBNAIL, THUMBNAIL]);
+	});
+
+	test('editor thumbnail retries only once when every load fails', async ({
+		editor,
+		page,
+		admin,
+	}) => {
+		const { image, requested } = await loadThumbnailFeed(
+			{ editor, page, admin },
+			false
+		);
+
+		await expect(image).toHaveAttribute('src', THUMBNAIL);
+		await expect.poll(() => requested.length).toBe(2);
+		await page.waitForTimeout(1000);
+		expect(requested).toEqual([UPGRADED_THUMBNAIL, THUMBNAIL]);
 	});
 });
