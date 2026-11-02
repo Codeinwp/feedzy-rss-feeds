@@ -3237,6 +3237,7 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	private function try_save_featured_image( $img_source_url, $post_id, $post_title, &$import_info, $post_data = array() ) {
 		$post_title = $this->sanitize_attachment_title( (string) $post_title );
+		$post_data  = $this->sanitize_attachment_post_data( $post_data );
 		$id         = $this->find_attachment_by_title( $post_title );
 
 		if ( ! $id ) {
@@ -4558,6 +4559,21 @@ class Feedzy_Rss_Feeds_Import {
 	private function sanitize_attachment_title( string $title ): string {
 		// Encode a lone "<" first so stripping does not cut the title at it.
 		return wp_strip_all_tags( wp_pre_kses_less_than( $title ) );
+	}
+
+	/**
+	 * Strip markup from the title in extra attachment fields, which overrides the sideload title.
+	 *
+	 * @param array<string, mixed> $post_data Fields forwarded to `media_handle_sideload()`.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function sanitize_attachment_post_data( array $post_data ): array {
+		if ( isset( $post_data['post_title'] ) ) {
+			$post_data['post_title'] = $this->sanitize_attachment_title( (string) $post_data['post_title'] );
+		}
+
+		return $post_data;
 	}
 
 	/**

@@ -76,6 +76,22 @@ class Test_Import_Attachment_Sanitize extends WP_UnitTestCase {
 	}
 
 	/**
+	 * An attachment-type import strips markup from the post title it passes as attachment fields.
+	 */
+	public function test_attachment_import_post_data_title_strips_markup(): void {
+		$method = new ReflectionMethod( $this->import, 'try_save_featured_image' );
+		$method->setAccessible( true );
+
+		$import_info   = array();
+		$post_data     = array( 'post_title' => '<a href="https://evil.example/">Breaking</a> news' );
+		$attachment_id = $method->invokeArgs( $this->import, array( 'data:image/jpeg;base64,' . base64_encode( $this->jpeg_bytes() ), 0, 'Item title', &$import_info, $post_data ) );
+
+		$this->assertIsInt( $attachment_id );
+		$this->attachment_ids[] = $attachment_id;
+		$this->assertSame( 'Breaking news', get_post_field( 'post_title', $attachment_id ) );
+	}
+
+	/**
 	 * A feed title with markup reuses the attachment stored under its plain title.
 	 */
 	public function test_featured_image_reuses_attachment_for_same_feed_title(): void {
