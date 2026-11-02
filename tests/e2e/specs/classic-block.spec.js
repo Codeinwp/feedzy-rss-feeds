@@ -223,4 +223,49 @@ test.describe('Feedzy Classic Block', () => {
 		const firstItem = page.locator('.feedzy-rss .rss_item').first();
 		await expect(firstItem).toBeVisible();
 	});
+
+	test('placeholder shows its icons and aligns the feed input with Load Feed', async ({
+		editor,
+		admin,
+		requestUtils,
+	}) => {
+		// The dropdown arrow only renders once a feed group exists.
+		const group = await requestUtils.rest({
+			path: '/wp/v2/feedzy_categories',
+			method: 'POST',
+			data: { title: 'Placeholder Icons Group', status: 'publish' },
+		});
+
+		try {
+			await admin.createNewPost();
+			await editor.insertBlock({
+				name: 'feedzy-rss-feeds/feedzy-block',
+			});
+
+			const block = editor.canvas.locator(
+				'.wp-block-feedzy-rss-feeds-feedzy-block'
+			);
+			await expect(block.locator('.dashicons-rss')).toBeVisible();
+			await expect(
+				block.locator('.feedzy-source + .dashicons-arrow-down-alt2')
+			).toBeVisible();
+
+			const input = await block
+				.locator('.feedzy-source input')
+				.boundingBox();
+			const button = await block
+				.getByRole('button', { name: 'Load Feed' })
+				.boundingBox();
+			expect(input.height).toBe(button.height);
+			expect(input.y + input.height / 2).toBe(
+				button.y + button.height / 2
+			);
+		} finally {
+			await requestUtils.rest({
+				path: `/wp/v2/feedzy_categories/${group.id}`,
+				method: 'DELETE',
+				params: { force: true },
+			});
+		}
+	});
 });
