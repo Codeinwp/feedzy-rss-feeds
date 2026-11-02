@@ -102,6 +102,18 @@ class Test_Import_Attachment_Sanitize extends WP_UnitTestCase {
 	}
 
 	/**
+	 * A literal less-than sign in a title is kept as text, so distinct titles stay distinct.
+	 */
+	public function test_featured_image_title_keeps_literal_less_than(): void {
+		$attachment = $this->save_featured_image( 'Price <$10 deals' );
+		$post_id    = self::factory()->post->create();
+		$result     = false;
+
+		$this->assertSame( 'Price &lt;$10 deals', $attachment->post_title );
+		$this->assertFalse( $this->import->try_reuse_existing_featured_image( $result, 'Price <$20 deals', $post_id ) );
+	}
+
+	/**
 	 * Upload a test image as an attachment with the given title.
 	 *
 	 * @param string $title Attachment title.

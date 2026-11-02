@@ -4556,7 +4556,8 @@ class Feedzy_Rss_Feeds_Import {
 	 * @return string
 	 */
 	private function sanitize_attachment_title( string $title ): string {
-		return wp_strip_all_tags( $title );
+		// Encode a lone "<" first so stripping does not cut the title at it.
+		return wp_strip_all_tags( wp_pre_kses_less_than( $title ) );
 	}
 
 	/**
