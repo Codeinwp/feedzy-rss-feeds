@@ -223,4 +223,87 @@ test.describe('Feedzy Classic Block', () => {
 		const firstItem = page.locator('.feedzy-rss .rss_item').first();
 		await expect(firstItem).toBeVisible();
 	});
+
+	test('editor thumbnail falls back to http when https fails', async ({
+		editor,
+		page,
+		admin,
+	}) => {
+		const thumbnail =
+			'http://img.feedzy.test/thumb.png?src=http://cdn.feedzy.test/a.png';
+		const upgraded =
+			'https://img.feedzy.test/thumb.png?src=http://cdn.feedzy.test/a.png';
+		const requested = [];
+
+		await page.route(/admin-ajax\.php/, (route) => {
+			if (!route.request().postData()?.includes('feedzy_validate_feed')) {
+				return route.fallback();
+			}
+			return route.fulfill({
+				status: 200,
+				contentType: 'application/json',
+				body: JSON.stringify({
+					success: true,
+					data: { results: [{ status: 'success', message: 'OK' }] },
+				}),
+			});
+		});
+		await page.route(/feedzy(\/|%2F)v1(\/|%2F)feed/, (route) =>
+			route.fulfill({
+				status: 200,
+				contentType: 'application/json',
+				body: JSON.stringify({
+					channel: null,
+					items: [
+						{
+							title: 'Image item',
+							link: 'https://example.com/item',
+							creator: null,
+							source: '',
+							pubDate: 1700000000,
+							date: 'November 14, 2023',
+							time: '10:13 pm',
+							description: 'Description',
+							thumbnail,
+							default_img: '',
+							price: null,
+							media: null,
+							categories: null,
+						},
+					],
+				}),
+			})
+		);
+		await page.route(/img\.feedzy\.test/, (route) => {
+			const url = route.request().url();
+			requested.push(url);
+			if (url.startsWith('https:')) {
+				return route.abort('failed');
+			}
+			return route.fulfill({
+				status: 200,
+				contentType: 'image/png',
+				body: Buffer.from(
+					'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+					'base64'
+				),
+			});
+		});
+
+		await admin.createNewPost();
+		await editor.insertBlock({
+			name: 'feedzy-rss-feeds/feedzy-block',
+			attributes: {
+				feeds: 'https://example.com/feed/',
+				max: 1,
+			},
+		});
+
+		const image = editor.canvas.locator('.feedzy-rss .rss_image img');
+		await expect(image).toHaveAttribute('src', thumbnail);
+		await expect
+			.poll(() => image.evaluate((img) => img.naturalWidth))
+			.toBe(1);
+		expect(requested).toEqual([upgraded, thumbnail]);
+	});
 });

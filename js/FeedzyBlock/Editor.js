@@ -23,6 +23,7 @@ import {
 	inArray,
 	arrangeMeta,
 	filterCustomPattern,
+	upgradeToHttps,
 } from './utils';
 
 class Editor extends Component {
@@ -335,7 +336,7 @@ class Editor extends Component {
 			this.props.attributes.thumb === 'auto' &&
 			item.thumbnail !== item.default_img
 		) {
-			url = item.thumbnail.replace(/http:/g, 'https:');
+			url = upgradeToHttps(item.thumbnail);
 		} else if (this.props.attributes.default) {
 			url = this.props.attributes.default.url;
 		} else if (item.default_img) {
@@ -348,6 +349,21 @@ class Editor extends Component {
 			url = 'url("' + url + '")';
 		}
 		return url;
+	}
+
+	/**
+	 * @param {HTMLImageElement}           img  The thumbnail that failed to load.
+	 * @param {{thumbnail: string | null}} item The feed item it belongs to.
+	 */
+	restoreThumbnail(img, item) {
+		// Hosts without HTTPS: retry the URL as the feed gave it.
+		const upgraded = item.thumbnail && upgradeToHttps(item.thumbnail);
+		if (
+			upgraded !== item.thumbnail &&
+			img.getAttribute('src') === upgraded
+		) {
+			img.src = item.thumbnail;
+		}
 	}
 
 	onChangeFeed(value) {
@@ -858,6 +874,12 @@ class Editor extends Component {
 																item,
 																false
 															)}
+															onError={(event) =>
+																this.restoreThumbnail(
+																	event.currentTarget,
+																	item
+																)
+															}
 															alt={unescapeHTML(
 																item.title
 															)}
