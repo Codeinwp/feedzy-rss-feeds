@@ -48,28 +48,78 @@ class Test_Import_Attachment_Sanitize extends WP_UnitTestCase {
 	}
 
 	/**
-	 * A feed item title with markup is stored as a plain attachment title.
+	 * Feed item titles carrying markup.
+	 *
+	 * @return array<string, array{string}>
 	 */
-	public function test_featured_image_title_strips_executable_markup(): void {
+	public function markup_title_provider(): array {
+		return array(
+			'svg handler' => array( '<svg onload=alert(document.domain)>Breaking news' ),
+			'iframe'      => array( '<iframe src="https://evil.example/embed"></iframe>Breaking news' ),
+			'link'        => array( '<a href="https://evil.example/">Breaking</a> news' ),
+		);
+	}
+
+	/**
+	 * A feed item title with markup is stored as a plain attachment title.
+	 *
+	 * @dataProvider markup_title_provider
+	 *
+	 * @param string $title Feed item title.
+	 */
+	public function test_featured_image_title_strips_markup( string $title ): void {
 		$this->assertFalse( has_filter( 'title_save_pre', 'wp_filter_kses' ), 'Core kses must be off, as for an administrator running the import.' );
 
-		$attachment = $this->save_featured_image( '<svg onload=alert(document.domain)>Breaking news' );
+		$attachment = $this->save_featured_image( $title );
 
 		$this->assertSame( 'Breaking news', $attachment->post_title );
 	}
 
 	/**
-	 * Importing the same feed title again reuses the existing attachment.
+	 * A feed title with markup reuses the attachment stored under its plain title.
 	 */
 	public function test_featured_image_reuses_attachment_for_same_feed_title(): void {
-		$title = '<svg onload=alert(document.domain)>Breaking news';
-		$first = $this->save_featured_image( $title );
+		$existing_id = $this->upload_attachment( 'Breaking news' );
+		$post_id     = self::factory()->post->create();
+		$result      = false;
 
-		$post_id = self::factory()->post->create();
-		$result  = false;
+		$this->assertTrue( $this->import->try_reuse_existing_featured_image( $result, '<svg onload=alert(document.domain)>Breaking news', $post_id ) );
+		$this->assertSame( $existing_id, (int) get_post_thumbnail_id( $post_id ) );
+	}
 
-		$this->assertTrue( $this->import->try_reuse_existing_featured_image( $result, $title, $post_id ) );
-		$this->assertSame( $first->ID, (int) get_post_thumbnail_id( $post_id ) );
+	/**
+	 * A title made only of markup never reuses an unrelated attachment.
+	 */
+	public function test_markup_only_title_does_not_reuse_unrelated_attachment(): void {
+		$unrelated_id = $this->upload_attachment( 'Unrelated image' );
+		$title        = '<img src="x.jpg">';
+		$post_id      = self::factory()->post->create();
+		$result       = false;
+
+		$this->assertFalse( $this->import->try_reuse_existing_featured_image( $result, $title, $post_id ) );
+		$this->assertSame( 0, (int) get_post_thumbnail_id( $post_id ) );
+		$this->assertNotSame( $unrelated_id, $this->save_featured_image( $title )->ID );
+	}
+
+	/**
+	 * Upload a test image as an attachment with the given title.
+	 *
+	 * @param string $title Attachment title.
+	 *
+	 * @return int Attachment ID.
+	 */
+	private function upload_attachment( string $title ): int {
+		$attachment_id          = (int) self::factory()->attachment->create_upload_object( DIR_TESTDATA . '/images/canola.jpg' );
+		$this->attachment_ids[] = $attachment_id;
+
+		wp_update_post(
+			array(
+				'ID'         => $attachment_id,
+				'post_title' => $title,
+			)
+		);
+
+		return $attachment_id;
 	}
 
 	/**

@@ -3038,11 +3038,7 @@ class Feedzy_Rss_Feeds_Import {
 	 * @return bool
 	 */
 	public function try_reuse_existing_featured_image( &$result, $title_feed, $post_id = 0 ) {
-		if ( ! function_exists( 'post_exists' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/post.php';
-		}
-		// Find existing attachment by feed title.
-		$attachment_id = post_exists( $this->sanitize_attachment_title( (string) $title_feed ), '', '', 'attachment' );
+		$attachment_id = $this->find_attachment_by_title( $this->sanitize_attachment_title( (string) $title_feed ) );
 
 		if ( ! $attachment_id ) {
 			return false;
@@ -3241,12 +3237,7 @@ class Feedzy_Rss_Feeds_Import {
 	 */
 	private function try_save_featured_image( $img_source_url, $post_id, $post_title, &$import_info, $post_data = array() ) {
 		$post_title = $this->sanitize_attachment_title( (string) $post_title );
-
-		if ( ! function_exists( 'post_exists' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/post.php';
-		}
-		// Find existing attachment by item title.
-		$id = post_exists( $post_title, '', '', 'attachment' );
+		$id         = $this->find_attachment_by_title( $post_title );
 
 		if ( ! $id ) {
 
@@ -4558,14 +4549,34 @@ class Feedzy_Rss_Feeds_Import {
 	}
 
 	/**
-	 * Strip markup from a feed-derived attachment title, as the imported post title is.
+	 * Strip all markup from a feed-derived attachment title.
 	 *
 	 * @param string $title The attachment title.
 	 *
 	 * @return string
 	 */
 	private function sanitize_attachment_title( string $title ): string {
-		return wp_kses( $title, apply_filters( 'feedzy_wp_kses_allowed_html', array() ) );
+		return wp_strip_all_tags( $title );
+	}
+
+	/**
+	 * Find an existing attachment by its exact title.
+	 *
+	 * @param string $title The sanitized attachment title.
+	 *
+	 * @return int Attachment ID, or 0 when none matches.
+	 */
+	private function find_attachment_by_title( string $title ): int {
+		// post_exists() drops the title clause for an empty title and would match any attachment.
+		if ( '' === $title ) {
+			return 0;
+		}
+
+		if ( ! function_exists( 'post_exists' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/post.php';
+		}
+
+		return (int) post_exists( $title, '', '', 'attachment' );
 	}
 
 	/**
