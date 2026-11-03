@@ -320,6 +320,32 @@ add_filter(
 	}
 );
 
+/*
+ * Opts into the SDK Support Hub: one Help button on Feedzy's screens and the
+ * deactivation window. It replaces the float widget. Feedzy's screens already
+ * fire `themeisle_internal_page`, so no `pages` list is needed.
+ */
+add_filter(
+	'feedzy_rss_feeds_support_hub_metadata',
+	function () {
+		return array(
+			'is_pro' => feedzy_is_pro(),
+			'links'  => array(
+				array(
+					'icon' => 'book-alt',
+					'text' => __( 'Documentation', 'feedzy-rss-feeds' ),
+					'url'  => 'https://docs.themeisle.com/collection/1569-feedzy-rss-feeds',
+				),
+				array(
+					'icon' => 'groups',
+					'text' => __( 'Community Forum', 'feedzy-rss-feeds' ),
+					'url'  => 'https://wordpress.org/support/plugin/feedzy-rss-feeds/',
+				),
+			),
+		);
+	}
+);
+
 add_filter(
 	'themeisle_sdk_labels',
 	function ( $labels ) {
