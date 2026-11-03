@@ -85,23 +85,29 @@ class Editor extends Component {
 	}
 
 	async componentDidMount() {
-		this.loadFeed();
+		if (this.props.attributes.categories !== undefined) {
+			this.loadFeed();
+			return;
+		}
 
-		if (this.props.attributes.categories === undefined) {
-			if (!this.props.attributes.meta) {
-				this.props.setAttributes({
-					meta: true,
-					metafields: 'no',
-				});
-			}
-			setTimeout(() => {
-				this.loadCategories();
+		if (!this.props.attributes.meta) {
+			this.props.setAttributes({
+				meta: true,
+				metafields: 'no',
 			});
 		}
+		setTimeout(() => {
+			this.loadCategories();
+		});
 	}
 
-	async componentDidUpdate() {
-		if ('reload' === this.state.route) {
+	async componentDidUpdate(prevProps) {
+		// The first load waits for the groups, so a saved group name is not validated as a URL.
+		const categoriesLoaded =
+			prevProps.attributes.categories === undefined &&
+			this.props.attributes.categories !== undefined;
+
+		if ('reload' === this.state.route || categoriesLoaded) {
 			this.loadFeed();
 		}
 	}
@@ -304,6 +310,7 @@ class Editor extends Component {
 			})
 			.catch((err) => {
 				window.console.error(err);
+				this.loadFeed();
 			});
 	}
 
