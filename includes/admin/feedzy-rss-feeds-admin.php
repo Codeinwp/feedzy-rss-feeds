@@ -1579,6 +1579,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 		$post_tab = isset( $_POST['tab'] ) ? sanitize_text_field( wp_unslash( $_POST['tab'] ) ) : '';
 		$settings = apply_filters( 'feedzy_get_settings', array() );
+		$settings = is_array( $settings ) ? $settings : array();
 
 		switch ( $post_tab ) {
 			case 'general':
@@ -1608,7 +1609,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 				$auto_categories = array_values( $auto_categories );
 
-				$settings            = is_array( $settings ) ? $settings : array();
 				$settings['general'] = isset( $settings['general'] ) && is_array( $settings['general'] ) ? $settings['general'] : array();
 				$settings['logs']    = isset( $settings['logs'] ) && is_array( $settings['logs'] ) ? $settings['logs'] : array();
 
@@ -1632,7 +1632,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			case 'proxy':
 				$settings['proxy'] = array(
 					'host' => isset( $_POST['proxy-host'] ) ? sanitize_text_field( wp_unslash( $_POST['proxy-host'] ) ) : '',
-					'port' => isset( $_POST['proxy-port'] ) ? absint( wp_unslash( $_POST['proxy-port'] ) ) : '',
+					'port' => ! empty( $_POST['proxy-port'] ) ? absint( wp_unslash( $_POST['proxy-port'] ) ) : '',
 					'user' => isset( $_POST['proxy-user'] ) ? sanitize_text_field( wp_unslash( $_POST['proxy-user'] ) ) : '',
 					'pass' => isset( $_POST['proxy-pass'] ) ? sanitize_text_field( wp_unslash( $_POST['proxy-pass'] ) ) : '',
 				);
