@@ -333,12 +333,12 @@ add_filter(
 			'links'  => array(
 				array(
 					'icon' => 'book-alt',
-					'text' => __( 'Docs', 'feedzy-rss-feeds' ),
+					'text' => __( 'Documentation', 'feedzy-rss-feeds' ),
 					'url'  => 'https://docs.themeisle.com/collection/1569-feedzy-rss-feeds',
 				),
 				array(
 					'icon' => 'groups',
-					'text' => __( 'Forum', 'feedzy-rss-feeds' ),
+					'text' => __( 'Community Forum', 'feedzy-rss-feeds' ),
 					'url'  => 'https://wordpress.org/support/plugin/feedzy-rss-feeds/',
 				),
 			),
