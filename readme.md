@@ -4,7 +4,7 @@
 **Requires at least:** 6.0  
 **Requires PHP:** 7.2  
 **Tested up to:** 7.1  
-**Stable tag:** 5.2.13  
+**Stable tag:** 5.2.14  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -479,9 +479,14 @@ You have to check first if your feed is valid. Please test it here: https://vali
 
  == Changelog ==
 
-##### [Version 5.2.13](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.12...v5.2.13) (2026-10-19)
+##### [Version 5.2.14](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.13...v5.2.14) (2026-11-04)
 
-- Fixed import preview order handling
+- Fixed the Feed Groups list to show saved feed sources
+- Ensured proxy port is validated and rendered correctly
+- Fixed a console error on the License tab
+- Restored classic block iframe styles
+- Fixed feed imports storing unsafe markup in featured-image titles
+- Added a Help panel to make it easier to contact support and find answers 
 - Enhanced security
 - Updated dependencies
 
