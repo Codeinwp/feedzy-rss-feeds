@@ -3038,11 +3038,7 @@ class Feedzy_Rss_Feeds_Import {
 	 * @return bool
 	 */
 	public function try_reuse_existing_featured_image( &$result, $title_feed, $post_id = 0 ) {
-		if ( ! function_exists( 'post_exists' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/post.php';
-		}
-		// Find existing attachment by feed title.
-		$attachment_id = post_exists( $title_feed, '', '', 'attachment' );
+		$attachment_id = $this->find_attachment_by_title( $this->sanitize_attachment_title( (string) $title_feed ) );
 
 		if ( ! $attachment_id ) {
 			return false;
@@ -3240,11 +3236,9 @@ class Feedzy_Rss_Feeds_Import {
 	 *                   of `set_post_thumbnail()` otherwise; false on any error.
 	 */
 	private function try_save_featured_image( $img_source_url, $post_id, $post_title, &$import_info, $post_data = array() ) {
-		if ( ! function_exists( 'post_exists' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/post.php';
-		}
-		// Find existing attachment by item title.
-		$id = post_exists( $post_title, '', '', 'attachment' );
+		$post_title = $this->sanitize_attachment_title( (string) $post_title );
+		$post_data  = $this->sanitize_attachment_post_data( $post_data );
+		$id         = $this->find_attachment_by_title( $post_title );
 
 		if ( ! $id ) {
 
@@ -4553,6 +4547,53 @@ class Feedzy_Rss_Feeds_Import {
 		}
 
 		return wp_kses_post( $excerpt );
+	}
+
+	/**
+	 * Strip all markup from a feed-derived attachment title.
+	 *
+	 * @param string $title The attachment title.
+	 *
+	 * @return string
+	 */
+	private function sanitize_attachment_title( string $title ): string {
+		// Encode a lone "<" first so stripping does not cut the title at it.
+		return wp_strip_all_tags( wp_pre_kses_less_than( $title ) );
+	}
+
+	/**
+	 * Strip markup from the title in extra attachment fields, which overrides the sideload title.
+	 *
+	 * @param array<string, mixed> $post_data Fields forwarded to `media_handle_sideload()`.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function sanitize_attachment_post_data( array $post_data ): array {
+		if ( isset( $post_data['post_title'] ) ) {
+			$post_data['post_title'] = $this->sanitize_attachment_title( (string) $post_data['post_title'] );
+		}
+
+		return $post_data;
+	}
+
+	/**
+	 * Find an existing attachment by its exact title.
+	 *
+	 * @param string $title The sanitized attachment title.
+	 *
+	 * @return int Attachment ID, or 0 when none matches.
+	 */
+	private function find_attachment_by_title( string $title ): int {
+		// post_exists() drops the title clause for an empty title and would match any attachment.
+		if ( '' === $title ) {
+			return 0;
+		}
+
+		if ( ! function_exists( 'post_exists' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/post.php';
+		}
+
+		return (int) post_exists( $title, '', '', 'attachment' );
 	}
 
 	/**

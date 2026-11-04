@@ -47,7 +47,7 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 	}
 
 	/**
-	 * Enqueue front end and editor JavaScript and CSS
+	 * Enqueue the block editor JavaScript
 	 */
 	public function feedzy_gutenberg_scripts() {
 		// Dependent WordPress core libraries.
@@ -80,10 +80,6 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 			)
 		);
 
-		// Enqueue editor block styles
-		wp_enqueue_style( 'feedzy-block-css', FEEDZY_ABSURL . 'css/feedzy-rss-feeds.css', array(), $this->version );
-		wp_enqueue_style( 'feedzy-gutenberg-block-css', FEEDZY_ABSURL . 'build/block/style-index.css', array(), $this->version );
-
 		if ( ! defined( 'TE2E_TESTING' ) ) {
 			add_filter( 'themeisle_sdk_enable_telemetry', '__return_true' );
 		}
@@ -93,9 +89,14 @@ class Feedzy_Rss_Feeds_Gutenberg_Block {
 	 * Hook server side rendering into render callback
 	 */
 	public function feedzy_register_block_type() {
+		// Core also loads editor styles inside the editor iframe.
+		wp_register_style( 'feedzy-block-css', FEEDZY_ABSURL . 'css/feedzy-rss-feeds.css', array(), $this->version );
+		wp_register_style( 'feedzy-gutenberg-block-css', FEEDZY_ABSURL . 'build/block/style-index.css', array( 'dashicons', 'feedzy-block-css' ), $this->version );
+
 		register_block_type(
 			'feedzy-rss-feeds/feedzy-block',
 			array(
+				'editor_style'    => 'feedzy-gutenberg-block-css',
 				'render_callback' => array( $this, 'feedzy_gutenberg_block_callback' ),
 				'attributes'      => array(
 					'feeds'           => array(

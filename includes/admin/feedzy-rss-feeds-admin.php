@@ -358,13 +358,11 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
 
-		if ( 'feedzy_page_feedzy-support' === $screen->base &&
-			(
-				( 'improve' === $tab )
-				|| ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type )
-				|| ( 'license' === $tab )
-			)
-		) {
+		if ( 'feedzy_page_feedzy-support' === $screen->base && 'license' === $tab ) {
+			$this->enqueue_license_script();
+		}
+
+		if ( 'feedzy_page_feedzy-support' === $screen->base && 'improve' === $tab ) {
 			$asset_file = include FEEDZY_ABSPATH . '/build/feedback/index.asset.php';
 			wp_enqueue_script( $this->plugin_name . '_feedback', FEEDZY_ABSURL . 'build/feedback/index.js', array_merge( $asset_file['dependencies'], array( 'wp-editor', 'wp-api', 'lodash' ) ), $asset_file['version'], true );
 			wp_enqueue_style( 'wp-block-editor' );
@@ -377,8 +375,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					'pluginVersion' => $this->version,
 				)
 			);
-
-			$this->enqueue_license_script();
 
 			wp_set_script_translations( $this->plugin_name . '_feedback', 'feedzy-rss-feeds' );
 		}
@@ -1173,6 +1169,9 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 
 		$new_columns = $this->array_insert_before( 'slug', $columns, 'source', __( 'Source', 'feedzy-rss-feeds' ) );
+		if ( $new_columns ) {
+			$columns = $new_columns;
+		}
 
 		return $columns;
 	}
@@ -1219,35 +1218,38 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				echo wp_kses_post( sprintf( '<button class="button button-primary validate-category" title="%s" data-category-id="%d">%s</button>', __( 'Click to remove invalid URLs from this category', 'feedzy-rss-feeds' ), $post_id, __( 'Validate & Clean', 'feedzy-rss-feeds' ) ) );
 				break;
 			case 'source':
-				$src = get_post_meta( $post_id, 'feedzy_category_feed', true );
-				if ( empty( $src ) ) {
-					$src = __( 'No Source Configured', 'feedzy-rss-feeds' );
-				} else {
-					$urls = $this->normalize_urls( $src );
-					$src  = '';
-					if ( is_array( $urls ) ) {
-
-						foreach ( $urls as $key => $url ) {
-							$too_long = 130;
-							if ( strlen( $src ) > $too_long ) {
-								$src .= '...';
-								break;
-							} else {
-								$src .= '<a href="' . $url . '" target="_blank" title="' . __( 'Click to view', 'feedzy-rss-feeds' ) . '">' . $url . '</a>';
-								if ( count( $urls ) > $key + 1 ) {
-									$src .= ', ';
-								}
-							}
-						}
-					} else {
-						$src .= '<a href="' . esc_url( $urls ) . '" target="_blank" title="' . __( 'Click to view', 'feedzy-rss-feeds' ) . '">' . esc_html( $urls ) . '</a>';
-					}
-				}
-				echo wp_kses_post( $src );
+				echo wp_kses_post( $this->get_category_source_links( get_post_meta( $post_id, 'feedzy_category_feed', true ) ) );
 				break;
 			default:
 				break;
 		}
+	}
+
+	/**
+	 * Build the Source column links from a feed group's saved URLs.
+	 *
+	 * @param string|string[] $feeds Saved feed URLs, comma or whitespace separated.
+	 *
+	 * @return string
+	 */
+	private function get_category_source_links( $feeds ): string {
+		$too_long = 130;
+		$length   = 0;
+		$links    = array();
+		foreach ( wp_parse_list( $feeds ) as $url ) {
+			if ( $length > $too_long ) {
+				$links[] = '...';
+				break;
+			}
+			$length += strlen( $url );
+			$links[] = sprintf( '<a href="%s" target="_blank" title="%s">%s</a>', esc_url( $url ), esc_attr__( 'Click to view', 'feedzy-rss-feeds' ), esc_html( $url ) );
+		}
+
+		if ( empty( $links ) ) {
+			return esc_html__( 'No Source Configured', 'feedzy-rss-feeds' );
+		}
+
+		return implode( ', ', $links );
 	}
 
 	/**
@@ -1577,6 +1579,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 		$post_tab = isset( $_POST['tab'] ) ? sanitize_text_field( wp_unslash( $_POST['tab'] ) ) : '';
 		$settings = apply_filters( 'feedzy_get_settings', array() );
+		$settings = is_array( $settings ) ? $settings : array();
 
 		switch ( $post_tab ) {
 			case 'general':
@@ -1606,7 +1609,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 				$auto_categories = array_values( $auto_categories );
 
-				$settings            = is_array( $settings ) ? $settings : array();
 				$settings['general'] = isset( $settings['general'] ) && is_array( $settings['general'] ) ? $settings['general'] : array();
 				$settings['logs']    = isset( $settings['logs'] ) && is_array( $settings['logs'] ) ? $settings['logs'] : array();
 
@@ -1630,7 +1632,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			case 'proxy':
 				$settings['proxy'] = array(
 					'host' => isset( $_POST['proxy-host'] ) ? sanitize_text_field( wp_unslash( $_POST['proxy-host'] ) ) : '',
-					'port' => isset( $_POST['proxy-port'] ) ? absint( wp_unslash( $_POST['proxy-port'] ) ) : '',
+					'port' => ! empty( $_POST['proxy-port'] ) ? absint( wp_unslash( $_POST['proxy-port'] ) ) : '',
 					'user' => isset( $_POST['proxy-user'] ) ? sanitize_text_field( wp_unslash( $_POST['proxy-user'] ) ) : '',
 					'pass' => isset( $_POST['proxy-pass'] ) ? sanitize_text_field( wp_unslash( $_POST['proxy-pass'] ) ) : '',
 				);
@@ -3460,7 +3462,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$license_status   = apply_filters( 'product_feedzy_license_status', false );
 		$is_valid         = 'valid' === $license_status;
-		$is_expired       = 'expired' === $license_status || 'active-expired' === $license_status;
+		$is_expired       = in_array( $license_status, array( 'expired', 'active_expired', 'active-expired' ), true );
 		$pro_product_slug = defined( 'FEEDZY_PRO_BASEFILE' ) ? basename( dirname( FEEDZY_PRO_BASEFILE ) ) : '';
 
 		if ( $is_valid ) {
@@ -3485,9 +3487,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$config['upgrade_menu_text'] = sprintf( __( 'BF Sale - %s off', 'feedzy-rss-feeds' ), '60%' );
 		}
 
-		$url_params = array(
+		$license_key = apply_filters( 'product_feedzy_license_key', false );
+		$url_params  = array(
 			'utm_term' => $is_valid ? 'plan-' . apply_filters( 'product_feedzy_license_plan', 0 ) : 'free',
-			'lkey'     => $is_valid || $is_expired ? apply_filters( 'product_feedzy_license_key', false ) : false,
+			'lkey'     => ! empty( $license_key ) ? $license_key : false,
 			'expired'  => $is_expired ? '1' : false,
 		);
 
