@@ -502,7 +502,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 											<div class="fz-form-group">
 												<label class="form-label"><?php esc_html_e( 'Port', 'feedzy-rss-feeds' ); ?>:</label>
 												<input type="number" min="0" max="65535" class="form-control" name="proxy-port" placeholder="<?php esc_attr_e( 'Add the port number', 'feedzy-rss-feeds' ); ?>"
-													value="<?php echo isset( $settings['proxy']['port'] ) ? esc_attr( (int) $settings['proxy']['port'] ) : ''; ?>">
+													value="<?php echo ! empty( $settings['proxy']['port'] ) ? esc_attr( absint( $settings['proxy']['port'] ) ) : ''; ?>">
 												<div class="help-text pt-8">
 													<?php
 													/* translators: %s: the value to introduce. */

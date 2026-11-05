@@ -37,4 +37,49 @@ test.describe('Admin pages health', () => {
 			page.getByRole('button', { name: 'Save Settings' })
 		).toBeVisible();
 	});
+
+	test.describe('dashboard tabs', () => {
+		/** @type {string[]} */
+		let pageErrors;
+
+		/**
+		 * Open a Dashboard tab, retrying once past the first-visit redirect.
+		 *
+		 * @param {import('@playwright/test').Page} page Playwright page.
+		 * @param {string}                          tab  Tab slug.
+		 * @return {Promise<void>}
+		 */
+		const openTab = async (page, tab) => {
+			const url = `/wp-admin/admin.php?page=feedzy-support&tab=${tab}`;
+			await page.goto(url);
+			if (!page.url().includes(`tab=${tab}`)) {
+				await page.goto(url);
+			}
+		};
+
+		test.beforeEach(({ page }) => {
+			pageErrors = [];
+			page.on('pageerror', (error) => pageErrors.push(error.message));
+		});
+
+		test('license tab loads without script errors', async ({ page }) => {
+			await openTab(page, 'license');
+
+			await expect(page.locator('.fz-form-wrap')).toBeAttached();
+			expect(pageErrors).toEqual([]);
+		});
+
+		test('improve tab opens the feedback survey', async ({ page }) => {
+			await openTab(page, 'improve');
+
+			await page.getByRole('button', { name: 'Take the Survey' }).click();
+
+			await expect(
+				page.getByRole('dialog', {
+					name: "What's one thing you need in Feedzy?",
+				})
+			).toBeVisible();
+			expect(pageErrors).toEqual([]);
+		});
+	});
 });

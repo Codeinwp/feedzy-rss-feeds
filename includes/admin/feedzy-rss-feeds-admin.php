@@ -358,13 +358,11 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
 
-		if ( 'feedzy_page_feedzy-support' === $screen->base &&
-			(
-				( 'improve' === $tab )
-				|| ( 'edit' !== $screen->base && 'feedzy_imports' === $screen->post_type )
-				|| ( 'license' === $tab )
-			)
-		) {
+		if ( 'feedzy_page_feedzy-support' === $screen->base && 'license' === $tab ) {
+			$this->enqueue_license_script();
+		}
+
+		if ( 'feedzy_page_feedzy-support' === $screen->base && 'improve' === $tab ) {
 			$asset_file = include FEEDZY_ABSPATH . '/build/feedback/index.asset.php';
 			wp_enqueue_script( $this->plugin_name . '_feedback', FEEDZY_ABSURL . 'build/feedback/index.js', array_merge( $asset_file['dependencies'], array( 'wp-editor', 'wp-api', 'lodash' ) ), $asset_file['version'], true );
 			wp_enqueue_style( 'wp-block-editor' );
@@ -377,8 +375,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 					'pluginVersion' => $this->version,
 				)
 			);
-
-			$this->enqueue_license_script();
 
 			wp_set_script_translations( $this->plugin_name . '_feedback', 'feedzy-rss-feeds' );
 		}
@@ -1583,6 +1579,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		}
 		$post_tab = isset( $_POST['tab'] ) ? sanitize_text_field( wp_unslash( $_POST['tab'] ) ) : '';
 		$settings = apply_filters( 'feedzy_get_settings', array() );
+		$settings = is_array( $settings ) ? $settings : array();
 
 		switch ( $post_tab ) {
 			case 'general':
@@ -1612,7 +1609,6 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 				$auto_categories = array_values( $auto_categories );
 
-				$settings            = is_array( $settings ) ? $settings : array();
 				$settings['general'] = isset( $settings['general'] ) && is_array( $settings['general'] ) ? $settings['general'] : array();
 				$settings['logs']    = isset( $settings['logs'] ) && is_array( $settings['logs'] ) ? $settings['logs'] : array();
 
@@ -1636,7 +1632,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			case 'proxy':
 				$settings['proxy'] = array(
 					'host' => isset( $_POST['proxy-host'] ) ? sanitize_text_field( wp_unslash( $_POST['proxy-host'] ) ) : '',
-					'port' => isset( $_POST['proxy-port'] ) ? absint( wp_unslash( $_POST['proxy-port'] ) ) : '',
+					'port' => ! empty( $_POST['proxy-port'] ) ? absint( wp_unslash( $_POST['proxy-port'] ) ) : '',
 					'user' => isset( $_POST['proxy-user'] ) ? sanitize_text_field( wp_unslash( $_POST['proxy-user'] ) ) : '',
 					'pass' => isset( $_POST['proxy-pass'] ) ? sanitize_text_field( wp_unslash( $_POST['proxy-pass'] ) ) : '',
 				);
@@ -3466,7 +3462,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 		$license_status   = apply_filters( 'product_feedzy_license_status', false );
 		$is_valid         = 'valid' === $license_status;
-		$is_expired       = 'expired' === $license_status || 'active-expired' === $license_status;
+		$is_expired       = in_array( $license_status, array( 'expired', 'active_expired', 'active-expired' ), true );
 		$pro_product_slug = defined( 'FEEDZY_PRO_BASEFILE' ) ? basename( dirname( FEEDZY_PRO_BASEFILE ) ) : '';
 
 		if ( $is_valid ) {
@@ -3491,9 +3487,10 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			$config['upgrade_menu_text'] = sprintf( __( 'BF Sale - %s off', 'feedzy-rss-feeds' ), '60%' );
 		}
 
-		$url_params = array(
+		$license_key = apply_filters( 'product_feedzy_license_key', false );
+		$url_params  = array(
 			'utm_term' => $is_valid ? 'plan-' . apply_filters( 'product_feedzy_license_plan', 0 ) : 'free',
-			'lkey'     => $is_valid || $is_expired ? apply_filters( 'product_feedzy_license_key', false ) : false,
+			'lkey'     => ! empty( $license_key ) ? $license_key : false,
 			'expired'  => $is_expired ? '1' : false,
 		);
 
