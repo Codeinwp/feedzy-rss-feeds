@@ -116,3 +116,11 @@ export const filterCustomPattern = ( keyword = '' ) => {
 	}
 	return pattern;
 };
+
+/**
+ * Switch a URL's scheme from http to https, leaving the rest untouched.
+ *
+ * @param {string} url The URL to upgrade.
+ * @return {string} The URL with an https scheme when it started with http.
+ */
+export const upgradeToHttps = (url) => url.replace(/^http:/, 'https:');
