@@ -1,3 +1,8 @@
+##### [Version 5.2.15](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.14...v5.2.15) (2026-11-06)
+
+- Fixed broken block editor thumbnails on sites without HTTPS support
+- Updated dependencies
+
 ##### [Version 5.2.14](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.13...v5.2.14) (2026-11-04)
 
 - Fixed the Feed Groups list to show saved feed sources
