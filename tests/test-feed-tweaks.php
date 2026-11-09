@@ -220,4 +220,40 @@ class Test_Feed_Tweaks extends WP_UnitTestCase {
 
 		$this->assertEquals( $content, escape_html_to_tag( $content ) );
 	}
+
+	/**
+	 * Test feedzy_docs_url builds the current docs URL with UTMs.
+	 *
+	 * @access public
+	 */
+	public function test_docs_url_adds_utms() {
+		$this->assertEquals(
+			'https://docs.themeisle.com/feedzy-rss-feeds/how-to-change-user-agent-in-feedzy?utm_source=wpadmin&utm_medium=settings&utm_campaign=headers&utm_content=docsfeedzy-rss-feedshow-to-change-user-agent-in-feedzy',
+			feedzy_docs_url( 'how-to-change-user-agent-in-feedzy', 'headers', 'settings' )
+		);
+	}
+
+	/**
+	 * Test feedzy_docs_url puts the section anchor after the UTMs.
+	 *
+	 * @access public
+	 */
+	public function test_docs_url_anchor_after_utms() {
+		$this->assertEquals(
+			'https://docs.themeisle.com/feedzy-rss-feeds/feedzy-loop?utm_source=wpadmin&utm_medium=blockeditor&utm_campaign=feedzy-loop&utm_content=docsfeedzy-rss-feedsfeedzy-loop#magic-tags-reference',
+			feedzy_docs_url( 'feedzy-loop', 'feedzy-loop', 'blockeditor', 'magic-tags-reference' )
+		);
+	}
+
+	/**
+	 * Test the shortcode and widget form labels link to the current docs pages.
+	 *
+	 * @access public
+	 */
+	public function test_form_elements_link_to_current_docs() {
+		$elements = wp_json_encode( Feedzy_Rss_Feeds_Ui_Lang::get_form_elements(), JSON_UNESCAPED_SLASHES );
+
+		$this->assertStringContainsString( 'https://docs.themeisle.com/feedzy-rss-feeds/feedzy-how-to-add-affiliate-referrals-to-feed-urls?utm_source=wpadmin&#038;utm_medium=feed-options&#038;utm_campaign=referral', $elements );
+		$this->assertStringNotContainsString( 'docs.themeisle.com/article/', $elements );
+	}
 }

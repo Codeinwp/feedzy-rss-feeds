@@ -103,7 +103,7 @@ global $post;
 							<input type="text" id="feedzy-source-tags" name="feedzy_meta_data[source]" class="fz-tagify--outside" value="<?php echo esc_attr( $source ); ?>" />
 						</div>
 						<div class="cta-text pt-8">
-							<a href="<?php echo esc_url( 'https://docs.themeisle.com/article/799-how-to-find-feed-url-for-feedzy-rss-feeds' ); ?>" target="_blank"><?php esc_html_e( 'How do I find an RSS feed URL?', 'feedzy-rss-feeds' ); ?></a>
+							<a href="<?php echo esc_url( feedzy_docs_url( 'how-to-find-feed-url-for-feedzy-rss-feeds', 'feed-url', 'import' ) ); ?>" target="_blank"><?php esc_html_e( 'How do I find an RSS feed URL?', 'feedzy-rss-feeds' ); ?></a>
 						</div>
 					</div>
 				</div>
@@ -197,7 +197,7 @@ global $post;
 														// translators: %1$s: magic tag, %2$s: opening anchor tag, %3$s: closing anchor tag.
 														__( 'Auto-create categories from source: %1$s %2$s Learn More %3$s', 'feedzy-rss-feeds' ),
 														'<strong>[#item_categories]</strong>',
-														'<a href="' . esc_url( 'https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#dynamic-post-taxonomy' ) . '" target="_blank">',
+														'<a href="' . esc_url( feedzy_docs_url( 'how-to-use-feed-to-post-feature-in-feedzy', 'dynamic-taxonomy', 'import', 'dynamic-post-taxonomy' ) ) . '" target="_blank">',
 														'</a>'
 													)
 												);
@@ -533,7 +533,7 @@ global $post;
 										<?php esc_html_e( 'Custom Fields', 'feedzy-rss-feeds' ); ?> <?php echo ! feedzy_is_pro() ? ' <span class="pro-label">PRO</span>' : ''; ?>
 									</h4>
 									<div class="form-block-pro-text">
-										<a href="https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy" target="_blank">
+										<a href="<?php echo esc_url( feedzy_docs_url( 'how-do-i-extract-values-from-custom-tags-in-feedzy', 'custom-fields', 'import' ) ); ?>" target="_blank">
 											<?php esc_html_e( 'Learn More', 'feedzy-rss-feeds' ); ?>
 										</a>
 									</div>
@@ -581,7 +581,7 @@ global $post;
 												sprintf(
 													// translators: %1$s: opening anchor tag, %2$s: closing anchor tag.
 													__( 'Check the %1$s Documentation %2$s for more details.', 'feedzy-rss-feeds' ),
-													'<a href="' . esc_url( 'https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy' ) . '" target="_blank">',
+													'<a href="' . esc_url( feedzy_docs_url( 'how-do-i-extract-values-from-custom-tags-in-feedzy', 'custom-fields', 'import' ) ) . '" target="_blank">',
 													'</a>'
 												)
 											);
@@ -897,7 +897,7 @@ global $post;
 										echo wp_sprintf(
 											// translators: %1$s and %2$s are HTML anchor tags for documentation.
 											esc_html__( 'To understand how duplicates will be removed, check out our %1$sDocumentation%2$s', 'feedzy-rss-feeds' ),
-											'<a href="https://docs.themeisle.com/article/638-how-to-eliminate-duplicate-feed-item" target="_blank">',
+											'<a href="' . esc_url( feedzy_docs_url( 'how-to-eliminate-duplicate-feed-items', 'duplicates', 'import' ) ) . '" target="_blank">',
 											'</a>'
 										);
 										?>
@@ -977,7 +977,7 @@ global $post;
 										<?php if ( ! feedzy_is_pro() ) : ?>
 											<div class="form-block-pro-text">
 											<?php esc_html_e( 'This feature is only for Pro users.', 'feedzy-rss-feeds' ); ?><br>
-												<a href="https://docs.themeisle.com/category/712-feedzy" target="_blank"><?php esc_html_e( 'Learn More', 'feedzy-rss-feeds' ); ?></a>
+												<a href="<?php echo esc_url( feedzy_docs_url( '', 'language', 'import' ) ); ?>" target="_blank"><?php esc_html_e( 'Learn More', 'feedzy-rss-feeds' ); ?></a>
 											</div>
 										<?php endif; ?>
 									</div>
