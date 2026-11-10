@@ -1671,7 +1671,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 					'<span><i class="dashicons dashicons-%s %s"></i>%s',
 					$status['success'] ? 'yes' : 'no-alt',
 					$status['success'] ? 'pass' : 'fail',
-					$status['msg']
+					esc_html( $status['msg'] )
 				);
 			}
 		}
