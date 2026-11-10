@@ -113,13 +113,19 @@ $subscribed_notice_dismissed = get_option( 'feedzy_dismiss_subscribe_notice_dash
 							echo wp_kses_post(
 								wp_sprintf(
 									// Translators: %1$s is the opening anchor tag for the upsell link, %2$s is the closing anchor tag.
-									__( 'If you did not found an answer in our Knowledge Base, you can always ask for help from our community based forum or %1$s get dedicated support with our premium plans. %2$s', 'feedzy-rss-feeds' ),
+									__( 'If you did not find an answer in our Knowledge Base, you can always ask our support team or our community based forum, or %1$s get priority support with our premium plans. %2$s', 'feedzy-rss-feeds' ),
 									'<a target="_blank" href="' . esc_url( $upsell_link ) . '">',
 									'</a>'
 								)
 							);
 							?>
 						</p>
+						<?php if ( class_exists( '\ThemeisleSDK\Modules\Support_hub' ) ) : ?>
+							<?php // The SDK's Support Hub opens its Help panel for any [data-ti-support] link. ?>
+							<a href="#" class="btn btn-primary" data-ti-support="support-page">
+								<?php esc_html_e( 'Contact Support', 'feedzy-rss-feeds' ); ?>
+							</a>
+						<?php endif; ?>
 						<a href="https://wordpress.org/support/plugin/feedzy-rss-feeds/" class="btn btn-outline-primary"
 							target="_blank">
 							<?php esc_html_e( 'Community Forum', 'feedzy-rss-feeds' ); ?>

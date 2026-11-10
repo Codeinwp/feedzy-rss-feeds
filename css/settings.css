@@ -1412,6 +1412,9 @@ input.fz-switch-toggle[type=checkbox]:checked:before{
 	display: inline-block;
 	color: #4268CF;
 }
+.need-help-box.feedzy-accordion-item .btn + .btn{
+	margin-left: 8px;
+}
 
 .fz-document-list{
 	padding: 30px 0 10px;
