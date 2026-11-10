@@ -55,7 +55,7 @@ class Test_Validation_Output_Escaping extends WP_UnitTestCase {
 			}
 
 			public function get_title(): string {
-				return 'News &amp; Updates';
+				return '&lt;b&gt;News&lt;/b&gt; &amp; Updates';
 			}
 
 			public function error() {
@@ -91,6 +91,7 @@ class Test_Validation_Output_Escaping extends WP_UnitTestCase {
 		$this->assertSame( 'News & Updates', $result['title'] );
 		$this->assertStringStartsWith( 'News & Updates', $result['message'] );
 		$this->assertStringNotContainsString( '&amp;', $result['message'] );
+		$this->assertStringNotContainsString( '<b>', $result['message'] );
 	}
 
 	/**
