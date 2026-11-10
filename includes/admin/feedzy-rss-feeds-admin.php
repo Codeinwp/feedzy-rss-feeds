@@ -3577,7 +3577,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 				try {
 					$items = $feed->get_item_quantity();
-					$title = wp_strip_all_tags( html_entity_decode( (string) $feed->get_title(), ENT_QUOTES, 'UTF-8' ) );
+					$title = html_entity_decode( wp_strip_all_tags( (string) $feed->get_title() ), ENT_QUOTES, 'UTF-8' );
 					$error = $feed->error();
 
 					if ( ! empty( $error ) ) {

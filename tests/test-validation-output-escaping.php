@@ -47,15 +47,26 @@ class Test_Validation_Output_Escaping extends WP_UnitTestCase {
 
 	/**
 	 * Feed title entities are decoded before the client receives them.
+	 *
+	 * @dataProvider encoded_feed_title_provider
+	 *
+	 * @param string $encoded_title Encoded title returned by the feed parser.
+	 * @param string $expected_title Plain title expected in the response.
 	 */
-	public function test_feed_title_entities_are_decoded_before_json(): void {
-		$feed = new class() {
+	public function test_feed_title_entities_are_decoded_before_json( string $encoded_title, string $expected_title ): void {
+		$feed = new class( $encoded_title ) {
+			private $title;
+
+			public function __construct( string $title ) {
+				$this->title = $title;
+			}
+
 			public function get_item_quantity(): int {
 				return 1;
 			}
 
 			public function get_title(): string {
-				return '&lt;b&gt;News&lt;/b&gt; &amp; Updates';
+				return $this->title;
 			}
 
 			public function error() {
@@ -88,10 +99,21 @@ class Test_Validation_Output_Escaping extends WP_UnitTestCase {
 		$result   = $response['data']['results'][0];
 
 		$this->assertTrue( $response['success'] );
-		$this->assertSame( 'News & Updates', $result['title'] );
-		$this->assertStringStartsWith( 'News & Updates', $result['message'] );
+		$this->assertSame( $expected_title, $result['title'] );
+		$this->assertStringStartsWith( $expected_title, $result['message'] );
 		$this->assertStringNotContainsString( '&amp;', $result['message'] );
-		$this->assertStringNotContainsString( '<b>', $result['message'] );
+	}
+
+	/**
+	 * Encoded feed titles and their expected response values.
+	 *
+	 * @return array<string, array{string, string}>
+	 */
+	public function encoded_feed_title_provider(): array {
+		return array(
+			'formatting-like title' => array( '&lt;b&gt;News&lt;/b&gt; &amp; Updates', '<b>News</b> & Updates' ),
+			'literal less-than'     => array( 'C++ &lt;3 Rust', 'C++ <3 Rust' ),
+		);
 	}
 
 	/**
