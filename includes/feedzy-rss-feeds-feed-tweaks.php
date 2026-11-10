@@ -176,6 +176,28 @@ add_filter( 'elementor/image_size/get_attachment_image_html', 'feedzy_el_display
 function feedzy_upgrade_link( $area, $location = null ) {
 	return tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, $area, $location ) );
 }
+
+/**
+ * Get the URL of a Feedzy docs page, with UTM parameters.
+ *
+ * Links to the final docs URL: the old /article/ URLs redirect, and the redirect drops the UTM parameters.
+ *
+ * @param string $page     The docs page slug, empty for the Feedzy docs home.
+ * @param string $campaign The feature the link is about (utm_campaign).
+ * @param string $medium   The screen the link is shown on (utm_medium).
+ * @param string $anchor   Optional. The section of the page, without the #.
+ *
+ * @return string The docs URL.
+ */
+function feedzy_docs_url( $page, $campaign, $medium, $anchor = '' ) {
+	$url = 'https://docs.themeisle.com/feedzy-rss-feeds/' . $page;
+
+	if ( function_exists( 'tsdk_utmify' ) ) {
+		$url = tsdk_utmify( $url, $campaign, $medium );
+	}
+
+	return '' === $anchor ? $url : $url . '#' . $anchor;
+}
 /**
  * Filters whether a post has a post thumbnail.
  *

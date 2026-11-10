@@ -11,24 +11,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 	$active_tab  = isset( $_REQUEST['tab'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['tab'] ) ) : 'general';// phpcs:ignore WordPress.Security.NonceVerification
 	$show_button = true;
 
-	$help_btn_url = 'https://docs.themeisle.com/category/712-feedzy';
+	$help_btn_url = feedzy_docs_url( '', 'documentation', 'settings' );
 
 	if ( 'general' === $active_tab ) {
-		$help_btn_url = 'https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation#general';
+		$help_btn_url = feedzy_docs_url( 'feedzy-rss-feeds-documentation', 'general', 'settings', 'general' );
 	} elseif ( 'headers' === $active_tab ) {
-		$help_btn_url = 'https://docs.themeisle.com/article/713-how-to-change-user-agent-in-feedzy';
+		$help_btn_url = feedzy_docs_url( 'how-to-change-user-agent-in-feedzy', 'headers', 'settings' );
 	} elseif ( 'proxy' === $active_tab ) {
-		$help_btn_url = 'https://docs.themeisle.com/article/714-how-to-use-proxy-settings-in-feezy';
+		$help_btn_url = feedzy_docs_url( 'how-to-use-proxy-settings-in-feezy', 'proxy', 'settings' );
 	} elseif ( 'misc' === $active_tab ) {
-		$help_btn_url = 'https://docs.themeisle.com/article/841-how-to-add-canonical-tags-for-imported-posts';
+		$help_btn_url = feedzy_docs_url( 'how-to-add-canonical-tags-for-imported-posts', 'misc', 'settings' );
 	} elseif ( 'openai' === $active_tab ) {
-		$help_btn_url = 'https://docs.themeisle.com/article/1962-how-to-paraphrase-using-chatgpt-in-feed-to-post';
+		$help_btn_url = feedzy_docs_url( 'how-to-paraphrase-using-chatgpt-in-feed-to-post', 'openai', 'settings' );
 	} elseif ( 'wordai' === $active_tab ) {
-		$help_btn_url = 'https://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy#wordai';
+		$help_btn_url = feedzy_docs_url( 'how-to-use-wordai-to-rephrase-rss-content-in-feedzy', 'wordai', 'settings', 'wordai-integration' );
 	} elseif ( 'spinnerchief' === $active_tab ) {
-		$help_btn_url = 'https://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy#spinner';
+		$help_btn_url = feedzy_docs_url( 'how-to-use-wordai-to-rephrase-rss-content-in-feedzy', 'spinnerchief', 'settings', 'spinnerchief-integration' );
 	} elseif ( 'amazon-product-advertising' === $active_tab ) {
-		$help_btn_url = 'https://docs.themeisle.com/article/1745-how-to-display-amazon-products-using-feedzy';
+		$help_btn_url = feedzy_docs_url( 'how-to-display-amazon-products-using-feedzy', 'amazon-product-advertising', 'settings' );
 	}
 
 	$logs                            = array();

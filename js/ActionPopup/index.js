@@ -33,6 +33,7 @@ const clearTagifyPersistedData = (tagify) => {
 };
 
 const ActionModal = () => {
+	const tagActionsDocsUrl = window.feedzyData?.tagActionsDocsUrl;
 	// useRef
 	const userRef = useRef(null);
 	// State
@@ -450,7 +451,7 @@ const ActionModal = () => {
 											'feedzy-rss-feeds'
 										)}
 										<br />
-										<ExternalLink href="https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#tag-actions">
+										<ExternalLink href={tagActionsDocsUrl}>
 											{__(
 												'Learn more about this feature.',
 												'feedzy-rss-feeds'
@@ -796,7 +797,9 @@ const ActionModal = () => {
 																)),
 														]}
 												<li className="link-item">
-													<ExternalLink href="https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy#tag-actions">
+													<ExternalLink
+														href={tagActionsDocsUrl}
+													>
 														{__(
 															'Learn more about this feature.',
 															'feedzy-rss-feeds'
