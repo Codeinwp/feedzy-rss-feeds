@@ -411,6 +411,49 @@ test.describe('Feed Import', () => {
 		await runFeedImport(page);
 	});
 
+	test('feed validation renders response values as text', async ({
+		page,
+	}) => {
+		const responseUrl = '<b>https://example.com/feed</b>';
+		const responseMessage = '<b>Example feed</b> 1 item found';
+
+		await page.route(/admin-ajax\.php/, (route) => {
+			if (!route.request().postData()?.includes('feedzy_validate_feed')) {
+				return route.fallback();
+			}
+
+			return route.fulfill({
+				status: 200,
+				contentType: 'application/json',
+				body: JSON.stringify({
+					success: true,
+					data: {
+						results: [
+							{
+								url: responseUrl,
+								status: 'success',
+								message: responseMessage,
+							},
+						],
+					},
+				}),
+			});
+		});
+
+		await page.goto('/wp-admin/post-new.php?post_type=feedzy_imports');
+		await tryCloseTourModal(page);
+
+		await page
+			.locator('#feedzy-import-source')
+			.fill('https://example.com/feed');
+		await page.getByRole('button', { name: 'Validate Feed' }).click();
+
+		const validationMessage = page.locator('.fz-validation-message');
+		await expect(validationMessage).toContainText(responseUrl);
+		await expect(validationMessage).toContainText(responseMessage);
+		await expect(validationMessage.locator('b')).toHaveCount(0);
+	});
+
 	test('importing feed from URL with featured image', async ({
 		admin,
 		page,
