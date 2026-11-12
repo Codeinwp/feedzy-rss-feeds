@@ -120,8 +120,8 @@ $subscribed_notice_dismissed = get_option( 'feedzy_dismiss_subscribe_notice_dash
 							);
 							?>
 						</p>
-						<?php if ( class_exists( '\ThemeisleSDK\Modules\Support_hub' ) ) : ?>
-							<?php // The SDK's Support Hub opens its Help panel for any [data-ti-support] link. ?>
+						<?php if ( wp_script_is( 'themeisle-sdk-support-hub', 'enqueued' ) ) : ?>
+							<?php // The SDK's Support Hub script opens its Help panel for any [data-ti-support] link; the SDK enqueues it only when the module loads. ?>
 							<a href="#" class="btn btn-primary" data-ti-support="support-page">
 								<?php esc_html_e( 'Contact Support', 'feedzy-rss-feeds' ); ?>
 							</a>
@@ -133,7 +133,7 @@ $subscribed_notice_dismissed = get_option( 'feedzy_dismiss_subscribe_notice_dash
 						<?php
 					} else {
 						?>
-						<p><?php echo wp_kses_post( wp_sprintf( __( 'If you didn\'t found an answer in our Knowledge Base, our dedicated support team standby to help you.', 'feedzy-rss-feeds' ) ) ); ?>
+						<p><?php echo wp_kses_post( wp_sprintf( __( 'If you didn\'t find an answer in our Knowledge Base, our dedicated support team standby to help you.', 'feedzy-rss-feeds' ) ) ); ?>
 						</p>
 						<a href="https://store.themeisle.com/contact" class="btn btn-outline-primary"
 							target="_blank"><?php esc_html_e( 'Contact Support', 'feedzy-rss-feeds' ); ?></a>

@@ -126,3 +126,34 @@ test.describe('Docs links', () => {
 		);
 	});
 });
+
+test.describe('Need help box', () => {
+	test('free Help tab offers the Help panel and the community forum', async ({
+		page,
+	}) => {
+		await openPage(page, 'page=feedzy-support&tab=help');
+
+		await expect(
+			page.getByRole('link', { name: 'Contact Support' })
+		).toHaveAttribute('data-ti-support', 'support-page');
+		await expect(
+			page.getByRole('link', { name: 'Community Forum' })
+		).toBeVisible();
+	});
+
+	test('Help tab keeps only the community forum when the Support Hub is hidden', async ({
+		page,
+	}) => {
+		await openPage(
+			page,
+			'page=feedzy-support&tab=help&feedzy_e2e_hide_support_hub=1'
+		);
+
+		await expect(
+			page.getByRole('link', { name: 'Community Forum' })
+		).toBeVisible();
+		await expect(
+			page.getByRole('link', { name: 'Contact Support' })
+		).toHaveCount(0);
+	});
+});
