@@ -632,4 +632,62 @@ class Test_Admin_Abstract_Helpers extends WP_UnitTestCase {
 			)
 		);
 	}
+
+	/**
+	 * Test a lazy feed request built from the rendered placeholder passes the nonce check.
+	 *
+	 * The browser reads the placeholder's data attributes, whose names HTML lowercases,
+	 * and sends them back as the request arguments.
+	 *
+	 * @dataProvider lazy_placeholder_attributes
+	 *
+	 * @param array<string, string> $atts Shortcode or block attributes.
+	 */
+	public function test_lazy_request_from_rendered_placeholder_passes_nonce_check( $atts ) {
+		$feedzy = new class extends Feedzy_Rss_Feeds_Admin_Abstract {
+			protected $plugin_name = 'feedzy-rss-feeds';
+			protected $version     = '1.0.0';
+		};
+
+		$document = new DOMDocument();
+		$document->loadHTML( '<html><body>' . $feedzy->feedzy_rss( $atts ) . '</body></html>', LIBXML_NOERROR );
+		$args = array();
+		foreach ( $document->getElementsByTagName( 'div' )->item( 0 )->attributes as $attribute ) {
+			if ( 0 === strpos( $attribute->name, 'data-' ) ) {
+				$args[ substr( $attribute->name, 5 ) ] = $attribute->value;
+			}
+		}
+
+		$sc     = $feedzy->get_short_code_attributes( $args );
+		$action = new ReflectionMethod( 'Feedzy_Rss_Feeds_Admin_Abstract', 'feed_nonce_action' );
+		$action->setAccessible( true );
+
+		$this->assertNotFalse( wp_verify_nonce( $args['nonce'], $action->invoke( $feedzy, $feedzy->normalize_urls( $sc['feeds'] ), $sc ) ) );
+	}
+
+	/**
+	 * Lazy placeholders from a classic shortcode and from block-style camelCase attributes.
+	 *
+	 * @return array<string, array<int, array<string, string>>>
+	 */
+	public function lazy_placeholder_attributes() {
+		return array(
+			'shortcode' => array(
+				array(
+					'feeds'    => 'https://example.com/feed',
+					'max'      => '2',
+					'keywords_title' => 'God, Mendes',
+					'lazy'     => 'yes',
+				),
+			),
+			'block'     => array(
+				array(
+					'feeds'       => 'https://example.com/feed',
+					'aspectRatio' => '16/9',
+					'className'   => 'is-style-custom',
+					'lazy'        => 'yes',
+				),
+			),
+		);
+	}
 }

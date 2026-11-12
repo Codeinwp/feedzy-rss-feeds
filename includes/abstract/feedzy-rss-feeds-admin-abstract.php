@@ -1153,7 +1153,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return array<string, mixed>
 	 */
 	private function normalize_lazyload_attributes( $attributes ) {
-		foreach ( array( 'nonce', 'error_msg', 'has_valid_cache', 'feedData' ) as $runtime_key ) {
+		// HTML lowercases data attribute names, so a lazy request sends aspectRatio back as aspectratio,
+		// next to the aspectRatio default. On a collision the later key, the sent value, wins.
+		$attributes = array_change_key_case( $attributes, CASE_LOWER );
+
+		foreach ( array( 'nonce', 'error_msg', 'has_valid_cache', 'feeddata' ) as $runtime_key ) {
 			unset( $attributes[ $runtime_key ] );
 		}
 
