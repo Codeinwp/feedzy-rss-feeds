@@ -450,6 +450,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		// Disregard the pseudo-shortcode coming from Gutenberg as a lazy one.
 		if ( ( true === $sc['lazy'] || 'yes' === $sc['lazy'] ) && ! isset( $sc['gutenberg'] ) ) {
 			$attributes = '';
+			$printed    = array();
 			foreach ( $sc as $key => $val ) {
 				// ignore the feedData, its not required.
 				if ( 'feedData' === $key ) {
@@ -458,9 +459,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				if ( is_array( $val ) ) {
 					$val = implode( ',', $val );
 				}
-				$attributes .= 'data-' . esc_attr( $key ) . '="' . esc_attr( $val ) . '"';
+				$printed[ $key ] = esc_attr( $val );
+				$attributes     .= 'data-' . esc_attr( $key ) . '="' . $printed[ $key ] . '"';
 			}
-			$lazyload_cache_key = $this->get_lazyload_cache_key( $sc, $feed_url );
+			$signed_attributes  = $this->lazy_placeholder_attributes( $printed );
+			$lazyload_cache_key = $this->get_lazyload_cache_key( $signed_attributes );
 			$content            = get_transient( $lazyload_cache_key );
 
 			// the first time the shortcode is being called it will not have any content.
@@ -470,8 +473,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$attributes .= 'data-has_valid_cache="true"';
 			}
 
-			// Add nonce based on feed url.
-			$attributes .= 'data-nonce="' . esc_attr( wp_create_nonce( $this->feed_nonce_action( $feed_url, $sc ) ) ) . '"';
+			// Add a nonce bound to the feed url and every printed attribute.
+			$attributes .= 'data-nonce="' . esc_attr( wp_create_nonce( $this->feed_nonce_action( $feed_url, $signed_attributes ) ) ) . '"';
 			$attributes .= 'data-error_msg="' . esc_attr( apply_filters( 'feedzy_lazyload_error_msg', __( 'An error occurred while fetching the feed.', 'feedzy-rss-feeds' ), $feed_url ) ) . '"';
 
 			$class = array_filter( apply_filters( 'feedzy_add_classes_block', array( $sc['classname'], 'feedzy-' . md5( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ) ), $sc, null, $feed_url ) );
@@ -569,16 +572,22 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @param   array $data The attributes passed by the ajax call.
 	 */
 	public function feedzy_lazy_load( $data ) {
-		$atts     = $data['args'];
+		$atts              = $data['args'];
+		$signed_attributes = $this->lazy_request_attributes( $atts );
+
+		if ( null === $signed_attributes ) {
+			wp_send_json_error( array( 'message' => __( 'Security check failed.', 'feedzy-rss-feeds' ) ) );
+		}
+
 		$sc       = $this->get_short_code_attributes( $atts );
 		$feed_url = $this->normalize_urls( $sc['feeds'] );
 		$nonce    = isset( $atts['nonce'] ) ? $atts['nonce'] : '';
 
-		if ( ! wp_verify_nonce( $nonce, $this->feed_nonce_action( $feed_url, $sc ) ) ) {
+		if ( ! wp_verify_nonce( $nonce, $this->feed_nonce_action( $feed_url, $signed_attributes ) ) ) {
 			wp_send_json_error( array( 'message' => __( 'Security check failed.', 'feedzy-rss-feeds' ) ) );
 		}
 
-		$lazyload_cache_key = $this->get_lazyload_cache_key( $sc, $feed_url );
+		$lazyload_cache_key = $this->get_lazyload_cache_key( $signed_attributes );
 
 		if ( isset( $sc['filters'] ) && ! empty( $sc['filters'] ) && feedzy_is_pro() ) {
 			$sc['filters'] = apply_filters( 'feedzy_filter_conditions_attribute', $sc['filters'] );
@@ -748,19 +757,20 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * normalize_urls() returns an array for multi-feed shortcodes, and PHP's
 	 * array-to-string coercion collapses any array to "Array" if passed
 	 * straight into wp_create_nonce()/wp_verify_nonce(), making every
-	 * multi-feed shortcode share the same nonce action.
+	 * multi-feed shortcode share the same nonce action. Lazy placeholders also
+	 * bind their signed attributes, so a request cannot change what it renders.
 	 *
-	 * @param   string|array<string> $feed_url The normalized feed url(s).
-	 * @param   array<string, mixed> $sc Shortcode attributes to bind to the nonce.
+	 * @param   string|array<string> $feed_url   The normalized feed url(s).
+	 * @param   array<string, mixed> $attributes Signed lazy attributes, from lazy_placeholder_attributes() or lazy_request_attributes().
 	 * @return  string
 	 */
-	private function feed_nonce_action( $feed_url, $sc = array() ) {
+	private function feed_nonce_action( $feed_url, $attributes = array() ) {
 		$feed_action = is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url;
-		if ( empty( $sc ) ) {
+		if ( empty( $attributes ) ) {
 			return $feed_action;
 		}
 
-		return $feed_action . '-' . md5( wp_json_encode( $this->normalize_lazyload_attributes( $sc ) ) );
+		return $feed_action . '-' . md5( (string) wp_json_encode( $attributes ) );
 	}
 
 	/**
@@ -1134,47 +1144,64 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @access  private
 	 *
-	 * @param   array<string, mixed> $sc The shortcode attributes.
-	 * @param   string|array<string> $feed_url The feed URL(s).
+	 * @param   array<string, mixed> $attributes Signed lazy attributes, which include the feed URL(s).
 	 *
 	 * @return string
 	 */
-	private function get_lazyload_cache_key( $sc, $feed_url ) {
-		$feed_url = is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url;
-
-		return md5( 'feedzy-lazy-' . $feed_url . '-' . wp_json_encode( $this->normalize_lazyload_attributes( $sc ) ) );
+	private function get_lazyload_cache_key( $attributes ) {
+		return md5( 'feedzy-lazy-' . wp_json_encode( $attributes ) );
 	}
 
 	/**
-	 * Normalize lazy-load attributes before signing or caching them.
+	 * The attributes a lazy placeholder signs: its data attributes as the browser sends them back.
 	 *
-	 * @param array<string, mixed> $attributes Shortcode attributes.
+	 * HTML lowercases attribute names, keeps the first of two names that differ only in case,
+	 * and decodes the entities that esc_attr() leaves in values.
+	 *
+	 * @param array<string, string> $printed Escaped attribute values, keyed by the printed name.
+	 *
+	 * @return array<string, string>
+	 */
+	private function lazy_placeholder_attributes( $printed ) {
+		$attributes = array();
+		foreach ( $printed as $key => $value ) {
+			$name = strtolower( (string) $key );
+			if ( ! isset( $attributes[ $name ] ) ) {
+				$attributes[ $name ] = html_entity_decode( $value, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+			}
+		}
+
+		return $this->signed_lazy_attributes( $attributes );
+	}
+
+	/**
+	 * The attributes a lazy request signs, or null when no placeholder could have sent it.
+	 *
+	 * The arguments are signed as sent, not normalized: an uppercase duplicate or an array
+	 * value changes the signed set, so two requests that render differently never share
+	 * a nonce or a cache entry.
+	 *
+	 * @param mixed $args The request arguments.
+	 *
+	 * @return array<string, mixed>|null
+	 */
+	private function lazy_request_attributes( $args ) {
+		if ( ! is_array( $args ) ) {
+			return null;
+		}
+
+		return $this->signed_lazy_attributes( $args );
+	}
+
+	/**
+	 * Drop the values a placeholder adds or removes at runtime, and sort the rest.
+	 *
+	 * @param array<string, mixed> $attributes Lazy attributes.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function normalize_lazyload_attributes( $attributes ) {
-		// HTML lowercases data attribute names, so a lazy request sends aspectRatio back as aspectratio,
-		// next to the aspectRatio default. On a collision the later key, the sent value, wins.
-		$attributes = array_change_key_case( $attributes, CASE_LOWER );
-
-		foreach ( array( 'nonce', 'error_msg', 'has_valid_cache', 'feeddata' ) as $runtime_key ) {
-			unset( $attributes[ $runtime_key ] );
-		}
-
-		foreach ( $attributes as $key => $value ) {
-			if ( is_array( $value ) ) {
-				$value = implode( ',', array_map( 'strval', $value ) );
-			} elseif ( is_bool( $value ) ) {
-				$value = $value ? '1' : '0';
-			} elseif ( null === $value ) {
-				$value = '';
-			} else {
-				$value = (string) $value;
-			}
-
-			$attributes[ $key ] = $value;
-		}
-
+	private function signed_lazy_attributes( $attributes ) {
+		unset( $attributes['nonce'], $attributes['error_msg'], $attributes['has_valid_cache'] );
 		ksort( $attributes );
 
 		return $attributes;

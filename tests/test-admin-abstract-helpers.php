@@ -478,67 +478,6 @@ class Test_Admin_Abstract_Helpers extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test lazy nonces are bound to rendering-relevant shortcode attributes.
-	 *
-	 * @access public
-	 */
-	public function test_feed_nonce_action_differs_between_shortcode_attributes() {
-		$method = new ReflectionMethod( 'Feedzy_Rss_Feeds_Admin_Abstract', 'feed_nonce_action' );
-		$method->setAccessible( true );
-
-		$action_a = $method->invoke( $this->feedzy_abstract, 'https://example.com/feed', array( 'target' => '_blank' ) );
-		$action_b = $method->invoke( $this->feedzy_abstract, 'https://example.com/feed', array( 'target' => '_self' ) );
-
-		$this->assertNotEquals( $action_a, $action_b );
-	}
-
-	/**
-	 * Test browser-serialized attributes retain the same nonce action.
-	 *
-	 * @access public
-	 */
-	public function test_feed_nonce_action_normalizes_serialized_attributes() {
-		$method = new ReflectionMethod( 'Feedzy_Rss_Feeds_Admin_Abstract', 'feed_nonce_action' );
-		$method->setAccessible( true );
-
-		$action_a = $method->invoke(
-			$this->feedzy_abstract,
-			'https://example.com/feed',
-			array(
-				'offset'  => 0,
-				'sources' => array( 'one', 'two' ),
-			)
-		);
-		$action_b = $method->invoke(
-			$this->feedzy_abstract,
-			'https://example.com/feed',
-			array(
-				'nonce'     => 'transport-value',
-				'sources'   => 'one,two',
-				'offset'    => '0',
-				'error_msg' => 'Try again.',
-			)
-		);
-
-		$this->assertEquals( $action_a, $action_b );
-	}
-
-	/**
-	 * Test lazy cache entries are isolated by rendering-relevant attributes.
-	 *
-	 * @access public
-	 */
-	public function test_lazyload_cache_key_differs_between_shortcode_attributes() {
-		$method = new ReflectionMethod( 'Feedzy_Rss_Feeds_Admin_Abstract', 'get_lazyload_cache_key' );
-		$method->setAccessible( true );
-
-		$key_a = $method->invoke( $this->feedzy_abstract, array( 'target' => '_blank' ), 'https://example.com/feed' );
-		$key_b = $method->invoke( $this->feedzy_abstract, array( 'target' => '_self' ), 'https://example.com/feed' );
-
-		$this->assertNotEquals( $key_a, $key_b );
-	}
-
-	/**
 	 * Test get_feed_title_filter falls back to an empty string for rss_url and
 	 * rss_description when the feed provides none, instead of null.
 	 *
@@ -634,60 +573,197 @@ class Test_Admin_Abstract_Helpers extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test a lazy feed request built from the rendered placeholder passes the nonce check.
-	 *
-	 * The browser reads the placeholder's data attributes, whose names HTML lowercases,
-	 * and sends them back as the request arguments.
+	 * Test a lazy request built from a rendered placeholder is rendered and cached for that placeholder.
 	 *
 	 * @dataProvider lazy_placeholder_attributes
 	 *
-	 * @param array<string, string> $atts Shortcode or block attributes.
+	 * @param array<string, mixed> $atts Shortcode or block attributes.
 	 */
-	public function test_lazy_request_from_rendered_placeholder_passes_nonce_check( $atts ) {
-		$feedzy = new class extends Feedzy_Rss_Feeds_Admin_Abstract {
+	public function test_lazy_request_from_rendered_placeholder_is_rendered_and_cached( $atts ) {
+		$feedzy   = $this->lazy_feedzy();
+		$response = $this->lazy_response( $feedzy, $this->placeholder_args( $feedzy, $atts ) );
+
+		$this->assertTrue( $response['success'], wp_json_encode( $response ) );
+		$this->assertStringContainsString( 'Feedzy lazy item', $response['data']['content'] );
+		$this->assertStringContainsString( 'data-has_valid_cache="true"', $feedzy->feedzy_rss( $atts ) );
+	}
+
+	/**
+	 * Placeholders from a classic shortcode, from block attributes and from an entity-encoded value.
+	 *
+	 * @return array<string, array<int, array<string, mixed>>>
+	 */
+	public function lazy_placeholder_attributes() {
+		return array(
+			'shortcode' => array(
+				array(
+					'feeds' => 'https://example.com/feed',
+					'max'   => '2',
+					'lazy'  => 'yes',
+				),
+			),
+			'block'     => array(
+				array(
+					'feeds'        => 'https://example.com/feed',
+					'lazy'         => true,
+					'aspectRatio'  => '16/9',
+					'className'    => 'is-style-custom',
+					'disableStyle' => false,
+					'itemTitle'    => true,
+				),
+			),
+			'entity'    => array(
+				array(
+					'feeds'       => 'https://example.com/feed',
+					'error_empty' => 'No news from AT&amp;T',
+					'lazy'        => 'yes',
+				),
+			),
+		);
+	}
+
+	/**
+	 * Test a lazy request that changes, shadows or retypes a signed attribute is rejected.
+	 *
+	 * @dataProvider tampered_lazy_requests
+	 *
+	 * @param callable(array<string, mixed>): mixed $tamper Changes the placeholder arguments.
+	 */
+	public function test_tampered_lazy_request_is_rejected( $tamper ) {
+		$feedzy = $this->lazy_feedzy();
+		$args   = $tamper(
+			$this->placeholder_args(
+				$feedzy,
+				array(
+					'feeds' => 'https://example.com/feed',
+					'max'   => '2',
+					'lazy'  => 'yes',
+				)
+			)
+		);
+
+		$response = $this->lazy_response( $feedzy, $args );
+
+		$this->assertFalse( $response['success'] );
+		$this->assertSame( 'Security check failed.', $response['data']['message'] );
+	}
+
+	/**
+	 * Changes an attacker can make to the arguments of a signed placeholder.
+	 *
+	 * @return array<string, array<int, callable>>
+	 */
+	public function tampered_lazy_requests() {
+		return array(
+			'changed value'       => array(
+				function ( $args ) {
+					$args['max'] = '9';
+					return $args;
+				},
+			),
+			'uppercase duplicate' => array(
+				function ( $args ) {
+					$args['MAX'] = $args['max'];
+					$args['max'] = '0';
+					return $args;
+				},
+			),
+			'array value'         => array(
+				function ( $args ) {
+					$args['max'] = array( $args['max'] );
+					return $args;
+				},
+			),
+			'not an array'        => array(
+				function ( $args ) {
+					return http_build_query( $args );
+				},
+			),
+		);
+	}
+
+	/**
+	 * A Feedzy instance that can render lazy placeholders.
+	 *
+	 * @return Feedzy_Rss_Feeds_Admin_Abstract
+	 */
+	private function lazy_feedzy() {
+		return new class extends Feedzy_Rss_Feeds_Admin_Abstract {
 			protected $plugin_name = 'feedzy-rss-feeds';
 			protected $version     = '1.0.0';
 		};
+	}
 
+	/**
+	 * Render a lazy placeholder and read its data attributes the way feedzy-lazy.js does.
+	 *
+	 * @param Feedzy_Rss_Feeds_Admin_Abstract $feedzy Feedzy instance.
+	 * @param array<string, mixed>            $atts   Shortcode or block attributes.
+	 *
+	 * @return array<string, string>
+	 */
+	private function placeholder_args( $feedzy, $atts ) {
 		$document = new DOMDocument();
 		$document->loadHTML( '<html><body>' . $feedzy->feedzy_rss( $atts ) . '</body></html>', LIBXML_NOERROR );
+
 		$args = array();
 		foreach ( $document->getElementsByTagName( 'div' )->item( 0 )->attributes as $attribute ) {
 			if ( 0 === strpos( $attribute->name, 'data-' ) ) {
 				$args[ substr( $attribute->name, 5 ) ] = $attribute->value;
 			}
 		}
+		unset( $args['has_valid_cache'] );
 
-		$sc     = $feedzy->get_short_code_attributes( $args );
-		$action = new ReflectionMethod( 'Feedzy_Rss_Feeds_Admin_Abstract', 'feed_nonce_action' );
-		$action->setAccessible( true );
-
-		$this->assertNotFalse( wp_verify_nonce( $args['nonce'], $action->invoke( $feedzy, $feedzy->normalize_urls( $sc['feeds'] ), $sc ) ) );
+		return $args;
 	}
 
 	/**
-	 * Lazy placeholders from a classic shortcode and from block-style camelCase attributes.
+	 * Send a lazy request to the endpoint, serving a one-item feed, and decode its JSON response.
 	 *
-	 * @return array<string, array<int, array<string, string>>>
+	 * @param Feedzy_Rss_Feeds_Admin_Abstract $feedzy Feedzy instance.
+	 * @param mixed                           $args   Request arguments.
+	 *
+	 * @return array<string, mixed>
 	 */
-	public function lazy_placeholder_attributes() {
-		return array(
-			'shortcode' => array(
-				array(
-					'feeds'    => 'https://example.com/feed',
-					'max'      => '2',
-					'keywords_title' => 'God, Mendes',
-					'lazy'     => 'yes',
-				),
-			),
-			'block'     => array(
-				array(
-					'feeds'       => 'https://example.com/feed',
-					'aspectRatio' => '16/9',
-					'className'   => 'is-style-custom',
-					'lazy'        => 'yes',
-				),
-			),
+	private function lazy_response( $feedzy, $args ) {
+		add_filter( 'wp_doing_ajax', '__return_true' );
+		add_filter(
+			'wp_die_ajax_handler',
+			function () {
+				return function () {
+					throw new WPDieException();
+				};
+			}
 		);
+		add_filter(
+			'pre_http_request',
+			function ( $preempt, $request, $url ) {
+				if ( 'https://example.com/feed' !== $url ) {
+					return $preempt;
+				}
+
+				return array(
+					'headers'  => array( 'content-type' => 'application/rss+xml' ),
+					'body'     => '<?xml version="1.0"?><rss version="2.0"><channel><title>Feedzy lazy</title><link>https://example.com</link><description>Feed</description><item><title>Feedzy lazy item</title><link>https://example.com/item</link><description>Item</description><pubDate>Mon, 01 Jan 2024 10:00:00 +0000</pubDate></item></channel></rss>',
+					'response' => array(
+						'code'    => 200,
+						'message' => 'OK',
+					),
+					'cookies'  => array(),
+					'filename' => null,
+				);
+			},
+			10,
+			3
+		);
+
+		ob_start();
+		try {
+			$feedzy->feedzy_lazy_load( array( 'args' => $args ) );
+		} catch ( WPDieException $exception ) {
+			unset( $exception );
+		}
+
+		return (array) json_decode( (string) ob_get_clean(), true );
 	}
 }
