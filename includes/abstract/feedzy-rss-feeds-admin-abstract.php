@@ -471,7 +471,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 
 			// Add nonce based on feed url.
-			$attributes .= 'data-nonce="' . esc_attr( wp_create_nonce( $this->feed_nonce_action( $feed_url ) ) ) . '"';
+			$attributes .= 'data-nonce="' . esc_attr( wp_create_nonce( $this->feed_nonce_action( $feed_url, $sc ) ) ) . '"';
 			$attributes .= 'data-error_msg="' . esc_attr( apply_filters( 'feedzy_lazyload_error_msg', __( 'An error occurred while fetching the feed.', 'feedzy-rss-feeds' ), $feed_url ) ) . '"';
 
 			$class = array_filter( apply_filters( 'feedzy_add_classes_block', array( $sc['classname'], 'feedzy-' . md5( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ) ), $sc, null, $feed_url ) );
@@ -574,7 +574,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$feed_url = $this->normalize_urls( $sc['feeds'] );
 		$nonce    = isset( $atts['nonce'] ) ? $atts['nonce'] : '';
 
-		if ( ! wp_verify_nonce( $nonce, $this->feed_nonce_action( $feed_url ) ) ) {
+		if ( ! wp_verify_nonce( $nonce, $this->feed_nonce_action( $feed_url, $sc ) ) ) {
 			wp_send_json_error( array( 'message' => __( 'Security check failed.', 'feedzy-rss-feeds' ) ) );
 		}
 
@@ -707,7 +707,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! is_array( $filtered_atts ) ) {
 			$filtered_atts = array();
 		}
-		$sc = array_merge( $sc, $filtered_atts );
+		$sc           = array_merge( $sc, $filtered_atts );
+		$sc['target'] = in_array( $sc['target'], array( '_blank', '_self', '_parent', '_top' ), true ) ? $sc['target'] : '_blank';
 
 		return $sc;
 	}
@@ -750,10 +751,16 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * multi-feed shortcode share the same nonce action.
 	 *
 	 * @param   string|array<string> $feed_url The normalized feed url(s).
+	 * @param   array<string, mixed> $sc Shortcode attributes to bind to the nonce.
 	 * @return  string
 	 */
-	private function feed_nonce_action( $feed_url ) {
-		return is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url;
+	private function feed_nonce_action( $feed_url, $sc = array() ) {
+		$feed_action = is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url;
+		if ( empty( $sc ) ) {
+			return $feed_action;
+		}
+
+		return $feed_action . '-' . md5( wp_json_encode( $this->normalize_lazyload_attributes( $sc ) ) );
 	}
 
 	/**
@@ -1133,7 +1140,40 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @return string
 	 */
 	private function get_lazyload_cache_key( $sc, $feed_url ) {
-		return md5( sprintf( 'feedzy-lazy-%s-%d-%d-%s', ( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ), ( ! empty( $sc['max'] ) ? $sc['max'] : 1 ), ( ! empty( $sc['offset'] ) ? $sc['offset'] : 0 ), ( ! empty( $sc['refresh'] ) ? $sc['refresh'] : '12_hours' ) ) );
+		$feed_url = is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url;
+
+		return md5( 'feedzy-lazy-' . $feed_url . '-' . wp_json_encode( $this->normalize_lazyload_attributes( $sc ) ) );
+	}
+
+	/**
+	 * Normalize lazy-load attributes before signing or caching them.
+	 *
+	 * @param array<string, mixed> $attributes Shortcode attributes.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function normalize_lazyload_attributes( $attributes ) {
+		foreach ( array( 'nonce', 'error_msg', 'has_valid_cache', 'feedData' ) as $runtime_key ) {
+			unset( $attributes[ $runtime_key ] );
+		}
+
+		foreach ( $attributes as $key => $value ) {
+			if ( is_array( $value ) ) {
+				$value = implode( ',', array_map( 'strval', $value ) );
+			} elseif ( is_bool( $value ) ) {
+				$value = $value ? '1' : '0';
+			} elseif ( null === $value ) {
+				$value = '';
+			} else {
+				$value = (string) $value;
+			}
+
+			$attributes[ $key ] = $value;
+		}
+
+		ksort( $attributes );
+
+		return $attributes;
 	}
 
 	/**
@@ -1949,15 +1989,17 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 			if ( $author_name ) {
 				$domain                        = wp_parse_url( $new_link );
-				$author_url                    = isset( $domain['host'] ) ? '//' . $domain['host'] : '';
+				$domain_host                   = isset( $domain['host'] ) ? $domain['host'] : '';
+				$author_url                    = $domain_host ? '//' . $domain_host : '';
 				$author_url                    = apply_filters( 'feedzy_author_url', $author_url, $author_name, $feed_url, $item );
-				$content_meta_values['author'] = apply_filters( 'feedzy_meta_author', __( 'by', 'feedzy-rss-feeds' ) . ' <a href="' . $author_url . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $author_name . '</a> ', $author_name, $author_url, $feed_source, $feed_url, $item );
+				$content_meta_values['author'] = apply_filters( 'feedzy_meta_author', __( 'by', 'feedzy-rss-feeds' ) . ' <a href="' . esc_url( $author_url ) . '" target="' . esc_attr( $sc['target'] ) . '" title="' . esc_attr( $domain_host ) . '" >' . esc_html( $author_name ) . '</a> ', $author_name, $author_url, $feed_source, $feed_url, $item );
 			}
 		} elseif ( $is_multiple && $meta_args['source'] && ! empty( $feed_source ) ) {
 			$domain                        = wp_parse_url( $new_link );
-			$author_url                    = isset( $domain['host'] ) ? '//' . $domain['host'] : '';
+			$domain_host                   = isset( $domain['host'] ) ? $domain['host'] : '';
+			$author_url                    = $domain_host ? '//' . $domain_host : '';
 			$author_url                    = apply_filters( 'feedzy_author_url', $author_url, $feed_source, $feed_url, $item );
-			$content_meta_values['author'] = apply_filters( 'feedzy_meta_author', __( 'by', 'feedzy-rss-feeds' ) . ' <a href="' . $author_url . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $feed_source . '</a> ', $feed_source, $author_url, $feed_source, $feed_url, $item );
+			$content_meta_values['author'] = apply_filters( 'feedzy_meta_author', __( 'by', 'feedzy-rss-feeds' ) . ' <a href="' . esc_url( $author_url ) . '" target="' . esc_attr( $sc['target'] ) . '" title="' . esc_attr( $domain_host ) . '" >' . esc_html( $feed_source ) . '</a> ', $feed_source, $author_url, $feed_source, $feed_url, $item );
 		}
 
 		// date/time.

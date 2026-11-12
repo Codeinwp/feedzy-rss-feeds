@@ -392,6 +392,17 @@ class Test_Admin_Abstract_Helpers extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test unsupported link targets fall back to the documented default.
+	 *
+	 * @access public
+	 */
+	public function test_get_short_code_attributes_rejects_unsupported_target() {
+		$sc = $this->feedzy_abstract->get_short_code_attributes( array( 'target' => 'unsupported' ) );
+
+		$this->assertEquals( '_blank', $sc['target'] );
+	}
+
+	/**
 	 * Test get_short_code_attributes maps className to classname.
 	 *
 	 * @access public
@@ -464,6 +475,67 @@ class Test_Admin_Abstract_Helpers extends WP_UnitTestCase {
 	 */
 	public function test_feed_nonce_action_single_feed_returns_scalar_unchanged() {
 		$this->assertEquals( 'https://example.com/feed', $this->feed_nonce_action( 'https://example.com/feed' ) );
+	}
+
+	/**
+	 * Test lazy nonces are bound to rendering-relevant shortcode attributes.
+	 *
+	 * @access public
+	 */
+	public function test_feed_nonce_action_differs_between_shortcode_attributes() {
+		$method = new ReflectionMethod( 'Feedzy_Rss_Feeds_Admin_Abstract', 'feed_nonce_action' );
+		$method->setAccessible( true );
+
+		$action_a = $method->invoke( $this->feedzy_abstract, 'https://example.com/feed', array( 'target' => '_blank' ) );
+		$action_b = $method->invoke( $this->feedzy_abstract, 'https://example.com/feed', array( 'target' => '_self' ) );
+
+		$this->assertNotEquals( $action_a, $action_b );
+	}
+
+	/**
+	 * Test browser-serialized attributes retain the same nonce action.
+	 *
+	 * @access public
+	 */
+	public function test_feed_nonce_action_normalizes_serialized_attributes() {
+		$method = new ReflectionMethod( 'Feedzy_Rss_Feeds_Admin_Abstract', 'feed_nonce_action' );
+		$method->setAccessible( true );
+
+		$action_a = $method->invoke(
+			$this->feedzy_abstract,
+			'https://example.com/feed',
+			array(
+				'offset'  => 0,
+				'sources' => array( 'one', 'two' ),
+			)
+		);
+		$action_b = $method->invoke(
+			$this->feedzy_abstract,
+			'https://example.com/feed',
+			array(
+				'nonce'     => 'transport-value',
+				'sources'   => 'one,two',
+				'offset'    => '0',
+				'error_msg' => 'Try again.',
+			)
+		);
+
+		$this->assertEquals( $action_a, $action_b );
+	}
+
+	/**
+	 * Test lazy cache entries are isolated by rendering-relevant attributes.
+	 *
+	 * @access public
+	 */
+	public function test_lazyload_cache_key_differs_between_shortcode_attributes() {
+		$method = new ReflectionMethod( 'Feedzy_Rss_Feeds_Admin_Abstract', 'get_lazyload_cache_key' );
+		$method->setAccessible( true );
+
+		$key_a = $method->invoke( $this->feedzy_abstract, array( 'target' => '_blank' ), 'https://example.com/feed' );
+		$key_b = $method->invoke( $this->feedzy_abstract, array( 'target' => '_self' ), 'https://example.com/feed' );
+
+		$this->assertNotEquals( $key_a, $key_b );
 	}
 
 	/**
