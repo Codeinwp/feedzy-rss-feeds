@@ -392,14 +392,54 @@ class Test_Admin_Abstract_Helpers extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test unsupported link targets fall back to the documented default.
+	 * Test an unknown underscore keyword or a target with spaces falls back to the documented default.
 	 *
-	 * @access public
+	 * @dataProvider unsupported_targets
+	 *
+	 * @param string $target Link target.
 	 */
-	public function test_get_short_code_attributes_rejects_unsupported_target() {
-		$sc = $this->feedzy_abstract->get_short_code_attributes( array( 'target' => 'unsupported' ) );
+	public function test_get_short_code_attributes_rejects_unsupported_target( $target ) {
+		$sc = $this->feedzy_abstract->get_short_code_attributes( array( 'target' => $target ) );
 
 		$this->assertEquals( '_blank', $sc['target'] );
+	}
+
+	/**
+	 * Targets that are neither a keyword nor a frame name.
+	 *
+	 * @return array<string, array<int, string>>
+	 */
+	public function unsupported_targets() {
+		return array(
+			'unknown keyword' => array( '_unsupported' ),
+			'with spaces'     => array( 'my frame' ),
+		);
+	}
+
+	/**
+	 * Test the widgets' "Auto" and frame-name targets are kept.
+	 *
+	 * @dataProvider kept_targets
+	 *
+	 * @param string $target Link target.
+	 */
+	public function test_get_short_code_attributes_keeps_widget_targets( $target ) {
+		$sc = $this->feedzy_abstract->get_short_code_attributes( array( 'target' => $target ) );
+
+		$this->assertSame( $target, $sc['target'] );
+	}
+
+	/**
+	 * Targets the classic and Elementor widgets offer.
+	 *
+	 * @return array<string, array<int, string>>
+	 */
+	public function kept_targets() {
+		return array(
+			'auto'       => array( '' ),
+			'frame name' => array( 'framename' ),
+			'parent'     => array( '_parent' ),
+		);
 	}
 
 	/**
@@ -551,7 +591,8 @@ class Test_Admin_Abstract_Helpers extends WP_UnitTestCase {
 			'max'   => '2',
 			'lazy'  => 'yes',
 		);
-		$other  = array_merge( $signed, array( 'max' => '3' ) );
+		// The previous cache key ignored summarylength, so only the new key separates the two.
+		$other  = array_merge( $signed, array( 'summarylength' => '10' ) );
 
 		$this->assertTrue( $this->lazy_response( $feedzy, $this->placeholder_args( $feedzy, $signed ) )['success'] );
 

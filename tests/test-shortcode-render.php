@@ -38,6 +38,7 @@ class Test_Shortcode_Render extends WP_UnitTestCase {
 		$this->fixtures = array(
 			'sample-feed' => file_get_contents( dirname( __FILE__ ) . '/fixtures/sample-feed.xml' ),
 			'empty-feed'  => file_get_contents( dirname( __FILE__ ) . '/fixtures/empty-feed.xml' ),
+			'author-feed' => file_get_contents( dirname( __FILE__ ) . '/fixtures/author-feed.xml' ),
 		);
 
 		$this->requested_urls = array();
@@ -103,6 +104,9 @@ class Test_Shortcode_Render extends WP_UnitTestCase {
 		$body = $this->fixtures['sample-feed'];
 		if ( false !== strpos( $url, 'empty-feed' ) ) {
 			$body = $this->fixtures['empty-feed'];
+		}
+		if ( false !== strpos( $url, 'author-feed' ) ) {
+			$body = $this->fixtures['author-feed'];
 		}
 
 		return array(
@@ -278,6 +282,47 @@ class Test_Shortcode_Render extends WP_UnitTestCase {
 		// Default is _blank.
 		$output = do_shortcode( $this->build_shortcode( 'max="1"' ) );
 		$this->assertStringContainsString( 'target="_blank"', $output );
+	}
+
+	/**
+	 * Test the author link escapes a filtered author URL.
+	 *
+	 * @access public
+	 */
+	public function test_shortcode_author_link_escapes_filtered_url() {
+		add_filter( 'feedzy_author_url', array( $this, 'script_author_url' ) );
+		$output = do_shortcode( $this->build_shortcode( 'max="1" meta="author"', 'author-feed' ) );
+		remove_filter( 'feedzy_author_url', array( $this, 'script_author_url' ) );
+
+		$this->assertStringContainsString( 'by <a href="" ', $output );
+		$this->assertStringContainsString( '(Jane Doe)</a>', $output );
+	}
+
+	/**
+	 * Test the source link of a multi-feed item without an author escapes a filtered URL.
+	 *
+	 * @access public
+	 */
+	public function test_shortcode_source_link_escapes_filtered_url() {
+		add_filter( 'feedzy_author_url', array( $this, 'script_author_url' ) );
+		$first  = $this->build_shortcode( 'source-a' );
+		$second = $this->build_shortcode( 'source-b' );
+		preg_match( '/feeds="([^"]+)"/', $first, $first_url );
+		preg_match( '/feeds="([^"]+)"/', $second, $second_url );
+		$output = do_shortcode( '[feedzy-rss feeds="' . $first_url[1] . ',' . $second_url[1] . '" disable_default_style="yes" max="1" multiple_meta="source"]' );
+		remove_filter( 'feedzy_author_url', array( $this, 'script_author_url' ) );
+
+		$this->assertStringContainsString( 'by <a href="" ', $output );
+		$this->assertStringContainsString( 'Feedzy Fixture Feed</a>', $output );
+	}
+
+	/**
+	 * An author URL with a script scheme.
+	 *
+	 * @return string
+	 */
+	public function script_author_url() {
+		return 'javascript:alert(1)';
 	}
 
 	/**

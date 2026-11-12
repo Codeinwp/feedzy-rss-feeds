@@ -716,8 +716,10 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( ! is_array( $filtered_atts ) ) {
 			$filtered_atts = array();
 		}
-		$sc           = array_merge( $sc, $filtered_atts );
-		$sc['target'] = in_array( $sc['target'], array( '_blank', '_self', '_parent', '_top' ), true ) ? $sc['target'] : '_blank';
+		$sc = array_merge( $sc, $filtered_atts );
+		// Keep the "Auto" ('') and frame-name targets the widgets offer; only an unknown _keyword falls back.
+		$is_target    = '' === $sc['target'] || in_array( $sc['target'], array( '_blank', '_self', '_parent', '_top' ), true ) || 1 === preg_match( '/^[^_\s][^\s]*$/', (string) $sc['target'] );
+		$sc['target'] = $is_target ? $sc['target'] : '_blank';
 
 		return $sc;
 	}
