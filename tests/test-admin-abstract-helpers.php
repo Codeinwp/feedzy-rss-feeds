@@ -589,6 +589,37 @@ class Test_Admin_Abstract_Helpers extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test a lazy request only fills the cache of the placeholder that signed it.
+	 */
+	public function test_lazy_request_does_not_fill_the_cache_of_another_placeholder() {
+		$feedzy = $this->lazy_feedzy();
+		$signed = array(
+			'feeds' => 'https://example.com/feed',
+			'max'   => '2',
+			'lazy'  => 'yes',
+		);
+		$other  = array_merge( $signed, array( 'max' => '3' ) );
+
+		$this->assertTrue( $this->lazy_response( $feedzy, $this->placeholder_args( $feedzy, $signed ) )['success'] );
+
+		$this->assertStringContainsString( 'data-has_valid_cache="true"', $feedzy->feedzy_rss( $signed ) );
+		$this->assertStringNotContainsString( 'data-has_valid_cache="true"', $feedzy->feedzy_rss( $other ) );
+	}
+
+	/**
+	 * Test line breaks are signed as the browser sends them: HTML turns CRLF and CR into LF.
+	 */
+	public function test_lazy_placeholder_signs_line_breaks_as_the_browser_sends_them() {
+		$method = new ReflectionMethod( 'Feedzy_Rss_Feeds_Admin_Abstract', 'lazy_placeholder_attributes' );
+		$method->setAccessible( true );
+
+		$this->assertSame(
+			array( 'error_empty' => "No\nnews\ntoday" ),
+			$method->invoke( $this->feedzy_abstract, array( 'error_empty' => "No\r\nnews\rtoday" ) )
+		);
+	}
+
+	/**
 	 * Placeholders from a classic shortcode, from block attributes and from an entity-encoded value.
 	 *
 	 * @return array<string, array<int, array<string, mixed>>>
@@ -635,9 +666,10 @@ class Test_Admin_Abstract_Helpers extends WP_UnitTestCase {
 			$this->placeholder_args(
 				$feedzy,
 				array(
-					'feeds' => 'https://example.com/feed',
-					'max'   => '2',
-					'lazy'  => 'yes',
+					'feeds'       => 'https://example.com/feed',
+					'max'         => '2',
+					'error_empty' => 'No news?',
+					'lazy'        => 'yes',
 				)
 			)
 		);
@@ -665,6 +697,18 @@ class Test_Admin_Abstract_Helpers extends WP_UnitTestCase {
 				function ( $args ) {
 					$args['MAX'] = $args['max'];
 					$args['max'] = '0';
+					return $args;
+				},
+			),
+			'uppercase copy'      => array(
+				function ( $args ) {
+					$args['MAX'] = $args['max'];
+					return $args;
+				},
+			),
+			'invalid UTF-8'       => array(
+				function ( $args ) {
+					$args['error_empty'] = "No news\xFF";
 					return $args;
 				},
 			),
@@ -704,7 +748,7 @@ class Test_Admin_Abstract_Helpers extends WP_UnitTestCase {
 	 */
 	private function placeholder_args( $feedzy, $atts ) {
 		$document = new DOMDocument();
-		$document->loadHTML( '<html><body>' . $feedzy->feedzy_rss( $atts ) . '</body></html>', LIBXML_NOERROR );
+		$document->loadHTML( '<html><head><meta charset="utf-8"></head><body>' . $feedzy->feedzy_rss( $atts ) . '</body></html>', LIBXML_NOERROR );
 
 		$args = array();
 		foreach ( $document->getElementsByTagName( 'div' )->item( 0 )->attributes as $attribute ) {
