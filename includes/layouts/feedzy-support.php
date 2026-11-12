@@ -113,13 +113,19 @@ $subscribed_notice_dismissed = get_option( 'feedzy_dismiss_subscribe_notice_dash
 							echo wp_kses_post(
 								wp_sprintf(
 									// Translators: %1$s is the opening anchor tag for the upsell link, %2$s is the closing anchor tag.
-									__( 'If you did not found an answer in our Knowledge Base, you can always ask for help from our community based forum or %1$s get dedicated support with our premium plans. %2$s', 'feedzy-rss-feeds' ),
+									__( 'If you did not find an answer in our Knowledge Base, you can always ask our support team or our community based forum, or %1$s get priority support with our premium plans. %2$s', 'feedzy-rss-feeds' ),
 									'<a target="_blank" href="' . esc_url( $upsell_link ) . '">',
 									'</a>'
 								)
 							);
 							?>
 						</p>
+						<?php if ( wp_script_is( 'themeisle-sdk-support-hub', 'enqueued' ) ) : ?>
+							<?php // The SDK's Support Hub script opens its Help panel for any [data-ti-support] link; the SDK enqueues it only when the module loads. ?>
+							<a href="#" class="btn btn-primary" data-ti-support="support-page">
+								<?php esc_html_e( 'Contact Support', 'feedzy-rss-feeds' ); ?>
+							</a>
+						<?php endif; ?>
 						<a href="https://wordpress.org/support/plugin/feedzy-rss-feeds/" class="btn btn-outline-primary"
 							target="_blank">
 							<?php esc_html_e( 'Community Forum', 'feedzy-rss-feeds' ); ?>
@@ -127,7 +133,7 @@ $subscribed_notice_dismissed = get_option( 'feedzy_dismiss_subscribe_notice_dash
 						<?php
 					} else {
 						?>
-						<p><?php echo wp_kses_post( wp_sprintf( __( 'If you didn\'t found an answer in our Knowledge Base, our dedicated support team standby to help you.', 'feedzy-rss-feeds' ) ) ); ?>
+						<p><?php echo wp_kses_post( wp_sprintf( __( 'If you didn\'t find an answer in our Knowledge Base, our dedicated support team standby to help you.', 'feedzy-rss-feeds' ) ) ); ?>
 						</p>
 						<a href="https://store.themeisle.com/contact" class="btn btn-outline-primary"
 							target="_blank"><?php esc_html_e( 'Contact Support', 'feedzy-rss-feeds' ); ?></a>

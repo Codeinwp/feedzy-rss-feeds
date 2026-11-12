@@ -151,10 +151,7 @@ function CustomInspectorControls({
 					max={20}
 				/>
 
-				<ExternalLink
-					href="https://docs.themeisle.com/article/2217-feedzy-loop#magic_tags"
-					target="_blank"
-				>
+				<ExternalLink href={window.feedzyData.docsUrl} target="_blank">
 					{__('Feedzy Loop Documentation', 'feedzy-rss-feeds')}
 				</ExternalLink>
 			</PanelBody>

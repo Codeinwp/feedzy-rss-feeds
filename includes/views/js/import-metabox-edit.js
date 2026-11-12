@@ -175,6 +175,8 @@
 		let validationSummaryHtml = '<div class="fz-validation-summary">';
 
 		response.data.results.forEach(({ url, status, message }) => {
+			const safeUrl = escapeText(String(url));
+			const safeMessage = escapeText(String(message));
 			const icon =
 				'<span class="dashicons dashicons-' +
 				(status === 'success'
@@ -185,8 +187,8 @@
 				'"></span>';
 
 			validationSummaryHtml += `<div class="${'fz-feed-result fz-' + status}">`;
-			validationSummaryHtml += `${icon} <span class="fz-feed-url">${url}</span>`;
-			validationSummaryHtml += ` - ${message}`;
+			validationSummaryHtml += `${icon} <span class="fz-feed-url">${safeUrl}</span>`;
+			validationSummaryHtml += ` - ${safeMessage}`;
 			validationSummaryHtml += `</div>`;
 		});
 

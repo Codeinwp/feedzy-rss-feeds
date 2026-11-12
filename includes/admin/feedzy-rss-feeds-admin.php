@@ -284,6 +284,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				'feedzyData',
 				array(
 					'isPro'                       => feedzy_is_pro(),
+					'tagActionsDocsUrl'           => esc_url_raw( feedzy_docs_url( 'how-to-use-feed-to-post-feature-in-feedzy', 'tag-actions', 'import', 'tag-actions' ) ),
 					'isBusinessPlan'              => apply_filters( 'feedzy_is_license_of_type', false, 'business' ),
 					'isAgencyPlan'                => apply_filters( 'feedzy_is_license_of_type', false, 'agency' ),
 					'apiLicenseStatus'            => $this->api_license_status(),
@@ -1268,7 +1269,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		if ( strpos( $file, 'feedzy-rss-feed.php' ) !== false ) {
 			$is_black_friday  = apply_filters( 'themeisle_sdk_is_black_friday_sale', false );
 			$new_links        = array();
-			$new_links['doc'] = '<a href="https://docs.themeisle.com/article/658-feedzy-rss-feeds" target="_blank" title="' . __( 'Documentation and examples', 'feedzy-rss-feeds' ) . '">' . __( 'Documentation and examples', 'feedzy-rss-feeds' ) . '</a>';
+			$new_links['doc'] = '<a href="' . esc_url( feedzy_docs_url( '', 'documentation', 'plugins' ) ) . '" target="_blank" title="' . __( 'Documentation and examples', 'feedzy-rss-feeds' ) . '">' . __( 'Documentation and examples', 'feedzy-rss-feeds' ) . '</a>';
 
 			if ( ! $is_black_friday && ! feedzy_is_pro() ) {
 				$new_links['more_features'] = '<a style="color: #009E29; font-weight: 700;"  onmouseout="this.style.color=\'#009528\';"  onmouseover="this.style.color=\'#008a20\';" href="' . esc_url( tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'rowmeta', 'plugins' ) ) ) . '" target="_blank" title="' . __( 'More Features', 'feedzy-rss-feeds' ) . '">' . __( 'Upgrade to Pro', 'feedzy-rss-feeds' ) . '<i style="width: 17px; height: 17px; margin-left: 4px; color: #ffca54; font-size: 17px; vertical-align: -3px;" class="dashicons dashicons-unlock more-features-icon"></i></a>';
@@ -3576,7 +3577,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 
 				try {
 					$items = $feed->get_item_quantity();
-					$title = $feed->get_title();
+					$title = html_entity_decode( wp_strip_all_tags( (string) $feed->get_title() ), ENT_QUOTES, 'UTF-8' );
 					$error = $feed->error();
 
 					if ( ! empty( $error ) ) {

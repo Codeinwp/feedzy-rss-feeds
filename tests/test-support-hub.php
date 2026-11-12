@@ -25,7 +25,7 @@ class Test_Support_Hub extends WP_UnitTestCase {
 
 		$this->assertSame(
 			array(
-				'https://docs.themeisle.com/collection/1569-feedzy-rss-feeds',
+				'https://docs.themeisle.com/feedzy-rss-feeds/?utm_source=wpadmin&utm_medium=support-hub&utm_campaign=documentation&utm_content=docsfeedzy-rss-feeds',
 				'https://wordpress.org/support/plugin/feedzy-rss-feeds/',
 			),
 			wp_list_pluck( $links, 'url' )

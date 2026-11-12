@@ -41,7 +41,7 @@ class Control_Template_Layout extends Base_Data_Control {
 			<p>' . esc_html__( 'With Feedzy Pro you get more features, like Custom Templates, Magic Tags, Keywords filters and much more.', 'feedzy-rss-feeds' ) . '</p>
 			<div class="docs-btn">
 				<a href="' . tsdk_translate_link( tsdk_utmify( FEEDZY_UPSELL_LINK, 'more', 'elementoreditor' ) ) . '" target="_blank" class="fz-upgrade-link">' . esc_html__( 'Learn more', 'feedzy-rss-feeds' ) . '</a>
-				<span><a href="' . esc_url( 'https://docs.themeisle.com/article/1119-feedzy-rss-feeds-documentation' ) . '" target="_blank">' . esc_html__( 'Open Feedzy docs', 'feedzy-rss-feeds' ) . '</a></span>
+				<span><a href="' . esc_url( feedzy_docs_url( 'feedzy-rss-feeds-documentation', 'documentation', 'elementoreditor' ) ) . '" target="_blank">' . esc_html__( 'Open Feedzy docs', 'feedzy-rss-feeds' ) . '</a></span>
 			</div>
 		</div>';
 		}

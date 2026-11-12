@@ -450,6 +450,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		// Disregard the pseudo-shortcode coming from Gutenberg as a lazy one.
 		if ( ( true === $sc['lazy'] || 'yes' === $sc['lazy'] ) && ! isset( $sc['gutenberg'] ) ) {
 			$attributes = '';
+			$printed    = array();
 			foreach ( $sc as $key => $val ) {
 				// ignore the feedData, its not required.
 				if ( 'feedData' === $key ) {
@@ -458,9 +459,11 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				if ( is_array( $val ) ) {
 					$val = implode( ',', $val );
 				}
-				$attributes .= 'data-' . esc_attr( $key ) . '="' . esc_attr( $val ) . '"';
+				$printed[ $key ] = esc_attr( $val );
+				$attributes     .= 'data-' . esc_attr( $key ) . '="' . $printed[ $key ] . '"';
 			}
-			$lazyload_cache_key = $this->get_lazyload_cache_key( $sc, $feed_url );
+			$signed_attributes  = $this->lazy_placeholder_attributes( $printed );
+			$lazyload_cache_key = $this->get_lazyload_cache_key( $signed_attributes );
 			$content            = get_transient( $lazyload_cache_key );
 
 			// the first time the shortcode is being called it will not have any content.
@@ -470,8 +473,8 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				$attributes .= 'data-has_valid_cache="true"';
 			}
 
-			// Add nonce based on feed url.
-			$attributes .= 'data-nonce="' . esc_attr( wp_create_nonce( $this->feed_nonce_action( $feed_url ) ) ) . '"';
+			// Add a nonce bound to the feed url and every printed attribute.
+			$attributes .= 'data-nonce="' . esc_attr( wp_create_nonce( $this->lazy_nonce_action( $signed_attributes ) ) ) . '"';
 			$attributes .= 'data-error_msg="' . esc_attr( apply_filters( 'feedzy_lazyload_error_msg', __( 'An error occurred while fetching the feed.', 'feedzy-rss-feeds' ), $feed_url ) ) . '"';
 
 			$class = array_filter( apply_filters( 'feedzy_add_classes_block', array( $sc['classname'], 'feedzy-' . md5( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ) ), $sc, null, $feed_url ) );
@@ -569,16 +572,22 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 * @param   array $data The attributes passed by the ajax call.
 	 */
 	public function feedzy_lazy_load( $data ) {
-		$atts     = $data['args'];
+		$atts              = $data['args'];
+		$signed_attributes = $this->lazy_request_attributes( $atts );
+
+		if ( null === $signed_attributes ) {
+			wp_send_json_error( array( 'message' => __( 'Security check failed.', 'feedzy-rss-feeds' ) ) );
+		}
+
 		$sc       = $this->get_short_code_attributes( $atts );
 		$feed_url = $this->normalize_urls( $sc['feeds'] );
 		$nonce    = isset( $atts['nonce'] ) ? $atts['nonce'] : '';
 
-		if ( ! wp_verify_nonce( $nonce, $this->feed_nonce_action( $feed_url ) ) ) {
+		if ( ! wp_verify_nonce( $nonce, $this->lazy_nonce_action( $signed_attributes ) ) ) {
 			wp_send_json_error( array( 'message' => __( 'Security check failed.', 'feedzy-rss-feeds' ) ) );
 		}
 
-		$lazyload_cache_key = $this->get_lazyload_cache_key( $sc, $feed_url );
+		$lazyload_cache_key = $this->get_lazyload_cache_key( $signed_attributes );
 
 		if ( isset( $sc['filters'] ) && ! empty( $sc['filters'] ) && feedzy_is_pro() ) {
 			$sc['filters'] = apply_filters( 'feedzy_filter_conditions_attribute', $sc['filters'] );
@@ -708,6 +717,9 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			$filtered_atts = array();
 		}
 		$sc = array_merge( $sc, $filtered_atts );
+		// Keep the "Auto" ('') and frame-name targets the widgets offer; only an unknown _keyword falls back.
+		$is_target    = '' === $sc['target'] || in_array( $sc['target'], array( '_blank', '_self', '_parent', '_top' ), true ) || 1 === preg_match( '/^[^_\s][^\s]*$/', (string) $sc['target'] );
+		$sc['target'] = $is_target ? $sc['target'] : '_blank';
 
 		return $sc;
 	}
@@ -743,17 +755,15 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	}
 
 	/**
-	 * Derives a deterministic nonce action string from a normalized feed URL.
-	 * normalize_urls() returns an array for multi-feed shortcodes, and PHP's
-	 * array-to-string coercion collapses any array to "Array" if passed
-	 * straight into wp_create_nonce()/wp_verify_nonce(), making every
-	 * multi-feed shortcode share the same nonce action.
+	 * The nonce action of a lazy placeholder, bound to its signed attributes, which
+	 * include the feed url(s), so a request cannot change what it renders.
 	 *
-	 * @param   string|array<string> $feed_url The normalized feed url(s).
+	 * @param   array<string, mixed> $attributes Signed lazy attributes, from lazy_placeholder_attributes() or lazy_request_attributes().
 	 * @return  string
 	 */
-	private function feed_nonce_action( $feed_url ) {
-		return is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url;
+	private function lazy_nonce_action( $attributes ) {
+		// serialize() keeps every byte; JSON encoding can map two different values to one.
+		return 'feedzy-lazy-' . md5( serialize( $attributes ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize -- Hashed only, never unserialized.
 	}
 
 	/**
@@ -1127,13 +1137,66 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	 *
 	 * @access  private
 	 *
-	 * @param   array<string, mixed> $sc The shortcode attributes.
-	 * @param   string|array<string> $feed_url The feed URL(s).
+	 * @param   array<string, mixed> $attributes Signed lazy attributes, which include the feed URL(s).
 	 *
 	 * @return string
 	 */
-	private function get_lazyload_cache_key( $sc, $feed_url ) {
-		return md5( sprintf( 'feedzy-lazy-%s-%d-%d-%s', ( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ), ( ! empty( $sc['max'] ) ? $sc['max'] : 1 ), ( ! empty( $sc['offset'] ) ? $sc['offset'] : 0 ), ( ! empty( $sc['refresh'] ) ? $sc['refresh'] : '12_hours' ) ) );
+	private function get_lazyload_cache_key( $attributes ) {
+		return md5( 'feedzy-lazy-' . serialize( $attributes ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize -- Hashed only, never unserialized.
+	}
+
+	/**
+	 * The attributes a lazy placeholder signs: its data attributes as the browser sends them back.
+	 *
+	 * HTML lowercases attribute names, keeps the first of two names that differ only in case,
+	 * turns CRLF and CR line breaks into LF, and decodes the entities that esc_attr() leaves in values.
+	 *
+	 * @param array<string, string> $printed Escaped attribute values, keyed by the printed name.
+	 *
+	 * @return array<string, string>
+	 */
+	private function lazy_placeholder_attributes( $printed ) {
+		$attributes = array();
+		foreach ( $printed as $key => $value ) {
+			$name = strtolower( (string) $key );
+			if ( ! isset( $attributes[ $name ] ) ) {
+				$attributes[ $name ] = html_entity_decode( str_replace( array( "\r\n", "\r" ), "\n", $value ), ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+			}
+		}
+
+		return $this->signed_lazy_attributes( $attributes );
+	}
+
+	/**
+	 * The attributes a lazy request signs, or null when the arguments are not an array.
+	 *
+	 * The arguments are signed as sent, not normalized: an uppercase duplicate, an array
+	 * value or any changed byte changes the signed set and fails the nonce check.
+	 *
+	 * @param mixed $args The request arguments.
+	 *
+	 * @return array<string, mixed>|null
+	 */
+	private function lazy_request_attributes( $args ) {
+		if ( ! is_array( $args ) ) {
+			return null;
+		}
+
+		return $this->signed_lazy_attributes( $args );
+	}
+
+	/**
+	 * Drop the values a placeholder adds or removes at runtime, and sort the rest.
+	 *
+	 * @param array<string, mixed> $attributes Lazy attributes.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function signed_lazy_attributes( $attributes ) {
+		unset( $attributes['nonce'], $attributes['error_msg'], $attributes['has_valid_cache'] );
+		ksort( $attributes );
+
+		return $attributes;
 	}
 
 	/**
@@ -1671,7 +1734,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 					'<span><i class="dashicons dashicons-%s %s"></i>%s',
 					$status['success'] ? 'yes' : 'no-alt',
 					$status['success'] ? 'pass' : 'fail',
-					$status['msg']
+					esc_html( $status['msg'] )
 				);
 			}
 		}
@@ -1949,15 +2012,17 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 
 			if ( $author_name ) {
 				$domain                        = wp_parse_url( $new_link );
-				$author_url                    = isset( $domain['host'] ) ? '//' . $domain['host'] : '';
+				$domain_host                   = isset( $domain['host'] ) ? $domain['host'] : '';
+				$author_url                    = $domain_host ? '//' . $domain_host : '';
 				$author_url                    = apply_filters( 'feedzy_author_url', $author_url, $author_name, $feed_url, $item );
-				$content_meta_values['author'] = apply_filters( 'feedzy_meta_author', __( 'by', 'feedzy-rss-feeds' ) . ' <a href="' . $author_url . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $author_name . '</a> ', $author_name, $author_url, $feed_source, $feed_url, $item );
+				$content_meta_values['author'] = apply_filters( 'feedzy_meta_author', __( 'by', 'feedzy-rss-feeds' ) . ' <a href="' . esc_url( $author_url ) . '" target="' . esc_attr( $sc['target'] ) . '" title="' . esc_attr( $domain_host ) . '" >' . esc_html( $author_name ) . '</a> ', $author_name, $author_url, $feed_source, $feed_url, $item );
 			}
 		} elseif ( $is_multiple && $meta_args['source'] && ! empty( $feed_source ) ) {
 			$domain                        = wp_parse_url( $new_link );
-			$author_url                    = isset( $domain['host'] ) ? '//' . $domain['host'] : '';
+			$domain_host                   = isset( $domain['host'] ) ? $domain['host'] : '';
+			$author_url                    = $domain_host ? '//' . $domain_host : '';
 			$author_url                    = apply_filters( 'feedzy_author_url', $author_url, $feed_source, $feed_url, $item );
-			$content_meta_values['author'] = apply_filters( 'feedzy_meta_author', __( 'by', 'feedzy-rss-feeds' ) . ' <a href="' . $author_url . '" target="' . $sc['target'] . '" title="' . $domain['host'] . '" >' . $feed_source . '</a> ', $feed_source, $author_url, $feed_source, $feed_url, $item );
+			$content_meta_values['author'] = apply_filters( 'feedzy_meta_author', __( 'by', 'feedzy-rss-feeds' ) . ' <a href="' . esc_url( $author_url ) . '" target="' . esc_attr( $sc['target'] ) . '" title="' . esc_attr( $domain_host ) . '" >' . esc_html( $feed_source ) . '</a> ', $feed_source, $author_url, $feed_source, $feed_url, $item );
 		}
 
 		// date/time.

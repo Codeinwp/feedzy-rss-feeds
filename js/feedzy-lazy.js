@@ -10,7 +10,9 @@
 (function($) {
 
     // load all attributes into the ajax call.
-    $('.feedzy-lazy:not(.loading)').each(function() {
+    $('.feedzy-lazy:not(.loading)').filter(function() {
+        return 0 === $(this).parents('.feedzy-lazy').length;
+    }).each(function() {
         var $feedzy_block = $(this);
         var $attributes = {};
         $.each(this.attributes, function() {
@@ -41,15 +43,15 @@
                     if(data && data.success && data.data && data.data.content){
                         $feedzy_block.empty().append(data.data.content);
                     } else if(data && data.data && data.data.message){
-                        $feedzy_block.empty().append(data.data.message);
+                        $feedzy_block.empty().text(data.data.message);
                     } else if('string' === typeof data && data.length){
-                        $feedzy_block.empty().append(data);
+                        $feedzy_block.empty().text(data);
                     } else {
-                        $feedzy_block.empty().append($attributes.error_msg);
+                        $feedzy_block.empty().text($attributes.error_msg);
                     }
                 },
                 error: function(){
-                    $feedzy_block.empty().append($attributes.error_msg);
+                    $feedzy_block.empty().text($attributes.error_msg);
                 },
                 complete: function(){
                     $feedzy_block.removeClass('loading');

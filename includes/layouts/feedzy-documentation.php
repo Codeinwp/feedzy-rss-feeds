@@ -25,7 +25,7 @@ Layout For Document Page of Feedzy RSS Feeds
 					<h3 class="h3"><?php esc_html_e( 'Feed to Post', 'feedzy-rss-feeds' ); ?></h3>
 					<p><?php esc_html_e( 'Learn how to convert feed items into Posts, Pages, or any custom post type.', 'feedzy-rss-feeds' ); ?></p>
 					<div class="cta">
-						<a href="https://docs.themeisle.com/article/1154-how-to-use-feed-to-post-feature-in-feedzy" class="btn btn-outline-primary" target="_blank"><?php esc_html_e( 'Learn more', 'feedzy-rss-feeds' ); ?></a>
+						<a href="<?php echo esc_url( feedzy_docs_url( 'how-to-use-feed-to-post-feature-in-feedzy', 'feed-to-post', 'support' ) ); ?>" class="btn btn-outline-primary" target="_blank"><?php esc_html_e( 'Learn more', 'feedzy-rss-feeds' ); ?></a>
 					</div>
 				</div>
 			</div>
@@ -44,7 +44,7 @@ Layout For Document Page of Feedzy RSS Feeds
 						?>
 					</p>
 					<div class="cta">
-						<a href="https://docs.themeisle.com/article/1130-how-to-use-feedzy-with-a-shortcode" class="btn btn-outline-primary" target="_blank"><?php esc_html_e( 'Learn more', 'feedzy-rss-feeds' ); ?></a>
+						<a href="<?php echo esc_url( feedzy_docs_url( 'how-to-use-feedzy-with-a-shortcode', 'shortcode', 'support' ) ); ?>" class="btn btn-outline-primary" target="_blank"><?php esc_html_e( 'Learn more', 'feedzy-rss-feeds' ); ?></a>
 					</div>
 				</div>
 			</div>
@@ -64,7 +64,7 @@ Layout For Document Page of Feedzy RSS Feeds
 						?>
 					</p>
 					<div class="cta">
-						<a href="https://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy" class="btn btn-outline-primary" target="_blank"><?php esc_html_e( 'Learn more', 'feedzy-rss-feeds' ); ?></a>
+						<a href="<?php echo esc_url( feedzy_docs_url( 'how-to-use-wordai-to-rephrase-rss-content-in-feedzy', 'wordai', 'support' ) ); ?>" class="btn btn-outline-primary" target="_blank"><?php esc_html_e( 'Learn more', 'feedzy-rss-feeds' ); ?></a>
 					</div>
 				</div>
 			</div>
@@ -78,7 +78,7 @@ Layout For Document Page of Feedzy RSS Feeds
 					<h3 class="h3"><?php esc_html_e( 'How to validate a RSS feed', 'feedzy-rss-feeds' ); ?></h3>
 					<p><?php esc_html_e( 'Learn how to check if a RSS feed is valid or not in Feedzy.', 'feedzy-rss-feeds' ); ?></p>
 					<div class="cta">
-						<a href="https://docs.themeisle.com/article/716-feedzy-how-to-check-whether-the-rss-feed-is-valid-or-not" class="btn btn-outline-primary" target="_blank"><?php esc_html_e( 'Learn more', 'feedzy-rss-feeds' ); ?></a>
+						<a href="<?php echo esc_url( feedzy_docs_url( 'feedzy-how-to-check-whether-the-rss-feed-is-valid-or-not', 'valid-feed', 'support' ) ); ?>" class="btn btn-outline-primary" target="_blank"><?php esc_html_e( 'Learn more', 'feedzy-rss-feeds' ); ?></a>
 					</div>
 				</div>
 			</div>
@@ -92,7 +92,7 @@ Layout For Document Page of Feedzy RSS Feeds
 					<h3 class="h3"><?php esc_html_e( 'In Feedzy how do I...', 'feedzy-rss-feeds' ); ?></h3>
 					<p><?php esc_html_e( 'Learn some of the most popular hooks you can use with the Feedzy plugin.', 'feedzy-rss-feeds' ); ?></p>
 					<div class="cta">
-						<a href="https://docs.themeisle.com/article/942-in-feedzy-how-do-i" class="btn btn-outline-primary" target="_blank"><?php esc_html_e( 'Learn more', 'feedzy-rss-feeds' ); ?></a>
+						<a href="<?php echo esc_url( feedzy_docs_url( 'in-feedzy-how-do-i', 'how-do-i', 'support' ) ); ?>" class="btn btn-outline-primary" target="_blank"><?php esc_html_e( 'Learn more', 'feedzy-rss-feeds' ); ?></a>
 					</div>
 				</div>
 			</div>
@@ -151,6 +151,6 @@ Layout For Document Page of Feedzy RSS Feeds
 		</li>
 	</ul>
 	<div class="cta">
-		<a href="https://docs.themeisle.com/category/712-feedzy" class="btn btn-ghost" target="blank"><?php esc_html_e( 'Open Feedzy Documentation page', 'feedzy-rss-feeds' ); ?></a>
+		<a href="<?php echo esc_url( feedzy_docs_url( '', 'documentation', 'support' ) ); ?>" class="btn btn-ghost" target="blank"><?php esc_html_e( 'Open Feedzy Documentation page', 'feedzy-rss-feeds' ); ?></a>
 	</div>
 </div>

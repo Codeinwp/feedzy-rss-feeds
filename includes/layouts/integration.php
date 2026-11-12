@@ -11,12 +11,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	$active_tab  = isset( $_REQUEST['tab'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['tab'] ) ) : 'openai';// phpcs:ignore WordPress.Security.NonceVerification
 	$show_button = true;
 
-	$help_btn_url = 'https://docs.themeisle.com/category/712-feedzy';
+	$help_btn_url = feedzy_docs_url( '', 'documentation', 'integration' );
 
 	if ( 'wordai' === $active_tab ) {
-		$help_btn_url = 'https://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy#wordai';
+		$help_btn_url = feedzy_docs_url( 'how-to-use-wordai-to-rephrase-rss-content-in-feedzy', 'wordai', 'integration', 'wordai-integration' );
 	} elseif ( 'spinnerchief' === $active_tab ) {
-		$help_btn_url = 'https://docs.themeisle.com/article/746-how-to-use-wordai-to-rephrase-rss-content-in-feedzy#spinner';
+		$help_btn_url = feedzy_docs_url( 'how-to-use-wordai-to-rephrase-rss-content-in-feedzy', 'spinnerchief', 'integration', 'spinnerchief-integration' );
 	}
 
 	$is_managed_ai_active = class_exists( 'Feedzy_Rss_Feeds_Pro_Ai_Quota_Manager' )

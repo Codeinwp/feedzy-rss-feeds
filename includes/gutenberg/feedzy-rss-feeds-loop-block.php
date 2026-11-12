@@ -98,6 +98,7 @@ class Feedzy_Rss_Feeds_Loop_Block {
 				'url'          => admin_url( 'admin-ajax.php' ),
 				'nonce'        => wp_create_nonce( FEEDZY_BASEFILE ),
 				'isPro'        => feedzy_is_pro(),
+				'docsUrl'      => esc_url_raw( feedzy_docs_url( 'feedzy-loop', 'feedzy-loop', 'blockeditor', 'magic-tags-reference' ) ),
 			)
 		);
 

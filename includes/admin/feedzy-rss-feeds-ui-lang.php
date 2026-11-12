@@ -94,7 +94,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 			__( 'Should we display additional meta fields out of %1$sauthor%2$s, %1$sdate%2$s and %1$stime%2$s? (comma-separated list, in order of display). View documentation %3$shere%4$s.', 'feedzy-rss-feeds' ),
 			'<code>',
 			'</code>',
-			'<a href="' . esc_url( 'https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed' ) . '" target="_new">',
+			'<a href="' . esc_url( feedzy_docs_url( 'how-to-display-author-date-or-time-from-the-feed', 'meta-fields', 'feed-options' ) ) . '" target="_new">',
 			'</a>'
 		);
 		if ( has_filter( 'feedzy_retrieve_categories' ) ) {
@@ -103,7 +103,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 				__( 'Should we display additional meta fields out of %1$sauthor%2$s, %1$sdate%2$s, %1$stime%2$s and %1$scategories%2$s? (comma-separated list). View documentation %3$shere%4$s.', 'feedzy-rss-feeds' ),
 				'<code>',
 				'</code>',
-				'<a href="' . esc_url( 'https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed' ) . '" target="_new">',
+				'<a href="' . esc_url( feedzy_docs_url( 'how-to-display-author-date-or-time-from-the-feed', 'meta-fields', 'feed-options' ) ) . '" target="_new">',
 				'</a>'
 			);
 		}
@@ -481,7 +481,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 							// translators: 1: <br/> tag, 2: <a> tag opening, 3: </a> tag closing.
 							__( 'Should we display the price from the feed if it is available?%1$sYou can read about how to extract price from a custom tag %2$shere%3$s', 'feedzy-rss-feeds' ),
 							'<br/>',
-							'<a href="' . esc_url( 'https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy' ) . '" target="_blank">',
+							'<a href="' . esc_url( feedzy_docs_url( 'how-do-i-extract-values-from-custom-tags-in-feedzy', 'price', 'feed-options' ) ) . '" target="_blank">',
 							'</a>'
 						),
 						'type'     => 'select',
@@ -502,7 +502,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'label'       => sprintf(
 							// translators: 1: <a> tag opening, 2: </a> tag closing.
 							__( 'Referral URL parameters as per %1$sthis document here%2$s', 'feedzy-rss-feeds' ),
-							'<a href="' . esc_url( 'https://docs.themeisle.com/article/1073-how-to-add-referral-parameters-in-feedzy' ) . '" target="_blank">',
+							'<a href="' . esc_url( feedzy_docs_url( 'feedzy-how-to-add-affiliate-referrals-to-feed-urls', 'referral', 'feed-options' ) ) . '" target="_blank">',
 							'</a>'
 						),
 						'placeholder' => '',
@@ -522,7 +522,7 @@ class Feedzy_Rss_Feeds_Ui_Lang {
 						'label'       => sprintf(
 							// translators: 1: <a> tag opening, 2: </a> tag closing.
 							__( 'Provide mapping for custom feed elements as per %1$sthis document here%2$s. This will only work for single feeds, not comma-separated feeds.', 'feedzy-rss-feeds' ),
-							'<a href="' . esc_url( 'https://docs.themeisle.com/article/977-how-do-i-extract-values-from-custom-tags-in-feedzy' ) . '" target="_blank">',
+							'<a href="' . esc_url( feedzy_docs_url( 'how-do-i-extract-values-from-custom-tags-in-feedzy', 'custom-mapping', 'feed-options' ) ) . '" target="_blank">',
 							'</a>'
 						),
 						'type'        => 'text',

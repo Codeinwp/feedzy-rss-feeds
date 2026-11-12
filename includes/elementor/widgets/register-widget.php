@@ -470,7 +470,7 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 				'type'        => Controls_Manager::TEXT,
 				'description' => __( 'You can add multiple tags at once, by separating them with commas.', 'feedzy-rss-feeds' )
 					. ' '
-					. '<a target="_blank" href="' . esc_url( 'https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed' ) . '">'
+					. '<a target="_blank" href="' . esc_url( feedzy_docs_url( 'how-to-display-author-date-or-time-from-the-feed', 'meta-fields', 'elementoreditor' ) ) . '">'
 					. __( 'View documentation here.', 'feedzy-rss-feeds' )
 					. '</a>',
 			)
@@ -486,7 +486,7 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 				// translators: this followed by sentence: View documentation here.
 				'description' => __( 'You can find more info about available meta field values here.', 'feedzy-rss-feeds' )
 					. ' '
-					. '<a target="_blank" href="' . esc_url( 'https://docs.themeisle.com/article/1089-how-to-display-author-date-or-time-from-the-feed' ) . '">'
+					. '<a target="_blank" href="' . esc_url( feedzy_docs_url( 'how-to-display-author-date-or-time-from-the-feed', 'meta-fields', 'elementoreditor' ) ) . '">'
 					// translators: this sentence is wrapped with a link tag.
 					. __( 'View documentation here.', 'feedzy-rss-feeds' )
 					. '</a>',
@@ -508,7 +508,7 @@ class Feedzy_Register_Widget extends Elementor\Widget_Base {
 						'Learn more about this feature in %1$sFeedzy docs%2$s.',
 						'feedzy-rss-feeds'
 					),
-					'<a target="_blank" href="' . esc_url( 'https://docs.themeisle.com/article/923-how-price-is-displayed-from-the-feed' ) . '">',
+					'<a target="_blank" href="' . esc_url( feedzy_docs_url( 'how-price-is-displayed-from-the-feed', 'price', 'elementoreditor' ) ) . '">',
 					'</a>'
 				),
 				'classes'      => $this->upsell_class(),
