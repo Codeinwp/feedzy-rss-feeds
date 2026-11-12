@@ -474,7 +474,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 			}
 
 			// Add a nonce bound to the feed url and every printed attribute.
-			$attributes .= 'data-nonce="' . esc_attr( wp_create_nonce( $this->feed_nonce_action( $feed_url, $signed_attributes ) ) ) . '"';
+			$attributes .= 'data-nonce="' . esc_attr( wp_create_nonce( $this->lazy_nonce_action( $signed_attributes ) ) ) . '"';
 			$attributes .= 'data-error_msg="' . esc_attr( apply_filters( 'feedzy_lazyload_error_msg', __( 'An error occurred while fetching the feed.', 'feedzy-rss-feeds' ), $feed_url ) ) . '"';
 
 			$class = array_filter( apply_filters( 'feedzy_add_classes_block', array( $sc['classname'], 'feedzy-' . md5( is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url ) ), $sc, null, $feed_url ) );
@@ -583,7 +583,7 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 		$feed_url = $this->normalize_urls( $sc['feeds'] );
 		$nonce    = isset( $atts['nonce'] ) ? $atts['nonce'] : '';
 
-		if ( ! wp_verify_nonce( $nonce, $this->feed_nonce_action( $feed_url, $signed_attributes ) ) ) {
+		if ( ! wp_verify_nonce( $nonce, $this->lazy_nonce_action( $signed_attributes ) ) ) {
 			wp_send_json_error( array( 'message' => __( 'Security check failed.', 'feedzy-rss-feeds' ) ) );
 		}
 
@@ -753,25 +753,15 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 	}
 
 	/**
-	 * Derives a deterministic nonce action string from a normalized feed URL.
-	 * normalize_urls() returns an array for multi-feed shortcodes, and PHP's
-	 * array-to-string coercion collapses any array to "Array" if passed
-	 * straight into wp_create_nonce()/wp_verify_nonce(), making every
-	 * multi-feed shortcode share the same nonce action. Lazy placeholders bind
-	 * their signed attributes instead, which include the feed url(s), so a
-	 * request cannot change what it renders.
+	 * The nonce action of a lazy placeholder, bound to its signed attributes, which
+	 * include the feed url(s), so a request cannot change what it renders.
 	 *
-	 * @param   string|array<string> $feed_url   The normalized feed url(s).
 	 * @param   array<string, mixed> $attributes Signed lazy attributes, from lazy_placeholder_attributes() or lazy_request_attributes().
 	 * @return  string
 	 */
-	private function feed_nonce_action( $feed_url, $attributes = array() ) {
-		if ( ! empty( $attributes ) ) {
-			// serialize() keeps every byte; JSON encoding can map two different values to one.
-			return 'feedzy-lazy-' . md5( serialize( $attributes ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize -- Hashed only, never unserialized.
-		}
-
-		return is_array( $feed_url ) ? implode( ',', $feed_url ) : $feed_url;
+	private function lazy_nonce_action( $attributes ) {
+		// serialize() keeps every byte; JSON encoding can map two different values to one.
+		return 'feedzy-lazy-' . md5( serialize( $attributes ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize -- Hashed only, never unserialized.
 	}
 
 	/**

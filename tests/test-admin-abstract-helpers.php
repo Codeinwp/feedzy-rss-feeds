@@ -431,53 +431,6 @@ class Test_Admin_Abstract_Helpers extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Invoke the private feed_nonce_action() method through reflection.
-	 *
-	 * @param string|array $feed_url The normalized feed url(s).
-	 *
-	 * @return string
-	 */
-	private function feed_nonce_action( $feed_url ) {
-		$method = new ReflectionMethod( 'Feedzy_Rss_Feeds_Admin_Abstract', 'feed_nonce_action' );
-		$method->setAccessible( true );
-
-		return $method->invoke( $this->feedzy_abstract, $feed_url );
-	}
-
-	/**
-	 * Test feed_nonce_action does not collapse multi-feed arrays to "Array".
-	 *
-	 * @access public
-	 */
-	public function test_feed_nonce_action_multi_feed_does_not_collapse_to_array() {
-		$action = $this->feed_nonce_action( array( 'https://example.com/feed1', 'https://example.com/feed2' ) );
-
-		$this->assertNotEquals( 'Array', $action );
-	}
-
-	/**
-	 * Test feed_nonce_action produces distinct actions for distinct feed sets,
-	 * so a nonce for one multi-feed shortcode does not validate for another.
-	 *
-	 * @access public
-	 */
-	public function test_feed_nonce_action_differs_between_feed_sets() {
-		$action_a = $this->feed_nonce_action( array( 'https://example.com/a1', 'https://example.com/a2' ) );
-		$action_b = $this->feed_nonce_action( array( 'https://example.com/b1', 'https://example.com/b2' ) );
-
-		$this->assertNotEquals( $action_a, $action_b );
-	}
-
-	/**
-	 * Test feed_nonce_action passes single-feed (scalar) urls through unchanged.
-	 *
-	 * @access public
-	 */
-	public function test_feed_nonce_action_single_feed_returns_scalar_unchanged() {
-		$this->assertEquals( 'https://example.com/feed', $this->feed_nonce_action( 'https://example.com/feed' ) );
-	}
-
-	/**
 	 * Test get_feed_title_filter falls back to an empty string for rss_url and
 	 * rss_description when the feed provides none, instead of null.
 	 *
@@ -661,6 +614,11 @@ class Test_Admin_Abstract_Helpers extends WP_UnitTestCase {
 	 * @param callable(array<string, mixed>): mixed $tamper Changes the placeholder arguments.
 	 */
 	public function test_tampered_lazy_request_is_rejected( $tamper ) {
+		// WordPress's JSON encoding maps invalid UTF-8 through mbstring detection; pin it to
+		// the common ASCII/UTF-8 order so the invalid UTF-8 case is not environment dependent.
+		$detect_order = mb_detect_order();
+		mb_detect_order( array( 'ASCII', 'UTF-8' ) );
+
 		$feedzy = $this->lazy_feedzy();
 		$args   = $tamper(
 			$this->placeholder_args(
@@ -675,6 +633,7 @@ class Test_Admin_Abstract_Helpers extends WP_UnitTestCase {
 		);
 
 		$response = $this->lazy_response( $feedzy, $args );
+		mb_detect_order( $detect_order );
 
 		$this->assertFalse( $response['success'] );
 		$this->assertSame( 'Security check failed.', $response['data']['message'] );
@@ -690,6 +649,12 @@ class Test_Admin_Abstract_Helpers extends WP_UnitTestCase {
 			'changed value'       => array(
 				function ( $args ) {
 					$args['max'] = '9';
+					return $args;
+				},
+			),
+			'other feeds'         => array(
+				function ( $args ) {
+					$args['feeds'] = 'https://example.com/feed,https://example.com/other';
 					return $args;
 				},
 			),
