@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+	<channel>
+		<title>Feedzy Author Fixture Feed</title>
+		<link>https://tests.example.com/</link>
+		<description>Fixture feed whose item has an author</description>
+		<item>
+			<title>Zeta Article With An Author</title>
+			<link>https://tests.example.com/zeta</link>
+			<guid>https://tests.example.com/zeta</guid>
+			<pubDate>Fri, 05 Jan 2024 10:00:00 +0000</pubDate>
+			<author>jane@tests.example.com (Jane Doe)</author>
+			<description>Zeta description content.</description>
+		</item>
+	</channel>
+</rss>
