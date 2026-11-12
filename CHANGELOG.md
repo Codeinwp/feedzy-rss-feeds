@@ -1,3 +1,7 @@
+##### [Version 5.2.16](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.15...v5.2.16) (2026-11-12)
+
+- Enhanced security
+
 ##### [Version 5.2.15](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.14...v5.2.15) (2026-11-06)
 
 - Fixed broken block editor thumbnails on sites without HTTPS support
