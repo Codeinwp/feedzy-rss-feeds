@@ -370,6 +370,7 @@
 		$('#feedzy_post_terms')
 			.html($('#loading_select_tpl').html())
 			.trigger('chosen:updated');
+		$('#feedzy_post_terms_loaded').prop('disabled', true);
 
 		$.post(
 			ajaxurl,
@@ -475,6 +476,7 @@
 				}
 
 				$('#feedzy_post_terms').html(options).trigger('chosen:updated');
+				$('#feedzy_post_terms_loaded').prop('disabled', false);
 			},
 			'json'
 		);

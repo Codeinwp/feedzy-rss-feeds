@@ -184,6 +184,7 @@ global $post;
 											<select id="feedzy_post_terms" data-placeholder="<?php esc_attr_e( 'Select Some Options', 'feedzy-rss-feeds' ); ?>"  multiple class="form-control feedzy-chosen<?php echo feedzy_is_pro() ? ' fz-chosen-custom-tag' : ''; ?>"
 												name="feedzy_meta_data[import_post_term][]">
 											</select>
+											<input type="hidden" id="feedzy_post_terms_loaded" name="feedzy_post_terms_loaded" value="1" disabled>
 										</div>
 										<div class="help-text pt-8">
 											<?php esc_html_e( 'If you don\'t select at least one taxonomy, posts will be assigned to Uncategorized by default.', 'feedzy-rss-feeds' ); ?>

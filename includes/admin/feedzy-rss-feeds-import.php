@@ -721,7 +721,11 @@ class Feedzy_Rss_Feeds_Import {
 			$data_meta['import_use_external_image'] = isset( $data_meta['import_use_external_image'] ) ? $data_meta['import_use_external_image'] : 'no';
 			// Check feeds remove html checkbox checked OR not.
 			$data_meta['import_remove_html'] = isset( $data_meta['import_remove_html'] ) ? $data_meta['import_remove_html'] : 'no';
-			$data_meta['import_post_term']   = isset( $data_meta['import_post_term'] ) ? $data_meta['import_post_term'] : '';
+			// An unselected multiselect submits nothing, so a missing value means "cleared" only once the
+			// taxonomy options have loaded; otherwise the selector never loaded and the saved value is kept.
+			if ( ! isset( $data_meta['import_post_term'] ) && isset( $_POST['feedzy_post_terms_loaded'] ) ) {
+				$data_meta['import_post_term'] = '';
+			}
 
 			// If it is filter_conditions we want to escape it.
 			if ( isset( $data_meta['filter_conditions'] ) ) {
