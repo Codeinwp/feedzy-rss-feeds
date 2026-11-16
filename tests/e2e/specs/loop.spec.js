@@ -3,6 +3,11 @@
  */
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
+/**
+ * Internal dependencies
+ */
+import { getOrderFeedUrl } from '../utils';
+
 test.describe('Feedzy Loop', () => {
 	const FEED_URL =
 		'https://s3.amazonaws.com/verti-utils/sample-feed-import.xml';
@@ -226,7 +231,7 @@ test.describe('Feedzy Loop', () => {
 			attributes: {
 				feed: {
 					type: 'url',
-					source: 'https://fasterthanli.me/index.xml',
+					source: getOrderFeedUrl(page, 'svg-thumbnail'),
 				},
 				query: {
 					max: 1,
