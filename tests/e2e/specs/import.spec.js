@@ -838,6 +838,61 @@ test.describe('Feed Import', () => {
 			await expectSavedTerms(page, [TERM]);
 		});
 
+		test('keeps saved terms past the taxonomy limit', async ({
+			page,
+			requestUtils,
+		}) => {
+			// The saved "Uncategorized" sorts between these, so the limit lists only the first.
+			const createCategory = (name) =>
+				requestUtils.rest({
+					method: 'POST',
+					path: '/wp/v2/categories',
+					data: { name },
+				});
+			const categories = [
+				await createCategory('AAA taxonomy limit'),
+				await createCategory('ZZZ taxonomy limit'),
+			];
+
+			try {
+				await createImportWithTerm(page);
+				await page.route(/admin-ajax\.php/, (route) => {
+					const body = route.request().postData() ?? '';
+					if (!body.includes(TAXONOMY_REQUEST)) {
+						return route.fallback();
+					}
+					return route.fallback({
+						postData: `${body}&feedzy_e2e_taxonomy_limit=1`,
+					});
+				});
+
+				await openMapContent(page);
+				await waitForTermsLoaded(page);
+				expect(
+					await page
+						.locator(
+							'#feedzy_post_terms optgroup[label="Category"] option'
+						)
+						.evaluateAll((options) =>
+							options.map((option) => option.value).sort()
+						)
+				).toEqual([`category_${categories[0].id}`, TERM].sort());
+				await saveImport(page);
+
+				await expectSavedTerms(page, [TERM]);
+			} finally {
+				await Promise.all(
+					categories.map((category) =>
+						requestUtils.rest({
+							method: 'DELETE',
+							path: `/wp/v2/categories/${category.id}`,
+							params: { force: true },
+						})
+					)
+				);
+			}
+		});
+
 		test('ignores taxonomies of a superseded post type', async ({
 			page,
 		}) => {

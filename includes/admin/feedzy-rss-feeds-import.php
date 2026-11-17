@@ -1427,6 +1427,7 @@ class Feedzy_Rss_Feeds_Import {
 		check_ajax_referer( FEEDZY_BASEFILE, 'security' );
 
 		$post_type  = isset( $_POST['post_type'] ) ? sanitize_text_field( $_POST['post_type'] ) : '';
+		$selected   = isset( $_POST['selected'] ) ? (array) map_deep( wp_unslash( $_POST['selected'] ), 'sanitize_text_field' ) : array();
 		$taxonomies = get_object_taxonomies(
 			array(
 				'post_type' => $post_type,
@@ -1435,7 +1436,7 @@ class Feedzy_Rss_Feeds_Import {
 		$results    = array();
 		if ( ! empty( $taxonomies ) ) {
 			foreach ( $taxonomies as $taxonomy ) {
-				$terms                = get_terms(
+				$terms = get_terms(
 					array(
 						'taxonomy'   => $taxonomy,
 						'hide_empty' => false,
@@ -1443,11 +1444,43 @@ class Feedzy_Rss_Feeds_Import {
 						'number'     => apply_filters( 'feedzy_post_taxonomy_limit', 999, $taxonomy ),
 					)
 				);
+				// Saved terms past the limit must stay selectable, or the next save drops them.
+				$missing = is_array( $terms ) ? array_diff( $this->get_saved_term_ids( $selected, $taxonomy ), array_keys( $terms ) ) : array();
+				if ( ! empty( $missing ) ) {
+					$saved_terms = get_terms(
+						array(
+							'taxonomy'   => $taxonomy,
+							'hide_empty' => false,
+							'fields'     => 'id=>name',
+							'include'    => $missing,
+						)
+					);
+					$terms      += is_array( $saved_terms ) ? $saved_terms : array();
+				}
 				$results[ $taxonomy ] = $terms;
 			}
 		}
 		echo wp_json_encode( $results );
 		wp_die();
+	}
+
+	/**
+	 * Term IDs of a taxonomy among saved Post Taxonomy values.
+	 *
+	 * @param array<mixed> $selected Saved values, `<taxonomy>_<term id>` for terms.
+	 * @param string       $taxonomy Taxonomy name.
+	 *
+	 * @return list<int>
+	 */
+	private function get_saved_term_ids( array $selected, string $taxonomy ): array {
+		$ids     = array();
+		$pattern = '/^' . preg_quote( $taxonomy, '/' ) . '_(\d+)$/';
+		foreach ( $selected as $value ) {
+			if ( is_string( $value ) && preg_match( $pattern, $value, $match ) ) {
+				$ids[] = (int) $match[1];
+			}
+		}
+		return $ids;
 	}
 
 	/**

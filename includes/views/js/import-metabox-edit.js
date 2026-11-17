@@ -368,6 +368,7 @@
 			action: 'feedzy',
 			_action: 'get_taxonomies',
 			post_type: selected,
+			selected: tax_selected,
 		};
 
 		$('#feedzy_post_terms')

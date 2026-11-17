@@ -743,6 +743,66 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Saved terms past the taxonomy limit are still returned, so the selector keeps them selected.
+	 */
+	public function test_get_taxonomies_returns_saved_terms_past_limit(): void {
+		wp_set_current_user( $this->factory->user->create( array( 'role' => 'administrator' ) ) );
+		$first_id = $this->factory->category->create( array( 'name' => 'AAA first' ) );
+		$saved_id = $this->factory->category->create( array( 'name' => 'ZZZ saved' ) );
+		$limit    = static function (): int {
+			return 1;
+		};
+		add_filter( 'feedzy_post_taxonomy_limit', $limit );
+
+		try {
+			$response = $this->get_taxonomies_response( 'post', array( '[#auto_categories]', 'category_' . $saved_id, 'post_tag_' . $saved_id ) );
+		} finally {
+			remove_filter( 'feedzy_post_taxonomy_limit', $limit );
+		}
+
+		$this->assertSame(
+			array(
+				$first_id => 'AAA first',
+				$saved_id => 'ZZZ saved',
+			),
+			$response['category']
+		);
+		$this->assertSame( array(), $response['post_tag'] );
+	}
+
+	/**
+	 * Runs the get_taxonomies AJAX action.
+	 *
+	 * @param string       $post_type Post type to list taxonomies for.
+	 * @param list<string> $selected  Saved Post Taxonomy values.
+	 *
+	 * @return array<string, array<int, string>> Term names keyed by taxonomy and term ID.
+	 */
+	private function get_taxonomies_response( string $post_type, array $selected ): array {
+		$_POST                = array(
+			'security'  => wp_create_nonce( FEEDZY_BASEFILE ),
+			'post_type' => $post_type,
+			'selected'  => $selected,
+		);
+		$_REQUEST['security'] = $_POST['security'];
+		$import               = new Feedzy_Rss_Feeds_Import( 'feedzy-rss-feeds', '1.2.0' );
+		$method               = new ReflectionMethod( $import, 'get_taxonomies' );
+		$method->setAccessible( true );
+
+		ob_start();
+		try {
+			$method->invoke( $import );
+		} catch ( WPDieException $e ) {
+			// wp_die() ends the AJAX response.
+		} finally {
+			$output = (string) ob_get_clean();
+			unset( $_REQUEST['security'] );
+		}
+
+		return json_decode( $output, true );
+	}
+
+	/**
 	 * Parses the given XML and returns the nodes requested as key value pairs.
 	 */
 	private function parse_xml( $string, $key, $value ) {
