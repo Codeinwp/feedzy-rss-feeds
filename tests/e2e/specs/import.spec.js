@@ -811,6 +811,9 @@ test.describe('Feed Import', () => {
 			page,
 		}) => {
 			await createImportWithTerm(page);
+			// Load once so the flag starts enabled; the reload must disable it.
+			await openMapContent(page);
+			await waitForTermsLoaded(page);
 
 			let releaseTaxonomies;
 			const taxonomiesHeld = new Promise((resolve) => {
@@ -824,7 +827,7 @@ test.describe('Feed Import', () => {
 				return route.abort();
 			});
 
-			await openMapContent(page);
+			await setPostType(page, 'post');
 			await expect(
 				page.locator('#feedzy_post_terms_loaded')
 			).toBeDisabled();
