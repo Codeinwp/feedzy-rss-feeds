@@ -671,4 +671,213 @@ test.describe('Feed Import', () => {
 			page.getByRole('heading', { name: 'Add actions to this tag' })
 		).not.toBeVisible();
 	});
+
+	test.describe('Post Taxonomy', () => {
+		const TERM = 'category_1';
+		const TAXONOMY_REQUEST = '_action=get_taxonomies';
+
+		/**
+		 * @param {import('playwright').Page} page The page object.
+		 * @return {Promise<void>}
+		 */
+		const openMapContent = async (page) => {
+			await page
+				.getByRole('button', { name: 'Step 3 Map content ' })
+				.click();
+		};
+
+		/**
+		 * @param {import('playwright').Page} page The page object.
+		 * @return {Promise<void>}
+		 */
+		const waitForTermsLoaded = async (page) => {
+			await expect(
+				page.locator('#feedzy_post_terms_loaded')
+			).toBeEnabled();
+		};
+
+		/**
+		 * @param {import('playwright').Page} page The page object.
+		 * @return {Promise<string[]>} The selected Post Taxonomy values.
+		 */
+		const getSelectedTerms = (page) =>
+			page
+				.locator('#feedzy_post_terms')
+				.evaluate((select) =>
+					Array.from(select.selectedOptions, (option) => option.value)
+				);
+
+		/**
+		 * @param {import('playwright').Page} page  The page object.
+		 * @param {string[]}                  terms The Post Taxonomy values to select.
+		 * @return {Promise<void>}
+		 */
+		const setSelectedTerms = (page, terms) =>
+			page
+				.locator('#feedzy_post_terms')
+				.evaluate(
+					(select, values) =>
+						window
+							.jQuery(select)
+							.val(values)
+							.trigger('chosen:updated'),
+					terms
+				);
+
+		/**
+		 * @param {import('playwright').Page} page     The page object.
+		 * @param {string}                    postType The post type to switch to.
+		 * @return {Promise<void>}
+		 */
+		const setPostType = (page, postType) =>
+			page
+				.locator('#feedzy_post_type')
+				.evaluate(
+					(select, value) =>
+						window.jQuery(select).val(value).trigger('change'),
+					postType
+				);
+
+		/**
+		 * Save the import and reopen its edit screen.
+		 *
+		 * @param {import('playwright').Page} page The page object.
+		 * @return {Promise<void>}
+		 */
+		const saveImport = async (page) => {
+			const postId = await page.locator('#post_ID').inputValue();
+			await page.evaluate(() => {
+				window.onbeforeunload = null;
+				window.jQuery(window).off('beforeunload');
+			});
+			await Promise.all([
+				page.waitForURL(/edit\.php\?post_type=feedzy_imports/),
+				page.getByRole('button', { name: 'Save', exact: true }).click(),
+			]);
+			await page.goto(`/wp-admin/post.php?post=${postId}&action=edit`);
+			await tryCloseTourModal(page);
+		};
+
+		/**
+		 * @param {import('playwright').Page} page The page object.
+		 * @return {Promise<void>}
+		 */
+		const createImportWithTerm = async (page) => {
+			await page.goto('/wp-admin/post-new.php?post_type=feedzy_imports');
+			await tryCloseTourModal(page);
+			await page
+				.getByPlaceholder('Add a name for your import')
+				.fill('Post Taxonomy import');
+			await addFeeds(page, [FEED_URL]);
+			await openMapContent(page);
+			await waitForTermsLoaded(page);
+			await setSelectedTerms(page, [TERM]);
+			await saveImport(page);
+		};
+
+		/**
+		 * @param {import('playwright').Page} page  The page object.
+		 * @param {string[]}                  terms The expected Post Taxonomy values.
+		 * @return {Promise<void>}
+		 */
+		const expectSavedTerms = async (page, terms) => {
+			await openMapContent(page);
+			await waitForTermsLoaded(page);
+			expect(await getSelectedTerms(page)).toEqual(terms);
+		};
+
+		test('keeps terms when saved without opening Map Content', async ({
+			page,
+		}) => {
+			await createImportWithTerm(page);
+
+			await saveImport(page);
+
+			await expectSavedTerms(page, [TERM]);
+		});
+
+		test('clears terms removed after they loaded', async ({ page }) => {
+			await createImportWithTerm(page);
+
+			await openMapContent(page);
+			await waitForTermsLoaded(page);
+			await setSelectedTerms(page, []);
+			await saveImport(page);
+
+			await expectSavedTerms(page, []);
+		});
+
+		test('keeps terms when saved while they are loading', async ({
+			page,
+		}) => {
+			await createImportWithTerm(page);
+
+			let releaseTaxonomies;
+			const taxonomiesHeld = new Promise((resolve) => {
+				releaseTaxonomies = resolve;
+			});
+			await page.route(/admin-ajax\.php/, async (route) => {
+				if (!route.request().postData()?.includes(TAXONOMY_REQUEST)) {
+					return route.fallback();
+				}
+				await taxonomiesHeld;
+				return route.abort();
+			});
+
+			await openMapContent(page);
+			await expect(
+				page.locator('#feedzy_post_terms_loaded')
+			).toBeDisabled();
+			await saveImport(page);
+			releaseTaxonomies();
+			await page.unrouteAll({ behavior: 'ignoreErrors' });
+
+			await expectSavedTerms(page, [TERM]);
+		});
+
+		test('ignores taxonomies of a superseded post type', async ({
+			page,
+		}) => {
+			await createImportWithTerm(page);
+			await openMapContent(page);
+			await waitForTermsLoaded(page);
+
+			let releaseStale;
+			const staleHeld = new Promise((resolve) => {
+				releaseStale = resolve;
+			});
+			await page.route(/admin-ajax\.php/, async (route) => {
+				const body = route.request().postData() ?? '';
+				if (
+					body.includes(TAXONOMY_REQUEST) &&
+					body.includes('post_type=page')
+				) {
+					await staleHeld;
+				}
+				return route.fallback();
+			});
+
+			await setPostType(page, 'page');
+			await setPostType(page, 'post');
+			await waitForTermsLoaded(page);
+
+			await page.evaluate(() => {
+				window
+					.jQuery(document)
+					.on('ajaxComplete', (event, xhr, settings) => {
+						if (String(settings.data).includes('post_type=page')) {
+							window.feedzyStaleTaxonomiesHandled = true;
+						}
+					});
+			});
+			releaseStale();
+			await page.waitForFunction(
+				() => window.feedzyStaleTaxonomiesHandled === true
+			);
+
+			expect(await getSelectedTerms(page)).toEqual([TERM]);
+			await saveImport(page);
+			await expectSavedTerms(page, [TERM]);
+		});
+	});
 });

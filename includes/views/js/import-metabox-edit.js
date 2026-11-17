@@ -350,7 +350,10 @@
 		return false;
 	}
 
+	let taxonomyRequest = 0;
+
 	function update_taxonomy() {
+		const request = ++taxonomyRequest;
 		const selected = $(this).val();
 		let tax_selected = $(this).data('tax');
 		const custom_tag = $(this).data('custom-tag');
@@ -376,6 +379,10 @@
 			ajaxurl,
 			data,
 			function (response) {
+				// Superseded by a later post type change.
+				if (request !== taxonomyRequest) {
+					return;
+				}
 				let show_terms = true;
 
 				let options = '';
