@@ -104,7 +104,7 @@ class Feedzy_Rss_Feeds {
 	 */
 	public function init() {
 		self::$plugin_name = 'feedzy-rss-feeds';
-		self::$version     = '5.2.16';
+		self::$version     = '5.2.17';
 		self::$instance->load_dependencies();
 		self::$instance->define_admin_hooks();
 	}
