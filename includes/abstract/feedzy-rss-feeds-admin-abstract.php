@@ -456,8 +456,12 @@ abstract class Feedzy_Rss_Feeds_Admin_Abstract {
 				if ( 'feedData' === $key ) {
 					continue;
 				}
-				if ( is_array( $val ) ) {
+				if ( is_array( $val ) && array_filter( $val, 'is_scalar' ) === $val ) {
 					$val = implode( ',', $val );
+				}
+				// Objects and nested arrays, like the block options other plugins register, have no data attribute form.
+				if ( null !== $val && ! is_scalar( $val ) ) {
+					continue;
 				}
 				$printed[ $key ] = esc_attr( $val );
 				$attributes     .= 'data-' . esc_attr( $key ) . '="' . $printed[ $key ] . '"';
