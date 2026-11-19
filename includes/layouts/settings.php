@@ -235,33 +235,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 													<label class="form-label"><?php esc_html_e( 'Default Importing Schedule', 'feedzy-rss-feeds' ); ?></label>
 													<?php
 													$save_schedule = ! empty( $settings['general']['fz_cron_schedule'] ) ? $settings['general']['fz_cron_schedule'] : '';
-
-													$schedules = wp_get_schedules();
-													if ( isset( $schedules['hourly'] ) ) {
-														$hourly = $schedules['hourly'];
-														unset( $schedules['hourly'] );
-														$schedules = array_merge( array( 'hourly' => $hourly ), $schedules );
-													}
-													$internal_cron_schedules = apply_filters( 'feedzy_internal_cron_schedule_slugs', array() );
 													?>
 													<select id="fz-event-schedule" class="form-control fz-select-control" name="fz_cron_schedule">
-														<?php
-														$duplicate_schedule = array();
-														foreach ( $schedules as $slug => $schedule ) :
-															if (
-																empty( $schedule['interval'] ) ||
-																in_array( $schedule['interval'], $duplicate_schedule, true )
-															) {
-																continue;
-															}
-															$duplicate_schedule[] = $schedule['interval'];
-															$display_text         = $schedule['display'];
-															
-															if ( ! in_array( $slug, $internal_cron_schedules, true ) ) {
-																// translators: (externally created) is used to indicate that the schedule is created by another plugin or manually.
-																$display_text .= ' (' . esc_html__( 'externally created', 'feedzy-rss-feeds' ) . ')';
-															}
-															?>
+														<?php foreach ( feedzy_get_schedule_options( $save_schedule, 'hourly' ) as $slug => $display_text ) : ?>
 															<option
 																value="<?php echo esc_attr( $slug ); ?>"
 																<?php selected( $save_schedule, $slug ); ?>
