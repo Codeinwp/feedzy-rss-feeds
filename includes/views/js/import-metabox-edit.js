@@ -350,7 +350,10 @@
 		return false;
 	}
 
+	let taxonomyRequest = 0;
+
 	function update_taxonomy() {
+		const request = ++taxonomyRequest;
 		const selected = $(this).val();
 		let tax_selected = $(this).data('tax');
 		const custom_tag = $(this).data('custom-tag');
@@ -365,16 +368,22 @@
 			action: 'feedzy',
 			_action: 'get_taxonomies',
 			post_type: selected,
+			selected: tax_selected,
 		};
 
 		$('#feedzy_post_terms')
 			.html($('#loading_select_tpl').html())
 			.trigger('chosen:updated');
+		$('#feedzy_post_terms_loaded').prop('disabled', true);
 
 		$.post(
 			ajaxurl,
 			data,
 			function (response) {
+				// Superseded by a later post type change.
+				if (request !== taxonomyRequest) {
+					return;
+				}
 				let show_terms = true;
 
 				let options = '';
@@ -475,6 +484,7 @@
 				}
 
 				$('#feedzy_post_terms').html(options).trigger('chosen:updated');
+				$('#feedzy_post_terms_loaded').prop('disabled', false);
 			},
 			'json'
 		);

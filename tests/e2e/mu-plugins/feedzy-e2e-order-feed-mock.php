@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Feedzy E2E Order Feed Mock
- * Description: Serves a canned feed whose items are deliberately not in chronological document order, so Feed Order tests can tell sorted output from the original feed order.
+ * Description: Serves a canned feed whose items are deliberately not in chronological document order, so Feed Order tests can tell sorted output from the original feed order. Its items carry no images, so thumbnail tests get the default image.
  *
  * @package feedzy-rss-feeds
  */

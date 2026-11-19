@@ -644,6 +644,37 @@ class Test_Admin_Abstract_Helpers extends WP_UnitTestCase {
 					'lazy'        => 'yes',
 				),
 			),
+			'objects'   => array( $this->widget_options_block_attributes() ),
+		);
+	}
+
+	/**
+	 * Test issue 1360: object and nested array block attributes are left out of the lazy placeholder.
+	 */
+	public function test_lazy_placeholder_skips_object_block_attributes_issue_1360() {
+		$html = $this->lazy_feedzy()->feedzy_rss( $this->widget_options_block_attributes() );
+
+		$this->assertStringNotContainsString( 'data-extended_widget_opts=', $html );
+		$this->assertStringNotContainsString( 'data-extended_widget_opts_block=', $html );
+		$this->assertStringContainsString( 'data-extended_widget_opts_state=""', $html );
+	}
+
+	/**
+	 * Lazy block attributes with the options Widget Options adds to every block: an empty
+	 * object by default, and nested arrays once its settings are saved.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function widget_options_block_attributes() {
+		return array(
+			'feeds'                      => 'https://example.com/feed',
+			'lazy'                       => true,
+			'extended_widget_opts_block' => new stdClass(),
+			'extended_widget_opts'       => array(
+				'id_base'    => 'feedzy',
+				'visibility' => array( 'options' => 'hide' ),
+			),
+			'extended_widget_opts_state' => '',
 		);
 	}
 
