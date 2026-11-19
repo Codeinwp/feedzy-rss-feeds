@@ -685,6 +685,124 @@ class Test_Feedzy_Import extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Saving without the taxonomy selector having loaded keeps the saved Post Taxonomy (#1385).
+	 */
+	public function test_save_keeps_post_terms_when_selector_not_loaded_1385() {
+		$import_id = $this->create_import_with_post_terms_1385();
+
+		$this->save_import_without_post_terms_1385( $import_id, false );
+
+		$this->assertEquals( '[#auto_categories],category_1', get_post_meta( $import_id, 'import_post_term', true ) );
+	}
+
+	/**
+	 * Deselecting every term once the taxonomy selector has loaded still clears the saved Post Taxonomy (#1385).
+	 */
+	public function test_save_clears_post_terms_when_selector_loaded_1385() {
+		$import_id = $this->create_import_with_post_terms_1385();
+
+		$this->save_import_without_post_terms_1385( $import_id, true );
+
+		$this->assertFalse( metadata_exists( 'post', $import_id, 'import_post_term' ) );
+	}
+
+	/**
+	 * Creates an import owned by an administrator with a saved Post Taxonomy selection.
+	 *
+	 * @return int The import post ID.
+	 */
+	private function create_import_with_post_terms_1385(): int {
+		$admin_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $admin_id );
+		$import_id = $this->create_import( $admin_id );
+		update_post_meta( $import_id, 'import_post_term', '[#auto_categories],category_1' );
+
+		return $import_id;
+	}
+
+	/**
+	 * Submits the import editor form with no Post Taxonomy option selected.
+	 *
+	 * @param int  $import_id       The import post ID.
+	 * @param bool $selector_loaded Whether the taxonomy selector finished loading its options.
+	 */
+	private function save_import_without_post_terms_1385( int $import_id, bool $selector_loaded ): void {
+		$_POST = array(
+			'feedzy_post_nonce' => wp_create_nonce( 'feedzy_post_nonce' ),
+			'post_type'         => 'feedzy_imports',
+			'feedzy_meta_data'  => array(
+				'import_post_type'   => 'post',
+				'import_post_status' => 'publish',
+			),
+		);
+		if ( $selector_loaded ) {
+			$_POST['feedzy_post_terms_loaded'] = '1';
+		}
+
+		do_action( 'save_post_feedzy_imports', $import_id, get_post( $import_id ) );
+	}
+
+	/**
+	 * Saved terms past the taxonomy limit are still returned, so the selector keeps them selected.
+	 */
+	public function test_get_taxonomies_returns_saved_terms_past_limit(): void {
+		wp_set_current_user( $this->factory->user->create( array( 'role' => 'administrator' ) ) );
+		$first_id = $this->factory->category->create( array( 'name' => 'AAA first' ) );
+		$saved_id = $this->factory->category->create( array( 'name' => 'ZZZ saved' ) );
+		$limit    = static function (): int {
+			return 1;
+		};
+		add_filter( 'feedzy_post_taxonomy_limit', $limit );
+
+		try {
+			$response = $this->get_taxonomies_response( 'post', array( '[#auto_categories]', 'category_' . $saved_id, 'post_tag_' . $saved_id ) );
+		} finally {
+			remove_filter( 'feedzy_post_taxonomy_limit', $limit );
+		}
+
+		$this->assertSame(
+			array(
+				$first_id => 'AAA first',
+				$saved_id => 'ZZZ saved',
+			),
+			$response['category']
+		);
+		$this->assertSame( array(), $response['post_tag'] );
+	}
+
+	/**
+	 * Runs the get_taxonomies AJAX action.
+	 *
+	 * @param string       $post_type Post type to list taxonomies for.
+	 * @param list<string> $selected  Saved Post Taxonomy values.
+	 *
+	 * @return array<string, array<int, string>> Term names keyed by taxonomy and term ID.
+	 */
+	private function get_taxonomies_response( string $post_type, array $selected ): array {
+		$_POST                = array(
+			'security'  => wp_create_nonce( FEEDZY_BASEFILE ),
+			'post_type' => $post_type,
+			'selected'  => $selected,
+		);
+		$_REQUEST['security'] = $_POST['security'];
+		$import               = new Feedzy_Rss_Feeds_Import( 'feedzy-rss-feeds', '1.2.0' );
+		$method               = new ReflectionMethod( $import, 'get_taxonomies' );
+		$method->setAccessible( true );
+
+		ob_start();
+		try {
+			$method->invoke( $import );
+		} catch ( WPDieException $e ) {
+			// wp_die() ends the AJAX response.
+		} finally {
+			$output = (string) ob_get_clean();
+			unset( $_REQUEST['security'] );
+		}
+
+		return json_decode( $output, true );
+	}
+
+	/**
 	 * Parses the given XML and returns the nodes requested as key value pairs.
 	 */
 	private function parse_xml( $string, $key, $value ) {
