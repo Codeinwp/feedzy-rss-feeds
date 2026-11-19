@@ -785,3 +785,48 @@ function escape_html_to_tag( $content ) {
 
 	return $base_content;
 }
+
+/**
+ * List the cron schedules for a schedule dropdown, keeping the saved schedule selectable.
+ *
+ * A saved schedule that is no longer registered still gets an option, so saving the
+ * form keeps it instead of silently switching to the first schedule.
+ *
+ * @param string $saved_slug The saved schedule slug, or an empty string.
+ * @param string $first_slug The schedule listed first.
+ *
+ * @return array<string, string> Option labels keyed by schedule slug.
+ */
+function feedzy_get_schedule_options( string $saved_slug, string $first_slug ): array {
+	$schedules = wp_get_schedules();
+	if ( isset( $schedules[ $first_slug ] ) ) {
+		$schedules = array( $first_slug => $schedules[ $first_slug ] ) + $schedules;
+	}
+
+	$internal_cron_schedules = apply_filters( 'feedzy_internal_cron_schedule_slugs', array() );
+	$listed_intervals        = array();
+	$options                 = array();
+	foreach ( $schedules as $slug => $schedule ) {
+		if ( empty( $schedule['interval'] ) ) {
+			continue;
+		}
+		if ( in_array( $schedule['interval'], $listed_intervals, true ) && $saved_slug !== $slug ) {
+			continue;
+		}
+		$listed_intervals[] = $schedule['interval'];
+		$label              = $schedule['display'];
+
+		if ( ! in_array( $slug, $internal_cron_schedules, true ) ) {
+			// translators: (externally created) is used to indicate that the schedule is created by another plugin or manually.
+			$label .= ' (' . __( 'externally created', 'feedzy-rss-feeds' ) . ')';
+		}
+		$options[ $slug ] = $label;
+	}
+
+	if ( '' !== $saved_slug && ! isset( $options[ $saved_slug ] ) ) {
+		// translators: %s is the slug of a saved import schedule that is no longer registered.
+		$options[ $saved_slug ] = sprintf( __( '%s (unavailable)', 'feedzy-rss-feeds' ), $saved_slug );
+	}
+
+	return $options;
+}

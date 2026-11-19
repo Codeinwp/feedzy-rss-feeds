@@ -645,24 +645,7 @@ global $post;
 											<?php
 											$save_schedule = ! empty( $import_schedule['fz_cron_schedule'] ) ? $import_schedule['fz_cron_schedule'] : '';
 
-											$schedules = wp_get_schedules();
-											if ( isset( $schedules['daily'] ) ) {
-												$daily = $schedules['daily'];
-												unset( $schedules['daily'] );
-												$schedules = array_merge( array( 'daily' => $daily ), $schedules );
-											}
-											$internal_cron_schedules = apply_filters( 'feedzy_internal_cron_schedule_slugs', array() );
-											$duplicate_schedule      = array();
-											foreach ( $schedules as $slug => $schedule ) :
-												if ( empty( $schedule['interval'] ) || in_array( $schedule['interval'], $duplicate_schedule, true ) ) {
-													continue;
-												}
-												$duplicate_schedule[] = $schedule['interval'];
-												$display_text         = $schedule['display'];
-
-												if ( ! in_array( $slug, $internal_cron_schedules, true ) ) {
-													$display_text .= ' (' . esc_html__( 'externally created', 'feedzy-rss-feeds' ) . ')';
-												}
+											foreach ( feedzy_get_schedule_options( $save_schedule, 'daily' ) as $slug => $display_text ) :
 												?>
 												<option data-slug="<?php echo esc_attr( $slug ); ?>" value="<?php echo esc_attr( $slug ); ?>"<?php selected( $save_schedule, $slug ); ?>
 												<?php disabled( ! feedzy_is_pro() && 'daily' !== $slug ); ?>
