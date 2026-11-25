@@ -1,3 +1,8 @@
+##### [Version 5.2.18](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.17...v5.2.18) (2026-11-25)
+
+- Enhanced security
+- Updated dependencies
+
 ##### [Version 5.2.17](https://github.com/Codeinwp/feedzy-rss-feeds/compare/v5.2.16...v5.2.17) (2026-11-19)
 
 - Fixed lazy-loaded feeds crashing when block options contained objects
