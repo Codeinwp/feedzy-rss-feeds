@@ -168,4 +168,36 @@ class Test_Kses_Iframe_Scope extends WP_UnitTestCase {
 		}
 		$this->assertStringNotContainsString( '<iframe', wp_kses( self::IFRAME, 'pre_comment_content' ) );
 	}
+
+	/**
+	 * The import editor keeps an iframe stored as raw HTML in the Content template.
+	 */
+	public function test_import_editor_keeps_raw_template_iframe(): void {
+		global $post, $pagenow;
+
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+		$import_id = self::factory()->post->create(
+			array(
+				'post_type'   => 'feedzy_imports',
+				'post_status' => 'publish',
+			)
+		);
+		update_post_meta( $import_id, 'import_post_content', '[#item_content]<iframe src="[#item_custom_media:url]" height="315">' );
+
+		$previous_post    = $post;
+		$previous_pagenow = $pagenow;
+		$post             = get_post( $import_id );
+		$pagenow          = 'post.php';
+
+		ob_start();
+		( new Feedzy_Rss_Feeds_Import( 'feedzy-rss-feeds', Feedzy_Rss_Feeds::get_version() ) )->feedzy_import_feed_options();
+		$markup = (string) ob_get_clean();
+
+		$post    = $previous_post;
+		$pagenow = $previous_pagenow;
+
+		$this->assertSame( 1, preg_match( '/name="feedzy_meta_data\[import_post_content\]"[^>]*value="([^"]*)"/', $markup, $matches ) );
+		$this->assertStringContainsString( '<iframe src="[#item_custom_media:url]" height="315">', html_entity_decode( $matches[1], ENT_QUOTES ) );
+		$this->assertStringNotContainsString( '<iframe', wp_kses( self::IFRAME, 'pre_comment_content' ) );
+	}
 }

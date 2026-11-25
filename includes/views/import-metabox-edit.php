@@ -340,7 +340,7 @@ global $post;
 													<input type="text" name="feedzy_meta_data[import_post_content]"
 														placeholder="<?php esc_attr_e( 'Post Content', 'feedzy-rss-feeds' ); ?>"
 														class="form-control fz-input-tagify"
-														value="<?php echo esc_attr( feedzy_custom_tag_escape( $import_content ) ); ?>" />
+														value="<?php echo esc_attr( $import_content ); ?>" />
 													<div class="fz-input-group-right fz-content-action-tags position-absolute fz-insert-tags">
 														<div class="dropdown">
 															<button type="button" class="btn btn-outline-primary btn-add-fields dropdown-toggle" aria-haspopup="true"

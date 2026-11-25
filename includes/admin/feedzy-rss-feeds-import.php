@@ -525,6 +525,7 @@ class Feedzy_Rss_Feeds_Import {
 		if ( empty( $import_content ) ) {
 			$import_content = '[[{"value":"%5B%7B%22id%22%3A%22%22%2C%22tag%22%3A%22item_content%22%2C%22data%22%3A%7B%7D%7D%5D"}]]';
 		}
+		$import_content = $this->with_iframe_allowed( 'feedzy_custom_tag_escape', $import_content );
 
 		if ( feedzy_is_pro() && empty( $import_post_term ) && 'post-new.php' === $pagenow ) {
 			$import_post_term = '[#auto_categories]';
