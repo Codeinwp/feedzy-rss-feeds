@@ -135,7 +135,7 @@ class Test_Import_Helpers extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test feedzy_wp_kses_allowed_html adds the iframe tag and disables span.
+	 * Test feedzy_wp_kses_allowed_html disables span without adding iframe.
 	 *
 	 * @access public
 	 */
@@ -146,16 +146,28 @@ class Test_Import_Helpers extends WP_UnitTestCase {
 
 		$result = $this->import->feedzy_wp_kses_allowed_html( $context );
 
-		$this->assertArrayHasKey( 'iframe', $result );
+		$this->assertArrayNotHasKey( 'iframe', $result );
+		$this->assertTrue( $result['span']['disabled'] );
+	}
+
+	/**
+	 * Test allow_iframe_tag adds iframe to the post context only.
+	 *
+	 * @access public
+	 */
+	public function test_allow_iframe_tag_only_in_post_context(): void {
+		$result = $this->import->allow_iframe_tag( array(), 'post' );
+
 		$this->assertTrue( $result['iframe']['src'] );
 		$this->assertTrue( $result['iframe']['allowfullscreen'] );
-		$this->assertTrue( $result['span']['disabled'] );
+		$this->assertTrue( $result['iframe']['data-*'] );
+
+		foreach ( array( 'pre_comment_content', 'pre_user_description', 'explicit', 'strip' ) as $context ) {
+			$this->assertSame( array(), $this->import->allow_iframe_tag( array(), $context ), $context );
+		}
 
 		// An existing iframe definition is not overwritten.
-		$context = array(
-			'iframe' => array( 'src' => false ),
-		);
-		$result  = $this->import->feedzy_wp_kses_allowed_html( $context );
+		$result = $this->import->allow_iframe_tag( array( 'iframe' => array( 'src' => false ) ), 'post' );
 		$this->assertFalse( $result['iframe']['src'] );
 	}
 

@@ -525,6 +525,7 @@ class Feedzy_Rss_Feeds_Import {
 		if ( empty( $import_content ) ) {
 			$import_content = '[[{"value":"%5B%7B%22id%22%3A%22%22%2C%22tag%22%3A%22item_content%22%2C%22data%22%3A%7B%7D%7D%5D"}]]';
 		}
+		$import_content = $this->with_iframe_allowed( 'feedzy_custom_tag_escape', $import_content );
 
 		if ( feedzy_is_pro() && empty( $import_post_term ) && 'post-new.php' === $pagenow ) {
 			$import_post_term = '[#auto_categories]';
@@ -668,7 +669,7 @@ class Feedzy_Rss_Feeds_Import {
 				} else {
 					if ( 'import_post_content' === $key ) {
 						$val = escape_html_to_tag( $val );
-						$val = feedzy_custom_tag_escape( $val );
+						$val = $this->with_iframe_allowed( 'feedzy_custom_tag_escape', $val );
 					} elseif ( 'default_thumbnail_id' === $key && ! empty( $val ) ) {
 						$val = explode( ',', $val );
 						$val = array_map( 'intval', $val );
@@ -761,8 +762,7 @@ class Feedzy_Rss_Feeds_Import {
 					$source_is_valid = empty( $invalid_urls );
 				}
 				if ( 'import_post_content' === $key ) {
-					add_filter( 'wp_kses_allowed_html', array( $this, 'feedzy_wp_kses_allowed_html' ) );
-					$value = feedzy_custom_tag_escape( $value );
+					$value = $this->with_iframe_allowed( 'feedzy_custom_tag_escape', $value );
 				} else {
 					$value = wp_kses( $value, wp_kses_allowed_html( 'post' ) );
 				}
@@ -2455,7 +2455,7 @@ class Feedzy_Rss_Feeds_Import {
 			$post_date = str_replace( '[#post_date]', $now, $post_date );
 
 			if ( ! defined( 'FEEDZY_ALLOW_UNSAFE_HTML' ) || ! FEEDZY_ALLOW_UNSAFE_HTML ) {
-				$post_content = wp_kses_post( $post_content );
+				$post_content = $this->with_iframe_allowed( 'wp_kses_post', $post_content );
 
 				if ( ! function_exists( 'use_block_editor_for_post_type' ) ) {
 					require_once ABSPATH . 'wp-admin/includes/post.php';
@@ -2619,7 +2619,8 @@ class Feedzy_Rss_Feeds_Import {
 					add_filter( 'wp_targeted_link_rel', $link_rel_callback );
 				}
 
-				$new_post_id = wp_insert_post( $new_post, true );
+				// Core KSES filters the insert on cron.
+				$new_post_id = $this->with_iframe_allowed( 'wp_insert_post', $new_post, true );
 
 				if ( $link_rel_callback ) {
 					remove_filter( 'wp_targeted_link_rel', $link_rel_callback );
@@ -4293,28 +4294,60 @@ class Feedzy_Rss_Feeds_Import {
 	}
 
 	/**
-	 * Add iframe to allowed wp_kses_post tags.
+	 * Allow the disabled attribute on span tags, used by the locked magic tags.
 	 *
 	 * @param array|string $context Allowed tags, attributes, and/or entities.
 	 *
 	 * @return array
 	 */
 	public function feedzy_wp_kses_allowed_html( $context ) {
-		if ( ! isset( $context['iframe'] ) ) {
-			$context['iframe'] = array(
-				'src'             => true,
-				'height'          => true,
-				'width'           => true,
-				'frameborder'     => true,
-				'allowfullscreen' => true,
-				'data-*'          => true,
-			);
-		}
 		if ( isset( $context['span'] ) ) {
 			$context['span']['disabled'] = true;
 		}
 
 		return $context;
+	}
+
+	/**
+	 * Add iframe to the post KSES context while Feedzy sanitizes import content.
+	 *
+	 * @param array<string, array<string, mixed>|true> $tags    Allowed tags and their attributes.
+	 * @param string                                   $context KSES context name.
+	 *
+	 * @return array<string, array<string, mixed>|true>
+	 */
+	public function allow_iframe_tag( $tags, $context ) {
+		if ( 'post' !== $context || isset( $tags['iframe'] ) ) {
+			return $tags;
+		}
+
+		$tags['iframe'] = array(
+			'src'             => true,
+			'height'          => true,
+			'width'           => true,
+			'frameborder'     => true,
+			'allowfullscreen' => true,
+			'data-*'          => true,
+		);
+
+		return $tags;
+	}
+
+	/**
+	 * Call a function with iframes allowed in the post KSES context.
+	 *
+	 * @param callable $callback Function to call.
+	 * @param mixed    ...$args  Arguments passed to the function.
+	 *
+	 * @return mixed The function's return value.
+	 */
+	private function with_iframe_allowed( callable $callback, ...$args ) {
+		add_filter( 'wp_kses_allowed_html', array( $this, 'allow_iframe_tag' ), 10, 2 );
+		try {
+			return $callback( ...$args );
+		} finally {
+			remove_filter( 'wp_kses_allowed_html', array( $this, 'allow_iframe_tag' ), 10 );
+		}
 	}
 
 	/**
