@@ -2305,7 +2305,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 				wp_send_json_success( array( 'invalid' => count( $invalid ) ) );
 				break;
 			case 'validate_feeds_group':
-				$feeds = isset( $_POST['feeds'] ) ? sanitize_text_field( wp_unslash( $_POST['feeds'] ) ) : '';
+				$feeds = isset( $_POST['feeds'] ) ? sanitize_textarea_field( wp_unslash( $_POST['feeds'] ) ) : '';
+				$feeds = preg_replace( '/\s*,\s*|\R/', ',', $feeds );
 				if ( empty( $feeds ) ) {
 					wp_send_json_error( __( 'No feeds provided for validation.', 'feedzy-rss-feeds' ) );
 				}
@@ -2922,7 +2923,8 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 		$wizard_data = get_option( 'feedzy_wizard_data', array() );
 		if ( 'block_editor' === $type ) {
 			$add_basic_shortcode = true;
-			$basic_shortcode     = $this->feedzy_block_editor_content( $wizard_data );
+			// Preserve block JSON escapes when the post APIs unslash content.
+			$basic_shortcode = wp_slash( $this->feedzy_block_editor_content( $wizard_data ) );
 		}
 		$post_title = __( 'Feedzy Demo Page', 'feedzy-rss-feeds' );
 		$page_id    = post_exists( $post_title, '', '', 'page' );
@@ -2966,7 +2968,7 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 	/**
 	 * Create post content for block editor.
 	 *
-	 * @param array $wizard_data Setup wizard data.
+	 * @param array{feed?: string} $wizard_data Setup wizard data.
 	 * @return string
 	 */
 	public function feedzy_block_editor_content( $wizard_data = array() ) {
@@ -2975,8 +2977,16 @@ class Feedzy_Rss_Feeds_Admin extends Feedzy_Rss_Feeds_Admin_Abstract {
 			return $post_content;
 		}
 
-		$feed_url     = $wizard_data['feed'];
-		$post_content = '<!-- wp:feedzy-rss-feeds/loop {"feed":{"type":"url","source":["' . esc_url( $feed_url ) . '"]}} --><!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30","right":"var:preset|spacing|30"},"margin":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30"}}},"layout":{"type":"constrained"}} --><div class="wp-block-group" style="margin-top:var(--wp--preset--spacing--30);margin-bottom:var(--wp--preset--spacing--30);padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)"><!-- wp:image --><figure class="wp-block-image"><a href="{{feedzy_url}}"><img src="' . esc_url( FEEDZY_ABSURL . 'img/feedzy.svg' ) . '" alt="{{feedzy_title}}"/></a></figure><!-- /wp:image --><!-- wp:paragraph --><p><a href="{{feedzy_url}}">{{feedzy_title}}</a></p><!-- /wp:paragraph --><!-- wp:paragraph {"fontSize":"medium"} --><p class="has-medium-font-size">{{feedzy_meta}}</p><!-- /wp:paragraph --><!-- wp:paragraph {"fontSize":"small"} --><p class="has-small-font-size">{{feedzy_description}}</p><!-- /wp:paragraph --></div><!-- /wp:group --><!-- /wp:feedzy-rss-feeds/loop -->';
+		$feed_urls       = array_values( array_filter( array_map( 'esc_url_raw', array_map( 'trim', explode( ',', $wizard_data['feed'] ) ) ) ) );
+		$feed_attributes = serialize_block_attributes(
+			array(
+				'feed' => array(
+					'type'   => 'url',
+					'source' => $feed_urls,
+				),
+			)
+		);
+		$post_content    = '<!-- wp:feedzy-rss-feeds/loop ' . $feed_attributes . ' --><!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30","right":"var:preset|spacing|30"},"margin":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30"}}},"layout":{"type":"constrained"}} --><div class="wp-block-group" style="margin-top:var(--wp--preset--spacing--30);margin-bottom:var(--wp--preset--spacing--30);padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)"><!-- wp:image --><figure class="wp-block-image"><a href="{{feedzy_url}}"><img src="' . esc_url( FEEDZY_ABSURL . 'img/feedzy.svg' ) . '" alt="{{feedzy_title}}"/></a></figure><!-- /wp:image --><!-- wp:paragraph --><p><a href="{{feedzy_url}}">{{feedzy_title}}</a></p><!-- /wp:paragraph --><!-- wp:paragraph {"fontSize":"medium"} --><p class="has-medium-font-size">{{feedzy_meta}}</p><!-- /wp:paragraph --><!-- wp:paragraph {"fontSize":"small"} --><p class="has-small-font-size">{{feedzy_description}}</p><!-- /wp:paragraph --></div><!-- /wp:group --><!-- /wp:feedzy-rss-feeds/loop -->';
 		return $post_content;
 	}
 
