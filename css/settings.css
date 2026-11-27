@@ -610,53 +610,63 @@ fieldset[disabled] .form-control {
 	border-color: #4268CF;
 }
 
-.fz-form-wrap .chosen-container .chosen-results{
+.fz-form-wrap .chosen-container .chosen-results,
+.fz-action-event .chosen-container .chosen-results{
 	padding: 8px;
 	max-height: 230px;
 	overflow: auto;
 }
-.fz-form-wrap .chosen-container .chosen-results li{
+.fz-form-wrap .chosen-container .chosen-results li,
+.fz-action-event .chosen-container .chosen-results li{
 	padding: 8px;
 	font-weight: 600;
 	font-size: 16px;
 	line-height: 19px;
 	color: #050505;
 }
-.fz-form-wrap .chosen-container .chosen-results li.group-result{
+.fz-form-wrap .chosen-container .chosen-results li.group-result,
+.fz-action-event .chosen-container .chosen-results li.group-result{
 	font-weight: normal;
 	text-transform: uppercase;
 	color: #000000bd;
 	pointer-events: none;
 }
-.fz-form-wrap .chosen-container .chosen-results li.feedzy-pro-terms{
+.fz-form-wrap .chosen-container .chosen-results li.feedzy-pro-terms,
+.fz-action-event .chosen-container .chosen-results li.feedzy-pro-terms{
 	pointer-events: none;
 	font-weight: 500;
 }
-.fz-form-wrap .chosen-container .chosen-results li.feedzy-separator{
+.fz-form-wrap .chosen-container .chosen-results li.feedzy-separator,
+.fz-action-event .chosen-container .chosen-results li.feedzy-separator{
 	font-size: 0;
 	padding: 0;
 	border-bottom: 1px solid #757575;
 	height: 0;
 }
-.fz-form-wrap .chosen-container .chosen-results li.feedzy-pro-term{
+.fz-form-wrap .chosen-container .chosen-results li.feedzy-pro-term,
+.fz-action-event .chosen-container .chosen-results li.feedzy-pro-term{
 	display: flex;
 	align-items: center;
 	gap: 10px;
 	color: #757575;
 	pointer-events: none;
 }
-.fz-form-wrap .chosen-container .chosen-results li.feedzy-pro-term .pro-label{
+.fz-form-wrap .chosen-container .chosen-results li.feedzy-pro-term .pro-label,
+.fz-action-event .chosen-container .chosen-results li.feedzy-pro-term .pro-label{
 	background: #80a2ff;
 	padding-left: 7px;
 	padding-right: 7px;
 	border-radius: 5px;
 }
 .fz-form-wrap .chosen-container .chosen-results li:hover,
-.fz-form-wrap .chosen-container .chosen-results li.result-selected{
+.fz-form-wrap .chosen-container .chosen-results li.result-selected,
+.fz-action-event .chosen-container .chosen-results li:hover,
+.fz-action-event .chosen-container .chosen-results li.result-selected{
 	background: #F2F2F2;
 	color: #050505;
 }
-.fz-form-wrap .chosen-container .chosen-results li.highlighted{
+.fz-form-wrap .chosen-container .chosen-results li.highlighted,
+.fz-action-event .chosen-container .chosen-results li.highlighted{
 	background: #F2F2F2;
 	color: #050505;
 }
@@ -664,7 +674,8 @@ fieldset[disabled] .form-control {
 	font-size: 16px;
 	color: #838383;
 }
-.fz-form-wrap .chosen-container-multi .chosen-choices li.search-choice{
+.fz-form-wrap .chosen-container-multi .chosen-choices li.search-choice,
+.fz-action-event .chosen-container-multi .chosen-choices li.search-choice{
 	padding: 5px 36px 5px 8px;
 	background: #F0F2F5;
 	font-weight: 500;
@@ -680,7 +691,8 @@ fieldset[disabled] .form-control {
 	-o-transition: all 0.3s ease-in-out;
 	transition: all 0.3s ease-in-out;
 }
-.fz-form-wrap .chosen-container-multi .chosen-choices li.search-choice .search-choice-close{
+.fz-form-wrap .chosen-container-multi .chosen-choices li.search-choice .search-choice-close,
+.fz-action-event .chosen-container-multi .chosen-choices li.search-choice .search-choice-close{
 	position: absolute;
 	top: 50%;
 	right: 8px;
@@ -704,16 +716,19 @@ fieldset[disabled] .form-control {
 	-o-transition: all 0.3s ease-in-out;
 	transition: all 0.3s ease-in-out;
 }
-.fz-form-wrap .chosen-container-multi .chosen-choices li.search-choice .search-choice-close:after{
+.fz-form-wrap .chosen-container-multi .chosen-choices li.search-choice .search-choice-close:after,
+.fz-action-event .chosen-container-multi .chosen-choices li.search-choice .search-choice-close:after{
 	content: "\f335";
 	font-family: dashicons;
 	display: block;
 }
-.fz-form-wrap .chosen-container-multi .chosen-choices li.search-choice .search-choice-close:hover{
+.fz-form-wrap .chosen-container-multi .chosen-choices li.search-choice .search-choice-close:hover,
+.fz-action-event .chosen-container-multi .chosen-choices li.search-choice .search-choice-close:hover{
 	background: #D0D4D7;
 }
 
-.fz-form-wrap .chosen-container .chosen-results li.helper-text {
+.fz-form-wrap .chosen-container .chosen-results li.helper-text,
+.fz-action-event .chosen-container .chosen-results li.helper-text {
 	display: block;
 	background: white;
 	cursor: help;
