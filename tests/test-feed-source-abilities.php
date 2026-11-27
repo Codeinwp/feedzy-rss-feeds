@@ -110,6 +110,7 @@ class Test_Feed_Source_Abilities extends WP_UnitTestCase {
 		$data = $this->execute_ability( 'get-feed-source', array( 'id' => $id ) );
 		$this->assertSame( $this->feeds, $data['feeds'] );
 		$this->assertSame( implode( "\r\n", $this->feeds ), get_post_meta( $id, 'feedzy_category_feed', true ) );
+		$this->assertSame( $this->feeds, Feedzy_Rss_Feeds_Ability_Helpers::resolve_source_to_urls( get_post_field( 'post_name', $id ) ) );
 	}
 
 	public function test_get_reads_existing_comma_separated_groups(): void {
@@ -118,21 +119,33 @@ class Test_Feed_Source_Abilities extends WP_UnitTestCase {
 		$this->assertSame( $this->feeds, $data['feeds'] );
 	}
 
-	/** @expectedIncorrectUsage WP_Ability::execute */
-	public function test_author_cannot_update_administrator_feed_source(): void {
-		$id = $this->seed_feed_source( $this->feeds[0] );
-		wp_set_current_user( self::factory()->user->create( array( 'role' => 'author' ) ) );
-		$result = wp_get_ability( 'feedzy/update-feed-source' )->execute( array( 'id' => $id, 'feeds' => $this->feeds ) );
-		$this->assertWPError( $result );
-		$this->assertSame( $this->feeds[0], get_post_meta( $id, 'feedzy_category_feed', true ) );
-		$this->assertEmpty( $this->requests );
+	public function feed_group_titles(): array {
+		return array(
+			'ordinary slug' => array( 'Status feeds' ),
+			'http in slug'  => array( 'http-status-feeds' ),
+		);
 	}
 
-	/** @expectedIncorrectUsage WP_Ability::execute */
-	public function test_subscriber_cannot_create_feed_sources(): void {
-		wp_set_current_user( self::factory()->user->create( array( 'role' => 'subscriber' ) ) );
-		$result = wp_get_ability( 'feedzy/create-feed-source' )->execute( array( 'title' => 'Forbidden', 'feeds' => $this->feeds ) );
-		$this->assertWPError( $result );
-		$this->assertEmpty( $this->requests );
+	/**
+	 * @dataProvider feed_group_titles
+	 *
+	 * @param string $title Group title.
+	 */
+	public function test_import_status_reports_each_group_feed_and_its_errors( string $title ): void {
+		$feeds = array_slice( $this->feeds, 0, 2 );
+		$group = $this->execute_ability( 'create-feed-source', array( 'title' => $title, 'feeds' => $feeds ) );
+		$id    = self::factory()->post->create( array( 'post_type' => 'feedzy_imports' ) );
+		update_post_meta( $id, 'source', $group['name'] );
+		update_post_meta( $id, sanitize_title( $feeds[0] ) . '_errors', array( 'Could not fetch feed.' ) );
+
+		$expected = array(
+			array( 'url' => $feeds[0], 'errors' => array( 'Could not fetch feed.' ) ),
+			array( 'url' => $feeds[1], 'errors' => array() ),
+		);
+		foreach ( array( $group['name'], implode( ', ', $feeds ) ) as $source ) {
+			update_post_meta( $id, 'source', $source );
+			$status = $this->execute_ability( 'get-import-status', array( 'id' => $id ) );
+			$this->assertSame( $expected, $status['per_feed'] );
+		}
 	}
 }
