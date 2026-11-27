@@ -147,7 +147,7 @@ class Feedzy_Rss_Feeds_Ability_Helpers {
 		$feeds_raw = get_post_meta( $post->ID, 'feedzy_category_feed', true );
 		$feeds     = array();
 		if ( ! empty( $feeds_raw ) ) {
-			$feeds = array_filter( array_map( 'trim', explode( "\n", $feeds_raw ) ) );
+			$feeds = array_filter( array_map( 'trim', preg_split( '/,|\R/', $feeds_raw ) ) );
 			$feeds = array_values( $feeds );
 		}
 

@@ -101,7 +101,7 @@ class Feedzy_Rss_Feeds_Ability_Create_Feed_Source extends Feedzy_Rss_Feeds_Abili
 			return Feedzy_Rss_Feeds_Ability_Helpers::from_wp_error( $post_id );
 		}
 
-		update_post_meta( $post_id, 'feedzy_category_feed', implode( "\n", $feeds ) );
+		update_post_meta( $post_id, 'feedzy_category_feed', implode( ', ', $feeds ) );
 
 		$post = get_post( $post_id );
 
