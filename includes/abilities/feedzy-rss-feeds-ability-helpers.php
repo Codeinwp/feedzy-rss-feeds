@@ -147,8 +147,7 @@ class Feedzy_Rss_Feeds_Ability_Helpers {
 		$feeds_raw = get_post_meta( $post->ID, 'feedzy_category_feed', true );
 		$feeds     = array();
 		if ( ! empty( $feeds_raw ) ) {
-			$feeds = array_filter( array_map( 'trim', explode( "\n", $feeds_raw ) ) );
-			$feeds = array_values( $feeds );
+			$feeds = self::split_feed_urls( $feeds_raw );
 		}
 
 		return array(
@@ -160,6 +159,16 @@ class Feedzy_Rss_Feeds_Ability_Helpers {
 			'created_at' => $post->post_date_gmt,
 			'updated_at' => $post->post_modified_gmt,
 		);
+	}
+
+	/**
+	 * Split canonical comma-separated feeds and legacy line-separated metadata.
+	 *
+	 * @param string $feeds Stored feed URLs.
+	 * @return list<string> Feed URLs.
+	 */
+	private static function split_feed_urls( string $feeds ): array {
+		return array_values( array_filter( array_map( 'trim', preg_split( '/,|\R/', $feeds ) ) ) );
 	}
 
 	/**
@@ -1282,10 +1291,6 @@ class Feedzy_Rss_Feeds_Ability_Helpers {
 			return array();
 		}
 
-		if ( strpos( $source, 'http' ) !== false ) {
-			return array_filter( array_map( 'trim', explode( ',', $source ) ) );
-		}
-
 		$posts = get_posts(
 			array(
 				'post_type'              => 'feedzy_categories',
@@ -1297,10 +1302,15 @@ class Feedzy_Rss_Feeds_Ability_Helpers {
 				'update_post_term_cache' => false,
 			)
 		);
-		if ( empty( $posts ) ) {
-			return array();
+		if ( ! empty( $posts ) && false === strpos( $source, '://' ) ) {
+			$raw = get_post_meta( $posts[0]->ID, 'feedzy_category_feed', true );
+			return self::split_feed_urls( (string) $raw );
 		}
-		$raw = get_post_meta( $posts[0]->ID, 'feedzy_category_feed', true );
-		return array_filter( array_map( 'trim', explode( "\n", (string) $raw ) ) );
+
+		if ( strpos( $source, 'http' ) !== false ) {
+			return array_filter( array_map( 'trim', explode( ',', $source ) ) );
+		}
+
+		return array();
 	}
 }

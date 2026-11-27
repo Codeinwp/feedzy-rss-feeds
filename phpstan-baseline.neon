@@ -536,11 +536,6 @@ parameters:
 			path: includes/admin/feedzy-rss-feeds-admin.php
 
 		-
-			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:feedzy_block_editor_content\\(\\) has parameter \\$wizard_data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: includes/admin/feedzy-rss-feeds-admin.php
-
-		-
 			message: "#^Method Feedzy_Rss_Feeds_Admin\\:\\:feedzy_category_columns\\(\\) has parameter \\$columns with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: includes/admin/feedzy-rss-feeds-admin.php

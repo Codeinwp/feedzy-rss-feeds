@@ -58,7 +58,7 @@ class Feedzy_Rss_Feeds_Ability_Update_Feed_Source extends Feedzy_Rss_Feeds_Abili
 
 		$post_type = get_post_type_object( 'feedzy_categories' );
 		$cap       = ( $post_type && isset( $post_type->cap->edit_post ) ) ? $post_type->cap->edit_post : 'edit_posts';
-		if ( ! current_user_can( $cap ) ) {
+		if ( ! current_user_can( $cap, $post_id ) ) {
 			return Feedzy_Rss_Feeds_Ability_Helpers::error(
 				'feedzy_forbidden',
 				__( 'You do not have permission to do this.', 'feedzy-rss-feeds' ),
@@ -98,7 +98,7 @@ class Feedzy_Rss_Feeds_Ability_Update_Feed_Source extends Feedzy_Rss_Feeds_Abili
 				array_map( 'esc_url_raw', (array) $input['feeds'] )
 			);
 			if ( ! empty( $feeds ) ) {
-				update_post_meta( $post_id, 'feedzy_category_feed', implode( "\n", $feeds ) );
+				update_post_meta( $post_id, 'feedzy_category_feed', implode( ', ', $feeds ) );
 			}
 		}
 
